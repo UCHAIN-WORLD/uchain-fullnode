@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 #LABEL maintainer="Jeremy Lan <air.petrichor@gmail.com>" version="0.1.1" \
-#  description="This is uc-org/UChain image" website="http://uc.org/" \
+#  description="This is UCHAIN-WORLD/UChain image" website="http://uc.org/" \
 #  , etc..."
 
 RUN echo 'APT::Install-Recommends 0;' >> /etc/apt/apt.conf.d/01norecommends \

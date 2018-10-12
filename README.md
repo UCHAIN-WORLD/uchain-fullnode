@@ -1,26 +1,6 @@
-<p align="center">
-  <a href="https://www.myucnwallet.com/">
-    <img src="https://uc.org/images/UChainlogo.png" alt="">
-  </a>
-</p>
 
-UChain Core Integration/staging Tree
-=========================
-[![Build Status](https://travis-ci.org/uc-org/UChain.svg?branch=master)](https://travis-ci.org/uc-org/UChain)
+[![Build Status](https://travis-ci.org/UCHAIN-WORLD/UChain.svg?branch=master)](https://travis-ci.org/UCHAIN-WORLD/UChain)
 [![AGPL v3](https://img.shields.io/badge/license-AGPL%20v3-brightgreen.svg)](./LICENSE)
-
-# Introduction
-UChain(UC) is a decentralised system based on the blockchain technology, through which, a network of smart properties, digital identities and value intermediators are established.
-
-**UChain on Blockchain Development Path**:
-
-![dev-path](https://github.com/uc-org/UChain/raw/master/doc/image/dev-path.jpg)
-
-**UChain Features**:
-- [Digital Assets Register/Transfering](http://docs.uc.org/whitepaper/index.html)
-- [Digital Identity](http://docs.uc.org/whitepaper/digital-identity.html)
-- Decentralized Exchange
-- Oralces and Offchain Data-feed
 
 # UC Project
 UC is implemented based on [libbitcoin project](https://github.com/libbitcoin).
@@ -59,7 +39,7 @@ $ yum/brew/apt-get install autoconf automake libtool pkg-config
 
 ## Build UC
 ```bash
-$ git clone https://github.com/uc-org/UChain.git
+$ git clone https://github.com/UCHAIN-WORLD/UChain.git
 $ cd UChain && mkdir build && cd build
 $ cmake ..
 $ make -j4
@@ -87,13 +67,10 @@ You can install more by specify arguments, for example:
 $ sudo ./install_dependencies.sh --build-boost --build-upnpc
 ```
 
-## boost 1.56+
+## boost 1.60+
 ```bash
 $ sudo yum/brew/apt-get install libboost-all-dev
 ```
-If build boost manually, please download tar ball [HERE](http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.bz2).
-
-Odder than v0.7.3 code && boost 1.59/1.6x: [issue on json_parser 'placeholders::_1'](https://github.com/uc-org/UChain/issues/216)
 
 ## ZeroMQ 4.2.1+
 Modules server/explorer required.
@@ -112,7 +89,7 @@ $ sudo make install && sudo ldconfig
 Modules blockchain/database required.
 
 ```bash
-$ git clone https://github.com/uc-live/secp256k1
+$ git clone https://github.com/UCHAIN-WORLD/secp256k1
 $ cd secp256k1
 $ ./autogen.sh
 $ ./configure --enable-module-recovery
@@ -158,7 +135,7 @@ wget qO https://get.docker.com/ | sh
 
 ## Build UChain image
 ```
-git clone https://github.com/uc-org/UChain.git
+git clone https://github.com/UCHAIN-WORLD/UChain.git
 cd UChain
 docker build -t UChain -f Dockerfile .
 ```
