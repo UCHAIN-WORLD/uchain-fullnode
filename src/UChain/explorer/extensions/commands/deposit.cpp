@@ -1,0 +1,76 @@
+/**
+ * Copyright (c) 2018-2020 uc developers
+ *
+ * This file is part of UChain-explorer.
+ *
+ * UChain-explorer is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License with
+ * additional permissions to the one published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version. For more information see LICENSE.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <UChain/explorer/json_helper.hpp>
+#include <UChain/explorer/dispatch.hpp>
+#include <UChain/explorer/extensions/commands/deposit.hpp>
+#include <UChain/explorer/extensions/command_extension_func.hpp>
+#include <UChain/explorer/extensions/command_assistant.hpp>
+#include <UChain/explorer/extensions/exception.hpp>
+#include <UChain/explorer/extensions/base_helper.hpp>
+
+namespace libbitcoin {
+namespace explorer {
+namespace commands {
+
+console_result deposit::invoke(Json::Value& jv_output,
+    libbitcoin::server::server_node& node)
+{
+    auto& blockchain = node.chain_impl();
+    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    if(!argument_.address.empty() && !blockchain.is_valid_address(argument_.address))
+        throw address_invalid_exception{"invalid address!"};
+
+    if (argument_.deposit != 7 && argument_.deposit != 30
+        && argument_.deposit != 90 && argument_.deposit != 182
+        && argument_.deposit != 365)
+    {
+        throw account_deposit_period_exception{"deposit must be one in [7, 30, 90, 182, 365]."};
+    }
+
+    auto pvaddr = blockchain.get_account_addresses(auth_.name);
+    if(!pvaddr || pvaddr->empty())
+        throw address_list_nullptr_exception{"nullptr for address list"};
+
+    auto addr = argument_.address;
+    if (addr.empty()) {
+        addr = get_random_payment_address(pvaddr, blockchain);
+    }
+
+    // receiver
+    std::vector<receiver_record> receiver{
+        {addr, "", argument_.amount, 0, utxo_attach_type::deposit, attachment()}
+    };
+    auto deposit_helper = depositing_ucn(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
+            std::move(addr), std::move(receiver), argument_.deposit, argument_.fee);
+
+    deposit_helper.exec();
+
+    // json output
+    auto tx = deposit_helper.get_transaction();
+     jv_output =  config::json_helper(get_api_version()).prop_tree(tx, true);
+
+    return console_result::okay;
+}
+
+} // namespace commands
+} // namespace explorer
+} // namespace libbitcoin
+

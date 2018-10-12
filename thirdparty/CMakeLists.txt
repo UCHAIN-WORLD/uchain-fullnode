@@ -1,0 +1,3 @@
+ADD_SUBDIRECTORY(jsoncpp)
+ADD_SUBDIRECTORY(mongoose)
+ADD_SUBDIRECTORY(cryptojs)
