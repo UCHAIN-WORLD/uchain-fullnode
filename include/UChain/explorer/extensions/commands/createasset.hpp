@@ -95,7 +95,7 @@ public:
         (
             "symbol,s",
             value<std::string>(&option_.symbol)->required(),
-            "The asset symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.), eg: CHENHAO.LAPTOP, dot separates prefix 'CHENHAO', It's impossible to create any asset named with 'CHENHAO' prefix, but this issuer."
+            "The asset symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.), eg: -.LAPTOP, dot separates prefix '-', It's impossible to create any asset named with '-' prefix, but this issuer."
         )
         (
             "issuer,i",

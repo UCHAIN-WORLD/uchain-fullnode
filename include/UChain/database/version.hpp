@@ -11,7 +11,7 @@
  * The semantic version of this repository as: [major].[minor].[patch]
  * For interpretation of the versioning scheme see: http://semver.org
  */
-/*           chenhao     init value  0.6.0
+/*           -     init value  0.6.0
  * 2017.6.11 wangdongyun modify from 0.6.0 to 0.6.1
  * 1. replace asset with blockchain_asset, to contain asset blockchain height
  *       to resolve block not sync when same asset exist

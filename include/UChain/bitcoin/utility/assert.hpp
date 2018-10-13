@@ -33,7 +33,7 @@
 #endif
 
 // This is used to prevent bogus compiler warnings about unused variables.
-// remove by chenhao, -fno-unused
+// remove by -, -fno-unused
 //#define UNUSED(expression) (void)(expression)
 
 #include <UChain/bitcoin/utility/monitor.hpp>

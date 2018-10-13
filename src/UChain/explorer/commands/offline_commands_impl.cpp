@@ -34,7 +34,7 @@ data_chunk get_seed(uint16_t bit_length)
     if (bit_length < minimum_seed_size * byte_bits ||
         bit_length % byte_bits != 0)
     {
-        // chenhao exception
+        // - exception
         throw seed_size_exception{UCCLI_SEED_BIT_LENGTH_UNSUPPORTED};
     }
 
@@ -48,7 +48,7 @@ bw::word_list get_mnemonic_new(const bw::dictionary_list& language, const data_c
 
     if ((entropy_size % bw::mnemonic_seed_multiple) != 0)
     {
-        // chenhao exception
+        // - exception
         throw seed_length_exception{UCCLI_EC_MNEMONIC_NEW_INVALID_ENTROPY};
     }
 
@@ -72,7 +72,7 @@ data_chunk get_mnemonic_to_seed(const bw::dictionary_list& language,
 
     if ((word_count % bw::mnemonic_word_multiple) != 0)
     {
-        // chenhao exception
+        // - exception
         throw mnemonicwords_amount_exception{UCCLI_EC_MNEMONIC_TO_SEED_LENGTH_INVALID_SENTENCE};
     }
 
@@ -104,11 +104,11 @@ data_chunk get_mnemonic_to_seed(const bw::dictionary_list& language,
     if (!valid && language.size() == 1)
     {
         // This is fatal because a dictionary was specified explicitly.
-        // chenhao exception
+        // - exception
         throw mnemonicwords_content_exception{UCCLI_EC_MNEMONIC_TO_SEED_INVALID_IN_LANGUAGE};
     }
 
-    // chenhao exception
+    // - exception
     if (!valid && language.size() > 1)
         throw mnemonicwords_content_exception{UCCLI_EC_MNEMONIC_TO_SEED_INVALID_IN_LANGUAGES};
 
@@ -118,7 +118,7 @@ data_chunk get_mnemonic_to_seed(const bw::dictionary_list& language,
 #else
     if (!passphrase.empty())
     {
-        // chenhao exception
+        // - exception
         throw mnemonicwords_content_exception{UCCLI_EC_MNEMONIC_TO_SEED_PASSPHRASE_UNSUPPORTED};
     }
 
@@ -134,7 +134,7 @@ bw::hd_private get_hd_new(const data_chunk& seed, uint32_t version)
 {
     if (seed.size() < minimum_seed_size)
     {
-        // chenhao exception
+        // - exception
         throw hd_length_exception{UCCLI_HD_NEW_SHORT_SEED};
     }
 
@@ -144,7 +144,7 @@ bw::hd_private get_hd_new(const data_chunk& seed, uint32_t version)
 
     if (!private_key)
     {
-        // chenhao exception
+        // - exception
         throw hd_key_exception{UCCLI_HD_NEW_INVALID_KEY};
     }
 

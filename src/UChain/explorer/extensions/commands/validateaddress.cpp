@@ -43,13 +43,11 @@ console_result validateaddress::invoke(Json::Value& jv_output,
 
     if (blockchain.is_blackhole_address(argument_.address)) {
         version_info = "p2blackhole";
-    } else if (payment_address.version() == payment_address::mainnet_p2kh ) {
-        if (use_testnet_rules) {
-            version_info = "p2kh(test-net)";
-        } else {
-            version_info = "p2kh(main-net)";
-        }
-    } else if (payment_address.version() == payment_address::mainnet_p2sh ) {
+    } else if (payment_address.version() == 0x44) {
+        version_info = "p2kh(main-net)";      
+    } else if (payment_address.version() == 0x7f) {
+        version_info = "p2kh(test-net)";      
+    }else if (payment_address.version() == payment_address::mainnet_p2sh ) {
         version_info = "p2sh(multi-signature)";
     } else {
         version_info = "none";

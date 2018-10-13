@@ -166,7 +166,7 @@ bool address::unwrap_subscribe2_args(binary& prefix_filter,
     // First byte is the number of bits.
     const auto bit_length = data[0];
 
-    // always false for this case: chenhao
+    // always false for this case: -
     //if (bit_length > address_bits)
     //    return false;
 

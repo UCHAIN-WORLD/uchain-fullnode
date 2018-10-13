@@ -59,9 +59,9 @@ settings::settings(bc::settings context)
             //checkpoints.push_back({ "bd512ef95e5c6c99bf03112be7ac7fc0a6ef1113678dd583a18778ca683908f9", 700000 });
             //checkpoints.push_back({ "9a0efd7b41cfc1cbeb1bfbd2ab3cb7989314611608cc4236b80a540444fbfb36", 800000 });
 
-            bc::wallet::ec_private::mainnet_p2kh = 0x32;
-            bc::wallet::ec_public::mainnet_p2kh = 0x32;
-            bc::wallet::payment_address::mainnet_p2kh = 0x32;
+            bc::wallet::ec_private::mainnet_p2kh = 0x44;
+            bc::wallet::ec_public::mainnet_p2kh = 0x44;
+            bc::wallet::payment_address::mainnet_p2kh = 0x44;
             break;
         }
 

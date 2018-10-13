@@ -58,7 +58,7 @@ public:
     code error() const;
 
     /// This method is thread safe.
-    //chenhao remove & from hash_digest
+    //- remove & from hash_digest
     const hash_digest hash() const;
 
     // Set if work proof is checked.

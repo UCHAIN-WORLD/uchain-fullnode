@@ -215,7 +215,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     RETURN_IF_STOPPED();
 
-    //TO.FIX.CHENHAO.Reject
+    //TO.FIX.-.Reject
     /*if (current_block_.header.number == bc::consensus::future_blocktime_fork_height) {
         // 校验未来区块时间攻击分叉点
         bc::config::checkpoint::list blocktime_checkpoints;
@@ -502,7 +502,7 @@ code validate_block::accept_block() const
 
     RETURN_IF_STOPPED();
 
-    //CHENHAO. future blocktime attack
+    //-. future blocktime attack
 #if 0
     if (header.number >= bc::consensus::future_blocktime_fork_height) {
 

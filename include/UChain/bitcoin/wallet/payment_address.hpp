@@ -44,7 +44,7 @@ typedef byte_array<payment_size> payment;
 class BC_API payment_address
 {
 public:
-    // chenhao bad modify
+    // - bad modify
     static uint8_t mainnet_p2kh;
     static const uint8_t mainnet_p2sh;
     static const std::string blackhole_address;

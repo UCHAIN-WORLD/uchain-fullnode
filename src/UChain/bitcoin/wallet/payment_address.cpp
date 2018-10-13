@@ -33,9 +33,9 @@
 namespace libbitcoin {
 namespace wallet {
 
-//chenhao bad modify
-uint8_t payment_address::mainnet_p2kh = 0x32;
+uint8_t payment_address::mainnet_p2kh = 0x44;
 const uint8_t payment_address::mainnet_p2sh = 0x05;
+
 const std::string payment_address::blackhole_address = "1111111111111111111114oLvT2";
 
 payment_address::payment_address()

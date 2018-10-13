@@ -34,8 +34,8 @@ namespace wallet {
 const uint8_t ec_public::compressed_even = 0x02;
 const uint8_t ec_public::compressed_odd = 0x03;
 const uint8_t ec_public::uncompressed = 0x04;
-//chenhao bad modify
-uint8_t ec_public::mainnet_p2kh = 0x32;
+//- bad modify
+uint8_t ec_public::mainnet_p2kh = 0x44;
 
 ec_public::ec_public()
  : valid_(false), compress_(true), point_(null_compressed_point)

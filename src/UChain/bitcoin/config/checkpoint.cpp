@@ -68,7 +68,7 @@ checkpoint::checkpoint(const hash_digest& hash, size_t height)
 {
 }
 
-//chenhao
+//-
 hash_digest checkpoint::hash() const
 {
     return hash_;

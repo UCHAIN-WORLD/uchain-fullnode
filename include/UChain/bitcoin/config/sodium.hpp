@@ -76,7 +76,7 @@ public:
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
-     * chenhao
+     * -
      */
     operator hash_digest() const;
 

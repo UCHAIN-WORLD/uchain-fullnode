@@ -35,8 +35,8 @@ namespace libbitcoin {
 namespace wallet {
 
 const uint8_t ec_private::wif = 0x80;
-//chenhao bad modify
-uint8_t ec_private::mainnet_p2kh = 0x32;
+//- bad modify
+uint8_t ec_private::mainnet_p2kh = 0x44;
 const uint16_t ec_private::mainnet = uint8_t(wif) << 8 | mainnet_p2kh;
 const uint8_t ec_private::compressed_sentinel = 0x01;
 

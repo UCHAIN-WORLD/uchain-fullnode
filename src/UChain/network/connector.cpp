@@ -255,7 +255,7 @@ void connector::handle_resolve(const boost_code& ec, asio::iterator iterator,
     for (asio::iterator end; iterator != end; ++iterator)
     {
         do_connecting(iterator);
-        break; // FIXME. chenhao, can not query all hosts, caused by loop fastly
+        break; // FIXME. -, can not query all hosts, caused by loop fastly
     }
 
     mutex_.unlock_shared();

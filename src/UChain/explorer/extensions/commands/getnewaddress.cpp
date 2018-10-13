@@ -67,7 +67,7 @@ console_result getnewaddress::invoke(Json::Value& jv_output,
     auto payment_version = 68;
     if (blockchain.chain_settings().use_testnet_rules) {
         // testnucnayment address version
-        payment_version = 127;
+        payment_version = 127 ;
     }
 
     for (uint32_t idx = 0; idx < option_.count; idx++ ) {
