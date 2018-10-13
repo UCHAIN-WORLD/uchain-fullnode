@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2018 UChain developers (see AUTHORS)
+ * Copyright (c) 2011-2018 UChain developers 
  *
  * This file is part of ucd.
  *

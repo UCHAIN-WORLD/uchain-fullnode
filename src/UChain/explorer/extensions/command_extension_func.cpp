@@ -43,7 +43,7 @@
 #include <UChain/explorer/extensions/commands/dumpkeyfile.hpp>
 #include <UChain/explorer/extensions/commands/importkeyfile.hpp>
 #include <UChain/explorer/extensions/commands/importaccount.hpp>
-#include <UChain/explorer/extensions/commands/getnewaccount.hpp>
+#include <UChain/explorer/extensions/commands/createaccount.hpp>
 #include <UChain/explorer/extensions/commands/getaccount.hpp>
 #include <UChain/explorer/extensions/commands/deleteaccount.hpp>
 #include <UChain/explorer/extensions/commands/listaddresses.hpp>
@@ -108,7 +108,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
 
     os <<"\r\n";
     // account
-    func(make_shared<getnewaccount>());
+    func(make_shared<createaccount>());
     func(make_shared<getaccount>());
     func(make_shared<deleteaccount>());
     func(make_shared<importaccount>());
@@ -211,8 +211,8 @@ shared_ptr<command> find_extension(const string& symbol)
     using namespace commands;
 
     // account
-    if (symbol == getnewaccount::symbol())
-        return make_shared<getnewaccount>();
+    if (symbol == createaccount::symbol())
+        return make_shared<createaccount>();
     if (symbol == getaccount::symbol())
         return make_shared<getaccount>();
     if (symbol == deleteaccount::symbol())

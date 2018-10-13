@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2018 uc developers (see AUTHORS)
+ * Copyright (c) 2011-2018 uc developers 
  *
  * This file is part of uc-node.
  *

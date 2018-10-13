@@ -20,7 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChain/explorer/extensions/commands/getnewaccount.hpp>
+#include <UChain/explorer/extensions/commands/createaccount.hpp>
 #include <UChain/explorer/extensions/command_extension_func.hpp>
 #include <UChain/explorer/extensions/command_assistant.hpp>
 #include <UChain/explorer/extensions/exception.hpp>
@@ -31,9 +31,9 @@ namespace explorer {
 namespace commands {
 using namespace bc::explorer::config;
 
-/************************ getnewaccount *************************/
+/************************ createaccount *************************/
 
-console_result getnewaccount::invoke(Json::Value& jv_output,
+console_result createaccount::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
 #ifdef NDEBUG

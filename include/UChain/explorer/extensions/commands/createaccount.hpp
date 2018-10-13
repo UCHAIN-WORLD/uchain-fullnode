@@ -30,15 +30,15 @@ namespace explorer {
 namespace commands {
 
 
-/************************ getnewaccount *************************/
+/************************ createaccount *************************/
 
-class getnewaccount: public command_extension
+class createaccount: public command_extension
 {
 public:
-    static const char* symbol(){ return "getnewaccount";}
+    static const char* symbol(){ return "createaccount";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "Generate a new account from this wallet."; }
+    const char* description() override { return "Generate a new account to manage the keys belong to one user in this wallet."; }
 
     arguments_metadata& load_arguments() override
     {
