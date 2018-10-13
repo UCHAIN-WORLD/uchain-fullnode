@@ -64,7 +64,7 @@ console_result getnewaddress::invoke(Json::Value& jv_output,
     const bc::wallet::hd_private private_key(ds, prefixes);
 
     // mainnet payment address version
-    auto payment_version = 50;
+    auto payment_version = 68;
     if (blockchain.chain_settings().use_testnet_rules) {
         // testnucnayment address version
         payment_version = 127;
