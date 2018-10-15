@@ -343,16 +343,16 @@ code validate_transaction::check_tx_connect_input() const
         }
     }
 
-    if (tx_->has_token_mit_transfer()) {
-        if (!check_token_mit(*tx_)) {
+    if (tx_->has_token_card_transfer()) {
+        if (!check_token_card(*tx_)) {
             log::debug(LOG_BLOCKCHAIN) << "failed to check MIT token." << tx_->to_string(1);
-            return error::mit_error;
+            return error::card_error;
         }
     }
 
-    if (tx_->has_did_transfer()) {
-        if (!check_did_symbol_match(*tx_)) {
-            return error::did_symbol_not_match;
+    if (tx_->has_uid_transfer()) {
+        if (!check_uid_symbol_match(*tx_)) {
+            return error::uid_symbol_not_match;
         }
     }
 
@@ -759,14 +759,14 @@ code validate_transaction::check_token_cert_transaction() const
 
                 // check owner
                 cert_owner = cert_info.get_owner();
-                auto diddetail = chain.get_registered_did(cert_owner);
+                auto uiddetail = chain.get_registered_uid(cert_owner);
                 auto address = cert_info.get_address();
-                if (!diddetail) {
+                if (!uiddetail) {
                     log::debug(LOG_BLOCKCHAIN) << "issue cert: cert owner is not issued. "
                                                <<  cert_info.to_string();
                     return error::token_cert_issue_error;
                 }
-                if (address != diddetail->get_address()) {
+                if (address != uiddetail->get_address()) {
                     log::debug(LOG_BLOCKCHAIN) << "issue cert: cert address dismatch cert owner. "
                                                <<  cert_info.to_string();
                     return error::token_cert_issue_error;
@@ -828,56 +828,56 @@ code validate_transaction::check_token_cert_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_token_mit_transaction() const
+code validate_transaction::check_token_card_transaction() const
 {
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& chain = blockchain_;
 
-    bool is_token_mit{false};
+    bool is_token_card{false};
     for (auto& output : tx.outputs) {
-        if (output.is_token_mit()) {
-            is_token_mit = true;
+        if (output.is_token_card()) {
+            is_token_card = true;
             break;
         }
     }
 
-    if (!is_token_mit) {
+    if (!is_token_card) {
         return error::success;
     }
 
     std::string token_symbol;
     std::string token_address;
-    size_t num_mit_transfer = 0;
-    size_t num_mit_register = 0;
+    size_t num_card_transfer = 0;
+    size_t num_card_register = 0;
     for (auto& output : tx.outputs)
     {
-        if (output.is_token_mit_register()) {
-            ++num_mit_register;
+        if (output.is_token_card_register()) {
+            ++num_card_register;
 
-            auto&& token_info = output.get_token_mit();
+            auto&& token_info = output.get_token_card();
             token_symbol = token_info.get_symbol();
 
             if (!check_same(token_address, token_info.get_address())) {
                 log::debug(LOG_BLOCKCHAIN) << "register MIT: "
                                            << " address is not same. "
                                            << token_address << " != " << token_info.get_address();
-                return error::mit_register_error;
+                return error::card_register_error;
             }
 
             // check token not exists
-            if (check_token_mit_exist(token_symbol)) {
+            if (check_token_card_exist(token_symbol)) {
                 log::debug(LOG_BLOCKCHAIN) << "register MIT: "
                                            << token_symbol << " already exists.";
-                return error::mit_exist;
+                return error::card_exist;
             }
         }
-        else if (output.is_token_mit_transfer()) {
-            if (++num_mit_transfer > 1) {
+        else if (output.is_token_card_transfer()) {
+            if (++num_card_transfer > 1) {
                 log::debug(LOG_BLOCKCHAIN) << "transfer MIT: more than on MIT output." << output.to_string(1);
-                return error::mit_error;
+                return error::card_error;
             }
 
-            auto&& token_info = output.get_token_mit();
+            auto&& token_info = output.get_token_card();
             token_symbol = token_info.get_symbol();
         }
         else if (output.is_ucn()) {
@@ -885,20 +885,20 @@ code validate_transaction::check_token_mit_transaction() const
                 log::debug(LOG_BLOCKCHAIN) << "MIT: "
                                            << " address is not same. "
                                            << token_address << " != " << output.get_script_address();
-                return error::mit_register_error;
+                return error::card_register_error;
             }
         }
         else if (!output.is_message()) {
             log::debug(LOG_BLOCKCHAIN) << "MIT: illegal output, "
                                        << token_symbol << " : " << output.to_string(1);
-            return error::mit_error;
+            return error::card_error;
         }
     }
 
-    if ((num_mit_register == 0 && num_mit_transfer == 0)
-        || (num_mit_register > 0 && num_mit_transfer > 0)) {
+    if ((num_card_register == 0 && num_card_transfer == 0)
+        || (num_card_register > 0 && num_card_transfer > 0)) {
         log::debug(LOG_BLOCKCHAIN) << "MIT: illegal output.";
-        return error::mit_error;
+        return error::card_error;
     }
 
     // check inputs
@@ -921,8 +921,8 @@ code validate_transaction::check_token_mit_transaction() const
                 return error::validate_inputs_failed;
             }
         }
-        else if (prev_output.is_token_mit()) {
-            auto&& token_info = prev_output.get_token_mit();
+        else if (prev_output.is_token_card()) {
+            auto&& token_info = prev_output.get_token_card();
             if (token_symbol != token_info.get_symbol()) {
                 log::debug(LOG_BLOCKCHAIN) << "MIT: invalid MIT to transfer: "
                                             << token_info.get_symbol() << " != " << token_symbol;
@@ -933,7 +933,7 @@ code validate_transaction::check_token_mit_transaction() const
         }
     }
 
-    if (num_mit_transfer > 0 && !has_input_transfer) {
+    if (num_card_transfer > 0 && !has_input_transfer) {
         log::debug(LOG_BLOCKCHAIN) << "MIT: no input MIT to transfer " << token_symbol;
         return error::validate_inputs_failed;
     }
@@ -941,13 +941,13 @@ code validate_transaction::check_token_mit_transaction() const
     return error::success;
 }
 
-bool validate_transaction::check_did_exist(const std::string& did) const
+bool validate_transaction::check_uid_exist(const std::string& uid) const
 {
-    uint64_t height = blockchain_.get_did_height(did);
+    uint64_t height = blockchain_.get_uid_height(uid);
 
     if (validate_block_ ) {
         //register before fork or find in orphan chain
-        if (height <= validate_block_->get_fork_index() || validate_block_->is_did_in_orphan_chain(did)) {
+        if (height <= validate_block_->get_fork_index() || validate_block_->is_uid_in_orphan_chain(uid)) {
             return true;
         }
 
@@ -989,13 +989,13 @@ bool validate_transaction::check_token_cert_exist(const std::string& cert, token
     return height != max_uint64;
 }
 
-bool validate_transaction::check_token_mit_exist(const std::string& mit) const
+bool validate_transaction::check_token_card_exist(const std::string& mit) const
 {
-    uint64_t height = blockchain_.get_token_mit_height(mit);
+    uint64_t height = blockchain_.get_token_card_height(mit);
 
     if (validate_block_) {
         //register before fork or find in orphan chain
-        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_mit_in_orphan_chain(mit)) {
+        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_card_in_orphan_chain(mit)) {
             return true;
         }
 
@@ -1005,28 +1005,28 @@ bool validate_transaction::check_token_mit_exist(const std::string& mit) const
     return height != max_uint64;
 }
 
-bool validate_transaction::check_address_registered_did(const std::string& address) const
+bool validate_transaction::check_address_registered_uid(const std::string& address) const
 {
     uint64_t fork_index = validate_block_ ? validate_block_->get_fork_index() : max_uint64;
-    auto did_symbol = blockchain_.get_did_from_address(address, fork_index);
+    auto uid_symbol = blockchain_.get_uid_from_address(address, fork_index);
 
     if (!validate_block_) {
-        if (did_symbol.empty()) {
+        if (uid_symbol.empty()) {
             return false;
         }
     }
     else {
-        did_symbol = validate_block_->get_did_from_address_consider_orphan_chain(address, did_symbol);
-        if (did_symbol.empty()) {
+        uid_symbol = validate_block_->get_uid_from_address_consider_orphan_chain(address, uid_symbol);
+        if (uid_symbol.empty()) {
             return false;
         }
     }
 
-    log::debug(LOG_BLOCKCHAIN) << "address " << address << " already exists did " << did_symbol;
+    log::debug(LOG_BLOCKCHAIN) << "address " << address << " already exists uid " << uid_symbol;
     return true;
 }
 
-code validate_transaction::check_did_transaction() const
+code validate_transaction::check_uid_transaction() const
 {
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& chain = blockchain_;
@@ -1041,75 +1041,75 @@ code validate_transaction::check_did_transaction() const
         if ((ret = output.check_attachment_address(chain)) != error::success)
             return ret;
 
-        //to_did check(strong check)
-        if ((ret = check_attachment_to_did(output)) != error::success)
+        //to_uid check(strong check)
+        if ((ret = check_attachment_to_uid(output)) != error::success)
             return ret;
 
-        //from_did (weak check)
-        if ((ret = connect_attachment_from_did(output)) != error::success) {
+        //from_uid (weak check)
+        if ((ret = connect_attachment_from_uid(output)) != error::success) {
             return ret;
         }
 
-        if (output.is_did_register()) {
-            if (chain.is_valid_address(output.get_did_symbol())) {
-                return error::did_symbol_invalid;
+        if (output.is_uid_register()) {
+            if (chain.is_valid_address(output.get_uid_symbol())) {
+                return error::uid_symbol_invalid;
             }
 
-            if (check_did_exist(output.get_did_symbol())) {
-                log::debug(LOG_BLOCKCHAIN) << "did_register: "
-                    << output.get_did_symbol() << " already exists";
-                return error::did_exist;
+            if (check_uid_exist(output.get_uid_symbol())) {
+                log::debug(LOG_BLOCKCHAIN) << "uid_register: "
+                    << output.get_uid_symbol() << " already exists";
+                return error::uid_exist;
             }
 
-            if (check_address_registered_did(output.get_did_address())) {
+            if (check_address_registered_uid(output.get_uid_address())) {
                 log::debug(LOG_BLOCKCHAIN) << "address "
-                    << output.get_did_address() << " already exists did, cannot register did.";
-                return error::address_registered_did;
+                    << output.get_uid_address() << " already exists uid, cannot register uid.";
+                return error::address_registered_uid;
             }
 
             if (type != 255) {
-                return error::did_multi_type_exist;
+                return error::uid_multi_type_exist;
             }
-            type = DID_DETAIL_TYPE;
+            type = UID_DETAIL_TYPE;
 
-            if (!connect_did_input(boost::get<did>(output.get_did()))) {
-                return error::did_input_error;
+            if (!connect_uid_input(boost::get<uid>(output.get_uid()))) {
+                return error::uid_input_error;
             }
         }
-        else if (output.is_did_transfer()) {
-            if (check_address_registered_did(output.get_did_address())) {
+        else if (output.is_uid_transfer()) {
+            if (check_address_registered_uid(output.get_uid_address())) {
                 log::debug(LOG_BLOCKCHAIN) << "address "
-                    << output.get_did_address() << " already exists did, cannot transfer did.";
-                return error::address_registered_did;
+                    << output.get_uid_address() << " already exists uid, cannot transfer uid.";
+                return error::address_registered_uid;
             }
 
             if (type != 255) {
-                return error::did_multi_type_exist;
+                return error::uid_multi_type_exist;
             }
-            type = DID_TRANSFERABLE_TYPE;
+            type = UID_TRANSFERABLE_TYPE;
 
-            if (!connect_did_input(boost::get<did>(output.get_did()))) {
-                return error::did_input_error;
+            if (!connect_uid_input(boost::get<uid>(output.get_uid()))) {
+                return error::uid_input_error;
             }
         }
         else if (output.is_token_issue() || output.is_token_secondaryissue()) {
-            if (output.attach_data.get_version() == DID_ATTACH_VERIFY_VERSION
-                    && output.get_token_issuer() != output.attach_data.get_to_did()) {
+            if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION
+                    && output.get_token_issuer() != output.attach_data.get_to_uid()) {
                 log::debug(LOG_BLOCKCHAIN)
                         << "token issuer " << output.get_token_issuer()
-                        << " , does not match did " << output.attach_data.get_to_did()
+                        << " , does not match uid " << output.attach_data.get_to_uid()
                         << " , attach_data: " << output.attach_data.to_string();
-                return error::token_did_registerr_not_match;
+                return error::token_uid_registerr_not_match;
             }
         }
         else if (output.is_token_cert()) {
-            if (output.attach_data.get_version() == DID_ATTACH_VERIFY_VERSION) {
-                if (output.get_token_cert_owner() != output.attach_data.get_to_did()) {
+            if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION) {
+                if (output.get_token_cert_owner() != output.attach_data.get_to_uid()) {
                     log::debug(LOG_BLOCKCHAIN)
                             << "cert owner " << output.get_token_cert_owner()
-                            << " , does not match did " << output.attach_data.get_to_did()
+                            << " , does not match uid " << output.attach_data.get_to_uid()
                             << " , attach_data: " << output.attach_data.to_string();
-                    return error::token_did_registerr_not_match;
+                    return error::token_uid_registerr_not_match;
                 }
             }
         }
@@ -1118,99 +1118,99 @@ code validate_transaction::check_did_transaction() const
     return ret;
 }
 
-bool validate_transaction::connect_did_input(const did& info) const
+bool validate_transaction::connect_uid_input(const uid& info) const
 {
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& chain = blockchain_;
 
-    if (info.get_status() ==  DID_TRANSFERABLE_TYPE && tx.inputs.size() != 2) {
+    if (info.get_status() ==  UID_TRANSFERABLE_TYPE && tx.inputs.size() != 2) {
         return false;
     }
 
-    auto detail_info = boost::get<did_detail>(info.get_data());
-    bool found_did_info = false;
+    auto detail_info = boost::get<uid_detail>(info.get_data());
+    bool found_uid_info = false;
     bool found_address_info = false;
 
     for (const auto& input : tx.inputs) {
         chain::transaction prev_tx;
         uint64_t prev_height{0};
         if (!get_previous_tx(prev_tx, prev_height, input)) {
-            log::debug(LOG_BLOCKCHAIN) << "connect_did_input: input not found: "
+            log::debug(LOG_BLOCKCHAIN) << "connect_uid_input: input not found: "
                                        << encode_hash(input.previous_output.hash);
             return false;
         }
 
         auto prev_output = prev_tx.outputs.at(input.previous_output.index);
 
-        if (prev_output.is_did_register() || prev_output.is_did_transfer()) {
-            if (info.get_status() ==  DID_TRANSFERABLE_TYPE) {
-                if (detail_info.get_symbol() == prev_output.get_did_symbol()) {
-                    found_did_info = true;
+        if (prev_output.is_uid_register() || prev_output.is_uid_transfer()) {
+            if (info.get_status() ==  UID_TRANSFERABLE_TYPE) {
+                if (detail_info.get_symbol() == prev_output.get_uid_symbol()) {
+                    found_uid_info = true;
                 }
             }
         }
         else if (prev_output.is_ucn()) {
-            auto did_address_in = prev_output.get_script_address();
-            if (detail_info.get_address() == did_address_in) {
+            auto uid_address_in = prev_output.get_script_address();
+            if (detail_info.get_address() == uid_address_in) {
                 found_address_info = true;
             }
         }
     }
 
-    return (found_did_info && found_address_info && info.get_status() ==  DID_TRANSFERABLE_TYPE)
-           || (found_address_info && info.get_status() ==  DID_DETAIL_TYPE);
+    return (found_uid_info && found_address_info && info.get_status() ==  UID_TRANSFERABLE_TYPE)
+           || (found_address_info && info.get_status() ==  UID_DETAIL_TYPE);
 }
 
-bool validate_transaction::is_did_match_address_in_orphan_chain(const std::string& did, const std::string& address) const
+bool validate_transaction::is_uid_match_address_in_orphan_chain(const std::string& uid, const std::string& address) const
 {
-    if (validate_block_ && validate_block_->is_did_match_address_in_orphan_chain(did, address)) {
-        log::debug(LOG_BLOCKCHAIN) << "did_in_orphan_chain: "
-            << did << ", match address: " << address;
+    if (validate_block_ && validate_block_->is_uid_match_address_in_orphan_chain(uid, address)) {
+        log::debug(LOG_BLOCKCHAIN) << "uid_in_orphan_chain: "
+            << uid << ", match address: " << address;
         return true;
     }
 
     return false;
 }
 
-bool validate_transaction::is_did_in_orphan_chain(const std::string& did) const
+bool validate_transaction::is_uid_in_orphan_chain(const std::string& uid) const
 {
-    if (validate_block_ && validate_block_->is_did_in_orphan_chain(did)) {
-        log::debug(LOG_BLOCKCHAIN) << "did_in_orphan_chain: " << did << " exist";
+    if (validate_block_ && validate_block_->is_uid_in_orphan_chain(uid)) {
+        log::debug(LOG_BLOCKCHAIN) << "uid_in_orphan_chain: " << uid << " exist";
         return true;
     }
 
     return false;
 }
 
-code validate_transaction::check_attachment_to_did(const output& output) const
+code validate_transaction::check_attachment_to_uid(const output& output) const
 {
-    auto todid = output.attach_data.get_to_did();
-    if (todid.empty()) {
+    auto touid = output.attach_data.get_to_uid();
+    if (touid.empty()) {
         return error::success;
     }
 
     auto address = output.get_script_address();
 
-    if (is_did_match_address_in_orphan_chain(todid, address)) {
+    if (is_uid_match_address_in_orphan_chain(touid, address)) {
         return error::success;
     }
 
     uint64_t fork_index = validate_block_ ? validate_block_->get_fork_index() : max_uint64;
-    auto did = blockchain_.get_did_from_address(address, fork_index);
-    if (todid == did) {
+    auto uid = blockchain_.get_uid_from_address(address, fork_index);
+    if (touid == uid) {
         return error::success;
     }
 
-    log::debug(LOG_BLOCKCHAIN) << "check_attachment_to_did: "
-        << todid << ", address: " << address
-        << "; get did from address is " << did;
-    return error::did_address_not_match;
+    log::debug(LOG_BLOCKCHAIN) << "check_attachment_to_uid: "
+        << touid << ", address: " << address
+        << "; get uid from address is " << uid;
+    return error::uid_address_not_match;
 }
 
-code validate_transaction::connect_attachment_from_did(const output& output) const
+code validate_transaction::connect_attachment_from_uid(const output& output) const
 {
-    auto from_did = output.attach_data.get_from_did();
-    if (from_did.empty()) {
+    auto from_uid = output.attach_data.get_from_uid();
+    if (from_uid.empty()) {
         return error::success;
     }
 
@@ -1218,7 +1218,7 @@ code validate_transaction::connect_attachment_from_did(const output& output) con
         chain::transaction prev_tx;
         uint64_t prev_height{0};
         if (!get_previous_tx(prev_tx, prev_height, input)) {
-            log::debug(LOG_BLOCKCHAIN) << "connect_attachment_from_did: input not found: "
+            log::debug(LOG_BLOCKCHAIN) << "connect_attachment_from_uid: input not found: "
                                        << encode_hash(input.previous_output.hash);
             return error::input_not_found;
         }
@@ -1226,19 +1226,19 @@ code validate_transaction::connect_attachment_from_did(const output& output) con
         auto prev_output = prev_tx.outputs.at(input.previous_output.index);
         auto address = prev_output.get_script_address();
 
-        if (is_did_match_address_in_orphan_chain(from_did, address)) {
+        if (is_uid_match_address_in_orphan_chain(from_uid, address)) {
             return error::success;
         }
 
         uint64_t fork_index = validate_block_ ? validate_block_->get_fork_index() : max_uint64;
-        if (from_did == blockchain_.get_did_from_address(address, fork_index)) {
+        if (from_uid == blockchain_.get_uid_from_address(address, fork_index)) {
             return error::success;
         }
     }
 
-    log::debug(LOG_BLOCKCHAIN) << "connect_attachment_from_did: input not found for from_did: "
-                               << from_did;
-    return error::did_address_not_match;
+    log::debug(LOG_BLOCKCHAIN) << "connect_attachment_from_uid: input not found for from_uid: "
+                               << from_uid;
+    return error::uid_address_not_match;
 }
 
 code validate_transaction::check_transaction_connect_input(size_t last_height)
@@ -1290,11 +1290,11 @@ code validate_transaction::check_transaction() const
             return ret;
         }
 
-        if ((ret = check_token_mit_transaction()) != error::success) {
+        if ((ret = check_token_card_transaction()) != error::success) {
             return ret;
         }
 
-        if ((ret = check_did_transaction()) != error::success) {
+        if ((ret = check_uid_transaction()) != error::success) {
             return ret;
         }
 
@@ -1364,15 +1364,15 @@ code validate_transaction::check_transaction_basic() const
                 return error::token_symbol_invalid;
             }
         }
-        else if (output.is_did_register()) {
+        else if (output.is_uid_register()) {
             auto is_test = chain.chain_settings().use_testnet_rules;
-            if (!chain::output::is_valid_did_symbol(output.get_did_symbol(), !is_test)) {
-                return error::did_symbol_invalid;
+            if (!chain::output::is_valid_uid_symbol(output.get_uid_symbol(), !is_test)) {
+                return error::uid_symbol_invalid;
             }
         }
-        else if (output.is_token_mit_register()) {
-            if (!chain::output::is_valid_mit_symbol(output.get_token_symbol(), true)) {
-                return error::mit_symbol_invalid;
+        else if (output.is_token_card_register()) {
+            if (!chain::output::is_valid_card_symbol(output.get_token_symbol(), true)) {
+                return error::card_symbol_invalid;
             }
         }
 
@@ -1523,14 +1523,14 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
             return false;
         }
     }
-    else if (previous_output.is_token_mit()) {
-        if (!check_same(old_symbol_in_, previous_output.get_token_mit_symbol())) {
+    else if (previous_output.is_token_card()) {
+        if (!check_same(old_symbol_in_, previous_output.get_token_card_symbol())) {
             return false;
         }
     }
-    else if (previous_output.is_did()) {
-        // 1. do did symbol check
-        if (!check_same(old_symbol_in_, previous_output.get_did_symbol())) {
+    else if (previous_output.is_uid()) {
+        // 1. do uid symbol check
+        if (!check_same(old_symbol_in_, previous_output.get_uid_symbol())) {
             return false;
         }
     }
@@ -1557,7 +1557,7 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
 
 bool validate_transaction::check_special_fees(bool is_testnet, const chain::transaction& tx, uint64_t fee)
 {
-    // check fee of issue token or register did
+    // check fee of issue token or register uid
     auto developer_community_address = bc::get_developer_community_address(is_testnet);
     std::vector<uint64_t> ucn_vec;
     uint32_t special_fee_type = 0;
@@ -1575,7 +1575,7 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
             special_fee_type = 1;
             to_address = output.get_script_address();
         }
-        else if (output.is_did_register()) {
+        else if (output.is_uid_register()) {
             special_fee_type = 2;
             to_address = output.get_script_address();
         }
@@ -1595,13 +1595,13 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
 
             }
             else if (special_fee_type == 2) {
-                result = (total_fee >= bc::min_fee_to_register_did
+                result = (total_fee >= bc::min_fee_to_register_uid
                     && percentage_to_miner >= min_fee_percentage_to_miner);
             }
 
             if (!result) {
                 log::debug(LOG_BLOCKCHAIN) << "check fees failed: "
-                    << (special_fee_type == 1 ? "issue token" : "register did")
+                    << (special_fee_type == 1 ? "issue token" : "register uid")
                     << ", total_fee: " << std::to_string(total_fee)
                     << ", fee_percentage_to_miner: " << std::to_string(percentage_to_miner);
                 return false;
@@ -1616,9 +1616,9 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
                 }
             }
             else if (special_fee_type == 2) {
-                if (fee < bc::min_fee_to_register_did) {
-                    log::debug(LOG_BLOCKCHAIN) << "check fees failed: fee for registerring did less than "
-                        << std::to_string(bc::min_fee_to_register_did);
+                if (fee < bc::min_fee_to_register_uid) {
+                    log::debug(LOG_BLOCKCHAIN) << "check fees failed: fee for registerring uid less than "
+                        << std::to_string(bc::min_fee_to_register_uid);
                     return false;
                 }
             }
@@ -1771,16 +1771,16 @@ bool validate_transaction::check_token_certs(const transaction& tx) const
     return true;
 }
 
-bool validate_transaction::check_token_mit(const transaction& tx) const
+bool validate_transaction::check_token_card(const transaction& tx) const
 {
-    size_t num_mit = 0;
+    size_t num_card = 0;
     for (const auto& output : tx.outputs) {
-        if (output.is_token_mit_transfer()) {
-            if (++num_mit > 1) {
+        if (output.is_token_card_transfer()) {
+            if (++num_card > 1) {
                 return false;
             }
 
-            auto&& token_info = output.get_token_mit();
+            auto&& token_info = output.get_token_card();
             if (old_symbol_in_ != token_info.get_symbol()) {
                 return false;
             }
@@ -1790,14 +1790,14 @@ bool validate_transaction::check_token_mit(const transaction& tx) const
         }
     }
 
-    return (num_mit == 1);
+    return (num_card == 1);
 }
 
-bool validate_transaction::check_did_symbol_match(const transaction& tx) const
+bool validate_transaction::check_uid_symbol_match(const transaction& tx) const
 {
     for (const auto& output : tx.outputs) {
-        if (output.is_did()) {
-            if (old_symbol_in_ != output.get_did_symbol()) {
+        if (output.is_uid()) {
+            if (old_symbol_in_ != output.get_uid_symbol()) {
                 return false;
             }
         }

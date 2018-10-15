@@ -100,7 +100,7 @@ public:
         (
             "issuer,i",
             value<std::string>(&option_.issuer)->required(),
-            "Issue must be specified as a DID symbol."
+            "Issue must be specified as a UID symbol."
         )
         (
             "volume,v",

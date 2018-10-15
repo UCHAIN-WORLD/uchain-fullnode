@@ -145,7 +145,7 @@ void query_worker::query(zmq::socket& router)
             << "Failed to receive query from " << request.route().display()
             << " " << ec.message();
 
-        // Because the query did not parse this is likely to be misaddressed.
+        // Because the query uid not parse this is likely to be misaddressed.
         sender(message(request, ec));
         return;
     }

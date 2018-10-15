@@ -1,4 +1,5 @@
 /**
+ * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
  *
  * This file is part of UChain.
@@ -17,8 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_DATABASE_ADDRESS_MIT_DATABASE_HPP
-#define UC_DATABASE_ADDRESS_MIT_DATABASE_HPP
+#ifndef UC_DATABASE_ADDRESS_UID_DATABASE_HPP
+#define UC_DATABASE_ADDRESS_UID_DATABASE_HPP
 
 #include <memory>
 #include <boost/filesystem.hpp>
@@ -33,7 +34,7 @@ using namespace libbitcoin::chain;
 namespace libbitcoin {
 namespace database {
 
-struct BCD_API address_mit_statinfo
+struct BCD_API address_uid_statinfo
 {
     /// Number of buckets used in the hashtable.
     /// load factor = addrs / buckets
@@ -47,19 +48,19 @@ struct BCD_API address_mit_statinfo
 };
 
 /// This is a multimap where the key is the Bitcoin address hash,
-/// which returns several rows giving the address_mit for that address.
-class BCD_API address_mit_database
+/// which returns several rows giving the address_uid for that address.
+class BCD_API address_uid_database
 {
 public:
     /// Construct the database.
-    address_mit_database(const boost::filesystem::path& lookup_filename,
+    address_uid_database(const boost::filesystem::path& lookup_filename,
         const boost::filesystem::path& rows_filename,
         std::shared_ptr<shared_mutex> mutex=nullptr);
 
     /// Close the database (all threads must first be stopped).
-    ~address_mit_database();
+    ~address_uid_database();
 
-    /// Initialize a new address_mit database.
+    /// Initialize a new address_uid database.
     bool create();
 
     /// Call before using the database.
@@ -71,18 +72,24 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    /// Delete the last row that was added to key.
-    void delete_last_row(const short_hash& key);
-
-    /// Synchonise with disk.
-    void sync();
-
-    /// Return statistical info about the database.
-    address_mit_statinfo statinfo() const;
-
+    template <class BusinessDataType>
     void store_output(const short_hash& key, const output_point& outpoint,
-        uint32_t output_height, uint64_t value, uint16_t business_kd,
-        uint32_t timestamp, const token_mit& mit);
+        uint32_t output_height, uint64_t value, uint16_t business_kd, uint32_t timestamp, BusinessDataType& business_data)
+    {
+        //delete_last_row(key);
+        auto write = [&](memory_ptr data)
+        {
+            auto serial = make_serializer(REMAP_ADDRESS(data));
+            serial.write_byte(static_cast<uint8_t>(point_kind::output)); // 1
+            serial.write_data(outpoint.to_data()); // 36
+            serial.write_4_bytes_little_endian(output_height); // 4
+            serial.write_8_bytes_little_endian(value);  // 8
+            serial.write_2_bytes_little_endian(business_kd); // 2
+            serial.write_4_bytes_little_endian(timestamp); // 4
+            serial.write_data(business_data.to_data());
+        };
+        rows_multimap_.add_row(key, write);
+    }
 
     void store_input(const short_hash& key,
         const output_point& inpoint, uint32_t input_height,
@@ -97,13 +104,29 @@ public:
     business_history::list get_business_history(const short_hash& key,
             size_t from_height) const;
     business_history::list get_business_history(const std::string& address,
-        size_t from_height, uint8_t status) const;
+        size_t from_height, business_kind kind, uint8_t status) const;
     business_history::list get_business_history(const std::string& address,
-        size_t from_height, uint32_t time_begin, uint32_t time_end) const;
+        size_t from_height, business_kind kind, uint32_t time_begin, uint32_t time_end) const;
     std::shared_ptr<std::vector<business_history>> get_address_business_history(const std::string& address,
         size_t from_height) const;
-    business_address_mit::list get_mits(const std::string& address, size_t from_height,
-        token_mit::mit_status kind = token_mit::mit_status::mit_status_none) const;
+    business_address_uid::list get_uids(const std::string& address,
+        size_t from_height, business_kind kind) const;
+    business_address_uid::list get_uids(const std::string& address,
+        size_t from_height, size_t to_height = max_uint64) const;
+    business_address_message::list get_messages(const std::string& address,
+        size_t from_height) const;
+
+    //unbind the old uid with address
+    void delete_old_uid(const short_hash& key);
+
+    /// Delete the last row that was added to key.
+    void delete_last_row(const short_hash& key);
+
+    /// Synchonise with disk.
+    void sync();
+
+    /// Return statistical info about the database.
+    address_uid_statinfo statinfo() const;
 
 private:
     typedef record_hash_table<short_hash> record_map;
@@ -115,7 +138,7 @@ private:
     record_manager lookup_manager_;
     record_map lookup_map_;
 
-    /// List of address_mit rows.
+    /// List of address_uid rows.
     memory_map rows_file_;
     record_manager rows_manager_;
     record_list rows_list_;

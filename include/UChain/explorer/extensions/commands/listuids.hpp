@@ -30,23 +30,21 @@ namespace explorer {
 namespace commands {
 
 
-/************************ registerdid *************************/
+/************************ listuids *************************/
 
-class registerdid: public command_extension
+class listuids: public command_extension
 {
 public:
-    static const char* symbol(){ return "registerdid";}
+    static const char* symbol(){ return "listuids";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "registerdid "; }
+    const char* description() override { return "list UIDs in detail."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1)
-            .add("ADDRESS", 1)
-            .add("SYMBOL", 1);
+            .add("ACCOUNTAUTH", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -55,8 +53,6 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
-        load_input(argument_.address, "ADDRESS", variables, input, raw);
-        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -71,33 +67,23 @@ public:
         )
         (
             "ACCOUNTNAME",
-            value<std::string>(&auth_.name)->required(),
+            value<std::string>(&auth_.name),
             BX_ACCOUNT_NAME
         )
         (
             "ACCOUNTAUTH",
-            value<std::string>(&auth_.auth)->required(),
+            value<std::string>(&auth_.auth),
             BX_ACCOUNT_AUTH
         )
         (
-            "ADDRESS",
-            value<std::string>(&argument_.address)->required(),
-            "The address will be bound to, can change to other addresses later."
+            "limit,l",
+            value<uint64_t>(&argument_.limit)->default_value(100),
+            "UID count per page.Default is 100."
         )
         (
-            "SYMBOL",
-            value<std::string>(&argument_.symbol)->required(),
-            "The symbol of global unique UC Digital Identity Destination/Index, supports alphabets/numbers/(“@”, “.”, “_”, “-“), case-sensitive, maximum length is 64."
-        )
-        (
-            "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(100000000),
-            "The fee of tx. defaults to 1 ucn."
-        )
-        (
-            "percentage,p",
-            value<uint32_t>(&argument_.percentage)->default_value(20),
-            "Percentage of fee send to miner. minimum is 20."
+            "index,i",
+            value<uint64_t>(&argument_.index)->default_value(1),
+            "Page index. Default is 1."
         );
 
         return options;
@@ -112,10 +98,10 @@ public:
 
     struct argument
     {
-        std::string address;
-        std::string symbol;
-        uint64_t fee;
-        uint32_t percentage;
+        argument():limit(100), index(1)
+        {};
+        uint64_t limit;
+        uint64_t index;
     } argument_;
 
     struct option
@@ -123,6 +109,8 @@ public:
     } option_;
 
 };
+
+
 
 
 } // namespace commands

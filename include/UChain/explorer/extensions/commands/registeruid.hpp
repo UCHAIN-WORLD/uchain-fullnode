@@ -30,27 +30,33 @@ namespace explorer {
 namespace commands {
 
 
-/************************ getdid *************************/
+/************************ registeruid *************************/
 
-class getdid: public command_extension
+class registeruid: public command_extension
 {
 public:
-    static const char* symbol(){ return "getdid";}
+    static const char* symbol(){ return "registeruid";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "getdid "; }
+    const char* description() override { return "registeruid "; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("DidOrAddress", 1);
+            .add("ACCOUNTNAME", 1)
+            .add("ACCOUNTAUTH", 1)
+            .add("ADDRESS", 1)
+            .add("SYMBOL", 1);
     }
 
     void load_fallbacks (std::istream& input,
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(option_.symbol, "DidOrAddress", variables, input, raw);
+        load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
+        load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.address, "ADDRESS", variables, input, raw);
+        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -64,9 +70,34 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "DidOrAddress",
-            value<std::string>(&option_.symbol),
-            "Did symbol or standard address; If no input parameters, then display whole network DIDs."
+            "ACCOUNTNAME",
+            value<std::string>(&auth_.name)->required(),
+            BX_ACCOUNT_NAME
+        )
+        (
+            "ACCOUNTAUTH",
+            value<std::string>(&auth_.auth)->required(),
+            BX_ACCOUNT_AUTH
+        )
+        (
+            "ADDRESS",
+            value<std::string>(&argument_.address)->required(),
+            "The address will be bound to, can change to other addresses later."
+        )
+        (
+            "SYMBOL",
+            value<std::string>(&argument_.symbol)->required(),
+            "The symbol of global unique UC Digital Identity Destination/Index, supports alphabets/numbers/(“@”, “.”, “_”, “-“), case-sensitive, maximum length is 64."
+        )
+        (
+            "fee,f",
+            value<uint64_t>(&argument_.fee)->default_value(100000000),
+            "The fee of tx. defaults to 1 ucn."
+        )
+        (
+            "percentage,p",
+            value<uint32_t>(&argument_.percentage)->default_value(20),
+            "Percentage of fee send to miner. minimum is 20."
         );
 
         return options;
@@ -81,14 +112,18 @@ public:
 
     struct argument
     {
+        std::string address;
+        std::string symbol;
+        uint64_t fee;
+        uint32_t percentage;
     } argument_;
 
     struct option
     {
-        std::string symbol;
     } option_;
 
 };
+
 
 } // namespace commands
 } // namespace explorer

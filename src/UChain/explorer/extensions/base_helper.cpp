@@ -48,14 +48,14 @@ utxo_attach_type get_utxo_attach_type(const chain::output& output_)
     if (output.is_token_cert()) {
         return utxo_attach_type::token_cert;
     }
-    if (output.is_token_mit()) {
-        return utxo_attach_type::token_mit;
+    if (output.is_token_card()) {
+        return utxo_attach_type::token_card;
     }
-    if (output.is_did_register()) {
-        return utxo_attach_type::did_register;
+    if (output.is_uid_register()) {
+        return utxo_attach_type::uid_register;
     }
-    if (output.is_did_transfer()) {
-        return utxo_attach_type::did_transfer;
+    if (output.is_uid_transfer()) {
+        return utxo_attach_type::uid_transfer;
     }
     if (output.is_message()) {
         return utxo_attach_type::message;
@@ -67,15 +67,15 @@ utxo_attach_type get_utxo_attach_type(const chain::output& output_)
             + std::to_string(output.attach_data.get_type()));
 }
 
-void check_did_symbol(const std::string& symbol, bool check_sensitive)
+void check_uid_symbol(const std::string& symbol, bool check_sensitive)
 {
-    if (!chain::output::is_valid_did_symbol(symbol, check_sensitive)) {
-        throw did_symbol_name_exception{"Did symbol " + symbol + " is not valid."};
+    if (!chain::output::is_valid_uid_symbol(symbol, check_sensitive)) {
+        throw uid_symbol_name_exception{"Did symbol " + symbol + " is not valid."};
     }
 
     if (check_sensitive) {
         if (boost::iequals(symbol, "BLACKHOLE")) {
-            throw did_symbol_name_exception{"Did symbol cannot be blackhole."};
+            throw uid_symbol_name_exception{"Did symbol cannot be blackhole."};
         }
     }
 }
@@ -98,15 +98,15 @@ void check_token_symbol(const std::string& symbol, bool check_sensitive)
     }
 }
 
-void check_mit_symbol(const std::string& symbol, bool check_sensitive)
+void check_card_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (symbol.empty()) {
         throw token_symbol_length_exception{"Symbol cannot be empty."};
     }
 
-    if (symbol.length() > TOKEN_MIT_SYMBOL_FIX_SIZE) {
+    if (symbol.length() > TOKEN_CARD_SYMBOL_FIX_SIZE) {
         throw token_symbol_length_exception{"Symbol length must be less than "
-            + std::to_string(TOKEN_MIT_SYMBOL_FIX_SIZE) + "."};
+            + std::to_string(TOKEN_CARD_SYMBOL_FIX_SIZE) + "."};
     }
 
     // char check
@@ -124,52 +124,52 @@ void check_mit_symbol(const std::string& symbol, bool check_sensitive)
     }
 }
 
-std::string get_address(const std::string& did_or_address,
+std::string get_address(const std::string& uid_or_address,
     bc::blockchain::block_chain_impl& blockchain)
 {
     std::string address;
-    if (!did_or_address.empty()) {
-        if (blockchain.is_valid_address(did_or_address)) {
-            address = did_or_address;
+    if (!uid_or_address.empty()) {
+        if (blockchain.is_valid_address(uid_or_address)) {
+            address = uid_or_address;
         }
         else {
-            address = get_address_from_did(did_or_address, blockchain);
+            address = get_address_from_uid(uid_or_address, blockchain);
         }
     }
     return address;
 }
 
-std::string get_address(const std::string& did_or_address,
+std::string get_address(const std::string& uid_or_address,
     attachment& attach, bool is_from,
     bc::blockchain::block_chain_impl& blockchain)
 {
     std::string address;
-    if (blockchain.is_valid_address(did_or_address)) {
-        address = did_or_address;
+    if (blockchain.is_valid_address(uid_or_address)) {
+        address = uid_or_address;
     }
     else {
-        address = get_address_from_did(did_or_address, blockchain);
+        address = get_address_from_uid(uid_or_address, blockchain);
         if (is_from) {
-            attach.set_from_did(did_or_address);
+            attach.set_from_uid(uid_or_address);
         }
         else {
-            attach.set_to_did(did_or_address);
+            attach.set_to_uid(uid_or_address);
         }
-        attach.set_version(DID_ATTACH_VERIFY_VERSION);
+        attach.set_version(UID_ATTACH_VERIFY_VERSION);
     }
     return address;
 }
 
-std::string get_address_from_did(const std::string& did,
+std::string get_address_from_uid(const std::string& uid,
     bc::blockchain::block_chain_impl& blockchain)
 {
-    check_did_symbol(did);
+    check_uid_symbol(uid);
 
-    auto diddetail = blockchain.get_registered_did(did);
-    if (!diddetail) {
-        throw did_symbol_notfound_exception{"did " + did + " does not exist on the blockchain"};
+    auto uiddetail = blockchain.get_registered_uid(uid);
+    if (!uiddetail) {
+        throw uid_symbol_notfound_exception{"uid " + uid + " does not exist on the blockchain"};
     }
-    return diddetail->get_address();
+    return uiddetail->get_address();
 }
 
 std::string get_random_payment_address(
@@ -358,9 +358,9 @@ void sync_unspend_output(bc::blockchain::block_chain_impl& blockchain, const inp
     auto is_filter = [filter](const output & output_){
         if (((filter & base_transfer_common::FILTER_UCN) && output_.is_ucn())
         || ( (filter & base_transfer_common::FILTER_TOKEN) && output_.is_token())
-        || ( (filter & base_transfer_common::FILTER_IDENTIFIABLE_TOKEN) && output_.is_token_mit())
+        || ( (filter & base_transfer_common::FILTER_IDENTIFIABLE_TOKEN) && output_.is_token_card())
         || ( (filter & base_transfer_common::FILTER_TOKENCERT) && output_.is_token_cert())
-        || ( (filter & base_transfer_common::FILTER_DID) && output_.is_did())){
+        || ( (filter & base_transfer_common::FILTER_UID) && output_.is_uid())){
             return true;
         }
         return false;
@@ -719,7 +719,7 @@ bool base_transfer_common::get_spendable_output(
 }
 
 // only consider ucn and token and cert.
-// specify parameter 'did' to true to only consider did
+// specify parameter 'uid' to true to only consider uid
 void base_transfer_common::sync_fetchutxo(
         const std::string& prikey, const std::string& addr, filter filter)
 {
@@ -777,19 +777,19 @@ void base_transfer_common::sync_fetchutxo(
                 continue;
             }
         }
-        else if ((filter & FILTER_IDENTIFIABLE_TOKEN) && output.is_token_mit()) {
+        else if ((filter & FILTER_IDENTIFIABLE_TOKEN) && output.is_token_card()) {
             BITCOIN_ASSERT(ucn_amount == 0);
             BITCOIN_ASSERT(token_total_amount == 0);
             BITCOIN_ASSERT(cert_type == token_cert_ns::none);
 
-            if (payment_mit_ <= unspent_mit_) {
+            if (payment_card_ <= unspent_card_) {
                 continue;
             }
 
             if (symbol_ != output.get_token_symbol())
                 continue;
 
-            ++unspent_mit_;
+            ++unspent_card_;
         }
         else if ((filter & FILTER_TOKENCERT) && output.is_token_cert()) { // cert related
             BITCOIN_ASSERT(ucn_amount == 0);
@@ -819,20 +819,20 @@ void base_transfer_common::sync_fetchutxo(
                 continue;
             }
         }
-        else if ((filter & FILTER_DID) &&
-            (output.is_did_register() || output.is_did_transfer())) { // did related
+        else if ((filter & FILTER_UID) &&
+            (output.is_uid_register() || output.is_uid_transfer())) { // uid related
             BITCOIN_ASSERT(ucn_amount == 0);
             BITCOIN_ASSERT(token_total_amount == 0);
             BITCOIN_ASSERT(cert_type == token_cert_ns::none);
 
-            if (payment_did_ <= unspent_did_) {
+            if (payment_uid_ <= unspent_uid_) {
                 continue;
             }
 
-            if (symbol_ != output.get_did_symbol())
+            if (symbol_ != output.get_uid_symbol())
                 continue;
 
-            ++unspent_did_;
+            ++unspent_uid_;
         }
         else {
             continue;
@@ -927,16 +927,16 @@ void base_transfer_common::sum_payments()
             payment_token_cert_.push_back(iter.token_cert);
         }
 
-        if (iter.type == utxo_attach_type::token_mit_transfer) {
-            ++payment_mit_;
-            if (payment_mit_ > 1) {
+        if (iter.type == utxo_attach_type::token_card_transfer) {
+            ++payment_card_;
+            if (payment_card_ > 1) {
                 throw std::logic_error{"maximum one MIT can be transfered"};
             }
         }
-        else if (iter.type == utxo_attach_type::did_transfer) {
-            ++payment_did_;
-            if (payment_did_ > 1) {
-                throw std::logic_error{"maximum one DID can be transfered"};
+        else if (iter.type == utxo_attach_type::uid_transfer) {
+            ++payment_uid_;
+            if (payment_uid_ > 1) {
+                throw std::logic_error{"maximum one UID can be transfered"};
             }
         }
     }
@@ -964,14 +964,14 @@ bool base_transfer_common::is_payment_satisfied(filter filter) const
     if ((filter & FILTER_TOKEN) && (unspent_token_ < payment_token_))
         return false;
 
-    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_mit_ < payment_mit_))
+    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_card_ < payment_card_))
         return false;
 
     if ((filter & FILTER_TOKENCERT)
         && !token_cert::test_certs(unspent_token_cert_, payment_token_cert_))
         return false;
 
-    if ((filter & FILTER_DID) && (unspent_did_ < payment_did_))
+    if ((filter & FILTER_UID) && (unspent_uid_ < payment_uid_))
         return false;
 
     return true;
@@ -989,9 +989,9 @@ void base_transfer_common::check_payment_satisfied(filter filter) const
             + std::to_string(unspent_token_) + ", payment = " + std::to_string(payment_token_)};
     }
 
-    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_mit_ < payment_mit_)) {
+    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_card_ < payment_card_)) {
         throw token_lack_exception{"not enough MIT amount, unspent = "
-            + std::to_string(unspent_mit_) + ", payment = " + std::to_string(payment_mit_)};
+            + std::to_string(unspent_card_) + ", payment = " + std::to_string(payment_card_)};
     }
 
     if ((filter & FILTER_TOKENCERT)
@@ -1011,8 +1011,8 @@ void base_transfer_common::check_payment_satisfied(filter filter) const
             + unspent + "), payment = (" + payment + ")"};
     }
 
-    if ((filter & FILTER_DID) && (unspent_did_ < payment_did_)) {
-        throw tx_source_exception{"no did named " + symbol_ + " is found"};
+    if ((filter & FILTER_UID) && (unspent_uid_ < payment_uid_)) {
+        throw tx_source_exception{"no uid named " + symbol_ + " is found"};
     }
 }
 
@@ -1071,22 +1071,22 @@ void base_transfer_common::populate_ucn_change(const std::string& address)
                 {addr, "", unspent_ucn_ - payment_ucn_, 0, utxo_attach_type::ucn, attachment()});
         }
         else {
-            if (addr.length() > DID_DETAIL_SYMBOL_FIX_SIZE) {
-                throw did_symbol_length_exception{
-                    "mychange did symbol " + addr + " length must be less than 64."};
+            if (addr.length() > UID_DETAIL_SYMBOL_FIX_SIZE) {
+                throw uid_symbol_length_exception{
+                    "mychange uid symbol " + addr + " length must be less than 64."};
             }
 
-            auto diddetail = blockchain_.get_registered_did(addr);
-            if (!diddetail) {
-                throw did_symbol_notfound_exception{
-                    "mychange did symbol " + addr + "does not exist on the blockchain"};
+            auto uiddetail = blockchain_.get_registered_uid(addr);
+            if (!uiddetail) {
+                throw uid_symbol_notfound_exception{
+                    "mychange uid symbol " + addr + "does not exist on the blockchain"};
             }
 
             attachment attach;
-            attach.set_version(DID_ATTACH_VERIFY_VERSION);
-            attach.set_to_did(addr);
+            attach.set_version(UID_ATTACH_VERIFY_VERSION);
+            attach.set_to_uid(addr);
             receiver_list_.push_back(
-                {diddetail->get_address(), "", unspent_ucn_ - payment_ucn_, 0, utxo_attach_type::ucn, attach});
+                {uiddetail->get_address(), "", unspent_ucn_ - payment_ucn_, 0, utxo_attach_type::ucn, attach});
         }
     }
 }
@@ -1106,21 +1106,21 @@ void base_transfer_common::populate_token_change(const std::string& address)
                 utxo_attach_type::token_transfer, attachment()});
         }
         else {
-            if (addr.length() > DID_DETAIL_SYMBOL_FIX_SIZE) {
-                throw did_symbol_length_exception{
-                    "mychange did symbol " + addr + " length must be less than 64."};
+            if (addr.length() > UID_DETAIL_SYMBOL_FIX_SIZE) {
+                throw uid_symbol_length_exception{
+                    "mychange uid symbol " + addr + " length must be less than 64."};
             }
 
-            auto diddetail = blockchain_.get_registered_did(addr);
-            if (!diddetail) {
-                throw did_symbol_notfound_exception{
-                    "mychange did symbol " + addr + "does not exist on the blockchain"};
+            auto uiddetail = blockchain_.get_registered_uid(addr);
+            if (!uiddetail) {
+                throw uid_symbol_notfound_exception{
+                    "mychange uid symbol " + addr + "does not exist on the blockchain"};
             }
 
             attachment attach;
-            attach.set_version(DID_ATTACH_VERIFY_VERSION);
-            attach.set_to_did(addr);
-            receiver_list_.push_back({diddetail->get_address(), symbol_, 0, unspent_token_ - payment_token_,
+            attach.set_version(UID_ATTACH_VERIFY_VERSION);
+            attach.set_to_uid(addr);
+            receiver_list_.push_back({uiddetail->get_address(), symbol_, 0, unspent_token_ - payment_token_,
                 utxo_attach_type::token_transfer, attach});
         }
     }
@@ -1203,7 +1203,7 @@ void base_transfer_common::populate_tx_outputs()
 
         // generate token info
         auto&& output_att = populate_output_attachment(iter);
-        set_did_verify_attachment(iter, output_att);
+        set_uid_verify_attachment(iter, output_att);
 
         if (!output_att.is_valid()) {
             throw tx_validate_exception{"validate transaction failure, invalid output attachment."};
@@ -1234,12 +1234,12 @@ void base_transfer_common::populate_tx_inputs()
     }
 }
 
-void base_transfer_common::set_did_verify_attachment(const receiver_record& record, attachment& attach)
+void base_transfer_common::set_uid_verify_attachment(const receiver_record& record, attachment& attach)
 {
-    if (record.attach_elem.get_version() == DID_ATTACH_VERIFY_VERSION) {
-        attach.set_version(DID_ATTACH_VERIFY_VERSION);
-        attach.set_to_did(record.attach_elem.get_to_did());
-        attach.set_from_did(record.attach_elem.get_from_did());
+    if (record.attach_elem.get_version() == UID_ATTACH_VERIFY_VERSION) {
+        attach.set_version(UID_ATTACH_VERIFY_VERSION);
+        attach.set_to_uid(record.attach_elem.get_to_uid());
+        attach.set_from_uid(record.attach_elem.get_from_uid());
     }
 }
 
@@ -1275,25 +1275,25 @@ attachment base_transfer_common::populate_output_attachment(const receiver_recor
         }
         return attachment(MESSAGE_TYPE, attach_version, msg);
     }
-    else if (record.type == utxo_attach_type::did_register) {
-        did_detail diddetail(symbol_, record.target);
-        auto ass = did(DID_DETAIL_TYPE, diddetail);
+    else if (record.type == utxo_attach_type::uid_register) {
+        uid_detail uiddetail(symbol_, record.target);
+        auto ass = uid(UID_DETAIL_TYPE, uiddetail);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid did register attachment"};
+            throw tx_attachment_value_exception{"invalid uid register attachment"};
         }
-        return attachment(DID_TYPE, attach_version, ass);
+        return attachment(UID_TYPE, attach_version, ass);
     }
-    else if (record.type == utxo_attach_type::did_transfer) {
-        auto sh_did = blockchain_.get_registered_did(symbol_);
-        if(!sh_did)
-            throw did_symbol_notfound_exception{symbol_ + " not found"};
+    else if (record.type == utxo_attach_type::uid_transfer) {
+        auto sh_uid = blockchain_.get_registered_uid(symbol_);
+        if(!sh_uid)
+            throw uid_symbol_notfound_exception{symbol_ + " not found"};
 
-        sh_did->set_address(record.target);
-        auto ass = did(DID_TRANSFERABLE_TYPE, *sh_did);
+        sh_uid->set_address(record.target);
+        auto ass = uid(UID_TRANSFERABLE_TYPE, *sh_uid);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid did transfer attachment"};
+            throw tx_attachment_value_exception{"invalid uid transfer attachment"};
         }
-        return attachment(DID_TYPE, attach_version, ass);
+        return attachment(UID_TYPE, attach_version, ass);
     }
     else if (record.type == utxo_attach_type::token_cert
         || record.type == utxo_attach_type::token_cert_autoissue
@@ -1303,13 +1303,13 @@ attachment base_transfer_common::populate_output_attachment(const receiver_recor
             throw token_cert_exception("token cert is none");
         }
 
-        auto to_did = record.attach_elem.get_to_did();
-        auto to_address = get_address_from_did(to_did, blockchain_);
+        auto to_uid = record.attach_elem.get_to_uid();
+        auto to_address = get_address_from_uid(to_uid, blockchain_);
         if (to_address != record.target) {
-            throw token_cert_exception("address " + to_address + " dismatch did " + to_did);
+            throw token_cert_exception("address " + to_address + " dismatch uid " + to_uid);
         }
 
-        auto cert_info = chain::token_cert(record.symbol, to_did, to_address, record.token_cert);
+        auto cert_info = chain::token_cert(record.symbol, to_uid, to_address, record.token_cert);
         if (record.type == utxo_attach_type::token_cert_issue) {
             cert_info.set_status(TOKEN_CERT_ISSUE_TYPE);
         }
@@ -1325,9 +1325,9 @@ attachment base_transfer_common::populate_output_attachment(const receiver_recor
         }
         return attachment(TOKEN_CERT_TYPE, attach_version, cert_info);
     }
-    else if (record.type == utxo_attach_type::token_mit
-        || record.type == utxo_attach_type::token_mit_transfer) {
-        return attachment(TOKEN_MIT_TYPE, attach_version, token_mit(/*set on subclass*/));
+    else if (record.type == utxo_attach_type::token_card
+        || record.type == utxo_attach_type::token_card_transfer) {
+        return attachment(TOKEN_CARD_TYPE, attach_version, token_card(/*set on subclass*/));
     }
 
     throw tx_attachment_value_exception{
@@ -1764,8 +1764,8 @@ void issuing_token::sum_payment_amount()
     uint64_t amount = (uint64_t)std::floor(payment_ucn_ * ((100 - fee_percentage_to_miner_) / 100.0));
     if (amount > 0) {
         auto&& address = bc::get_developer_community_address(blockchain_.chain_settings().use_testnet_rules);
-        auto&& did = blockchain_.get_did_from_address(address);
-        receiver_list_.push_back({address, "", amount, 0, utxo_attach_type::ucn, attachment("", did)});
+        auto&& uid = blockchain_.get_uid_from_address(address);
+        receiver_list_.push_back({address, "", amount, 0, utxo_attach_type::ucn, attachment("", uid)});
     }
 }
 
@@ -1898,7 +1898,7 @@ attachment secondary_issuing_token::populate_output_attachment(const receiver_re
         token_detail.set_address(record.target);
         token_detail.set_token_secondaryissue();
         token_detail.set_maximum_supply(volume_);
-        token_detail.set_issuer(record.attach_elem.get_to_did());
+        token_detail.set_issuer(record.attach_elem.get_to_uid());
         auto ass = token(TOKEN_DETAIL_TYPE, token_detail);
         if (!ass.is_valid()) {
             throw tx_attachment_value_exception{"invalid token secondary issue attachment"};
@@ -1927,13 +1927,13 @@ void issuing_token_cert::sum_payment_amount()
     }
 }
 
-void registering_did::sum_payment_amount()
+void registering_uid::sum_payment_amount()
 {
     base_transfer_common::sum_payment_amount();
 
-    uint64_t min_fee = bc::min_fee_to_register_did;
+    uint64_t min_fee = bc::min_fee_to_register_uid;
     if (payment_ucn_ < min_fee) {
-        throw did_register_poundage_exception("fee must at least "
+        throw uid_register_poundage_exception("fee must at least "
             + std::to_string(min_fee) + " satoshi == "
             + std::to_string(min_fee/100000000) + " ucn");
     }
@@ -1941,12 +1941,12 @@ void registering_did::sum_payment_amount()
     uint64_t amount = (uint64_t)std::floor(payment_ucn_ * ((100 - fee_percentage_to_miner_) / 100.0));
     if (amount > 0) {
         auto&& address = bc::get_developer_community_address(blockchain_.chain_settings().use_testnet_rules);
-        auto&& did = blockchain_.get_did_from_address(address);
-        receiver_list_.push_back({address, "", amount, 0, utxo_attach_type::ucn, attachment("", did)});
+        auto&& uid = blockchain_.get_uid_from_address(address);
+        receiver_list_.push_back({address, "", amount, 0, utxo_attach_type::ucn, attachment("", uid)});
     }
 }
 
-std::string sending_multisig_did::get_sign_tx_multisig_script(const address_token_record& from) const
+std::string sending_multisig_uid::get_sign_tx_multisig_script(const address_token_record& from) const
 {
     std::string multisig_script;
     if (from.addr == multisig_from_.get_address()) {
@@ -1959,7 +1959,7 @@ std::string sending_multisig_did::get_sign_tx_multisig_script(const address_toke
     return multisig_script;
 }
 
-void sending_multisig_did::sum_payment_amount()
+void sending_multisig_uid::sum_payment_amount()
 {
     base_transfer_common::sum_payment_amount();
     if (fromfee.empty()) {
@@ -1967,13 +1967,13 @@ void sending_multisig_did::sum_payment_amount()
     }
 }
 
-void sending_multisig_did::populate_change()
+void sending_multisig_uid::populate_change()
 {
     // ucn utxo
     populate_ucn_change(fromfee);
 }
 
-void sending_multisig_did::populate_unspent_list()
+void sending_multisig_uid::populate_unspent_list()
 {
     // get address list
     auto pvaddr = blockchain_.get_account_addresses(name_);
@@ -1991,9 +1991,9 @@ void sending_multisig_did::populate_unspent_list()
         }
 
         if (from_ == each.get_address()) {
-            // pay did
-            sync_fetchutxo(each.get_prv_key(passwd_), each.get_address(), FILTER_DID);
-            check_payment_satisfied(FILTER_DID);
+            // pay uid
+            sync_fetchutxo(each.get_prv_key(passwd_), each.get_address(), FILTER_UID);
+            check_payment_satisfied(FILTER_UID);
         }
 
         if (is_payment_satisfied()) {
@@ -2011,7 +2011,7 @@ void sending_multisig_did::populate_unspent_list()
     populate_change();
 }
 
-void sending_did::sum_payment_amount()
+void sending_uid::sum_payment_amount()
 {
     base_transfer_common::sum_payment_amount();
     if (fromfee.empty()) {
@@ -2019,13 +2019,13 @@ void sending_did::sum_payment_amount()
     }
 }
 
-void sending_did::populate_change()
+void sending_uid::populate_change()
 {
     // ucn utxo
     populate_ucn_change(fromfee);
 }
 
-void sending_did::populate_unspent_list()
+void sending_uid::populate_unspent_list()
 {
     // get address list
     auto pvaddr = blockchain_.get_account_addresses(name_);
@@ -2046,9 +2046,9 @@ void sending_did::populate_unspent_list()
         }
 
         if (from_ == each.get_address()) {
-            // pay did
-            sync_fetchutxo(each.get_prv_key(passwd_), each.get_address(), FILTER_DID);
-            check_payment_satisfied(FILTER_DID);
+            // pay uid
+            sync_fetchutxo(each.get_prv_key(passwd_), each.get_address(), FILTER_UID);
+            check_payment_satisfied(FILTER_UID);
         }
 
         if (is_payment_satisfied()) {
@@ -2066,18 +2066,18 @@ void sending_did::populate_unspent_list()
     populate_change();
 }
 
-attachment registering_mit::populate_output_attachment(const receiver_record& record)
+attachment registering_card::populate_output_attachment(const receiver_record& record)
 {
     auto&& attach = base_transfer_common::populate_output_attachment(record);
 
-    if (record.type == utxo_attach_type::token_mit) {
-        auto iter = mit_map_.find(record.symbol);
-        if (iter == mit_map_.end()) {
+    if (record.type == utxo_attach_type::token_card) {
+        auto iter = card_map_.find(record.symbol);
+        if (iter == card_map_.end()) {
             throw tx_attachment_value_exception{"invalid MIT issue attachment"};
         }
 
-        auto ass = token_mit(record.symbol, record.target, iter->second);
-        ass.set_status(MIT_STATUS_REGISTER);
+        auto ass = token_card(record.symbol, record.target, iter->second);
+        ass.set_status(CARD_STATUS_REGISTER);
         if (!ass.is_valid()) {
             throw tx_attachment_value_exception{"invalid MIT issue attachment"};
         }
@@ -2088,13 +2088,13 @@ attachment registering_mit::populate_output_attachment(const receiver_record& re
     return attach;
 }
 
-attachment transferring_mit::populate_output_attachment(const receiver_record& record)
+attachment transferring_card::populate_output_attachment(const receiver_record& record)
 {
     auto&& attach = base_transfer_common::populate_output_attachment(record);
 
-    if (record.type == utxo_attach_type::token_mit_transfer) {
-        auto ass = token_mit(record.symbol, record.target, "");
-        ass.set_status(MIT_STATUS_TRANSFER);
+    if (record.type == utxo_attach_type::token_card_transfer) {
+        auto ass = token_card(record.symbol, record.target, "");
+        ass.set_status(CARD_STATUS_TRANSFER);
         if (!ass.is_valid()) {
             throw tx_attachment_value_exception{"invalid MIT transfer attachment"};
         }

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/database/databases/address_mit_database.hpp>
+#include <UChain/database/databases/address_card_database.hpp>
 
 #include <cstdint>
 #include <cstddef>
@@ -28,7 +28,7 @@
 #include <UChain/database/primitives/record_multimap_iterable.hpp>
 #include <UChain/database/primitives/record_multimap_iterator.hpp>
 
-#define  LOG_ADDRESS_MIT_DATABASE  "address_mit_database"
+#define  LOG_ADDRESS_CARD_DATABASE  "address_card_database"
 
 namespace libbitcoin {
 namespace database {
@@ -42,10 +42,10 @@ BC_CONSTEXPR size_t initial_lookup_file_size = header_size + minimum_records_siz
 
 BC_CONSTEXPR size_t record_size = hash_table_multimap_record_size<short_hash>();
 
-BC_CONSTEXPR size_t mit_transfer_record_size = 1 + 36 + 4 + 8 + 2 + 4 + TOKEN_MIT_TRANSFER_FIX_SIZE;
-BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(mit_transfer_record_size);
+BC_CONSTEXPR size_t card_transfer_record_size = 1 + 36 + 4 + 8 + 2 + 4 + TOKEN_CARD_TRANSFER_FIX_SIZE;
+BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(card_transfer_record_size);
 
-address_mit_database::address_mit_database(const path& lookup_filename,
+address_card_database::address_card_database(const path& lookup_filename,
     const path& rows_filename, std::shared_ptr<shared_mutex> mutex)
   : lookup_file_(lookup_filename, mutex),
     lookup_header_(lookup_file_, number_buckets),
@@ -59,7 +59,7 @@ address_mit_database::address_mit_database(const path& lookup_filename,
 }
 
 // Close does not call stop because there is no way to detect thread join.
-address_mit_database::~address_mit_database()
+address_card_database::~address_card_database()
 {
     close();
 }
@@ -68,7 +68,7 @@ address_mit_database::~address_mit_database()
 // ----------------------------------------------------------------------------
 
 // Initialize files and start.
-bool address_mit_database::create()
+bool address_card_database::create()
 {
     // Resize and create require a started file.
     if (!lookup_file_.start() ||
@@ -94,7 +94,7 @@ bool address_mit_database::create()
 // Startup and shutdown.
 // ----------------------------------------------------------------------------
 
-bool address_mit_database::start()
+bool address_card_database::start()
 {
     return
         lookup_file_.start() &&
@@ -104,27 +104,27 @@ bool address_mit_database::start()
         rows_manager_.start();
 }
 
-bool address_mit_database::stop()
+bool address_card_database::stop()
 {
     return
         lookup_file_.stop() &&
         rows_file_.stop();
 }
 
-bool address_mit_database::close()
+bool address_card_database::close()
 {
     return
         lookup_file_.close() &&
         rows_file_.close();
 }
 
-void address_mit_database::sync()
+void address_card_database::sync()
 {
     lookup_manager_.sync();
     rows_manager_.sync();
 }
 
-address_mit_statinfo address_mit_database::statinfo() const
+address_card_statinfo address_card_database::statinfo() const
 {
     return
     {
@@ -135,10 +135,10 @@ address_mit_statinfo address_mit_database::statinfo() const
 }
 
 // ----------------------------------------------------------------------------
-void address_mit_database::store_output(const short_hash& key,
+void address_card_database::store_output(const short_hash& key,
     const output_point& outpoint, uint32_t output_height,
     uint64_t value, uint16_t business_kd,
-    uint32_t timestamp, const token_mit& mit)
+    uint32_t timestamp, const token_card& mit)
 {
     auto write = [&](memory_ptr data)
     {
@@ -154,7 +154,7 @@ void address_mit_database::store_output(const short_hash& key,
     rows_multimap_.add_row(key, write);
 }
 
-void address_mit_database::store_input(const short_hash& key,
+void address_card_database::store_input(const short_hash& key,
     const output_point& inpoint, uint32_t input_height,
     const input_point& previous, uint32_t timestamp)
 {
@@ -173,13 +173,13 @@ void address_mit_database::store_input(const short_hash& key,
     rows_multimap_.add_row(key, write);
 }
 
-void address_mit_database::delete_last_row(const short_hash& key)
+void address_card_database::delete_last_row(const short_hash& key)
 {
     rows_multimap_.delete_last_row(key);
 }
 
 /// get all record of key from database
-business_record::list address_mit_database::get(const short_hash& key,
+business_record::list address_card_database::get(const short_hash& key,
     size_t from_height, size_t limit) const
 {
     // Read the height value from the row.
@@ -240,7 +240,7 @@ business_record::list address_mit_database::get(const short_hash& key,
     return result;
 }
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_mit_database::get(const std::string& address, const std::string& symbol,
+std::shared_ptr<std::vector<business_record>> address_card_database::get(const std::string& address, const std::string& symbol,
     size_t start_height, size_t end_height, uint64_t limit, uint64_t page_number) const
 {
     data_chunk addr_data(address.begin(), address.end());
@@ -296,7 +296,7 @@ std::shared_ptr<std::vector<business_record>> address_mit_database::get(const st
         const auto record = rows_list_.get(index);
         const auto address = REMAP_ADDRESS(record);
         auto height = read_height(address);
-        std::string mit_symbol;
+        std::string card_symbol;
 
         // Skip rows below from_height.
         if (((start_height == 0)&&(end_height == 0))
@@ -310,10 +310,10 @@ std::shared_ptr<std::vector<business_record>> address_mit_database::get(const st
                 result->emplace_back(row);
             } else { // mit symbol utxo
                 // mit business process
-                auto transfer = boost::get<token_mit>(row.data.get_data());
-                mit_symbol = transfer.get_symbol();
+                auto transfer = boost::get<token_card>(row.data.get_data());
+                card_symbol = transfer.get_symbol();
 
-                if (symbol == mit_symbol) {
+                if (symbol == card_symbol) {
                     cnt++;
                     if((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
                         continue; // skip previous page record
@@ -328,7 +328,7 @@ std::shared_ptr<std::vector<business_record>> address_mit_database::get(const st
 }
 
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_mit_database::get(const std::string& address, size_t start_height,
+std::shared_ptr<std::vector<business_record>> address_card_database::get(const std::string& address, size_t start_height,
     size_t end_height) const
 {
     data_chunk addr_data(address.begin(), address.end());
@@ -391,7 +391,7 @@ std::shared_ptr<std::vector<business_record>> address_mit_database::get(const st
 
 
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_mit_database::get(size_t idx) const
+std::shared_ptr<std::vector<business_record>> address_card_database::get(size_t idx) const
 {
     // Read a row from the data for the history list.
     const auto read_row = [](uint8_t* data)
@@ -440,7 +440,7 @@ std::shared_ptr<std::vector<business_record>> address_mit_database::get(size_t i
     return result;
 }
 /// get one record by index from row_list
-business_record address_mit_database::get_record(size_t idx) const
+business_record address_card_database::get_record(size_t idx) const
 {
     // Read a row from the data for the history list.
     const auto read_row = [](uint8_t* data)
@@ -474,7 +474,7 @@ business_record address_mit_database::get_record(size_t idx) const
     const auto address = REMAP_ADDRESS(record);
     return read_row(address);
 }
-business_history::list address_mit_database::get_business_history(const short_hash& key,
+business_history::list address_card_database::get_business_history(const short_hash& key,
         size_t from_height) const
 {
     business_record::list compact = get(key, from_height, 0);
@@ -545,7 +545,7 @@ business_history::list address_mit_database::get_business_history(const short_ha
 }
 
 // get address mits in the database(blockchain)
-std::shared_ptr<std::vector<business_history>> address_mit_database::get_address_business_history(const std::string& address,
+std::shared_ptr<std::vector<business_history>> address_card_database::get_address_business_history(const std::string& address,
     size_t from_height) const
 {
     data_chunk data(address.begin(), address.end());
@@ -575,7 +575,7 @@ std::shared_ptr<std::vector<business_history>> address_mit_database::get_address
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
-business_history::list address_mit_database::get_business_history(const std::string& address,
+business_history::list address_card_database::get_business_history(const std::string& address,
     size_t from_height, uint8_t status) const
 {
     data_chunk data(address.begin(), address.end());
@@ -597,7 +597,7 @@ business_history::list address_mit_database::get_business_history(const std::str
 }
 
 // get special kind of mit in the database(blockchain)
-business_history::list address_mit_database::get_business_history(const std::string& address,
+business_history::list address_card_database::get_business_history(const std::string& address,
     size_t from_height, uint32_t time_begin, uint32_t time_end) const
 {
     data_chunk data(address.begin(), address.end());
@@ -628,13 +628,13 @@ business_history::list address_mit_database::get_business_history(const std::str
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
-business_address_mit::list address_mit_database::get_mits(const std::string& address,
-    size_t from_height, token_mit::mit_status kind) const
+business_address_card::list address_card_database::get_cards(const std::string& address,
+    size_t from_height, token_card::card_status kind) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
-    business_address_mit::list unspent;
+    business_address_card::list unspent;
 
     for (const auto& row: result)
     {
@@ -649,13 +649,13 @@ business_address_mit::list address_mit_database::get_mits(const std::string& add
         if (status == business_status::unknown)
             continue;
 
-        auto mit = boost::get<token_mit>(row.data.get_data());
-        if ((kind != token_mit::mit_status::mit_status_none)
-            && (kind != (token_mit::mit_status)mit.get_status())) {
+        auto mit = boost::get<token_card>(row.data.get_data());
+        if ((kind != token_card::card_status::card_status_none)
+            && (kind != (token_card::card_status)mit.get_status())) {
             continue;
         }
 
-        business_address_mit detail;
+        business_address_card detail;
         detail.mit = mit;
         detail.address = address; // account address
         detail.status = status; // 0 -- unspent  1 -- confirmed

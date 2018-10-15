@@ -1466,36 +1466,36 @@ bool block_chain_impl::is_token_cert_exist(const std::string& symbol, token_cert
     return database_.certs.get(key) != nullptr;
 }
 
-bool block_chain_impl::is_token_mit_exist(const std::string& symbol)
+bool block_chain_impl::is_token_card_exist(const std::string& symbol)
 {
-    return get_registered_mit(symbol) != nullptr;
+    return get_registered_card(symbol) != nullptr;
 }
 
-std::shared_ptr<token_mit_info> block_chain_impl::get_registered_mit(const std::string& symbol)
+std::shared_ptr<token_card_info> block_chain_impl::get_registered_card(const std::string& symbol)
 {
     BITCOIN_ASSERT(!symbol.empty());
-    // return the registered identifiable token, its status must be MIT_STATUS_REGISTER
+    // return the registered identifiable token, its status must be CARD_STATUS_REGISTER
     return database_.mits.get(get_hash(symbol));
 }
 
-std::shared_ptr<token_mit_info::list> block_chain_impl::get_registered_mits()
+std::shared_ptr<token_card_info::list> block_chain_impl::get_registered_cards()
 {
-    // return the registered identifiable tokens, their status must be MIT_STATUS_REGISTER
-    return database_.mits.get_blockchain_mits();
+    // return the registered identifiable tokens, their status must be CARD_STATUS_REGISTER
+    return database_.mits.get_blockchain_cards();
 }
 
-std::shared_ptr<token_mit_info::list> block_chain_impl::get_mit_history(
+std::shared_ptr<token_card_info::list> block_chain_impl::get_card_history(
     const std::string& symbol, uint64_t limit, uint64_t page_number)
 {
     BITCOIN_ASSERT(!symbol.empty());
-    // return the identifiable tokens of specified symbol, the last item's status must be MIT_STATUS_REGISTER
-    return database_.mit_history.get_history_mits_by_height(get_short_hash(symbol), 0, 0, limit, page_number);
+    // return the identifiable tokens of specified symbol, the last item's status must be CARD_STATUS_REGISTER
+    return database_.card_history.get_history_cards_by_height(get_short_hash(symbol), 0, 0, limit, page_number);
 }
 
-std::shared_ptr<token_mit::list> block_chain_impl::get_account_mits(
+std::shared_ptr<token_card::list> block_chain_impl::get_account_cards(
     const std::string& account, const std::string& symbol)
 {
-    auto sp_vec = std::make_shared<token_mit::list>();
+    auto sp_vec = std::make_shared<token_card::list>();
 
     auto pvaddr = get_account_addresses(account);
     if (!pvaddr)
@@ -1515,8 +1515,8 @@ std::shared_ptr<token_mit::list> block_chain_impl::get_account_mits(
             {
                 BITCOIN_ASSERT(row.output.index < tx_temp.outputs.size());
                 const auto& output = tx_temp.outputs.at(row.output.index);
-                if (output.is_token_mit()) {
-                    auto&& token = output.get_token_mit();
+                if (output.is_token_card()) {
+                    auto&& token = output.get_token_card();
                     if (symbol.empty()) {
                         sp_vec->emplace_back(std::move(token));
                     }
@@ -1869,32 +1869,32 @@ std::shared_ptr<blockchain_token::list> block_chain_impl::get_token_register_out
 
 
 
-/* check did symbol exist or not
+/* check uid symbol exist or not
 */
-bool block_chain_impl::is_did_exist(const std::string& did_name)
+bool block_chain_impl::is_uid_exist(const std::string& uid_name)
 {
     // find from blockchain database
-    return get_registered_did(did_name) != nullptr;
+    return get_registered_uid(uid_name) != nullptr;
 }
 
-/* check did address exist or not
+/* check uid address exist or not
 */
-bool block_chain_impl::is_address_registered_did(const std::string& did_address, uint64_t fork_index)
+bool block_chain_impl::is_address_registered_uid(const std::string& uid_address, uint64_t fork_index)
 {
-    return !get_did_from_address(did_address, fork_index).empty();
+    return !get_uid_from_address(uid_address, fork_index).empty();
 }
 
-bool block_chain_impl::is_account_owned_did(const std::string& account, const std::string& symbol)
+bool block_chain_impl::is_account_owned_uid(const std::string& account, const std::string& symbol)
 {
-    auto did_detail = get_registered_did(symbol);
-    if (!did_detail) {
+    auto uid_detail = get_registered_uid(symbol);
+    if (!uid_detail) {
         return false;
     }
 
     auto pvaddr = get_account_addresses(account);
     if (pvaddr) {
-        const auto match = [&did_detail](const account_address& item) {
-            return item.get_address() == did_detail->get_address();
+        const auto match = [&uid_detail](const account_address& item) {
+            return item.get_address() == uid_detail->get_address();
         };
         auto iter = std::find_if(pvaddr->begin(), pvaddr->end(), match);
         return iter != pvaddr->end();
@@ -1903,87 +1903,87 @@ bool block_chain_impl::is_account_owned_did(const std::string& account, const st
     return false;
 }
 
-std::shared_ptr<did_detail::list> block_chain_impl::get_account_dids(const std::string& account)
+std::shared_ptr<uid_detail::list> block_chain_impl::get_account_uids(const std::string& account)
 {
-    auto sh_vec = std::make_shared<did_detail::list>();
+    auto sh_vec = std::make_shared<uid_detail::list>();
     auto pvaddr = get_account_addresses(account);
     if (pvaddr) {
         for (const auto& account_address : *pvaddr) {
-            auto did_address = account_address.get_address();
-            auto did_symbol = get_did_from_address(did_address);
-            if (!did_symbol.empty()) {
-                sh_vec->emplace_back(did_detail(did_symbol, did_address));
+            auto uid_address = account_address.get_address();
+            auto uid_symbol = get_uid_from_address(uid_address);
+            if (!uid_symbol.empty()) {
+                sh_vec->emplace_back(uid_detail(uid_symbol, uid_address));
             }
         }
     }
 
     return sh_vec;
 }
-/* find did by address
+/* find uid by address
 */
-std::string block_chain_impl::get_did_from_address(const std::string& did_address, uint64_t fork_index)
+std::string block_chain_impl::get_uid_from_address(const std::string& uid_address, uint64_t fork_index)
 {
-    //search from address_did_database first
-    business_address_did::list did_vec = database_.address_dids.get_dids(did_address, 0, fork_index);
+    //search from address_uid_database first
+    business_address_uid::list uid_vec = database_.address_uids.get_uids(uid_address, 0, fork_index);
 
-    std::string  did_symbol= "";
-    if(!did_vec.empty())
-        did_symbol = did_vec[0].detail.get_symbol();
+    std::string  uid_symbol= "";
+    if(!uid_vec.empty())
+        uid_symbol = uid_vec[0].detail.get_symbol();
 
-    if(did_symbol != "")
+    if(uid_symbol != "")
     {
         //double check
-        std::shared_ptr<blockchain_did::list>  blockchain_didlist = get_did_history_addresses(did_symbol);
-        auto iter = std::find_if(blockchain_didlist->begin(), blockchain_didlist->end(),
-        [fork_index](const blockchain_did & item){
-            return is_blackhole_address(item.get_did().get_address()) || item.get_height() <= fork_index;
+        std::shared_ptr<blockchain_uid::list>  blockchain_uidlist = get_uid_history_addresses(uid_symbol);
+        auto iter = std::find_if(blockchain_uidlist->begin(), blockchain_uidlist->end(),
+        [fork_index](const blockchain_uid & item){
+            return is_blackhole_address(item.get_uid().get_address()) || item.get_height() <= fork_index;
         });
         
-        if(iter == blockchain_didlist->end() || iter->get_did().get_address() != did_address)   
+        if(iter == blockchain_uidlist->end() || iter->get_uid().get_address() != uid_address)   
             return "";
     }
-    else if(did_symbol == "" && fork_index != max_uint64)
+    else if(uid_symbol == "" && fork_index != max_uint64)
     {
-        // search from dids database
-        auto sp_did_vec = database_.dids.getdids_from_address_history(did_address, 0, fork_index);
-        if (sp_did_vec && !sp_did_vec->empty()) {
-            did_symbol = sp_did_vec->back().get_did().get_symbol();
+        // search from uids database
+        auto sp_uid_vec = database_.uids.getuids_from_address_history(uid_address, 0, fork_index);
+        if (sp_uid_vec && !sp_uid_vec->empty()) {
+            uid_symbol = sp_uid_vec->back().get_uid().get_symbol();
         }
     }
 
-    return did_symbol;
+    return uid_symbol;
 }
 
-/* find history addresses by the did symbol
+/* find history addresses by the uid symbol
 */
-std::shared_ptr<blockchain_did::list> block_chain_impl::get_did_history_addresses(const std::string &symbol)
+std::shared_ptr<blockchain_uid::list> block_chain_impl::get_uid_history_addresses(const std::string &symbol)
 {
     const auto hash = get_hash(symbol);
-    return database_.dids.get_history_dids(hash);
+    return database_.uids.get_history_uids(hash);
 }
 
-std::shared_ptr<did_detail> block_chain_impl::get_registered_did(const std::string& symbol)
+std::shared_ptr<uid_detail> block_chain_impl::get_registered_uid(const std::string& symbol)
 {
-    std::shared_ptr<did_detail> sp_did(nullptr);
+    std::shared_ptr<uid_detail> sp_uid(nullptr);
     const auto hash = get_hash(symbol);
-    auto sh_block_did = database_.dids.get(hash);
-    if (sh_block_did) {
-        sp_did = std::make_shared<did_detail>(sh_block_did->get_did());
+    auto sh_block_uid = database_.uids.get(hash);
+    if (sh_block_uid) {
+        sp_uid = std::make_shared<uid_detail>(sh_block_uid->get_uid());
     }
-    return sp_did;
+    return sp_uid;
 }
 
-/// get all the did in blockchain
-std::shared_ptr<did_detail::list> block_chain_impl::get_registered_dids()
+/// get all the uid in blockchain
+std::shared_ptr<uid_detail::list> block_chain_impl::get_registered_uids()
 {
-    auto sp_vec = std::make_shared<did_detail::list>();
+    auto sp_vec = std::make_shared<uid_detail::list>();
     if (!sp_vec)
         return nullptr;
 
-    auto sp_blockchain_vec = database_.dids.get_blockchain_dids();
+    auto sp_blockchain_vec = database_.uids.get_blockchain_uids();
     for (const auto &each : *sp_blockchain_vec){
-        if (each.get_status() == blockchain_did::address_current){
-            sp_vec->emplace_back(each.get_did());
+        if (each.get_status() == blockchain_uid::address_current){
+            sp_vec->emplace_back(each.get_uid());
         }
     }
 
@@ -2074,9 +2074,9 @@ uint64_t block_chain_impl::get_token_height(const std::string& token_name)const
     return database_.tokens.get_register_height(token_name);
 }
 
-uint64_t block_chain_impl::get_did_height(const std::string& did_name)const
+uint64_t block_chain_impl::get_uid_height(const std::string& uid_name)const
 {
-    return database_.dids.get_register_height(did_name);
+    return database_.uids.get_register_height(uid_name);
 }
 
 uint64_t block_chain_impl::get_token_cert_height(const std::string& cert_symbol,const token_cert_type& cert_type)
@@ -2094,9 +2094,9 @@ uint64_t block_chain_impl::get_token_cert_height(const std::string& cert_symbol,
     return max_uint64;
 }
 
-uint64_t block_chain_impl::get_token_mit_height(const std::string& mit_symbol) const
+uint64_t block_chain_impl::get_token_card_height(const std::string& card_symbol) const
 {
-    return database_.mits.get_register_height(mit_symbol);
+    return database_.mits.get_register_height(card_symbol);
 }
 
 /// get token from local database including all account's tokens

@@ -20,7 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChain/explorer/extensions/commands/didchangeaddress.hpp>
+#include <UChain/explorer/extensions/commands/uidchangeaddress.hpp>
 #include <UChain/explorer/extensions/command_extension_func.hpp>
 #include <UChain/explorer/extensions/command_assistant.hpp>
 #include <UChain/explorer/extensions/exception.hpp>
@@ -30,29 +30,29 @@ namespace libbitcoin {
 namespace explorer {
 namespace commands {
 
-console_result didchangeaddress::invoke(Json::Value& jv_output,
+console_result uidchangeaddress::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
     auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
-    // check did symbol
-    auto did = argument_.symbol;
+    // check uid symbol
+    auto uid = argument_.symbol;
 
-    check_did_symbol(did);
+    check_uid_symbol(uid);
 
-    // check did exsits
-    auto did_detail = blockchain.get_registered_did(did);
-    if (!did_detail) {
-        throw did_symbol_notfound_exception{"Did '" + did + "' does not exist on the blockchain"};
+    // check uid exsits
+    auto uid_detail = blockchain.get_registered_uid(uid);
+    if (!uid_detail) {
+        throw uid_symbol_notfound_exception{"Did '" + uid + "' does not exist on the blockchain"};
     }
 
-    auto from_address = did_detail->get_address();
+    auto from_address = uid_detail->get_address();
 
-    // check did is owned by the account
+    // check uid is owned by the account
     if (!blockchain.get_account_address(auth_.name, from_address)) {
-        throw did_symbol_notowned_exception{
-            "Did '" + did + "' is not owned by " + auth_.name};
+        throw uid_symbol_notowned_exception{
+            "Did '" + uid + "' is not owned by " + auth_.name};
     }
 
     // check to address is valid
@@ -64,14 +64,14 @@ console_result didchangeaddress::invoke(Json::Value& jv_output,
         throw address_dismatch_account_exception{"Target address is not owned by account. " + argument_.to};
     }
 
-     // fail if address is already binded with did in blockchain
-    if (blockchain.is_address_registered_did(argument_.to)) {
-        throw did_symbol_existed_exception{"Target address is already binded with some did on the blockchain"};
+     // fail if address is already binded with uid in blockchain
+    if (blockchain.is_address_registered_uid(argument_.to)) {
+        throw uid_symbol_existed_exception{"Target address is already binded with some uid on the blockchain"};
     }
 
     // receiver
     std::vector<receiver_record> receiver{
-        {argument_.to, argument_.symbol, 0, 0, utxo_attach_type::did_transfer, attachment()}
+        {argument_.to, argument_.symbol, 0, 0, utxo_attach_type::uid_transfer, attachment()}
     };
 
     auto toaddr = bc::wallet::payment_address(argument_.to);
@@ -79,7 +79,7 @@ console_result didchangeaddress::invoke(Json::Value& jv_output,
 
     if( toaddr.version() == bc::wallet::payment_address::mainnet_p2sh
     && addr.version() == bc::wallet::payment_address::mainnet_p2sh)
-        throw did_multisig_address_exception{"did cannot modify multi-signature address to multi-signature address"};
+        throw uid_multisig_address_exception{"uid cannot modify multi-signature address to multi-signature address"};
 
 
     if (addr.version() == bc::wallet::payment_address::mainnet_p2sh
@@ -103,7 +103,7 @@ console_result didchangeaddress::invoke(Json::Value& jv_output,
         if (toaddr.version() == bc::wallet::payment_address::mainnet_p2sh && !findmultisig(acc_multisig_to, argument_.to))
             throw multisig_notfound_exception{"to address multisig record not found."};
 
-        auto send_helper = sending_multisig_did(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
+        auto send_helper = sending_multisig_uid(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
                                                  std::move(from_address),  std::move(argument_.to),
                                                  std::move(argument_.symbol), std::move(receiver), argument_.fee,
                                                  std::move(acc_multisig), std::move(acc_multisig_to));
@@ -115,7 +115,7 @@ console_result didchangeaddress::invoke(Json::Value& jv_output,
     }
     else
     {
-        auto send_helper = sending_did(*this, blockchain,
+        auto send_helper = sending_uid(*this, blockchain,
                                        std::move(auth_.name), std::move(auth_.auth),
                                        std::move(from_address), std::move(argument_.to),
                                        std::move(argument_.symbol), std::move(receiver), argument_.fee);

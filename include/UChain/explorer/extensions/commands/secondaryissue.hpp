@@ -44,7 +44,7 @@ public:
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
             .add("ACCOUNTAUTH", 1)
-            .add("TODID", 1)
+            .add("TOUID", 1)
             .add("SYMBOL", 1)
             .add("VOLUME", 1);
     }
@@ -55,7 +55,7 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
-        load_input(argument_.to, "TODID", variables, input, raw);
+        load_input(argument_.to, "TOUID", variables, input, raw);
         load_input(argument_.symbol, "SYMBOL", variables, input, raw);
         load_input(argument_.volume, "VOLUME", variables, input, raw);
     }
@@ -81,9 +81,9 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
-            "TODID",
+            "TOUID",
             value<std::string>(&argument_.to)->required(),
-            "target did to check and issue token, fee from and mychange to the address of this did too."
+            "target uid to check and issue token, fee from and mychange to the address of this uid too."
         )
         (
             "SYMBOL",

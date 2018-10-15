@@ -269,9 +269,9 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     std::set<string> tokens;
     std::set<string> token_certs;
-    std::set<string> token_mits;
-    std::set<string> dids;
-    std::set<string> didaddreses;
+    std::set<string> token_cards;
+    std::set<string> uids;
+    std::set<string> uidaddreses;
     code first_tx_ec = error::success;
     for (const auto& tx : transactions)
     {
@@ -309,35 +309,35 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
                     break;
                 }
             }
-            else if (output.is_token_mit()) {
-                auto r = token_mits.insert(output.get_token_symbol());
+            else if (output.is_token_card()) {
+                auto r = token_cards.insert(output.get_token_symbol());
                 if (r.second == false) {
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_block mit " + output.get_token_symbol()
                         << " already exists in block!"
                         << " " << tx.to_string(1);
-                    ec = error::mit_exist;
+                    ec = error::card_exist;
                     break;
                 }
             }
-            else if (output.is_did()) {
-                auto didexist = dids.insert(output.get_did_symbol());
-                if (didexist.second == false) {
+            else if (output.is_uid()) {
+                auto uidexist = uids.insert(output.get_uid_symbol());
+                if (uidexist.second == false) {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_block did " + output.get_did_symbol()
+                        << "check_block uid " + output.get_uid_symbol()
                         << " already exists in block!"
                         << " " << tx.to_string(1);
-                    ec = error::did_exist;
+                    ec = error::uid_exist;
                     break;
                 }
 
-                auto didaddress = didaddreses.insert(output.get_did_address());
-                if (didaddress.second == false ) {
+                auto uidaddress = uidaddreses.insert(output.get_uid_address());
+                if (uidaddress.second == false ) {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_block did " + output.get_did_address()
-                        << " address_registered_did!"
+                        << "check_block uid " + output.get_uid_address()
+                        << " address_registered_uid!"
                         << " " << tx.to_string(1);
-                    ec = error::address_registered_did;
+                    ec = error::address_registered_uid;
                     break;
                 }
             }

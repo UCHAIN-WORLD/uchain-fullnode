@@ -44,12 +44,12 @@ public:
     virtual bool is_valid_proof_of_work(const chain::header& header) const;
     virtual bool check_get_coinage_reward_transaction(const chain::transaction& coinage_reward_coinbase, const chain::output& output) const;
 
-    virtual std::string get_did_from_address_consider_orphan_chain(const std::string& address, const std::string& did_symbol) const override;
-    virtual bool is_did_match_address_in_orphan_chain(const std::string& symbol, const std::string& address) const override;
-    virtual bool is_did_in_orphan_chain(const std::string& symbol) const override;
+    virtual std::string get_uid_from_address_consider_orphan_chain(const std::string& address, const std::string& uid_symbol) const override;
+    virtual bool is_uid_match_address_in_orphan_chain(const std::string& symbol, const std::string& address) const override;
+    virtual bool is_uid_in_orphan_chain(const std::string& symbol) const override;
     virtual bool is_token_in_orphan_chain(const std::string& symbol) const override;
     virtual bool is_token_cert_in_orphan_chain(const std::string& symbol, token_cert_type cert_type) const override;
-    virtual bool is_token_mit_in_orphan_chain(const std::string& symbol) const override;
+    virtual bool is_token_card_in_orphan_chain(const std::string& symbol) const override;
 
     virtual size_t get_fork_index() const override { return fork_index_; }
 

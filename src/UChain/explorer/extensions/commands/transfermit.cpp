@@ -37,17 +37,17 @@ console_result transfermit::invoke (Json::Value& jv_output,
     auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
     // check symbol
-    check_mit_symbol(argument_.symbol);
+    check_card_symbol(argument_.symbol);
 
-    // check to did
-    auto to_did = argument_.to;
-    auto to_address = get_address_from_did(to_did, blockchain);
+    // check to uid
+    auto to_uid = argument_.to;
+    auto to_address = get_address_from_uid(to_uid, blockchain);
     if (!blockchain.is_valid_address(to_address)) {
-        throw toaddress_invalid_exception("Invalid did parameter! " + to_did);
+        throw toaddress_invalid_exception("Invalid uid parameter! " + to_uid);
     }
 
     // get identifiable token
-    auto mits = blockchain.get_account_mits(auth_.name, argument_.symbol);
+    auto mits = blockchain.get_account_cards(auth_.name, argument_.symbol);
     if (mits->size() == 0) {
         throw token_lack_exception("Not enough token '" + argument_.symbol +  "'");
     }
@@ -70,11 +70,11 @@ console_result transfermit::invoke (Json::Value& jv_output,
     std::vector<receiver_record> receiver{
         {
             to_address, argument_.symbol, 0, 0, 0,
-            utxo_attach_type::token_mit_transfer, attachment("", to_did)
+            utxo_attach_type::token_card_transfer, attachment("", to_uid)
         }
     };
 
-    auto helper = transferring_mit(
+    auto helper = transferring_card(
                       *this, blockchain,
                       std::move(auth_.name), std::move(auth_.auth),
                       is_multisig_address ? std::move(from_address) : "",

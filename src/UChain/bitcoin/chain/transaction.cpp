@@ -397,57 +397,57 @@ bool transaction::has_token_cert() const
     return false;
 }
 
-bool transaction::has_token_mit_transfer() const
+bool transaction::has_token_card_transfer() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_token_mit_transfer())
+        if(elem.is_token_card_transfer())
             return true;
     }
     return false;
 }
 
-bool transaction::has_did_register() const
+bool transaction::has_uid_register() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_did_register())
+        if(elem.is_uid_register())
             return true;
     }
     return false;
 }
 
-bool transaction::has_did_transfer() const
+bool transaction::has_uid_transfer() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_did_transfer())
+        if(elem.is_uid_transfer())
             return true;
     }
     return false;
 }
 
-std::string transaction::get_did_transfer_old_address() const
+std::string transaction::get_uid_transfer_old_address() const
 {
-    std::string newdidstr = "";
+    std::string newuidstr = "";
     for (auto& elem: outputs) {
-        if(elem.is_did_transfer()) {
-            newdidstr = elem.get_script_address();
+        if(elem.is_uid_transfer()) {
+            newuidstr = elem.get_script_address();
         }
 
     }
 
-    if (newdidstr.empty()){
-        return newdidstr;
+    if (newuidstr.empty()){
+        return newuidstr;
     }
 
     for (auto& elem: inputs) {
-        if(elem.get_script_address()!=newdidstr) {
-            newdidstr = elem.get_script_address();
-            return newdidstr;
+        if(elem.get_script_address()!=newuidstr) {
+            newuidstr = elem.get_script_address();
+            return newuidstr;
         }
 
     }
 
 
-    return newdidstr;
+    return newuidstr;
 }
 
 } // namspace chain

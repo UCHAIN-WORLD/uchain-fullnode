@@ -42,7 +42,7 @@ console_result listmits::invoke(Json::Value& jv_output,
 
     if (auth_.name.empty()) {
         // no account -- list whole tokens in blockchain
-        auto sh_vec = blockchain.get_registered_mits();
+        auto sh_vec = blockchain.get_registered_cards();
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem : *sh_vec) {
@@ -55,13 +55,13 @@ console_result listmits::invoke(Json::Value& jv_output,
         blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
         // list tokens owned by account
-        auto sh_vec = blockchain.get_account_mits(auth_.name);
+        auto sh_vec = blockchain.get_account_cards(auth_.name);
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem : *sh_vec) {
                 // update content if it's transfered from others
                 if (!elem.is_register_status()) {
-                    auto token = blockchain.get_registered_mit(elem.get_symbol());
+                    auto token = blockchain.get_registered_card(elem.get_symbol());
                     if (nullptr != token) {
                         elem.set_content(token->mit.get_content());
                     }

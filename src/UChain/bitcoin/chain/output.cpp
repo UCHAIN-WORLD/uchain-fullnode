@@ -78,12 +78,12 @@ bool output::is_valid_symbol(const std::string& symbol, uint32_t tx_version)
     return true;
 }
 
-bool output::is_valid_did_symbol(const std::string& symbol, bool check_sensitive)
+bool output::is_valid_uid_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (symbol.empty())
         return false;
     // length check
-    if (symbol.length() > DID_DETAIL_SYMBOL_FIX_SIZE)
+    if (symbol.length() > UID_DETAIL_SYMBOL_FIX_SIZE)
         return false;
     // char check
     for (const auto& i : symbol) {
@@ -103,12 +103,12 @@ bool output::is_valid_did_symbol(const std::string& symbol, bool check_sensitive
     return true;
 }
 
-bool output::is_valid_mit_symbol(const std::string& symbol, bool check_sensitive)
+bool output::is_valid_card_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (symbol.empty())
         return false;
     // length check
-    if (symbol.length() > TOKEN_MIT_SYMBOL_FIX_SIZE)
+    if (symbol.length() > TOKEN_CARD_SYMBOL_FIX_SIZE)
         return false;
     // char check
     for (const auto& i : symbol) {
@@ -142,30 +142,30 @@ std::string output::get_script_address() const
 code output::check_attachment_address(bc::blockchain::block_chain_impl& chain) const
 {
     bool is_token = false;
-    bool is_did = false;
+    bool is_uid = false;
     std::string attachment_address;
-    if (is_token_issue() || is_token_secondaryissue() || is_token_mit()) {
+    if (is_token_issue() || is_token_secondaryissue() || is_token_card()) {
         attachment_address = get_token_address();
         is_token = true;
     } else if (is_token_cert()) {
         attachment_address = get_token_cert_address();
         is_token = true;
-    } else if (is_did_register() || is_did_transfer()) {
-        attachment_address = get_did_address();
-        is_did = true;
+    } else if (is_uid_register() || is_uid_transfer()) {
+        attachment_address = get_uid_address();
+        is_uid = true;
     }
-    if (is_token || is_did) {
+    if (is_token || is_uid) {
         auto script_address = get_script_address();
         if (attachment_address != script_address) {
             log::debug("output::check_attachment_address")
-                << (is_token ? "token" : "did")
+                << (is_token ? "token" : "uid")
                 << " attachment address " << attachment_address
                 << " is not equal to script address " << script_address;
             if (is_token) {
                 return error::token_address_not_match;
             }
-            if (is_did) {
-                return error::did_address_not_match;
+            if (is_uid) {
+                return error::uid_address_not_match;
             }
         }
     }
@@ -282,11 +282,11 @@ bool output::is_token_transfer() const
     return false;
 }
 
-bool output::is_did_transfer() const
+bool output::is_uid_transfer() const
 {
-    if(attach_data.get_type() == DID_TYPE) {
-        auto did_info = boost::get<did>(attach_data.get_attach());
-        return (did_info.get_status() == DID_TRANSFERABLE_TYPE);
+    if(attach_data.get_type() == UID_TYPE) {
+        auto uid_info = boost::get<uid>(attach_data.get_attach());
+        return (uid_info.get_status() == UID_TRANSFERABLE_TYPE);
     }
     return false;
 }
@@ -315,24 +315,24 @@ bool output::is_token_secondaryissue() const
     return false;
 }
 
-bool output::is_token_mit() const
+bool output::is_token_card() const
 {
-    return (attach_data.get_type() == TOKEN_MIT_TYPE);
+    return (attach_data.get_type() == TOKEN_CARD_TYPE);
 }
 
-std::string output::get_token_mit_symbol() const
+std::string output::get_token_card_symbol() const
 {
-    if (is_token_mit()) {
-        auto mit_info = boost::get<token_mit>(attach_data.get_attach());
-        return mit_info.get_symbol();
+    if (is_token_card()) {
+        auto card_info = boost::get<token_card>(attach_data.get_attach());
+        return card_info.get_symbol();
     }
     return std::string("");
 }
 
-bool output::is_token_mit_register() const
+bool output::is_token_card_register() const
 {
-    if (is_token_mit()) {
-        auto token_info = boost::get<token_mit>(attach_data.get_attach());
+    if (is_token_card()) {
+        auto token_info = boost::get<token_card>(attach_data.get_attach());
         if (token_info.is_register_status()) {
             return true;
         }
@@ -340,10 +340,10 @@ bool output::is_token_mit_register() const
     return false;
 }
 
-bool output::is_token_mit_transfer() const
+bool output::is_token_card_transfer() const
 {
-    if (is_token_mit()) {
-        auto token_info = boost::get<token_mit>(attach_data.get_attach());
+    if (is_token_card()) {
+        auto token_info = boost::get<token_card>(attach_data.get_attach());
         if (token_info.is_transfer_status()) {
             return true;
         }
@@ -394,9 +394,9 @@ bool output::is_token() const
     return (attach_data.get_type() == TOKEN_TYPE);
 }
 
-bool output::is_did() const
+bool output::is_uid() const
 {
-    return (attach_data.get_type() == DID_TYPE);
+    return (attach_data.get_type() == UID_TYPE);
 }
 
 bool output::is_ucn() const
@@ -427,8 +427,8 @@ std::string output::get_token_symbol() const // for validate_transaction.cpp to 
             return trans_info.get_symbol();
         }
     }
-    else if (is_token_mit()) {
-        auto token_info = boost::get<token_mit>(attach_data.get_attach());
+    else if (is_token_card()) {
+        auto token_info = boost::get<token_card>(attach_data.get_attach());
         return token_info.get_symbol();
     }
     else if (is_token_cert()) {
@@ -447,7 +447,7 @@ std::string output::get_token_issuer() const // for validate_transaction.cpp to 
             return detail_info.get_issuer();
         }
     }
-    else if (is_token_mit()) {
+    else if (is_token_card()) {
         BITCOIN_ASSERT(false);
     }
     return std::string("");
@@ -462,20 +462,20 @@ std::string output::get_token_address() const // for validate_transaction.cpp to
             return detail_info.get_address();
         }
     }
-    else if (is_token_mit()) {
-        auto token_info = boost::get<token_mit>(attach_data.get_attach());
+    else if (is_token_card()) {
+        auto token_info = boost::get<token_card>(attach_data.get_attach());
         return token_info.get_address();
     }
     return std::string("");
 }
 
-token_mit output::get_token_mit() const
+token_card output::get_token_card() const
 {
-    if (is_token_mit()) {
-        return boost::get<token_mit>(attach_data.get_attach());
+    if (is_token_card()) {
+        return boost::get<token_card>(attach_data.get_attach());
     }
-    log::error("output::get_token_mit") << "Asset type is not an mit.";
-    return token_mit();
+    log::error("output::get_token_card") << "Asset type is not an mit.";
+    return token_card();
 }
 
 token_cert output::get_token_cert() const
@@ -524,43 +524,43 @@ token_cert_type output::get_token_cert_type() const
     return token_cert_ns::none;
 }
 
-bool output::is_did_register() const
+bool output::is_uid_register() const
 {
-    if(attach_data.get_type() == DID_TYPE) {
-        auto did_info = boost::get<did>(attach_data.get_attach());
-        return (did_info.get_status() ==  DID_DETAIL_TYPE);
+    if(attach_data.get_type() == UID_TYPE) {
+        auto uid_info = boost::get<uid>(attach_data.get_attach());
+        return (uid_info.get_status() ==  UID_DETAIL_TYPE);
     }
     return false;
 }
 
-std::string output::get_did_symbol() const // for validate_transaction.cpp to calculate did transfer amount
+std::string output::get_uid_symbol() const // for validate_transaction.cpp to calculate uid transfer amount
 {
-    if (attach_data.get_type() == DID_TYPE) {
-        auto did_info = boost::get<did>(attach_data.get_attach());
-        auto detail_info = boost::get<did_detail>(did_info.get_data());
+    if (attach_data.get_type() == UID_TYPE) {
+        auto uid_info = boost::get<uid>(attach_data.get_attach());
+        auto detail_info = boost::get<uid_detail>(uid_info.get_data());
         return detail_info.get_symbol();
 
     }
     return std::string("");
 }
 
-std::string output::get_did_address() const // for validate_transaction.cpp to calculate did transfer amount
+std::string output::get_uid_address() const // for validate_transaction.cpp to calculate uid transfer amount
 {
-    if(attach_data.get_type() == DID_TYPE) {
-        auto did_info = boost::get<did>(attach_data.get_attach());
-        auto detail_info = boost::get<did_detail>(did_info.get_data());
+    if(attach_data.get_type() == UID_TYPE) {
+        auto uid_info = boost::get<uid>(attach_data.get_attach());
+        auto detail_info = boost::get<uid_detail>(uid_info.get_data());
         return detail_info.get_address();
 
     }
     return std::string("");
 }
 
-did output::get_did() const
+uid output::get_uid() const
 {
-    if(attach_data.get_type() == DID_TYPE) {
-        return boost::get<did>(attach_data.get_attach());
+    if(attach_data.get_type() == UID_TYPE) {
+        return boost::get<uid>(attach_data.get_attach());
     }
-    return did();
+    return uid();
 }
 
 token_transfer output::get_token_transfer() const

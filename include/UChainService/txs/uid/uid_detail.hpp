@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
+#ifndef UC_CHAIN_ATTACHMENT_UID_DETAIL_HPP
+#define UC_CHAIN_ATTACHMENT_UID_DETAIL_HPP
 
 #include <cstdint>
 #include <istream>
@@ -27,29 +28,36 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
-#include <UChainService/txs/did/did_detail.hpp>
 
 namespace libbitcoin {
 namespace chain {
 
-class BC_API blockchain_did
+BC_CONSTEXPR size_t UID_DETAIL_SYMBOL_FIX_SIZE = 64;
+BC_CONSTEXPR size_t UID_DETAIL_ADDRESS_FIX_SIZE = 64;
+
+BC_CONSTEXPR size_t UID_DETAIL_FIX_SIZE = UID_DETAIL_SYMBOL_FIX_SIZE
+            + UID_DETAIL_ADDRESS_FIX_SIZE;
+
+class BC_API uid_detail
 {
 public:
-    enum did_address_type: uint32_t
-    {
-        address_invalid,
-        address_current,
-        address_history
-    };
-    typedef std::vector<blockchain_did> list;
-    blockchain_did();
-    blockchain_did( uint32_t version, const output_point& tx_point,
-            uint64_t height, uint32_t status, const did_detail& did);
-    static blockchain_did factory_from_data(const data_chunk& data);
-    static blockchain_did factory_from_data(std::istream& stream);
-    static blockchain_did factory_from_data(reader& source);
-    static uint64_t satoshi_fixed_size();
+    typedef std::vector<uid_detail> list;
 
+    enum uid_detail_type : uint32_t
+    {
+        created,
+        registered_not_in_blockchain,
+        registered_in_blockchain
+    };
+
+    uid_detail();
+    uid_detail(const std::string& symbol, const std::string& address);
+
+    static uid_detail factory_from_data(const data_chunk& data);
+    static uid_detail factory_from_data(std::istream& stream);
+    static uid_detail factory_from_data(reader& source);
+    static uint64_t satoshi_fixed_size();
+    static std::string get_blackhole_uid_symbol();
     bool from_data(const data_chunk& data);
     bool from_data(std::istream& stream);
     bool from_data(reader& source);
@@ -57,33 +65,26 @@ public:
     void to_data(std::ostream& stream) const;
     void to_data(writer& sink) const;
 
-#ifdef UC_DEBUG
+    bool operator< (const uid_detail& other) const;
     std::string to_string() const;
-#endif
+    void to_json(std::ostream& out);
 
     bool is_valid() const;
     void reset();
+    uint32_t count_size() const;
     uint64_t serialized_size() const;
-    const uint32_t& get_version() const;
-    void set_version(const uint32_t& version_);
-    const output_point& get_tx_point() const;
-    void set_tx_point(const output_point& tx_point_);
-    const uint64_t& get_height() const;
-    void set_height(const uint64_t& height_);
-    const did_detail& get_did() const;
-    void set_did(const did_detail& did_);
-    void set_status(const uint32_t & status);
-    const uint32_t& get_status() const;
-    std::string get_status_string() const;
+    const std::string& get_symbol() const;
+    void set_symbol(const std::string& symbol);
+    const std::string& get_address() const;
+    void set_address(const std::string& address);
+
 private:
-    uint32_t version_;
-    output_point tx_point_;
-    uint64_t height_;
-    uint32_t status_;
-    did_detail did_;
+    std::string symbol;
+    std::string address;
 };
 
 } // namespace chain
 } // namespace libbitcoin
 
+#endif
 

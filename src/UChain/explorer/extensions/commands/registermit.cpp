@@ -37,19 +37,19 @@ void registermit::check_symbol_content(const std::string& symbol, const std::str
     }
 
     // reserve 4 bytes
-    if (symbol.size() > (TOKEN_MIT_SYMBOL_FIX_SIZE - 4)) {
+    if (symbol.size() > (TOKEN_CARD_SYMBOL_FIX_SIZE - 4)) {
         throw token_symbol_length_exception{"Symbol length must be less than "
-            + std::to_string(TOKEN_MIT_SYMBOL_FIX_SIZE - 4) + ". " + symbol};
+            + std::to_string(TOKEN_CARD_SYMBOL_FIX_SIZE - 4) + ". " + symbol};
     }
 
     // check symbol
-    check_mit_symbol(symbol, true);
+    check_card_symbol(symbol, true);
 
     // check content
-    if (content.size() > TOKEN_MIT_CONTENT_FIX_SIZE) {
+    if (content.size() > TOKEN_CARD_CONTENT_FIX_SIZE) {
         throw argument_size_invalid_exception(
             "Content length must be less than "
-            + std::to_string(TOKEN_MIT_CONTENT_FIX_SIZE) + ". " + content);
+            + std::to_string(TOKEN_CARD_CONTENT_FIX_SIZE) + ". " + content);
     }
 }
 
@@ -59,7 +59,7 @@ console_result registermit::invoke (Json::Value& jv_output,
     auto& blockchain = node.chain_impl();
     blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
-    std::map<std::string, std::string> mit_map;
+    std::map<std::string, std::string> card_map;
 
     bool use_unified_content = false;
     // check single symbol and content
@@ -67,19 +67,19 @@ console_result registermit::invoke (Json::Value& jv_output,
         check_symbol_content(argument_.symbol, option_.content);
 
         // check symbol not registered
-        if (blockchain.get_registered_mit(argument_.symbol)) {
+        if (blockchain.get_registered_card(argument_.symbol)) {
             throw token_symbol_existed_exception{"MIT already exists in blockchain. " + argument_.symbol};
         }
 
-        mit_map[argument_.symbol] = option_.content;
+        card_map[argument_.symbol] = option_.content;
     }
     else {
         if (option_.content.size() > 0) {
             // check content
-            if (option_.content.size() > TOKEN_MIT_CONTENT_FIX_SIZE) {
+            if (option_.content.size() > TOKEN_CARD_CONTENT_FIX_SIZE) {
                 throw argument_size_invalid_exception(
                     "Content length must be less than "
-                    + std::to_string(TOKEN_MIT_CONTENT_FIX_SIZE) + ". " + option_.content);
+                    + std::to_string(TOKEN_CARD_CONTENT_FIX_SIZE) + ". " + option_.content);
             }
 
             use_unified_content = true;
@@ -107,48 +107,48 @@ console_result registermit::invoke (Json::Value& jv_output,
 
         check_symbol_content(symbol, content);
 
-        if (mit_map.find(symbol) != mit_map.end()) {
+        if (card_map.find(symbol) != card_map.end()) {
             throw token_symbol_existed_exception{"Duplicate symbol: " + symbol};
         }
 
         // check symbol not registered
-        if (blockchain.get_registered_mit(symbol)) {
+        if (blockchain.get_registered_card(symbol)) {
             throw token_symbol_existed_exception{"MIT already exists in blockchain. " + symbol};
         }
 
-        mit_map[symbol] = content;
+        card_map[symbol] = content;
     }
 
-    if (mit_map.empty()) {
+    if (card_map.empty()) {
         throw argument_legality_exception{"No symbol provided."};
     }
 
-    // check to did
-    auto to_did = argument_.to;
-    auto to_address = get_address_from_did(to_did, blockchain);
+    // check to uid
+    auto to_uid = argument_.to;
+    auto to_address = get_address_from_uid(to_uid, blockchain);
     if (!blockchain.is_valid_address(to_address)) {
-        throw address_invalid_exception{"invalid did parameter! " + to_did};
+        throw address_invalid_exception{"invalid uid parameter! " + to_uid};
     }
     if (!blockchain.get_account_address(auth_.name, to_address)) {
-        throw address_dismatch_account_exception{"target did does not match account. " + to_did};
+        throw address_dismatch_account_exception{"target uid does not match account. " + to_uid};
     }
 
     // receiver
     std::vector<receiver_record> receiver;
-    for (auto& pair : mit_map) {
+    for (auto& pair : card_map) {
         receiver.push_back(
             {
                 to_address, pair.first, 0, 0, 0,
-                utxo_attach_type::token_mit, attachment(to_did, to_did)
+                utxo_attach_type::token_card, attachment(to_uid, to_uid)
             }
         );
     }
 
-    auto helper = registering_mit(
+    auto helper = registering_card(
                       *this, blockchain,
                       std::move(auth_.name), std::move(auth_.auth),
                       std::move(to_address),
-                      "", std::move(mit_map),
+                      "", std::move(card_map),
                       std::move(receiver), argument_.fee);
 
     helper.exec();

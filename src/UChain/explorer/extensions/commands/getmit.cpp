@@ -39,7 +39,7 @@ console_result getmit::invoke(Json::Value& jv_output,
 
     if (!argument_.symbol.empty()) {
         // check symbol
-        check_mit_symbol(argument_.symbol);
+        check_card_symbol(argument_.symbol);
     }
 
     if (option_.show_current) {
@@ -72,7 +72,7 @@ console_result getmit::invoke(Json::Value& jv_output,
 
     bool is_list = true;
     if (argument_.symbol.empty()) {
-        auto sh_vec = blockchain.get_registered_mits();
+        auto sh_vec = blockchain.get_registered_cards();
         std::sort(sh_vec->begin(), sh_vec->end());
         for (auto& elem : *sh_vec) {
             json_value.append(elem.mit.get_symbol());
@@ -87,7 +87,7 @@ console_result getmit::invoke(Json::Value& jv_output,
     }
     else {
         if (option_.show_history) {
-            auto sh_vec = blockchain.get_mit_history(argument_.symbol, option_.limit, option_.index);
+            auto sh_vec = blockchain.get_card_history(argument_.symbol, option_.limit, option_.index);
             for (auto& elem : *sh_vec) {
                 Json::Value token_data = json_helper.prop_list(elem);
                 json_value.append(token_data);
@@ -105,22 +105,22 @@ console_result getmit::invoke(Json::Value& jv_output,
         }
         else {
             if (option_.show_current) {
-                auto sh_vec = blockchain.get_mit_history(argument_.symbol, 1, 1);
+                auto sh_vec = blockchain.get_card_history(argument_.symbol, 1, 1);
                 if (nullptr != sh_vec && sh_vec->size() > 0) {
                     auto last_iter = --(sh_vec->end());
-                    auto& mit_info = *last_iter;
-                    auto reg_mit = blockchain.get_registered_mit(argument_.symbol);
-                    if (nullptr != reg_mit) {
-                        mit_info.mit.set_content(reg_mit->mit.get_content());
+                    auto& card_info = *last_iter;
+                    auto reg_card = blockchain.get_registered_card(argument_.symbol);
+                    if (nullptr != reg_card) {
+                        card_info.mit.set_content(reg_card->mit.get_content());
                     }
 
-                    json_value = json_helper.prop_list(mit_info, true);
+                    json_value = json_helper.prop_list(card_info, true);
                 }
             }
             else {
-                auto mit_info = blockchain.get_registered_mit(argument_.symbol);
-                if (nullptr != mit_info) {
-                    json_value = json_helper.prop_list(*mit_info);
+                auto card_info = blockchain.get_registered_card(argument_.symbol);
+                if (nullptr != card_info) {
+                    json_value = json_helper.prop_list(*card_info);
                 }
             }
 

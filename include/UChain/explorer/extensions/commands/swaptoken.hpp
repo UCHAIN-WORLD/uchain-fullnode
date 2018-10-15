@@ -86,7 +86,7 @@ public:
         (
             "TO_",
             value<std::string>(&argument_.to)->required(),
-            "To this did/address the specific token will be sent. expect to be \"crosschain\"."
+            "To this uid/address the specific token will be sent. expect to be \"crosschain\"."
         )
         (
             "SYMBOL",
@@ -106,12 +106,12 @@ public:
         (
             "change,c",
             value<std::string>(&option_.change),
-            "Change to this did/address"
+            "Change to this uid/address"
         )
         (
             "from,d",
             value<std::string>(&option_.from),
-            "From this did/address"
+            "From this uid/address"
         )
         (
             "swapfee,s",

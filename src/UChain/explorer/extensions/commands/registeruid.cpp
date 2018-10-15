@@ -19,7 +19,7 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChain/explorer/extensions/commands/registerdid.hpp>
+#include <UChain/explorer/extensions/commands/registeruid.hpp>
 #include <UChain/explorer/extensions/command_extension_func.hpp>
 #include <UChain/explorer/extensions/command_assistant.hpp>
 #include <UChain/explorer/extensions/exception.hpp>
@@ -32,30 +32,30 @@ namespace explorer
 namespace commands
 {
 
-console_result registerdid::invoke(Json::Value &jv_output,
+console_result registeruid::invoke(Json::Value &jv_output,
                                    libbitcoin::server::server_node &node)
 {
     auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
-    // check did symbol
-    check_did_symbol(argument_.symbol, true);
+    // check uid symbol
+    check_uid_symbol(argument_.symbol, true);
 
     if (blockchain.is_valid_address(argument_.symbol)) {
         throw address_invalid_exception{"symbol cannot be an address!"};
     }
 
     // check fee
-    if (argument_.fee < bc::min_fee_to_register_did) {
-        throw did_register_poundage_exception{
-            "register did: fee less than "
-            + std::to_string(bc::min_fee_to_register_did) + " that's "
-            + std::to_string(bc::min_fee_to_register_did / 100000000) + " UCNs"};
+    if (argument_.fee < bc::min_fee_to_register_uid) {
+        throw uid_register_poundage_exception{
+            "register uid: fee less than "
+            + std::to_string(bc::min_fee_to_register_uid) + " that's "
+            + std::to_string(bc::min_fee_to_register_uid / 100000000) + " UCNs"};
     }
 
     if (argument_.percentage < bc::min_fee_percentage_to_miner || argument_.percentage > 100) {
-        throw did_register_poundage_exception{
-            "register did minimum percentage of fee to miner less than "
+        throw uid_register_poundage_exception{
+            "register uid minimum percentage of fee to miner less than "
             + std::to_string(bc::min_fee_percentage_to_miner)
             + " or greater than 100."};
     }
@@ -70,13 +70,13 @@ console_result registerdid::invoke(Json::Value &jv_output,
             "address " + argument_.address + " is not owned by " + auth_.name};
     }
 
-    // fail if did is already in blockchain
-    if (blockchain.is_did_exist(argument_.symbol))
-        throw did_symbol_existed_exception{"did symbol already exists on the blockchain"};
+    // fail if uid is already in blockchain
+    if (blockchain.is_uid_exist(argument_.symbol))
+        throw uid_symbol_existed_exception{"uid symbol already exists on the blockchain"};
 
-    // fail if address is already binded with did in blockchain
-    if (blockchain.is_address_registered_did(argument_.address))
-        throw did_symbol_existed_exception{"address is already binded with some did on the blockchain"};
+    // fail if address is already binded with uid in blockchain
+    if (blockchain.is_address_registered_uid(argument_.address))
+        throw uid_symbol_existed_exception{"address is already binded with some uid on the blockchain"};
 
     account_multisig acc_multisig;
     bool is_multisig_address = blockchain.is_script_address(argument_.address);
@@ -91,9 +91,9 @@ console_result registerdid::invoke(Json::Value &jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {argument_.address, argument_.symbol, 0, 0, utxo_attach_type::did_register, attachment()}};
+        {argument_.address, argument_.symbol, 0, 0, utxo_attach_type::uid_register, attachment()}};
 
-    auto register_helper = registering_did(
+    auto register_helper = registering_uid(
                                *this, blockchain, std::move(auth_.name), std::move(auth_.auth),
                                std::move(argument_.address), std::move(argument_.symbol),
                                std::move(receiver), argument_.fee, argument_.percentage,

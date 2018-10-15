@@ -31,7 +31,7 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 #include <UChainService/txs/attachment.hpp> // added for token issue/transfer
-#include <UChainService/txs/did/did.hpp>
+#include <UChainService/txs/uid/uid.hpp>
 
 // forward declaration
 namespace libbitcoin {
@@ -53,8 +53,8 @@ public:
     static output factory_from_data(reader& source);
     static uint64_t satoshi_fixed_size();
     static bool is_valid_symbol(const std::string& symbol, uint32_t tx_version);
-    static bool is_valid_did_symbol(const std::string& symbol,  bool check_sensitive = false);
-    static bool is_valid_mit_symbol(const std::string& symbol,  bool check_sensitive = false);
+    static bool is_valid_uid_symbol(const std::string& symbol,  bool check_sensitive = false);
+    static bool is_valid_card_symbol(const std::string& symbol,  bool check_sensitive = false);
     bool from_data(const data_chunk& data);
     bool from_data(std::istream& stream);
     bool from_data(reader& source);
@@ -72,7 +72,7 @@ public:
     std::string get_token_issuer() const;
     std::string get_token_address() const;
     std::string get_token_cert_symbol() const;
-    std::string get_token_mit_symbol() const;
+    std::string get_token_card_symbol() const;
     std::string get_token_cert_owner() const;
     std::string get_token_cert_address() const;
     token_cert_type get_token_cert_type() const;
@@ -81,9 +81,9 @@ public:
     bool is_token_transfer() const;
     bool is_token_issue() const;
     bool is_token_secondaryissue() const;
-    bool is_token_mit() const;
-    bool is_token_mit_register() const;
-    bool is_token_mit_transfer() const;
+    bool is_token_card() const;
+    bool is_token_card_register() const;
+    bool is_token_card_transfer() const;
     bool is_token_cert() const;
     bool is_token_cert_issue() const;
     bool is_token_cert_transfer() const;
@@ -91,16 +91,16 @@ public:
     bool is_ucn() const;
     bool is_ucn_award() const;
     bool is_message() const;
-    bool is_did() const;
-    bool is_did_register() const;
-    bool is_did_transfer() const;
+    bool is_uid() const;
+    bool is_uid_register() const;
+    bool is_uid_transfer() const;
     token_detail get_token_detail() const;
     token_transfer get_token_transfer() const;
     token_cert get_token_cert() const;
-    token_mit get_token_mit() const;
-    std::string get_did_symbol() const;
-    std::string get_did_address() const;
-    did get_did() const;
+    token_card get_token_card() const;
+    std::string get_uid_symbol() const;
+    std::string get_uid_address() const;
+    uid get_uid() const;
 
     uint64_t value;
     chain::script script;

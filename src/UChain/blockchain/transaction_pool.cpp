@@ -159,39 +159,39 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
 {
     std::set<string> tokens;
     std::set<string> token_certs;
-    std::set<string> token_mits;
-    std::set<string> dids;
-    std::set<string> didaddreses;
-    std::set<string> didattaches;
+    std::set<string> token_cards;
+    std::set<string> uids;
+    std::set<string> uidaddreses;
+    std::set<string> uidattaches;
 
     auto check_outputs = [&](transaction_ptr txs)->code
     {
         for (auto &output : txs->outputs)
         {
-            //add attachment check;avoid send with did while transfer
-            if (output.attach_data.get_version() == DID_ATTACH_VERIFY_VERSION)
+            //add attachment check;avoid send with uid while transfer
+            if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION)
             {
-                auto check_did = [&dids, &didattaches](string attach_did) {
-                    if (!attach_did.empty() && dids.find(attach_did) != dids.end())
+                auto check_uid = [&uids, &uidattaches](string attach_uid) {
+                    if (!attach_uid.empty() && uids.find(attach_uid) != uids.end())
                     {
                         log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat attachment did: " + attach_did
+                        << "check_symbol_repeat attachment uid: " + attach_uid
                         << " already exists in memorypool!";
                         return false;
                     }
 
-                    didattaches.insert(attach_did);
+                    uidattaches.insert(attach_uid);
                     return true;
                 };
 
-                if (!check_did(output.attach_data.get_from_did())
-                 || !check_did(output.attach_data.get_to_did())) {
+                if (!check_uid(output.attach_data.get_from_uid())
+                 || !check_uid(output.attach_data.get_to_uid())) {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat from_did " + output.attach_data.get_from_did()
-                        << " to_did " + output.attach_data.get_to_did()
+                        << "check_symbol_repeat from_uid " + output.attach_data.get_from_uid()
+                        << " to_uid " + output.attach_data.get_to_uid()
                         << " check failed!"
                         << " " << tx->to_string(1);
-                    return error::did_exist;
+                    return error::uid_exist;
                 }
             }
 
@@ -221,47 +221,47 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                     return error::token_cert_exist;
                 }
             }
-            else if (output.is_token_mit())
+            else if (output.is_token_card())
             {
-                auto r = token_mits.insert(output.get_token_symbol());
+                auto r = token_cards.insert(output.get_token_symbol());
                 if (r.second == false)
                 {
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_symbol_repeat mit " + output.get_token_symbol()
                         << " already exists in memorypool!"
                         << " " << tx->to_string(1);
-                    return error::mit_exist;
+                    return error::card_exist;
                 }
             }
-            else if (output.is_did())
+            else if (output.is_uid())
             {
-                auto didsymbol = output.get_did_symbol();
-                auto didexist = dids.insert(didsymbol);
-                if (didexist.second == false) {
+                auto uidsymbol = output.get_uid_symbol();
+                auto uidexist = uids.insert(uidsymbol);
+                if (uidexist.second == false) {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat did " + didsymbol
+                        << "check_symbol_repeat uid " + uidsymbol
                         << " already exists in memorypool!"
                         << " " << tx->to_string(1);
-                    return error::did_exist;
+                    return error::uid_exist;
                 }
 
-                auto didaddress = didaddreses.insert(output.get_did_address());
-                if (didaddress.second == false)
+                auto uidaddress = uidaddreses.insert(output.get_uid_address());
+                if (uidaddress.second == false)
                 {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat did address " + output.get_did_address()
-                        << " already has did on it in memorypool!"
+                        << "check_symbol_repeat uid address " + output.get_uid_address()
+                        << " already has uid on it in memorypool!"
                         << " " << tx->to_string(1);
-                    return error::address_registered_did;
+                    return error::address_registered_uid;
                 }
 
-                if (didattaches.find(didsymbol) != didattaches.end())
+                if (uidattaches.find(uidsymbol) != uidattaches.end())
                 {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat attachment did: " + didsymbol
+                        << "check_symbol_repeat attachment uid: " + uidsymbol
                         << " already transfer in memorypool!"
                         << " " << tx->to_string(1);
-                    return error::did_exist;
+                    return error::uid_exist;
                 }
             }
         }

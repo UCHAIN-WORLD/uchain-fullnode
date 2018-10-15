@@ -102,11 +102,11 @@ void executor::set_admin()
     db.stop();
 }
 
-void executor::set_blackhole_did()
+void executor::set_blackhole_uid()
 {
     data_base db(metadata_.configured.database);
     db.start();
-    db.set_blackhole_did();
+    db.set_blackhole_uid();
     db.stop();
 }
 
@@ -137,8 +137,8 @@ bool executor::do_initchain()
         }
         // init admin account
         set_admin();
-        // init blackhole DID
-        set_blackhole_did();
+        // init blackhole UID
+        set_blackhole_uid();
         log::info(LOG_SERVER) << BS_INITCHAIN_COMPLETE;
         return true;
     }

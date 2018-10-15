@@ -20,7 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChain/explorer/extensions/commands/getdid.hpp>
+#include <UChain/explorer/extensions/commands/getuid.hpp>
 #include <UChain/explorer/extensions/command_extension_func.hpp>
 #include <UChain/explorer/extensions/command_assistant.hpp>
 #include <UChain/explorer/extensions/exception.hpp>
@@ -30,7 +30,7 @@ namespace libbitcoin {
 namespace explorer {
 namespace commands {
 
-console_result getdid::invoke (Json::Value& jv_output,
+console_result getuid::invoke (Json::Value& jv_output,
                                libbitcoin::server::server_node& node)
 {
     Json::Value json_value;
@@ -39,53 +39,53 @@ console_result getdid::invoke (Json::Value& jv_output,
 
     if (option_.symbol.empty()) {
 
-        auto sh_vec = blockchain.get_registered_dids();
+        auto sh_vec = blockchain.get_registered_uids();
 
         std::sort(sh_vec->begin(), sh_vec->end());
-        // add blockchain dids
+        // add blockchain uids
         for (auto& elem : *sh_vec) {
             json_value.append(elem.get_symbol());
         }
 
         if (get_api_version() <= 2) {
-            jv_output["dids"] = json_value;
+            jv_output["uids"] = json_value;
         }
         else {
             jv_output = json_value;
         }
     }
     else {
-        auto didSymbol = option_.symbol;
-        if (blockchain.is_valid_address(didSymbol)) {
-            didSymbol = blockchain.get_did_from_address(didSymbol);
-            if (didSymbol.empty()) {
-                throw address_not_bound_did_exception{"address is not binded with some did on the blockchain"};
+        auto uidSymbol = option_.symbol;
+        if (blockchain.is_valid_address(uidSymbol)) {
+            uidSymbol = blockchain.get_uid_from_address(uidSymbol);
+            if (uidSymbol.empty()) {
+                throw address_not_bound_uid_exception{"address is not binded with some uid on the blockchain"};
             }
         }
 
-        // check did symbol
-        check_did_symbol(didSymbol);
+        // check uid symbol
+        check_uid_symbol(uidSymbol);
 
-        // check did exists
-        if (!blockchain.is_did_exist(didSymbol)) {
-            throw did_symbol_notfound_exception{"did symbol does not exist on the blockchain"};
+        // check uid exists
+        if (!blockchain.is_uid_exist(uidSymbol)) {
+            throw uid_symbol_notfound_exception{"uid symbol does not exist on the blockchain"};
         }
 
-        auto blockchain_dids = blockchain.get_did_history_addresses(didSymbol);
-        if (blockchain_dids) {
+        auto blockchain_uids = blockchain.get_uid_history_addresses(uidSymbol);
+        if (blockchain_uids) {
             Json::Value json_address;
-            Json::Value did_data;
-            for (auto &did : *blockchain_dids) {
-                did_data["address"] = did.get_did().get_address();
-                did_data["status"] = did.get_status_string();
+            Json::Value uid_data;
+            for (auto &uid : *blockchain_uids) {
+                uid_data["address"] = uid.get_uid().get_address();
+                uid_data["status"] = uid.get_status_string();
                 if (get_api_version() >= 3) {
-                    did_data["symbol"] = didSymbol;
+                    uid_data["symbol"] = uidSymbol;
                 }
-                json_value.append(did_data);
+                json_value.append(uid_data);
             }
             
             if (get_api_version() <= 2) {
-                jv_output["did"] = didSymbol;
+                jv_output["uid"] = uidSymbol;
                 jv_output["addresses"] = json_value;
             }
             else {

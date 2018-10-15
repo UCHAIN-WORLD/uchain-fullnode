@@ -21,7 +21,7 @@
  *    this version is enhanced to read block data from local block database not resysn block data from p2p network.
  *
  * 2018.3.21 jowenshaw modify to 0.6.3
- * 1. for DID (Digital IDentities) support, adding some new tables.
+ * 1. for UID (Digital IDentities) support, adding some new tables.
  *    these tables can be created automatically if not exist.
  *    this way only soft fork is needed when user upgrade.
  */

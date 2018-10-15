@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/database/databases/mit_history_database.hpp>
+#include <UChain/database/databases/card_history_database.hpp>
 
 #include <cstdint>
 #include <cstddef>
@@ -28,7 +28,7 @@
 #include <UChain/database/primitives/record_multimap_iterable.hpp>
 #include <UChain/database/primitives/record_multimap_iterator.hpp>
 
-#define  LOG_MIT_HISTORY_DATABASE  "mit_history_database"
+#define  LOG_CARD_HISTORY_DATABASE  "card_history_database"
 
 namespace libbitcoin {
 namespace database {
@@ -50,10 +50,10 @@ namespace {
     };
 
     // Read a row from the data for the history list.
-    token_mit_info read_row(uint8_t* data)
+    token_card_info read_row(uint8_t* data)
     {
         auto deserial = make_deserializer_unsafe(data);
-        return token_mit_info::factory_from_data(deserial);
+        return token_card_info::factory_from_data(deserial);
     };
 } // end of namespace anonymous
 
@@ -63,10 +63,10 @@ BC_CONSTEXPR size_t initial_lookup_file_size = header_size + minimum_records_siz
 
 BC_CONSTEXPR size_t record_size = hash_table_multimap_record_size<short_hash>();
 
-BC_CONSTEXPR size_t mit_transfer_record_size = TOKEN_MIT_INFO_FIX_SIZE;
-BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(mit_transfer_record_size);
+BC_CONSTEXPR size_t card_transfer_record_size = TOKEN_CARD_INFO_FIX_SIZE;
+BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(card_transfer_record_size);
 
-mit_history_database::mit_history_database(const path& lookup_filename,
+card_history_database::card_history_database(const path& lookup_filename,
     const path& rows_filename, std::shared_ptr<shared_mutex> mutex)
   : lookup_file_(lookup_filename, mutex),
     lookup_header_(lookup_file_, number_buckets),
@@ -80,7 +80,7 @@ mit_history_database::mit_history_database(const path& lookup_filename,
 }
 
 // Close does not call stop because there is no way to detect thread join.
-mit_history_database::~mit_history_database()
+card_history_database::~card_history_database()
 {
     close();
 }
@@ -89,7 +89,7 @@ mit_history_database::~mit_history_database()
 // ----------------------------------------------------------------------------
 
 // Initialize files and start.
-bool mit_history_database::create()
+bool card_history_database::create()
 {
     // Resize and create require a started file.
     if (!lookup_file_.start() ||
@@ -115,7 +115,7 @@ bool mit_history_database::create()
 // Startup and shutdown.
 // ----------------------------------------------------------------------------
 
-bool mit_history_database::start()
+bool card_history_database::start()
 {
     return
         lookup_file_.start() &&
@@ -125,27 +125,27 @@ bool mit_history_database::start()
         rows_manager_.start();
 }
 
-bool mit_history_database::stop()
+bool card_history_database::stop()
 {
     return
         lookup_file_.stop() &&
         rows_file_.stop();
 }
 
-bool mit_history_database::close()
+bool card_history_database::close()
 {
     return
         lookup_file_.close() &&
         rows_file_.close();
 }
 
-void mit_history_database::sync()
+void card_history_database::sync()
 {
     lookup_manager_.sync();
     rows_manager_.sync();
 }
 
-mit_history_statinfo mit_history_database::statinfo() const
+card_history_statinfo card_history_database::statinfo() const
 {
     return
     {
@@ -156,26 +156,26 @@ mit_history_statinfo mit_history_database::statinfo() const
 }
 
 // ----------------------------------------------------------------------------
-void mit_history_database::store(const token_mit_info& mit_info)
+void card_history_database::store(const token_card_info& card_info)
 {
-    const auto& key_str = mit_info.mit.get_symbol();
+    const auto& key_str = card_info.mit.get_symbol();
     const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
     const auto key = ripemd160_hash(data);
 
-    auto write = [&mit_info](memory_ptr data)
+    auto write = [&card_info](memory_ptr data)
     {
         auto serial = make_serializer(REMAP_ADDRESS(data));
-        serial.write_data(mit_info.to_short_data());
+        serial.write_data(card_info.to_short_data());
     };
     rows_multimap_.add_row(key, write);
 }
 
-void mit_history_database::delete_last_row(const short_hash& key)
+void card_history_database::delete_last_row(const short_hash& key)
 {
     rows_multimap_.delete_last_row(key);
 }
 
-std::shared_ptr<token_mit_info> mit_history_database::get(const short_hash& key) const
+std::shared_ptr<token_card_info> card_history_database::get(const short_hash& key) const
 {
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
@@ -186,18 +186,18 @@ std::shared_ptr<token_mit_info> mit_history_database::get(const short_hash& key)
         const auto record = rows_list_.get(index);
         const auto address = REMAP_ADDRESS(record);
 
-        return std::make_shared<token_mit_info>(read_row(address));
+        return std::make_shared<token_card_info>(read_row(address));
     }
 
     return nullptr;
 }
 
-std::shared_ptr<token_mit_info::list> mit_history_database::get_history_mits_by_height(
+std::shared_ptr<token_card_info::list> card_history_database::get_history_cards_by_height(
     const short_hash& key, uint32_t start_height, uint32_t end_height,
     uint64_t limit, uint64_t page_number) const
 {
     // use map to sort by height, decreasely
-    std::map<uint32_t, token_mit_info, std::greater<uint32_t>> height_mit_map;
+    std::map<uint32_t, token_card_info, std::greater<uint32_t>> height_card_map;
 
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
@@ -206,7 +206,7 @@ std::shared_ptr<token_mit_info::list> mit_history_database::get_history_mits_by_
     for (const auto index: records)
     {
         // Stop once we reach the limit (if specified).
-        if ((limit > 0) && (height_mit_map.size() >= limit)) {
+        if ((limit > 0) && (height_card_map.size() >= limit)) {
             break;
         }
 
@@ -233,22 +233,22 @@ std::shared_ptr<token_mit_info::list> mit_history_database::get_history_mits_by_
         }
 
         auto row = read_row(address);
-        height_mit_map[height] = row;
+        height_card_map[height] = row;
     }
 
-    auto result = std::make_shared<token_mit_info::list>();
-    for (const auto& pair : height_mit_map) {
+    auto result = std::make_shared<token_card_info::list>();
+    for (const auto& pair : height_card_map) {
         result->emplace_back(std::move(pair.second));
     }
     return result;
 }
 
-std::shared_ptr<token_mit_info::list> mit_history_database::get_history_mits_by_time(
+std::shared_ptr<token_card_info::list> card_history_database::get_history_cards_by_time(
     const short_hash& key, uint32_t time_begin, uint32_t time_end,
     uint64_t limit, uint64_t page_number) const
 {
     // use map to sort by time, decreasely
-    std::map<uint32_t, token_mit_info, std::greater<uint32_t>> time_mit_map;
+    std::map<uint32_t, token_card_info, std::greater<uint32_t>> time_card_map;
 
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
@@ -257,7 +257,7 @@ std::shared_ptr<token_mit_info::list> mit_history_database::get_history_mits_by_
     for (const auto index: records)
     {
         // Stop once we reach the limit (if specified).
-        if ((limit > 0) && (time_mit_map.size() >= limit)) {
+        if ((limit > 0) && (time_card_map.size() >= limit)) {
             break;
         }
 
@@ -284,11 +284,11 @@ std::shared_ptr<token_mit_info::list> mit_history_database::get_history_mits_by_
         }
 
         auto row = read_row(address);
-        time_mit_map[time] = row;
+        time_card_map[time] = row;
     }
 
-    auto result = std::make_shared<token_mit_info::list>();
-    for (const auto& pair : time_mit_map) {
+    auto result = std::make_shared<token_card_info::list>();
+    for (const auto& pair : time_card_map) {
         result->emplace_back(std::move(pair.second));
     }
     return result;

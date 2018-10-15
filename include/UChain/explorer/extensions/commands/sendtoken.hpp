@@ -84,7 +84,7 @@ public:
         (
             "TO_",
             value<std::string>(&argument_.to)->required(),
-            "Asset receiver did/address."
+            "Asset receiver uid/address."
         )
         (
             "TOKEN",
@@ -99,7 +99,7 @@ public:
         (
             "change,c",
             value<std::string>(&option_.change)->default_value(""),
-            "Change to this did/address"
+            "Change to this uid/address"
         )
         (
             "model,m",

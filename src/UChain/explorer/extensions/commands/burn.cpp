@@ -36,12 +36,12 @@ console_result burn::invoke(Json::Value& jv_output,
     auto& blockchain = node.chain_impl();
     blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
-    std::string blackhole_did = did_detail::get_blackhole_did_symbol();
+    std::string blackhole_uid = uid_detail::get_blackhole_uid_symbol();
 
-    if (option_.is_mit) {
+    if (option_.is_card) {
         const char* cmds[] {
             "transfermit", auth_.name.c_str(), auth_.auth.c_str(),
-            blackhole_did.c_str(), argument_.symbol.c_str()
+            blackhole_uid.c_str(), argument_.symbol.c_str()
         };
 
         return dispatch_command(5, cmds, jv_output, node, get_api_version());
@@ -49,7 +49,7 @@ console_result burn::invoke(Json::Value& jv_output,
     else if (!option_.cert_type.empty()) {
         const char* cmds[] {
             "transfercert", auth_.name.c_str(), auth_.auth.c_str(),
-            blackhole_did.c_str(), argument_.symbol.c_str(), option_.cert_type.c_str()
+            blackhole_uid.c_str(), argument_.symbol.c_str(), option_.cert_type.c_str()
         };
 
         return dispatch_command(6, cmds, jv_output, node, get_api_version());
@@ -62,7 +62,7 @@ console_result burn::invoke(Json::Value& jv_output,
         auto&& amount = std::to_string(argument_.amount);
         const char* cmds[] {
             "sendtoken", auth_.name.c_str(), auth_.auth.c_str(),
-            blackhole_did.c_str(), argument_.symbol.c_str(), amount.c_str()
+            blackhole_uid.c_str(), argument_.symbol.c_str(), amount.c_str()
         };
 
         return dispatch_command(6, cmds, jv_output, node, get_api_version());

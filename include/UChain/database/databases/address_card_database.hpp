@@ -1,5 +1,4 @@
 /**
- * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
  *
  * This file is part of UChain.
@@ -18,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_DATABASE_ADDRESS_DID_DATABASE_HPP
-#define UC_DATABASE_ADDRESS_DID_DATABASE_HPP
+#ifndef UC_DATABASE_ADDRESS_CARD_DATABASE_HPP
+#define UC_DATABASE_ADDRESS_CARD_DATABASE_HPP
 
 #include <memory>
 #include <boost/filesystem.hpp>
@@ -34,7 +33,7 @@ using namespace libbitcoin::chain;
 namespace libbitcoin {
 namespace database {
 
-struct BCD_API address_did_statinfo
+struct BCD_API address_card_statinfo
 {
     /// Number of buckets used in the hashtable.
     /// load factor = addrs / buckets
@@ -48,19 +47,19 @@ struct BCD_API address_did_statinfo
 };
 
 /// This is a multimap where the key is the Bitcoin address hash,
-/// which returns several rows giving the address_did for that address.
-class BCD_API address_did_database
+/// which returns several rows giving the address_card for that address.
+class BCD_API address_card_database
 {
 public:
     /// Construct the database.
-    address_did_database(const boost::filesystem::path& lookup_filename,
+    address_card_database(const boost::filesystem::path& lookup_filename,
         const boost::filesystem::path& rows_filename,
         std::shared_ptr<shared_mutex> mutex=nullptr);
 
     /// Close the database (all threads must first be stopped).
-    ~address_did_database();
+    ~address_card_database();
 
-    /// Initialize a new address_did database.
+    /// Initialize a new address_card database.
     bool create();
 
     /// Call before using the database.
@@ -72,24 +71,18 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    template <class BusinessDataType>
+    /// Delete the last row that was added to key.
+    void delete_last_row(const short_hash& key);
+
+    /// Synchonise with disk.
+    void sync();
+
+    /// Return statistical info about the database.
+    address_card_statinfo statinfo() const;
+
     void store_output(const short_hash& key, const output_point& outpoint,
-        uint32_t output_height, uint64_t value, uint16_t business_kd, uint32_t timestamp, BusinessDataType& business_data)
-    {
-        //delete_last_row(key);
-        auto write = [&](memory_ptr data)
-        {
-            auto serial = make_serializer(REMAP_ADDRESS(data));
-            serial.write_byte(static_cast<uint8_t>(point_kind::output)); // 1
-            serial.write_data(outpoint.to_data()); // 36
-            serial.write_4_bytes_little_endian(output_height); // 4
-            serial.write_8_bytes_little_endian(value);  // 8
-            serial.write_2_bytes_little_endian(business_kd); // 2
-            serial.write_4_bytes_little_endian(timestamp); // 4
-            serial.write_data(business_data.to_data());
-        };
-        rows_multimap_.add_row(key, write);
-    }
+        uint32_t output_height, uint64_t value, uint16_t business_kd,
+        uint32_t timestamp, const token_card& mit);
 
     void store_input(const short_hash& key,
         const output_point& inpoint, uint32_t input_height,
@@ -104,29 +97,13 @@ public:
     business_history::list get_business_history(const short_hash& key,
             size_t from_height) const;
     business_history::list get_business_history(const std::string& address,
-        size_t from_height, business_kind kind, uint8_t status) const;
+        size_t from_height, uint8_t status) const;
     business_history::list get_business_history(const std::string& address,
-        size_t from_height, business_kind kind, uint32_t time_begin, uint32_t time_end) const;
+        size_t from_height, uint32_t time_begin, uint32_t time_end) const;
     std::shared_ptr<std::vector<business_history>> get_address_business_history(const std::string& address,
         size_t from_height) const;
-    business_address_did::list get_dids(const std::string& address,
-        size_t from_height, business_kind kind) const;
-    business_address_did::list get_dids(const std::string& address,
-        size_t from_height, size_t to_height = max_uint64) const;
-    business_address_message::list get_messages(const std::string& address,
-        size_t from_height) const;
-
-    //unbind the old did with address
-    void delete_old_did(const short_hash& key);
-
-    /// Delete the last row that was added to key.
-    void delete_last_row(const short_hash& key);
-
-    /// Synchonise with disk.
-    void sync();
-
-    /// Return statistical info about the database.
-    address_did_statinfo statinfo() const;
+    business_address_card::list get_cards(const std::string& address, size_t from_height,
+        token_card::card_status kind = token_card::card_status::card_status_none) const;
 
 private:
     typedef record_hash_table<short_hash> record_map;
@@ -138,7 +115,7 @@ private:
     record_manager lookup_manager_;
     record_map lookup_map_;
 
-    /// List of address_did rows.
+    /// List of address_card rows.
     memory_map rows_file_;
     record_manager rows_manager_;
     record_list rows_list_;

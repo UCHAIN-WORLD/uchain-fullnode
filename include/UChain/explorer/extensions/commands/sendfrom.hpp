@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "sendfrom";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "send ucn from a specified did/address of this account to target did/address, mychange goes to from_did/address."; }
+    const char* description() override { return "send ucn from a specified uid/address of this account to target uid/address, mychange goes to from_uid/address."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -84,12 +84,12 @@ public:
         (
             "FROM_",
             value<std::string>(&argument_.from)->required(),
-            "Send from this did/address"
+            "Send from this uid/address"
         )
         (
             "TO_",
             value<std::string>(&argument_.to)->required(),
-            "Send to this did/address"
+            "Send to this uid/address"
         )
         (
             "AMOUNT",
@@ -99,7 +99,7 @@ public:
         (
             "change,c",
             value<std::string>(&option_.change)->default_value(""),
-            "Change to this did/address"
+            "Change to this uid/address"
         )
         (
             "memo,m",

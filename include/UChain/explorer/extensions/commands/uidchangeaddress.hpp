@@ -30,21 +30,23 @@ namespace explorer {
 namespace commands {
 
 
-/************************ listdids *************************/
+/************************ uidchangeaddress *************************/
 
-class listdids: public command_extension
+class uidchangeaddress: public command_extension
 {
 public:
-    static const char* symbol(){ return "listdids";}
+    static const char* symbol(){ return "uidchangeaddress";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "list DIDs in detail."; }
+    const char* description() override { return "uidchangeaddress "; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("ACCOUNTAUTH", 1)
+            .add("TOADDRESS", 1)
+            .add("UIDSYMBOL", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -53,6 +55,8 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.to, "TOADDRESS", variables, input, raw);
+        load_input(argument_.symbol, "UIDSYMBOL", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -67,23 +71,28 @@ public:
         )
         (
             "ACCOUNTNAME",
-            value<std::string>(&auth_.name),
+            value<std::string>(&auth_.name)->required(),
             BX_ACCOUNT_NAME
         )
         (
             "ACCOUNTAUTH",
-            value<std::string>(&auth_.auth),
+            value<std::string>(&auth_.auth)->required(),
             BX_ACCOUNT_AUTH
         )
         (
-            "limit,l",
-            value<uint64_t>(&argument_.limit)->default_value(100),
-            "DID count per page.Default is 100."
+            "TOADDRESS",
+            value<std::string>(&argument_.to)->required(),
+            "Target address"
         )
         (
-            "index,i",
-            value<uint64_t>(&argument_.index)->default_value(1),
-            "Page index. Default is 1."
+            "UIDSYMBOL",
+            value<std::string>(&argument_.symbol)->required(),
+            "Did symbol"
+        )
+        (
+            "fee,f",
+            value<uint64_t>(&argument_.fee)->default_value(10000),
+            "Transaction fee. defaults to 10000 UCN bits"
         );
 
         return options;
@@ -98,10 +107,9 @@ public:
 
     struct argument
     {
-        argument():limit(100), index(1)
-        {};
-        uint64_t limit;
-        uint64_t index;
+        std::string to;
+        std::string symbol;
+        uint64_t fee;
     } argument_;
 
     struct option
@@ -109,9 +117,6 @@ public:
     } option_;
 
 };
-
-
-
 
 } // namespace commands
 } // namespace explorer

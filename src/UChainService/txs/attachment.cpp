@@ -34,11 +34,11 @@ attachment::attachment()
     reset();
 }
 
-attachment::attachment(const std::string& from_did, const std::string& to_did)
-    : version(DID_ATTACH_VERIFY_VERSION)
+attachment::attachment(const std::string& from_uid, const std::string& to_uid)
+    : version(UID_ATTACH_VERIFY_VERSION)
     , type(0) //attachment_type::attach_none;
-    , todid(to_did)
-    , fromdid(from_did)
+    , touid(to_uid)
+    , fromuid(from_uid)
 {
     auto visitor = reset_visitor();
     boost::apply_visitor(visitor, attach);
@@ -71,8 +71,8 @@ void attachment::reset()
     type = 0; //attachment_type::attach_none;
     auto visitor = reset_visitor();
     boost::apply_visitor(visitor, attach);
-    todid = "";
-    fromdid = "";
+    touid = "";
+    fromuid = "";
 }
 
 bool attachment::is_valid() const
@@ -89,10 +89,10 @@ bool attachment::is_valid_type() const
     return ((UCN_TYPE == type)
         || (TOKEN_TYPE == type)
         || (TOKEN_CERT_TYPE == type)
-        || (TOKEN_MIT_TYPE == type)
+        || (TOKEN_CARD_TYPE == type)
         || (MESSAGE_TYPE == type)
         || (UCN_AWARD_TYPE == type)
-        || (DID_TYPE == type));
+        || (UID_TYPE == type));
 }
 
 
@@ -118,9 +118,9 @@ bool attachment::from_data(reader& source)
     if (result)
         type = source.read_4_bytes_little_endian();
 
-    if (result && version == DID_ATTACH_VERIFY_VERSION) {
-            todid = source.read_string();
-            fromdid = source.read_string();
+    if (result && version == UID_ATTACH_VERIFY_VERSION) {
+            touid = source.read_string();
+            fromuid = source.read_string();
     }
 
     result = static_cast<bool>(source);
@@ -146,9 +146,9 @@ bool attachment::from_data(reader& source)
                 attach = token_cert();
                 break;
             }
-            case TOKEN_MIT_TYPE:
+            case TOKEN_CARD_TYPE:
             {
-                attach = token_mit();
+                attach = token_card();
                 break;
             }
             case MESSAGE_TYPE:
@@ -156,9 +156,9 @@ bool attachment::from_data(reader& source)
                 attach = blockchain_message();
                 break;
             }
-            case DID_TYPE:
+            case UID_TYPE:
             {
-                attach = did();
+                attach = uid();
                 break;
             }
         }
@@ -194,9 +194,9 @@ void attachment::to_data(writer& sink) const
 {
     sink.write_4_bytes_little_endian(version);
     sink.write_4_bytes_little_endian(type);
-    if (version == DID_ATTACH_VERIFY_VERSION) {
-        sink.write_string(todid);
-        sink.write_string(fromdid);
+    if (version == UID_ATTACH_VERIFY_VERSION) {
+        sink.write_string(touid);
+        sink.write_string(fromuid);
     }
     auto visitor = to_data_visitor(sink);
     boost::apply_visitor(visitor, attach);
@@ -205,8 +205,8 @@ void attachment::to_data(writer& sink) const
 uint64_t attachment::serialized_size() const
 {
     uint64_t size = 0;
-    if(version == DID_ATTACH_VERIFY_VERSION) {
-        size = 4 + 4 + (todid.size() + 1) + (fromdid.size() + 1);
+    if(version == UID_ATTACH_VERIFY_VERSION) {
+        size = 4 + 4 + (touid.size() + 1) + (fromuid.size() + 1);
     }
     else {
         size = 4 + 4;
@@ -224,9 +224,9 @@ std::string attachment::to_string() const
 
     ss << "\t version = " << version << "\n"
         << "\t type = " << type << "\n";
-    if (version == DID_ATTACH_VERIFY_VERSION) {
-        ss << "\t fromdid = " << fromdid << "\n"
-            << "\t todid = " << todid << "\n";
+    if (version == UID_ATTACH_VERIFY_VERSION) {
+        ss << "\t fromuid = " << fromuid << "\n"
+            << "\t touid = " << touid << "\n";
     }
     auto visitor = to_string_visitor();
     ss << boost::apply_visitor(visitor, attach);
@@ -252,22 +252,22 @@ void attachment::set_type(uint32_t type)
      this->type = type;
 }
 
-std::string attachment::get_to_did() const
+std::string attachment::get_to_uid() const
 {
-    return todid;
+    return touid;
 }
-void attachment::set_to_did(const std::string& did)
+void attachment::set_to_uid(const std::string& uid)
 {
-    this->todid = did;
+    this->touid = uid;
 }
 
-std::string attachment::get_from_did() const
+std::string attachment::get_from_uid() const
 {
-    return fromdid;
+    return fromuid;
 }
-void attachment::set_from_did(const std::string& did)
+void attachment::set_from_uid(const std::string& uid)
 {
-     this->fromdid = did;
+     this->fromuid = uid;
 }
 
 attachment::attachment_data_type& attachment::get_attach()

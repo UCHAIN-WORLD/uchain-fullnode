@@ -79,22 +79,22 @@ bool data_base::initialize(const path& prefix, const chain::block& genesis)
     return instance.stop();
 }
 
-bool data_base::initialize_dids(const path& prefix)
+bool data_base::initialize_uids(const path& prefix)
 {
     const store paths(prefix);
-    if (paths.dids_exist())
+    if (paths.uids_exist())
         return true;
-    if (!paths.touch_dids())
+    if (!paths.touch_uids())
         return false;
 
     data_base instance(prefix, 0, 0);
-    if (!instance.create_dids())
+    if (!instance.create_uids())
         return false;
 
-    instance.set_blackhole_did();
+    instance.set_blackhole_uid();
 
     log::info(LOG_DATABASE)
-        << "Upgrading did table is complete.";
+        << "Upgrading uid table is complete.";
 
     return instance.stop();
 }
@@ -117,16 +117,16 @@ bool data_base::initialize_certs(const path& prefix)
     return instance.stop();
 }
 
-bool data_base::initialize_mits(const path& prefix)
+bool data_base::initialize_cards(const path& prefix)
 {
     const store paths(prefix);
     if (paths.mits_exist())
         return true;
-    if (!paths.touch_mits())
+    if (!paths.touch_cards())
         return false;
 
     data_base instance(prefix, 0, 0);
-    if (!instance.create_mits())
+    if (!instance.create_cards())
         return false;
 
     log::info(LOG_DATABASE)
@@ -147,9 +147,9 @@ bool data_base::upgrade_version_63(const path& prefix)
         return false; // no version before, initialize all intead of upgrade.
     }
 
-    if (!initialize_dids(prefix)) {
+    if (!initialize_uids(prefix)) {
         log::error(LOG_DATABASE)
-            << "Failed to upgrade did database.";
+            << "Failed to upgrade uid database.";
         return false;
     }
 
@@ -159,7 +159,7 @@ bool data_base::upgrade_version_63(const path& prefix)
         return false;
     }
 
-    if (!initialize_mits(prefix)) {
+    if (!initialize_cards(prefix)) {
         log::error(LOG_DATABASE)
             << "Failed to upgrade mit database.";
         return false;
@@ -179,21 +179,21 @@ void data_base::set_admin(const std::string& name, const std::string& passwd)
     accounts.set_admin(name, passwd);
 }
 
-void data_base::set_blackhole_did()
+void data_base::set_blackhole_uid()
 {
-    const std::string did_symbol = did_detail::get_blackhole_did_symbol();
-    const std::string& did_address = wallet::payment_address::blackhole_address;
-    did_detail diddetail(did_symbol, did_address);
+    const std::string uid_symbol = uid_detail::get_blackhole_uid_symbol();
+    const std::string& uid_address = wallet::payment_address::blackhole_address;
+    uid_detail uiddetail(uid_symbol, uid_address);
 
-    data_chunk data(did_address.begin(), did_address.end());
+    data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
 
     output_point outpoint = { null_hash, max_uint32 };
     uint32_t output_height = max_uint32;
     uint64_t value = 0;
 
-    push_did_detail(diddetail, hash, outpoint, output_height, value);
-    synchronize_dids();
+    push_uid_detail(uiddetail, hash, outpoint, output_height, value);
+    synchronize_uids();
 }
 
 data_base::store::store(const path& prefix)
@@ -211,17 +211,17 @@ data_base::store::store(const path& prefix)
     address_tokens_rows = prefix / "address_token_row"; // for blockchain
     account_tokens_lookup = prefix / "account_token_table";
     account_tokens_rows = prefix / "account_token_row";
-    dids_lookup = prefix / "did_table";
-    address_dids_lookup = prefix / "address_did_table"; // for blockchain
-    address_dids_rows = prefix / "address_did_row"; // for blockchain
+    uids_lookup = prefix / "uid_table";
+    address_uids_lookup = prefix / "address_uid_table"; // for blockchain
+    address_uids_rows = prefix / "address_uid_row"; // for blockchain
     account_addresses_lookup = prefix / "account_address_table";
     account_addresses_rows = prefix / "account_address_rows";
     /* end database for account, token, address_token relationship */
-    mits_lookup = prefix / "mit_table";
-    address_mits_lookup = prefix / "address_mit_table"; // for blockchain
-    address_mits_rows = prefix / "address_mit_row"; // for blockchain
-    mit_history_lookup = prefix / "mit_history_table"; // for blockchain
-    mit_history_rows = prefix / "mit_history_row"; // for blockchain
+    mits_lookup = prefix / "card_table";
+    address_cards_lookup = prefix / "address_card_table"; // for blockchain
+    address_cards_rows = prefix / "address_card_row"; // for blockchain
+    card_history_lookup = prefix / "card_history_table"; // for blockchain
+    card_history_rows = prefix / "card_history_row"; // for blockchain
 
     // Height-based (reverse) lookup.
     blocks_index = prefix / "block_index";
@@ -253,33 +253,33 @@ bool data_base::store::touch_all() const
         touch_file(address_tokens_rows) &&
         touch_file(account_tokens_lookup) &&
         touch_file(account_tokens_rows) &&
-        touch_file(dids_lookup) &&
-        touch_file(address_dids_lookup) &&
-        touch_file(address_dids_rows) &&
+        touch_file(uids_lookup) &&
+        touch_file(address_uids_lookup) &&
+        touch_file(address_uids_rows) &&
         touch_file(account_addresses_lookup) &&
         touch_file(account_addresses_rows) &&
         /* end database for account, token, address_token relationship */
         touch_file(mits_lookup) &&
-        touch_file(address_mits_lookup) &&
-        touch_file(address_mits_rows) &&
-        touch_file(mit_history_lookup) &&
-        touch_file(mit_history_rows);
+        touch_file(address_cards_lookup) &&
+        touch_file(address_cards_rows) &&
+        touch_file(card_history_lookup) &&
+        touch_file(card_history_rows);
 }
 
-bool data_base::store::dids_exist() const
+bool data_base::store::uids_exist() const
 {
     return
-        boost::filesystem::exists(dids_lookup) ||
-        boost::filesystem::exists(address_dids_lookup) ||
-        boost::filesystem::exists(address_dids_rows);
+        boost::filesystem::exists(uids_lookup) ||
+        boost::filesystem::exists(address_uids_lookup) ||
+        boost::filesystem::exists(address_uids_rows);
 }
 
-bool data_base::store::touch_dids() const
+bool data_base::store::touch_uids() const
 {
     return
-        touch_file(dids_lookup) &&
-        touch_file(address_dids_lookup) &&
-        touch_file(address_dids_rows);
+        touch_file(uids_lookup) &&
+        touch_file(address_uids_lookup) &&
+        touch_file(address_uids_rows);
 }
 
 bool data_base::store::certs_exist() const
@@ -296,20 +296,20 @@ bool data_base::store::mits_exist() const
 {
     return
         boost::filesystem::exists(mits_lookup) ||
-        boost::filesystem::exists(address_mits_lookup) ||
-        boost::filesystem::exists(address_mits_rows) ||
-        boost::filesystem::exists(mit_history_lookup) ||
-        boost::filesystem::exists(mit_history_rows);
+        boost::filesystem::exists(address_cards_lookup) ||
+        boost::filesystem::exists(address_cards_rows) ||
+        boost::filesystem::exists(card_history_lookup) ||
+        boost::filesystem::exists(card_history_rows);
 }
 
-bool data_base::store::touch_mits() const
+bool data_base::store::touch_cards() const
 {
     return
         touch_file(mits_lookup) &&
-        touch_file(address_mits_lookup) &&
-        touch_file(address_mits_rows) &&
-        touch_file(mit_history_lookup) &&
-        touch_file(mit_history_rows);
+        touch_file(address_cards_lookup) &&
+        touch_file(address_cards_rows) &&
+        touch_file(card_history_lookup) &&
+        touch_file(card_history_rows);
 }
 
 data_base::db_metadata::db_metadata():version_("")
@@ -459,19 +459,19 @@ data_base::data_base(const store& paths, size_t history_height,
     stealth(paths.stealth_rows, mutex_),
     spends(paths.spends_lookup, mutex_),
     transactions(paths.transactions_lookup, mutex_),
-    /* begin database for account, token, address_token, did relationship */
+    /* begin database for account, token, address_token, uid relationship */
     accounts(paths.accounts_lookup, mutex_),
     tokens(paths.tokens_lookup, mutex_),
     address_tokens(paths.address_tokens_lookup, paths.address_tokens_rows, mutex_),
     account_tokens(paths.account_tokens_lookup, paths.account_tokens_rows, mutex_),
     certs(paths.certs_lookup, mutex_),
-    dids(paths.dids_lookup, mutex_),
-    address_dids(paths.address_dids_lookup, paths.address_dids_rows, mutex_),
+    uids(paths.uids_lookup, mutex_),
+    address_uids(paths.address_uids_lookup, paths.address_uids_rows, mutex_),
     account_addresses(paths.account_addresses_lookup, paths.account_addresses_rows, mutex_),
-    /* end database for account, token, address_token, did relationship */
+    /* end database for account, token, address_token, uid relationship */
     mits(paths.mits_lookup, mutex_),
-    address_mits(paths.address_mits_lookup, paths.address_mits_rows, mutex_),
-    mit_history(paths.mit_history_lookup, paths.mit_history_rows, mutex_)
+    address_cards(paths.address_cards_lookup, paths.address_cards_rows, mutex_),
+    card_history(paths.card_history_lookup, paths.card_history_rows, mutex_)
 {
 }
 
@@ -525,21 +525,21 @@ bool data_base::create()
         address_tokens.create() &&
         account_tokens.create() &&
         certs.create() &&
-        dids.create() &&
-        address_dids.create() &&
+        uids.create() &&
+        address_uids.create() &&
         account_addresses.create() &&
         /* end database for account, token, address_token relationship */
         mits.create() &&
-        address_mits.create() &&
-        mit_history.create()
+        address_cards.create() &&
+        card_history.create()
         ;
 }
 
-bool data_base::create_dids()
+bool data_base::create_uids()
 {
     return
-        dids.create() &&
-        address_dids.create();
+        uids.create() &&
+        address_uids.create();
 }
 
 bool data_base::create_certs()
@@ -548,12 +548,12 @@ bool data_base::create_certs()
         certs.create();
 }
 
-bool data_base::create_mits()
+bool data_base::create_cards()
 {
     return
         mits.create() &&
-        address_mits.create() &&
-        mit_history.create();
+        address_cards.create() &&
+        card_history.create();
 }
 
 // Start must be called before performing queries.
@@ -587,13 +587,13 @@ bool data_base::start()
         address_tokens.start() &&
         account_tokens.start() &&
         certs.start() &&
-        dids.start() &&
-        address_dids.start() &&
+        uids.start() &&
+        address_uids.start() &&
         account_addresses.start() &&
         /* end database for account, token, address_token relationship */
         mits.start() &&
-        address_mits.start() &&
-        mit_history.start()
+        address_cards.start() &&
+        card_history.start()
         ;
     const auto end_exclusive = end_write();
 
@@ -616,13 +616,13 @@ bool data_base::stop()
     const auto address_tokens_stop = address_tokens.stop();
     const auto account_tokens_stop = account_tokens.stop();
     const auto certs_stop = certs.stop();
-    const auto dids_stop = dids.stop();
-    const auto address_dids_stop = address_dids.stop();
+    const auto uids_stop = uids.stop();
+    const auto address_uids_stop = address_uids.stop();
     const auto account_addresses_stop = account_addresses.stop();
     /* end database for account, token, address_token relationship */
     const auto mits_stop = mits.stop();
-    const auto address_mits_stop = address_mits.stop();
-    const auto mit_history_stop = mit_history.stop();
+    const auto address_cards_stop = address_cards.stop();
+    const auto card_history_stop = card_history.stop();
     const auto end_exclusive = end_write();
 
     // This should remove the lock file. This is not important for locking
@@ -644,13 +644,13 @@ bool data_base::stop()
         address_tokens_stop &&
         account_tokens_stop &&
         certs_stop &&
-        dids_stop &&
-        address_dids_stop &&
+        uids_stop &&
+        address_uids_stop &&
         account_addresses_stop &&
         /* end database for account, token, address_token relationship */
         mits_stop &&
-        address_mits_stop &&
-        mit_history_stop &&
+        address_cards_stop &&
+        card_history_stop &&
         end_exclusive;
 }
 
@@ -666,15 +666,15 @@ bool data_base::close()
     const auto accounts_close = accounts.close();
     const auto tokens_close = tokens.close();
     const auto address_tokens_close = address_tokens.close();
-    const auto address_dids_close = address_dids.close();
+    const auto address_uids_close = address_uids.close();
     const auto account_tokens_close = account_tokens.close();
     const auto certs_close = certs.close();
-    const auto dids_close = dids.close();
+    const auto uids_close = uids.close();
     const auto account_addresses_close = account_addresses.close();
     /* end database for account, token, address_token relationship */
     const auto mits_close = mits.close();
-    const auto address_mits_close = address_mits.close();
-    const auto mit_history_close = mit_history.close();
+    const auto address_cards_close = address_cards.close();
+    const auto card_history_close = card_history.close();
 
     // Return the cumulative result of the database closes.
     return
@@ -687,15 +687,15 @@ bool data_base::close()
         accounts_close &&
         tokens_close &&
         address_tokens_close&&
-        address_dids_close &&
+        address_uids_close &&
         account_tokens_close&&
         certs_close &&
-        dids_close &&
+        uids_close &&
         account_addresses_close &&
         /* end database for account, token, address_token relationship */
         mits_close &&
-        address_mits_close &&
-        mit_history_close
+        address_cards_close &&
+        card_history_close
         ;
 }
 
@@ -762,20 +762,20 @@ void data_base::synchronize()
     address_tokens.sync();
     account_tokens.sync();
     certs.sync();
-    dids.sync();
-    address_dids.sync();
+    uids.sync();
+    address_uids.sync();
     account_addresses.sync();
     /* end database for account, token, address_token relationship */
     mits.sync();
-    address_mits.sync();
-    mit_history.sync();
+    address_cards.sync();
+    card_history.sync();
     blocks.sync();
 }
 
-void data_base::synchronize_dids()
+void data_base::synchronize_uids()
 {
-    dids.sync();
-    address_dids.sync();
+    uids.sync();
+    address_uids.sync();
 }
 
 void data_base::synchronize_certs()
@@ -783,11 +783,11 @@ void data_base::synchronize_certs()
     certs.sync();
 }
 
-void data_base::synchronize_mits()
+void data_base::synchronize_cards()
 {
     mits.sync();
-    address_mits.sync();
-    mit_history.sync();
+    address_cards.sync();
+    card_history.sync();
 }
 
 void data_base::push(const block& block)
@@ -813,11 +813,11 @@ void data_base::push(const block& block, uint64_t height)
         if (!tx.is_coinbase())
             push_inputs(tx_hash, height, tx.inputs);
 
-        // std::string didaddress = tx.get_did_transfer_old_address();
-        // if (!didaddress.empty()) {
-        //     data_chunk data(didaddress.begin(), didaddress.end());
+        // std::string uidaddress = tx.get_uid_transfer_old_address();
+        // if (!uidaddress.empty()) {
+        //     data_chunk data(uidaddress.begin(), uidaddress.end());
         //     short_hash key = ripemd160_hash(data);
-        //     address_dids.delete_old_did(key);
+        //     address_uids.delete_old_uid(key);
         // }
 
         // Add outputs
@@ -1029,49 +1029,49 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
             data_chunk data(address_str.begin(), address_str.end());
             short_hash hash = ripemd160_hash(data);
             bc::chain::output op = *output;
-            // NOTICE: pop only the pushed row, at present did and mit is
+            // NOTICE: pop only the pushed row, at present uid and mit is
             // not stored in address_token, but stored separately
-            // in address_did and address_did
-            if (!op.is_did() && !op.is_token_mit()) {
+            // in address_uid and address_uid
+            if (!op.is_uid() && !op.is_token_card()) {
                 address_tokens.delete_last_row(hash);
             }
-            // remove token or did from database
+            // remove token or uid from database
             if (op.is_token_issue() || op.is_token_secondaryissue()) {
                 auto symbol = op.get_token_symbol();
                 const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
                 const auto symbol_hash = sha256_hash(symbol_data);
                 tokens.remove(symbol_hash);
             }
-            else if (op.is_did()) {
-                auto symbol = op.get_did_symbol();
+            else if (op.is_uid()) {
+                auto symbol = op.get_uid_symbol();
                 const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
                 const auto symbol_hash = sha256_hash(symbol_data);
 
-                if(op.is_did_register())
+                if(op.is_uid_register())
                 {
-                    address_dids.delete_last_row(hash);
-                    address_dids.sync();
-                    dids.remove(symbol_hash);
-                    dids.sync();
+                    address_uids.delete_last_row(hash);
+                    address_uids.sync();
+                    uids.remove(symbol_hash);
+                    uids.sync();
                 }
-                else if(op.is_did_transfer() )
+                else if(op.is_uid_transfer() )
                 {
-                    std::shared_ptr<blockchain_did> blockchain_did_=  dids.pop_did_transfer(symbol_hash);
-                    dids.sync();
+                    std::shared_ptr<blockchain_uid> blockchain_uid_=  uids.pop_uid_transfer(symbol_hash);
+                    uids.sync();
 
-                    if(blockchain_did_)
+                    if(blockchain_uid_)
                     {
-                        auto old_address = blockchain_did_->get_did().get_address();
+                        auto old_address = blockchain_uid_->get_uid().get_address();
                         data_chunk data_old(old_address.begin(), old_address.end());
                         short_hash old_hash = ripemd160_hash(data_old);
 
-                        address_dids.delete_last_row(old_hash);
-                        address_dids.delete_last_row(hash);
+                        address_uids.delete_last_row(old_hash);
+                        address_uids.delete_last_row(hash);
 
-                        address_dids.store_output(old_hash, blockchain_did_->get_tx_point(), blockchain_did_->get_height(), 0,
-                            static_cast<typename std::underlying_type<business_kind>::type>(business_kind::did_register),
-                            timestamp_, blockchain_did_->get_did());
-                        address_dids.sync();
+                        address_uids.store_output(old_hash, blockchain_uid_->get_tx_point(), blockchain_uid_->get_height(), 0,
+                            static_cast<typename std::underlying_type<business_kind>::type>(business_kind::uid_register),
+                            timestamp_, blockchain_uid_->get_uid());
+                        address_uids.sync();
 
                     }
                 }
@@ -1086,15 +1086,15 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
                     certs.remove(key_hash);
                 }
             }
-            else if (op.is_token_mit()) {
-                address_mits.delete_last_row(hash);
+            else if (op.is_token_card()) {
+                address_cards.delete_last_row(hash);
 
-                const auto mit = op.get_token_mit();
+                const auto mit = op.get_token_card();
                 auto symbol = mit.get_symbol();
                 const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
 
                 const auto symbol_short_hash = ripemd160_hash(symbol_data);
-                mit_history.delete_last_row(symbol_short_hash);
+                card_history.delete_last_row(symbol_short_hash);
 
                 if (mit.is_register_status()) {
                     const auto symbol_hash = sha256_hash(symbol_data);
@@ -1118,7 +1118,7 @@ void data_base::push_attachment(const attachment& attach, const payment_address&
     data_chunk data(address_str.begin(), address_str.end());
     short_hash hash = ripemd160_hash(data);
     auto visitor = attachment_visitor(this, hash, outpoint, output_height, value,
-        attach.get_from_did(), attach.get_to_did());
+        attach.get_from_uid(), attach.get_to_uid());
     boost::apply_visitor(visitor, const_cast<attachment&>(attach).get_attach());
 }
 
@@ -1194,48 +1194,48 @@ void data_base::push_token_transfer(const token_transfer& sp_transfer, const sho
 }
 /* end store token related info into database */
 
-/* begin store did related info into database */
-void data_base::push_did(const did& sp, const short_hash& key,
+/* begin store uid related info into database */
+void data_base::push_uid(const uid& sp, const short_hash& key,
     const output_point& outpoint, uint32_t output_height, uint64_t value) // sp = smart property
 {
-    push_did_detail(sp.get_data(), key, outpoint, output_height, value);
+    push_uid_detail(sp.get_data(), key, outpoint, output_height, value);
 }
 
-void data_base::push_did_detail(const did_detail& sp_detail, const short_hash& key,
+void data_base::push_uid_detail(const uid_detail& sp_detail, const short_hash& key,
     const output_point& outpoint, uint32_t output_height, uint64_t value)
 {
     const data_chunk& data = data_chunk(sp_detail.get_symbol().begin(), sp_detail.get_symbol().end());
     const auto hash = sha256_hash(data);
-    auto bc_did = blockchain_did(0, outpoint,output_height, blockchain_did::address_current,sp_detail);
-    dids.store(hash, bc_did);
-    dids.sync();
-    address_dids.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::did_register),
+    auto bc_uid = blockchain_uid(0, outpoint,output_height, blockchain_uid::address_current,sp_detail);
+    uids.store(hash, bc_uid);
+    uids.sync();
+    address_uids.store_output(key, outpoint, output_height, value,
+        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::uid_register),
         timestamp_, sp_detail);
-    address_dids.sync();
+    address_uids.sync();
 }
 
-/* end store did related info into database */
+/* end store uid related info into database */
 
 /* begin store mit related info into database */
-void data_base::push_mit(const token_mit& mit, const short_hash& key,
+void data_base::push_card(const token_card& mit, const short_hash& key,
     const output_point& outpoint, uint32_t output_height, uint64_t value,
-    const std::string from_did, std::string to_did)
+    const std::string from_uid, std::string to_uid)
 {
-    token_mit_info mit_info{output_height, timestamp_, to_did, mit};
+    token_card_info card_info{output_height, timestamp_, to_uid, mit};
 
     if (mit.is_register_status()) {
-        mits.store(mit_info);
+        mits.store(card_info);
         mits.sync();
     }
 
-    address_mits.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_mit),
+    address_cards.store_output(key, outpoint, output_height, value,
+        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_card),
         timestamp_, mit);
-    address_mits.sync();
+    address_cards.sync();
 
-    mit_history.store(mit_info);
-    mit_history.sync();
+    card_history.store(card_info);
+    card_history.sync();
 }
 /* end store mit related info into database */
 

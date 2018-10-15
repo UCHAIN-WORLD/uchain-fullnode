@@ -55,9 +55,9 @@ console_result createtoken::invoke(Json::Value& jv_output,
     // check token symbol
     check_token_symbol(option_.symbol, true);
 
-    // check did symbol
-    auto issued_did = option_.issuer;
-    check_did_symbol(issued_did);
+    // check uid symbol
+    auto issued_uid = option_.issuer;
+    check_uid_symbol(issued_uid);
 
     if (option_.description.length() > TOKEN_DETAIL_DESCRIPTION_FIX_SIZE)
         throw token_description_length_exception{"token description length must be less than 64."};
@@ -72,16 +72,16 @@ console_result createtoken::invoke(Json::Value& jv_output,
     if (option_.maximum_supply.volume == 0u)
         throw argument_legality_exception{"volume cannot be zero."};
 
-    // check did exists
-    if (!blockchain.is_did_exist(issued_did)) {
-        throw did_symbol_notfound_exception{
-            "The did '" + issued_did + "' does not exist on the blockchain, maybe you should registerdid first"};
+    // check uid exists
+    if (!blockchain.is_uid_exist(issued_uid)) {
+        throw uid_symbol_notfound_exception{
+            "The uid '" + issued_uid + "' does not exist on the blockchain, maybe you should registeruid first"};
     }
 
-    // check did is owned by the account
-    if (!blockchain.is_account_owned_did(auth_.name, issued_did)) {
-        throw did_symbol_notowned_exception{
-            "The did '" + issued_did + "' is not owned by " + auth_.name};
+    // check uid is owned by the account
+    if (!blockchain.is_account_owned_uid(auth_.name, issued_uid)) {
+        throw uid_symbol_notowned_exception{
+            "The uid '" + issued_uid + "' is not owned by " + auth_.name};
     }
 
     // check token exists
@@ -99,7 +99,7 @@ console_result createtoken::invoke(Json::Value& jv_output,
     acc->set_symbol(option_.symbol);
     acc->set_maximum_supply(option_.maximum_supply.volume);
     acc->set_decimal_number(static_cast<uint8_t>(option_.decimal_number));
-    acc->set_issuer(issued_did);
+    acc->set_issuer(issued_uid);
     acc->set_description(option_.description);
     // use 127 to represent freely secondary issue, and 255 for its secondary issued status.
     acc->set_secondaryissue_threshold((threshold == -1) ?

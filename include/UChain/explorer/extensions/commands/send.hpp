@@ -36,7 +36,7 @@ public:
     static const char* symbol(){ return "send";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "send ucn to a targert did/address."; }
+    const char* description() override { return "send ucn to a targert uid/address."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -80,7 +80,7 @@ public:
         (
             "TO_",
             value<std::string>(&argument_.to)->required(),
-            "Send to this did/address"
+            "Send to this uid/address"
         )
         (
             "AMOUNT",
@@ -90,7 +90,7 @@ public:
         (
             "change,c",
             value<std::string>(&option_.change)->default_value(""),
-            "Change to this did/address"
+            "Change to this uid/address"
         )
         (
             "memo,m",

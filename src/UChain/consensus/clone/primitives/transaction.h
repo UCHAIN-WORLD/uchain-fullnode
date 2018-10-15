@@ -223,7 +223,7 @@ public:
         READWRITE(status);
         READWRITE(symbol);
         READWRITE(address);
-        if (status == MIT_STATUS_REGISTER) {
+        if (status == CARD_STATUS_REGISTER) {
             READWRITE(content);
         }
     }
@@ -278,10 +278,10 @@ public:
         //NCONST_PTR(this)->SerializationOp(s, CSerActionSerialize(), nType, nVersion);
         (::SerReadWrite(s, (status), nType, nVersion, CSerActionSerialize()));
         switch(status) {
-            case 1: // did detail
+            case 1: // uid detail
                 (::SerReadWrite(s, (*(CDidDetail*)(&detail)), nType, nVersion, CSerActionSerialize()));
                 break;
-            case 2: // did transfer
+            case 2: // uid transfer
                 (::SerReadWrite(s, (*(CDidTransfer*)(&trans)), nType, nVersion, CSerActionSerialize()));
                 break;
         };
@@ -291,10 +291,10 @@ public:
         //SerializationOp(s, CSerActionUnserialize(), nType, nVersion);
         (::SerReadWrite(s, (status), nType, nVersion, CSerActionUnserialize()));
         switch(status) {
-            case 1: // did detail
+            case 1: // uid detail
                 (::SerReadWrite(s, (*(CDidDetail*)(&detail)), nType, nVersion, CSerActionUnserialize()));
                 break;
-            case 2: // did transfer
+            case 2: // uid transfer
                 (::SerReadWrite(s, (*(CDidTransfer*)(&trans)), nType, nVersion, CSerActionUnserialize()));
                 break;
         };
@@ -311,13 +311,13 @@ public:
     // add for attachment
     uint32_t version;
     uint32_t type;
-    std::string fromdid;
-    std::string todid;
+    std::string fromuid;
+    std::string touid;
 
     CAsset asset;
     CAssetCert assetcert;
     CAssetMit mit;
-    CDid did;
+    CDid uid;
     CMessage message;
 
     CTxOut()
@@ -340,9 +340,9 @@ public:
         (::SerReadWrite(s, (*(CScriptBase*)(&scriptPubKey)), nType, nVersion, CSerActionSerialize()));
         (::SerReadWrite(s, (version), nType, nVersion, CSerActionSerialize()));
         (::SerReadWrite(s, (type), nType, nVersion, CSerActionSerialize()));
-        if (version == DID_ATTACH_VERIFY_VERSION) {
-            (::SerReadWrite(s, (fromdid), nType, nVersion, CSerActionSerialize()));
-            (::SerReadWrite(s, (todid), nType, nVersion, CSerActionSerialize()));
+        if (version == UID_ATTACH_VERIFY_VERSION) {
+            (::SerReadWrite(s, (fromuid), nType, nVersion, CSerActionSerialize()));
+            (::SerReadWrite(s, (touid), nType, nVersion, CSerActionSerialize()));
         }
 
         switch(type) {
@@ -356,8 +356,8 @@ public:
             case 3: // message
                 (::SerReadWrite(s, (*(CMessage*)(&message)), nType, nVersion, CSerActionSerialize()));
                 break;
-            case 4: //did
-                (::SerReadWrite(s, (*(CDid*)(&did)), nType, nVersion, CSerActionSerialize()));
+            case 4: //uid
+                (::SerReadWrite(s, (*(CDid*)(&uid)), nType, nVersion, CSerActionSerialize()));
                 break;
             case 5: // asset cert
                 (::SerReadWrite(s, (*(CAssetCert*)(&assetcert)), nType, nVersion, CSerActionSerialize()));
@@ -374,9 +374,9 @@ public:
         (::SerReadWrite(s, (*(CScriptBase*)(&scriptPubKey)), nType, nVersion, CSerActionUnserialize()));
         (::SerReadWrite(s, (version), nType, nVersion, CSerActionUnserialize()));
         (::SerReadWrite(s, (type), nType, nVersion, CSerActionUnserialize()));
-        if (version == DID_ATTACH_VERIFY_VERSION) {
-            (::SerReadWrite(s, (fromdid), nType, nVersion, CSerActionUnserialize()));
-            (::SerReadWrite(s, (todid), nType, nVersion, CSerActionUnserialize()));
+        if (version == UID_ATTACH_VERIFY_VERSION) {
+            (::SerReadWrite(s, (fromuid), nType, nVersion, CSerActionUnserialize()));
+            (::SerReadWrite(s, (touid), nType, nVersion, CSerActionUnserialize()));
         }
         switch(type) {
             case 0: // ucn
@@ -389,8 +389,8 @@ public:
             case 3: // message
                 (::SerReadWrite(s, (*(CMessage*)(&message)), nType, nVersion, CSerActionUnserialize()));
                 break;
-            case 4: // did
-                (::SerReadWrite(s, (*(CDid*)(&did)), nType, nVersion, CSerActionUnserialize()));
+            case 4: // uid
+                (::SerReadWrite(s, (*(CDid*)(&uid)), nType, nVersion, CSerActionUnserialize()));
                 break;
             case 5: // asset cert
                 (::SerReadWrite(s, (*(CAssetCert*)(&assetcert)), nType, nVersion, CSerActionUnserialize()));

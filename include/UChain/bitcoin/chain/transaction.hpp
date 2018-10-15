@@ -96,11 +96,11 @@ public:
     bool has_token_secondary_issue() const;
     bool has_token_transfer() const;
     bool has_token_cert() const;
-    bool has_token_mit_transfer() const;
+    bool has_token_card_transfer() const;
 
-    bool has_did_register() const;
-    bool has_did_transfer() const;
-    std::string get_did_transfer_old_address() const;
+    bool has_uid_register() const;
+    bool has_uid_transfer() const;
+    std::string get_uid_transfer_old_address() const;
 
     uint32_t version;
     uint32_t locktime;

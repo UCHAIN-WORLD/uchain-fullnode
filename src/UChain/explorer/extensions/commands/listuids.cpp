@@ -20,7 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChain/explorer/extensions/commands/listdids.hpp>
+#include <UChain/explorer/extensions/commands/listuids.hpp>
 #include <UChain/explorer/extensions/command_extension_func.hpp>
 #include <UChain/explorer/extensions/command_assistant.hpp>
 #include <UChain/explorer/extensions/base_helper.hpp>
@@ -31,9 +31,9 @@ namespace explorer {
 namespace commands {
 using namespace bc::explorer::config;
 
-/************************ listdids *************************/
+/************************ listuids *************************/
 
-console_result listdids::invoke(Json::Value& jv_output,
+console_result listuids::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     // page limit & page index paramenter check
@@ -48,21 +48,21 @@ console_result listdids::invoke(Json::Value& jv_output,
     }
 
     auto& blockchain = node.chain_impl();
-    std::shared_ptr<did_detail::list> sh_vec;
+    std::shared_ptr<uid_detail::list> sh_vec;
     if (auth_.name.empty()) {
-        // no account -- list all dids in blockchain
-        sh_vec = blockchain.get_registered_dids();
+        // no account -- list all uids in blockchain
+        sh_vec = blockchain.get_registered_uids();
     }
     else {
-        // list dids owned by the account
+        // list uids owned by the account
         blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
-        sh_vec = blockchain.get_account_dids(auth_.name);
+        sh_vec = blockchain.get_account_uids(auth_.name);
     }
 
     uint64_t limit = argument_.limit;
     uint64_t index = argument_.index;
 
-    std::vector<did_detail> result;
+    std::vector<uid_detail> result;
     uint64_t total_count = sh_vec-> size();
     uint64_t total_page = 0;
     if (total_count > 0) {
@@ -92,25 +92,25 @@ console_result listdids::invoke(Json::Value& jv_output,
         }
     }
 
-    Json::Value dids;
-    // add blockchain dids
+    Json::Value uids;
+    // add blockchain uids
     for (auto& elem: result) {
-        Json::Value did_data;
-        did_data["symbol"] = elem.get_symbol();
-        did_data["address"] = elem.get_address();
-        did_data["status"] = "registered";
-        dids.append(did_data);
+        Json::Value uid_data;
+        uid_data["symbol"] = elem.get_symbol();
+        uid_data["address"] = elem.get_address();
+        uid_data["status"] = "registered";
+        uids.append(uid_data);
     }
 
     // output
-    if (dids.isNull()) {
-        dids.resize(0);
+    if (uids.isNull()) {
+        uids.resize(0);
     }
 
     jv_output["total_count"] = total_count;
     jv_output["total_page"] = total_page;
     jv_output["current_page"] = index;
-    jv_output["dids"] = dids;
+    jv_output["uids"] = uids;
 
     return console_result::okay;
 }

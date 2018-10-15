@@ -50,13 +50,13 @@
 #include <UChain/database/databases/blockchain_token_database.hpp>
 #include <UChain/database/databases/address_token_database.hpp>
 #include <UChain/database/databases/account_token_database.hpp>
-#include <UChainService/txs/did/did.hpp>
+#include <UChainService/txs/uid/uid.hpp>
 #include <UChain/database/databases/blockchain_token_cert_database.hpp>
-#include <UChain/database/databases/blockchain_did_database.hpp>
-#include <UChain/database/databases/address_did_database.hpp>
-#include <UChain/database/databases/blockchain_mit_database.hpp>
-#include <UChain/database/databases/address_mit_database.hpp>
-#include <UChain/database/databases/mit_history_database.hpp>
+#include <UChain/database/databases/blockchain_uid_database.hpp>
+#include <UChain/database/databases/address_uid_database.hpp>
+#include <UChain/database/databases/blockchain_card_database.hpp>
+#include <UChain/database/databases/address_card_database.hpp>
+#include <UChain/database/databases/card_history_database.hpp>
 
 using namespace libbitcoin::wallet;
 using namespace libbitcoin::chain;
@@ -76,11 +76,11 @@ public:
     public:
         store(const path& prefix);
         bool touch_all() const;
-        bool touch_dids() const;
-        bool dids_exist() const;
+        bool touch_uids() const;
+        bool uids_exist() const;
         bool touch_certs() const;
         bool certs_exist() const;
-        bool touch_mits() const;
+        bool touch_cards() const;
         bool mits_exist() const;
 
         path database_lock;
@@ -91,7 +91,7 @@ public:
         path stealth_rows;
         path spends_lookup;
         path transactions_lookup;
-        /* begin database for account, token, address_token, did relationship */
+        /* begin database for account, token, address_token, uid relationship */
         path accounts_lookup;
         path tokens_lookup;
         path certs_lookup;
@@ -99,17 +99,17 @@ public:
         path address_tokens_rows;
         path account_tokens_lookup;
         path account_tokens_rows;
-        path dids_lookup;
-        path address_dids_lookup;
-        path address_dids_rows;
+        path uids_lookup;
+        path address_uids_lookup;
+        path address_uids_rows;
         path account_addresses_lookup;
         path account_addresses_rows;
-        /* end database for account, token, address_token, did ,address_did relationship */
+        /* end database for account, token, address_token, uid ,address_uid relationship */
         path mits_lookup;
-        path address_mits_lookup;
-        path address_mits_rows;
-        path mit_history_lookup;
-        path mit_history_rows;
+        path address_cards_lookup;
+        path address_cards_rows;
+        path card_history_lookup;
+        path card_history_rows;
     };
 
     class db_metadata
@@ -155,9 +155,9 @@ public:
 
     /// Create and start all databases.
     bool create();
-    bool create_dids();
+    bool create_uids();
     bool create_certs();
-    bool create_mits();
+    bool create_cards();
 
     /// Start all databases.
     bool start();
@@ -216,23 +216,23 @@ public:
     void push_token_transfer(const token_transfer& sp_transfer, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_did(const did& sp, const short_hash& key,
+    void push_uid(const uid& sp, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_did_detail(const did_detail& sp_detail, const short_hash& key,
+    void push_uid_detail(const uid_detail& sp_detail, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_mit(const token_mit& mit, const short_hash& key,
+    void push_card(const token_card& mit, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value,
-                const std::string from_did, std::string to_did);
+                const std::string from_uid, std::string to_uid);
 
    class attachment_visitor : public boost::static_visitor<void>
     {
     public:
         attachment_visitor(data_base* db, const short_hash& sh_hash,  const output_point& outpoint,
-            uint32_t output_height, uint64_t value, const std::string from_did, std::string to_did):
+            uint32_t output_height, uint64_t value, const std::string from_uid, std::string to_uid):
             db_(db), sh_hash_(sh_hash), outpoint_(outpoint), output_height_(output_height), value_(value),
-            from_did_(from_did), to_did_(to_did)
+            from_uid_(from_uid), to_uid_(to_uid)
         {
 
         }
@@ -256,13 +256,13 @@ public:
         {
             return db_->push_message(t, sh_hash_, outpoint_, output_height_, value_);
         }
-        void operator()(const did &t) const
+        void operator()(const uid &t) const
         {
-            return db_->push_did(t, sh_hash_, outpoint_, output_height_, value_);
+            return db_->push_uid(t, sh_hash_, outpoint_, output_height_, value_);
         }
-        void operator()(const token_mit &t) const
+        void operator()(const token_card &t) const
         {
-            return db_->push_mit(t, sh_hash_, outpoint_, output_height_, value_, from_did_, to_did_);
+            return db_->push_card(t, sh_hash_, outpoint_, output_height_, value_, from_uid_, to_uid_);
         }
     private:
         data_base* db_;
@@ -270,8 +270,8 @@ public:
         output_point outpoint_;
         uint32_t output_height_;
         uint64_t value_;
-        std::string from_did_;
-        std::string to_did_;
+        std::string from_uid_;
+        std::string to_uid_;
     };
 
     class token_visitor : public boost::static_visitor<void>
@@ -300,7 +300,7 @@ public:
     };
 
     void set_admin(const std::string& name, const std::string& passwd);
-    void set_blackhole_did();
+    void set_blackhole_uid();
    /* begin store token info into  database */
 
 protected:
@@ -313,17 +313,17 @@ private:
     typedef std::atomic<size_t> sequential_lock;
     typedef boost::interprocess::file_lock file_lock;
 
-    static bool initialize_dids(const path& prefix);
+    static bool initialize_uids(const path& prefix);
     static bool initialize_certs(const path& prefix);
-    static bool initialize_mits(const path& prefix);
+    static bool initialize_cards(const path& prefix);
 
     static void uninitialize_lock(const path& lock);
     static file_lock initialize_lock(const path& lock);
 
     void synchronize();
-    void synchronize_dids();
+    void synchronize_uids();
     void synchronize_certs();
-    void synchronize_mits();
+    void synchronize_cards();
 
     void push_inputs(const hash_digest& tx_hash, size_t height,
         const inputs& inputs);
@@ -358,19 +358,19 @@ public:
     spend_database spends;
     stealth_database stealth;
     transaction_database transactions;
-    /* begin database for account, token, address_token,did relationship */
+    /* begin database for account, token, address_token,uid relationship */
     account_database accounts;
     blockchain_token_database tokens;
     address_token_database address_tokens;
     account_token_database account_tokens;
     blockchain_token_cert_database certs;
-    blockchain_did_database dids;
-    address_did_database address_dids;
+    blockchain_uid_database uids;
+    address_uid_database address_uids;
     account_address_database account_addresses;
     /* end database for account, token, address_token relationship */
-    blockchain_mit_database mits;
-    address_mit_database address_mits;
-    mit_history_database mit_history;
+    blockchain_card_database mits;
+    address_card_database address_cards;
+    card_history_database card_history;
 };
 
 } // namespace database

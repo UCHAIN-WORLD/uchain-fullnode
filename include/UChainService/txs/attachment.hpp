@@ -28,9 +28,9 @@
 #include <boost/variant.hpp>
 #include <UChainService/txs/token/token.hpp>
 #include <UChainService/txs/token/token_cert.hpp>
-#include <UChainService/txs/token/token_mit.hpp>
+#include <UChainService/txs/token/token_card.hpp>
 #include <UChainService/txs/token/attenuation_model.hpp>
-#include <UChainService/txs/did/did.hpp>
+#include <UChainService/txs/uid/uid.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
 #include <UChainService/txs/ucn/ucn_award.hpp>
 #include <UChainService/txs/message/message.hpp>
@@ -42,11 +42,11 @@ using namespace libbitcoin::chain;
 #define UCN_AWARD_TYPE  TYPE2UINT32(attachment::attachment_type::attachment_ucn_award)
 #define TOKEN_TYPE      TYPE2UINT32(attachment::attachment_type::attachment_token)
 #define MESSAGE_TYPE    TYPE2UINT32(attachment::attachment_type::attachment_message)
-#define DID_TYPE        TYPE2UINT32(attachment::attachment_type::attachment_did)
+#define UID_TYPE        TYPE2UINT32(attachment::attachment_type::attachment_uid)
 #define TOKEN_CERT_TYPE TYPE2UINT32(attachment::attachment_type::attachment_token_cert)
-#define TOKEN_MIT_TYPE  TYPE2UINT32(attachment::attachment_type::attachment_token_mit)
+#define TOKEN_CARD_TYPE  TYPE2UINT32(attachment::attachment_type::attachment_token_card)
 
-#define DID_ATTACH_VERIFY_VERSION       TYPE2UINT32(207)
+#define UID_ATTACH_VERIFY_VERSION       TYPE2UINT32(207)
 
 
 namespace libbitcoin {
@@ -62,9 +62,9 @@ public:
         attachment_ucn_award,
         attachment_token,
         attachment_message,
-        attachment_did,
+        attachment_uid,
         attachment_token_cert,
-        attachment_token_mit
+        attachment_token_card
     };
 
     typedef boost::variant<
@@ -72,14 +72,14 @@ public:
         ucn_award,
         token,
         blockchain_message,
-        did,
+        uid,
         token_cert,
-        token_mit
+        token_card
         > attachment_data_type;
 
     attachment();
 
-    attachment(const std::string& from_did, const std::string& to_did);
+    attachment(const std::string& from_uid, const std::string& to_uid);
 
     template<class Type>
     attachment(uint32_t type, uint32_t version, const Type& attach_data)
@@ -108,11 +108,11 @@ public:
     uint32_t get_type() const;
     void set_type(uint32_t type);
 
-    std::string get_to_did() const;
-    void set_to_did(const std::string& did);
+    std::string get_to_uid() const;
+    void set_to_uid(const std::string& uid);
 
-    std::string get_from_did() const;
-    void set_from_did(const std::string& did);
+    std::string get_from_uid() const;
+    void set_from_uid(const std::string& uid);
 
     template<class Type>
     void set_attach(const Type& attach)
@@ -125,8 +125,8 @@ public:
 private:
     uint32_t version;
     uint32_t type;
-    std::string todid;
-    std::string fromdid;
+    std::string touid;
+    std::string fromuid;
     attachment_data_type attach;
 };
 

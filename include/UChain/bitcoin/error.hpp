@@ -145,17 +145,17 @@ enum error_code_t
     fetch_more_block,
     bad_magic,                      // 65
 
-    // did check
-    did_symbol_not_match,
-    did_symbol_invalid,
-    did_exist,
-    address_registered_did,
-    did_func_not_actived,           // 70
-    did_address_not_match,
-    did_address_needed,
-    did_not_exist,
-    did_multi_type_exist,
-    did_input_error,                // 75
+    // uid check
+    uid_symbol_not_match,
+    uid_symbol_invalid,
+    uid_exist,
+    address_registered_uid,
+    uid_func_not_actived,           // 70
+    uid_address_not_match,
+    uid_address_needed,
+    uid_not_exist,
+    uid_multi_type_exist,
+    uid_input_error,                // 75
     attenuation_model_param_error,
 
     // cert check
@@ -165,17 +165,17 @@ enum error_code_t
     token_cert_not_owned,           // 80
     token_cert_not_provided,
     token_cert_issue_error,
-    token_did_registerr_not_match,
+    token_uid_registerr_not_match,
 
     attachment_invalid,
     nova_feature_not_activated,     // 85
 
     // identifier token
-    mit_error,
-    mit_exist,
-    mit_register_error,
-    mit_symbol_invalid,
-    mit_not_exist,
+    card_error,
+    card_exist,
+    card_register_error,
+    card_symbol_invalid,
+    card_not_exist,
 
 };
 

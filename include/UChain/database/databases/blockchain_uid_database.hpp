@@ -28,7 +28,7 @@
 #include <UChain/database/result/transaction_result.hpp>
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
-#include <UChainService/txs/did/blockchain_did.hpp>
+#include <UChainService/txs/uid/blockchain_uid.hpp>
 
 namespace libbitcoin {
 namespace database {
@@ -38,15 +38,15 @@ namespace database {
 /// that is assigned upon storage.
 /// This is so we can quickly reconstruct blocks given a list of tx indexes
 /// belonging to that block. These are stored with the block.
-class BCD_API blockchain_did_database
+class BCD_API blockchain_uid_database
 {
 public:
     /// Construct the database.
-    blockchain_did_database(const boost::filesystem::path& map_filename,
+    blockchain_uid_database(const boost::filesystem::path& map_filename,
         std::shared_ptr<shared_mutex> mutex=nullptr);
 
     /// Close the database (all threads must first be stopped).
-    ~blockchain_did_database();
+    ~blockchain_uid_database();
 
     /// Initialize a new transaction database.
     bool create();
@@ -60,23 +60,23 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    std::shared_ptr<blockchain_did> get(const hash_digest& hash) const;
+    std::shared_ptr<blockchain_uid> get(const hash_digest& hash) const;
 
     ///
-    std::shared_ptr<std::vector<blockchain_did> > get_history_dids(const hash_digest& hash) const;
+    std::shared_ptr<std::vector<blockchain_uid> > get_history_uids(const hash_digest& hash) const;
     ///
-    std::shared_ptr<std::vector<blockchain_did> > get_blockchain_dids() const;
+    std::shared_ptr<std::vector<blockchain_uid> > get_blockchain_uids() const;
 
     /// 
-    std::shared_ptr<blockchain_did> get_register_history(const std::string & did_symbol) const;
+    std::shared_ptr<blockchain_uid> get_register_history(const std::string & uid_symbol) const;
     ///
-    uint64_t get_register_height(const std::string & did_symbol) const;
+    uint64_t get_register_height(const std::string & uid_symbol) const;
 
-    std::shared_ptr<std::vector<blockchain_did> > getdids_from_address_history(
+    std::shared_ptr<std::vector<blockchain_uid> > getuids_from_address_history(
         const std::string &address, const uint64_t& fromheight = 0
         ,const uint64_t & toheight = max_uint64 ) const;
 
-    void store(const hash_digest& hash, const blockchain_did& sp_detail);
+    void store(const hash_digest& hash, const blockchain_uid& sp_detail);
 
     /// Delete a transaction from database.
     void remove(const hash_digest& hash);
@@ -85,11 +85,11 @@ public:
     /// Should be done at the end of every block write.
     void sync();
 
-    //pop back did_detail
-    std::shared_ptr<blockchain_did> pop_did_transfer(const hash_digest &hash);
+    //pop back uid_detail
+    std::shared_ptr<blockchain_uid> pop_uid_transfer(const hash_digest &hash);
 protected:
     /// update address status(current or old), default old
-     std::shared_ptr<blockchain_did> update_address_status(const hash_digest& hash,uint32_t status = blockchain_did::address_history);
+     std::shared_ptr<blockchain_uid> update_address_status(const hash_digest& hash,uint32_t status = blockchain_uid::address_history);
 private:
     typedef slab_hash_table<hash_digest> slab_map;
 

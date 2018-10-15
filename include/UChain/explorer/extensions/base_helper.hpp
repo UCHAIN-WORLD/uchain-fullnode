@@ -38,9 +38,9 @@ namespace commands{
 /// attachment_ucn_award     --> ucn_award
 /// attachment_token         --> token_issue | token_transfer
 /// attachment_message       --> message
-/// attachment_did           --> did_register   |  did_transfer
+/// attachment_uid           --> uid_register   |  uid_transfer
 /// attachment_token_cert    --> token_cert
-/// attachment_token_mit     --> token_mit
+/// attachment_token_card     --> token_card
 /// -------------------------------------------------------------------
 /// utxo_attach_type is only used in explorer module
 /// utxo_attach_type will be used to generate attachment with attachment_type and content
@@ -64,13 +64,13 @@ enum class utxo_attach_type : uint32_t
     message = 6,
     token_cert = 7,
     token_secondaryissue = 8,
-    did_register = 9,
-    did_transfer = 10,
+    uid_register = 9,
+    uid_transfer = 10,
     token_cert_issue = 11,
     token_cert_transfer = 12,
     token_cert_autoissue = 13,
-    token_mit = 14,
-    token_mit_transfer = 15,
+    token_card = 14,
+    token_card_transfer = 15,
     invalid = 0xffffffff
 };
 
@@ -204,21 +204,21 @@ void sync_fetch_token_cert_balance(const std::string& address, const string& sym
 std::string get_random_payment_address(std::shared_ptr<std::vector<account_address>>,
     bc::blockchain::block_chain_impl& blockchain);
 
-std::string get_address(const std::string& did_or_address,
+std::string get_address(const std::string& uid_or_address,
     bc::blockchain::block_chain_impl& blockchain);
 
-std::string get_address(const std::string& did_or_address,
+std::string get_address(const std::string& uid_or_address,
     attachment& attach, bool is_from,
     bc::blockchain::block_chain_impl& blockchain);
 
-std::string get_address_from_did(const std::string& did,
+std::string get_address_from_uid(const std::string& uid,
     bc::blockchain::block_chain_impl& blockchain);
 
 std::string get_fee_dividend_address(bc::blockchain::block_chain_impl& blockchain);
 
 void check_token_symbol(const std::string& symbol, bool check_sensitive=false);
-void check_mit_symbol(const std::string& symbol, bool check_sensitive=false);
-void check_did_symbol(const std::string& symbol,  bool check_sensitive=false);
+void check_card_symbol(const std::string& symbol, bool check_sensitive=false);
+void check_uid_symbol(const std::string& symbol,  bool check_sensitive=false);
 
 class BCX_API base_transfer_common
 {
@@ -227,7 +227,7 @@ public:
         FILTER_UCN = 1 << 0,
         FILTER_TOKEN = 1 << 1,
         FILTER_TOKENCERT = 1 << 2,
-        FILTER_DID = 1 << 3,
+        FILTER_UID = 1 << 3,
         FILTER_IDENTIFIABLE_TOKEN = 1 << 4,
         FILTER_ALL = 0xff,
         // if specify 'from_' address,
@@ -302,7 +302,7 @@ public:
 
     virtual std::string get_sign_tx_multisig_script(const address_token_record& from) const;
 
-    void set_did_verify_attachment(const receiver_record& record, attachment& attach);
+    void set_uid_verify_attachment(const receiver_record& record, attachment& attach);
 
 protected:
     bc::blockchain::block_chain_impl& blockchain_;
@@ -317,10 +317,10 @@ protected:
     uint64_t                          unspent_token_{0};
     std::vector<token_cert_type>      payment_token_cert_;
     std::vector<token_cert_type>      unspent_token_cert_;
-    uint8_t                           payment_did_{0};
-    uint8_t                           unspent_did_{0};
-    uint8_t                           payment_mit_{0};
-    uint8_t                           unspent_mit_{0};
+    uint8_t                           payment_uid_{0};
+    uint8_t                           unspent_uid_{0};
+    uint8_t                           payment_card_{0};
+    uint8_t                           unspent_card_{0};
     std::vector<receiver_record>      receiver_list_;
     std::vector<address_token_record> from_list_;
 };
@@ -587,10 +587,10 @@ private:
     std::string message_;
 };
 
-class BCX_API registering_did : public base_multisig_transfer_helper
+class BCX_API registering_uid : public base_multisig_transfer_helper
 {
 public:
-    registering_did(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    registering_uid(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol, receiver_record::list&& receiver_list,
         uint64_t fee, uint32_t fee_percentage_to_miner,
@@ -601,7 +601,7 @@ public:
         , fee_percentage_to_miner_(fee_percentage_to_miner)
     {}
 
-    ~registering_did()
+    ~registering_uid()
     {}
 
     void sum_payment_amount() override;
@@ -615,10 +615,10 @@ private:
     uint32_t fee_percentage_to_miner_;
 };
 
-class BCX_API sending_multisig_did : public base_transfer_helper
+class BCX_API sending_multisig_uid : public base_transfer_helper
 {
 public:
-    sending_multisig_did(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    sending_multisig_uid(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& feefrom, std::string&& symbol,
         receiver_record::list&& receiver_list
@@ -628,7 +628,7 @@ public:
         , fromfee(feefrom), multisig_from_(std::move(multisig)), multisig_to_(std::move(multisigto))
     {}
 
-    ~sending_multisig_did()
+    ~sending_multisig_uid()
     {}
 
     void sum_payment_amount() override;
@@ -651,10 +651,10 @@ private:
     account_multisig multisig_to_;
 };
 
-class BCX_API sending_did : public base_transfer_helper
+class BCX_API sending_uid : public base_transfer_helper
 {
 public:
-    sending_did(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    sending_uid(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& feefrom, std::string&& symbol,
         receiver_record::list&& receiver_list, uint64_t fee)
@@ -662,7 +662,7 @@ public:
             std::move(from), std::move(receiver_list), fee, std::move(symbol)),fromfee(feefrom)
     {}
 
-    ~sending_did()
+    ~sending_uid()
     {}
 
     void sum_payment_amount() override;
@@ -721,19 +721,19 @@ public:
         tx_.locktime = 0;
     };
 };
-class BCX_API registering_mit : public base_transfer_helper
+class BCX_API registering_card : public base_transfer_helper
 {
 public:
-    registering_mit(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    registering_card(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
-        std::string&& from, std::string&& symbol, std::map<std::string, std::string>&& mit_map,
+        std::string&& from, std::string&& symbol, std::map<std::string, std::string>&& card_map,
         receiver_record::list&& receiver_list, uint64_t fee)
         : base_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
             std::move(from), std::move(receiver_list), fee, std::move(symbol))
-        , mit_map_(mit_map)
+        , card_map_(card_map)
     {}
 
-    ~registering_mit()
+    ~registering_card()
     {}
 
     void populate_tx_header() override {
@@ -744,13 +744,13 @@ public:
     attachment populate_output_attachment(const receiver_record& record) override;
 
 private:
-    std::map<std::string, std::string> mit_map_;
+    std::map<std::string, std::string> card_map_;
 };
 
-class BCX_API transferring_mit : public base_multisig_transfer_helper
+class BCX_API transferring_card : public base_multisig_transfer_helper
 {
 public:
-    transferring_mit(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    transferring_card(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         receiver_record::list&& receiver_list, uint64_t fee,
@@ -760,7 +760,7 @@ public:
             std::move(multisig_from))
     {}
 
-    ~transferring_mit()
+    ~transferring_card()
     {}
 
     void populate_tx_header() override {

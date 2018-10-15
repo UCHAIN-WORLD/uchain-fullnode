@@ -190,13 +190,13 @@ bool validate_block_impl::fetch_orphan_transaction(chain::transaction& tx,
     return false;
 }
 
-std::string validate_block_impl::get_did_from_address_consider_orphan_chain(
-    const std::string& address, const std::string& did_symbol) const
+std::string validate_block_impl::get_uid_from_address_consider_orphan_chain(
+    const std::string& address, const std::string& uid_symbol) const
 {
     BITCOIN_ASSERT(!address.empty());
 
     if (address.empty()) {
-        log::debug("blockchain") << "get_did_from_address_consider_orphan_chain: address is empty";
+        log::debug("blockchain") << "get_uid_from_address_consider_orphan_chain: address is empty";
         return "";
     }
 
@@ -206,9 +206,9 @@ std::string validate_block_impl::get_did_from_address_consider_orphan_chain(
         for (const auto& orphan_tx : orphan_block->transactions) {
             // iter outputs
             for (const auto& output : orphan_tx.outputs) {
-                if (output.is_did_register() || output.is_did_transfer()) {
-                    if (address == output.get_did_address()) {
-                        return output.get_did_symbol();
+                if (output.is_uid_register() || output.is_uid_transfer()) {
+                    if (address == output.get_uid_address()) {
+                        return output.get_uid_symbol();
                     }
                 }
             }
@@ -231,8 +231,8 @@ std::string validate_block_impl::get_did_from_address_consider_orphan_chain(
 
                 const auto& previous_tx_out = previous_tx.outputs[previous_output.index];
 
-                if (previous_tx_out.is_did_register() || previous_tx_out.is_did_transfer()) {
-                    if (address == previous_tx_out.get_did_address()) {
+                if (previous_tx_out.is_uid_register() || previous_tx_out.is_uid_transfer()) {
+                    if (address == previous_tx_out.get_uid_address()) {
                         return "";
                     }
                 }
@@ -240,16 +240,16 @@ std::string validate_block_impl::get_did_from_address_consider_orphan_chain(
         }
     }
 
-    return did_symbol;
+    return uid_symbol;
 }
 
-bool validate_block_impl::is_did_match_address_in_orphan_chain(const std::string& did, const std::string& address) const
+bool validate_block_impl::is_uid_match_address_in_orphan_chain(const std::string& uid, const std::string& address) const
 {
-    BITCOIN_ASSERT(!did.empty());
+    BITCOIN_ASSERT(!uid.empty());
     BITCOIN_ASSERT(!address.empty());
 
     if (address.empty()) {
-        log::debug("blockchain") << "check did match address in orphan chain: address is null for did: " << did;
+        log::debug("blockchain") << "check uid match address in orphan chain: address is null for uid: " << uid;
         return false;
     }
 
@@ -258,9 +258,9 @@ bool validate_block_impl::is_did_match_address_in_orphan_chain(const std::string
         const auto& orphan_block = orphan_chain_[--orphan]->actual();
         for (const auto& orphan_tx : orphan_block->transactions) {
             for (auto& output : orphan_tx.outputs) {
-                if (output.is_did_register() || output.is_did_transfer()) {
-                    if (did == output.get_did_symbol()) {
-                        return address == output.get_did_address();
+                if (output.is_uid_register() || output.is_uid_transfer()) {
+                    if (uid == output.get_uid_symbol()) {
+                        return address == output.get_uid_address();
                     }
                 }
             }
@@ -270,16 +270,16 @@ bool validate_block_impl::is_did_match_address_in_orphan_chain(const std::string
     return false;
 }
 
-bool validate_block_impl::is_did_in_orphan_chain(const std::string& did) const
+bool validate_block_impl::is_uid_in_orphan_chain(const std::string& uid) const
 {
-    BITCOIN_ASSERT(!did.empty());
+    BITCOIN_ASSERT(!uid.empty());
 
     for (size_t orphan = 0; orphan < orphan_index_; ++orphan) {
         const auto& orphan_block = orphan_chain_[orphan]->actual();
         for (const auto& orphan_tx : orphan_block->transactions) {
             for (auto& output : orphan_tx.outputs) {
-                if (output.is_did_register()) {
-                    if (did == output.get_did_symbol()) {
+                if (output.is_uid_register()) {
+                    if (uid == output.get_uid_symbol()) {
                         return true;
                     }
                 }
@@ -329,7 +329,7 @@ bool validate_block_impl::is_token_cert_in_orphan_chain(const std::string& symbo
     return false;
 }
 
-bool validate_block_impl::is_token_mit_in_orphan_chain(const std::string& symbol) const
+bool validate_block_impl::is_token_card_in_orphan_chain(const std::string& symbol) const
 {
     BITCOIN_ASSERT(!symbol.empty());
 
@@ -337,8 +337,8 @@ bool validate_block_impl::is_token_mit_in_orphan_chain(const std::string& symbol
         const auto& orphan_block = orphan_chain_[orphan]->actual();
         for (const auto& orphan_tx : orphan_block->transactions) {
             for (const auto& output : orphan_tx.outputs) {
-                if (output.is_token_mit_register()) {
-                    if (symbol == output.get_token_mit_symbol()) {
+                if (output.is_token_card_register()) {
+                    if (symbol == output.get_token_card_symbol()) {
                         return true;
                     }
                 }

@@ -282,27 +282,27 @@ public:
         const std::string& address, const std::string& symbol, token_cert_type cert_type);
 
     // identifiable token
-    bool is_token_mit_exist(const std::string& symbol);
-    uint64_t get_token_mit_height(const std::string& mit_symbol)const;
-    std::shared_ptr<token_mit_info> get_registered_mit(const std::string& symbol);
-    std::shared_ptr<token_mit_info::list> get_registered_mits();
-    std::shared_ptr<token_mit_info::list> get_mit_history(const std::string& symbol,
+    bool is_token_card_exist(const std::string& symbol);
+    uint64_t get_token_card_height(const std::string& card_symbol)const;
+    std::shared_ptr<token_card_info> get_registered_card(const std::string& symbol);
+    std::shared_ptr<token_card_info::list> get_registered_cards();
+    std::shared_ptr<token_card_info::list> get_card_history(const std::string& symbol,
         uint64_t limit = 0, uint64_t page_number = 0);
-    std::shared_ptr<token_mit::list> get_account_mits(
+    std::shared_ptr<token_card::list> get_account_cards(
         const std::string& account, const std::string& symbol="");
 
-    // account did api
-    bool is_did_exist(const std::string& symbol);
-    uint64_t get_did_height(const std::string& symbol) const;
-    bool is_address_registered_did(const std::string& address, uint64_t fork_index = max_uint64);
-    bool is_account_owned_did(const std::string& account, const std::string& symbol);
-    std::string get_did_from_address(const std::string& address, uint64_t fork_index = max_uint64);
-    std::shared_ptr<did_detail> get_registered_did(const std::string& symbol);
-    std::shared_ptr<did_detail::list> get_registered_dids();
-    std::shared_ptr<did_detail::list> get_account_dids(const std::string& account);
+    // account uid api
+    bool is_uid_exist(const std::string& symbol);
+    uint64_t get_uid_height(const std::string& symbol) const;
+    bool is_address_registered_uid(const std::string& address, uint64_t fork_index = max_uint64);
+    bool is_account_owned_uid(const std::string& account, const std::string& symbol);
+    std::string get_uid_from_address(const std::string& address, uint64_t fork_index = max_uint64);
+    std::shared_ptr<uid_detail> get_registered_uid(const std::string& symbol);
+    std::shared_ptr<uid_detail::list> get_registered_uids();
+    std::shared_ptr<uid_detail::list> get_account_uids(const std::string& account);
 
-    //get history addresses from did symbol
-    std::shared_ptr<blockchain_did::list>  get_did_history_addresses(const std::string & symbol);
+    //get history addresses from uid symbol
+    std::shared_ptr<blockchain_uid::list>  get_uid_history_addresses(const std::string & symbol);
 
     std::shared_ptr<business_history::list> get_account_business_history(
         const std::string& name, business_kind kind, uint32_t time_begin, uint32_t time_end);

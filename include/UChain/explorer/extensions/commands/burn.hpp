@@ -96,7 +96,7 @@ public:
         )
         (
             "mit,m",
-            value<bool>(&option_.is_mit)->default_value(false)->zero_tokens(),
+            value<bool>(&option_.is_card)->default_value(false)->zero_tokens(),
             "If specified, then only burn related MIT. Default is not specified."
         )
         ;
@@ -122,10 +122,10 @@ public:
 
     struct option
     {
-        option(): is_mit(false), cert_type("")
+        option(): is_card(false), cert_type("")
         {}
 
-        bool is_mit;
+        bool is_card;
         std::string cert_type;
     } option_;
 

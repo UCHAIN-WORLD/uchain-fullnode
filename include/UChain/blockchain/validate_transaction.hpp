@@ -64,13 +64,13 @@ public:
     code check_token_issue_transaction() const;
     code check_token_cert_transaction() const;
     code check_secondaryissue_transaction() const;
-    code check_token_mit_transaction() const;
-    code check_did_transaction() const;
-    bool connect_did_input(const did& info) const;
-    bool is_did_match_address_in_orphan_chain(const std::string& symbol, const std::string& address) const;
-    bool is_did_in_orphan_chain(const std::string& did) const;
-    code check_attachment_to_did(const output& output) const;
-    code connect_attachment_from_did(const output& output) const;
+    code check_token_card_transaction() const;
+    code check_uid_transaction() const;
+    bool connect_uid_input(const uid& info) const;
+    bool is_uid_match_address_in_orphan_chain(const std::string& symbol, const std::string& address) const;
+    bool is_uid_in_orphan_chain(const std::string& uid) const;
+    code check_attachment_to_uid(const output& output) const;
+    code connect_attachment_from_uid(const output& output) const;
 
     bool connect_input(const chain::transaction& previous_tx, size_t parent_height);
 
@@ -81,11 +81,11 @@ public:
     bool check_token_amount(const transaction& tx) const;
     bool check_token_symbol(const transaction& tx) const;
     bool check_token_certs(const transaction& tx) const;
-    bool check_token_mit(const transaction& tx) const;
-    bool check_address_registered_did(const std::string& address) const;
+    bool check_token_card(const transaction& tx) const;
+    bool check_address_registered_uid(const std::string& address) const;
 
-    //check input did match output did
-    bool check_did_symbol_match(const transaction& tx) const;
+    //check input uid match output uid
+    bool check_uid_symbol_match(const transaction& tx) const;
 
     static bool is_nova_feature_activated(blockchain::block_chain_impl& chain);
 
@@ -109,7 +109,7 @@ private:
     void next_previous_transaction();
     void previous_tx_index(const code& ec, size_t parent_height);
 
-    // If previous_tx_index didn't find it then check in pool instead
+    // If previous_tx_index uidn't find it then check in pool instead
     void search_pool_previous_tx();
     void handle_previous_tx(const code& ec,
         const chain::transaction& previous_tx, size_t parent_height);
@@ -120,10 +120,10 @@ private:
     void check_double_spend(const code& ec, const chain::input_point& point);
     void check_fees() const;
     code check_tx_connect_input() const;
-    bool check_did_exist(const std::string& did) const;
+    bool check_uid_exist(const std::string& uid) const;
     bool check_token_exist(const std::string& symbol) const;
     bool check_token_cert_exist(const std::string& cert, token_cert_type cert_type) const;
-    bool check_token_mit_exist(const std::string& mit) const;
+    bool check_token_card_exist(const std::string& mit) const;
 
     block_chain_impl& blockchain_;
     const transaction_ptr tx_;
@@ -136,7 +136,7 @@ private:
     uint64_t value_in_;
     uint64_t token_amount_in_;
     std::vector<token_cert_type> token_certs_in_;
-    std::string old_symbol_in_; // used for check same token/did/mit symbol in previous outputs
+    std::string old_symbol_in_; // used for check same token/uid/mit symbol in previous outputs
     std::string old_cert_symbol_in_; // used for check same cert symbol in previous outputs
     uint32_t current_input_;
     chain::point::indexes unconfirmed_;

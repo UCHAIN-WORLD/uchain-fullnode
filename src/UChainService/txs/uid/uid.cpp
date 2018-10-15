@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainService/txs/did/did.hpp>
+#include <UChainService/txs/uid/uid.hpp>
 #include <UChainService/txs/variant_visitor.hpp>
-#include <UChainService/txs/did/did_detail.hpp>
+#include <UChainService/txs/uid/uid_detail.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
 #include <UChain/bitcoin/utility/container_sink.hpp>
@@ -30,66 +30,66 @@
 namespace libbitcoin {
 namespace chain {
 
-did::did()
+uid::uid()
 {
     reset();
 }
-did::did(uint32_t status, const did_detail& detail):
+uid::uid(uint32_t status, const uid_detail& detail):
     status(status), data(detail)
 {
 }
 
-did did::factory_from_data(const data_chunk& data)
+uid uid::factory_from_data(const data_chunk& data)
 {
-    did instance;
+    uid instance;
     instance.from_data(data);
     return instance;
 }
 
-did did::factory_from_data(std::istream& stream)
+uid uid::factory_from_data(std::istream& stream)
 {
-    did instance;
+    uid instance;
     instance.from_data(stream);
     return instance;
 }
 
-did did::factory_from_data(reader& source)
+uid uid::factory_from_data(reader& source)
 {
-    did instance;
+    uid instance;
     instance.from_data(source);
     return instance;
 }
 
-void did::reset()
+void uid::reset()
 {
-    status = 0; //did_status::did_none;
+    status = 0; //uid_status::uid_none;
     data.reset();
 }
 
-bool did::is_valid() const
+bool uid::is_valid() const
 {
     return data.is_valid();
 }
 
-bool did::is_valid_type() const
+bool uid::is_valid_type() const
 {
-    return ((DID_DETAIL_TYPE == status)
-        || (DID_TRANSFERABLE_TYPE == status));
+    return ((UID_DETAIL_TYPE == status)
+        || (UID_TRANSFERABLE_TYPE == status));
 }
 
-bool did::from_data(const data_chunk& data)
+bool uid::from_data(const data_chunk& data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool did::from_data(std::istream& stream)
+bool uid::from_data(std::istream& stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool did::from_data(reader& source)
+bool uid::from_data(reader& source)
 {
     reset();
 
@@ -107,7 +107,7 @@ bool did::from_data(reader& source)
     return result;
 }
 
-data_chunk did::to_data() const
+data_chunk uid::to_data() const
 {
     data_chunk data;
     data_sink ostream(data);
@@ -117,24 +117,24 @@ data_chunk did::to_data() const
     return data;
 }
 
-void did::to_data(std::ostream& stream) const
+void uid::to_data(std::ostream& stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void did::to_data(writer& sink) const
+void uid::to_data(writer& sink) const
 {
     sink.write_4_bytes_little_endian(status);
     data.to_data(sink);
 }
 
-uint64_t did::serialized_size() const
+uint64_t uid::serialized_size() const
 {
     return 4 + data.serialized_size();
 }
 
-std::string did::to_string() const
+std::string uid::to_string() const
 {
     std::ostringstream ss;
     ss << "\t status = " << status << "\n";
@@ -142,20 +142,20 @@ std::string did::to_string() const
     return ss.str();
 }
 
-uint32_t did::get_status() const
+uint32_t uid::get_status() const
 {
     return status;
 }
-void did::set_status(uint32_t status)
+void uid::set_status(uint32_t status)
 {
     this->status = status;
 }
-void did::set_data(const did_detail& detail)
+void uid::set_data(const uid_detail& detail)
 {
     this->data = detail;
 }
 
-const did_detail& did::get_data() const
+const uid_detail& uid::get_data() const
 {
     return this->data;
 }

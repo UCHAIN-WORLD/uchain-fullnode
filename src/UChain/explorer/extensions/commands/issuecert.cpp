@@ -51,13 +51,13 @@ console_result issuecert::invoke (Json::Value& jv_output,
     // check token symbol
     check_token_symbol(argument_.symbol);
 
-    auto to_did = argument_.to;
-    auto to_address = get_address_from_did(to_did, blockchain);
+    auto to_uid = argument_.to;
+    auto to_address = get_address_from_uid(to_uid, blockchain);
     if (!blockchain.is_valid_address(to_address)) {
-        throw address_invalid_exception{"invalid did parameter! " + to_did};
+        throw address_invalid_exception{"invalid uid parameter! " + to_uid};
     }
     if (!blockchain.get_account_address(auth_.name, to_address)) {
-        throw address_dismatch_account_exception{"target did does not match account. " + to_did};
+        throw address_dismatch_account_exception{"target uid does not match account. " + to_uid};
     }
 
     // check token cert types
@@ -131,7 +131,7 @@ console_result issuecert::invoke (Json::Value& jv_output,
     std::vector<receiver_record> receiver{
         {to_address, argument_.symbol, 0, 0,
             certs_create, utxo_attach_type::token_cert_issue,
-            attachment("", to_did)}
+            attachment("", to_uid)}
     };
 
     if (certs_create == token_cert_ns::naming) {
@@ -139,7 +139,7 @@ console_result issuecert::invoke (Json::Value& jv_output,
         receiver.push_back(
             {to_address, domain, 0, 0,
                 token_cert_ns::domain, utxo_attach_type::token_cert,
-                attachment("", to_did)}
+                attachment("", to_uid)}
         );
     }
 

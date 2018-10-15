@@ -43,13 +43,13 @@ console_result secondaryissue::invoke(Json::Value& jv_output,
     // check token symbol
     check_token_symbol(argument_.symbol);
 
-    auto to_did = argument_.to;
-    auto to_address = get_address_from_did(to_did, blockchain);
+    auto to_uid = argument_.to;
+    auto to_address = get_address_from_uid(to_uid, blockchain);
     if (!blockchain.is_valid_address(to_address))
-        throw address_invalid_exception{"invalid did parameter! " + to_did};
+        throw address_invalid_exception{"invalid uid parameter! " + to_uid};
 
     if (!blockchain.get_account_address(auth_.name, to_address))
-        throw address_dismatch_account_exception{"target did does not match account. " + to_did};
+        throw address_dismatch_account_exception{"target uid does not match account. " + to_uid};
 
     auto token = blockchain.get_issued_token(argument_.symbol);
     if (!token) {
@@ -86,9 +86,9 @@ console_result secondaryissue::invoke(Json::Value& jv_output,
     // receiver
     std::vector<receiver_record> receiver{
         {to_address, argument_.symbol, 0, token_volume_of_threshold,
-            utxo_attach_type::token_secondaryissue, attachment("", to_did)},
+            utxo_attach_type::token_secondaryissue, attachment("", to_uid)},
         {to_address, argument_.symbol, 0, 0, token_cert_ns::issue,
-            utxo_attach_type::token_cert, attachment("", to_did)}
+            utxo_attach_type::token_cert, attachment("", to_uid)}
     };
 
     auto issue_helper = secondary_issuing_token(*this, blockchain,

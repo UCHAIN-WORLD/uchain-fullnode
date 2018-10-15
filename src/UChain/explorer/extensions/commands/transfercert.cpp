@@ -62,10 +62,10 @@ console_result transfercert::invoke (Json::Value& jv_output,
     }
 
     // check target address
-    auto to_did = argument_.to;
-    auto to_address = get_address_from_did(to_did, blockchain);
+    auto to_uid = argument_.to;
+    auto to_address = get_address_from_uid(to_uid, blockchain);
     if (!blockchain.is_valid_address(to_address))
-        throw toaddress_invalid_exception{"invalid did parameter! " + to_did};
+        throw toaddress_invalid_exception{"invalid uid parameter! " + to_uid};
 
     // check cert is owned by the account
     bool exist = blockchain.is_token_cert_exist(argument_.symbol, cert_type);
@@ -95,7 +95,7 @@ console_result transfercert::invoke (Json::Value& jv_output,
     // receiver
     std::vector<receiver_record> receiver{
         {to_address, argument_.symbol, 0, 0,
-            cert_type, utxo_attach_type::token_cert_transfer, attachment("", to_did)}
+            cert_type, utxo_attach_type::token_cert_transfer, attachment("", to_uid)}
     };
 
     auto helper = transferring_token_cert(*this, blockchain,

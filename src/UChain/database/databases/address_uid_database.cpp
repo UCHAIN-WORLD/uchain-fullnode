@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/database/databases/address_did_database.hpp>
-//#include <UChainService/txs/account/address_did.hpp>
+#include <UChain/database/databases/address_uid_database.hpp>
+//#include <UChainService/txs/account/address_uid.hpp>
 
 #include <cstdint>
 #include <cstddef>
@@ -29,7 +29,7 @@
 #include <UChain/database/primitives/record_multimap_iterable.hpp>
 #include <UChain/database/primitives/record_multimap_iterator.hpp>
 
-#define  LOG_ADDRESS_DID_DATABASE  "address_did_database"
+#define  LOG_ADDRESS_UID_DATABASE  "address_uid_database"
 
 namespace libbitcoin {
 namespace database {
@@ -43,11 +43,11 @@ BC_CONSTEXPR size_t initial_lookup_file_size = header_size + minimum_records_siz
 
 BC_CONSTEXPR size_t record_size = hash_table_multimap_record_size<short_hash>();
 
-BC_CONSTEXPR size_t did_transfer_record_size = 1 + 36 + 4 + 8 + 2 + 4 + DID_DETAIL_FIX_SIZE; // DID_DETAIL_FIX_SIZE is the biggest one
-//        + std::max({UCN_FIX_SIZE, DID_DETAIL_FIX_SIZE, DID_TRANSFER_FIX_SIZE});
-BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(did_transfer_record_size);
+BC_CONSTEXPR size_t uid_transfer_record_size = 1 + 36 + 4 + 8 + 2 + 4 + UID_DETAIL_FIX_SIZE; // UID_DETAIL_FIX_SIZE is the biggest one
+//        + std::max({UCN_FIX_SIZE, UID_DETAIL_FIX_SIZE, UID_TRANSFER_FIX_SIZE});
+BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(uid_transfer_record_size);
 
-address_did_database::address_did_database(const path& lookup_filename,
+address_uid_database::address_uid_database(const path& lookup_filename,
     const path& rows_filename, std::shared_ptr<shared_mutex> mutex)
   : lookup_file_(lookup_filename, mutex),
     lookup_header_(lookup_file_, number_buckets),
@@ -61,7 +61,7 @@ address_did_database::address_did_database(const path& lookup_filename,
 }
 
 // Close does not call stop because there is no way to detect thread join.
-address_did_database::~address_did_database()
+address_uid_database::~address_uid_database()
 {
     close();
 }
@@ -70,7 +70,7 @@ address_did_database::~address_did_database()
 // ----------------------------------------------------------------------------
 
 // Initialize files and start.
-bool address_did_database::create()
+bool address_uid_database::create()
 {
     // Resize and create require a started file.
     if (!lookup_file_.start() ||
@@ -96,7 +96,7 @@ bool address_did_database::create()
 // Startup and shutdown.
 // ----------------------------------------------------------------------------
 
-bool address_did_database::start()
+bool address_uid_database::start()
 {
     return
         lookup_file_.start() &&
@@ -106,14 +106,14 @@ bool address_did_database::start()
         rows_manager_.start();
 }
 
-bool address_did_database::stop()
+bool address_uid_database::stop()
 {
     return
         lookup_file_.stop() &&
         rows_file_.stop();
 }
 
-bool address_did_database::close()
+bool address_uid_database::close()
 {
     return
         lookup_file_.close() &&
@@ -121,7 +121,7 @@ bool address_did_database::close()
 }
 
 // ----------------------------------------------------------------------------
-void address_did_database::store_input(const short_hash& key,
+void address_uid_database::store_input(const short_hash& key,
     const output_point& inpoint, uint32_t input_height,
     const input_point& previous, uint32_t timestamp)
 {
@@ -135,22 +135,22 @@ void address_did_database::store_input(const short_hash& key,
 
         serial.write_2_bytes_little_endian(0); // 2 use ucn type fill incase invalid when deser
         serial.write_4_bytes_little_endian(timestamp); // 4
-        // did data should be here but input has no these data
+        // uid data should be here but input has no these data
     };
     rows_multimap_.add_row(key, write);
 }
 
-void address_did_database::delete_old_did(const short_hash& key)
+void address_uid_database::delete_old_uid(const short_hash& key)
 {
     delete_last_row(key);
 }
 
-void address_did_database::delete_last_row(const short_hash& key)
+void address_uid_database::delete_last_row(const short_hash& key)
 {
     rows_multimap_.delete_last_row(key);
 }
 /// get all record of key from database
-business_record::list address_did_database::get(const short_hash& key,
+business_record::list address_uid_database::get(const short_hash& key,
     size_t from_height, size_t limit) const
 {
     // Read the height value from the row.
@@ -211,7 +211,7 @@ business_record::list address_did_database::get(const short_hash& key,
     return result;
 }
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_did_database::get(const std::string& address, const std::string& symbol,
+std::shared_ptr<std::vector<business_record>> address_uid_database::get(const std::string& address, const std::string& symbol,
     size_t start_height, size_t end_height, uint64_t limit, uint64_t page_number) const
 {
     data_chunk addr_data(address.begin(), address.end());
@@ -267,7 +267,7 @@ std::shared_ptr<std::vector<business_record>> address_did_database::get(const st
         const auto record = rows_list_.get(index);
         const auto address = REMAP_ADDRESS(record);
         auto height = read_height(address);
-        std::string did_symbol;
+        std::string uid_symbol;
 
         // Skip rows below from_height.
         if (((start_height == 0)&&(end_height == 0))
@@ -279,18 +279,18 @@ std::shared_ptr<std::vector<business_record>> address_did_database::get(const st
                 if((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
                     continue; // skip previous page record
                 result->emplace_back(row);
-            } else { // did symbol utxo
-                // did business process
-                did_symbol = "";
-                if (row.data.get_kind_value() ==  business_kind::did_register) {
-                    auto transfer = boost::get<did_detail>(row.data.get_data());
-                    did_symbol = transfer.get_symbol();
-                }else if(row.data.get_kind_value() ==  business_kind::did_transfer) {
-                    auto transfer = boost::get<did_detail>(row.data.get_data());
-                    did_symbol = transfer.get_symbol();
+            } else { // uid symbol utxo
+                // uid business process
+                uid_symbol = "";
+                if (row.data.get_kind_value() ==  business_kind::uid_register) {
+                    auto transfer = boost::get<uid_detail>(row.data.get_data());
+                    uid_symbol = transfer.get_symbol();
+                }else if(row.data.get_kind_value() ==  business_kind::uid_transfer) {
+                    auto transfer = boost::get<uid_detail>(row.data.get_data());
+                    uid_symbol = transfer.get_symbol();
                 }
 
-                if (symbol == did_symbol) {
+                if (symbol == uid_symbol) {
                     cnt++;
                     if((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
                         continue; // skip previous page record
@@ -305,7 +305,7 @@ std::shared_ptr<std::vector<business_record>> address_did_database::get(const st
 }
 
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_did_database::get(const std::string& address, size_t start_height,
+std::shared_ptr<std::vector<business_record>> address_uid_database::get(const std::string& address, size_t start_height,
     size_t end_height) const
 {
     data_chunk addr_data(address.begin(), address.end());
@@ -368,7 +368,7 @@ std::shared_ptr<std::vector<business_record>> address_did_database::get(const st
 
 
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_did_database::get(size_t idx) const
+std::shared_ptr<std::vector<business_record>> address_uid_database::get(size_t idx) const
 {
     // Read a row from the data for the history list.
     const auto read_row = [](uint8_t* data)
@@ -417,7 +417,7 @@ std::shared_ptr<std::vector<business_record>> address_did_database::get(size_t i
     return result;
 }
 /// get one record by index from row_list
-business_record address_did_database::get_record(size_t idx) const
+business_record address_uid_database::get_record(size_t idx) const
 {
     // Read a row from the data for the history list.
     const auto read_row = [](uint8_t* data)
@@ -451,7 +451,7 @@ business_record address_did_database::get_record(size_t idx) const
     const auto address = REMAP_ADDRESS(record);
     return read_row(address);
 }
-business_history::list address_did_database::get_business_history(const short_hash& key,
+business_history::list address_uid_database::get_business_history(const short_hash& key,
         size_t from_height) const
 {
     business_record::list compact = get(key, from_height, 0);
@@ -522,8 +522,8 @@ business_history::list address_did_database::get_business_history(const short_ha
     return result;
 }
 
-// get address dids in the database(blockchain)
-std::shared_ptr<std::vector<business_history>> address_did_database::get_address_business_history(const std::string& address,
+// get address uids in the database(blockchain)
+std::shared_ptr<std::vector<business_history>> address_uid_database::get_address_business_history(const std::string& address,
     size_t from_height) const
 {
     data_chunk data(address.begin(), address.end());
@@ -549,20 +549,20 @@ std::shared_ptr<std::vector<business_history>> address_did_database::get_address
 
 }
 
-// get special kind of did in the database(blockchain)
+// get special kind of uid in the database(blockchain)
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
-business_history::list address_did_database::get_business_history(const std::string& address,
+business_history::list address_uid_database::get_business_history(const std::string& address,
     size_t from_height, business_kind kind, uint8_t status) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
     business_history::list unspent;
-    // did type check
-    if((kind != business_kind::did_register) // did_detail
-        && (kind != business_kind::did_transfer) // did_transfer
+    // uid type check
+    if((kind != business_kind::uid_register) // uid_detail
+        && (kind != business_kind::uid_transfer) // uid_transfer
         && (kind != business_kind::ucn))
         return unspent;
 
@@ -585,20 +585,20 @@ business_history::list address_did_database::get_business_history(const std::str
 
 }
 
-// get special kind of did in the database(blockchain)
+// get special kind of uid in the database(blockchain)
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
-business_history::list address_did_database::get_business_history(const std::string& address,
+business_history::list address_uid_database::get_business_history(const std::string& address,
     size_t from_height, business_kind kind, uint32_t time_begin, uint32_t time_end) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
     business_history::list unspent;
-    // did type check
-    if((kind != business_kind::did_register) // did_detail
-        && (kind != business_kind::did_transfer) // did_transfer
+    // uid type check
+    if((kind != business_kind::uid_register) // uid_detail
+        && (kind != business_kind::uid_transfer) // uid_transfer
         && (kind != business_kind::ucn))
         return unspent;
 
@@ -625,17 +625,17 @@ business_history::list address_did_database::get_business_history(const std::str
 
 }
 
-// get special kind of did in the database(blockchain)
-business_address_did::list address_did_database::get_dids(const std::string& address,
+// get special kind of uid in the database(blockchain)
+business_address_uid::list address_uid_database::get_uids(const std::string& address,
     size_t from_height, business_kind kind) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
-    business_address_did::list unspent;
-    // did type check
-    if((kind != business_kind::did_register) // did_detail
-        && (kind != business_kind::did_transfer)) // did_transfer
+    business_address_uid::list unspent;
+    // uid type check
+    if((kind != business_kind::uid_register) // uid_detail
+        && (kind != business_kind::uid_transfer)) // uid_transfer
         return unspent;
 
     for (const auto& row: result)
@@ -651,15 +651,15 @@ business_address_did::list address_did_database::get_dids(const std::string& add
             (row.spend.hash == null_hash || row.spend_height == 0))
             status = 1;
 
-        business_address_did detail;
-        if(row.data.get_kind_value() == business_kind::did_register) // did register
+        business_address_uid detail;
+        if(row.data.get_kind_value() == business_kind::uid_register) // uid register
         {
-            auto issue_info = boost::get<did_detail>(row.data.get_data());
+            auto issue_info = boost::get<uid_detail>(row.data.get_data());
             detail.detail = issue_info;
         }
-        else if(row.data.get_kind_value() == business_kind::did_transfer)//did transfer
+        else if(row.data.get_kind_value() == business_kind::uid_transfer)//uid transfer
         {
-            auto issue_info = boost::get<did_detail>(row.data.get_data());
+            auto issue_info = boost::get<uid_detail>(row.data.get_data());
             detail.detail = issue_info;
         }
 
@@ -671,18 +671,18 @@ business_address_did::list address_did_database::get_dids(const std::string& add
 
 }
 
-// get all kinds of did in the database(blockchain)
-business_address_did::list address_did_database::get_dids(const std::string& address,
+// get all kinds of uid in the database(blockchain)
+business_address_uid::list address_uid_database::get_uids(const std::string& address,
     size_t from_height, size_t to_height) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
-    business_address_did::list unspent;
+    business_address_uid::list unspent;
     for (const auto& row: result)
     {
-        if((row.data.get_kind_value() != business_kind::did_register)  // did_detail
-            && (row.data.get_kind_value() != business_kind::did_transfer))  // did_transfer
+        if((row.data.get_kind_value() != business_kind::uid_register)  // uid_detail
+            && (row.data.get_kind_value() != business_kind::uid_transfer))  // uid_transfer
             continue;
 
         if(address != wallet::payment_address::blackhole_address)
@@ -700,15 +700,15 @@ business_address_did::list address_did_database::get_dids(const std::string& add
             (row.spend.hash == null_hash || row.spend_height == 0))
             status = 1;
 
-        business_address_did detail;
-        if(row.data.get_kind_value() == business_kind::did_register) // did register
+        business_address_uid detail;
+        if(row.data.get_kind_value() == business_kind::uid_register) // uid register
         {
-            auto issue_info = boost::get<did_detail>(row.data.get_data());
+            auto issue_info = boost::get<uid_detail>(row.data.get_data());
             detail.detail = issue_info;
         }
-        else if(row.data.get_kind_value() == business_kind::did_transfer)//did transfer
+        else if(row.data.get_kind_value() == business_kind::uid_transfer)//uid transfer
         {
-            auto transfer_info = boost::get<did_detail>(row.data.get_data());
+            auto transfer_info = boost::get<uid_detail>(row.data.get_data());
             detail.detail = transfer_info;
         }
 
@@ -720,7 +720,7 @@ business_address_did::list address_did_database::get_dids(const std::string& add
 
 }
 
-business_address_message::list address_did_database::get_messages(const std::string& address,
+business_address_message::list address_uid_database::get_messages(const std::string& address,
     size_t from_height) const
 {
     data_chunk data(address.begin(), address.end());
@@ -729,7 +729,7 @@ business_address_message::list address_did_database::get_messages(const std::str
     business_address_message::list unspent;
     for (const auto& row: result)
     {
-        if((row.data.get_kind_value() != business_kind::message))  // did_detail
+        if((row.data.get_kind_value() != business_kind::message))  // uid_detail
             continue;
 
         uint8_t status = 0xff;
@@ -751,13 +751,13 @@ business_address_message::list address_did_database::get_messages(const std::str
     return unspent;
 
 }
-void address_did_database::sync()
+void address_uid_database::sync()
 {
     lookup_manager_.sync();
     rows_manager_.sync();
 }
 
-address_did_statinfo address_did_database::statinfo() const
+address_uid_statinfo address_uid_database::statinfo() const
 {
     return
     {

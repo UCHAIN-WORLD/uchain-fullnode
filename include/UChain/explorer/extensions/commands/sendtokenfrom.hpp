@@ -86,12 +86,12 @@ public:
         (
             "FROM_",
             value<std::string>(&argument_.from)->required(),
-            "From did/address"
+            "From uid/address"
         )
         (
             "TO_",
             value<std::string>(&argument_.to)->required(),
-            "Target did/address"
+            "Target uid/address"
         )
         (
             "SYMBOL",
@@ -106,7 +106,7 @@ public:
         (
             "change,c",
             value<std::string>(&option_.change),
-            "Change to this did/address"
+            "Change to this uid/address"
         )
         (
             "model,m",

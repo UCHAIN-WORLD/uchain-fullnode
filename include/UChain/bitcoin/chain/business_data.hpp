@@ -29,8 +29,8 @@
 #include <UChainService/txs/token/token_detail.hpp>
 #include <UChainService/txs/token/token_transfer.hpp>
 #include <UChainService/txs/token/token_cert.hpp>
-#include <UChainService/txs/token/token_mit.hpp>
-#include <UChainService/txs/did/did_detail.hpp>
+#include <UChainService/txs/token/token_card.hpp>
+#include <UChainService/txs/uid/uid_detail.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
 #include <UChainService/txs/ucn/ucn_award.hpp>
 #include <UChainService/txs/message/message.hpp>
@@ -51,10 +51,10 @@ enum class business_kind : uint16_t
     token_transfer = 2,
     message = 3,
     ucn_award = 4, // store to address_token database
-    did_register = 5,
-    did_transfer = 6,
+    uid_register = 5,
+    uid_transfer = 6,
     token_cert = 7,
-    token_mit = 8,
+    token_card = 8,
     unknown = 0xffff
 };
 
@@ -76,9 +76,9 @@ public:
         token_detail,
         token_transfer,
         token_cert,
-        token_mit,
+        token_card,
         blockchain_message,
-        did_detail> business_data_type;
+        uid_detail> business_data_type;
 
     static business_data factory_from_data(const data_chunk& data);
     static business_data factory_from_data(std::istream& stream);
@@ -244,14 +244,14 @@ public:
 #endif
 };
 
-class BC_API business_address_mit
+class BC_API business_address_card
 {
 public:
-    typedef std::vector<business_address_mit> list;
+    typedef std::vector<business_address_card> list;
 
     std::string  address;
     uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
-    token_mit mit;
+    token_card mit;
 
 #ifdef UC_DEBUG
     // just used for unit test in block_chain_impl_test.cpp
@@ -268,14 +268,14 @@ public:
 #endif
 };
 
-class BC_API business_address_did
+class BC_API business_address_uid
 {
 public:
-    typedef std::vector<business_address_did> list;
+    typedef std::vector<business_address_uid> list;
 
     std::string  address;
     uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
-    did_detail detail;
+    uid_detail detail;
 
 #ifdef UC_DEBUG
     // just used for unit test in block_chain_impl_test.cpp

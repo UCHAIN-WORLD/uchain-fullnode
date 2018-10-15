@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainService/txs/did/did_detail.hpp>
+#include <UChainService/txs/uid/uid_detail.hpp>
 
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
@@ -30,62 +30,62 @@
 namespace libbitcoin {
 namespace chain {
 
-did_detail::did_detail()
+uid_detail::uid_detail()
 {
     reset();
 }
 
-did_detail::did_detail(
+uid_detail::uid_detail(
     const std::string& symbol, const std::string& address)
     : symbol(symbol), address(address)
 {
 }
 
-did_detail did_detail::factory_from_data(const data_chunk& data)
+uid_detail uid_detail::factory_from_data(const data_chunk& data)
 {
-    did_detail instance;
+    uid_detail instance;
     instance.from_data(data);
     return instance;
 }
 
-did_detail did_detail::factory_from_data(std::istream& stream)
+uid_detail uid_detail::factory_from_data(std::istream& stream)
 {
-    did_detail instance;
+    uid_detail instance;
     instance.from_data(stream);
     return instance;
 }
 
-did_detail did_detail::factory_from_data(reader& source)
+uid_detail uid_detail::factory_from_data(reader& source)
 {
-    did_detail instance;
+    uid_detail instance;
     instance.from_data(source);
     return instance;
 }
-bool did_detail::is_valid() const
+bool uid_detail::is_valid() const
 {
     return !(symbol.empty()
-            || count_size()>DID_DETAIL_FIX_SIZE);
+            || count_size()>UID_DETAIL_FIX_SIZE);
 }
 
-void did_detail::reset()
+void uid_detail::reset()
 {
     symbol = "";
     address = "";
 }
 
-bool did_detail::from_data(const data_chunk& data)
+bool uid_detail::from_data(const data_chunk& data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool did_detail::from_data(std::istream& stream)
+bool uid_detail::from_data(std::istream& stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool did_detail::from_data(reader& source)
+bool uid_detail::from_data(reader& source)
 {
     reset();
 
@@ -99,7 +99,7 @@ bool did_detail::from_data(reader& source)
     return result;
 }
 
-data_chunk did_detail::to_data() const
+data_chunk uid_detail::to_data() const
 {
     data_chunk data;
     data_sink ostream(data);
@@ -109,30 +109,30 @@ data_chunk did_detail::to_data() const
     return data;
 }
 
-void did_detail::to_data(std::ostream& stream) const
+void uid_detail::to_data(std::ostream& stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void did_detail::to_data(writer& sink) const
+void uid_detail::to_data(writer& sink) const
 {
     sink.write_string(symbol);
     sink.write_string(address);
 }
 
-uint64_t did_detail::serialized_size() const
+uint64_t uid_detail::serialized_size() const
 {
     size_t len = count_size();
-    return std::min(DID_DETAIL_FIX_SIZE, len);
+    return std::min(UID_DETAIL_FIX_SIZE, len);
 }
 
-uint32_t did_detail::count_size() const
+uint32_t uid_detail::count_size() const
 {
     return symbol.size()  + address.size() + 2;
 }
 
-bool did_detail::operator< (const did_detail& other) const
+bool uid_detail::operator< (const uid_detail& other) const
 {
     auto ret = 0;
     if((ret = symbol.compare(other.symbol)) < 0
@@ -143,7 +143,7 @@ bool did_detail::operator< (const did_detail& other) const
     return false;
 }
 
-std::string did_detail::to_string() const
+std::string uid_detail::to_string() const
 {
     std::ostringstream ss;
 
@@ -153,7 +153,7 @@ std::string did_detail::to_string() const
     return ss.str();
 }
 
-void did_detail::to_json(std::ostream& output)
+void uid_detail::to_json(std::ostream& output)
 {
     minijson::object_writer json_writer(output);
     json_writer.write("symbol", symbol);
@@ -161,29 +161,29 @@ void did_detail::to_json(std::ostream& output)
     json_writer.close();
 }
 
-const std::string& did_detail::get_symbol() const
+const std::string& uid_detail::get_symbol() const
 {
     return symbol;
 }
 
-void did_detail::set_symbol(const std::string& symbol)
+void uid_detail::set_symbol(const std::string& symbol)
 {
-    size_t len = std::min(symbol.size()+1 , DID_DETAIL_SYMBOL_FIX_SIZE);
+    size_t len = std::min(symbol.size()+1 , UID_DETAIL_SYMBOL_FIX_SIZE);
     this->symbol = symbol.substr(0, len);
 }
 
-const std::string& did_detail::get_address() const
+const std::string& uid_detail::get_address() const
 {
     return address;
 }
 
-void did_detail::set_address(const std::string& address)
+void uid_detail::set_address(const std::string& address)
 {
-     size_t len = std::min(address.size()+1 , DID_DETAIL_ADDRESS_FIX_SIZE);
+     size_t len = std::min(address.size()+1 , UID_DETAIL_ADDRESS_FIX_SIZE);
      this->address = address.substr(0, len);
 }
 
-std::string did_detail::get_blackhole_did_symbol()
+std::string uid_detail::get_blackhole_uid_symbol()
 {
     return "BLACKHOLE";
 }

@@ -31,10 +31,10 @@
 #define TOKEN_ISSUE_TYPE    KIND2UINT16(business_kind::token_issue)
 #define TOKEN_TRANSFER_TYPE KIND2UINT16(business_kind::token_transfer)
 #define TOKEN_CERT_TYPE     KIND2UINT16(business_kind::token_cert)
-#define TOKEN_MIT_TYPE      KIND2UINT16(business_kind::token_mit)
+#define TOKEN_CARD_TYPE      KIND2UINT16(business_kind::token_card)
 #define MESSAGE_TYPE        KIND2UINT16(business_kind::message)
-#define DID_REGISTER_TYPE   KIND2UINT16(business_kind::did_register)
-#define DID_TRANSFER_TYPE   KIND2UINT16(business_kind::did_transfer)
+#define UID_REGISTER_TYPE   KIND2UINT16(business_kind::uid_register)
+#define UID_TRANSFER_TYPE   KIND2UINT16(business_kind::uid_transfer)
 
 namespace libbitcoin {
 namespace chain {
@@ -78,11 +78,11 @@ bool business_data::is_valid_type() const
             || (TOKEN_ISSUE_TYPE == KIND2UINT16(kind))
             || (TOKEN_TRANSFER_TYPE == KIND2UINT16(kind))
             || (TOKEN_CERT_TYPE == KIND2UINT16(kind))
-            || (TOKEN_MIT_TYPE == KIND2UINT16(kind)))
+            || (TOKEN_CARD_TYPE == KIND2UINT16(kind)))
             || (UCN_AWARD_TYPE == KIND2UINT16(kind))
             || (MESSAGE_TYPE == KIND2UINT16(kind))
-            || (DID_REGISTER_TYPE == KIND2UINT16(kind))
-            || (DID_TRANSFER_TYPE == KIND2UINT16(kind));
+            || (UID_REGISTER_TYPE == KIND2UINT16(kind))
+            || (UID_TRANSFER_TYPE == KIND2UINT16(kind));
 }
 
 bool business_data::from_data(const data_chunk& data)
@@ -133,9 +133,9 @@ bool business_data::from_data(reader& source)
                 data = token_cert();
                 break;
             }
-            case TOKEN_MIT_TYPE:
+            case TOKEN_CARD_TYPE:
             {
-                data = token_mit();
+                data = token_card();
                 break;
             }
             case MESSAGE_TYPE:
@@ -143,14 +143,14 @@ bool business_data::from_data(reader& source)
                 data = blockchain_message();
                 break;
             }
-            case DID_REGISTER_TYPE:
+            case UID_REGISTER_TYPE:
             {
-                data = did_detail();
+                data = uid_detail();
                 break;
             }
-            case DID_TRANSFER_TYPE:
+            case UID_TRANSFER_TYPE:
             {
-                data = did_detail();
+                data = uid_detail();
                 break;
             }
         }

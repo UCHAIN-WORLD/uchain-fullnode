@@ -79,12 +79,12 @@ public:
         (
             "receivers,r",
             value<std::vector<std::string>>(&argument_.receivers)->required(),
-            "Send to [did/address:ucn_bits]."
+            "Send to [uid/address:ucn_bits]."
         )
         (
             "mychange,m",
             value<std::string>(&option_.change),
-            "Change to this did/address"
+            "Change to this uid/address"
         )
         (
             "fee,f",

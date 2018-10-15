@@ -205,27 +205,27 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
         case error::token_secondaryissue_threshold_invalid:
             return "token secondaryissue tokenshare threshold value invalid";
 
-        // did errors
-        case error::did_symbol_not_match:
-            return "did symbol not match";
-        case error::did_symbol_invalid:
-            return "did symbol invalid";
-        case error::did_exist:
-            return "did exist";
-        case error::address_registered_did:
-            return "address already registered did";
-        case error::did_func_not_actived:
-            return "did function has not been actived until block height is larger than 1130000";
-        case error::did_address_not_match:
-            return "attach did address must equal with output address";
-        case error::did_address_needed:
-            return "did address is needed but not supplied";
-        case error::did_not_exist:
-            return "did does not exist";
-        case error::did_input_error:
-            return "did input error";
-        case error::did_multi_type_exist:
-            return "did attchment type can not be with some others";
+        // uid errors
+        case error::uid_symbol_not_match:
+            return "uid symbol not match";
+        case error::uid_symbol_invalid:
+            return "uid symbol invalid";
+        case error::uid_exist:
+            return "uid exist";
+        case error::address_registered_uid:
+            return "address already registered uid";
+        case error::uid_func_not_actived:
+            return "uid function has not been actived until block height is larger than 1130000";
+        case error::uid_address_not_match:
+            return "attach uid address must equal with output address";
+        case error::uid_address_needed:
+            return "uid address is needed but not supplied";
+        case error::uid_not_exist:
+            return "uid does not exist";
+        case error::uid_input_error:
+            return "uid input error";
+        case error::uid_multi_type_exist:
+            return "uid attchment type can not be with some others";
         case error::attenuation_model_param_error:
             return "attenuation model parameter is wrong";
 
@@ -243,8 +243,8 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
         case error::token_cert_issue_error:
             return "token cert issue error";
 
-        case error::token_did_registerr_not_match:
-            return "attach todid must equal with token issuer or cert owner";
+        case error::token_uid_registerr_not_match:
+            return "attach touid must equal with token issuer or cert owner";
 
         case error::attachment_invalid:
             return "attachment is invalid";
@@ -252,13 +252,13 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
             return "nova feature is not activated, it will be activated when block height is larger than 1270000";
 
         // mit errors
-        case error::mit_error:
+        case error::card_error:
             return "MIT token error";
-        case error::mit_exist:
+        case error::card_exist:
             return "MIT token already exists";
-        case error::mit_register_error:
+        case error::card_register_error:
             return "MIT token register error";
-        case error::mit_symbol_invalid:
+        case error::card_symbol_invalid:
             return "MIT symbol invalid";
 
         // unknown errors

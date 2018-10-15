@@ -72,10 +72,10 @@ console_result issue::invoke (Json::Value& jv_output,
         throw token_symbol_notfound_exception{"token " + argument_.symbol + " not found"};
     }
 
-    auto to_did = sh_token->get_issuer();
-    auto to_address = get_address_from_did(to_did, blockchain);
+    auto to_uid = sh_token->get_issuer();
+    auto to_address = get_address_from_uid(to_uid, blockchain);
     if (!blockchain.is_valid_address(to_address)) {
-        throw address_invalid_exception{"invalid token issuer " + to_did};
+        throw address_invalid_exception{"invalid token issuer " + to_uid};
     }
 
     std::string cert_symbol;
@@ -123,7 +123,7 @@ console_result issue::invoke (Json::Value& jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {to_address, argument_.symbol, 0, 0, utxo_attach_type::token_issue, attachment("", to_did)}
+        {to_address, argument_.symbol, 0, 0, utxo_attach_type::token_issue, attachment("", to_uid)}
     };
 
     // token_cert utxo
@@ -132,7 +132,7 @@ console_result issue::invoke (Json::Value& jv_output,
         for (auto each_cert_type : certs) {
             receiver.push_back(
             {   to_address, argument_.symbol, 0, 0,
-                each_cert_type, utxo_attach_type::token_cert_autoissue, attachment("", to_did)
+                each_cert_type, utxo_attach_type::token_cert_autoissue, attachment("", to_uid)
             });
         }
     }
@@ -142,7 +142,7 @@ console_result issue::invoke (Json::Value& jv_output,
         receiver.push_back(
         {   to_address, cert_symbol, 0, 0, cert_type,
             (is_domain_cert_exist ? utxo_attach_type::token_cert : utxo_attach_type::token_cert_autoissue),
-            attachment("", to_did)
+            attachment("", to_uid)
         });
     }
 

@@ -532,39 +532,39 @@ Json::Value json_helper::prop_list(const bc::chain::token_cert& cert_info)
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::token_mit& mit_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::token_card& card_info, bool always_show_content)
 {
     Json::Value tree;
-    tree["symbol"] = mit_info.get_symbol();
-    tree["address"] = mit_info.get_address();
-    tree["status"] = mit_info.get_status_name();
+    tree["symbol"] = card_info.get_symbol();
+    tree["address"] = card_info.get_address();
+    tree["status"] = card_info.get_status_name();
 
-    if (always_show_content || mit_info.is_register_status()) {
-        tree["content"] = mit_info.get_content();
+    if (always_show_content || card_info.is_register_status()) {
+        tree["content"] = card_info.get_content();
     }
 
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::token_mit_info& mit_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::token_card_info& card_info, bool always_show_content)
 {
     Json::Value tree;
 
-    tree["height"] = mit_info.output_height;
+    tree["height"] = card_info.output_height;
     if (version_ <= 2) {
-        tree["time_stamp"] = mit_info.timestamp;
+        tree["time_stamp"] = card_info.timestamp;
     }
     else {
-        tree["timestamp"] = mit_info.timestamp;
+        tree["timestamp"] = card_info.timestamp;
     }
 
-    tree["to_did"] = mit_info.to_did;
-    tree["symbol"] = mit_info.mit.get_symbol();
-    tree["address"] = mit_info.mit.get_address();
-    tree["status"] = mit_info.mit.get_status_name();
+    tree["to_uid"] = card_info.to_uid;
+    tree["symbol"] = card_info.mit.get_symbol();
+    tree["address"] = card_info.mit.get_address();
+    tree["status"] = card_info.mit.get_status_name();
 
-    if (always_show_content || mit_info.mit.is_register_status()) {
-        tree["content"] = mit_info.mit.get_content();
+    if (always_show_content || card_info.mit.is_register_status()) {
+        tree["content"] = card_info.mit.get_content();
     }
 
     return tree;
@@ -639,8 +639,8 @@ Json::Value json_helper::prop_list(bc::chain::attachment& attach_data)
             tree["type"] = "token-transfer";
         }
     }
-    else if (attach_data.get_type() == TOKEN_MIT_TYPE) {
-        auto token_info = boost::get<bc::chain::token_mit>(attach_data.get_attach());
+    else if (attach_data.get_type() == TOKEN_CARD_TYPE) {
+        auto token_info = boost::get<bc::chain::token_card>(attach_data.get_attach());
         tree = prop_list(token_info);
         tree["type"] = "mit";
     }
@@ -649,17 +649,17 @@ Json::Value json_helper::prop_list(bc::chain::attachment& attach_data)
         tree = prop_list(cert_info);
         tree["type"] = "token-cert";
     }
-    else if (attach_data.get_type() == DID_TYPE) {
-        auto did_info = boost::get<bc::chain::did>(attach_data.get_attach());
-        if (did_info.get_status() == DID_DETAIL_TYPE) {
-            tree["type"] = "did-register";
-            auto detail_info = boost::get<bc::chain::did_detail>(did_info.get_data());
+    else if (attach_data.get_type() == UID_TYPE) {
+        auto uid_info = boost::get<bc::chain::uid>(attach_data.get_attach());
+        if (uid_info.get_status() == UID_DETAIL_TYPE) {
+            tree["type"] = "uid-register";
+            auto detail_info = boost::get<bc::chain::uid_detail>(uid_info.get_data());
             tree["symbol"] = detail_info.get_symbol();
             tree["address"] = detail_info.get_address();
         }
-        if (did_info.get_status() == DID_TRANSFERABLE_TYPE) {
-            tree["type"] = "did-transfer";
-            auto detail_info = boost::get<bc::chain::did_detail>(did_info.get_data());
+        if (uid_info.get_status() == UID_TRANSFERABLE_TYPE) {
+            tree["type"] = "uid-transfer";
+            auto detail_info = boost::get<bc::chain::uid_detail>(uid_info.get_data());
             tree["symbol"] = detail_info.get_symbol();
             tree["address"] = detail_info.get_address();
         }
@@ -674,9 +674,9 @@ Json::Value json_helper::prop_list(bc::chain::attachment& attach_data)
         BITCOIN_ASSERT(false);
     }
 
-    if (attach_data.get_version() == DID_ATTACH_VERIFY_VERSION) {
-        tree["from_did"] = attach_data.get_from_did();
-        tree["to_did"] =  attach_data.get_to_did();
+    if (attach_data.get_version() == UID_ATTACH_VERIFY_VERSION) {
+        tree["from_uid"] = attach_data.get_from_uid();
+        tree["to_uid"] =  attach_data.get_to_uid();
     }
     return tree;
 }

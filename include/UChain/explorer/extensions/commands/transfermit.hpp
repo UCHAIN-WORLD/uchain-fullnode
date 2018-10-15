@@ -38,14 +38,14 @@ public:
     static const char* symbol() { return "transfermit";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Transfer MIT to other DID"; }
+    const char* description() override { return "Transfer MIT to other UID"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
                .add("ACCOUNTNAME", 1)
                .add("ACCOUNTAUTH", 1)
-               .add("TODID", 1)
+               .add("TOUID", 1)
                .add("SYMBOL", 1);
     }
 
@@ -55,7 +55,7 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
-        load_input(argument_.to, "TODID", variables, input, raw);
+        load_input(argument_.to, "TOUID", variables, input, raw);
         load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
@@ -80,9 +80,9 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
-            "TODID",
+            "TOUID",
             value<std::string>(&argument_.to)->required(),
-            "Target did"
+            "Target uid"
         )
         (
             "SYMBOL",

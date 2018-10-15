@@ -109,7 +109,7 @@ DEFINE_EXPLORER_EXCEPTION(toaddress_unrecognized_exception, 4013);
 DEFINE_EXPLORER_EXCEPTION(fromaddress_empty_exception, 4014);
 DEFINE_EXPLORER_EXCEPTION(fromaddress_invalid_exception, 4015);
 DEFINE_EXPLORER_EXCEPTION(fromaddress_unrecognized_exception, 4016);
-DEFINE_EXPLORER_EXCEPTION(address_not_bound_did_exception, 4017);
+DEFINE_EXPLORER_EXCEPTION(address_not_bound_uid_exception, 4017);
 
 DEFINE_EXPLORER_EXCEPTION(token_lack_exception, 5001);
 DEFINE_EXPLORER_EXCEPTION(token_amount_exception, 5002);
@@ -177,16 +177,16 @@ DEFINE_EXPLORER_EXCEPTION(encode_exception, 6001);
 DEFINE_EXPLORER_EXCEPTION(ec_to_address_exception, 6002);
 DEFINE_EXPLORER_EXCEPTION(ec_to_public_exception, 6003);
 
-DEFINE_EXPLORER_EXCEPTION(did_symbol_name_exception, 7001);
-DEFINE_EXPLORER_EXCEPTION(did_symbol_existed_exception, 7002);
-DEFINE_EXPLORER_EXCEPTION(did_symbol_length_exception, 7003);
-DEFINE_EXPLORER_EXCEPTION(did_description_length_exception, 7004);
-DEFINE_EXPLORER_EXCEPTION(did_register_poundage_exception, 7005);
-DEFINE_EXPLORER_EXCEPTION(did_symbol_notfound_exception, 7006);
-DEFINE_EXPLORER_EXCEPTION(did_symbol_duplicate_exception, 7007);
-DEFINE_EXPLORER_EXCEPTION(did_address_needed_exception, 7008);
-DEFINE_EXPLORER_EXCEPTION(did_symbol_notowned_exception, 7009);
-DEFINE_EXPLORER_EXCEPTION(did_multisig_address_exception, 7010);
+DEFINE_EXPLORER_EXCEPTION(uid_symbol_name_exception, 7001);
+DEFINE_EXPLORER_EXCEPTION(uid_symbol_existed_exception, 7002);
+DEFINE_EXPLORER_EXCEPTION(uid_symbol_length_exception, 7003);
+DEFINE_EXPLORER_EXCEPTION(uid_description_length_exception, 7004);
+DEFINE_EXPLORER_EXCEPTION(uid_register_poundage_exception, 7005);
+DEFINE_EXPLORER_EXCEPTION(uid_symbol_notfound_exception, 7006);
+DEFINE_EXPLORER_EXCEPTION(uid_symbol_duplicate_exception, 7007);
+DEFINE_EXPLORER_EXCEPTION(uid_address_needed_exception, 7008);
+DEFINE_EXPLORER_EXCEPTION(uid_symbol_notowned_exception, 7009);
+DEFINE_EXPLORER_EXCEPTION(uid_multisig_address_exception, 7010);
 
 DEFINE_EXPLORER_EXCEPTION(seed_exception, 9001);
 DEFINE_EXPLORER_EXCEPTION(seed_size_exception, 9001);

@@ -65,14 +65,14 @@
 #include <UChain/explorer/extensions/commands/transfermit.hpp>
 #include <UChain/explorer/extensions/commands/listmits.hpp>
 #include <UChain/explorer/extensions/commands/getmit.hpp>
-#include <UChain/explorer/extensions/commands/registerdid.hpp>
+#include <UChain/explorer/extensions/commands/registeruid.hpp>
 #include <UChain/explorer/extensions/commands/send.hpp>
 #include <UChain/explorer/extensions/commands/sendfrom.hpp>
 #include <UChain/explorer/extensions/commands/sendmore.hpp>
 #include <UChain/explorer/extensions/commands/sendtoken.hpp>
 #include <UChain/explorer/extensions/commands/sendtokenfrom.hpp>
 #include <UChain/explorer/extensions/commands/swaptoken.hpp>
-#include <UChain/explorer/extensions/commands/listdids.hpp>
+#include <UChain/explorer/extensions/commands/listuids.hpp>
 #include <UChain/explorer/extensions/commands/deletelocaltoken.hpp>
 #include <UChain/explorer/extensions/commands/issue.hpp>
 #include <UChain/explorer/extensions/commands/burn.hpp>
@@ -93,8 +93,8 @@
 #include <UChain/explorer/extensions/commands/sendrawtx.hpp>
 #include <UChain/explorer/extensions/commands/signmultisigtx.hpp>
 #include <UChain/explorer/extensions/commands/signrawtx.hpp>
-#include <UChain/explorer/extensions/commands/didchangeaddress.hpp>
-#include <UChain/explorer/extensions/commands/getdid.hpp>
+#include <UChain/explorer/extensions/commands/uidchangeaddress.hpp>
+#include <UChain/explorer/extensions/commands/getuid.hpp>
 
 
 namespace libbitcoin {
@@ -198,11 +198,11 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<getmit>());
 
     os <<"\r\n";*/
-    //did
-    /*func(make_shared<registerdid>());
-    func(make_shared<didchangeaddress>());
-    func(make_shared<listdids>());
-    func(make_shared<getdid>());*/
+    //uid
+    /*func(make_shared<registeruid>());
+    func(make_shared<uidchangeaddress>());
+    func(make_shared<listuids>());
+    func(make_shared<getuid>());*/
 }
 
 shared_ptr<command> find_extension(const string& symbol)
@@ -311,11 +311,11 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<getaddressucn>();
     if (symbol == deposit::symbol())
         return make_shared<deposit>();
-    if (symbol == send::symbol() || symbol == "didsend")
+    if (symbol == send::symbol() || symbol == "uidsend")
         return make_shared<send>();
-    if (symbol == sendmore::symbol() || symbol == "didsendmore")
+    if (symbol == sendmore::symbol() || symbol == "uidsendmore")
         return make_shared<sendmore>();
-    if (symbol == sendfrom::symbol() || symbol == "didsendfrom")
+    if (symbol == sendfrom::symbol() || symbol == "uidsendfrom")
         return make_shared<sendfrom>();
 
     // token
@@ -337,9 +337,9 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<issue>();
     if (symbol == secondaryissue::symbol() || (symbol == "additionalissue") )
         return make_shared<secondaryissue>();
-    if (symbol == sendtoken::symbol() || symbol == "didsendtoken")
+    if (symbol == sendtoken::symbol() || symbol == "uidsendtoken")
         return make_shared<sendtoken>();
-    if (symbol == sendtokenfrom::symbol() || symbol == "didsendtokenfrom")
+    if (symbol == sendtokenfrom::symbol() || symbol == "uidsendtokenfrom")
         return make_shared<sendtokenfrom>();
     if (symbol == burn::symbol())
         return make_shared<burn>();
@@ -362,15 +362,15 @@ shared_ptr<command> find_extension(const string& symbol)
     if (symbol == getmit::symbol())
         return make_shared<getmit>();*/
 
-    // did
-    /*if (symbol == registerdid::symbol())
-        return make_shared<registerdid>();
-    if (symbol == didchangeaddress::symbol())
-        return make_shared<didchangeaddress>();
-    if (symbol == listdids::symbol())
-        return make_shared<listdids>();
-    if (symbol == getdid::symbol())
-        return make_shared<getdid>();*/
+    // uid
+    /*if (symbol == registeruid::symbol())
+        return make_shared<registeruid>();
+    if (symbol == uidchangeaddress::symbol())
+        return make_shared<uidchangeaddress>();
+    if (symbol == listuids::symbol())
+        return make_shared<listuids>();
+    if (symbol == getuid::symbol())
+        return make_shared<getuid>();*/
 
     return nullptr;
 }
