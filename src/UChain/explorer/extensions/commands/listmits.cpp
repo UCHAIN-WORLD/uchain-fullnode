@@ -41,34 +41,34 @@ console_result listmits::invoke(Json::Value& jv_output,
     auto json_helper = config::json_helper(get_api_version());
 
     if (auth_.name.empty()) {
-        // no account -- list whole assets in blockchain
+        // no account -- list whole tokens in blockchain
         auto sh_vec = blockchain.get_registered_mits();
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem : *sh_vec) {
-                Json::Value asset_data = json_helper.prop_list(elem);
-                json_value.append(asset_data);
+                Json::Value token_data = json_helper.prop_list(elem);
+                json_value.append(token_data);
             }
         }
     }
     else {
         blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
-        // list assets owned by account
+        // list tokens owned by account
         auto sh_vec = blockchain.get_account_mits(auth_.name);
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem : *sh_vec) {
                 // update content if it's transfered from others
                 if (!elem.is_register_status()) {
-                    auto asset = blockchain.get_registered_mit(elem.get_symbol());
-                    if (nullptr != asset) {
-                        elem.set_content(asset->mit.get_content());
+                    auto token = blockchain.get_registered_mit(elem.get_symbol());
+                    if (nullptr != token) {
+                        elem.set_content(token->mit.get_content());
                     }
                 }
 
-                Json::Value asset_data = json_helper.prop_list(elem, true);
-                json_value.append(asset_data);
+                Json::Value token_data = json_helper.prop_list(elem, true);
+                json_value.append(token_data);
             }
         }
     }

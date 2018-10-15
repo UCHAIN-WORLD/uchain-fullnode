@@ -86,7 +86,7 @@ public:
         (
             "TO_",
             value<std::string>(&argument_.to)->required(),
-            "To this did/address the specific asset will be sent. expect to be \"crosschain\"."
+            "To this did/address the specific token will be sent. expect to be \"crosschain\"."
         )
         (
             "SYMBOL",
@@ -96,12 +96,12 @@ public:
         (
             "AMOUNT",
             value<uint64_t>(&argument_.amount)->required(),
-            "Asset integer bits. see asset <decimal_number>."
+            "Asset integer bits. see token <decimal_number>."
         )
         (
             "FOREIGN_ADDR",
             value<std::string>(&argument_.foreign_addr)->required(),
-            "To this address of the destination chain to swap the asset."
+            "To this address of the destination chain to swap the token."
         )
         (
             "change,c",

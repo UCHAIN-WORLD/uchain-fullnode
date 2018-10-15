@@ -29,8 +29,8 @@
 #include <UChain/bitcoin/utility/writer.hpp>
 #include <UChain/bitcoin/formats/base_16.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
-#include <UChain/bitcoin/chain/attachment/account/account_address.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_detail.hpp>
+#include <UChainService/txs/account/account_address.hpp>
+#include <UChainService/txs/token/token_detail.hpp>
 
 namespace libbitcoin {
 namespace chain {
@@ -41,7 +41,7 @@ class BC_API account_info
 public:
     account_info(libbitcoin::blockchain::block_chain_impl& blockchain, std::string& passphrase);
     account_info(libbitcoin::blockchain::block_chain_impl& blockchain, std::string& passphrase,
-        account& meta, std::vector<account_address>& addr_vec, std::vector<asset_detail>& asset_vec);
+        account& meta, std::vector<account_address>& addr_vec, std::vector<token_detail>& token_vec);
 
     bool from_data(const data_chunk& data);
     bool from_data(std::istream& stream);
@@ -52,7 +52,7 @@ public:
     void store(std::string& name, std::string& passwd);
     account get_account() const;
     std::vector<account_address>& get_account_address(); 
-    std::vector<asset_detail>& get_account_asset();
+    std::vector<token_detail>& get_account_token();
     void encrypt();
     void decrypt(std::string& hexcode);
     friend std::istream& operator>>(std::istream& input, account_info& self_ref);
@@ -62,7 +62,7 @@ private:
     libbitcoin::blockchain::block_chain_impl& blockchain_;
     account meta_;
     std::vector<account_address> addr_vec_;
-    std::vector<asset_detail> asset_vec_;
+    std::vector<token_detail> token_vec_;
     // encrypt/decrypt
     data_chunk data_;
     std::string passphrase_;

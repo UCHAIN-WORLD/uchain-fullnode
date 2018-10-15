@@ -80,7 +80,7 @@ namespace symbol {
         "CHF",
         "UCN",
         "CURRENCY",
-        "ASSET",
+        "TOKEN",
         "BALANCE",
         "EXCHANGE",
         "TOKEN",

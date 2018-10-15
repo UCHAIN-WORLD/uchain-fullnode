@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChain/database/result/account_address_result.hpp>
-#include <UChain/bitcoin/chain/attachment/account/account_address.hpp>
+#include <UChainService/txs/account/account_address.hpp>
 #include <cstddef>
 #include <cstdint>
 #include <UChain/bitcoin.hpp>

@@ -30,8 +30,8 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
-#include <UChain/bitcoin/chain/attachment/attachment.hpp> // added for asset issue/transfer
-#include <UChain/bitcoin/chain/attachment/did/did.hpp>
+#include <UChainService/txs/attachment.hpp> // added for token issue/transfer
+#include <UChainService/txs/did/did.hpp>
 
 // forward declaration
 namespace libbitcoin {
@@ -67,44 +67,44 @@ public:
     std::string get_script_address() const;
     void reset();
     uint64_t serialized_size() const;
-    uint64_t get_asset_amount() const;
-    std::string get_asset_symbol() const;
-    std::string get_asset_issuer() const;
-    std::string get_asset_address() const;
-    std::string get_asset_cert_symbol() const;
-    std::string get_asset_mit_symbol() const;
-    std::string get_asset_cert_owner() const;
-    std::string get_asset_cert_address() const;
-    asset_cert_type get_asset_cert_type() const;
+    uint64_t get_token_amount() const;
+    std::string get_token_symbol() const;
+    std::string get_token_issuer() const;
+    std::string get_token_address() const;
+    std::string get_token_cert_symbol() const;
+    std::string get_token_mit_symbol() const;
+    std::string get_token_cert_owner() const;
+    std::string get_token_cert_address() const;
+    token_cert_type get_token_cert_type() const;
     const data_chunk& get_attenuation_model_param() const;
-    bool is_asset() const;
-    bool is_asset_transfer() const;
-    bool is_asset_issue() const;
-    bool is_asset_secondaryissue() const;
-    bool is_asset_mit() const;
-    bool is_asset_mit_register() const;
-    bool is_asset_mit_transfer() const;
-    bool is_asset_cert() const;
-    bool is_asset_cert_issue() const;
-    bool is_asset_cert_transfer() const;
-    bool is_asset_cert_autoissue() const;
+    bool is_token() const;
+    bool is_token_transfer() const;
+    bool is_token_issue() const;
+    bool is_token_secondaryissue() const;
+    bool is_token_mit() const;
+    bool is_token_mit_register() const;
+    bool is_token_mit_transfer() const;
+    bool is_token_cert() const;
+    bool is_token_cert_issue() const;
+    bool is_token_cert_transfer() const;
+    bool is_token_cert_autoissue() const;
     bool is_ucn() const;
     bool is_ucn_award() const;
     bool is_message() const;
     bool is_did() const;
     bool is_did_register() const;
     bool is_did_transfer() const;
-    asset_detail get_asset_detail() const;
-    asset_transfer get_asset_transfer() const;
-    asset_cert get_asset_cert() const;
-    asset_mit get_asset_mit() const;
+    token_detail get_token_detail() const;
+    token_transfer get_token_transfer() const;
+    token_cert get_token_cert() const;
+    token_mit get_token_mit() const;
     std::string get_did_symbol() const;
     std::string get_did_address() const;
     did get_did() const;
 
     uint64_t value;
     chain::script script;
-    attachment attach_data; // added for asset issue/transfer
+    attachment attach_data; // added for token issue/transfer
 };
 
 struct BC_API output_info

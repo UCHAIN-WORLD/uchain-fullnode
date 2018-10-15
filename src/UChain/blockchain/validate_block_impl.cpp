@@ -290,7 +290,7 @@ bool validate_block_impl::is_did_in_orphan_chain(const std::string& did) const
     return false;
 }
 
-bool validate_block_impl::is_asset_in_orphan_chain(const std::string& symbol) const
+bool validate_block_impl::is_token_in_orphan_chain(const std::string& symbol) const
 {
     BITCOIN_ASSERT(!symbol.empty());
 
@@ -298,8 +298,8 @@ bool validate_block_impl::is_asset_in_orphan_chain(const std::string& symbol) co
         const auto& orphan_block = orphan_chain_[orphan]->actual();
         for (const auto& orphan_tx : orphan_block->transactions) {
             for (const auto& output : orphan_tx.outputs) {
-                if (output.is_asset_issue()) {
-                    if (symbol == output.get_asset_symbol()) {
+                if (output.is_token_issue()) {
+                    if (symbol == output.get_token_symbol()) {
                         return true;
                     }
                 }
@@ -310,7 +310,7 @@ bool validate_block_impl::is_asset_in_orphan_chain(const std::string& symbol) co
     return false;
 }
 
-bool validate_block_impl::is_asset_cert_in_orphan_chain(const std::string& symbol, asset_cert_type cert_type) const
+bool validate_block_impl::is_token_cert_in_orphan_chain(const std::string& symbol, token_cert_type cert_type) const
 {
     BITCOIN_ASSERT(!symbol.empty());
 
@@ -318,8 +318,8 @@ bool validate_block_impl::is_asset_cert_in_orphan_chain(const std::string& symbo
         const auto& orphan_block = orphan_chain_[orphan]->actual();
         for (const auto& orphan_tx : orphan_block->transactions) {
             for (const auto& output : orphan_tx.outputs) {
-                if (symbol == output.get_asset_cert_symbol() &&
-                    cert_type == output.get_asset_cert_type()) {
+                if (symbol == output.get_token_cert_symbol() &&
+                    cert_type == output.get_token_cert_type()) {
                     return true;
                 }
             }
@@ -329,7 +329,7 @@ bool validate_block_impl::is_asset_cert_in_orphan_chain(const std::string& symbo
     return false;
 }
 
-bool validate_block_impl::is_asset_mit_in_orphan_chain(const std::string& symbol) const
+bool validate_block_impl::is_token_mit_in_orphan_chain(const std::string& symbol) const
 {
     BITCOIN_ASSERT(!symbol.empty());
 
@@ -337,8 +337,8 @@ bool validate_block_impl::is_asset_mit_in_orphan_chain(const std::string& symbol
         const auto& orphan_block = orphan_chain_[orphan]->actual();
         for (const auto& orphan_tx : orphan_block->transactions) {
             for (const auto& output : orphan_tx.outputs) {
-                if (output.is_asset_mit_register()) {
-                    if (symbol == output.get_asset_mit_symbol()) {
+                if (output.is_token_mit_register()) {
+                    if (symbol == output.get_token_mit_symbol()) {
                         return true;
                     }
                 }

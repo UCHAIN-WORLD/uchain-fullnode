@@ -54,13 +54,13 @@
 #include <UChain/explorer/extensions/commands/getbalance.hpp>
 #include <UChain/explorer/extensions/commands/listtxs.hpp>
 #include <UChain/explorer/extensions/commands/deposit.hpp>
-#include <UChain/explorer/extensions/commands/listassets.hpp>
-#include <UChain/explorer/extensions/commands/getasset.hpp>
+#include <UChain/explorer/extensions/commands/listtokens.hpp>
+#include <UChain/explorer/extensions/commands/gettoken.hpp>
 #include <UChain/explorer/extensions/commands/secondaryissue.hpp>
-#include <UChain/explorer/extensions/commands/getaddressasset.hpp>
-#include <UChain/explorer/extensions/commands/getaccountasset.hpp>
-#include <UChain/explorer/extensions/commands/getassetview.hpp>
-#include <UChain/explorer/extensions/commands/createasset.hpp>
+#include <UChain/explorer/extensions/commands/getaddresstoken.hpp>
+#include <UChain/explorer/extensions/commands/getaccounttoken.hpp>
+#include <UChain/explorer/extensions/commands/gettokenview.hpp>
+#include <UChain/explorer/extensions/commands/createtoken.hpp>
 #include <UChain/explorer/extensions/commands/registermit.hpp>
 #include <UChain/explorer/extensions/commands/transfermit.hpp>
 #include <UChain/explorer/extensions/commands/listmits.hpp>
@@ -69,11 +69,11 @@
 #include <UChain/explorer/extensions/commands/send.hpp>
 #include <UChain/explorer/extensions/commands/sendfrom.hpp>
 #include <UChain/explorer/extensions/commands/sendmore.hpp>
-#include <UChain/explorer/extensions/commands/sendasset.hpp>
-#include <UChain/explorer/extensions/commands/sendassetfrom.hpp>
+#include <UChain/explorer/extensions/commands/sendtoken.hpp>
+#include <UChain/explorer/extensions/commands/sendtokenfrom.hpp>
 #include <UChain/explorer/extensions/commands/swaptoken.hpp>
 #include <UChain/explorer/extensions/commands/listdids.hpp>
-#include <UChain/explorer/extensions/commands/deletelocalasset.hpp>
+#include <UChain/explorer/extensions/commands/deletelocaltoken.hpp>
 #include <UChain/explorer/extensions/commands/issue.hpp>
 #include <UChain/explorer/extensions/commands/burn.hpp>
 #include <UChain/explorer/extensions/commands/transfercert.hpp>
@@ -170,18 +170,18 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<getaddressucn>());
 
     //os <<"\r\n";
-    // asset
-    /*func(make_shared<createasset>());
-    func(make_shared<deletelocalasset>());
+    // token
+    /*func(make_shared<createtoken>());
+    func(make_shared<deletelocaltoken>());
     func(make_shared<issue>());
     func(make_shared<secondaryissue>());
-    func(make_shared<sendasset>());
-    func(make_shared<sendassetfrom>());
-    func(make_shared<listassets>());
-    func(make_shared<getasset>());
-    func(make_shared<getaccountasset>());*/
-    // func(make_shared<getassetview>());
-    /*func(make_shared<getaddressasset>());
+    func(make_shared<sendtoken>());
+    func(make_shared<sendtokenfrom>());
+    func(make_shared<listtokens>());
+    func(make_shared<gettoken>());
+    func(make_shared<getaccounttoken>());*/
+    // func(make_shared<gettokenview>());
+    /*func(make_shared<getaddresstoken>());
     func(make_shared<burn>());
     func(make_shared<swaptoken>());*/
 
@@ -318,29 +318,29 @@ shared_ptr<command> find_extension(const string& symbol)
     if (symbol == sendfrom::symbol() || symbol == "didsendfrom")
         return make_shared<sendfrom>();
 
-    // asset
-    /*if (symbol == createasset::symbol())
-        return make_shared<createasset>();
-    if (symbol == deletelocalasset::symbol() || symbol == "deleteasset" )
-        return make_shared<deletelocalasset>();
-    if (symbol == listassets::symbol())
-        return make_shared<listassets>();
-    if (symbol == getasset::symbol())
-        return make_shared<getasset>();
-    if (symbol == getaccountasset::symbol())
-        return make_shared<getaccountasset>();*/
-    // if (symbol == getassetview::symbol())
-    //     return make_shared<getassetview>();
-    /*if (symbol == getaddressasset::symbol())
-        return make_shared<getaddressasset>();
+    // token
+    /*if (symbol == createtoken::symbol())
+        return make_shared<createtoken>();
+    if (symbol == deletelocaltoken::symbol() || symbol == "deletetoken" )
+        return make_shared<deletelocaltoken>();
+    if (symbol == listtokens::symbol())
+        return make_shared<listtokens>();
+    if (symbol == gettoken::symbol())
+        return make_shared<gettoken>();
+    if (symbol == getaccounttoken::symbol())
+        return make_shared<getaccounttoken>();*/
+    // if (symbol == gettokenview::symbol())
+    //     return make_shared<gettokenview>();
+    /*if (symbol == getaddresstoken::symbol())
+        return make_shared<getaddresstoken>();
     if (symbol == issue::symbol())
         return make_shared<issue>();
     if (symbol == secondaryissue::symbol() || (symbol == "additionalissue") )
         return make_shared<secondaryissue>();
-    if (symbol == sendasset::symbol() || symbol == "didsendasset")
-        return make_shared<sendasset>();
-    if (symbol == sendassetfrom::symbol() || symbol == "didsendassetfrom")
-        return make_shared<sendassetfrom>();
+    if (symbol == sendtoken::symbol() || symbol == "didsendtoken")
+        return make_shared<sendtoken>();
+    if (symbol == sendtokenfrom::symbol() || symbol == "didsendtokenfrom")
+        return make_shared<sendtokenfrom>();
     if (symbol == burn::symbol())
         return make_shared<burn>();
     if (symbol == swaptoken::symbol())

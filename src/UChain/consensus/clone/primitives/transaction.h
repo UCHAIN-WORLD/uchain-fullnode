@@ -10,7 +10,7 @@
 #include "script/script.h"
 #include "serialize.h"
 #include "uint256.h"
-#include <UChain/bitcoin/chain/attachment/attachment.hpp>
+#include <UChainService/txs/attachment.hpp>
 
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
@@ -103,7 +103,7 @@ class CAssetDetail
 public:
     std::string symbol;
     uint64_t maximum_supply;
-    uint32_t asset_type;
+    uint32_t token_type;
     std::string issuer;
     std::string address;
     std::string description;
@@ -114,7 +114,7 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         READWRITE(symbol);
         READWRITE(maximum_supply);
-        READWRITE(asset_type);
+        READWRITE(token_type);
         READWRITE(issuer);
         READWRITE(address);
         READWRITE(description);

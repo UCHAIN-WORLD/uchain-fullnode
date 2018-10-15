@@ -157,9 +157,9 @@ void transaction_pool::handle_validated(const code& ec, transaction_ptr tx,
 
 code transaction_pool::check_symbol_repeat(transaction_ptr tx)
 {
-    std::set<string> assets;
-    std::set<string> asset_certs;
-    std::set<string> asset_mits;
+    std::set<string> tokens;
+    std::set<string> token_certs;
+    std::set<string> token_mits;
     std::set<string> dids;
     std::set<string> didaddreses;
     std::set<string> didattaches;
@@ -195,39 +195,39 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                 }
             }
 
-            if (output.is_asset_issue())
+            if (output.is_token_issue())
             {
-                auto r = assets.insert(output.get_asset_symbol());
+                auto r = tokens.insert(output.get_token_symbol());
                 if (r.second == false)
                 {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat asset " + output.get_asset_symbol()
+                        << "check_symbol_repeat token " + output.get_token_symbol()
                         << " already exists in memorypool!"
                         << " " << tx->to_string(1);
-                    return error::asset_exist;
+                    return error::token_exist;
                 }
             }
-            else if (output.is_asset_cert())
+            else if (output.is_token_cert())
             {
-                auto &&key = output.get_asset_cert().get_key();
-                auto r = asset_certs.insert(key);
+                auto &&key = output.get_token_cert().get_key();
+                auto r = token_certs.insert(key);
                 if (r.second == false)
                 {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat cert " + output.get_asset_cert_symbol()
-                        << " with type " << output.get_asset_cert_type()
+                        << "check_symbol_repeat cert " + output.get_token_cert_symbol()
+                        << " with type " << output.get_token_cert_type()
                         << " already exists in memorypool!"
                         << " " << tx->to_string(1);
-                    return error::asset_cert_exist;
+                    return error::token_cert_exist;
                 }
             }
-            else if (output.is_asset_mit())
+            else if (output.is_token_mit())
             {
-                auto r = asset_mits.insert(output.get_asset_symbol());
+                auto r = token_mits.insert(output.get_token_symbol());
                 if (r.second == false)
                 {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat mit " + output.get_asset_symbol()
+                        << "check_symbol_repeat mit " + output.get_token_symbol()
                         << " already exists in memorypool!"
                         << " " << tx->to_string(1);
                     return error::mit_exist;

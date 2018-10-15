@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "burn";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Burn asset to blackhole address 1111111111111111111114oLvT2."; }
+    const char* description() override { return "Burn token to blackhole address 1111111111111111111114oLvT2."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -82,12 +82,12 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol)->required(),
-            "The asset will be burned."
+            "The token will be burned."
         )
         (
             "AMOUNT",
             value<uint64_t>(&argument_.amount)->default_value(0),
-            "Asset integer bits. see asset <decimal_number>."
+            "Asset integer bits. see token <decimal_number>."
         )
         (
             "cert,c",

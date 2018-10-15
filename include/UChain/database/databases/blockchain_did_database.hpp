@@ -28,7 +28,7 @@
 #include <UChain/database/result/transaction_result.hpp>
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
-#include <UChain/bitcoin/chain/attachment/did/blockchain_did.hpp>
+#include <UChainService/txs/did/blockchain_did.hpp>
 
 namespace libbitcoin {
 namespace database {

@@ -32,7 +32,7 @@
 #include <UChain/explorer/config/point.hpp>
 #include <UChain/explorer/config/transaction.hpp>
 #include <UChain/explorer/config/wrapper.hpp>
-#include <UChain/bitcoin/chain/attachment/account/account.hpp>
+#include <UChainService/txs/account/account.hpp>
 
 #include <jsoncpp/json/json.h>
 
@@ -413,61 +413,61 @@ BCX_API Json::Value prop_tree(const wallet::bitcoin_uri& uri);
 BCX_API Json::Value prop_tree(const block& block, bool json, bool tx_json);
 
 /**
- * Generate a property list for a asset detail.
- * @param[in]  detail_info          The asset detail.
- * @param[in]  is_maximum_supply    The asset amount means maximum_supply or quantity.
+ * Generate a property list for a token detail.
+ * @param[in]  detail_info          The token detail.
+ * @param[in]  is_maximum_supply    The token amount means maximum_supply or quantity.
  * @param[in]  show_address         A boolean value indicate whether show address.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::asset_detail& detail_info, bool is_maximum_supply, bool show_address = true);
+BCX_API Json::Value prop_list(const bc::chain::token_detail& detail_info, bool is_maximum_supply, bool show_address = true);
 
 /**
- * Generate a property list for a asset transfer with detail.
- * @param[in]  balance_info The asset balance info.
- * @param[in]  issued_info  The issued asset detail. include the other info.
+ * Generate a property list for a token transfer with detail.
+ * @param[in]  balance_info The token balance info.
+ * @param[in]  issued_info  The issued token detail. include the other info.
  * @param[in]  show_address A boolean value indicate whether show address.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::asset_balances& balance_info, const bc::chain::asset_detail& issued_info, bool show_address = true);
+BCX_API Json::Value prop_list(const bc::chain::token_balances& balance_info, const bc::chain::token_detail& issued_info, bool show_address = true);
 
 /**
- * Generate a property list for a asset transfer with detail.
- * @param[in]  balance_info The asset balance info.
+ * Generate a property list for a token transfer with detail.
+ * @param[in]  balance_info The token balance info.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::asset_balances& balance_info);
+BCX_API Json::Value prop_list(const bc::chain::token_balances& balance_info);
 
 /**
- * Generate a property list for a asset transfer with detail.
- * @param[in]  balance_info The deoisuted asset balance info.
- * @param[in]  issued_info  The issued asset detail. include the other info.
+ * Generate a property list for a token transfer with detail.
+ * @param[in]  balance_info The deoisuted token balance info.
+ * @param[in]  issued_info  The issued token detail. include the other info.
  * @param[in]  show_address A boolean value indicate whether show address.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::asset_deposited_balance& balance_info, const bc::chain::asset_detail& issued_info, bool show_address = true);
+BCX_API Json::Value prop_list(const bc::chain::token_deposited_balance& balance_info, const bc::chain::token_detail& issued_info, bool show_address = true);
 
 /**
- * Generate a property list for a asset transfer.
- * @param[in]  trans_info        The asset transfer.
- * @param[in]  decimal_number    The asset transfer unit. if equals max_uint8, do not add "decimal_number" index.
+ * Generate a property list for a token transfer.
+ * @param[in]  trans_info        The token transfer.
+ * @param[in]  decimal_number    The token transfer unit. if equals max_uint8, do not add "decimal_number" index.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::asset_transfer& trans_info, uint8_t decimal_number = max_uint8);
+BCX_API Json::Value prop_list(const bc::chain::token_transfer& trans_info, uint8_t decimal_number = max_uint8);
 
 /**
- * Generate a property list for a asset cert.
- * @param[in]  cert_info        The asset cert.
+ * Generate a property list for a token cert.
+ * @param[in]  cert_info        The token cert.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::asset_cert& cert_info);
+BCX_API Json::Value prop_list(const bc::chain::token_cert& cert_info);
 
 /**
- * Generate a property list for an identifiable asset.
- * @param[in]  cert_info        The identifiable asset.
+ * Generate a property list for an identifiable token.
+ * @param[in]  cert_info        The identifiable token.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::asset_mit& mit_info, bool always_show_content=false);
-BCX_API Json::Value prop_list(const bc::chain::asset_mit_info& mit_info, bool always_show_content=false);
+BCX_API Json::Value prop_list(const bc::chain::token_mit& mit_info, bool always_show_content=false);
+BCX_API Json::Value prop_list(const bc::chain::token_mit_info& mit_info, bool always_show_content=false);
 
 /**
  * Generate a property list for a multisign.

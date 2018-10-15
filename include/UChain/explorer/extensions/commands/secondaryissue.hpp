@@ -83,17 +83,17 @@ public:
         (
             "TODID",
             value<std::string>(&argument_.to)->required(),
-            "target did to check and issue asset, fee from and mychange to the address of this did too."
+            "target did to check and issue token, fee from and mychange to the address of this did too."
         )
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol)->required(),
-            "issued asset symbol"
+            "issued token symbol"
         )
         (
             "VOLUME",
             value<uint64_t>(&argument_.volume)->required(),
-            "The volume of asset, with unit of integer bits."
+            "The volume of token, with unit of integer bits."
         )
         (
             "model,m",

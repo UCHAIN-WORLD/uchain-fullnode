@@ -27,7 +27,7 @@
 #include <UChain/bitcoin/constants.hpp>
 #include <UChain/bitcoin/chain/script/operation.hpp>
 #include <UChain/bitcoin/chain/transaction.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/attenuation_model.hpp>
+#include <UChainService/txs/token/attenuation_model.hpp>
 #include <UChain/bitcoin/formats/base_16.hpp>
 #include <UChain/bitcoin/math/elliptic_curve.hpp>
 #include <UChain/bitcoin/math/hash.hpp>

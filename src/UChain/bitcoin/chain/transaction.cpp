@@ -349,58 +349,58 @@ uint64_t transaction::total_output_transfer_amount() const
 {
     const auto value = [](uint64_t total, const output& output)
     {
-        // asset issue and asset transfer can not co-exist in one transaction outputs.
-        // asset secondary issue is from air, so not add its amount to pass amount check.
-        if (output.is_asset_secondaryissue()) {
+        // token issue and token transfer can not co-exist in one transaction outputs.
+        // token secondary issue is from air, so not add its amount to pass amount check.
+        if (output.is_token_secondaryissue()) {
             return total;
         }
-        return total + output.get_asset_amount();
+        return total + output.get_token_amount();
     };
     return std::accumulate(outputs.begin(), outputs.end(), uint64_t(0), value);
 }
 
-bool transaction::has_asset_issue() const
+bool transaction::has_token_issue() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_asset_issue())
+        if(elem.is_token_issue())
             return true;
     }
     return false;
 }
 
-bool transaction::has_asset_secondary_issue() const
+bool transaction::has_token_secondary_issue() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_asset_secondaryissue())
+        if(elem.is_token_secondaryissue())
             return true;
     }
     return false;
 }
 
 
-bool transaction::has_asset_transfer() const
+bool transaction::has_token_transfer() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_asset_transfer()
-            && elem.get_asset_amount()) // block #810376 has 0 asset transfer without input
+        if(elem.is_token_transfer()
+            && elem.get_token_amount()) // block #810376 has 0 token transfer without input
             return true;
     }
     return false;
 }
 
-bool transaction::has_asset_cert() const
+bool transaction::has_token_cert() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_asset_cert())
+        if(elem.is_token_cert())
             return true;
     }
     return false;
 }
 
-bool transaction::has_asset_mit_transfer() const
+bool transaction::has_token_mit_transfer() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_asset_mit_transfer())
+        if(elem.is_token_mit_transfer())
             return true;
     }
     return false;

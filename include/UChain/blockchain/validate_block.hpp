@@ -58,9 +58,9 @@ public:
     virtual std::string get_did_from_address_consider_orphan_chain(const std::string& address, const std::string& did_symbol) const = 0;
     virtual bool is_did_match_address_in_orphan_chain(const std::string& symbol, const std::string& address) const = 0;
     virtual bool is_did_in_orphan_chain(const std::string& symbol) const = 0;
-    virtual bool is_asset_in_orphan_chain(const std::string& symbol) const = 0;
-    virtual bool is_asset_cert_in_orphan_chain(const std::string& symbol, asset_cert_type cert_type) const = 0;
-    virtual bool is_asset_mit_in_orphan_chain(const std::string& symbol) const = 0;
+    virtual bool is_token_in_orphan_chain(const std::string& symbol) const = 0;
+    virtual bool is_token_cert_in_orphan_chain(const std::string& symbol, token_cert_type cert_type) const = 0;
+    virtual bool is_token_mit_in_orphan_chain(const std::string& symbol) const = 0;
 
     virtual size_t get_fork_index() const { return max_size_t; }
 

@@ -42,8 +42,8 @@ account_info::account_info(blockchain::block_chain_impl& blockchain, std::string
 {
 }
 account_info::account_info(blockchain::block_chain_impl& blockchain, std::string& passphrase,
-    account& meta, std::vector<account_address>& addr_vec,    std::vector<asset_detail>& asset_vec):
-        blockchain_(blockchain), passphrase_(passphrase), meta_(meta), addr_vec_(addr_vec), asset_vec_(asset_vec)
+    account& meta, std::vector<account_address>& addr_vec,    std::vector<token_detail>& token_vec):
+        blockchain_(blockchain), passphrase_(passphrase), meta_(meta), addr_vec_(addr_vec), token_vec_(token_vec)
 {
 }
 
@@ -71,12 +71,12 @@ bool account_info::from_data(reader& source)
         addr_vec_.push_back(addr);
     }
 
-    asset_detail detail;
-    uint32_t asset_size = source.read_4_bytes_little_endian();
-    while(asset_size--) {
+    token_detail detail;
+    uint32_t token_size = source.read_4_bytes_little_endian();
+    while(token_size--) {
         detail.reset();
         detail.from_data(source);
-        asset_vec_.push_back(detail);
+        token_vec_.push_back(detail);
     }
 
     return true;
@@ -108,10 +108,10 @@ void account_info::to_data(writer& sink) const
             each.to_data(sink);
         }
     }
-    // account asset vector
-    sink.write_4_bytes_little_endian(asset_vec_.size());
-    if(asset_vec_.size()) {
-        for(auto& each : asset_vec_) {
+    // account token vector
+    sink.write_4_bytes_little_endian(token_vec_.size());
+    if(token_vec_.size()) {
+        for(auto& each : token_vec_) {
             each.to_data(sink);
         }
     }
@@ -124,9 +124,9 @@ std::vector<account_address>& account_info::get_account_address()
 {
     return addr_vec_;
 }
-std::vector<asset_detail>& account_info::get_account_asset()
+std::vector<token_detail>& account_info::get_account_token()
 {
-    return asset_vec_;
+    return token_vec_;
 }
 void account_info::store(std::string& name, std::string& passwd)
 {
@@ -148,11 +148,11 @@ void account_info::store(std::string& name, std::string& passwd)
         blockchain_.store_account_address(addr);
     }
 
-    // restore account asset
-    for(auto& each : asset_vec_) {
+    // restore account token
+    for(auto& each : token_vec_) {
         each.set_issuer(name);
-        auto acc = std::make_shared<asset_detail>(each);
-        blockchain_.store_account_asset(acc, name);
+        auto acc = std::make_shared<token_detail>(each);
+        blockchain_.store_account_token(acc, name);
     }
 }
 void account_info::encrypt()

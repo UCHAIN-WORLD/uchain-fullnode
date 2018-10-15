@@ -99,17 +99,17 @@ console_result swaptoken::invoke(Json::Value& jv_output,
         throw argument_legality_exception{argument_.foreign_addr + " is not a valid ETH address."};
     }
 
-    // check asset symbol
-    check_asset_symbol(argument_.symbol);
+    // check token symbol
+    check_token_symbol(argument_.symbol);
 
-    attachment attach_asset, attach_fee;
-    const std::string&& to_address = get_address(argument_.to, attach_asset, false, blockchain);
+    attachment attach_token, attach_fee;
+    const std::string&& to_address = get_address(argument_.to, attach_token, false, blockchain);
     const std::string&& swapfee_address = bc::get_developer_community_address(
         blockchain.chain_settings().use_testnet_rules);
 
     std::string from_address("");
     if (!option_.from.empty()) {
-        from_address = get_address(option_.from, attach_asset, true, blockchain);
+        from_address = get_address(option_.from, attach_token, true, blockchain);
                        get_address(option_.from, attach_fee, true, blockchain);
     }
 
@@ -123,13 +123,13 @@ console_result swaptoken::invoke(Json::Value& jv_output,
     }
 
     std::vector<receiver_record> receiver{
-        {to_address, argument_.symbol, 0, argument_.amount, utxo_attach_type::asset_transfer, attach_asset},
+        {to_address, argument_.symbol, 0, argument_.amount, utxo_attach_type::token_transfer, attach_token},
         {swapfee_address, "", option_.swapfee, 0, utxo_attach_type::ucn, attach_fee},
     };
 
     std::string message("{\"type\":\"ETH\",\"address\":\""+ argument_.foreign_addr + "\"}");
 
-    auto send_helper = sending_asset(
+    auto send_helper = sending_token(
         *this, blockchain,
          std::move(auth_.name), std::move(auth_.auth),
          std::move(from_address), std::move(argument_.symbol),

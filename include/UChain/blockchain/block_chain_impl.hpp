@@ -243,52 +243,52 @@ public:
         const std::string& addr, business_kind kind, uint32_t time_begin, uint32_t time_end);
     std::shared_ptr<business_history::list> get_address_business_history(const std::string& addr);
 
-    // account asset api
-    operation_result store_account_asset(const asset_detail& detail, const std::string& name);
-    operation_result store_account_asset(std::shared_ptr<asset_detail> detail, const std::string& name);
-    operation_result delete_account_asset(const std::string& name);
-    std::shared_ptr<business_address_asset::list> get_account_asset(
-        const std::string& name, const std::string& asset_name, business_kind kind);
-    std::shared_ptr<business_address_asset::list> get_account_asset(
-        const std::string& name, const std::string& asset);
-    std::shared_ptr<business_address_asset::list> get_account_assets(const std::string& name);
-    std::shared_ptr<business_address_asset::list> get_account_assets(
+    // account token api
+    operation_result store_account_token(const token_detail& detail, const std::string& name);
+    operation_result store_account_token(std::shared_ptr<token_detail> detail, const std::string& name);
+    operation_result delete_account_token(const std::string& name);
+    std::shared_ptr<business_address_token::list> get_account_token(
+        const std::string& name, const std::string& token_name, business_kind kind);
+    std::shared_ptr<business_address_token::list> get_account_token(
+        const std::string& name, const std::string& token);
+    std::shared_ptr<business_address_token::list> get_account_tokens(const std::string& name);
+    std::shared_ptr<business_address_token::list> get_account_tokens(
         const std::string& name, business_kind kind);
-    uint64_t get_address_asset_volume(const std::string& address, const std::string& asset);
-    uint64_t get_account_asset_volume(const std::string& account, const std::string& asset);
-    uint64_t get_asset_volume(const std::string& asset);
+    uint64_t get_address_token_volume(const std::string& address, const std::string& token);
+    uint64_t get_account_token_volume(const std::string& account, const std::string& token);
+    uint64_t get_token_volume(const std::string& token);
 
-    // asset api
-    bool is_asset_exist(const std::string& asset_name, bool check_local_db=true);
-    uint64_t get_asset_height(const std::string& asset_name) const ;
-    std::shared_ptr<asset_detail::list> get_local_assets();
-    std::shared_ptr<asset_detail::list> get_issued_assets(const std::string& symbol="");
-    std::shared_ptr<asset_detail> get_issued_asset(const std::string& symbol);
-    std::shared_ptr<business_address_asset::list> get_account_assets();
-    std::shared_ptr<business_address_asset::list> get_account_unissued_assets(const std::string& name);
-    std::shared_ptr<asset_detail> get_account_unissued_asset(
+    // token api
+    bool is_token_exist(const std::string& token_name, bool check_local_db=true);
+    uint64_t get_token_height(const std::string& token_name) const ;
+    std::shared_ptr<token_detail::list> get_local_tokens();
+    std::shared_ptr<token_detail::list> get_issued_tokens(const std::string& symbol="");
+    std::shared_ptr<token_detail> get_issued_token(const std::string& symbol);
+    std::shared_ptr<business_address_token::list> get_account_tokens();
+    std::shared_ptr<business_address_token::list> get_account_unissued_tokens(const std::string& name);
+    std::shared_ptr<token_detail> get_account_unissued_token(
         const std::string& name, const std::string& symbol);
     
-    std::shared_ptr<blockchain_asset::list> get_asset_register_output(const std::string& symbol);
+    std::shared_ptr<blockchain_token::list> get_token_register_output(const std::string& symbol);
     // cert api
-    bool is_asset_cert_exist(const std::string& symbol, asset_cert_type cert_type);
-    uint64_t get_asset_cert_height(const std::string& cert_symbol,const asset_cert_type& cert_type);
-    std::shared_ptr<asset_cert::list> get_issued_asset_certs();
-    std::shared_ptr<asset_cert> get_account_asset_cert(
-        const std::string& account, const std::string& symbol, asset_cert_type cert_type);
-    std::shared_ptr<business_address_asset_cert::list> get_account_asset_certs(
-        const std::string& account, const std::string& symbol, asset_cert_type cert_type);
-    std::shared_ptr<business_address_asset_cert::list> get_address_asset_certs(
-        const std::string& address, const std::string& symbol, asset_cert_type cert_type);
+    bool is_token_cert_exist(const std::string& symbol, token_cert_type cert_type);
+    uint64_t get_token_cert_height(const std::string& cert_symbol,const token_cert_type& cert_type);
+    std::shared_ptr<token_cert::list> get_issued_token_certs();
+    std::shared_ptr<token_cert> get_account_token_cert(
+        const std::string& account, const std::string& symbol, token_cert_type cert_type);
+    std::shared_ptr<business_address_token_cert::list> get_account_token_certs(
+        const std::string& account, const std::string& symbol, token_cert_type cert_type);
+    std::shared_ptr<business_address_token_cert::list> get_address_token_certs(
+        const std::string& address, const std::string& symbol, token_cert_type cert_type);
 
-    // identifiable asset
-    bool is_asset_mit_exist(const std::string& symbol);
-    uint64_t get_asset_mit_height(const std::string& mit_symbol)const;
-    std::shared_ptr<asset_mit_info> get_registered_mit(const std::string& symbol);
-    std::shared_ptr<asset_mit_info::list> get_registered_mits();
-    std::shared_ptr<asset_mit_info::list> get_mit_history(const std::string& symbol,
+    // identifiable token
+    bool is_token_mit_exist(const std::string& symbol);
+    uint64_t get_token_mit_height(const std::string& mit_symbol)const;
+    std::shared_ptr<token_mit_info> get_registered_mit(const std::string& symbol);
+    std::shared_ptr<token_mit_info::list> get_registered_mits();
+    std::shared_ptr<token_mit_info::list> get_mit_history(const std::string& symbol,
         uint64_t limit = 0, uint64_t page_number = 0);
-    std::shared_ptr<asset_mit::list> get_account_mits(
+    std::shared_ptr<token_mit::list> get_account_mits(
         const std::string& account, const std::string& symbol="");
 
     // account did api
@@ -379,7 +379,7 @@ private:
     void fetch_serial(perform_read_functor perform_read);
     bool stopped() const;
 
-    std::string get_asset_symbol_from_business_data(const business_data& data);
+    std::string get_token_symbol_from_business_data(const business_data& data);
 
 private:
     std::atomic<bool> stopped_;

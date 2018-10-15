@@ -26,7 +26,7 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/result/base_result.hpp>
-#include <UChain/bitcoin/chain/attachment/account/account_address.hpp>
+#include <UChainService/txs/account/account_address.hpp>
 
 using namespace libbitcoin::chain;
 

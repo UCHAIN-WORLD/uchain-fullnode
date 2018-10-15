@@ -61,10 +61,10 @@ public:
     code check_transaction_connect_input(size_t last_height);
     code check_transaction() const;
     code check_transaction_basic() const;
-    code check_asset_issue_transaction() const;
-    code check_asset_cert_transaction() const;
+    code check_token_issue_transaction() const;
+    code check_token_cert_transaction() const;
     code check_secondaryissue_transaction() const;
-    code check_asset_mit_transaction() const;
+    code check_token_mit_transaction() const;
     code check_did_transaction() const;
     bool connect_did_input(const did& info) const;
     bool is_did_match_address_in_orphan_chain(const std::string& symbol, const std::string& address) const;
@@ -78,10 +78,10 @@ public:
         const chain::transaction& tx, uint64_t value_in, uint64_t& fees);
     static bool check_special_fees(bool is_testnet, const chain::transaction& tx, uint64_t fees);
 
-    bool check_asset_amount(const transaction& tx) const;
-    bool check_asset_symbol(const transaction& tx) const;
-    bool check_asset_certs(const transaction& tx) const;
-    bool check_asset_mit(const transaction& tx) const;
+    bool check_token_amount(const transaction& tx) const;
+    bool check_token_symbol(const transaction& tx) const;
+    bool check_token_certs(const transaction& tx) const;
+    bool check_token_mit(const transaction& tx) const;
     bool check_address_registered_did(const std::string& address) const;
 
     //check input did match output did
@@ -121,9 +121,9 @@ private:
     void check_fees() const;
     code check_tx_connect_input() const;
     bool check_did_exist(const std::string& did) const;
-    bool check_asset_exist(const std::string& symbol) const;
-    bool check_asset_cert_exist(const std::string& cert, asset_cert_type cert_type) const;
-    bool check_asset_mit_exist(const std::string& mit) const;
+    bool check_token_exist(const std::string& symbol) const;
+    bool check_token_cert_exist(const std::string& cert, token_cert_type cert_type) const;
+    bool check_token_mit_exist(const std::string& mit) const;
 
     block_chain_impl& blockchain_;
     const transaction_ptr tx_;
@@ -134,9 +134,9 @@ private:
     const hash_digest tx_hash_;
     size_t last_block_height_;
     uint64_t value_in_;
-    uint64_t asset_amount_in_;
-    std::vector<asset_cert_type> asset_certs_in_;
-    std::string old_symbol_in_; // used for check same asset/did/mit symbol in previous outputs
+    uint64_t token_amount_in_;
+    std::vector<token_cert_type> token_certs_in_;
+    std::string old_symbol_in_; // used for check same token/did/mit symbol in previous outputs
     std::string old_cert_symbol_in_; // used for check same cert symbol in previous outputs
     uint32_t current_input_;
     chain::point::indexes unconfirmed_;

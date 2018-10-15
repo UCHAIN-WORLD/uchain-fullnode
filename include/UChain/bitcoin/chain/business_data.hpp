@@ -26,20 +26,20 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 #include <boost/variant.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_detail.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_transfer.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_cert.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_mit.hpp>
-#include <UChain/bitcoin/chain/attachment/did/did_detail.hpp>
-#include <UChain/bitcoin/chain/attachment/ucn/ucn.hpp>
-#include <UChain/bitcoin/chain/attachment/ucn/ucn_award.hpp>
-#include <UChain/bitcoin/chain/attachment/message/message.hpp>
+#include <UChainService/txs/token/token_detail.hpp>
+#include <UChainService/txs/token/token_transfer.hpp>
+#include <UChainService/txs/token/token_cert.hpp>
+#include <UChainService/txs/token/token_mit.hpp>
+#include <UChainService/txs/did/did_detail.hpp>
+#include <UChainService/txs/ucn/ucn.hpp>
+#include <UChainService/txs/ucn/ucn_award.hpp>
+#include <UChainService/txs/message/message.hpp>
 
 #define KIND2UINT16(kd)  (static_cast<typename std::underlying_type<business_kind>::type>(kd))
-// 0 -- unspent  1 -- confirmed  2 -- local asset not issued
-#define ASSET_STATUS_UNSPENT    0 // in blockchain
-#define ASSET_STATUS_CONFIRMED  1 // in blockchain
-#define ASSET_STATUS_UNISSUED   2 // in local database
+// 0 -- unspent  1 -- confirmed  2 -- local token not issued
+#define TOKEN_STATUS_UNSPENT    0 // in blockchain
+#define TOKEN_STATUS_CONFIRMED  1 // in blockchain
+#define TOKEN_STATUS_UNISSUED   2 // in local database
 
 namespace libbitcoin {
 namespace chain {
@@ -47,23 +47,23 @@ namespace chain {
 enum class business_kind : uint16_t
 {
     ucn = 0,
-    asset_issue = 1,
-    asset_transfer = 2,
+    token_issue = 1,
+    token_transfer = 2,
     message = 3,
-    ucn_award = 4, // store to address_asset database
+    ucn_award = 4, // store to address_token database
     did_register = 5,
     did_transfer = 6,
-    asset_cert = 7,
-    asset_mit = 8,
+    token_cert = 7,
+    token_mit = 8,
     unknown = 0xffff
 };
 
-// 0 -- unspent  1 -- confirmed  2 -- local asset not issued
+// 0 -- unspent  1 -- confirmed  2 -- local token not issued
 enum business_status : uint8_t
 {
     unspent = 0, // in blockchain but unspent
     confirmed = 1, // in blockchain confirmed
-    unissued = 2, //  in local database ,special for asset related business
+    unissued = 2, //  in local database ,special for token related business
     unknown = 0xff
 };
 
@@ -73,10 +73,10 @@ public:
     typedef boost::variant<
         ucn,
         ucn_award,
-        asset_detail,
-        asset_transfer,
-        asset_cert,
-        asset_mit,
+        token_detail,
+        token_transfer,
+        token_cert,
+        token_mit,
         blockchain_message,
         did_detail> business_data_type;
 
@@ -194,15 +194,15 @@ public:
     }
 #endif
 };
-class BC_API business_address_asset
+class BC_API business_address_token
 {
 public:
-    typedef std::vector<business_address_asset> list;
+    typedef std::vector<business_address_token> list;
 
     std::string  address;
-    uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local asset not issued
+    uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
     uint64_t quantity;
-    asset_detail detail;
+    token_detail detail;
 
 #ifdef UC_DEBUG
     // just used for unit test in block_chain_impl_test.cpp
@@ -220,14 +220,14 @@ public:
 #endif
 };
 
-class BC_API business_address_asset_cert
+class BC_API business_address_token_cert
 {
 public:
-    typedef std::vector<business_address_asset_cert> list;
+    typedef std::vector<business_address_token_cert> list;
 
     std::string  address;
-    uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local asset not issued
-    asset_cert certs;
+    uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
+    token_cert certs;
 
 #ifdef UC_DEBUG
     // just used for unit test in block_chain_impl_test.cpp
@@ -250,8 +250,8 @@ public:
     typedef std::vector<business_address_mit> list;
 
     std::string  address;
-    uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local asset not issued
-    asset_mit mit;
+    uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
+    token_mit mit;
 
 #ifdef UC_DEBUG
     // just used for unit test in block_chain_impl_test.cpp
@@ -274,7 +274,7 @@ public:
     typedef std::vector<business_address_did> list;
 
     std::string  address;
-    uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local asset not issued
+    uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
     did_detail detail;
 
 #ifdef UC_DEBUG

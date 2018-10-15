@@ -46,10 +46,10 @@ console_result transfermit::invoke (Json::Value& jv_output,
         throw toaddress_invalid_exception("Invalid did parameter! " + to_did);
     }
 
-    // get identifiable asset
+    // get identifiable token
     auto mits = blockchain.get_account_mits(auth_.name, argument_.symbol);
     if (mits->size() == 0) {
-        throw asset_lack_exception("Not enough asset '" + argument_.symbol +  "'");
+        throw token_lack_exception("Not enough token '" + argument_.symbol +  "'");
     }
 
     auto& mit = *(mits->begin());
@@ -70,7 +70,7 @@ console_result transfermit::invoke (Json::Value& jv_output,
     std::vector<receiver_record> receiver{
         {
             to_address, argument_.symbol, 0, 0, 0,
-            utxo_attach_type::asset_mit_transfer, attachment("", to_did)
+            utxo_attach_type::token_mit_transfer, attachment("", to_did)
         }
     };
 

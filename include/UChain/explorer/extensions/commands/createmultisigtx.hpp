@@ -96,12 +96,12 @@ public:
         (
             "symbol,s",
             value<std::string>(&option_.symbol),
-            "asset name, not specify this option for ucn tx"
+            "token name, not specify this option for ucn tx"
         )
         (
             "type,t",
             value<uint16_t>(&option_.type)->default_value(0),
-            "Transaction type, defaults to 0. 0 -- transfer ucn, 3 -- transfer asset"
+            "Transaction type, defaults to 0. 0 -- transfer ucn, 3 -- transfer token"
         )
         (
             "fee,f",

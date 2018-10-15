@@ -401,9 +401,9 @@ Json::Value json_helper::prop_list(const tx_output_type& tx_output, uint32_t ind
     return tree;
 }
 
-// is_secondaryissue has no meaning for asset quantity summary.
+// is_secondaryissue has no meaning for token quantity summary.
 // don't add address info if show_address is not true.
-Json::Value json_helper::prop_list(const bc::chain::asset_detail& detail_info,
+Json::Value json_helper::prop_list(const bc::chain::token_detail& detail_info,
         bool is_maximum_supply, bool show_address)
 {
     Json::Value tree;
@@ -421,14 +421,14 @@ Json::Value json_helper::prop_list(const bc::chain::asset_detail& detail_info,
         tree["decimal_number"] += detail_info.get_decimal_number();
         tree["secondaryissue_threshold"] += detail_info.get_secondaryissue_threshold();
         if (is_maximum_supply) {
-            tree["is_secondaryissue"] = detail_info.is_asset_secondaryissue() ? "true" : "false";
+            tree["is_secondaryissue"] = detail_info.is_token_secondaryissue() ? "true" : "false";
         }
     } else {
         tree[maximum_supply_or_quantity] = detail_info.get_maximum_supply();
         tree["decimal_number"] = detail_info.get_decimal_number();
         tree["secondaryissue_threshold"] = detail_info.get_secondaryissue_threshold();
         if (is_maximum_supply) {
-            tree["is_secondaryissue"] = detail_info.is_asset_secondaryissue();
+            tree["is_secondaryissue"] = detail_info.is_token_secondaryissue();
         }
     }
     return tree;
@@ -436,10 +436,10 @@ Json::Value json_helper::prop_list(const bc::chain::asset_detail& detail_info,
 
 // balance_info only "symbol" "address" "quantity" info included in it.
 // issued_info include the other info.
-// is_secondaryissue has no meaning for asset quantity summary.
+// is_secondaryissue has no meaning for token quantity summary.
 // don't add address info if show_address is not true.
-Json::Value json_helper::prop_list(const bc::chain::asset_balances& balance_info,
-        const bc::chain::asset_detail& issued_info, bool show_address)
+Json::Value json_helper::prop_list(const bc::chain::token_balances& balance_info,
+        const bc::chain::token_detail& issued_info, bool show_address)
 {
     Json::Value tree;
     tree["symbol"] = balance_info.symbol;
@@ -451,14 +451,14 @@ Json::Value json_helper::prop_list(const bc::chain::asset_balances& balance_info
     tree["description"] = issued_info.get_description();
 
     if (version_ == 1) {
-        tree["quantity"] += balance_info.unspent_asset;
-        tree["locked_quantity"] += balance_info.locked_asset;
+        tree["quantity"] += balance_info.unspent_token;
+        tree["locked_quantity"] += balance_info.locked_token;
 
         tree["decimal_number"] += issued_info.get_decimal_number();
         tree["secondaryissue_threshold"] += issued_info.get_secondaryissue_threshold();
     } else {
-        tree["quantity"] = balance_info.unspent_asset;
-        tree["locked_quantity"] = balance_info.locked_asset;
+        tree["quantity"] = balance_info.unspent_token;
+        tree["locked_quantity"] = balance_info.locked_token;
 
         tree["decimal_number"] = issued_info.get_decimal_number();
         tree["secondaryissue_threshold"] = issued_info.get_secondaryissue_threshold();
@@ -466,23 +466,23 @@ Json::Value json_helper::prop_list(const bc::chain::asset_balances& balance_info
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::asset_balances& balance_info)
+Json::Value json_helper::prop_list(const bc::chain::token_balances& balance_info)
 {
     Json::Value tree;
     tree["address"] = balance_info.address;
 
     if (version_ == 1) {
-        tree["quantity"] += balance_info.unspent_asset;
-        tree["locked_quantity"] += balance_info.locked_asset;
+        tree["quantity"] += balance_info.unspent_token;
+        tree["locked_quantity"] += balance_info.locked_token;
     } else {
-        tree["quantity"] = balance_info.unspent_asset;
-        tree["locked_quantity"] = balance_info.locked_asset;
+        tree["quantity"] = balance_info.unspent_token;
+        tree["locked_quantity"] = balance_info.locked_token;
     }
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::asset_deposited_balance& balance_info,
-        const bc::chain::asset_detail& issued_info, bool show_address)
+Json::Value json_helper::prop_list(const bc::chain::token_deposited_balance& balance_info,
+        const bc::chain::token_detail& issued_info, bool show_address)
 {
     Json::Value tree;
     tree["symbol"] = balance_info.symbol;
@@ -495,13 +495,13 @@ Json::Value json_helper::prop_list(const bc::chain::asset_deposited_balance& bal
     tree["decimal_number"] = issued_info.get_decimal_number();
     // tree["issuer"] = issued_info.get_issuer();
     // tree["description"] = issued_info.get_description();
-    tree["quantity"] = balance_info.unspent_asset;
-    tree["locked_quantity"] = balance_info.locked_asset;
+    tree["quantity"] = balance_info.unspent_token;
+    tree["locked_quantity"] = balance_info.locked_token;
     tree["attenuation_model_param"] = prop_attenuation_model_param(balance_info.model_param);
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::asset_transfer& trans_info, uint8_t decimal_number)
+Json::Value json_helper::prop_list(const bc::chain::token_transfer& trans_info, uint8_t decimal_number)
 {
     Json::Value tree;
     tree["symbol"] = trans_info.get_symbol();
@@ -522,7 +522,7 @@ Json::Value json_helper::prop_list(const bc::chain::asset_transfer& trans_info, 
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::asset_cert& cert_info)
+Json::Value json_helper::prop_list(const bc::chain::token_cert& cert_info)
 {
     Json::Value tree;
     tree["symbol"] = cert_info.get_symbol();
@@ -532,7 +532,7 @@ Json::Value json_helper::prop_list(const bc::chain::asset_cert& cert_info)
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::asset_mit& mit_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::token_mit& mit_info, bool always_show_content)
 {
     Json::Value tree;
     tree["symbol"] = mit_info.get_symbol();
@@ -546,7 +546,7 @@ Json::Value json_helper::prop_list(const bc::chain::asset_mit& mit_info, bool al
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::asset_mit_info& mit_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::token_mit_info& mit_info, bool always_show_content)
 {
     Json::Value tree;
 
@@ -620,34 +620,34 @@ Json::Value json_helper::prop_list(bc::chain::attachment& attach_data)
     if (attach_data.get_type() == UCN_TYPE) {
         tree["type"] = "ucn";
     }
-    else if (attach_data.get_type() == ASSET_TYPE) {
-        auto asset_info = boost::get<bc::chain::asset>(attach_data.get_attach());
-        if (asset_info.get_status() == ASSET_DETAIL_TYPE) {
-            auto detail_info = boost::get<bc::chain::asset_detail>(asset_info.get_data());
+    else if (attach_data.get_type() == TOKEN_TYPE) {
+        auto token_info = boost::get<bc::chain::token>(attach_data.get_attach());
+        if (token_info.get_status() == TOKEN_DETAIL_TYPE) {
+            auto detail_info = boost::get<bc::chain::token_detail>(token_info.get_data());
             tree = prop_list(detail_info, false);
-            // add is_secondaryissue for asset-issue
+            // add is_secondaryissue for token-issue
             if (version_ == 1) {
-                tree["is_secondaryissue"] = detail_info.is_asset_secondaryissue() ? "true" : "false";
+                tree["is_secondaryissue"] = detail_info.is_token_secondaryissue() ? "true" : "false";
             } else {
-                tree["is_secondaryissue"] = detail_info.is_asset_secondaryissue();
+                tree["is_secondaryissue"] = detail_info.is_token_secondaryissue();
             }
-            tree["type"] = "asset-issue";
+            tree["type"] = "token-issue";
         }
-        if (asset_info.get_status() == ASSET_TRANSFERABLE_TYPE) {
-            auto trans_info = boost::get<bc::chain::asset_transfer>(asset_info.get_data());
+        if (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE) {
+            auto trans_info = boost::get<bc::chain::token_transfer>(token_info.get_data());
             tree = prop_list(trans_info);
-            tree["type"] = "asset-transfer";
+            tree["type"] = "token-transfer";
         }
     }
-    else if (attach_data.get_type() == ASSET_MIT_TYPE) {
-        auto asset_info = boost::get<bc::chain::asset_mit>(attach_data.get_attach());
-        tree = prop_list(asset_info);
+    else if (attach_data.get_type() == TOKEN_MIT_TYPE) {
+        auto token_info = boost::get<bc::chain::token_mit>(attach_data.get_attach());
+        tree = prop_list(token_info);
         tree["type"] = "mit";
     }
-    else if (attach_data.get_type() == ASSET_CERT_TYPE) {
-        auto cert_info = boost::get<bc::chain::asset_cert>(attach_data.get_attach());
+    else if (attach_data.get_type() == TOKEN_CERT_TYPE) {
+        auto cert_info = boost::get<bc::chain::token_cert>(attach_data.get_attach());
         tree = prop_list(cert_info);
-        tree["type"] = "asset-cert";
+        tree["type"] = "token-cert";
     }
     else if (attach_data.get_type() == DID_TYPE) {
         auto did_info = boost::get<bc::chain::did>(attach_data.get_attach());

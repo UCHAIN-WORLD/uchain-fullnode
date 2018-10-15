@@ -27,7 +27,7 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/primitives/record_multimap.hpp>
-#include <UChain/bitcoin/chain/attachment/account/account_address.hpp>
+#include <UChainService/txs/account/account_address.hpp>
 //#include <UChain/database/result/account_address_result.hpp>  // todo -- remove later
 using namespace libbitcoin::chain;
 

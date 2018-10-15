@@ -181,29 +181,29 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
         case error::not_satisfied:
             return "not satisfied";
 
-        // asset errors
-        case error::asset_amount_overflow:
-            return "asset amount overflow";
-        case error::asset_amount_not_equal:
-            return "asset amount not equal";
-        case error::asset_symbol_not_match:
-            return "asset symbol not match";
-        case error::asset_symbol_invalid:
-            return "asset symbol invalid";
-        case error::asset_address_not_match:
-            return "asset attachment address must be equal with output address";
-        case error::asset_exist:
-            return "asset exist";
-        case error::asset_not_exist:
-            return "asset not exist";
-        case error::asset_issue_error:
-            return "issue asset error";
-        case error::asset_secondaryissue_error:
-            return "secondary issue asset error";
-        case error::asset_secondaryissue_share_not_enough:
-            return "user asset share is not enought to secondary issue asset ";
-        case error::asset_secondaryissue_threshold_invalid:
-            return "asset secondaryissue assetshare threshold value invalid";
+        // token errors
+        case error::token_amount_overflow:
+            return "token amount overflow";
+        case error::token_amount_not_equal:
+            return "token amount not equal";
+        case error::token_symbol_not_match:
+            return "token symbol not match";
+        case error::token_symbol_invalid:
+            return "token symbol invalid";
+        case error::token_address_not_match:
+            return "token attachment address must be equal with output address";
+        case error::token_exist:
+            return "token exist";
+        case error::token_not_exist:
+            return "token not exist";
+        case error::token_issue_error:
+            return "issue token error";
+        case error::token_secondaryissue_error:
+            return "secondary issue token error";
+        case error::token_secondaryissue_share_not_enough:
+            return "user token share is not enought to secondary issue token ";
+        case error::token_secondaryissue_threshold_invalid:
+            return "token secondaryissue tokenshare threshold value invalid";
 
         // did errors
         case error::did_symbol_not_match:
@@ -230,21 +230,21 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
             return "attenuation model parameter is wrong";
 
         // cert errors
-        case error::asset_cert_error:
-            return "asset cert error";
-        case error::asset_cert_exist:
-            return "asset cert already exists";
-        case error::asset_cert_not_exist:
-            return "asset cert does not exist";
-        case error::asset_cert_not_provided:
-            return "asset cert is not provided";
-        case error::asset_cert_not_owned:
-            return "asset cert is not owned";
-        case error::asset_cert_issue_error:
-            return "asset cert issue error";
+        case error::token_cert_error:
+            return "token cert error";
+        case error::token_cert_exist:
+            return "token cert already exists";
+        case error::token_cert_not_exist:
+            return "token cert does not exist";
+        case error::token_cert_not_provided:
+            return "token cert is not provided";
+        case error::token_cert_not_owned:
+            return "token cert is not owned";
+        case error::token_cert_issue_error:
+            return "token cert issue error";
 
-        case error::asset_did_registerr_not_match:
-            return "attach todid must equal with asset issuer or cert owner";
+        case error::token_did_registerr_not_match:
+            return "attach todid must equal with token issuer or cert owner";
 
         case error::attachment_invalid:
             return "attachment is invalid";

@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChain/database/databases/address_did_database.hpp>
-//#include <UChain/bitcoin/chain/attachment/account/address_did.hpp>
+//#include <UChainService/txs/account/address_did.hpp>
 
 #include <cstdint>
 #include <cstddef>

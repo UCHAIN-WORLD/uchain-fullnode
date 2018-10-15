@@ -64,7 +64,7 @@ public:
         (
             "type,t",
             value<uint16_t>(&option_.type)->required(),
-            "Transaction type. 0 -- transfer ucn, 1 -- deposit ucn, 3 -- transfer asset"
+            "Transaction type. 0 -- transfer ucn, 1 -- deposit ucn, 3 -- transfer token"
         )
         (
             "senders,s",
@@ -74,12 +74,12 @@ public:
         (
             "receivers,r",
             value<std::vector<std::string>>(&option_.receivers)->required(),
-            "Send to [address:amount]. amount is asset number if sybol option specified"
+            "Send to [address:amount]. amount is token number if sybol option specified"
         )
         (
             "symbol,n",
             value<std::string>(&option_.symbol)->default_value(""),
-            "asset name, not specify this option for ucn tx"
+            "token name, not specify this option for ucn tx"
         )
         (
             "deposit,d",
@@ -89,7 +89,7 @@ public:
         (
             "mychange,m",
             value<std::string>(&option_.mychange_address),
-            "Mychange to this address, includes ucn and asset change"
+            "Mychange to this address, includes ucn and token change"
         )
         (
             "message,i",

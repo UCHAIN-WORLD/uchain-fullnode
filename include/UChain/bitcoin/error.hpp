@@ -128,18 +128,18 @@ enum error_code_t
     not_satisfied,
     mock,
 
-    // asset check
-    asset_amount_overflow,
-    asset_amount_not_equal,
-    asset_symbol_not_match,         // 55
-    asset_symbol_invalid,
-    asset_address_not_match,
-    asset_exist,
-    asset_not_exist,
-    asset_issue_error,              // 60
-    asset_secondaryissue_error,
-    asset_secondaryissue_share_not_enough,
-    asset_secondaryissue_threshold_invalid,
+    // token check
+    token_amount_overflow,
+    token_amount_not_equal,
+    token_symbol_not_match,         // 55
+    token_symbol_invalid,
+    token_address_not_match,
+    token_exist,
+    token_not_exist,
+    token_issue_error,              // 60
+    token_secondaryissue_error,
+    token_secondaryissue_share_not_enough,
+    token_secondaryissue_threshold_invalid,
 
     //syn block
     fetch_more_block,
@@ -159,18 +159,18 @@ enum error_code_t
     attenuation_model_param_error,
 
     // cert check
-    asset_cert_error,
-    asset_cert_exist,
-    asset_cert_not_exist,
-    asset_cert_not_owned,           // 80
-    asset_cert_not_provided,
-    asset_cert_issue_error,
-    asset_did_registerr_not_match,
+    token_cert_error,
+    token_cert_exist,
+    token_cert_not_exist,
+    token_cert_not_owned,           // 80
+    token_cert_not_provided,
+    token_cert_issue_error,
+    token_did_registerr_not_match,
 
     attachment_invalid,
     nova_feature_not_activated,     // 85
 
-    // identifier asset
+    // identifier token
     mit_error,
     mit_exist,
     mit_register_error,

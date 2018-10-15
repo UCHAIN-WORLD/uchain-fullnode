@@ -25,7 +25,7 @@
 #include <UChain/explorer/extensions/command_assistant.hpp>
 #include <UChain/explorer/extensions/exception.hpp>
 #include <UChain/explorer/extensions/base_helper.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_detail.hpp>
+#include <UChainService/txs/token/token_detail.hpp>
 
 using std::placeholders::_1;
 
@@ -42,75 +42,75 @@ console_result issue::invoke (Json::Value& jv_output,
     blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
     blockchain.uppercase_symbol(argument_.symbol);
 
-    // check asset symbol
-    check_asset_symbol(argument_.symbol);
+    // check token symbol
+    check_token_symbol(argument_.symbol);
 
     // check fee
-    if (argument_.fee < bc::min_fee_to_issue_asset) {
-        throw asset_issue_poundage_exception{
-            "issue asset fee less than "
-            + std::to_string(bc::min_fee_to_issue_asset) + " that's "
-            + std::to_string(bc::min_fee_to_issue_asset / 100000000) + " UCNs"};
+    if (argument_.fee < bc::min_fee_to_issue_token) {
+        throw token_issue_poundage_exception{
+            "issue token fee less than "
+            + std::to_string(bc::min_fee_to_issue_token) + " that's "
+            + std::to_string(bc::min_fee_to_issue_token / 100000000) + " UCNs"};
     }
 
     if (argument_.percentage < bc::min_fee_percentage_to_miner || argument_.percentage > 100) {
-        throw asset_issue_poundage_exception{
-            "issue asset minimum percentage of fee to miner less than "
+        throw token_issue_poundage_exception{
+            "issue token minimum percentage of fee to miner less than "
             + std::to_string(bc::min_fee_percentage_to_miner)
             + " or greater than 100."};
     }
 
-    // fail if asset is already in blockchain
-    if (blockchain.is_asset_exist(argument_.symbol, false)) {
-        throw asset_symbol_existed_exception{
-            "asset " + argument_.symbol + " already exists in blockchain"};
+    // fail if token is already in blockchain
+    if (blockchain.is_token_exist(argument_.symbol, false)) {
+        throw token_symbol_existed_exception{
+            "token " + argument_.symbol + " already exists in blockchain"};
     }
 
-    // local database asset check
-    auto sh_asset = blockchain.get_account_unissued_asset(auth_.name, argument_.symbol);
-    if (!sh_asset) {
-        throw asset_symbol_notfound_exception{"asset " + argument_.symbol + " not found"};
+    // local database token check
+    auto sh_token = blockchain.get_account_unissued_token(auth_.name, argument_.symbol);
+    if (!sh_token) {
+        throw token_symbol_notfound_exception{"token " + argument_.symbol + " not found"};
     }
 
-    auto to_did = sh_asset->get_issuer();
+    auto to_did = sh_token->get_issuer();
     auto to_address = get_address_from_did(to_did, blockchain);
     if (!blockchain.is_valid_address(to_address)) {
-        throw address_invalid_exception{"invalid asset issuer " + to_did};
+        throw address_invalid_exception{"invalid token issuer " + to_did};
     }
 
     std::string cert_symbol;
-    asset_cert_type cert_type = asset_cert_ns::none;
+    token_cert_type cert_type = token_cert_ns::none;
     bool is_domain_cert_exist = false;
 
     // domain cert check
-    auto&& domain = asset_cert::get_domain(argument_.symbol);
-    if (asset_cert::is_valid_domain(domain)) {
-        bool exist = blockchain.is_asset_cert_exist(domain, asset_cert_ns::domain);
+    auto&& domain = token_cert::get_domain(argument_.symbol);
+    if (token_cert::is_valid_domain(domain)) {
+        bool exist = blockchain.is_token_cert_exist(domain, token_cert_ns::domain);
         if (!exist) {
             // domain cert does not exist, issue new domain cert to this address
             is_domain_cert_exist = false;
-            cert_type = asset_cert_ns::domain;
+            cert_type = token_cert_ns::domain;
             cert_symbol = domain;
         }
         else {
             // if domain cert exists then check whether it belongs to the account.
             is_domain_cert_exist = true;
-            auto cert = blockchain.get_account_asset_cert(auth_.name, domain, asset_cert_ns::domain);
+            auto cert = blockchain.get_account_token_cert(auth_.name, domain, token_cert_ns::domain);
             if (cert) {
                 cert_symbol = domain;
                 cert_type = cert->get_type();
             }
             else {
                 // if domain cert does not belong to the account then check naming cert
-                exist = blockchain.is_asset_cert_exist(argument_.symbol, asset_cert_ns::naming);
+                exist = blockchain.is_token_cert_exist(argument_.symbol, token_cert_ns::naming);
                 if (!exist) {
-                    throw asset_cert_notfound_exception{
+                    throw token_cert_notfound_exception{
                         "Domain cert " + argument_.symbol + " exists on the blockchain and is not owned by " + auth_.name};
                 }
                 else {
-                    cert = blockchain.get_account_asset_cert(auth_.name, argument_.symbol, asset_cert_ns::naming);
+                    cert = blockchain.get_account_token_cert(auth_.name, argument_.symbol, token_cert_ns::naming);
                     if (!cert) {
-                        throw asset_cert_notowned_exception{
+                        throw token_cert_notowned_exception{
                             "No domain cert or naming cert owned by " + auth_.name};
                     }
 
@@ -123,30 +123,30 @@ console_result issue::invoke (Json::Value& jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {to_address, argument_.symbol, 0, 0, utxo_attach_type::asset_issue, attachment("", to_did)}
+        {to_address, argument_.symbol, 0, 0, utxo_attach_type::token_issue, attachment("", to_did)}
     };
 
-    // asset_cert utxo
-    auto certs = sh_asset->get_asset_cert_mask();
+    // token_cert utxo
+    auto certs = sh_token->get_token_cert_mask();
     if (!certs.empty()) {
         for (auto each_cert_type : certs) {
             receiver.push_back(
             {   to_address, argument_.symbol, 0, 0,
-                each_cert_type, utxo_attach_type::asset_cert_autoissue, attachment("", to_did)
+                each_cert_type, utxo_attach_type::token_cert_autoissue, attachment("", to_did)
             });
         }
     }
 
     // domain cert or naming cert
-    if (asset_cert::is_valid_domain(domain)) {
+    if (token_cert::is_valid_domain(domain)) {
         receiver.push_back(
         {   to_address, cert_symbol, 0, 0, cert_type,
-            (is_domain_cert_exist ? utxo_attach_type::asset_cert : utxo_attach_type::asset_cert_autoissue),
+            (is_domain_cert_exist ? utxo_attach_type::token_cert : utxo_attach_type::token_cert_autoissue),
             attachment("", to_did)
         });
     }
 
-    auto issue_helper = issuing_asset(
+    auto issue_helper = issuing_token(
                             *this, blockchain,
                             std::move(auth_.name), std::move(auth_.auth),
                             "", std::move(argument_.symbol),

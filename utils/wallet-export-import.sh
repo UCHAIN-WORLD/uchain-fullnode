@@ -7,8 +7,8 @@ tarball_block=uc-linux-export-blockdata.tar.gz
 
 ########################### database files ################################
 
-block_data_arr="address_asset_row address_asset_table block_index history_rows metadata spend_table transaction_table asset_table block_table history_table stealth_rows"
-account_arr="account_table account_asset_table account_asset_row account_address_table account_address_rows"
+block_data_arr="address_token_row address_token_table block_index history_rows metadata spend_table transaction_table token_table block_table history_table stealth_rows"
+account_arr="account_table account_token_table account_token_row account_address_table account_address_rows"
 
 ########################### functions ################################
 

@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChain/bitcoin/chain/business_data.hpp>
-#include <UChain/bitcoin/chain/attachment/variant_visitor.hpp>
+#include <UChainService/txs/variant_visitor.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
 #include <UChain/bitcoin/utility/container_sink.hpp>
@@ -28,10 +28,10 @@
 
 #define UCN_TYPE            KIND2UINT16(business_kind::ucn)
 #define UCN_AWARD_TYPE      KIND2UINT16(business_kind::ucn_award)
-#define ASSET_ISSUE_TYPE    KIND2UINT16(business_kind::asset_issue)
-#define ASSET_TRANSFER_TYPE KIND2UINT16(business_kind::asset_transfer)
-#define ASSET_CERT_TYPE     KIND2UINT16(business_kind::asset_cert)
-#define ASSET_MIT_TYPE      KIND2UINT16(business_kind::asset_mit)
+#define TOKEN_ISSUE_TYPE    KIND2UINT16(business_kind::token_issue)
+#define TOKEN_TRANSFER_TYPE KIND2UINT16(business_kind::token_transfer)
+#define TOKEN_CERT_TYPE     KIND2UINT16(business_kind::token_cert)
+#define TOKEN_MIT_TYPE      KIND2UINT16(business_kind::token_mit)
 #define MESSAGE_TYPE        KIND2UINT16(business_kind::message)
 #define DID_REGISTER_TYPE   KIND2UINT16(business_kind::did_register)
 #define DID_TRANSFER_TYPE   KIND2UINT16(business_kind::did_transfer)
@@ -75,10 +75,10 @@ bool business_data::is_valid() const
 bool business_data::is_valid_type() const
 {
     return ((UCN_TYPE == KIND2UINT16(kind))
-            || (ASSET_ISSUE_TYPE == KIND2UINT16(kind))
-            || (ASSET_TRANSFER_TYPE == KIND2UINT16(kind))
-            || (ASSET_CERT_TYPE == KIND2UINT16(kind))
-            || (ASSET_MIT_TYPE == KIND2UINT16(kind)))
+            || (TOKEN_ISSUE_TYPE == KIND2UINT16(kind))
+            || (TOKEN_TRANSFER_TYPE == KIND2UINT16(kind))
+            || (TOKEN_CERT_TYPE == KIND2UINT16(kind))
+            || (TOKEN_MIT_TYPE == KIND2UINT16(kind)))
             || (UCN_AWARD_TYPE == KIND2UINT16(kind))
             || (MESSAGE_TYPE == KIND2UINT16(kind))
             || (DID_REGISTER_TYPE == KIND2UINT16(kind))
@@ -118,24 +118,24 @@ bool business_data::from_data(reader& source)
                 data = ucn_award();
                 break;
             }
-            case ASSET_ISSUE_TYPE:
+            case TOKEN_ISSUE_TYPE:
             {
-                data = asset_detail();
+                data = token_detail();
                 break;
             }
-            case ASSET_TRANSFER_TYPE:
+            case TOKEN_TRANSFER_TYPE:
             {
-                data = asset_transfer();
+                data = token_transfer();
                 break;
             }
-            case ASSET_CERT_TYPE:
+            case TOKEN_CERT_TYPE:
             {
-                data = asset_cert();
+                data = token_cert();
                 break;
             }
-            case ASSET_MIT_TYPE:
+            case TOKEN_MIT_TYPE:
             {
-                data = asset_mit();
+                data = token_mit();
                 break;
             }
             case MESSAGE_TYPE:

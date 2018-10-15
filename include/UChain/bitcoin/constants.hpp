@@ -56,7 +56,7 @@ BC_CONSTEXPR uint32_t max_input_sequence = max_uint32;
 
 BC_CONSTEXPR uint32_t total_reward = 100000000;
 
-BC_CONSTEXPR uint64_t min_fee_to_issue_asset       = 10 * 100000000;
+BC_CONSTEXPR uint64_t min_fee_to_issue_token       = 10 * 100000000;
 BC_CONSTEXPR uint64_t min_fee_to_register_did      = 1 * 100000000;
 BC_CONSTEXPR uint32_t min_fee_percentage_to_miner  = 20;
 

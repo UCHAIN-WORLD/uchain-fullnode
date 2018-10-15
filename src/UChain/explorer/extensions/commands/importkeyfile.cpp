@@ -177,15 +177,15 @@ console_result importkeyfile::invoke(Json::Value& jv_output,
 
         if (get_api_version() == 1) {
             root["address-count"] += acc.get_hd_index();
-            root["unissued-asset-count"] += all_info.get_account_asset().size();
+            root["unissued-token-count"] += all_info.get_account_token().size();
         }
         else if (get_api_version() <= 2) {
             root["address-count"] = acc.get_hd_index();
-            root["unissued-asset-count"] = static_cast<uint64_t>(all_info.get_account_asset().size());
+            root["unissued-token-count"] = static_cast<uint64_t>(all_info.get_account_token().size());
         }
         else {
             root["address_count"] = acc.get_hd_index();
-            root["unissued_asset_count"] = static_cast<uint64_t>(all_info.get_account_asset().size());
+            root["unissued_token_count"] = static_cast<uint64_t>(all_info.get_account_token().size());
         }
 
         return console_result::okay;

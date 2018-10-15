@@ -37,7 +37,7 @@ public:
     static const char* symbol(){ return "issue";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Broadcast the asset whole network."; }
+    const char* description() override { return "Broadcast the token whole network."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -79,7 +79,7 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol)->required(),
-            "The asset symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.)"
+            "The token symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.)"
         )
         (
             "model,m",

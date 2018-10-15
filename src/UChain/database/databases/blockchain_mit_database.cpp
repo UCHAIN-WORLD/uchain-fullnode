@@ -110,24 +110,24 @@ void blockchain_mit_database::sync()
     lookup_manager_.sync();
 }
 
-std::shared_ptr<asset_mit_info> blockchain_mit_database::get(const hash_digest& hash) const
+std::shared_ptr<token_mit_info> blockchain_mit_database::get(const hash_digest& hash) const
 {
-    std::shared_ptr<asset_mit_info> detail(nullptr);
+    std::shared_ptr<token_mit_info> detail(nullptr);
 
     const auto raw_memory = lookup_map_.find(hash);
     if(raw_memory) {
         const auto memory = REMAP_ADDRESS(raw_memory);
-        detail = std::make_shared<asset_mit_info>();
+        detail = std::make_shared<token_mit_info>();
         auto deserial = make_deserializer_unsafe(memory);
-        *detail = asset_mit_info::factory_from_data(deserial);
+        *detail = token_mit_info::factory_from_data(deserial);
     }
 
     return detail;
 }
 
-std::shared_ptr<asset_mit_info::list> blockchain_mit_database::get_blockchain_mits() const
+std::shared_ptr<token_mit_info::list> blockchain_mit_database::get_blockchain_mits() const
 {
-    auto vec_acc = std::make_shared<std::vector<asset_mit_info>>();
+    auto vec_acc = std::make_shared<std::vector<token_mit_info>>();
     for( uint64_t i = 0; i < number_buckets; i++ ) {
         auto memo = lookup_map_.find(i);
         if (memo->size()) {
@@ -135,7 +135,7 @@ std::shared_ptr<asset_mit_info::list> blockchain_mit_database::get_blockchain_mi
             {
                 const auto memory = REMAP_ADDRESS(elem);
                 auto deserial = make_deserializer_unsafe(memory);
-                vec_acc->push_back(asset_mit_info::factory_from_data(deserial));
+                vec_acc->push_back(token_mit_info::factory_from_data(deserial));
             };
             std::for_each(memo->begin(), memo->end(), action);
         }
@@ -144,35 +144,35 @@ std::shared_ptr<asset_mit_info::list> blockchain_mit_database::get_blockchain_mi
 }
 
 /// 
-std::shared_ptr<asset_mit_info> blockchain_mit_database::get_register_history(const std::string & mit_symbol) const
+std::shared_ptr<token_mit_info> blockchain_mit_database::get_register_history(const std::string & mit_symbol) const
 {
-    std::shared_ptr<asset_mit_info> asset_mit_ = nullptr;
+    std::shared_ptr<token_mit_info> token_mit_ = nullptr;
     data_chunk data(mit_symbol.begin(), mit_symbol.end());
     auto key = sha256_hash(data);
 
     auto memo = lookup_map_.rfind(key);
     if(memo)
     {
-        asset_mit_ = std::make_shared<asset_mit_info>();
+        token_mit_ = std::make_shared<token_mit_info>();
         const auto memory = REMAP_ADDRESS(memo);
         auto deserial = make_deserializer_unsafe(memory);
-        *asset_mit_ = asset_mit_info::factory_from_data(deserial);
+        *token_mit_ = token_mit_info::factory_from_data(deserial);
     }
 
-    return asset_mit_;
+    return token_mit_;
 }
 
 ///
 uint64_t blockchain_mit_database::get_register_height(const std::string & mit_symbol) const
 {
-    std::shared_ptr<asset_mit_info> asset_mit_ = get_register_history(mit_symbol);
-    if(asset_mit_)
-        return asset_mit_->output_height;
+    std::shared_ptr<token_mit_info> token_mit_ = get_register_history(mit_symbol);
+    if(token_mit_)
+        return token_mit_->output_height;
         
     return max_uint64;
 }
 
-void blockchain_mit_database::store(const asset_mit_info& mit_info)
+void blockchain_mit_database::store(const token_mit_info& mit_info)
 {
     const auto& key_str = mit_info.mit.get_symbol();
     const data_chunk& data = data_chunk(key_str.begin(), key_str.end());

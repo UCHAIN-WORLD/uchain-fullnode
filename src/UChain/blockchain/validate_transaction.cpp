@@ -155,8 +155,8 @@ void validate_transaction::reset(size_t last_height)
     last_block_height_ = last_height;
     current_input_ = 0;
     value_in_ = 0;
-    asset_amount_in_ = 0;
-    asset_certs_in_.clear();
+    token_amount_in_ = 0;
+    token_certs_in_.clear();
     old_symbol_in_ = "";
     old_cert_symbol_in_ = "";
 }
@@ -327,24 +327,24 @@ code validate_transaction::check_tx_connect_input() const
         return error::fees_out_of_range;
     }
 
-    if (tx_->has_asset_transfer()) {
-        if (!check_asset_amount(*tx_)) {
-            return error::asset_amount_not_equal;
+    if (tx_->has_token_transfer()) {
+        if (!check_token_amount(*tx_)) {
+            return error::token_amount_not_equal;
         }
-        if (!check_asset_symbol(*tx_)) {
-            return error::asset_symbol_not_match;
-        }
-    }
-
-    if (tx_->has_asset_cert()) {
-        if (!check_asset_certs(*tx_)) {
-            log::debug(LOG_BLOCKCHAIN) << "failed to check asset cert." << tx_->to_string(1);
-            return error::asset_cert_error;
+        if (!check_token_symbol(*tx_)) {
+            return error::token_symbol_not_match;
         }
     }
 
-    if (tx_->has_asset_mit_transfer()) {
-        if (!check_asset_mit(*tx_)) {
+    if (tx_->has_token_cert()) {
+        if (!check_token_certs(*tx_)) {
+            log::debug(LOG_BLOCKCHAIN) << "failed to check token cert." << tx_->to_string(1);
+            return error::token_cert_error;
+        }
+    }
+
+    if (tx_->has_token_mit_transfer()) {
+        if (!check_token_mit(*tx_)) {
             log::debug(LOG_BLOCKCHAIN) << "failed to check MIT token." << tx_->to_string(1);
             return error::mit_error;
         }
@@ -375,126 +375,126 @@ code validate_transaction::check_secondaryissue_transaction() const
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& blockchain = blockchain_;
 
-    bool is_asset_secondaryissue{false};
+    bool is_token_secondaryissue{false};
     for (auto& output : tx.outputs) {
-        if (output.is_asset_secondaryissue()) {
-            is_asset_secondaryissue = true;
+        if (output.is_token_secondaryissue()) {
+            is_token_secondaryissue = true;
             break;
         }
     }
-    if (!is_asset_secondaryissue) {
+    if (!is_token_secondaryissue) {
         return error::success;
     }
 
-    is_asset_secondaryissue = false;
-    std::string asset_symbol;
-    std::string asset_address;
-    std::string asset_cert_owner;
+    is_token_secondaryissue = false;
+    std::string token_symbol;
+    std::string token_address;
+    std::string token_cert_owner;
     uint8_t secondaryissue_threshold{0};
-    uint64_t secondaryissue_asset_amount{0};
-    uint64_t asset_transfer_volume{0};
-    int num_asset_secondaryissue{0};
-    int num_asset_transfer{0};
-    int num_asset_cert{0};
-    std::vector<asset_cert_type> certs_out;
+    uint64_t secondaryissue_token_amount{0};
+    uint64_t token_transfer_volume{0};
+    int num_token_secondaryissue{0};
+    int num_token_transfer{0};
+    int num_token_cert{0};
+    std::vector<token_cert_type> certs_out;
     for (auto& output : tx.outputs)
     {
-        if (output.is_asset_secondaryissue())
+        if (output.is_token_secondaryissue())
         {
-            ++num_asset_secondaryissue;
-            if (num_asset_secondaryissue > 1) {
-                log::debug(LOG_BLOCKCHAIN) << "secondaryissue: num of secondaryissue output > 1, " << asset_symbol;
-                return error::asset_secondaryissue_error;
+            ++num_token_secondaryissue;
+            if (num_token_secondaryissue > 1) {
+                log::debug(LOG_BLOCKCHAIN) << "secondaryissue: num of secondaryissue output > 1, " << token_symbol;
+                return error::token_secondaryissue_error;
             }
 
-            auto&& asset_detail = output.get_asset_detail();
-            if (!asset_detail.is_asset_secondaryissue()
-                    || !asset_detail.is_secondaryissue_threshold_value_ok()) {
-                log::debug(LOG_BLOCKCHAIN) << "secondaryissue: threshold value invalid, " << asset_symbol;
-                return error::asset_secondaryissue_threshold_invalid;
+            auto&& token_detail = output.get_token_detail();
+            if (!token_detail.is_token_secondaryissue()
+                    || !token_detail.is_secondaryissue_threshold_value_ok()) {
+                log::debug(LOG_BLOCKCHAIN) << "secondaryissue: threshold value invalid, " << token_symbol;
+                return error::token_secondaryissue_threshold_invalid;
             }
-            if (!check_same(asset_symbol, asset_detail.get_symbol())) {
-                return error::asset_secondaryissue_error;
+            if (!check_same(token_symbol, token_detail.get_symbol())) {
+                return error::token_secondaryissue_error;
             }
-            if (!check_same(asset_address, asset_detail.get_address())) {
-                return error::asset_secondaryissue_error;
+            if (!check_same(token_address, token_detail.get_address())) {
+                return error::token_secondaryissue_error;
             }
             if (operation::is_pay_key_hash_with_attenuation_model_pattern(output.script.operations)) {
                 const auto& model_param = output.get_attenuation_model_param();
                 if (!attenuation_model::check_model_param(
-                            model_param, asset_detail.get_maximum_supply())) {
+                            model_param, token_detail.get_maximum_supply())) {
                     log::debug(LOG_BLOCKCHAIN) << "secondaryissue: model param invalid, "
-                                               << asset_symbol << " " << model_param;
+                                               << token_symbol << " " << model_param;
                     return error::attenuation_model_param_error;
                 }
             }
-            secondaryissue_threshold = asset_detail.get_secondaryissue_threshold();
-            secondaryissue_asset_amount = asset_detail.get_maximum_supply();
+            secondaryissue_threshold = token_detail.get_secondaryissue_threshold();
+            secondaryissue_token_amount = token_detail.get_maximum_supply();
         }
-        else if (output.is_asset_transfer())
+        else if (output.is_token_transfer())
         {
-            ++num_asset_transfer;
-            auto&& asset_transfer = output.get_asset_transfer();
-            if (!check_same(asset_symbol, asset_transfer.get_symbol())) {
-                return error::asset_secondaryissue_error;
+            ++num_token_transfer;
+            auto&& token_transfer = output.get_token_transfer();
+            if (!check_same(token_symbol, token_transfer.get_symbol())) {
+                return error::token_secondaryissue_error;
             }
-            if (!check_same(asset_address, output.get_script_address())) {
-                return error::asset_secondaryissue_error;
+            if (!check_same(token_address, output.get_script_address())) {
+                return error::token_secondaryissue_error;
             }
-            asset_transfer_volume += asset_transfer.get_quantity();
+            token_transfer_volume += token_transfer.get_quantity();
         }
-        else if (output.is_asset_cert())
+        else if (output.is_token_cert())
         {
-            ++num_asset_cert;
-            if (num_asset_cert > 1) {
-                log::debug(LOG_BLOCKCHAIN) << "secondaryissue: cert numbers > 1, " << asset_symbol;
-                return error::asset_secondaryissue_error;
+            ++num_token_cert;
+            if (num_token_cert > 1) {
+                log::debug(LOG_BLOCKCHAIN) << "secondaryissue: cert numbers > 1, " << token_symbol;
+                return error::token_secondaryissue_error;
             }
-            auto&& asset_cert = output.get_asset_cert();
-            auto cur_cert_type = asset_cert.get_type();
-            if (cur_cert_type == asset_cert_ns::issue) {
-                if (!check_same(asset_symbol, asset_cert.get_symbol())) {
-                    return error::asset_secondaryissue_error;
+            auto&& token_cert = output.get_token_cert();
+            auto cur_cert_type = token_cert.get_type();
+            if (cur_cert_type == token_cert_ns::issue) {
+                if (!check_same(token_symbol, token_cert.get_symbol())) {
+                    return error::token_secondaryissue_error;
                 }
-                if (!check_same(asset_cert_owner, asset_cert.get_owner())) {
-                    return error::asset_secondaryissue_error;
+                if (!check_same(token_cert_owner, token_cert.get_owner())) {
+                    return error::token_secondaryissue_error;
                 }
                 certs_out.push_back(cur_cert_type);
             }
             else {
                 log::debug(LOG_BLOCKCHAIN) << "secondaryissue: invalid output of cert "
-                                           << asset_cert.to_string();
-                return error::asset_secondaryissue_error;
+                                           << token_cert.to_string();
+                return error::token_secondaryissue_error;
             }
         }
         else if (!output.is_ucn() && !output.is_message())
         {
             log::debug(LOG_BLOCKCHAIN) << "secondaryissue: illega output, "
-                                       << asset_symbol << " : " << output.to_string(1);
-            return error::asset_secondaryissue_error;
+                                       << token_symbol << " : " << output.to_string(1);
+            return error::token_secondaryissue_error;
         }
     }
 
     if (tx.version >= transaction_version::check_nova_feature
-        && !asset_cert::test_certs(certs_out, asset_cert_ns::issue)) {
-        log::debug(LOG_BLOCKCHAIN) << "secondaryissue: no issue asset cert, " << asset_symbol;
-        return error::asset_cert_error;
+        && !token_cert::test_certs(certs_out, token_cert_ns::issue)) {
+        log::debug(LOG_BLOCKCHAIN) << "secondaryissue: no issue token cert, " << token_symbol;
+        return error::token_cert_error;
     }
 
-    auto total_volume = blockchain.get_asset_volume(asset_symbol);
-    if (total_volume > max_uint64 - secondaryissue_asset_amount) {
+    auto total_volume = blockchain.get_token_volume(token_symbol);
+    if (total_volume > max_uint64 - secondaryissue_token_amount) {
         log::debug(LOG_BLOCKCHAIN)
-                << "secondaryissue: total asset volume cannot exceed maximum value, "
-                << asset_symbol;
-        return error::asset_secondaryissue_error;
+                << "secondaryissue: total token volume cannot exceed maximum value, "
+                << token_symbol;
+        return error::token_secondaryissue_error;
     }
 
-    if (!asset_detail::is_secondaryissue_owns_enough(asset_transfer_volume, total_volume, secondaryissue_threshold)) {
-        log::debug(LOG_BLOCKCHAIN) << "secondaryissue: no enough asset volume, " << asset_symbol;
-        return error::asset_secondaryissue_share_not_enough;
+    if (!token_detail::is_secondaryissue_owns_enough(token_transfer_volume, total_volume, secondaryissue_threshold)) {
+        log::debug(LOG_BLOCKCHAIN) << "secondaryissue: no enough token volume, " << token_symbol;
+        return error::token_secondaryissue_share_not_enough;
     }
 
-    // check inputs asset address
+    // check inputs token address
     for (const auto& input : tx.inputs) {
         chain::transaction prev_tx;
         uint64_t prev_height{0};
@@ -504,17 +504,17 @@ code validate_transaction::check_secondaryissue_transaction() const
             return error::input_not_found;
         }
         auto prev_output = prev_tx.outputs.at(input.previous_output.index);
-        if (prev_output.is_asset() || prev_output.is_asset_cert()) {
-            auto&& asset_address_in = prev_output.get_script_address();
-            if (prev_output.is_asset_cert()) {
-                auto&& prev_asset_cert = prev_output.get_asset_cert();
-                if (prev_asset_cert.get_symbol() != asset_symbol
-                    || prev_asset_cert.get_type() != asset_cert_ns::issue) {
-                    log::debug(LOG_BLOCKCHAIN) << "secondaryissue: invalid cert input, " << asset_symbol;
+        if (prev_output.is_token() || prev_output.is_token_cert()) {
+            auto&& token_address_in = prev_output.get_script_address();
+            if (prev_output.is_token_cert()) {
+                auto&& prev_token_cert = prev_output.get_token_cert();
+                if (prev_token_cert.get_symbol() != token_symbol
+                    || prev_token_cert.get_type() != token_cert_ns::issue) {
+                    log::debug(LOG_BLOCKCHAIN) << "secondaryissue: invalid cert input, " << token_symbol;
                     return error::validate_inputs_failed;
                 }
-            } else if (asset_address != asset_address_in) {
-                log::debug(LOG_BLOCKCHAIN) << "secondaryissue: invalid asset input, " << asset_symbol;
+            } else if (token_address != token_address_in) {
+                log::debug(LOG_BLOCKCHAIN) << "secondaryissue: invalid token input, " << token_symbol;
                 return error::validate_inputs_failed;
             }
         }
@@ -523,117 +523,117 @@ code validate_transaction::check_secondaryissue_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_asset_issue_transaction() const
+code validate_transaction::check_token_issue_transaction() const
 {
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& chain = blockchain_;
 
-    bool is_asset_issue{false};
+    bool is_token_issue{false};
     for (auto& output : tx.outputs) {
-        if (output.is_asset_issue()) {
-            is_asset_issue = true;
+        if (output.is_token_issue()) {
+            is_token_issue = true;
             break;
         }
     }
-    if (!is_asset_issue) {
+    if (!is_token_issue) {
         return error::success;
     }
 
-    is_asset_issue = false;
+    is_token_issue = false;
     int num_cert_issue{0};
     int num_cert_domain_or_naming{0};
-    std::vector<asset_cert_type> cert_mask;
-    std::vector<asset_cert_type> cert_type;
-    std::string asset_symbol;
-    std::string asset_address;
+    std::vector<token_cert_type> cert_mask;
+    std::vector<token_cert_type> cert_type;
+    std::string token_symbol;
+    std::string token_address;
     std::string cert_owner;
     for (auto& output : tx.outputs)
     {
-        if (output.is_asset_issue())
+        if (output.is_token_issue())
         {
-            if (is_asset_issue) {
-                // can not issue multiple assets at the same transaction
-                return error::asset_issue_error;
+            if (is_token_issue) {
+                // can not issue multiple tokens at the same transaction
+                return error::token_issue_error;
             }
-            is_asset_issue = true;
-            asset_detail&& detail = output.get_asset_detail();
+            is_token_issue = true;
+            token_detail&& detail = output.get_token_detail();
             if (!detail.is_secondaryissue_threshold_value_ok()) {
-                return error::asset_secondaryissue_threshold_invalid;
+                return error::token_secondaryissue_threshold_invalid;
             }
-            if (!check_same(asset_symbol, detail.get_symbol())) {
-                return error::asset_issue_error;
+            if (!check_same(token_symbol, detail.get_symbol())) {
+                return error::token_issue_error;
             }
-            if (!check_same(asset_address, detail.get_address())) {
-                return error::asset_issue_error;
+            if (!check_same(token_address, detail.get_address())) {
+                return error::token_issue_error;
             }
-            if (check_asset_exist(asset_symbol)) {
-                return error::asset_exist;
+            if (check_token_exist(token_symbol)) {
+                return error::token_exist;
             }
             if (operation::is_pay_key_hash_with_attenuation_model_pattern(output.script.operations)) {
                 const auto& model_param = output.get_attenuation_model_param();
                 if (!attenuation_model::check_model_param(
                             model_param, detail.get_maximum_supply())) {
                     log::debug(LOG_BLOCKCHAIN) << "issue: model param invalid, "
-                                               << asset_symbol << " " << model_param;
+                                               << token_symbol << " " << model_param;
                     return error::attenuation_model_param_error;
                 }
             }
-            cert_mask = detail.get_asset_cert_mask();
+            cert_mask = detail.get_token_cert_mask();
         }
-        else if (output.is_asset_cert()) {
-            asset_cert&& cert_info = output.get_asset_cert();
+        else if (output.is_token_cert()) {
+            token_cert&& cert_info = output.get_token_cert();
 
             // check cert
-            asset_cert_type cur_cert_type = cert_info.get_type();
-            if (cur_cert_type == asset_cert_ns::issue) {
+            token_cert_type cur_cert_type = cert_info.get_type();
+            if (cur_cert_type == token_cert_ns::issue) {
                 ++num_cert_issue;
                 if (num_cert_issue > 1) {
-                    return error::asset_issue_error;
+                    return error::token_issue_error;
                 }
 
-                if (!check_same(asset_symbol, cert_info.get_symbol())) {
-                    return error::asset_issue_error;
+                if (!check_same(token_symbol, cert_info.get_symbol())) {
+                    return error::token_issue_error;
                 }
 
-                if (!check_same(asset_address, output.get_script_address())) {
-                    return error::asset_issue_error;
+                if (!check_same(token_address, output.get_script_address())) {
+                    return error::token_issue_error;
                 }
             }
-            else if (cur_cert_type == asset_cert_ns::domain) {
+            else if (cur_cert_type == token_cert_ns::domain) {
                 ++num_cert_domain_or_naming;
                 if (num_cert_domain_or_naming > 1) {
-                    return error::asset_issue_error;
+                    return error::token_issue_error;
                 }
 
-                if (!asset_symbol.empty()) {
-                    auto&& domain = asset_cert::get_domain(asset_symbol);
+                if (!token_symbol.empty()) {
+                    auto&& domain = token_cert::get_domain(token_symbol);
                     if (domain != cert_info.get_symbol()) {
-                        return error::asset_issue_error;
+                        return error::token_issue_error;
                     }
                 }
 
                 if (!check_same(cert_owner, cert_info.get_owner())) {
-                    return error::asset_issue_error;
+                    return error::token_issue_error;
                 }
             }
-            else if (cur_cert_type == asset_cert_ns::naming) {
+            else if (cur_cert_type == token_cert_ns::naming) {
                 ++num_cert_domain_or_naming;
                 if (num_cert_domain_or_naming > 1) {
-                    return error::asset_issue_error;
+                    return error::token_issue_error;
                 }
 
-                if (!check_same(asset_symbol, cert_info.get_symbol())) {
-                    return error::asset_issue_error;
+                if (!check_same(token_symbol, cert_info.get_symbol())) {
+                    return error::token_issue_error;
                 }
 
                 if (!check_same(cert_owner, cert_info.get_owner())) {
-                    return error::asset_issue_error;
+                    return error::token_issue_error;
                 }
             }
             else {
                 log::debug(LOG_BLOCKCHAIN) << "issue: invalid output of cert "
                                            <<  cert_info.to_string();
-                return error::asset_issue_error;
+                return error::token_issue_error;
             }
 
             cert_type.push_back(cur_cert_type);
@@ -641,31 +641,31 @@ code validate_transaction::check_asset_issue_transaction() const
         else if (!output.is_ucn() && !output.is_message())
         {
             log::debug(LOG_BLOCKCHAIN) << "issue: illega output, "
-                                       << asset_symbol << " : " << output.to_string(1);
-            return error::asset_issue_error;
+                                       << token_symbol << " : " << output.to_string(1);
+            return error::token_issue_error;
         }
     }
 
     // check cert for transactions after check_nova_feature version.
     if (tx.version >= transaction_version::check_nova_feature) {
-        if (!asset_cert::test_certs(cert_type, cert_mask)) {
-            log::debug(LOG_BLOCKCHAIN) << "issue asset: "
+        if (!token_cert::test_certs(cert_type, cert_mask)) {
+            log::debug(LOG_BLOCKCHAIN) << "issue token: "
                                        << "not enough cert.";
-            return error::asset_issue_error;
+            return error::token_issue_error;
         }
 
-        auto&& domain = asset_cert::get_domain(asset_symbol);
-        if (asset_cert::is_valid_domain(domain)) {
+        auto&& domain = token_cert::get_domain(token_symbol);
+        if (token_cert::is_valid_domain(domain)) {
             if (cert_owner.empty()) {
-                log::debug(LOG_BLOCKCHAIN) << "issue asset: owner of cert "
-                                           << asset_symbol << " is empty!";
-                return error::asset_cert_error;
+                log::debug(LOG_BLOCKCHAIN) << "issue token: owner of cert "
+                                           << token_symbol << " is empty!";
+                return error::token_cert_error;
             }
 
             if (num_cert_domain_or_naming < 1) {
                 // no valid domain or naming cert
-                log::debug(LOG_BLOCKCHAIN) << "issue asset: not cert provided!";
-                return error::asset_cert_not_provided;
+                log::debug(LOG_BLOCKCHAIN) << "issue token: not cert provided!";
+                return error::token_cert_not_provided;
             }
         }
     }
@@ -673,14 +673,14 @@ code validate_transaction::check_asset_issue_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_asset_cert_transaction() const
+code validate_transaction::check_token_cert_transaction() const
 {
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& chain = blockchain_;
 
     bool is_cert{false};
     for (auto& output : tx.outputs) {
-        if (output.is_asset_cert_issue() || output.is_asset_cert_transfer()) {
+        if (output.is_token_cert_issue() || output.is_token_cert_transfer()) {
             is_cert = true;
             break;
         }
@@ -693,66 +693,66 @@ code validate_transaction::check_asset_cert_transaction() const
     int num_cert_issue{0};
     int num_cert_domain{0};
     int num_cert_transfer{0};
-    asset_cert_type issue_cert_type{asset_cert_ns::none};
-    std::vector<asset_cert_type> cert_type;
+    token_cert_type issue_cert_type{token_cert_ns::none};
+    std::vector<token_cert_type> cert_type;
     std::string cert_symbol;
     std::string domain_symbol;
     std::string cert_owner;
     for (auto& output : tx.outputs)
     {
-        if (output.is_asset_cert_issue()) {
+        if (output.is_token_cert_issue()) {
             ++num_cert_issue;
             if (num_cert_issue > 1) {
-                // can not issue multiple asset cert at the same transaction
-                return error::asset_cert_issue_error;
+                // can not issue multiple token cert at the same transaction
+                return error::token_cert_issue_error;
             }
 
-            asset_cert&& cert_info = output.get_asset_cert();
-            asset_cert_type cur_cert_type = cert_info.get_type();
+            token_cert&& cert_info = output.get_token_cert();
+            token_cert_type cur_cert_type = cert_info.get_type();
 
             if (!check_same(cert_symbol, cert_info.get_symbol())) {
                 log::debug(LOG_BLOCKCHAIN) << "issue cert: "
                                            << cert_info.get_symbol() << " does not match.";
-                return error::asset_cert_issue_error;
+                return error::token_cert_issue_error;
             }
 
             // check cert not exists
-            if (check_asset_cert_exist(cert_symbol, cur_cert_type)) {
+            if (check_token_cert_exist(cert_symbol, cur_cert_type)) {
                 log::debug(LOG_BLOCKCHAIN) << "issue cert: "
                                            << cert_info.get_symbol() << " already exists.";
-                return error::asset_cert_exist;
+                return error::token_cert_exist;
             }
 
             issue_cert_type = cur_cert_type;
         }
-        else if (output.is_asset_cert_transfer()) {
+        else if (output.is_token_cert_transfer()) {
             ++num_cert_transfer;
             if (num_cert_transfer > 1) {
-                // can not transfer multiple asset cert at the same transaction
-                return error::asset_cert_error;
+                // can not transfer multiple token cert at the same transaction
+                return error::token_cert_error;
             }
 
-            asset_cert&& cert_info = output.get_asset_cert();
+            token_cert&& cert_info = output.get_token_cert();
             if (!check_same(cert_symbol, cert_info.get_symbol())) {
                 log::debug(LOG_BLOCKCHAIN) << "transfer cert: "
                                            << cert_info.get_symbol() << " does not match.";
-                return error::asset_cert_error;
+                return error::token_cert_error;
             }
         }
-        else if (output.is_asset_cert()) {
-            asset_cert&& cert_info = output.get_asset_cert();
+        else if (output.is_token_cert()) {
+            token_cert&& cert_info = output.get_token_cert();
 
             // check cert
-            asset_cert_type cur_cert_type = cert_info.get_type();
-            if (cur_cert_type == asset_cert_ns::domain) {
-                if (issue_cert_type != asset_cert_ns::naming) {
+            token_cert_type cur_cert_type = cert_info.get_type();
+            if (cur_cert_type == token_cert_ns::domain) {
+                if (issue_cert_type != token_cert_ns::naming) {
                     log::debug(LOG_BLOCKCHAIN) << "issue cert: redundant output of domain cert.";
-                    return error::asset_cert_issue_error;
+                    return error::token_cert_issue_error;
                 }
 
                 ++num_cert_domain;
                 if (num_cert_domain > 1) {
-                    return error::asset_cert_issue_error;
+                    return error::token_cert_issue_error;
                 }
 
                 domain_symbol = cert_info.get_symbol();
@@ -764,18 +764,18 @@ code validate_transaction::check_asset_cert_transaction() const
                 if (!diddetail) {
                     log::debug(LOG_BLOCKCHAIN) << "issue cert: cert owner is not issued. "
                                                <<  cert_info.to_string();
-                    return error::asset_cert_issue_error;
+                    return error::token_cert_issue_error;
                 }
                 if (address != diddetail->get_address()) {
                     log::debug(LOG_BLOCKCHAIN) << "issue cert: cert address dismatch cert owner. "
                                                <<  cert_info.to_string();
-                    return error::asset_cert_issue_error;
+                    return error::token_cert_issue_error;
                 }
             }
             else {
                 log::debug(LOG_BLOCKCHAIN) << "issue cert: invalid output of cert "
                                            <<  cert_info.to_string();
-                return error::asset_cert_issue_error;
+                return error::token_cert_issue_error;
             }
 
             cert_type.push_back(cur_cert_type);
@@ -785,7 +785,7 @@ code validate_transaction::check_asset_cert_transaction() const
             log::debug(LOG_BLOCKCHAIN) << "cert: illegal output attachment type:"
                                        << output.attach_data.get_type()
                                        << ", tx: " << output.to_string(1);
-            return error::asset_cert_issue_error;
+            return error::token_cert_issue_error;
         }
     }
 
@@ -793,34 +793,34 @@ code validate_transaction::check_asset_cert_transaction() const
         || (num_cert_issue > 0 && num_cert_transfer > 0)
         || (num_cert_transfer > 0 && num_cert_domain > 0)) {
         log::debug(LOG_BLOCKCHAIN) << "cert: illegal output.";
-        return error::asset_cert_error;
+        return error::token_cert_error;
     }
 
     if (num_cert_issue == 1) {
-        if (issue_cert_type == asset_cert_ns::none) {
-            return error::asset_cert_issue_error;
+        if (issue_cert_type == token_cert_ns::none) {
+            return error::token_cert_issue_error;
         }
 
-        if (issue_cert_type == asset_cert_ns::naming) {
-            if (!asset_cert::test_certs(cert_type, asset_cert_ns::domain)
+        if (issue_cert_type == token_cert_ns::naming) {
+            if (!token_cert::test_certs(cert_type, token_cert_ns::domain)
                 || cert_owner.empty()) {
                 log::debug(LOG_BLOCKCHAIN) << "issue cert: "
                                            << "no domain cert provided to issue naming cert.";
-                return error::asset_cert_issue_error;
+                return error::token_cert_issue_error;
             }
 
-            auto&& domain = asset_cert::get_domain(cert_symbol);
+            auto&& domain = token_cert::get_domain(cert_symbol);
             if (domain != domain_symbol) {
                 log::debug(LOG_BLOCKCHAIN) << "issue cert: "
                                            << "invalid domain cert provided to issue naming cert.";
-                return error::asset_cert_issue_error;
+                return error::token_cert_issue_error;
             }
 
-            // check asset not exist.
-            if (check_asset_exist(cert_symbol)) {
+            // check token not exist.
+            if (check_token_exist(cert_symbol)) {
                 log::debug(LOG_BLOCKCHAIN) << "issue cert: "
-                                           << "asset symbol '" + cert_symbol + "' already exists in blockchain!";
-                return error::asset_exist;
+                                           << "token symbol '" + cert_symbol + "' already exists in blockchain!";
+                return error::token_exist;
             }
         }
     }
@@ -828,69 +828,69 @@ code validate_transaction::check_asset_cert_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_asset_mit_transaction() const
+code validate_transaction::check_token_mit_transaction() const
 {
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& chain = blockchain_;
 
-    bool is_asset_mit{false};
+    bool is_token_mit{false};
     for (auto& output : tx.outputs) {
-        if (output.is_asset_mit()) {
-            is_asset_mit = true;
+        if (output.is_token_mit()) {
+            is_token_mit = true;
             break;
         }
     }
 
-    if (!is_asset_mit) {
+    if (!is_token_mit) {
         return error::success;
     }
 
-    std::string asset_symbol;
-    std::string asset_address;
+    std::string token_symbol;
+    std::string token_address;
     size_t num_mit_transfer = 0;
     size_t num_mit_register = 0;
     for (auto& output : tx.outputs)
     {
-        if (output.is_asset_mit_register()) {
+        if (output.is_token_mit_register()) {
             ++num_mit_register;
 
-            auto&& asset_info = output.get_asset_mit();
-            asset_symbol = asset_info.get_symbol();
+            auto&& token_info = output.get_token_mit();
+            token_symbol = token_info.get_symbol();
 
-            if (!check_same(asset_address, asset_info.get_address())) {
+            if (!check_same(token_address, token_info.get_address())) {
                 log::debug(LOG_BLOCKCHAIN) << "register MIT: "
                                            << " address is not same. "
-                                           << asset_address << " != " << asset_info.get_address();
+                                           << token_address << " != " << token_info.get_address();
                 return error::mit_register_error;
             }
 
-            // check asset not exists
-            if (check_asset_mit_exist(asset_symbol)) {
+            // check token not exists
+            if (check_token_mit_exist(token_symbol)) {
                 log::debug(LOG_BLOCKCHAIN) << "register MIT: "
-                                           << asset_symbol << " already exists.";
+                                           << token_symbol << " already exists.";
                 return error::mit_exist;
             }
         }
-        else if (output.is_asset_mit_transfer()) {
+        else if (output.is_token_mit_transfer()) {
             if (++num_mit_transfer > 1) {
                 log::debug(LOG_BLOCKCHAIN) << "transfer MIT: more than on MIT output." << output.to_string(1);
                 return error::mit_error;
             }
 
-            auto&& asset_info = output.get_asset_mit();
-            asset_symbol = asset_info.get_symbol();
+            auto&& token_info = output.get_token_mit();
+            token_symbol = token_info.get_symbol();
         }
         else if (output.is_ucn()) {
-            if (!check_same(asset_address, output.get_script_address())) {
+            if (!check_same(token_address, output.get_script_address())) {
                 log::debug(LOG_BLOCKCHAIN) << "MIT: "
                                            << " address is not same. "
-                                           << asset_address << " != " << output.get_script_address();
+                                           << token_address << " != " << output.get_script_address();
                 return error::mit_register_error;
             }
         }
         else if (!output.is_message()) {
             log::debug(LOG_BLOCKCHAIN) << "MIT: illegal output, "
-                                       << asset_symbol << " : " << output.to_string(1);
+                                       << token_symbol << " : " << output.to_string(1);
             return error::mit_error;
         }
     }
@@ -914,18 +914,18 @@ code validate_transaction::check_asset_mit_transaction() const
 
         auto prev_output = prev_tx.outputs.at(input.previous_output.index);
         if (prev_output.is_ucn()) {
-            auto&& asset_address_in = prev_output.get_script_address();
-            if (asset_address != asset_address_in) {
+            auto&& token_address_in = prev_output.get_script_address();
+            if (token_address != token_address_in) {
                 log::debug(LOG_BLOCKCHAIN) << "MIT: invalid input address to pay fee: "
-                                            << asset_address_in << " != " << asset_address;
+                                            << token_address_in << " != " << token_address;
                 return error::validate_inputs_failed;
             }
         }
-        else if (prev_output.is_asset_mit()) {
-            auto&& asset_info = prev_output.get_asset_mit();
-            if (asset_symbol != asset_info.get_symbol()) {
+        else if (prev_output.is_token_mit()) {
+            auto&& token_info = prev_output.get_token_mit();
+            if (token_symbol != token_info.get_symbol()) {
                 log::debug(LOG_BLOCKCHAIN) << "MIT: invalid MIT to transfer: "
-                                            << asset_info.get_symbol() << " != " << asset_symbol;
+                                            << token_info.get_symbol() << " != " << token_symbol;
                 return error::validate_inputs_failed;
             }
 
@@ -934,7 +934,7 @@ code validate_transaction::check_asset_mit_transaction() const
     }
 
     if (num_mit_transfer > 0 && !has_input_transfer) {
-        log::debug(LOG_BLOCKCHAIN) << "MIT: no input MIT to transfer " << asset_symbol;
+        log::debug(LOG_BLOCKCHAIN) << "MIT: no input MIT to transfer " << token_symbol;
         return error::validate_inputs_failed;
     }
 
@@ -957,13 +957,13 @@ bool validate_transaction::check_did_exist(const std::string& did) const
     return height != max_uint64;
 }
 
-bool validate_transaction::check_asset_exist(const std::string& symbol) const
+bool validate_transaction::check_token_exist(const std::string& symbol) const
 {
-    uint64_t height = blockchain_.get_asset_height(symbol);
+    uint64_t height = blockchain_.get_token_height(symbol);
 
     if (validate_block_) {
         //register before fork or find in orphan chain
-        if (height <= validate_block_->get_fork_index() || validate_block_->is_asset_in_orphan_chain(symbol)) {
+        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_in_orphan_chain(symbol)) {
             return true;
         }
 
@@ -973,13 +973,13 @@ bool validate_transaction::check_asset_exist(const std::string& symbol) const
     return height != max_uint64;
 }
 
-bool validate_transaction::check_asset_cert_exist(const std::string& cert, asset_cert_type cert_type) const
+bool validate_transaction::check_token_cert_exist(const std::string& cert, token_cert_type cert_type) const
 {
-    uint64_t height = blockchain_.get_asset_cert_height(cert, cert_type);
+    uint64_t height = blockchain_.get_token_cert_height(cert, cert_type);
 
     if (validate_block_) {
         //register before fork or find in orphan chain
-        if (height <= validate_block_->get_fork_index() || validate_block_->is_asset_cert_in_orphan_chain(cert, cert_type)) {
+        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_cert_in_orphan_chain(cert, cert_type)) {
             return true;
         }
 
@@ -989,13 +989,13 @@ bool validate_transaction::check_asset_cert_exist(const std::string& cert, asset
     return height != max_uint64;
 }
 
-bool validate_transaction::check_asset_mit_exist(const std::string& mit) const
+bool validate_transaction::check_token_mit_exist(const std::string& mit) const
 {
-    uint64_t height = blockchain_.get_asset_mit_height(mit);
+    uint64_t height = blockchain_.get_token_mit_height(mit);
 
     if (validate_block_) {
         //register before fork or find in orphan chain
-        if (height <= validate_block_->get_fork_index() || validate_block_->is_asset_mit_in_orphan_chain(mit)) {
+        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_mit_in_orphan_chain(mit)) {
             return true;
         }
 
@@ -1092,24 +1092,24 @@ code validate_transaction::check_did_transaction() const
                 return error::did_input_error;
             }
         }
-        else if (output.is_asset_issue() || output.is_asset_secondaryissue()) {
+        else if (output.is_token_issue() || output.is_token_secondaryissue()) {
             if (output.attach_data.get_version() == DID_ATTACH_VERIFY_VERSION
-                    && output.get_asset_issuer() != output.attach_data.get_to_did()) {
+                    && output.get_token_issuer() != output.attach_data.get_to_did()) {
                 log::debug(LOG_BLOCKCHAIN)
-                        << "asset issuer " << output.get_asset_issuer()
+                        << "token issuer " << output.get_token_issuer()
                         << " , does not match did " << output.attach_data.get_to_did()
                         << " , attach_data: " << output.attach_data.to_string();
-                return error::asset_did_registerr_not_match;
+                return error::token_did_registerr_not_match;
             }
         }
-        else if (output.is_asset_cert()) {
+        else if (output.is_token_cert()) {
             if (output.attach_data.get_version() == DID_ATTACH_VERIFY_VERSION) {
-                if (output.get_asset_cert_owner() != output.attach_data.get_to_did()) {
+                if (output.get_token_cert_owner() != output.attach_data.get_to_did()) {
                     log::debug(LOG_BLOCKCHAIN)
-                            << "cert owner " << output.get_asset_cert_owner()
+                            << "cert owner " << output.get_token_cert_owner()
                             << " , does not match did " << output.attach_data.get_to_did()
                             << " , attach_data: " << output.attach_data.to_string();
-                    return error::asset_did_registerr_not_match;
+                    return error::token_did_registerr_not_match;
                 }
             }
         }
@@ -1277,12 +1277,12 @@ code validate_transaction::check_transaction() const
         return ret;
     }
 
-    if ((ret = check_asset_issue_transaction()) != error::success) {
+    if ((ret = check_token_issue_transaction()) != error::success) {
         return ret;
     }
 
     if (tx_->version >= transaction_version::check_nova_feature) {
-        if ((ret = check_asset_cert_transaction()) != error::success) {
+        if ((ret = check_token_cert_transaction()) != error::success) {
             return ret;
         }
 
@@ -1290,7 +1290,7 @@ code validate_transaction::check_transaction() const
             return ret;
         }
 
-        if ((ret = check_asset_mit_transaction()) != error::success) {
+        if ((ret = check_token_mit_transaction()) != error::success) {
             return ret;
         }
 
@@ -1354,14 +1354,14 @@ code validate_transaction::check_transaction_basic() const
     }
 
     for (auto& output : tx.outputs) {
-        if (output.is_asset_issue()) {
-            if (!chain::output::is_valid_symbol(output.get_asset_symbol(), tx.version)) {
-                return error::asset_symbol_invalid;
+        if (output.is_token_issue()) {
+            if (!chain::output::is_valid_symbol(output.get_token_symbol(), tx.version)) {
+                return error::token_symbol_invalid;
             }
         }
-        else if (output.is_asset_cert()) {
-            if (!chain::output::is_valid_symbol(output.get_asset_symbol(), tx.version)) {
-                return error::asset_symbol_invalid;
+        else if (output.is_token_cert()) {
+            if (!chain::output::is_valid_symbol(output.get_token_symbol(), tx.version)) {
+                return error::token_symbol_invalid;
             }
         }
         else if (output.is_did_register()) {
@@ -1370,8 +1370,8 @@ code validate_transaction::check_transaction_basic() const
                 return error::did_symbol_invalid;
             }
         }
-        else if (output.is_asset_mit_register()) {
-            if (!chain::output::is_valid_mit_symbol(output.get_asset_symbol(), true)) {
+        else if (output.is_token_mit_register()) {
+            if (!chain::output::is_valid_mit_symbol(output.get_token_symbol(), true)) {
                 return error::mit_symbol_invalid;
             }
         }
@@ -1501,14 +1501,14 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
         return false;
     }
 
-    asset_cert_type asset_certs = asset_cert_ns::none;
-    uint64_t asset_transfer_amount = 0;
-    if (previous_output.is_asset()) {
-        auto new_symbol_in = previous_output.get_asset_symbol();
-        // 1. do asset transfer amount check
-        asset_transfer_amount = previous_output.get_asset_amount();
+    token_cert_type token_certs = token_cert_ns::none;
+    uint64_t token_transfer_amount = 0;
+    if (previous_output.is_token()) {
+        auto new_symbol_in = previous_output.get_token_symbol();
+        // 1. do token transfer amount check
+        token_transfer_amount = previous_output.get_token_amount();
 
-        // 2. do asset symbol check
+        // 2. do token symbol check
         if (!check_same(old_symbol_in_, new_symbol_in)) {
             return false;
         }
@@ -1517,14 +1517,14 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
             return false;
         }
     }
-    else if (previous_output.is_asset_cert()) {
-        asset_certs = previous_output.get_asset_cert_type();
-        if (!check_same(old_cert_symbol_in_, previous_output.get_asset_cert_symbol())) {
+    else if (previous_output.is_token_cert()) {
+        token_certs = previous_output.get_token_cert_type();
+        if (!check_same(old_cert_symbol_in_, previous_output.get_token_cert_symbol())) {
             return false;
         }
     }
-    else if (previous_output.is_asset_mit()) {
-        if (!check_same(old_symbol_in_, previous_output.get_asset_mit_symbol())) {
+    else if (previous_output.is_token_mit()) {
+        if (!check_same(old_symbol_in_, previous_output.get_token_mit_symbol())) {
             return false;
         }
     }
@@ -1548,16 +1548,16 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
     }
 
     value_in_ += output_value;
-    asset_amount_in_ += asset_transfer_amount;
-    if (asset_certs != asset_cert_ns::none) {
-        asset_certs_in_.push_back(asset_certs);
+    token_amount_in_ += token_transfer_amount;
+    if (token_certs != token_cert_ns::none) {
+        token_certs_in_.push_back(token_certs);
     }
     return value_in_ <= max_money();
 }
 
 bool validate_transaction::check_special_fees(bool is_testnet, const chain::transaction& tx, uint64_t fee)
 {
-    // check fee of issue asset or register did
+    // check fee of issue token or register did
     auto developer_community_address = bc::get_developer_community_address(is_testnet);
     std::vector<uint64_t> ucn_vec;
     uint32_t special_fee_type = 0;
@@ -1571,7 +1571,7 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
                 ucn_vec.push_back(0);
             }
         }
-        else if (output.is_asset_issue()) {
+        else if (output.is_token_issue()) {
             special_fee_type = 1;
             to_address = output.get_script_address();
         }
@@ -1590,7 +1590,7 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
 
             bool result = false;
             if (special_fee_type == 1) {
-                result = (total_fee >= bc::min_fee_to_issue_asset
+                result = (total_fee >= bc::min_fee_to_issue_token
                     && percentage_to_miner >= min_fee_percentage_to_miner);
 
             }
@@ -1601,7 +1601,7 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
 
             if (!result) {
                 log::debug(LOG_BLOCKCHAIN) << "check fees failed: "
-                    << (special_fee_type == 1 ? "issue asset" : "register did")
+                    << (special_fee_type == 1 ? "issue token" : "register did")
                     << ", total_fee: " << std::to_string(total_fee)
                     << ", fee_percentage_to_miner: " << std::to_string(percentage_to_miner);
                 return false;
@@ -1609,9 +1609,9 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
         }
         else {
             if (special_fee_type == 1) {
-                if (fee < bc::min_fee_to_issue_asset) {
-                    log::debug(LOG_BLOCKCHAIN) << "check fees failed: fee for issuing asset less than "
-                        << std::to_string(bc::min_fee_to_issue_asset);
+                if (fee < bc::min_fee_to_issue_token) {
+                    log::debug(LOG_BLOCKCHAIN) << "check fees failed: fee for issuing token less than "
+                        << std::to_string(bc::min_fee_to_issue_token);
                     return false;
                 }
             }
@@ -1645,143 +1645,143 @@ bool validate_transaction::tally_fees(blockchain::block_chain_impl& chain,
     return total_fees <= max_money();
 }
 
-bool validate_transaction::check_asset_amount(const transaction& tx) const
+bool validate_transaction::check_token_amount(const transaction& tx) const
 {
-    const auto asset_amount_out = tx.total_output_transfer_amount();
-    if (asset_amount_in_ != asset_amount_out) // asset amount must be equal
+    const auto token_amount_out = tx.total_output_transfer_amount();
+    if (token_amount_in_ != token_amount_out) // token amount must be equal
         return false;
 
     return true;
 }
 
-bool validate_transaction::check_asset_symbol(const transaction& tx) const
+bool validate_transaction::check_token_symbol(const transaction& tx) const
 {
     for (const auto& output : tx.outputs) {
-        if (output.is_asset()) {
-            if (old_symbol_in_ != output.get_asset_symbol()) {
+        if (output.is_token()) {
+            if (old_symbol_in_ != output.get_token_symbol()) {
                 return false;
             }
         }
-        else if (output.is_asset_cert()) { // asset cert related
+        else if (output.is_token_cert()) { // token cert related
             continue;
         }
         else if (!output.is_ucn() && !output.is_message()) {
-            // asset tx only related to asset_cert and ucn output
+            // token tx only related to token_cert and ucn output
             return false;
         }
     }
     return true;
 }
 
-bool validate_transaction::check_asset_certs(const transaction& tx) const
+bool validate_transaction::check_token_certs(const transaction& tx) const
 {
     bool is_cert_transfer = false;
     bool is_cert_issue = false;
     bool has_cert_autoissue = false;
-    bool has_asset_issue = false;
-    bool has_asset_output = false;
-    std::vector<asset_cert_type> asset_certs_out;
+    bool has_token_issue = false;
+    bool has_token_output = false;
+    std::vector<token_cert_type> token_certs_out;
     for (auto& output : tx.outputs) {
-        if (output.is_asset_cert()) {
-            auto&& asset_cert = output.get_asset_cert();
-            auto cert_type = asset_cert.get_type();
+        if (output.is_token_cert()) {
+            auto&& token_cert = output.get_token_cert();
+            auto cert_type = token_cert.get_type();
 
-            if (asset_cert.get_status() == ASSET_CERT_TRANSFER_TYPE) {
+            if (token_cert.get_status() == TOKEN_CERT_TRANSFER_TYPE) {
                 is_cert_transfer = true;
             }
-            else if (asset_cert.get_status() == ASSET_CERT_ISSUE_TYPE) {
+            else if (token_cert.get_status() == TOKEN_CERT_ISSUE_TYPE) {
                 is_cert_issue = true;
             }
-            else if (asset_cert.get_status() == ASSET_CERT_AUTOISSUE_TYPE) {
+            else if (token_cert.get_status() == TOKEN_CERT_AUTOISSUE_TYPE) {
                 has_cert_autoissue = true;
             }
 
-            if (asset_cert::test_certs(asset_certs_out, cert_type)) { // double certs exists
+            if (token_cert::test_certs(token_certs_out, cert_type)) { // double certs exists
                 return false;
             }
 
-            // check asset cert symbol
-            if (asset_cert::test_certs(asset_certs_in_, asset_cert_ns::domain)
-                && (cert_type == asset_cert_ns::naming)) {
-                auto&& domain = asset_cert::get_domain(asset_cert.get_symbol());
+            // check token cert symbol
+            if (token_cert::test_certs(token_certs_in_, token_cert_ns::domain)
+                && (cert_type == token_cert_ns::naming)) {
+                auto&& domain = token_cert::get_domain(token_cert.get_symbol());
                 if (domain != old_cert_symbol_in_) {
                     log::debug(LOG_BLOCKCHAIN) << "cert domain error: "
-                        << "symbol : " << asset_cert.get_symbol() << "; "
+                        << "symbol : " << token_cert.get_symbol() << "; "
                         << old_cert_symbol_in_ << " != " << domain;
                     return false;
                 }
             }
-            else if (!asset_cert.is_newly_generated()) {
-                if (old_cert_symbol_in_ != asset_cert.get_symbol()) {
+            else if (!token_cert.is_newly_generated()) {
+                if (old_cert_symbol_in_ != token_cert.get_symbol()) {
                     log::debug(LOG_BLOCKCHAIN) << "cert symbol error: "
-                        << old_cert_symbol_in_ << " != " << asset_cert.get_symbol();
+                        << old_cert_symbol_in_ << " != " << token_cert.get_symbol();
                     return false;
                 }
             }
 
-            if (!asset_cert.is_newly_generated()) {
-                if (!asset_cert::test_certs(asset_certs_in_, cert_type)) {
-                    log::debug(LOG_BLOCKCHAIN) << "input lack of cert: " << asset_cert.get_type_name();
+            if (!token_cert.is_newly_generated()) {
+                if (!token_cert::test_certs(token_certs_in_, cert_type)) {
+                    log::debug(LOG_BLOCKCHAIN) << "input lack of cert: " << token_cert.get_type_name();
                     return false;
                 }
             }
 
-            asset_certs_out.push_back(cert_type);
+            token_certs_out.push_back(cert_type);
         }
-        else if (output.is_asset()) { // asset related
-            has_asset_output = true;
-            if (output.is_asset_issue()) {
-                has_asset_issue = true;
+        else if (output.is_token()) { // token related
+            has_token_output = true;
+            if (output.is_token_issue()) {
+                has_token_issue = true;
             }
         }
         else if (!output.is_ucn() && !output.is_message()) {
-            // asset cert transfer tx only related to asset_cert and ucn output
+            // token cert transfer tx only related to token_cert and ucn output
             log::debug(LOG_BLOCKCHAIN) << "cert tx mix other illegal output";
             return false;
         }
     }
 
-    if ((is_cert_issue || is_cert_transfer) && has_asset_output) {
-        log::debug(LOG_BLOCKCHAIN) << "issue/transfer cert can not mix with asset output";
+    if ((is_cert_issue || is_cert_transfer) && has_token_output) {
+        log::debug(LOG_BLOCKCHAIN) << "issue/transfer cert can not mix with token output";
         return false;
     }
 
-    if (has_cert_autoissue && !has_asset_issue) {
+    if (has_cert_autoissue && !has_token_issue) {
         log::debug(LOG_BLOCKCHAIN) << "only issue command can has cert with autoissue status";
         return false;
     }
 
     if (is_cert_transfer) {
-        if (asset_certs_in_.size() != 1) {
+        if (token_certs_in_.size() != 1) {
             log::debug(LOG_BLOCKCHAIN) << "transfer cert: invalid number of cert in inputs: "
-                                       << asset_certs_in_.size();
+                                       << token_certs_in_.size();
             return false;
         }
-        if (asset_certs_out.size() != 1) {
+        if (token_certs_out.size() != 1) {
             log::debug(LOG_BLOCKCHAIN) << "transfer cert: invalid number of cert in outputs: "
-                                       << asset_certs_out.size();
+                                       << token_certs_out.size();
             return false;
         }
     }
 
-    if (!asset_cert::test_certs(asset_certs_out, asset_certs_in_)) {
+    if (!token_cert::test_certs(token_certs_out, token_certs_in_)) {
         log::debug(LOG_BLOCKCHAIN) << "some inputed certs is missed in outputs";
         return false;
     }
     return true;
 }
 
-bool validate_transaction::check_asset_mit(const transaction& tx) const
+bool validate_transaction::check_token_mit(const transaction& tx) const
 {
     size_t num_mit = 0;
     for (const auto& output : tx.outputs) {
-        if (output.is_asset_mit_transfer()) {
+        if (output.is_token_mit_transfer()) {
             if (++num_mit > 1) {
                 return false;
             }
 
-            auto&& asset_info = output.get_asset_mit();
-            if (old_symbol_in_ != asset_info.get_symbol()) {
+            auto&& token_info = output.get_token_mit();
+            if (old_symbol_in_ != token_info.get_symbol()) {
                 return false;
             }
         }

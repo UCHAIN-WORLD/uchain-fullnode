@@ -36,20 +36,20 @@ utxo_attach_type get_utxo_attach_type(const chain::output& output_)
     if (output.is_ucn()) {
         return utxo_attach_type::ucn;
     }
-    if (output.is_asset_transfer()) {
-        return utxo_attach_type::asset_transfer;
+    if (output.is_token_transfer()) {
+        return utxo_attach_type::token_transfer;
     }
-    if (output.is_asset_issue()) {
-        return utxo_attach_type::asset_issue;
+    if (output.is_token_issue()) {
+        return utxo_attach_type::token_issue;
     }
-    if (output.is_asset_secondaryissue()) {
-        return utxo_attach_type::asset_secondaryissue;
+    if (output.is_token_secondaryissue()) {
+        return utxo_attach_type::token_secondaryissue;
     }
-    if (output.is_asset_cert()) {
-        return utxo_attach_type::asset_cert;
+    if (output.is_token_cert()) {
+        return utxo_attach_type::token_cert;
     }
-    if (output.is_asset_mit()) {
-        return utxo_attach_type::asset_mit;
+    if (output.is_token_mit()) {
+        return utxo_attach_type::token_mit;
     }
     if (output.is_did_register()) {
         return utxo_attach_type::did_register;
@@ -80,20 +80,20 @@ void check_did_symbol(const std::string& symbol, bool check_sensitive)
     }
 }
 
-void check_asset_symbol(const std::string& symbol, bool check_sensitive)
+void check_token_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (symbol.empty()) {
-        throw asset_symbol_length_exception{"Symbol cannot be empty."};
+        throw token_symbol_length_exception{"Symbol cannot be empty."};
     }
 
-    if (symbol.length() > ASSET_DETAIL_SYMBOL_FIX_SIZE) {
-        throw asset_symbol_length_exception{"Symbol length must be less than "
-            + std::to_string(ASSET_DETAIL_SYMBOL_FIX_SIZE) + "."};
+    if (symbol.length() > TOKEN_DETAIL_SYMBOL_FIX_SIZE) {
+        throw token_symbol_length_exception{"Symbol length must be less than "
+            + std::to_string(TOKEN_DETAIL_SYMBOL_FIX_SIZE) + "."};
     }
 
     if (check_sensitive) {
         if (bc::wallet::symbol::is_sensitive(symbol)) {
-            throw asset_symbol_name_exception{"Symbol " + symbol + " is forbidden."};
+            throw token_symbol_name_exception{"Symbol " + symbol + " is forbidden."};
         }
     }
 }
@@ -101,25 +101,25 @@ void check_asset_symbol(const std::string& symbol, bool check_sensitive)
 void check_mit_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (symbol.empty()) {
-        throw asset_symbol_length_exception{"Symbol cannot be empty."};
+        throw token_symbol_length_exception{"Symbol cannot be empty."};
     }
 
-    if (symbol.length() > ASSET_MIT_SYMBOL_FIX_SIZE) {
-        throw asset_symbol_length_exception{"Symbol length must be less than "
-            + std::to_string(ASSET_MIT_SYMBOL_FIX_SIZE) + "."};
+    if (symbol.length() > TOKEN_MIT_SYMBOL_FIX_SIZE) {
+        throw token_symbol_length_exception{"Symbol length must be less than "
+            + std::to_string(TOKEN_MIT_SYMBOL_FIX_SIZE) + "."};
     }
 
     // char check
     for (const auto& i : symbol) {
         if (!(std::isalnum(i) || i == '.'|| i == '@' || i == '_' || i == '-'))
-            throw asset_symbol_name_exception(
+            throw token_symbol_name_exception(
                 "Symbol " + symbol + " has invalid character.");
     }
 
     if (check_sensitive) {
         auto upper = boost::to_upper_copy(symbol);
         if (bc::wallet::symbol::is_sensitive(upper)) {
-            throw asset_symbol_name_exception{"Symbol " + symbol + " is forbidden."};
+            throw token_symbol_name_exception{"Symbol " + symbol + " is forbidden."};
         }
     }
 }
@@ -203,10 +203,10 @@ std::string get_random_payment_address(
     return "";
 }
 
-void sync_fetch_asset_cert_balance(const std::string& address, const string& symbol,
+void sync_fetch_token_cert_balance(const std::string& address, const string& symbol,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<asset_cert::list> sh_vec,
-    asset_cert_type cert_type)
+    std::shared_ptr<token_cert::list> sh_vec,
+    token_cert_type cert_type)
 {
     chain::transaction tx_temp;
     uint64_t tx_height;
@@ -223,25 +223,25 @@ void sync_fetch_asset_cert_balance(const std::string& address, const string& sym
             if (output.get_script_address() != address) {
                 continue;
             }
-            if (output.is_asset_cert())
+            if (output.is_token_cert())
             {
-                auto asset_cert = output.get_asset_cert();
-                if (!symbol.empty() && symbol != asset_cert.get_symbol()) {
+                auto token_cert = output.get_token_cert();
+                if (!symbol.empty() && symbol != token_cert.get_symbol()) {
                     continue;
                 }
-                if (cert_type != asset_cert_ns::none && cert_type != asset_cert.get_type()) {
+                if (cert_type != token_cert_ns::none && cert_type != token_cert.get_type()) {
                     continue;
                 }
 
-                sh_vec->push_back(std::move(asset_cert));
+                sh_vec->push_back(std::move(token_cert));
             }
         }
     }
 }
 
-void sync_fetch_asset_balance(const std::string& address, bool sum_all,
+void sync_fetch_token_balance(const std::string& address, bool sum_all,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<asset_balances::list> sh_asset_vec)
+    std::shared_ptr<token_balances::list> sh_token_vec)
 {
     auto&& rows = blockchain.get_address_history(wallet::payment_address(address));
 
@@ -261,44 +261,44 @@ void sync_fetch_asset_balance(const std::string& address, bool sum_all,
             if (output.get_script_address() != address) {
                 continue;
             }
-            if (output.is_asset())
+            if (output.is_token())
             {
-                const auto& symbol = output.get_asset_symbol();
+                const auto& symbol = output.get_token_symbol();
                 if (bc::wallet::symbol::is_forbidden(symbol)) {
                     // swallow forbidden symbol
                     continue;
                 }
 
-                auto match = [sum_all, &symbol, &address](const asset_balances& elem) {
+                auto match = [sum_all, &symbol, &address](const token_balances& elem) {
                     return (symbol == elem.symbol) && (sum_all || (address == elem.address));
                 };
-                auto iter = std::find_if(sh_asset_vec->begin(), sh_asset_vec->end(), match);
+                auto iter = std::find_if(sh_token_vec->begin(), sh_token_vec->end(), match);
 
-                auto asset_amount = output.get_asset_amount();
+                auto token_amount = output.get_token_amount();
                 uint64_t locked_amount = 0;
-                if (asset_amount
+                if (token_amount
                     && operation::is_pay_key_hash_with_attenuation_model_pattern(output.script.operations)) {
                     const auto& attenuation_model_param = output.get_attenuation_model_param();
                     auto diff_height = row.output_height ? (height - row.output_height) : 0;
-                    auto available_amount = attenuation_model::get_available_asset_amount(
-                            asset_amount, diff_height, attenuation_model_param);
-                    locked_amount = asset_amount - available_amount;
+                    auto available_amount = attenuation_model::get_available_token_amount(
+                            token_amount, diff_height, attenuation_model_param);
+                    locked_amount = token_amount - available_amount;
                 }
-                if (iter == sh_asset_vec->end()) { // new item
-                    sh_asset_vec->push_back({symbol, address, asset_amount, locked_amount});
+                if (iter == sh_token_vec->end()) { // new item
+                    sh_token_vec->push_back({symbol, address, token_amount, locked_amount});
                 }
                 else { // exist just add amount
-                    iter->unspent_asset += asset_amount;
-                    iter->locked_asset += locked_amount;
+                    iter->unspent_token += token_amount;
+                    iter->locked_token += locked_amount;
                 }
             }
         }
     }
 }
 
-void sync_fetch_asset_deposited_balance(const std::string& address,
+void sync_fetch_token_deposited_balance(const std::string& address,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<asset_deposited_balance::list> sh_asset_vec)
+    std::shared_ptr<token_deposited_balance::list> sh_token_vec)
 {
     auto&& rows = blockchain.get_address_history(wallet::payment_address(address));
 
@@ -315,18 +315,18 @@ void sync_fetch_asset_deposited_balance(const std::string& address,
         {
             BITCOIN_ASSERT(row.output.index < tx_temp.outputs.size());
             const auto& output = tx_temp.outputs.at(row.output.index);
-            if (output.is_asset())
+            if (output.is_token())
             {
                 if (!operation::is_pay_key_hash_with_attenuation_model_pattern(output.script.operations)) {
                     continue;
                 }
 
-                auto asset_amount = output.get_asset_amount();
-                if (asset_amount == 0) {
+                auto token_amount = output.get_token_amount();
+                if (token_amount == 0) {
                     continue;
                 }
 
-                const auto& symbol = output.get_asset_symbol();
+                const auto& symbol = output.get_token_symbol();
                 if (bc::wallet::symbol::is_forbidden(symbol)) {
                     // swallow forbidden symbol
                     continue;
@@ -334,19 +334,19 @@ void sync_fetch_asset_deposited_balance(const std::string& address,
 
                 const auto& model_param = output.get_attenuation_model_param();
                 auto diff_height = row.output_height ? (height - row.output_height) : 0;
-                auto available_amount = attenuation_model::get_available_asset_amount(
-                        asset_amount, diff_height, model_param);
-                uint64_t locked_amount = asset_amount - available_amount;
+                auto available_amount = attenuation_model::get_available_token_amount(
+                        token_amount, diff_height, model_param);
+                uint64_t locked_amount = token_amount - available_amount;
                 if (locked_amount == 0) {
                     continue;
                 }
 
-                asset_deposited_balance deposited(
+                token_deposited_balance deposited(
                     symbol, address, encode_hash(row.output.hash), row.output_height);
-                deposited.unspent_asset = asset_amount;
-                deposited.locked_asset = locked_amount;
+                deposited.unspent_token = token_amount;
+                deposited.locked_token = locked_amount;
                 deposited.model_param = std::string(model_param.begin(), model_param.end());
-                sh_asset_vec->push_back(deposited);
+                sh_token_vec->push_back(deposited);
             }
         }
     }
@@ -357,9 +357,9 @@ void sync_unspend_output(bc::blockchain::block_chain_impl& blockchain, const inp
 {
     auto is_filter = [filter](const output & output_){
         if (((filter & base_transfer_common::FILTER_UCN) && output_.is_ucn())
-        || ( (filter & base_transfer_common::FILTER_ASSET) && output_.is_asset())
-        || ( (filter & base_transfer_common::FILTER_IDENTIFIABLE_ASSET) && output_.is_asset_mit())
-        || ( (filter & base_transfer_common::FILTER_ASSETCERT) && output_.is_asset_cert())
+        || ( (filter & base_transfer_common::FILTER_TOKEN) && output_.is_token())
+        || ( (filter & base_transfer_common::FILTER_IDENTIFIABLE_TOKEN) && output_.is_token_mit())
+        || ( (filter & base_transfer_common::FILTER_TOKENCERT) && output_.is_token_cert())
         || ( (filter & base_transfer_common::FILTER_DID) && output_.is_did())){
             return true;
         }
@@ -394,19 +394,19 @@ void sync_unspend_output(bc::blockchain::block_chain_impl& blockchain, const inp
 
 }
 
-auto get_asset_unspend_utxo(const std::string& symbol,
+auto get_token_unspend_utxo(const std::string& symbol,
  bc::blockchain::block_chain_impl& blockchain) -> std::shared_ptr<output_point::list>
 {
-    auto blockchain_assets = blockchain.get_asset_register_output(symbol);
-    if (blockchain_assets == nullptr || blockchain_assets->empty()){
-        throw asset_symbol_existed_exception(std::string("asset symbol[") +symbol + "]does not exist!");
+    auto blockchain_tokens = blockchain.get_token_register_output(symbol);
+    if (blockchain_tokens == nullptr || blockchain_tokens->empty()){
+        throw token_symbol_existed_exception(std::string("token symbol[") +symbol + "]does not exist!");
     }
 
     std::shared_ptr<output_point::list> output_list = std::make_shared<output_point::list>();
-    for (auto asset : *blockchain_assets)
+    for (auto token : *blockchain_tokens)
     {
-        auto out_point = asset.get_tx_point();
-        sync_unspend_output(blockchain, out_point, output_list, base_transfer_common::FILTER_ASSET);
+        auto out_point = token.get_tx_point();
+        sync_unspend_output(blockchain, out_point, output_list, base_transfer_common::FILTER_TOKEN);
     }
     if(!output_list->empty()){
         std::sort(output_list->begin(), output_list->end());
@@ -415,14 +415,14 @@ auto get_asset_unspend_utxo(const std::string& symbol,
     return output_list;
 }
 
-auto sync_fetch_asset_deposited_view(const std::string& symbol,
+auto sync_fetch_token_deposited_view(const std::string& symbol,
     bc::blockchain::block_chain_impl& blockchain)
-     -> std::shared_ptr<asset_deposited_balance::list>
+     -> std::shared_ptr<token_deposited_balance::list>
 {
 
-    std::shared_ptr<output_point::list> output_list = get_asset_unspend_utxo(symbol, blockchain);
+    std::shared_ptr<output_point::list> output_list = get_token_unspend_utxo(symbol, blockchain);
 
-    std::shared_ptr<asset_deposited_balance::list> sh_asset_vec = std::make_shared<asset_deposited_balance::list>();
+    std::shared_ptr<token_deposited_balance::list> sh_token_vec = std::make_shared<token_deposited_balance::list>();
 
     chain::transaction tx_temp;
     uint64_t tx_height;
@@ -436,12 +436,12 @@ auto sync_fetch_asset_deposited_view(const std::string& symbol,
         {
             BITCOIN_ASSERT(out.index < tx_temp.outputs.size());
             const auto &output = tx_temp.outputs.at(out.index);
-            if (output.is_asset())
+            if (output.is_token())
             {
                 std::string address = output.get_script_address();
 
-                const auto &symbol = output.get_asset_symbol();
-                if (output.get_asset_symbol() != symbol ||
+                const auto &symbol = output.get_token_symbol();
+                if (output.get_token_symbol() != symbol ||
                     bc::wallet::symbol::is_forbidden(symbol))
                 {
                     // swallow forbidden symbol
@@ -453,44 +453,44 @@ auto sync_fetch_asset_deposited_view(const std::string& symbol,
                     continue;
                 }
 
-                auto asset_amount = output.get_asset_amount();
-                if (asset_amount == 0)
+                auto token_amount = output.get_token_amount();
+                if (token_amount == 0)
                 {
                     continue;
                 }
 
                 const auto &model_param = output.get_attenuation_model_param();
                 auto diff_height = tx_height ? (height - tx_height) : 0;
-                auto available_amount = attenuation_model::get_available_asset_amount(
-                    asset_amount, diff_height, model_param);
-                uint64_t locked_amount = asset_amount - available_amount;
+                auto available_amount = attenuation_model::get_available_token_amount(
+                    token_amount, diff_height, model_param);
+                uint64_t locked_amount = token_amount - available_amount;
                 if (locked_amount == 0)
                 {
                     continue;
                 }
 
-                asset_deposited_balance deposited(
+                token_deposited_balance deposited(
                     symbol, address, encode_hash(out.hash), tx_height);
-                deposited.unspent_asset = asset_amount;
-                deposited.locked_asset = locked_amount;
+                deposited.unspent_token = token_amount;
+                deposited.locked_token = locked_amount;
                 deposited.model_param = std::string(model_param.begin(), model_param.end());
-                sh_asset_vec->emplace_back(deposited);
+                sh_token_vec->emplace_back(deposited);
             }
         }
     }
 
-    return sh_asset_vec;
+    return sh_token_vec;
 }
 
 
-auto sync_fetch_asset_view(const std::string& symbol,
+auto sync_fetch_token_view(const std::string& symbol,
     bc::blockchain::block_chain_impl& blockchain)
-     -> std::shared_ptr<asset_balances::list>
+     -> std::shared_ptr<token_balances::list>
 {
 
-    std::shared_ptr<output_point::list> output_list = get_asset_unspend_utxo(symbol, blockchain);
+    std::shared_ptr<output_point::list> output_list = get_token_unspend_utxo(symbol, blockchain);
 
-    std::shared_ptr<asset_balances::list> sh_asset_vec = std::make_shared<asset_balances::list>();
+    std::shared_ptr<token_balances::list> sh_token_vec = std::make_shared<token_balances::list>();
 
     chain::transaction tx_temp;
     uint64_t tx_height;
@@ -504,12 +504,12 @@ auto sync_fetch_asset_view(const std::string& symbol,
         {
             BITCOIN_ASSERT(out.index < tx_temp.outputs.size());
             const auto &output = tx_temp.outputs.at(out.index);
-            if (output.is_asset())
+            if (output.is_token())
             {
                 std::string address = output.get_script_address();
 
-                const auto &symbol = output.get_asset_symbol();
-                if (output.get_asset_symbol() != symbol ||
+                const auto &symbol = output.get_token_symbol();
+                if (output.get_token_symbol() != symbol ||
                     bc::wallet::symbol::is_forbidden(symbol))
                 {
                     // swallow forbidden symbol
@@ -517,24 +517,24 @@ auto sync_fetch_asset_view(const std::string& symbol,
                 }
 
 
-                auto asset_amount = output.get_asset_amount();
+                auto token_amount = output.get_token_amount();
                 uint64_t locked_amount = 0;
-                if (asset_amount
+                if (token_amount
                     && operation::is_pay_key_hash_with_attenuation_model_pattern(output.script.operations)) {
                     const auto& attenuation_model_param = output.get_attenuation_model_param();
                     auto diff_height = tx_height ? (height - tx_height) : 0;
-                    auto available_amount = attenuation_model::get_available_asset_amount(
-                            asset_amount, diff_height, attenuation_model_param);
-                    locked_amount = asset_amount - available_amount;
+                    auto available_amount = attenuation_model::get_available_token_amount(
+                            token_amount, diff_height, attenuation_model_param);
+                    locked_amount = token_amount - available_amount;
                 }
 
-                sh_asset_vec->push_back({symbol, address, asset_amount, locked_amount});
+                sh_token_vec->push_back({symbol, address, token_amount, locked_amount});
 
             }
         }
     }
 
-    return sh_asset_vec;
+    return sh_token_vec;
 }
 
 static uint32_t get_domain_cert_count(bc::blockchain::block_chain_impl& blockchain,
@@ -545,9 +545,9 @@ static uint32_t get_domain_cert_count(bc::blockchain::block_chain_impl& blockcha
         return 0;
     }
 
-    auto sh_vec = std::make_shared<asset_cert::list>();
+    auto sh_vec = std::make_shared<token_cert::list>();
     for (auto& each : *pvaddr){
-        sync_fetch_asset_cert_balance(each.get_address(), "", blockchain, sh_vec, asset_cert_ns::domain);
+        sync_fetch_token_cert_balance(each.get_address(), "", blockchain, sh_vec, token_cert_ns::domain);
     }
 
     return sh_vec->size();
@@ -718,7 +718,7 @@ bool base_transfer_common::get_spendable_output(
     return true;
 }
 
-// only consider ucn and asset and cert.
+// only consider ucn and token and cert.
 // specify parameter 'did' to true to only consider did
 void base_transfer_common::sync_fetchutxo(
         const std::string& prikey, const std::string& addr, filter filter)
@@ -746,84 +746,84 @@ void base_transfer_common::sync_fetchutxo(
         }
 
         auto ucn_amount = row.value;
-        auto asset_total_amount = output.get_asset_amount();
-        auto cert_type = output.get_asset_cert_type();
-        auto asset_symbol = output.get_asset_symbol();
+        auto token_total_amount = output.get_token_amount();
+        auto cert_type = output.get_token_cert_type();
+        auto token_symbol = output.get_token_symbol();
 
         // filter output
         if ((filter & FILTER_UCN) && output.is_ucn()) { // ucn related
-            BITCOIN_ASSERT(asset_total_amount == 0);
-            BITCOIN_ASSERT(asset_symbol.empty());
+            BITCOIN_ASSERT(token_total_amount == 0);
+            BITCOIN_ASSERT(token_symbol.empty());
             if (ucn_amount == 0)
                 continue;
             // enough ucn to pay
             if (unspent_ucn_ >= payment_ucn_)
                 continue;
         }
-        else if ((filter & FILTER_ASSET) && output.is_asset()) { // asset related
+        else if ((filter & FILTER_TOKEN) && output.is_token()) { // token related
             BITCOIN_ASSERT(ucn_amount == 0);
-            BITCOIN_ASSERT(cert_type == asset_cert_ns::none);
-            if (asset_total_amount == 0)
+            BITCOIN_ASSERT(cert_type == token_cert_ns::none);
+            if (token_total_amount == 0)
                 continue;
-            // enough asset to pay
-            if (unspent_asset_ >= payment_asset_)
+            // enough token to pay
+            if (unspent_token_ >= payment_token_)
                 continue;
-            // check asset symbol
-            if (symbol_ != asset_symbol)
+            // check token symbol
+            if (symbol_ != token_symbol)
                 continue;
 
-            if (bc::wallet::symbol::is_forbidden(asset_symbol)) {
+            if (bc::wallet::symbol::is_forbidden(token_symbol)) {
                 // swallow forbidden symbol
                 continue;
             }
         }
-        else if ((filter & FILTER_IDENTIFIABLE_ASSET) && output.is_asset_mit()) {
+        else if ((filter & FILTER_IDENTIFIABLE_TOKEN) && output.is_token_mit()) {
             BITCOIN_ASSERT(ucn_amount == 0);
-            BITCOIN_ASSERT(asset_total_amount == 0);
-            BITCOIN_ASSERT(cert_type == asset_cert_ns::none);
+            BITCOIN_ASSERT(token_total_amount == 0);
+            BITCOIN_ASSERT(cert_type == token_cert_ns::none);
 
             if (payment_mit_ <= unspent_mit_) {
                 continue;
             }
 
-            if (symbol_ != output.get_asset_symbol())
+            if (symbol_ != output.get_token_symbol())
                 continue;
 
             ++unspent_mit_;
         }
-        else if ((filter & FILTER_ASSETCERT) && output.is_asset_cert()) { // cert related
+        else if ((filter & FILTER_TOKENCERT) && output.is_token_cert()) { // cert related
             BITCOIN_ASSERT(ucn_amount == 0);
-            BITCOIN_ASSERT(asset_total_amount == 0);
-            // no needed asset cert is included in this output
-            if (payment_asset_cert_.empty())
+            BITCOIN_ASSERT(token_total_amount == 0);
+            // no needed token cert is included in this output
+            if (payment_token_cert_.empty())
                 continue;
 
             // check cert symbol
-            if (cert_type == asset_cert_ns::domain) {
-                auto&& domain = asset_cert::get_domain(symbol_);
-                if (domain != asset_symbol)
+            if (cert_type == token_cert_ns::domain) {
+                auto&& domain = token_cert::get_domain(symbol_);
+                if (domain != token_symbol)
                     continue;
             }
             else {
-                if (symbol_ != asset_symbol)
+                if (symbol_ != token_symbol)
                     continue;
             }
 
             // check cert type
-            if (!asset_cert::test_certs(payment_asset_cert_, cert_type)) {
+            if (!token_cert::test_certs(payment_token_cert_, cert_type)) {
                 continue;
             }
 
-            // asset cert has already found
-            if (asset_cert::test_certs(unspent_asset_cert_, payment_asset_cert_)) {
+            // token cert has already found
+            if (token_cert::test_certs(unspent_token_cert_, payment_token_cert_)) {
                 continue;
             }
         }
         else if ((filter & FILTER_DID) &&
             (output.is_did_register() || output.is_did_transfer())) { // did related
             BITCOIN_ASSERT(ucn_amount == 0);
-            BITCOIN_ASSERT(asset_total_amount == 0);
-            BITCOIN_ASSERT(cert_type == asset_cert_ns::none);
+            BITCOIN_ASSERT(token_total_amount == 0);
+            BITCOIN_ASSERT(cert_type == token_cert_ns::none);
 
             if (payment_did_ <= unspent_did_) {
                 continue;
@@ -838,24 +838,24 @@ void base_transfer_common::sync_fetchutxo(
             continue;
         }
 
-        auto asset_amount = asset_total_amount;
+        auto token_amount = token_total_amount;
         std::shared_ptr<data_chunk> new_model_param_ptr;
-        if (asset_total_amount
+        if (token_total_amount
             && operation::is_pay_key_hash_with_attenuation_model_pattern(output.script.operations)) {
             const auto& attenuation_model_param = output.get_attenuation_model_param();
             new_model_param_ptr = std::make_shared<data_chunk>();
             auto diff_height = row.output_height ? (height - row.output_height) : 0;
-            asset_amount = attenuation_model::get_available_asset_amount(
-                    asset_total_amount, diff_height, attenuation_model_param, new_model_param_ptr);
-            if ((asset_amount == 0) && !is_locked_asset_as_payment()) {
+            token_amount = attenuation_model::get_available_token_amount(
+                    token_total_amount, diff_height, attenuation_model_param, new_model_param_ptr);
+            if ((token_amount == 0) && !is_locked_token_as_payment()) {
                 continue; // all locked, filter out
             }
         }
 
-        BITCOIN_ASSERT(asset_total_amount >= asset_amount);
+        BITCOIN_ASSERT(token_total_amount >= token_amount);
 
         // add to from list
-        address_asset_record record;
+        address_token_record record;
 
         if (!prikey.empty()) { // raw tx has no prikey
             record.prikey = prikey;
@@ -863,32 +863,32 @@ void base_transfer_common::sync_fetchutxo(
         }
         record.addr = addr;
         record.amount = ucn_amount;
-        record.symbol = asset_symbol;
-        record.asset_amount = asset_amount;
-        record.asset_cert = cert_type;
+        record.symbol = token_symbol;
+        record.token_amount = token_amount;
+        record.token_cert = cert_type;
         record.output = row.output;
         record.type = get_utxo_attach_type(output);
 
         from_list_.push_back(record);
 
         unspent_ucn_ += record.amount;
-        unspent_asset_ += record.asset_amount;
+        unspent_token_ += record.token_amount;
 
-        if (record.asset_cert != asset_cert_ns::none) {
-            unspent_asset_cert_.push_back(record.asset_cert);
+        if (record.token_cert != token_cert_ns::none) {
+            unspent_token_cert_.push_back(record.token_cert);
         }
 
-        // asset_locked_transfer as a special change
-        if (new_model_param_ptr && (asset_total_amount > record.asset_amount)) {
-            auto locked_asset = asset_total_amount - record.asset_amount;
+        // token_locked_transfer as a special change
+        if (new_model_param_ptr && (token_total_amount > record.token_amount)) {
+            auto locked_token = token_total_amount - record.token_amount;
             std::string model_param(new_model_param_ptr->begin(), new_model_param_ptr->end());
             receiver_list_.push_back({record.addr, record.symbol,
-                    0, locked_asset, utxo_attach_type::asset_locked_transfer,
+                    0, locked_token, utxo_attach_type::token_locked_transfer,
                     attachment(0, 0, blockchain_message(std::move(model_param))), record.output});
-            // in secondary issue, locked asset can also verify threshold condition
-            if (is_locked_asset_as_payment()) {
-                payment_asset_ = (payment_asset_ > locked_asset)
-                    ? (payment_asset_ - locked_asset) : 0;
+            // in secondary issue, locked token can also verify threshold condition
+            if (is_locked_token_as_payment()) {
+                payment_token_ = (payment_token_ > locked_token)
+                    ? (payment_token_ - locked_token) : 0;
             }
         }
     }
@@ -899,7 +899,7 @@ void base_transfer_common::sync_fetchutxo(
 void base_transfer_common::check_fee_in_valid_range(uint64_t fee)
 {
     if ((fee < minimum_fee) || (fee > maximum_fee)) {
-        throw asset_exchange_poundage_exception{"fee must in ["
+        throw token_exchange_poundage_exception{"fee must in ["
             + std::to_string(minimum_fee) + ", " + std::to_string(maximum_fee) + "]"};
     }
 }
@@ -908,11 +908,11 @@ void base_transfer_common::check_model_param_initial(std::string& param, uint64_
 {
     if (!param.empty()) {
         if (!validate_transaction::is_nova_feature_activated(blockchain_)) {
-            throw asset_attenuation_model_exception(
+            throw token_attenuation_model_exception(
                 "attenuation model should be supported after nova feature is activated.");
         }
         if (!attenuation_model::check_model_param_initial(param, amount, true)) {
-            throw asset_attenuation_model_exception("check asset attenuation model param failed");
+            throw token_attenuation_model_exception("check token attenuation model param failed");
         }
     }
 }
@@ -921,13 +921,13 @@ void base_transfer_common::sum_payments()
 {
     for (auto& iter : receiver_list_) {
         payment_ucn_ += iter.amount;
-        payment_asset_ += iter.asset_amount;
+        payment_token_ += iter.token_amount;
 
-        if (iter.asset_cert != asset_cert_ns::none) {
-            payment_asset_cert_.push_back(iter.asset_cert);
+        if (iter.token_cert != token_cert_ns::none) {
+            payment_token_cert_.push_back(iter.token_cert);
         }
 
-        if (iter.type == utxo_attach_type::asset_mit_transfer) {
+        if (iter.type == utxo_attach_type::token_mit_transfer) {
             ++payment_mit_;
             if (payment_mit_ > 1) {
                 throw std::logic_error{"maximum one MIT can be transfered"};
@@ -961,14 +961,14 @@ bool base_transfer_common::is_payment_satisfied(filter filter) const
     if ((filter & FILTER_UCN) && (unspent_ucn_ < payment_ucn_))
         return false;
 
-    if ((filter & FILTER_ASSET) && (unspent_asset_ < payment_asset_))
+    if ((filter & FILTER_TOKEN) && (unspent_token_ < payment_token_))
         return false;
 
-    if ((filter & FILTER_IDENTIFIABLE_ASSET) && (unspent_mit_ < payment_mit_))
+    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_mit_ < payment_mit_))
         return false;
 
-    if ((filter & FILTER_ASSETCERT)
-        && !asset_cert::test_certs(unspent_asset_cert_, payment_asset_cert_))
+    if ((filter & FILTER_TOKENCERT)
+        && !token_cert::test_certs(unspent_token_cert_, payment_token_cert_))
         return false;
 
     if ((filter & FILTER_DID) && (unspent_did_ < payment_did_))
@@ -984,30 +984,30 @@ void base_transfer_common::check_payment_satisfied(filter filter) const
             + std::to_string(unspent_ucn_) + ", payment = " + std::to_string(payment_ucn_)};
     }
 
-    if ((filter & FILTER_ASSET) && (unspent_asset_ < payment_asset_)) {
-        throw asset_lack_exception{"not enough asset amount, unspent = "
-            + std::to_string(unspent_asset_) + ", payment = " + std::to_string(payment_asset_)};
+    if ((filter & FILTER_TOKEN) && (unspent_token_ < payment_token_)) {
+        throw token_lack_exception{"not enough token amount, unspent = "
+            + std::to_string(unspent_token_) + ", payment = " + std::to_string(payment_token_)};
     }
 
-    if ((filter & FILTER_IDENTIFIABLE_ASSET) && (unspent_mit_ < payment_mit_)) {
-        throw asset_lack_exception{"not enough MIT amount, unspent = "
+    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_mit_ < payment_mit_)) {
+        throw token_lack_exception{"not enough MIT amount, unspent = "
             + std::to_string(unspent_mit_) + ", payment = " + std::to_string(payment_mit_)};
     }
 
-    if ((filter & FILTER_ASSETCERT)
-        && !asset_cert::test_certs(unspent_asset_cert_, payment_asset_cert_)) {
+    if ((filter & FILTER_TOKENCERT)
+        && !token_cert::test_certs(unspent_token_cert_, payment_token_cert_)) {
         std::string payment(" ");
-        for (auto& cert_type : payment_asset_cert_) {
-            payment += asset_cert::get_type_name(cert_type);
+        for (auto& cert_type : payment_token_cert_) {
+            payment += token_cert::get_type_name(cert_type);
             payment += " ";
         }
         std::string unspent(" ");
-        for (auto& cert_type : unspent_asset_cert_) {
-            unspent += asset_cert::get_type_name(cert_type);
+        for (auto& cert_type : unspent_token_cert_) {
+            unspent += token_cert::get_type_name(cert_type);
             unspent += " ";
         }
 
-        throw asset_cert_exception{"not enough asset cert, unspent = ("
+        throw token_cert_exception{"not enough token cert, unspent = ("
             + unspent + "), payment = (" + payment + ")"};
     }
 
@@ -1032,14 +1032,14 @@ std::string base_transfer_common::get_mychange_address(filter filter) const
         return from_;
     }
 
-    const auto match = [filter](const address_asset_record& record) {
+    const auto match = [filter](const address_token_record& record) {
         if (filter & FILTER_UCN) {
             return (record.type == utxo_attach_type::ucn);
         }
-        if (filter & FILTER_ASSET) {
-            return (record.type == utxo_attach_type::asset_transfer)
-                || (record.type == utxo_attach_type::asset_issue)
-                || (record.type == utxo_attach_type::asset_secondaryissue);
+        if (filter & FILTER_TOKEN) {
+            return (record.type == utxo_attach_type::token_transfer)
+                || (record.type == utxo_attach_type::token_issue)
+                || (record.type == utxo_attach_type::token_secondaryissue);
         }
         throw std::logic_error{"get_mychange_address: unknown/wrong filter for mychange"};
     };
@@ -1091,19 +1091,19 @@ void base_transfer_common::populate_ucn_change(const std::string& address)
     }
 }
 
-void base_transfer_common::populate_asset_change(const std::string& address)
+void base_transfer_common::populate_token_change(const std::string& address)
 {
-    // asset utxo
-    if (unspent_asset_ > payment_asset_) {
+    // token utxo
+    if (unspent_token_ > payment_token_) {
         auto addr = address;
         if (addr.empty()) {
-            addr = get_mychange_address(FILTER_ASSET);
+            addr = get_mychange_address(FILTER_TOKEN);
         }
         BITCOIN_ASSERT(!addr.empty());
 
         if (blockchain_.is_valid_address(addr)) {
-            receiver_list_.push_back({addr, symbol_, 0, unspent_asset_ - payment_asset_,
-                utxo_attach_type::asset_transfer, attachment()});
+            receiver_list_.push_back({addr, symbol_, 0, unspent_token_ - payment_token_,
+                utxo_attach_type::token_transfer, attachment()});
         }
         else {
             if (addr.length() > DID_DETAIL_SYMBOL_FIX_SIZE) {
@@ -1120,8 +1120,8 @@ void base_transfer_common::populate_asset_change(const std::string& address)
             attachment attach;
             attach.set_version(DID_ATTACH_VERIFY_VERSION);
             attach.set_to_did(addr);
-            receiver_list_.push_back({diddetail->get_address(), symbol_, 0, unspent_asset_ - payment_asset_,
-                utxo_attach_type::asset_transfer, attach});
+            receiver_list_.push_back({diddetail->get_address(), symbol_, 0, unspent_token_ - payment_token_,
+                utxo_attach_type::token_transfer, attach});
         }
     }
 }
@@ -1131,7 +1131,7 @@ base_transfer_common::get_script_operations(const receiver_record& record) const
 {
     chain::operation::stack payment_ops;
 
-    // complicated script and asset should be implemented in subclass
+    // complicated script and token should be implemented in subclass
     // generate script
     const wallet::payment_address payment(record.target);
     if (!payment)
@@ -1142,12 +1142,12 @@ base_transfer_common::get_script_operations(const receiver_record& record) const
         payment_ops = chain::operation::to_pay_blackhole_pattern(hash);
     }
     else if (payment.version() == wallet::payment_address::mainnet_p2kh) {
-        if (record.type == utxo_attach_type::asset_locked_transfer) { // for asset locked change only
+        if (record.type == utxo_attach_type::token_locked_transfer) { // for token locked change only
             const auto& attenuation_model_param =
                 boost::get<blockchain_message>(record.attach_elem.get_attach()).get_content();
             if (!attenuation_model::check_model_param_format(to_chunk(attenuation_model_param))) {
-                throw asset_attenuation_model_exception(
-                    "check asset locked transfer attenuation model param failed: "
+                throw token_attenuation_model_exception(
+                    "check token locked transfer attenuation model param failed: "
                     + attenuation_model_param);
             }
             payment_ops = chain::operation::to_pay_key_hash_with_attenuation_model_pattern(
@@ -1171,7 +1171,7 @@ base_transfer_common::get_pay_key_hash_with_attenuation_model_operations(
     const std::string& model_param, const receiver_record& record)
 {
     if (model_param.empty()) {
-        throw asset_attenuation_model_exception("attenuation model param is empty.");
+        throw token_attenuation_model_exception("attenuation model param is empty.");
     }
 
     const wallet::payment_address payment(record.target);
@@ -1201,7 +1201,7 @@ void base_transfer_common::populate_tx_outputs()
 
         auto&& payment_script = chain::script{ get_script_operations(iter) };
 
-        // generate asset info
+        // generate token info
         auto&& output_att = populate_output_attachment(iter);
         set_did_verify_attachment(iter, output_att);
 
@@ -1247,23 +1247,23 @@ attachment base_transfer_common::populate_output_attachment(const receiver_recor
 {
     if ((record.type == utxo_attach_type::ucn)
         || (record.type == utxo_attach_type::deposit)
-        || ((record.type == utxo_attach_type::asset_transfer)
-            && ((record.amount > 0) && (!record.asset_amount)))) { // ucn
+        || ((record.type == utxo_attach_type::token_transfer)
+            && ((record.amount > 0) && (!record.token_amount)))) { // ucn
         return attachment(UCN_TYPE, attach_version, chain::ucn(record.amount));
     }
-    else if (record.type == utxo_attach_type::asset_issue
-        || record.type == utxo_attach_type::asset_secondaryissue) {
-        return attachment(ASSET_TYPE, attach_version, asset(/*set on subclass*/));
+    else if (record.type == utxo_attach_type::token_issue
+        || record.type == utxo_attach_type::token_secondaryissue) {
+        return attachment(TOKEN_TYPE, attach_version, token(/*set on subclass*/));
     }
-    else if (record.type == utxo_attach_type::asset_transfer
-            || record.type == utxo_attach_type::asset_locked_transfer
-            || record.type == utxo_attach_type::asset_attenuation_transfer) {
-        auto transfer = chain::asset_transfer(record.symbol, record.asset_amount);
-        auto ass = asset(ASSET_TRANSFERABLE_TYPE, transfer);
+    else if (record.type == utxo_attach_type::token_transfer
+            || record.type == utxo_attach_type::token_locked_transfer
+            || record.type == utxo_attach_type::token_attenuation_transfer) {
+        auto transfer = chain::token_transfer(record.symbol, record.token_amount);
+        auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid asset transfer attachment"};
+            throw tx_attachment_value_exception{"invalid token transfer attachment"};
         }
-        return attachment(ASSET_TYPE, attach_version, ass);
+        return attachment(TOKEN_TYPE, attach_version, ass);
     }
     else if (record.type == utxo_attach_type::message) {
         auto msg = boost::get<blockchain_message>(record.attach_elem.get_attach());
@@ -1295,39 +1295,39 @@ attachment base_transfer_common::populate_output_attachment(const receiver_recor
         }
         return attachment(DID_TYPE, attach_version, ass);
     }
-    else if (record.type == utxo_attach_type::asset_cert
-        || record.type == utxo_attach_type::asset_cert_autoissue
-        || record.type == utxo_attach_type::asset_cert_issue
-        || record.type == utxo_attach_type::asset_cert_transfer) {
-        if (record.asset_cert == asset_cert_ns::none) {
-            throw asset_cert_exception("asset cert is none");
+    else if (record.type == utxo_attach_type::token_cert
+        || record.type == utxo_attach_type::token_cert_autoissue
+        || record.type == utxo_attach_type::token_cert_issue
+        || record.type == utxo_attach_type::token_cert_transfer) {
+        if (record.token_cert == token_cert_ns::none) {
+            throw token_cert_exception("token cert is none");
         }
 
         auto to_did = record.attach_elem.get_to_did();
         auto to_address = get_address_from_did(to_did, blockchain_);
         if (to_address != record.target) {
-            throw asset_cert_exception("address " + to_address + " dismatch did " + to_did);
+            throw token_cert_exception("address " + to_address + " dismatch did " + to_did);
         }
 
-        auto cert_info = chain::asset_cert(record.symbol, to_did, to_address, record.asset_cert);
-        if (record.type == utxo_attach_type::asset_cert_issue) {
-            cert_info.set_status(ASSET_CERT_ISSUE_TYPE);
+        auto cert_info = chain::token_cert(record.symbol, to_did, to_address, record.token_cert);
+        if (record.type == utxo_attach_type::token_cert_issue) {
+            cert_info.set_status(TOKEN_CERT_ISSUE_TYPE);
         }
-        else if (record.type == utxo_attach_type::asset_cert_transfer) {
-            cert_info.set_status(ASSET_CERT_TRANSFER_TYPE);
+        else if (record.type == utxo_attach_type::token_cert_transfer) {
+            cert_info.set_status(TOKEN_CERT_TRANSFER_TYPE);
         }
-        else if (record.type == utxo_attach_type::asset_cert_autoissue) {
-            cert_info.set_status(ASSET_CERT_AUTOISSUE_TYPE);
+        else if (record.type == utxo_attach_type::token_cert_autoissue) {
+            cert_info.set_status(TOKEN_CERT_AUTOISSUE_TYPE);
         }
 
         if (!cert_info.is_valid()) {
             throw tx_attachment_value_exception{"invalid cert attachment"};
         }
-        return attachment(ASSET_CERT_TYPE, attach_version, cert_info);
+        return attachment(TOKEN_CERT_TYPE, attach_version, cert_info);
     }
-    else if (record.type == utxo_attach_type::asset_mit
-        || record.type == utxo_attach_type::asset_mit_transfer) {
-        return attachment(ASSET_MIT_TYPE, attach_version, asset_mit(/*set on subclass*/));
+    else if (record.type == utxo_attach_type::token_mit
+        || record.type == utxo_attach_type::token_mit_transfer) {
+        return attachment(TOKEN_MIT_TYPE, attach_version, token_mit(/*set on subclass*/));
     }
 
     throw tx_attachment_value_exception{
@@ -1362,7 +1362,7 @@ void base_transfer_helper::populate_unspent_list()
             sync_fetchutxo(priv_key, address);
         } else if (from_ == address) {
             sync_fetchutxo(priv_key, address);
-            // select ucn/asset utxo only in from_ address
+            // select ucn/token utxo only in from_ address
             check_payment_satisfied(FILTER_PAYFROM);
         } else {
             sync_fetchutxo(priv_key, address, FILTER_ALL_BUT_PAYFROM);
@@ -1375,7 +1375,7 @@ void base_transfer_helper::populate_unspent_list()
     }
 
     if (from_list_.empty()) {
-        throw tx_source_exception{"not enough ucn or asset in from address"
+        throw tx_source_exception{"not enough ucn or token in from address"
             ", or you do not own the from address!"};
     }
 
@@ -1397,14 +1397,14 @@ bool receiver_record::is_empty() const
         return true;
     }
 
-    // has asset amount
-    if (asset_amount != 0) {
+    // has token amount
+    if (token_amount != 0) {
         return false;
     }
 
-    // asset transfer business, ucn == 0 && asset_amount == 0
-    if ((type == utxo_attach_type::asset_transfer) ||
-        (type == utxo_attach_type::asset_locked_transfer)) {
+    // token transfer business, ucn == 0 && token_amount == 0
+    if ((type == utxo_attach_type::token_transfer) ||
+        (type == utxo_attach_type::token_locked_transfer)) {
         return true;
     }
 
@@ -1428,7 +1428,7 @@ void base_transfer_common::check_tx()
     }
 }
 
-std::string base_transfer_common::get_sign_tx_multisig_script(const address_asset_record& from) const
+std::string base_transfer_common::get_sign_tx_multisig_script(const address_token_record& from) const
 {
     return "";
 }
@@ -1555,7 +1555,7 @@ void base_multisig_transfer_helper::send_tx()
         base_transfer_common::send_tx();
     }
     else {
-        // no operation in exec for transferring multisig asset cert
+        // no operation in exec for transferring multisig token cert
     }
 }
 
@@ -1570,7 +1570,7 @@ bool base_multisig_transfer_helper::filter_out_address(const std::string& addres
     }
 }
 
-std::string base_multisig_transfer_helper::get_sign_tx_multisig_script(const address_asset_record& from) const
+std::string base_multisig_transfer_helper::get_sign_tx_multisig_script(const address_token_record& from) const
 {
     return multisig_.get_multisig_script();
 }
@@ -1588,10 +1588,10 @@ void base_transaction_constructor::populate_change()
     // ucn utxo
     populate_ucn_change();
 
-    // asset utxo
-    populate_asset_change();
+    // token utxo
+    populate_token_change();
 
-    if (!message_.empty()) { // ucn transfer/asset transfer  -- with message
+    if (!message_.empty()) { // ucn transfer/token transfer  -- with message
         auto addr = !mychange_.empty() ? mychange_ : from_list_.begin()->addr;
         receiver_list_.push_back({addr, "", 0, 0,
             utxo_attach_type::message,
@@ -1610,7 +1610,7 @@ void base_transaction_constructor::populate_unspent_list()
     }
 
     if (from_list_.empty()) {
-        throw tx_source_exception{"not enough ucn or asset in the from address!"};
+        throw tx_source_exception{"not enough ucn or token in the from address!"};
     }
 
     check_payment_satisfied();
@@ -1637,7 +1637,7 @@ depositing_ucn::get_script_operations(const receiver_record& record) const
 {
     chain::operation::stack payment_ops;
 
-    // complicated script and asset should be implemented in subclass
+    // complicated script and token should be implemented in subclass
     // generate script
     const wallet::payment_address payment(record.target);
     if (!payment)
@@ -1677,7 +1677,7 @@ depositing_ucn_transaction::get_script_operations(const receiver_record& record)
 {
     chain::operation::stack payment_ops;
 
-    // complicated script and asset should be implemented in subclass
+    // complicated script and token should be implemented in subclass
     // generate script
     const wallet::payment_address payment(record.target);
     if (!payment)
@@ -1704,61 +1704,61 @@ void sending_multisig_tx::populate_change()
     // ucn utxo
     populate_ucn_change();
 
-    // asset utxo
-    populate_asset_change();
+    // token utxo
+    populate_token_change();
 }
 
-void issuing_asset::sum_payments()
+void issuing_token::sum_payments()
 {
     for (auto& iter : receiver_list_) {
         payment_ucn_ += iter.amount;
-        payment_asset_ += iter.asset_amount;
+        payment_token_ += iter.token_amount;
 
-        if (iter.asset_cert == asset_cert_ns::domain) {
-            auto&& domain = asset_cert::get_domain(symbol_);
-            if (!asset_cert::is_valid_domain(domain)) {
-                throw asset_cert_domain_exception{"no valid domain exists for asset : " + symbol_};
+        if (iter.token_cert == token_cert_ns::domain) {
+            auto&& domain = token_cert::get_domain(symbol_);
+            if (!token_cert::is_valid_domain(domain)) {
+                throw token_cert_domain_exception{"no valid domain exists for token : " + symbol_};
             }
-            if (blockchain_.is_asset_cert_exist(domain, asset_cert_ns::domain)) {
-                payment_asset_cert_.clear();
-                payment_asset_cert_.push_back(asset_cert_ns::domain); // will verify by input
+            if (blockchain_.is_token_cert_exist(domain, token_cert_ns::domain)) {
+                payment_token_cert_.clear();
+                payment_token_cert_.push_back(token_cert_ns::domain); // will verify by input
             }
         }
-        else if (iter.asset_cert == asset_cert_ns::naming) {
-            auto&& domain = asset_cert::get_domain(symbol_);
-            if (!asset_cert::is_valid_domain(domain)) {
-                throw asset_cert_domain_exception{"no valid domain exists for asset : " + symbol_};
+        else if (iter.token_cert == token_cert_ns::naming) {
+            auto&& domain = token_cert::get_domain(symbol_);
+            if (!token_cert::is_valid_domain(domain)) {
+                throw token_cert_domain_exception{"no valid domain exists for token : " + symbol_};
             }
 
-            if (blockchain_.is_asset_cert_exist(symbol_, asset_cert_ns::naming)) {
-                payment_asset_cert_.clear();
-                payment_asset_cert_.push_back(asset_cert_ns::naming); // will verify by input
+            if (blockchain_.is_token_cert_exist(symbol_, token_cert_ns::naming)) {
+                payment_token_cert_.clear();
+                payment_token_cert_.push_back(token_cert_ns::naming); // will verify by input
             }
             else {
-                throw asset_cert_notfound_exception{"no naming cert exists for asset : " + symbol_};
+                throw token_cert_notfound_exception{"no naming cert exists for token : " + symbol_};
             }
         }
     }
 }
 
-void issuing_asset::sum_payment_amount()
+void issuing_token::sum_payment_amount()
 {
     base_transfer_common::sum_payment_amount();
 
-    unissued_asset_ = blockchain_.get_account_unissued_asset(name_, symbol_);
-    if (!unissued_asset_) {
-        throw asset_symbol_notfound_exception{symbol_ + " not created"};
+    unissued_token_ = blockchain_.get_account_unissued_token(name_, symbol_);
+    if (!unissued_token_) {
+        throw token_symbol_notfound_exception{symbol_ + " not created"};
     }
 
-    uint64_t min_fee = bc::min_fee_to_issue_asset;
+    uint64_t min_fee = bc::min_fee_to_issue_token;
     if (payment_ucn_ < min_fee) {
-        throw asset_issue_poundage_exception("fee must at least "
+        throw token_issue_poundage_exception("fee must at least "
             + std::to_string(min_fee) + " satoshi == "
             + std::to_string(min_fee/100000000) + " ucn");
     }
 
     if (!attenuation_model_param_.empty()) {
-        check_model_param_initial(attenuation_model_param_, unissued_asset_->get_maximum_supply());
+        check_model_param_initial(attenuation_model_param_, unissued_token_->get_maximum_supply());
     }
 
     uint64_t amount = (uint64_t)std::floor(payment_ucn_ * ((100 - fee_percentage_to_miner_) / 100.0));
@@ -1770,25 +1770,25 @@ void issuing_asset::sum_payment_amount()
 }
 
 chain::operation::stack
-issuing_asset::get_script_operations(const receiver_record& record) const
+issuing_token::get_script_operations(const receiver_record& record) const
 {
     if (!attenuation_model_param_.empty()
-        && (utxo_attach_type::asset_issue == record.type)) {
+        && (utxo_attach_type::token_issue == record.type)) {
         return get_pay_key_hash_with_attenuation_model_operations(attenuation_model_param_, record);
     }
 
     return base_transfer_helper::get_script_operations(record);
 }
 
-attachment issuing_asset::populate_output_attachment(const receiver_record& record)
+attachment issuing_token::populate_output_attachment(const receiver_record& record)
 {
     attachment&& attach = base_transfer_common::populate_output_attachment(record);
 
-    if (record.type == utxo_attach_type::asset_issue) {
-        unissued_asset_->set_address(record.target);
-        auto ass = asset(ASSET_DETAIL_TYPE, *unissued_asset_);
+    if (record.type == utxo_attach_type::token_issue) {
+        unissued_token_->set_address(record.target);
+        auto ass = token(TOKEN_DETAIL_TYPE, *unissued_token_);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid asset issue attachment"};
+            throw tx_attachment_value_exception{"invalid token issue attachment"};
         }
 
         attach.set_attach(ass);
@@ -1797,24 +1797,24 @@ attachment issuing_asset::populate_output_attachment(const receiver_record& reco
     return attach;
 }
 
-void sending_asset::sum_payment_amount()
+void sending_token::sum_payment_amount()
 {
     base_transfer_common::sum_payment_amount();
 
     if (!attenuation_model_param_.empty()) {
-        check_model_param_initial(attenuation_model_param_, payment_asset_);
+        check_model_param_initial(attenuation_model_param_, payment_token_);
     }
 }
 
-void sending_asset::populate_change()
+void sending_token::populate_change()
 {
     // ucn utxo
     populate_ucn_change();
 
-    // asset utxo
-    populate_asset_change();
+    // token utxo
+    populate_token_change();
 
-    // asset transfer  -- with message
+    // token transfer  -- with message
     if (!message_.empty()) {
         auto addr = !mychange_.empty() ? mychange_ : from_list_.begin()->addr;
         receiver_list_.push_back({addr, "", 0, 0,
@@ -1824,10 +1824,10 @@ void sending_asset::populate_change()
 }
 
 chain::operation::stack
-sending_asset::get_script_operations(const receiver_record& record) const
+sending_token::get_script_operations(const receiver_record& record) const
 {
     if (!attenuation_model_param_.empty()
-        && (utxo_attach_type::asset_attenuation_transfer == record.type)) { // for sending asset only
+        && (utxo_attach_type::token_attenuation_transfer == record.type)) { // for sending token only
         return get_pay_key_hash_with_attenuation_model_operations(attenuation_model_param_, record);
     }
 
@@ -1835,39 +1835,39 @@ sending_asset::get_script_operations(const receiver_record& record) const
 }
 
 chain::operation::stack
-secondary_issuing_asset::get_script_operations(const receiver_record& record) const
+secondary_issuing_token::get_script_operations(const receiver_record& record) const
 {
     if (!attenuation_model_param_.empty()
-        && (utxo_attach_type::asset_secondaryissue == record.type)) {
+        && (utxo_attach_type::token_secondaryissue == record.type)) {
         return get_pay_key_hash_with_attenuation_model_operations(attenuation_model_param_, record);
     }
 
     return base_transfer_helper::get_script_operations(record);
 }
 
-void secondary_issuing_asset::sum_payment_amount()
+void secondary_issuing_token::sum_payment_amount()
 {
     base_transfer_common::sum_payment_amount();
 
     target_address_ = receiver_list_.begin()->target;
 
-    issued_asset_ = blockchain_.get_issued_asset(symbol_);
-    if (!issued_asset_) {
-        throw asset_symbol_notfound_exception{"asset symbol does not exist on the blockchain"};
+    issued_token_ = blockchain_.get_issued_token(symbol_);
+    if (!issued_token_) {
+        throw token_symbol_notfound_exception{"token symbol does not exist on the blockchain"};
     }
 
-    auto total_volume = blockchain_.get_asset_volume(symbol_);
+    auto total_volume = blockchain_.get_token_volume(symbol_);
     if (total_volume > max_uint64 - volume_) {
-        throw asset_amount_exception{"secondaryissue, volume cannot exceed maximum value"};
+        throw token_amount_exception{"secondaryissue, volume cannot exceed maximum value"};
     }
 
-    if (!asset_cert::test_certs(payment_asset_cert_, asset_cert_ns::issue)) {
-        throw asset_cert_exception("no asset cert of issue right is provided.");
+    if (!token_cert::test_certs(payment_token_cert_, token_cert_ns::issue)) {
+        throw token_cert_exception("no token cert of issue right is provided.");
     }
 
     if (blockchain_.chain_settings().use_testnet_rules
-        && !blockchain_.is_asset_cert_exist(symbol_, asset_cert_ns::issue)) {
-        payment_asset_cert_.clear();
+        && !blockchain_.is_token_cert_exist(symbol_, token_cert_ns::issue)) {
+        payment_token_cert_.clear();
     }
 
     if (!attenuation_model_param_.empty()) {
@@ -1875,33 +1875,33 @@ void secondary_issuing_asset::sum_payment_amount()
     }
 }
 
-void secondary_issuing_asset::populate_change()
+void secondary_issuing_token::populate_change()
 {
     // ucn utxo
     populate_ucn_change();
 
-    // asset utxo
-    if (payment_asset_ > 0) {
+    // token utxo
+    if (payment_token_ > 0) {
         receiver_list_.push_back({target_address_, symbol_,
-            0, payment_asset_,
-            utxo_attach_type::asset_transfer, attachment()});
+            0, payment_token_,
+            utxo_attach_type::token_transfer, attachment()});
     }
-    populate_asset_change(target_address_);
+    populate_token_change(target_address_);
 }
 
-attachment secondary_issuing_asset::populate_output_attachment(const receiver_record& record)
+attachment secondary_issuing_token::populate_output_attachment(const receiver_record& record)
 {
     auto&& attach = base_transfer_common::populate_output_attachment(record);
 
-    if (record.type == utxo_attach_type::asset_secondaryissue) {
-        auto asset_detail = *issued_asset_;
-        asset_detail.set_address(record.target);
-        asset_detail.set_asset_secondaryissue();
-        asset_detail.set_maximum_supply(volume_);
-        asset_detail.set_issuer(record.attach_elem.get_to_did());
-        auto ass = asset(ASSET_DETAIL_TYPE, asset_detail);
+    if (record.type == utxo_attach_type::token_secondaryissue) {
+        auto token_detail = *issued_token_;
+        token_detail.set_address(record.target);
+        token_detail.set_token_secondaryissue();
+        token_detail.set_maximum_supply(volume_);
+        token_detail.set_issuer(record.attach_elem.get_to_did());
+        auto ass = token(TOKEN_DETAIL_TYPE, token_detail);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid asset secondary issue attachment"};
+            throw tx_attachment_value_exception{"invalid token secondary issue attachment"};
         }
 
         attach.set_attach(ass);
@@ -1910,20 +1910,20 @@ attachment secondary_issuing_asset::populate_output_attachment(const receiver_re
     return attach;
 }
 
-void issuing_asset_cert::sum_payment_amount()
+void issuing_token_cert::sum_payment_amount()
 {
     base_transfer_common::sum_payment_amount();
 
-    if (asset_cert::test_certs(payment_asset_cert_, asset_cert_ns::naming)) {
-        if (!asset_cert::test_certs(payment_asset_cert_, asset_cert_ns::domain)) {
-            throw asset_cert_exception("no asset cert of domain right.");
+    if (token_cert::test_certs(payment_token_cert_, token_cert_ns::naming)) {
+        if (!token_cert::test_certs(payment_token_cert_, token_cert_ns::domain)) {
+            throw token_cert_exception("no token cert of domain right.");
         }
 
-        payment_asset_cert_.clear();
-        payment_asset_cert_.push_back(asset_cert_ns::domain);
+        payment_token_cert_.clear();
+        payment_token_cert_.push_back(token_cert_ns::domain);
     }
     else {
-        payment_asset_cert_.clear();
+        payment_token_cert_.clear();
     }
 }
 
@@ -1946,7 +1946,7 @@ void registering_did::sum_payment_amount()
     }
 }
 
-std::string sending_multisig_did::get_sign_tx_multisig_script(const address_asset_record& from) const
+std::string sending_multisig_did::get_sign_tx_multisig_script(const address_token_record& from) const
 {
     std::string multisig_script;
     if (from.addr == multisig_from_.get_address()) {
@@ -2002,7 +2002,7 @@ void sending_multisig_did::populate_unspent_list()
     }
 
     if (from_list_.empty()) {
-        throw tx_source_exception{"not enough ucn or asset in from address"
+        throw tx_source_exception{"not enough ucn or token in from address"
             ", or you do not own the from address!"};
     }
 
@@ -2057,7 +2057,7 @@ void sending_did::populate_unspent_list()
     }
 
     if (from_list_.empty()) {
-        throw tx_source_exception{"not enough ucn or asset in from address"
+        throw tx_source_exception{"not enough ucn or token in from address"
             ", or you do not own the from address!"};
     }
 
@@ -2070,13 +2070,13 @@ attachment registering_mit::populate_output_attachment(const receiver_record& re
 {
     auto&& attach = base_transfer_common::populate_output_attachment(record);
 
-    if (record.type == utxo_attach_type::asset_mit) {
+    if (record.type == utxo_attach_type::token_mit) {
         auto iter = mit_map_.find(record.symbol);
         if (iter == mit_map_.end()) {
             throw tx_attachment_value_exception{"invalid MIT issue attachment"};
         }
 
-        auto ass = asset_mit(record.symbol, record.target, iter->second);
+        auto ass = token_mit(record.symbol, record.target, iter->second);
         ass.set_status(MIT_STATUS_REGISTER);
         if (!ass.is_valid()) {
             throw tx_attachment_value_exception{"invalid MIT issue attachment"};
@@ -2092,8 +2092,8 @@ attachment transferring_mit::populate_output_attachment(const receiver_record& r
 {
     auto&& attach = base_transfer_common::populate_output_attachment(record);
 
-    if (record.type == utxo_attach_type::asset_mit_transfer) {
-        auto ass = asset_mit(record.symbol, record.target, "");
+    if (record.type == utxo_attach_type::token_mit_transfer) {
+        auto ass = token_mit(record.symbol, record.target, "");
         ass.set_status(MIT_STATUS_TRANSFER);
         if (!ass.is_valid()) {
             throw tx_attachment_value_exception{"invalid MIT transfer attachment"};

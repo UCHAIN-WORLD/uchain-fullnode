@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "issuecert";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "issuecert supports define an asset certification."; }
+    const char* description() override { return "issuecert supports define an token certification."; }
 
     arguments_metadata& load_arguments() override
     {

@@ -33,23 +33,23 @@ void registermit::check_symbol_content(const std::string& symbol, const std::str
 {
     // check symbol
     if (symbol.size() == 0) {
-        throw asset_symbol_length_exception{"Symbol can not be empty."};
+        throw token_symbol_length_exception{"Symbol can not be empty."};
     }
 
     // reserve 4 bytes
-    if (symbol.size() > (ASSET_MIT_SYMBOL_FIX_SIZE - 4)) {
-        throw asset_symbol_length_exception{"Symbol length must be less than "
-            + std::to_string(ASSET_MIT_SYMBOL_FIX_SIZE - 4) + ". " + symbol};
+    if (symbol.size() > (TOKEN_MIT_SYMBOL_FIX_SIZE - 4)) {
+        throw token_symbol_length_exception{"Symbol length must be less than "
+            + std::to_string(TOKEN_MIT_SYMBOL_FIX_SIZE - 4) + ". " + symbol};
     }
 
     // check symbol
     check_mit_symbol(symbol, true);
 
     // check content
-    if (content.size() > ASSET_MIT_CONTENT_FIX_SIZE) {
+    if (content.size() > TOKEN_MIT_CONTENT_FIX_SIZE) {
         throw argument_size_invalid_exception(
             "Content length must be less than "
-            + std::to_string(ASSET_MIT_CONTENT_FIX_SIZE) + ". " + content);
+            + std::to_string(TOKEN_MIT_CONTENT_FIX_SIZE) + ". " + content);
     }
 }
 
@@ -68,7 +68,7 @@ console_result registermit::invoke (Json::Value& jv_output,
 
         // check symbol not registered
         if (blockchain.get_registered_mit(argument_.symbol)) {
-            throw asset_symbol_existed_exception{"MIT already exists in blockchain. " + argument_.symbol};
+            throw token_symbol_existed_exception{"MIT already exists in blockchain. " + argument_.symbol};
         }
 
         mit_map[argument_.symbol] = option_.content;
@@ -76,10 +76,10 @@ console_result registermit::invoke (Json::Value& jv_output,
     else {
         if (option_.content.size() > 0) {
             // check content
-            if (option_.content.size() > ASSET_MIT_CONTENT_FIX_SIZE) {
+            if (option_.content.size() > TOKEN_MIT_CONTENT_FIX_SIZE) {
                 throw argument_size_invalid_exception(
                     "Content length must be less than "
-                    + std::to_string(ASSET_MIT_CONTENT_FIX_SIZE) + ". " + option_.content);
+                    + std::to_string(TOKEN_MIT_CONTENT_FIX_SIZE) + ". " + option_.content);
             }
 
             use_unified_content = true;
@@ -108,12 +108,12 @@ console_result registermit::invoke (Json::Value& jv_output,
         check_symbol_content(symbol, content);
 
         if (mit_map.find(symbol) != mit_map.end()) {
-            throw asset_symbol_existed_exception{"Duplicate symbol: " + symbol};
+            throw token_symbol_existed_exception{"Duplicate symbol: " + symbol};
         }
 
         // check symbol not registered
         if (blockchain.get_registered_mit(symbol)) {
-            throw asset_symbol_existed_exception{"MIT already exists in blockchain. " + symbol};
+            throw token_symbol_existed_exception{"MIT already exists in blockchain. " + symbol};
         }
 
         mit_map[symbol] = content;
@@ -139,7 +139,7 @@ console_result registermit::invoke (Json::Value& jv_output,
         receiver.push_back(
             {
                 to_address, pair.first, 0, 0, 0,
-                utxo_attach_type::asset_mit, attachment(to_did, to_did)
+                utxo_attach_type::token_mit, attachment(to_did, to_did)
             }
         );
     }

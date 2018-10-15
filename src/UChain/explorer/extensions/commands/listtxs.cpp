@@ -81,8 +81,8 @@ console_result listtxs::invoke(Json::Value& jv_output,
     // symbol check
     if (!argument_.symbol.empty()) {
         blockchain.uppercase_symbol(argument_.symbol);
-        if (!blockchain.get_issued_asset(argument_.symbol))
-            throw asset_symbol_notfound_exception{argument_.symbol + std::string(" not exist!")};
+        if (!blockchain.get_issued_token(argument_.symbol))
+            throw token_symbol_notfound_exception{argument_.symbol + std::string(" not exist!")};
     }
 
     auto& aroot = jv_output;
@@ -253,19 +253,19 @@ console_result listtxs::invoke(Json::Value& jv_output,
             auto attach_data = op.attach_data;
             Json::Value tree = json_helper.prop_list(attach_data);
 
-            if (attach_data.get_type() == ASSET_TYPE) {
-                auto asset_info = boost::get<bc::chain::asset>(attach_data.get_attach());
-                if (asset_info.get_status() == ASSET_TRANSFERABLE_TYPE) {
-                    // asset_transfer dose not contain decimal_number message,
-                    // so we get decimal_number from the issued asset with the same symbol.
+            if (attach_data.get_type() == TOKEN_TYPE) {
+                auto token_info = boost::get<bc::chain::token>(attach_data.get_attach());
+                if (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE) {
+                    // token_transfer dose not contain decimal_number message,
+                    // so we get decimal_number from the issued token with the same symbol.
                     auto symbol = tree["symbol"].asString();
-                    auto issued_asset = blockchain.get_issued_asset(symbol);
+                    auto issued_token = blockchain.get_issued_token(symbol);
 
-                    if (issued_asset) {
+                    if (issued_token) {
                         if (get_api_version() == 1) {
-                            tree["decimal_number"] += issued_asset->get_decimal_number();
+                            tree["decimal_number"] += issued_token->get_decimal_number();
                         } else {
-                            tree["decimal_number"] = issued_asset->get_decimal_number();
+                            tree["decimal_number"] = issued_token->get_decimal_number();
                         }
                     }
                 }

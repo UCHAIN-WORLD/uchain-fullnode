@@ -60,18 +60,18 @@ console_result createrawtx::invoke(Json::Value& jv_output,
 
     if (type == utxo_attach_type::deposit) {
         if (!option_.symbol.empty()) {
-            throw argument_legality_exception{"not deposit asset " + option_.symbol};
+            throw argument_legality_exception{"not deposit token " + option_.symbol};
         }
 
         if (option_.receivers.size() != 1) {
             throw argument_legality_exception{"only support deposit on one address!"};
         }
     }
-    else if (type == utxo_attach_type::asset_transfer) {
+    else if (type == utxo_attach_type::token_transfer) {
         blockchain.uppercase_symbol(option_.symbol);
 
-        // check asset symbol
-        check_asset_symbol(option_.symbol);
+        // check token symbol
+        check_token_symbol(option_.symbol);
     }
 
     // receiver
@@ -88,15 +88,15 @@ console_result createrawtx::invoke(Json::Value& jv_output,
         record.symbol = option_.symbol;
         if (record.symbol.empty()) {
             record.amount = item.second(); // ucn amount
-            record.asset_amount = 0;
+            record.token_amount = 0;
             if (!record.amount)
                 throw argument_legality_exception{"invalid amount parameter " + each};
         }
         else {
             record.amount = 0;
-            record.asset_amount = item.second();
-            if (!record.asset_amount)
-                throw argument_legality_exception{"invalid asset amount parameter " + each};
+            record.token_amount = item.second();
+            if (!record.token_amount)
+                throw argument_legality_exception{"invalid token amount parameter " + each};
         }
 
         record.type = type;
@@ -111,7 +111,7 @@ console_result createrawtx::invoke(Json::Value& jv_output,
 
     switch (type) {
         case utxo_attach_type::ucn:
-        case utxo_attach_type::asset_transfer: {
+        case utxo_attach_type::token_transfer: {
             sp_send_helper = std::make_shared<base_transaction_constructor>(blockchain, type,
                              std::move(option_.senders), std::move(receivers),
                              std::move(option_.symbol), std::move(option_.mychange_address),

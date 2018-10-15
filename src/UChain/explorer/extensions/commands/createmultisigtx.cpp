@@ -72,9 +72,9 @@ console_result createmultisigtx::invoke(
             break;
         }
 
-        case utxo_attach_type::asset_transfer: {
+        case utxo_attach_type::token_transfer: {
             blockchain.uppercase_symbol(option_.symbol);
-            check_asset_symbol(option_.symbol);
+            check_token_symbol(option_.symbol);
             receiver.push_back({argument_.to, option_.symbol, 0, argument_.amount, type, attachment()});
             break;
         }

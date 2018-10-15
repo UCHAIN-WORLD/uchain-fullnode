@@ -61,7 +61,7 @@ console_result burn::invoke(Json::Value& jv_output,
 
         auto&& amount = std::to_string(argument_.amount);
         const char* cmds[] {
-            "sendasset", auth_.name.c_str(), auth_.auth.c_str(),
+            "sendtoken", auth_.name.c_str(), auth_.auth.c_str(),
             blackhole_did.c_str(), argument_.symbol.c_str(), amount.c_str()
         };
 

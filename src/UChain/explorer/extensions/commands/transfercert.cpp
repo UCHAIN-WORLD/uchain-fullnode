@@ -39,26 +39,26 @@ console_result transfercert::invoke (Json::Value& jv_output,
     blockchain.uppercase_symbol(argument_.symbol);
     boost::to_lower(argument_.cert);
 
-    // check asset symbol
-    check_asset_symbol(argument_.symbol);
+    // check token symbol
+    check_token_symbol(argument_.symbol);
 
-    // check asset cert types
+    // check token cert types
     auto& cert_type_name = argument_.cert;
-    auto match = [&cert_type_name](const std::pair<asset_cert_type, std::string> & item) {
+    auto match = [&cert_type_name](const std::pair<token_cert_type, std::string> & item) {
         return item.second == cert_type_name;
     };
-    const auto& type_name_map = asset_cert::get_type_name_map();
+    const auto& type_name_map = token_cert::get_type_name_map();
     auto iter = std::find_if(type_name_map.begin(), type_name_map.end(), match);
     if (iter == type_name_map.end()) {
-        throw asset_cert_exception("unsupported asset cert type " + cert_type_name);
+        throw token_cert_exception("unsupported token cert type " + cert_type_name);
     }
 
     auto cert_type = iter->first;
-    if (cert_type == asset_cert_ns::issue) {
-        auto sh_asset = blockchain.get_issued_asset(argument_.symbol);
-        if (!sh_asset)
-            throw asset_symbol_notfound_exception(
-                "asset '" + argument_.symbol + "' does not exist.");
+    if (cert_type == token_cert_ns::issue) {
+        auto sh_token = blockchain.get_issued_token(argument_.symbol);
+        if (!sh_token)
+            throw token_symbol_notfound_exception(
+                "token '" + argument_.symbol + "' does not exist.");
     }
 
     // check target address
@@ -68,15 +68,15 @@ console_result transfercert::invoke (Json::Value& jv_output,
         throw toaddress_invalid_exception{"invalid did parameter! " + to_did};
 
     // check cert is owned by the account
-    bool exist = blockchain.is_asset_cert_exist(argument_.symbol, cert_type);
+    bool exist = blockchain.is_token_cert_exist(argument_.symbol, cert_type);
     if (!exist) {
-        throw asset_cert_notfound_exception(
+        throw token_cert_notfound_exception(
             cert_type_name + " cert '" + argument_.symbol + "' does not exist.");
     }
 
-    auto cert = blockchain.get_account_asset_cert(auth_.name, argument_.symbol, cert_type);
+    auto cert = blockchain.get_account_token_cert(auth_.name, argument_.symbol, cert_type);
     if (!cert) {
-        throw asset_cert_notowned_exception(
+        throw token_cert_notowned_exception(
             cert_type_name + " cert '" + argument_.symbol + "' is not owned by " + auth_.name);
     }
 
@@ -95,10 +95,10 @@ console_result transfercert::invoke (Json::Value& jv_output,
     // receiver
     std::vector<receiver_record> receiver{
         {to_address, argument_.symbol, 0, 0,
-            cert_type, utxo_attach_type::asset_cert_transfer, attachment("", to_did)}
+            cert_type, utxo_attach_type::token_cert_transfer, attachment("", to_did)}
     };
 
-    auto helper = transferring_asset_cert(*this, blockchain,
+    auto helper = transferring_token_cert(*this, blockchain,
         std::move(auth_.name), std::move(auth_.auth),
         is_multisig_address ? std::move(from_address) : "",
         std::move(argument_.symbol),

@@ -26,7 +26,7 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/command.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_detail.hpp>  // used for createasset
+#include <UChainService/txs/token/token_detail.hpp>  // used for createtoken
 #include <UChain/server/server_node.hpp>
 
 namespace libbitcoin {
@@ -43,13 +43,13 @@ struct prikey_ucn_amount
 {
     std::string key;
     uint64_t    value;
-    uint64_t    asset_amount;
+    uint64_t    token_amount;
     output_point output;
 };
 
 struct utxo_attach_info
 {
-    //target:1:asset-transfer:symbol:amount
+    //target:1:token-transfer:symbol:amount
     std::string target;
     uint32_t version;
     std::string type;

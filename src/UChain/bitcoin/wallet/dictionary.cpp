@@ -136,7 +136,7 @@ const dictionary en =
         "ask",
         "aspect",
         "assault",
-        "asset",
+        "token",
         "assist",
         "assume",
         "asthma",

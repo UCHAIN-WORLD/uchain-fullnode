@@ -36,54 +36,54 @@ namespace commands{
 /// -------------------------------------------------------------------
 /// attachment_ucn           --> ucn
 /// attachment_ucn_award     --> ucn_award
-/// attachment_asset         --> asset_issue | asset_transfer
+/// attachment_token         --> token_issue | token_transfer
 /// attachment_message       --> message
 /// attachment_did           --> did_register   |  did_transfer
-/// attachment_asset_cert    --> asset_cert
-/// attachment_asset_mit     --> asset_mit
+/// attachment_token_cert    --> token_cert
+/// attachment_token_mit     --> token_mit
 /// -------------------------------------------------------------------
 /// utxo_attach_type is only used in explorer module
 /// utxo_attach_type will be used to generate attachment with attachment_type and content
 /// for example :
-/// utxo_attach_type::asset_issue    --> attachment_asset of asset_detail
-///     auto asset_detail = asset(ASSET_DETAIL_TYPE, asset_detail);
-///     attachment(ASSET_TYPE, attach_version, asset_detail);
-/// utxo_attach_type::asset_transfer --> attachment_asset of asset_transfer
-///     auto asset_transfer = asset(ASSET_TRANSFERABLE_TYPE, asset_transfer);
-///     attachment(ASSET_TYPE, attach_version, asset_transfer);
+/// utxo_attach_type::token_issue    --> attachment_token of token_detail
+///     auto token_detail = token(TOKEN_DETAIL_TYPE, token_detail);
+///     attachment(TOKEN_TYPE, attach_version, token_detail);
+/// utxo_attach_type::token_transfer --> attachment_token of token_transfer
+///     auto token_transfer = token(TOKEN_TRANSFERABLE_TYPE, token_transfer);
+///     attachment(TOKEN_TYPE, attach_version, token_transfer);
 /// NOTICE: createrawtx / createmultisigtx --type option is using these values.
 /// DO NOT CHANGE EXIST ITEMS!!!
 enum class utxo_attach_type : uint32_t
 {
     ucn = 0,
     deposit = 1,
-    asset_issue = 2,
-    asset_transfer = 3,
-    asset_attenuation_transfer = 4,
-    asset_locked_transfer = 5,
+    token_issue = 2,
+    token_transfer = 3,
+    token_attenuation_transfer = 4,
+    token_locked_transfer = 5,
     message = 6,
-    asset_cert = 7,
-    asset_secondaryissue = 8,
+    token_cert = 7,
+    token_secondaryissue = 8,
     did_register = 9,
     did_transfer = 10,
-    asset_cert_issue = 11,
-    asset_cert_transfer = 12,
-    asset_cert_autoissue = 13,
-    asset_mit = 14,
-    asset_mit_transfer = 15,
+    token_cert_issue = 11,
+    token_cert_transfer = 12,
+    token_cert_autoissue = 13,
+    token_mit = 14,
+    token_mit_transfer = 15,
     invalid = 0xffffffff
 };
 
 extern utxo_attach_type get_utxo_attach_type(const chain::output&);
 
-struct address_asset_record
+struct address_token_record
 {
     std::string prikey;
     std::string addr;
     uint64_t    amount{0}; // spendable ucn amount
     std::string symbol;
-    uint64_t    asset_amount{0}; // spendable asset amount
-    asset_cert_type asset_cert{asset_cert_ns::none};
+    uint64_t    token_amount{0}; // spendable token amount
+    token_cert_type token_cert{token_cert_ns::none};
     utxo_attach_type type{utxo_attach_type::invalid};
     output_point output;
     chain::script script;
@@ -97,8 +97,8 @@ struct receiver_record
     std::string target;
     std::string symbol;
     uint64_t    amount{0}; // ucn value
-    uint64_t    asset_amount{0};
-    asset_cert_type asset_cert{asset_cert_ns::none};
+    uint64_t    token_amount{0};
+    token_cert_type token_cert{token_cert_ns::none};
 
     utxo_attach_type type{utxo_attach_type::invalid};
     attachment attach_elem;  // used for MESSAGE_TYPE, used for information transfer etc.
@@ -108,30 +108,30 @@ struct receiver_record
         : target()
         , symbol()
         , amount(0)
-        , asset_amount(0)
-        , asset_cert(asset_cert_ns::none)
+        , token_amount(0)
+        , token_cert(token_cert_ns::none)
         , type(utxo_attach_type::invalid)
         , attach_elem()
         , input_point{null_hash, max_uint32}
     {}
 
     receiver_record(const std::string& target_, const std::string& symbol_,
-        uint64_t amount_, uint64_t asset_amount_,
+        uint64_t amount_, uint64_t token_amount_,
         utxo_attach_type type_, const attachment& attach_elem_ = attachment(),
         const chain::input_point& input_point_ = {null_hash, max_uint32})
-        : receiver_record(target_, symbol_, amount_, asset_amount_,
-            asset_cert_ns::none, type_, attach_elem_, input_point_)
+        : receiver_record(target_, symbol_, amount_, token_amount_,
+            token_cert_ns::none, type_, attach_elem_, input_point_)
     {}
 
     receiver_record(const std::string& target_, const std::string& symbol_,
-        uint64_t amount_, uint64_t asset_amount_, asset_cert_type asset_cert_,
+        uint64_t amount_, uint64_t token_amount_, token_cert_type token_cert_,
         utxo_attach_type type_, const attachment& attach_elem_ = attachment(),
         const chain::input_point& input_point_ = {null_hash, max_uint32})
         : target(target_)
         , symbol(symbol_)
         , amount(amount_)
-        , asset_amount(asset_amount_)
-        , asset_cert(asset_cert_)
+        , token_amount(token_amount_)
+        , token_cert(token_cert_)
         , type(type_)
         , attach_elem(attach_elem_)
         , input_point(input_point_)
@@ -181,25 +181,25 @@ void sync_fetchbalance(wallet::payment_address& address,
 void sync_fetch_deposited_balance(wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, std::shared_ptr<deposited_balance::list> sh_vec);
 
-void sync_fetch_asset_balance(const std::string& address, bool sum_all,
+void sync_fetch_token_balance(const std::string& address, bool sum_all,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<asset_balances::list> sh_asset_vec);
+    std::shared_ptr<token_balances::list> sh_token_vec);
 
-void sync_fetch_asset_deposited_balance(const std::string& address,
+void sync_fetch_token_deposited_balance(const std::string& address,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<asset_deposited_balance::list> sh_asset_vec);
+    std::shared_ptr<token_deposited_balance::list> sh_token_vec);
 
-std::shared_ptr<asset_balances::list> sync_fetch_asset_view(const std::string& symbol,
+std::shared_ptr<token_balances::list> sync_fetch_token_view(const std::string& symbol,
     bc::blockchain::block_chain_impl& blockchain);
 
-std::shared_ptr<asset_deposited_balance::list> sync_fetch_asset_deposited_view(
+std::shared_ptr<token_deposited_balance::list> sync_fetch_token_deposited_view(
     const std::string& symbol,
     bc::blockchain::block_chain_impl& blockchain);
     
 
-void sync_fetch_asset_cert_balance(const std::string& address, const string& symbol,
+void sync_fetch_token_cert_balance(const std::string& address, const string& symbol,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<asset_cert::list> sh_vec, asset_cert_type cert_type=asset_cert_ns::none);
+    std::shared_ptr<token_cert::list> sh_vec, token_cert_type cert_type=token_cert_ns::none);
 
 std::string get_random_payment_address(std::shared_ptr<std::vector<account_address>>,
     bc::blockchain::block_chain_impl& blockchain);
@@ -216,7 +216,7 @@ std::string get_address_from_did(const std::string& did,
 
 std::string get_fee_dividend_address(bc::blockchain::block_chain_impl& blockchain);
 
-void check_asset_symbol(const std::string& symbol, bool check_sensitive=false);
+void check_token_symbol(const std::string& symbol, bool check_sensitive=false);
 void check_mit_symbol(const std::string& symbol, bool check_sensitive=false);
 void check_did_symbol(const std::string& symbol,  bool check_sensitive=false);
 
@@ -225,14 +225,14 @@ class BCX_API base_transfer_common
 public:
     enum filter : uint8_t {
         FILTER_UCN = 1 << 0,
-        FILTER_ASSET = 1 << 1,
-        FILTER_ASSETCERT = 1 << 2,
+        FILTER_TOKEN = 1 << 1,
+        FILTER_TOKENCERT = 1 << 2,
         FILTER_DID = 1 << 3,
-        FILTER_IDENTIFIABLE_ASSET = 1 << 4,
+        FILTER_IDENTIFIABLE_TOKEN = 1 << 4,
         FILTER_ALL = 0xff,
         // if specify 'from_' address,
         // then get these types' unspent only from 'from_' address
-        FILTER_PAYFROM = FILTER_UCN | FILTER_ASSET,
+        FILTER_PAYFROM = FILTER_UCN | FILTER_TOKEN,
         FILTER_ALL_BUT_PAYFROM = FILTER_ALL & ~FILTER_PAYFROM
     };
 
@@ -285,7 +285,7 @@ public:
             const std::string& model_param, const receiver_record& record);
 
     void populate_ucn_change(const std::string& address = std::string(""));
-    void populate_asset_change(const std::string& address = std::string(""));
+    void populate_token_change(const std::string& address = std::string(""));
     void populate_tx_inputs();
     void check_tx();
     void exec();
@@ -295,12 +295,12 @@ public:
     tx_type& get_transaction() { return tx_; }
     const tx_type& get_transaction() const { return tx_; }
 
-    // in secondary issue, locked asset can also verify threshold condition
-    virtual bool is_locked_asset_as_payment() const {return false;}
+    // in secondary issue, locked token can also verify threshold condition
+    virtual bool is_locked_token_as_payment() const {return false;}
 
     virtual bool filter_out_address(const std::string& address) const;
 
-    virtual std::string get_sign_tx_multisig_script(const address_asset_record& from) const;
+    virtual std::string get_sign_tx_multisig_script(const address_token_record& from) const;
 
     void set_did_verify_attachment(const receiver_record& record, attachment& attach);
 
@@ -312,17 +312,17 @@ protected:
     std::string                       mychange_;
     uint64_t                          tx_item_idx_{0};
     uint64_t                          payment_ucn_{0};
-    uint64_t                          payment_asset_{0};
+    uint64_t                          payment_token_{0};
     uint64_t                          unspent_ucn_{0};
-    uint64_t                          unspent_asset_{0};
-    std::vector<asset_cert_type>      payment_asset_cert_;
-    std::vector<asset_cert_type>      unspent_asset_cert_;
+    uint64_t                          unspent_token_{0};
+    std::vector<token_cert_type>      payment_token_cert_;
+    std::vector<token_cert_type>      unspent_token_cert_;
     uint8_t                           payment_did_{0};
     uint8_t                           unspent_did_{0};
     uint8_t                           payment_mit_{0};
     uint8_t                           unspent_mit_{0};
     std::vector<receiver_record>      receiver_list_;
-    std::vector<address_asset_record> from_list_;
+    std::vector<address_token_record> from_list_;
 };
 
 class BCX_API base_transfer_helper : public base_transfer_common
@@ -370,7 +370,7 @@ public:
 
     bool filter_out_address(const std::string& address) const override;
 
-    std::string get_sign_tx_multisig_script(const address_asset_record& from) const override;
+    std::string get_sign_tx_multisig_script(const address_token_record& from) const override;
 
     void send_tx() override;
 
@@ -494,10 +494,10 @@ public:
     void populate_change() override;
 };
 
-class BCX_API issuing_asset : public base_transfer_helper
+class BCX_API issuing_token : public base_transfer_helper
 {
 public:
-    issuing_asset(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    issuing_token(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         std::string&& model_param,
@@ -508,7 +508,7 @@ public:
         , fee_percentage_to_miner_(fee_percentage_to_miner)
     {}
 
-    ~issuing_asset(){}
+    ~issuing_token(){}
 
     void sum_payments() override;
     void sum_payment_amount() override;
@@ -516,16 +516,16 @@ public:
     chain::operation::stack get_script_operations(const receiver_record& record) const override;
 
 private:
-    std::shared_ptr<asset_detail> unissued_asset_;
+    std::shared_ptr<token_detail> unissued_token_;
     std::string domain_cert_address_;
     std::string attenuation_model_param_;
     uint32_t fee_percentage_to_miner_;
 };
 
-class BCX_API secondary_issuing_asset : public base_transfer_helper
+class BCX_API secondary_issuing_token : public base_transfer_helper
 {
 public:
-    secondary_issuing_asset(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    secondary_issuing_token(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         std::string&& model_param,
@@ -536,7 +536,7 @@ public:
         , attenuation_model_param_{std::move(model_param)}
     {}
 
-    ~secondary_issuing_asset(){}
+    ~secondary_issuing_token(){}
 
     void sum_payment_amount() override;
     void populate_change() override;
@@ -545,7 +545,7 @@ public:
 
     uint64_t get_volume() { return volume_; };
 
-    bool is_locked_asset_as_payment() const override {return true;}
+    bool is_locked_token_as_payment() const override {return true;}
 
     void populate_tx_header() override {
         tx_.version = transaction_version::check_nova_feature;
@@ -554,15 +554,15 @@ public:
 
 private:
     uint64_t volume_{0};
-    std::shared_ptr<asset_detail> issued_asset_;
+    std::shared_ptr<token_detail> issued_token_;
     std::string target_address_;
     std::string attenuation_model_param_;
 };
 
-class BCX_API sending_asset : public base_transfer_helper
+class BCX_API sending_token : public base_transfer_helper
 {
 public:
-    sending_asset(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    sending_token(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         std::string&& model_param,
@@ -575,7 +575,7 @@ public:
         , message_{std::move(message)}
     {}
 
-    ~sending_asset()
+    ~sending_token()
     {}
 
     void sum_payment_amount() override;
@@ -635,7 +635,7 @@ public:
     void populate_unspent_list() override;
     void populate_change() override;
 
-    std::string get_sign_tx_multisig_script(const address_asset_record& from) const override;
+    std::string get_sign_tx_multisig_script(const address_token_record& from) const override;
 
     // no operation in exec
     void send_tx() override {}
@@ -678,10 +678,10 @@ private:
     std::string fromfee;
 };
 
-class BCX_API transferring_asset_cert : public base_multisig_transfer_helper
+class BCX_API transferring_token_cert : public base_multisig_transfer_helper
 {
 public:
-    transferring_asset_cert(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    transferring_token_cert(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         receiver_record::list&& receiver_list, uint64_t fee,
@@ -691,7 +691,7 @@ public:
             std::move(multisig_from))
     {}
 
-    ~transferring_asset_cert()
+    ~transferring_token_cert()
     {}
 
     void populate_tx_header() override {
@@ -700,10 +700,10 @@ public:
     };
 };
 
-class BCX_API issuing_asset_cert : public base_transfer_helper
+class BCX_API issuing_token_cert : public base_transfer_helper
 {
 public:
-    issuing_asset_cert(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    issuing_token_cert(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         receiver_record::list&& receiver_list, uint64_t fee)
@@ -711,7 +711,7 @@ public:
             std::move(from), std::move(receiver_list), fee, std::move(symbol))
     {}
 
-    ~issuing_asset_cert()
+    ~issuing_token_cert()
     {}
 
     void sum_payment_amount() override;

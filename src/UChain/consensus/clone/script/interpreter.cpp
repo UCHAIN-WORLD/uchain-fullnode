@@ -12,7 +12,7 @@
 #include "pubkey.h"
 #include "script/script.h"
 #include "uint256.h"
-#include <UChain/bitcoin/chain/attachment/asset/attenuation_model.hpp>
+#include <UChainService/txs/token/attenuation_model.hpp>
 
 using namespace std;
 

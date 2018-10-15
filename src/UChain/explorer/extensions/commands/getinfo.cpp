@@ -39,7 +39,7 @@ console_result getinfo::invoke(Json::Value& jv_output,
 
     administrator_required_checker(node, auth_.name, auth_.auth);
 
-    auto sh_vec = blockchain.get_issued_assets();
+    auto sh_vec = blockchain.get_issued_tokens();
     std::set<std::string> symbols;
     for (const auto& elem : *sh_vec) {
         symbols.insert(elem.get_symbol());
@@ -59,7 +59,7 @@ console_result getinfo::invoke(Json::Value& jv_output,
         jv["testnet"] = blockchain.chain_settings().use_testnet_rules;
         jv["peers"] = get_connections_count(node);
 
-        jv["network-assets-count"] = static_cast<uint64_t>(symbols.size());
+        jv["network-tokens-count"] = static_cast<uint64_t>(symbols.size());
         jv["wallet-account-count"] = static_cast<uint64_t>(blockchain.get_accounts()->size());
 
         jv["height"] = height;
@@ -74,7 +74,7 @@ console_result getinfo::invoke(Json::Value& jv_output,
         jv["testnet"] = blockchain.chain_settings().use_testnet_rules;
         jv["peers"] = get_connections_count(node);
 
-        jv["asset_count"] = static_cast<uint64_t>(symbols.size());
+        jv["token_count"] = static_cast<uint64_t>(symbols.size());
         jv["wallet_account_count"] = static_cast<uint64_t>(blockchain.get_accounts()->size());
 
         jv["height"] = height;

@@ -36,22 +36,22 @@
 #include <UChain/database/settings.hpp>
 
 #include <boost/variant.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset.hpp>
-#include <UChain/bitcoin/chain/attachment/ucn/ucn.hpp>
-#include <UChain/bitcoin/chain/attachment/message/message.hpp>
-#include <UChain/bitcoin/chain/attachment/account/account.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_detail.hpp>
-#include <UChain/bitcoin/chain/attachment/asset/asset_transfer.hpp>
-#include <UChain/bitcoin/chain/attachment/attachment.hpp>
+#include <UChainService/txs/token/token.hpp>
+#include <UChainService/txs/ucn/ucn.hpp>
+#include <UChainService/txs/message/message.hpp>
+#include <UChainService/txs/account/account.hpp>
+#include <UChainService/txs/token/token_detail.hpp>
+#include <UChainService/txs/token/token_transfer.hpp>
+#include <UChainService/txs/attachment.hpp>
 
 #include <UChain/database/databases/account_database.hpp>
 #include <UChain/database/databases/account_address_database.hpp>
-#include <UChain/database/databases/asset_database.hpp>
-#include <UChain/database/databases/blockchain_asset_database.hpp>
-#include <UChain/database/databases/address_asset_database.hpp>
-#include <UChain/database/databases/account_asset_database.hpp>
-#include <UChain/bitcoin/chain/attachment/did/did.hpp>
-#include <UChain/database/databases/blockchain_asset_cert_database.hpp>
+#include <UChain/database/databases/token_database.hpp>
+#include <UChain/database/databases/blockchain_token_database.hpp>
+#include <UChain/database/databases/address_token_database.hpp>
+#include <UChain/database/databases/account_token_database.hpp>
+#include <UChainService/txs/did/did.hpp>
+#include <UChain/database/databases/blockchain_token_cert_database.hpp>
 #include <UChain/database/databases/blockchain_did_database.hpp>
 #include <UChain/database/databases/address_did_database.hpp>
 #include <UChain/database/databases/blockchain_mit_database.hpp>
@@ -91,20 +91,20 @@ public:
         path stealth_rows;
         path spends_lookup;
         path transactions_lookup;
-        /* begin database for account, asset, address_asset, did relationship */
+        /* begin database for account, token, address_token, did relationship */
         path accounts_lookup;
-        path assets_lookup;
+        path tokens_lookup;
         path certs_lookup;
-        path address_assets_lookup;
-        path address_assets_rows;
-        path account_assets_lookup;
-        path account_assets_rows;
+        path address_tokens_lookup;
+        path address_tokens_rows;
+        path account_tokens_lookup;
+        path account_tokens_rows;
         path dids_lookup;
         path address_dids_lookup;
         path address_dids_rows;
         path account_addresses_lookup;
         path account_addresses_rows;
-        /* end database for account, asset, address_asset, did ,address_did relationship */
+        /* end database for account, token, address_token, did ,address_did relationship */
         path mits_lookup;
         path address_mits_lookup;
         path address_mits_rows;
@@ -190,7 +190,7 @@ public:
     /// Throws if the chain is empty.
     chain::block pop();
 
-    /* begin store asset info into  database */
+    /* begin store token info into  database */
 
     void push_attachment(const attachment& attach, const payment_address& address,
             const output_point& outpoint, uint32_t output_height, uint64_t value);
@@ -204,16 +204,16 @@ public:
     void push_message(const chain::blockchain_message& msg, const short_hash& key,
             const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_asset(const asset& sp, const short_hash& key,
+    void push_token(const token& sp, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_asset_cert(const asset_cert& sp_cert, const short_hash& key,
+    void push_token_cert(const token_cert& sp_cert, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_asset_detail(const asset_detail& sp_detail, const short_hash& key,
+    void push_token_detail(const token_detail& sp_detail, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_asset_transfer(const asset_transfer& sp_transfer, const short_hash& key,
+    void push_token_transfer(const token_transfer& sp_transfer, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
     void push_did(const did& sp, const short_hash& key,
@@ -222,7 +222,7 @@ public:
     void push_did_detail(const did_detail& sp_detail, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_mit(const asset_mit& mit, const short_hash& key,
+    void push_mit(const token_mit& mit, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value,
                 const std::string from_did, std::string to_did);
 
@@ -236,13 +236,13 @@ public:
         {
 
         }
-        void operator()(const asset &t) const
+        void operator()(const token &t) const
         {
-            return db_->push_asset(t, sh_hash_, outpoint_, output_height_, value_);
+            return db_->push_token(t, sh_hash_, outpoint_, output_height_, value_);
         }
-        void operator()(const asset_cert &t) const
+        void operator()(const token_cert &t) const
         {
-            return db_->push_asset_cert(t, sh_hash_, outpoint_, output_height_, value_);
+            return db_->push_token_cert(t, sh_hash_, outpoint_, output_height_, value_);
         }
         void operator()(const ucn &t) const
         {
@@ -260,7 +260,7 @@ public:
         {
             return db_->push_did(t, sh_hash_, outpoint_, output_height_, value_);
         }
-        void operator()(const asset_mit &t) const
+        void operator()(const token_mit &t) const
         {
             return db_->push_mit(t, sh_hash_, outpoint_, output_height_, value_, from_did_, to_did_);
         }
@@ -274,22 +274,22 @@ public:
         std::string to_did_;
     };
 
-    class asset_visitor : public boost::static_visitor<void>
+    class token_visitor : public boost::static_visitor<void>
     {
     public:
-        asset_visitor(data_base* db, const short_hash& key,
+        token_visitor(data_base* db, const short_hash& key,
             const output_point& outpoint, uint32_t output_height, uint64_t value):
             db_(db), key_(key), outpoint_(outpoint), output_height_(output_height), value_(value)
         {
 
         }
-        void operator()(const asset_detail &t) const
+        void operator()(const token_detail &t) const
         {
-            return db_->push_asset_detail(t, key_, outpoint_, output_height_, value_);
+            return db_->push_token_detail(t, key_, outpoint_, output_height_, value_);
         }
-        void operator()(const asset_transfer &t) const
+        void operator()(const token_transfer &t) const
         {
-             return db_->push_asset_transfer(t, key_, outpoint_, output_height_, value_);
+             return db_->push_token_transfer(t, key_, outpoint_, output_height_, value_);
         }
     private:
         data_base* db_;
@@ -301,7 +301,7 @@ public:
 
     void set_admin(const std::string& name, const std::string& passwd);
     void set_blackhole_did();
-   /* begin store asset info into  database */
+   /* begin store token info into  database */
 
 protected:
     data_base(const store& paths, size_t history_height, size_t stealth_height);
@@ -358,16 +358,16 @@ public:
     spend_database spends;
     stealth_database stealth;
     transaction_database transactions;
-    /* begin database for account, asset, address_asset,did relationship */
+    /* begin database for account, token, address_token,did relationship */
     account_database accounts;
-    blockchain_asset_database assets;
-    address_asset_database address_assets;
-    account_asset_database account_assets;
-    blockchain_asset_cert_database certs;
+    blockchain_token_database tokens;
+    address_token_database address_tokens;
+    account_token_database account_tokens;
+    blockchain_token_cert_database certs;
     blockchain_did_database dids;
     address_did_database address_dids;
     account_address_database account_addresses;
-    /* end database for account, asset, address_asset relationship */
+    /* end database for account, token, address_token relationship */
     blockchain_mit_database mits;
     address_mit_database address_mits;
     mit_history_database mit_history;
