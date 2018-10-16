@@ -52,7 +52,7 @@ console_result startmining::invoke(Json::Value& jv_output,
         Json::Value jv_temp;
 
         // get new address
-        const char* cmds2[]{"getnewaddress", auth_.name.c_str(), auth_.auth.c_str()};
+        const char* cmds2[]{"addaddress", auth_.name.c_str(), auth_.auth.c_str()};
 
         if (dispatch_command(3, cmds2, jv_temp, node, get_api_version()) != console_result::okay) {
             throw address_generate_exception(jv_temp.asString());

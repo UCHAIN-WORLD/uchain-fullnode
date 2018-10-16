@@ -44,10 +44,10 @@
 #include <UChainService/api/command/commands/importkeyfile.hpp>
 #include <UChainService/api/command/commands/importaccount.hpp>
 #include <UChainService/api/command/commands/createaccount.hpp>
-#include <UChainService/api/command/commands/getaccount.hpp>
+#include <UChainService/api/command/commands/getaccountinfo.hpp>
 #include <UChainService/api/command/commands/deleteaccount.hpp>
 #include <UChainService/api/command/commands/listaddresses.hpp>
-#include <UChainService/api/command/commands/getnewaddress.hpp>
+#include <UChainService/api/command/commands/addaddress.hpp>
 #include <UChainService/api/command/commands/getblock.hpp>
 #include <UChainService/api/command/commands/validateaddress.hpp>
 #include <UChainService/api/command/commands/listbalances.hpp>
@@ -64,7 +64,7 @@
 #include <UChainService/api/command/commands/registermit.hpp>
 #include <UChainService/api/command/commands/transfermit.hpp>
 #include <UChainService/api/command/commands/listmits.hpp>
-#include <UChainService/api/command/commands/getmit.hpp>
+#include <UChainService/api/command/commands/getcard.hpp>
 #include <UChainService/api/command/commands/registeruid.hpp>
 #include <UChainService/api/command/commands/send.hpp>
 #include <UChainService/api/command/commands/sendfrom.hpp>
@@ -73,7 +73,7 @@
 #include <UChainService/api/command/commands/sendtokenfrom.hpp>
 #include <UChainService/api/command/commands/swaptoken.hpp>
 #include <UChainService/api/command/commands/listuids.hpp>
-#include <UChainService/api/command/commands/deletelocaltoken.hpp>
+#include <UChainService/api/command/commands/deletetoken.hpp>
 #include <UChainService/api/command/commands/issue.hpp>
 #include <UChainService/api/command/commands/burn.hpp>
 #include <UChainService/api/command/commands/transfercert.hpp>
@@ -81,7 +81,7 @@
 #include <UChainService/api/command/commands/getwork.hpp>
 #include <UChainService/api/command/commands/submitwork.hpp>
 #include <UChainService/api/command/commands/setminingaccount.hpp>
-#include <UChainService/api/command/commands/changepasswd.hpp>
+#include <UChainService/api/command/commands/changepass.hpp>
 #include <UChainService/api/command/commands/getmemorypool.hpp>
 #include <UChainService/api/command/commands/createmultisigtx.hpp>
 #include <UChainService/api/command/commands/createrawtx.hpp>
@@ -109,11 +109,11 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     os <<"\r\n";
     // account
     func(make_shared<createaccount>());
-    func(make_shared<getaccount>());
+    func(make_shared<getaccountinfo>());
     func(make_shared<deleteaccount>());
     func(make_shared<importaccount>());
-    func(make_shared<changepasswd>());
-    func(make_shared<getnewaddress>());
+    func(make_shared<changepass>());
+    func(make_shared<addaddress>());
     func(make_shared<validateaddress>());
     func(make_shared<listaddresses>());
     func(make_shared<dumpkeyfile>());
@@ -172,14 +172,14 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     //os <<"\r\n";
     // token
     /*func(make_shared<createtoken>());
-    func(make_shared<deletelocaltoken>());
+    func(make_shared<deletetoken>());
     func(make_shared<issue>());
     func(make_shared<secondaryissue>());
     func(make_shared<sendtoken>());
     func(make_shared<sendtokenfrom>());
     func(make_shared<listtokens>());
     func(make_shared<gettoken>());
-    func(make_shared<getaccounttoken>());*/
+    func(make_shared<getaccountinfotoken>());*/
     // func(make_shared<gettokenview>());
     /*func(make_shared<getaddresstoken>());
     func(make_shared<burn>());
@@ -195,7 +195,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     /*func(make_shared<registermit>());
     func(make_shared<transfermit>());
     func(make_shared<listmits>());
-    func(make_shared<getmit>());
+    func(make_shared<getcard>());
 
     os <<"\r\n";*/
     //uid
@@ -213,16 +213,16 @@ shared_ptr<command> find_extension(const string& symbol)
     // account
     if (symbol == createaccount::symbol())
         return make_shared<createaccount>();
-    if (symbol == getaccount::symbol())
-        return make_shared<getaccount>();
+    if (symbol == getaccountinfo::symbol())
+        return make_shared<getaccountinfo>();
     if (symbol == deleteaccount::symbol())
         return make_shared<deleteaccount>();
-    if (symbol == changepasswd::symbol())
-        return make_shared<changepasswd>();
+    if (symbol == changepass::symbol())
+        return make_shared<changepass>();
     if (symbol == validateaddress::symbol())
         return make_shared<validateaddress>();
-    if (symbol == getnewaddress::symbol())
-        return make_shared<getnewaddress>();
+    if (symbol == addaddress::symbol())
+        return make_shared<addaddress>();
     if (symbol == listaddresses::symbol())
         return make_shared<listaddresses>();
     if (symbol == importaccount::symbol())
@@ -321,8 +321,8 @@ shared_ptr<command> find_extension(const string& symbol)
     // token
     /*if (symbol == createtoken::symbol())
         return make_shared<createtoken>();
-    if (symbol == deletelocaltoken::symbol() || symbol == "deletetoken" )
-        return make_shared<deletelocaltoken>();
+    if (symbol == deletetoken::symbol() || symbol == "deletetoken" )
+        return make_shared<deletetoken>();
     if (symbol == listtokens::symbol())
         return make_shared<listtokens>();
     if (symbol == gettoken::symbol())
@@ -359,8 +359,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<transfermit>();
     if (symbol == listmits::symbol())
         return make_shared<listmits>();
-    if (symbol == getmit::symbol())
-        return make_shared<getmit>();*/
+    if (symbol == getcard::symbol())
+        return make_shared<getcard>();*/
 
     // uid
     /*if (symbol == registeruid::symbol())

@@ -30,15 +30,15 @@ namespace explorer {
 namespace commands {
 
 
-/************************ deletelocaltoken *************************/
+/************************ addaddress *************************/
 
-class deletelocaltoken: public command_extension
+class addaddress: public command_extension
 {
 public:
-    static const char* symbol(){ return "deletelocaltoken";}
+    static const char* symbol(){ return "addaddress";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "deletelocaltoken"; }
+    const char* description() override { return "Generate new address for this account."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -76,9 +76,9 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
-            "symbol,s",
-            value<std::string>(&option_.symbol)->required(),
-            "The token symbol/name. Global unique."
+            "number,n",
+            value<std::uint32_t>(&option_.count),
+            "The number of addresses to be generated, defaults to 1."
         );
 
         return options;
@@ -97,17 +97,17 @@ public:
 
     struct option
     {
-        option()
-          : symbol("")
-        {
-        };
-
-        std::string symbol;
+        option():count(1)
+        {};
+        uint32_t count;
     } option_;
 
 };
 
 
+
+
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
+

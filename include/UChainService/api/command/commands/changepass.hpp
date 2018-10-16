@@ -30,15 +30,15 @@ namespace explorer {
 namespace commands {
 
 
-/************************ changepasswd *************************/
+/************************ changepass *************************/
 
-class changepasswd: public command_extension
+class changepass: public command_extension
 {
 public:
-    static const char* symbol(){ return "changepasswd";}
+    static const char* symbol(){ return "changepass";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "changepasswd "; }
+    const char* description() override { return "changepass "; }
 
     arguments_metadata& load_arguments() override
     {

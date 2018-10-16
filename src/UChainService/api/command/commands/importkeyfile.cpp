@@ -99,7 +99,7 @@ console_result importkeyfile::invoke(Json::Value& jv_output,
 
             // get n new sub-address
             Json::Value jv_temp;
-            const char *cmds2[]{"getnewaddress", auth_.name.c_str(), auth_.auth.c_str(), "--number",
+            const char *cmds2[]{"addaddress", auth_.name.c_str(), auth_.auth.c_str(), "--number",
                                 address_count.c_str()};
 
             if (dispatch_command(5, cmds2, jv_temp, node, get_api_version()) != console_result::okay) {

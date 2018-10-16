@@ -28,7 +28,7 @@
 #include <boost/filesystem.hpp>
 #include <UChain/bitcoin.hpp>
 #include <UChain/bitcoin/utility/path.hpp>
-#include <UChain/bitcoin/config/base16.hpp>  // used by db_metadata and push_uout
+#include <UChain/bitcoin/config/base16.hpp>  // used by db_metadata and push_asset
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/settings.hpp>
 #include <UChain/database/version.hpp>
@@ -887,7 +887,7 @@ void data_base::push_outputs(const hash_digest& tx_hash, size_t height,
         const auto value = output.value;
         history.add_output(address.hash(), point, height, value);
 
-        push_uout(output.attach_data, address, point, height, value);
+        push_asset(output.attach_data, address, point, height, value);
     }
 }
 
@@ -1109,17 +1109,17 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
 #include <UChain/bitcoin/config/base16.hpp>
 using namespace libbitcoin::config;
 
-void data_base::push_uout(const uout& attach, const payment_address& address,
+void data_base::push_asset(const asset& attach, const payment_address& address,
     const output_point& outpoint, uint32_t output_height, uint64_t value)
 {
     auto address_str = address.encoded();
-    log::trace(LOG_DATABASE) << "push_uout address_str=" << address_str;
-    log::trace(LOG_DATABASE) << "push_uout address hash=" << base16(address.hash());
+    log::trace(LOG_DATABASE) << "push_asset address_str=" << address_str;
+    log::trace(LOG_DATABASE) << "push_asset address hash=" << base16(address.hash());
     data_chunk data(address_str.begin(), address_str.end());
     short_hash hash = ripemd160_hash(data);
-    auto visitor = uout_visitor(this, hash, outpoint, output_height, value,
+    auto visitor = asset_visitor(this, hash, outpoint, output_height, value,
         attach.get_from_uid(), attach.get_to_uid());
-    boost::apply_visitor(visitor, const_cast<uout&>(attach).get_attach());
+    boost::apply_visitor(visitor, const_cast<asset&>(attach).get_attach());
 }
 
 void data_base::push_ucn(const ucn& ucn, const short_hash& key,

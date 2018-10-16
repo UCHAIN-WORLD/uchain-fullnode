@@ -191,7 +191,7 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
         case error::token_symbol_invalid:
             return "token symbol invalid";
         case error::token_address_not_match:
-            return "token uout address must be equal with output address";
+            return "token asset address must be equal with output address";
         case error::token_exist:
             return "token exist";
         case error::token_not_exist:
@@ -246,8 +246,8 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
         case error::token_uid_registerr_not_match:
             return "attach touid must equal with token issuer or cert owner";
 
-        case error::uout_invalid:
-            return "uout is invalid";
+        case error::asset_invalid:
+            return "asset is invalid";
         case error::nova_feature_not_activated:
             return "nova feature is not activated, it will be activated when block height is larger than 1270000";
 

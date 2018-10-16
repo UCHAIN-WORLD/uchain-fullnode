@@ -86,9 +86,9 @@ console_result secondaryissue::invoke(Json::Value& jv_output,
     // receiver
     std::vector<receiver_record> receiver{
         {to_address, argument_.symbol, 0, token_volume_of_threshold,
-            utxo_attach_type::token_secondaryissue, uout("", to_uid)},
+            utxo_attach_type::token_secondaryissue, asset("", to_uid)},
         {to_address, argument_.symbol, 0, 0, token_cert_ns::issue,
-            utxo_attach_type::token_cert, uout("", to_uid)}
+            utxo_attach_type::token_cert, asset("", to_uid)}
     };
 
     auto issue_helper = secondary_issuing_token(*this, blockchain,

@@ -18,9 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChainService/api/command/commands/changepasswd.hpp>
+#include <UChainService/api/command/commands/getaccountinfo.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
@@ -28,42 +28,38 @@
 namespace libbitcoin {
 namespace explorer {
 namespace commands {
+using namespace bc::explorer::config;
 
-console_result changepasswd::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+/************************ getaccountinfo *************************/
+
+console_result getaccountinfo::invoke(Json::Value& jv_output,
+                                  libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
     auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
-    std::string mnemonic;
-    acc->get_mnemonic(auth_.auth, mnemonic);
+    //auto&& mnemonic = acc->get_mnemonic(auth_.auth);
+    std::string&& mnemonic = blockchain.is_account_lastwd_valid(*acc, auth_.auth, argument_.last_word);
 
-    acc->set_passwd(option_.passwd);
-    acc->set_mnemonic(mnemonic, option_.passwd);
+    auto& root = jv_output;
 
-    blockchain.store_account(acc);
-
-    // reencry address
-    auto pvaddr = blockchain.get_account_addresses(auth_.name);
-    if(!pvaddr)
-        throw address_list_nullptr_exception{"empty address list"};
-
-    std::string prv_key;
-    for (auto& each : *pvaddr){
-        prv_key = each.get_prv_key(auth_.auth);
-        each.set_prv_key(prv_key, option_.passwd);
+    if (get_api_version() == 1) {
+        root["name"] = acc->get_name();
+        root["mnemonic-key"] = mnemonic;
+        root["address-count"] += acc->get_hd_index() + 1;
+        root["user-status"] += (uint8_t)account_status::normal;
     }
-    // delete all old address
-    blockchain.delete_account_address(auth_.name);
-    // restore address
-    for (auto& each : *pvaddr) {
-        auto addr = std::make_shared<bc::chain::account_address>(each);
-        blockchain.store_account_address(addr);
+    else if (get_api_version() == 2) {
+        root["name"] = acc->get_name();
+        root["mnemonic-key"] = mnemonic;
+        root["address-count"] = acc->get_hd_index() + 1;
+        root["user-status"] = (uint8_t)account_status::normal;
     }
-
-    auto& jv = jv_output;
-    jv["name"] = auth_.name;
-    jv["status"] = "changed successfully";
+    else {
+        root["name"] = acc->get_name();
+        root["mnemonic"] = mnemonic;
+        root["address_count"] = acc->get_hd_index() + 1;
+    }
 
     return console_result::okay;
 }

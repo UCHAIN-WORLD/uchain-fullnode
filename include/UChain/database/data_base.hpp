@@ -42,7 +42,7 @@
 #include <UChainService/txs/account/account.hpp>
 #include <UChainService/txs/token/token_detail.hpp>
 #include <UChainService/txs/token/token_transfer.hpp>
-#include <UChainService/txs/uout.hpp>
+#include <UChainService/txs/asset.hpp>
 
 #include <UChain/database/databases/account_database.hpp>
 #include <UChain/database/databases/account_address_database.hpp>
@@ -192,7 +192,7 @@ public:
 
     /* begin store token info into  database */
 
-    void push_uout(const uout& attach, const payment_address& address,
+    void push_asset(const asset& attach, const payment_address& address,
             const output_point& outpoint, uint32_t output_height, uint64_t value);
 
     void push_ucn(const ucn& ucn, const short_hash& key,
@@ -226,10 +226,10 @@ public:
                 const output_point& outpoint, uint32_t output_height, uint64_t value,
                 const std::string from_uid, std::string to_uid);
 
-   class uout_visitor : public boost::static_visitor<void>
+   class asset_visitor : public boost::static_visitor<void>
     {
     public:
-        uout_visitor(data_base* db, const short_hash& sh_hash,  const output_point& outpoint,
+        asset_visitor(data_base* db, const short_hash& sh_hash,  const output_point& outpoint,
             uint32_t output_height, uint64_t value, const std::string from_uid, std::string to_uid):
             db_(db), sh_hash_(sh_hash), outpoint_(outpoint), output_height_(output_height), value_(value),
             from_uid_(from_uid), to_uid_(to_uid)

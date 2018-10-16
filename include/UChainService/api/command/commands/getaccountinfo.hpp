@@ -30,27 +30,31 @@ namespace explorer {
 namespace commands {
 
 
-/************************ getmit *************************/
+/************************ getaccountinfo *************************/
 
-class getmit: public command_extension
+class getaccountinfo: public command_extension
 {
 public:
-    static const char* symbol(){ return "getmit";}
+    static const char* symbol(){ return "getaccountinfo";}
     const char* name() override { return symbol();}
-    bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Get information of MIT."; }
+    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
+    const char* description() override { return "Show account details"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("SYMBOL", 1);
+            .add("ACCOUNTNAME", 1)
+            .add("ACCOUNTAUTH", 1)
+            .add("LASTWORD", 1);
     }
 
     void load_fallbacks (std::istream& input,
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
+        load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
+        load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(auth_.auth, "LASTWORD", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -64,31 +68,20 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "SYMBOL",
-            value<std::string>(&argument_.symbol),
-            "Asset symbol. If not specified then show whole network MIT symbols."
+            "ACCOUNTNAME",
+            value<std::string>(&auth_.name)->required(),
+            BX_ACCOUNT_NAME
         )
         (
-            "trace,t",
-            value<bool>(&option_.show_history)->default_value(false)->zero_tokens(),
-            "If specified then trace the history. Default is not specified."
+            "ACCOUNTAUTH",
+            value<std::string>(&auth_.auth)->required(),
+            BX_ACCOUNT_AUTH
         )
         (
-            "limit,l",
-            value<uint32_t>(&option_.limit)->default_value(100),
-            "MIT count per page."
-        )
-        (
-            "index,i",
-            value<uint32_t>(&option_.index)->default_value(1),
-            "Page index."
-        )
-        (
-            "current,c",
-            value<bool>(&option_.show_current)->default_value(false)->zero_tokens(),
-            "If specified then show the lastest information of specified MIT. Default is not specified."
-        )
-        ;
+            "LASTWORD",
+            value<std::string>(&argument_.last_word)->required(),
+            "The last word of your backup words."
+        );
 
         return options;
     }
@@ -102,25 +95,14 @@ public:
 
     struct argument
     {
-        argument():
-            symbol()
-        {
-        }
-
-        std::string symbol;
+        std::string last_word;
     } argument_;
 
     struct option
     {
-        bool show_history;
-        bool show_current;
-        uint32_t index;
-        uint32_t limit;
     } option_;
 
 };
-
-
 
 
 } // namespace commands

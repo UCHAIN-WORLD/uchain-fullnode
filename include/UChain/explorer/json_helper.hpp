@@ -221,13 +221,13 @@ BCX_API Json::Value prop_tree(
  */
 BCX_API Json::Value prop_list(const tx_output_type& tx_output);
 /**
- * Generate a property list for a uout.
- * @param[in]  output_attach  The uout in output.
+ * Generate a property list for a asset.
+ * @param[in]  output_attach  The asset in output.
  * @return                A property list.
  */
 BCX_API Json::Value prop_list(const tx_output_type& tx_output, uint32_t index);
 
-BCX_API Json::Value prop_list(bc::chain::uout& output_attach);
+BCX_API Json::Value prop_list(bc::chain::asset& output_attach);
 /**
  * Generate a property tree for a transaction output.
  * @param[in]  tx_output  The transaction output.

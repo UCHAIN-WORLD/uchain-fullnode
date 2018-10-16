@@ -30,29 +30,27 @@ namespace explorer {
 namespace commands {
 
 
-/************************ getnewaddress *************************/
+/************************ getcard *************************/
 
-class getnewaddress: public command_extension
+class getcard: public command_extension
 {
 public:
-    static const char* symbol(){ return "getnewaddress";}
+    static const char* symbol(){ return "getcard";}
     const char* name() override { return symbol();}
-    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "Generate new address for this account."; }
+    bool category(int bs) override { return (ex_online & bs ) == bs; }
+    const char* description() override { return "Get information of MIT."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("SYMBOL", 1);
     }
 
     void load_fallbacks (std::istream& input,
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
-        load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -66,20 +64,31 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "ACCOUNTNAME",
-            value<std::string>(&auth_.name)->required(),
-            BX_ACCOUNT_NAME
+            "SYMBOL",
+            value<std::string>(&argument_.symbol),
+            "Asset symbol. If not specified then show whole network MIT symbols."
         )
         (
-            "ACCOUNTAUTH",
-            value<std::string>(&auth_.auth)->required(),
-            BX_ACCOUNT_AUTH
+            "trace,t",
+            value<bool>(&option_.show_history)->default_value(false)->zero_tokens(),
+            "If specified then trace the history. Default is not specified."
         )
         (
-            "number,n",
-            value<std::uint32_t>(&option_.count),
-            "The number of addresses to be generated, defaults to 1."
-        );
+            "limit,l",
+            value<uint32_t>(&option_.limit)->default_value(100),
+            "MIT count per page."
+        )
+        (
+            "index,i",
+            value<uint32_t>(&option_.index)->default_value(1),
+            "Page index."
+        )
+        (
+            "current,c",
+            value<bool>(&option_.show_current)->default_value(false)->zero_tokens(),
+            "If specified then show the lastest information of specified MIT. Default is not specified."
+        )
+        ;
 
         return options;
     }
@@ -93,13 +102,20 @@ public:
 
     struct argument
     {
+        argument():
+            symbol()
+        {
+        }
+
+        std::string symbol;
     } argument_;
 
     struct option
     {
-        option():count(1)
-        {};
-        uint32_t count;
+        bool show_history;
+        bool show_current;
+        uint32_t index;
+        uint32_t limit;
     } option_;
 
 };

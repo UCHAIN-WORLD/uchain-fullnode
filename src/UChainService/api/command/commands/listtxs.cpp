@@ -271,7 +271,7 @@ console_result listtxs::invoke(Json::Value& jv_output,
                 }
             }
 
-            pt_output["uout"] = tree;
+            pt_output["asset"] = tree;
             ////////////////////////////////////////////////////////////
 
             pt_outputs.append(pt_output);

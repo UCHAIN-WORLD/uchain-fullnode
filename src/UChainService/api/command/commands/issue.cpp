@@ -123,7 +123,7 @@ console_result issue::invoke (Json::Value& jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {to_address, argument_.symbol, 0, 0, utxo_attach_type::token_issue, uout("", to_uid)}
+        {to_address, argument_.symbol, 0, 0, utxo_attach_type::token_issue, asset("", to_uid)}
     };
 
     // token_cert utxo
@@ -132,7 +132,7 @@ console_result issue::invoke (Json::Value& jv_output,
         for (auto each_cert_type : certs) {
             receiver.push_back(
             {   to_address, argument_.symbol, 0, 0,
-                each_cert_type, utxo_attach_type::token_cert_autoissue, uout("", to_uid)
+                each_cert_type, utxo_attach_type::token_cert_autoissue, asset("", to_uid)
             });
         }
     }
@@ -142,7 +142,7 @@ console_result issue::invoke (Json::Value& jv_output,
         receiver.push_back(
         {   to_address, cert_symbol, 0, 0, cert_type,
             (is_domain_cert_exist ? utxo_attach_type::token_cert : utxo_attach_type::token_cert_autoissue),
-            uout("", to_uid)
+            asset("", to_uid)
         });
     }
 

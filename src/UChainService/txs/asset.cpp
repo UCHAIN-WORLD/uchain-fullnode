@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainService/txs/uout.hpp>
+#include <UChainService/txs/asset.hpp>
 #include <UChainService/txs/variant.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
@@ -29,14 +29,14 @@
 namespace libbitcoin {
 namespace chain {
 
-uout::uout()
+asset::asset()
 {
     reset();
 }
 
-uout::uout(const std::string& from_uid, const std::string& to_uid)
+asset::asset(const std::string& from_uid, const std::string& to_uid)
     : version(UID_ATTACH_VERIFY_VERSION)
-    , type(0) //uout_type::attach_none;
+    , type(0) //asset_type::attach_none;
     , touid(to_uid)
     , fromuid(from_uid)
 {
@@ -44,38 +44,38 @@ uout::uout(const std::string& from_uid, const std::string& to_uid)
     boost::apply_visitor(visitor, attach);
 }
 
-uout uout::factory_from_data(const data_chunk& data)
+asset asset::factory_from_data(const data_chunk& data)
 {
-    uout instance;
+    asset instance;
     instance.from_data(data);
     return instance;
 }
 
-uout uout::factory_from_data(std::istream& stream)
+asset asset::factory_from_data(std::istream& stream)
 {
-    uout instance;
+    asset instance;
     instance.from_data(stream);
     return instance;
 }
 
-uout uout::factory_from_data(reader& source)
+asset asset::factory_from_data(reader& source)
 {
-    uout instance;
+    asset instance;
     instance.from_data(source);
     return instance;
 }
 
-void uout::reset()
+void asset::reset()
 {
     version = 0;
-    type = 0; //uout_type::attach_none;
+    type = 0; //asset_type::attach_none;
     auto visitor = reset_visitor();
     boost::apply_visitor(visitor, attach);
     touid = "";
     fromuid = "";
 }
 
-bool uout::is_valid() const
+bool asset::is_valid() const
 {
     if (!is_valid_type()) {
         return false;
@@ -84,7 +84,7 @@ bool uout::is_valid() const
     return boost::apply_visitor(visitor, attach);
 }
 
-bool uout::is_valid_type() const
+bool asset::is_valid_type() const
 {
     return ((UCN_TYPE == type)
         || (TOKEN_TYPE == type)
@@ -96,19 +96,19 @@ bool uout::is_valid_type() const
 }
 
 
-bool uout::from_data(const data_chunk& data)
+bool asset::from_data(const data_chunk& data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool uout::from_data(std::istream& stream)
+bool asset::from_data(std::istream& stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool uout::from_data(reader& source)
+bool asset::from_data(reader& source)
 {
     reset();
 
@@ -174,7 +174,7 @@ bool uout::from_data(reader& source)
     return result;
 }
 
-data_chunk uout::to_data() const
+data_chunk asset::to_data() const
 {
     data_chunk data;
     data_sink ostream(data);
@@ -184,13 +184,13 @@ data_chunk uout::to_data() const
     return data;
 }
 
-void uout::to_data(std::ostream& stream) const
+void asset::to_data(std::ostream& stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void uout::to_data(writer& sink) const
+void asset::to_data(writer& sink) const
 {
     sink.write_4_bytes_little_endian(version);
     sink.write_4_bytes_little_endian(type);
@@ -202,7 +202,7 @@ void uout::to_data(writer& sink) const
     boost::apply_visitor(visitor, attach);
 }
 
-uint64_t uout::serialized_size() const
+uint64_t asset::serialized_size() const
 {
     uint64_t size = 0;
     if(version == UID_ATTACH_VERIFY_VERSION) {
@@ -218,7 +218,7 @@ uint64_t uout::serialized_size() const
     return size;
 }
 
-std::string uout::to_string() const
+std::string asset::to_string() const
 {
     std::ostringstream ss;
 
@@ -234,47 +234,47 @@ std::string uout::to_string() const
     return ss.str();
 }
 
-uint32_t uout::get_version() const
+uint32_t asset::get_version() const
 {
     return version;
 }
-void uout::set_version(uint32_t version)
+void asset::set_version(uint32_t version)
 {
      this->version = version;
 }
 
-uint32_t uout::get_type() const
+uint32_t asset::get_type() const
 {
     return type;
 }
-void uout::set_type(uint32_t type)
+void asset::set_type(uint32_t type)
 {
      this->type = type;
 }
 
-std::string uout::get_to_uid() const
+std::string asset::get_to_uid() const
 {
     return touid;
 }
-void uout::set_to_uid(const std::string& uid)
+void asset::set_to_uid(const std::string& uid)
 {
     this->touid = uid;
 }
 
-std::string uout::get_from_uid() const
+std::string asset::get_from_uid() const
 {
     return fromuid;
 }
-void uout::set_from_uid(const std::string& uid)
+void asset::set_from_uid(const std::string& uid)
 {
      this->fromuid = uid;
 }
 
-uout::uout_data_type& uout::get_attach()
+asset::asset_data_type& asset::get_attach()
 {
     return this->attach;
 }
-const uout::uout_data_type& uout::get_attach() const
+const asset::asset_data_type& asset::get_attach() const
 {
     return this->attach;
 }

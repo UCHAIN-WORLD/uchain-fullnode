@@ -139,7 +139,7 @@ console_result registermit::invoke (Json::Value& jv_output,
         receiver.push_back(
             {
                 to_address, pair.first, 0, 0, 0,
-                utxo_attach_type::token_card, uout(to_uid, to_uid)
+                utxo_attach_type::token_card, asset(to_uid, to_uid)
             }
         );
     }

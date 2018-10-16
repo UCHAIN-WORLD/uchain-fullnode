@@ -19,7 +19,7 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/command/commands/getmit.hpp>
+#include <UChainService/api/command/commands/getcard.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
@@ -30,9 +30,9 @@ namespace commands {
 
 using namespace bc::explorer::config;
 
-/************************ getmit *************************/
+/************************ getcard *************************/
 
-console_result getmit::invoke(Json::Value& jv_output,
+console_result getcard::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();

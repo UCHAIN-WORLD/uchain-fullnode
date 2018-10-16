@@ -30,7 +30,7 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
-#include <UChainService/txs/uout.hpp> // added for token issue/transfer
+#include <UChainService/txs/asset.hpp> // added for token issue/transfer
 #include <UChainService/txs/uid/uid.hpp>
 
 // forward declaration
@@ -63,7 +63,7 @@ public:
     void to_data(writer& sink) const;
     std::string to_string(uint32_t flags) const;
     bool is_valid() const;
-    code check_uout_address(bc::blockchain::block_chain_impl& chain) const;
+    code check_asset_address(bc::blockchain::block_chain_impl& chain) const;
     std::string get_script_address() const;
     void reset();
     uint64_t serialized_size() const;
@@ -104,7 +104,7 @@ public:
 
     uint64_t value;
     chain::script script;
-    uout attach_data; // added for token issue/transfer
+    asset attach_data; // added for token issue/transfer
 };
 
 struct BC_API output_info

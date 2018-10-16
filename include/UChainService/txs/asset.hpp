@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_CHAIN_UOUT_HPP
-#define UC_CHAIN_UOUT_HPP
+#ifndef UC_CHAIN_ASSET_HPP
+#define UC_CHAIN_ASSET_HPP
 
 #include <cstdint>
 #include <istream>
@@ -36,15 +36,15 @@
 #include <UChainService/txs/message/message.hpp>
 
 using namespace libbitcoin::chain;
-#define TYPE2UINT32(kd)  (static_cast<typename std::underlying_type<uout::uout_type>::type>(kd))
+#define TYPE2UINT32(kd)  (static_cast<typename std::underlying_type<asset::asset_type>::type>(kd))
 
-#define UCN_TYPE        TYPE2UINT32(uout::uout_type::uout_ucn)
-#define UCN_AWARD_TYPE  TYPE2UINT32(uout::uout_type::uout_ucn_award)
-#define TOKEN_TYPE      TYPE2UINT32(uout::uout_type::uout_token)
-#define MESSAGE_TYPE    TYPE2UINT32(uout::uout_type::uout_message)
-#define UID_TYPE        TYPE2UINT32(uout::uout_type::uout_uid)
-#define TOKEN_CERT_TYPE TYPE2UINT32(uout::uout_type::uout_token_cert)
-#define TOKEN_CARD_TYPE  TYPE2UINT32(uout::uout_type::uout_token_card)
+#define UCN_TYPE        TYPE2UINT32(asset::asset_type::asset_ucn)
+#define UCN_AWARD_TYPE  TYPE2UINT32(asset::asset_type::asset_ucn_award)
+#define TOKEN_TYPE      TYPE2UINT32(asset::asset_type::asset_token)
+#define MESSAGE_TYPE    TYPE2UINT32(asset::asset_type::asset_message)
+#define UID_TYPE        TYPE2UINT32(asset::asset_type::asset_uid)
+#define TOKEN_CERT_TYPE TYPE2UINT32(asset::asset_type::asset_token_cert)
+#define TOKEN_CARD_TYPE  TYPE2UINT32(asset::asset_type::asset_token_card)
 
 #define UID_ATTACH_VERIFY_VERSION       TYPE2UINT32(207)
 
@@ -52,19 +52,19 @@ using namespace libbitcoin::chain;
 namespace libbitcoin {
 namespace chain {
 
-class BC_API uout
+class BC_API asset
 {
 public:
 
-    enum class uout_type : uint32_t
+    enum class asset_type : uint32_t
     {
-        uout_ucn, // ucn
-        uout_ucn_award,
-        uout_token,
-        uout_message,
-        uout_uid,
-        uout_token_cert,
-        uout_token_card
+        asset_ucn, // ucn
+        asset_ucn_award,
+        asset_token,
+        asset_message,
+        asset_uid,
+        asset_token_cert,
+        asset_token_card
     };
 
     typedef boost::variant<
@@ -75,20 +75,20 @@ public:
         uid,
         token_cert,
         token_card
-        > uout_data_type;
+        > asset_data_type;
 
-    uout();
+    asset();
 
-    uout(const std::string& from_uid, const std::string& to_uid);
+    asset(const std::string& from_uid, const std::string& to_uid);
 
     template<class Type>
-    uout(uint32_t type, uint32_t version, const Type& attach_data)
+    asset(uint32_t type, uint32_t version, const Type& attach_data)
         : type(type), version(version), attach(attach_data)
     {}
 
-    static uout factory_from_data(const data_chunk& data);
-    static uout factory_from_data(std::istream& stream);
-    static uout factory_from_data(reader& source);
+    static asset factory_from_data(const data_chunk& data);
+    static asset factory_from_data(std::istream& stream);
+    static asset factory_from_data(reader& source);
     static uint64_t satoshi_fixed_size();
 
     bool from_data(const data_chunk& data);
@@ -119,15 +119,15 @@ public:
     {
          this->attach = attach;
     };
-    uout_data_type& get_attach();
-    const uout_data_type& get_attach() const;
+    asset_data_type& get_attach();
+    const asset_data_type& get_attach() const;
 
 private:
     uint32_t version;
     uint32_t type;
     std::string touid;
     std::string fromuid;
-    uout_data_type attach;
+    asset_data_type attach;
 };
 
 } // namespace chain

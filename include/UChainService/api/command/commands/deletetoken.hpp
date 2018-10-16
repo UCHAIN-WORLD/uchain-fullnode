@@ -30,22 +30,21 @@ namespace explorer {
 namespace commands {
 
 
-/************************ getaccount *************************/
+/************************ deletetoken *************************/
 
-class getaccount: public command_extension
+class deletetoken: public command_extension
 {
 public:
-    static const char* symbol(){ return "getaccount";}
+    static const char* symbol(){ return "deletetoken";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "Show account details"; }
+    const char* description() override { return "deletetoken"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1)
-            .add("LASTWORD", 1);
+            .add("ACCOUNTAUTH", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -54,7 +53,6 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
-        load_input(auth_.auth, "LASTWORD", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -78,9 +76,9 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
-            "LASTWORD",
-            value<std::string>(&argument_.last_word)->required(),
-            "The last word of your backup words."
+            "symbol,s",
+            value<std::string>(&option_.symbol)->required(),
+            "The token symbol/name. Global unique."
         );
 
         return options;
@@ -95,11 +93,16 @@ public:
 
     struct argument
     {
-        std::string last_word;
     } argument_;
 
     struct option
     {
+        option()
+          : symbol("")
+        {
+        };
+
+        std::string symbol;
     } option_;
 
 };
@@ -108,4 +111,3 @@ public:
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

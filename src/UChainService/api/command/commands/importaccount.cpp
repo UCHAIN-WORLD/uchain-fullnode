@@ -63,18 +63,18 @@ console_result importaccount::invoke(Json::Value& jv_output,
     acc->set_name(auth_.name);
     acc->set_passwd(option_.passwd);
     acc->set_mnemonic(mnemonic, option_.passwd);
-    //acc->set_hd_index(option_.hd_index); // hd_index updated in getnewaddress
+    //acc->set_hd_index(option_.hd_index); // hd_index updated in addaddress
 
     // flush to db
     blockchain.store_account(acc);
 
     // generate all account address
     auto&& str_idx = std::to_string(option_.hd_index);
-    const char* cmds2[]{"getnewaddress", auth_.name.c_str(), option_.passwd.c_str(), "-n", str_idx.c_str()};
+    const char* cmds2[]{"addaddress", auth_.name.c_str(), option_.passwd.c_str(), "-n", str_idx.c_str()};
     Json::Value addresses;
 
     if (dispatch_command(5, cmds2, addresses, node, get_api_version()) != console_result::okay) {
-        throw address_generate_exception{"getnewaddress got exception."};
+        throw address_generate_exception{"addaddress got exception."};
     }
 
     if (get_api_version() <= 2) {

@@ -43,7 +43,7 @@ console_result sendmore::invoke (Json::Value& jv_output,
     for (auto& each : argument_.receivers) {
         colon_delimited2_item<std::string, uint64_t> item(each);
 
-        uout attach;
+        asset attach;
         std::string address = get_address(item.first(), attach, false, blockchain);
         if (item.second() <= 0) {
             throw argument_legality_exception("invalid amount parameter for " + item.first());

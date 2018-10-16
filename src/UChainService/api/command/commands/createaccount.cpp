@@ -64,7 +64,7 @@ console_result createaccount::invoke(Json::Value& jv_output,
     // get 1 new sub-address by default
     std::stringstream sout("");
     Json::Value jv_temp;
-    const char* cmds2[]{"getnewaddress", auth_.name.c_str(), auth_.auth.c_str()};
+    const char* cmds2[]{"addaddress", auth_.name.c_str(), auth_.auth.c_str()};
 
     if (dispatch_command(3, cmds2, jv_temp, node, get_api_version()) != console_result::okay) {
         throw address_generate_exception(sout.str());

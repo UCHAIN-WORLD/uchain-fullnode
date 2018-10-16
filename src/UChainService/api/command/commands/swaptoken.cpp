@@ -102,7 +102,7 @@ console_result swaptoken::invoke(Json::Value& jv_output,
     // check token symbol
     check_token_symbol(argument_.symbol);
 
-    uout attach_token, attach_fee;
+    asset attach_token, attach_fee;
     const std::string&& to_address = get_address(argument_.to, attach_token, false, blockchain);
     const std::string&& swapfee_address = bc::get_developer_community_address(
         blockchain.chain_settings().use_testnet_rules);

@@ -158,7 +158,7 @@ DEFINE_EXPLORER_EXCEPTION(tx_sign_exception, 5303);
 DEFINE_EXPLORER_EXCEPTION(tx_validate_exception, 5304);
 DEFINE_EXPLORER_EXCEPTION(tx_broadcast_exception, 5305);
 DEFINE_EXPLORER_EXCEPTION(tx_notfound_exception, 5306);
-DEFINE_EXPLORER_EXCEPTION(tx_uout_value_exception, 5307);
+DEFINE_EXPLORER_EXCEPTION(tx_asset_value_exception, 5307);
 DEFINE_EXPLORER_EXCEPTION(tx_fetch_exception, 5308);
 DEFINE_EXPLORER_EXCEPTION(tx_send_exception, 5309);
 DEFINE_EXPLORER_EXCEPTION(tx_encode_get_exception, 5310);

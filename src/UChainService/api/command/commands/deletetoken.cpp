@@ -20,7 +20,7 @@
 
 
 #include <UChain/explorer/dispatch.hpp>
-#include <UChainService/api/command/commands/deletelocaltoken.hpp>
+#include <UChainService/api/command/commands/deletetoken.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
@@ -30,9 +30,9 @@ namespace libbitcoin {
 namespace explorer {
 namespace commands {
 using namespace bc::explorer::config;
-/************************ deletelocaltoken *************************/
+/************************ deletetoken *************************/
 
-console_result deletelocaltoken::invoke(Json::Value& jv_output,
+console_result deletetoken::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
