@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
  *
- * This file is part of uc-node.
+ * This file is part of UChainService.
  *
  * UChain is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License with

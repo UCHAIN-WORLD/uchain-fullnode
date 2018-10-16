@@ -32,7 +32,7 @@ struct mg_event {
 
 class MgServer {
 public:
-    static constexpr auto NAME = "MONGO";
+    static constexpr auto NAME = "mgserver";
 
 public:
     explicit MgServer(const std::string& svr_addr) : svr_addr_(svr_addr), running_(false)

@@ -85,12 +85,12 @@ void protocol_address::start()
             network_address nt_address = out_address.to_network_address();
             if (settings.hosts_file == "hosts-test.cache") {
                 address self = address({ { nt_address } });
-                log::info("UPnP") << "send addresss " << out_address.to_string();
+                log::info("upnp") << "send addresss " << out_address.to_string();
                 SEND2(self, handle_send, _1, self.command);
             }
             else if (!nt_address.is_private_network()) {
                 address self = address({ { nt_address } });
-                log::info("UPnP") << "send addresss " << out_address.to_string();
+                log::info("upnp") << "send addresss " << out_address.to_string();
                 SEND2(self, handle_send, _1, self.command);
             }
         }

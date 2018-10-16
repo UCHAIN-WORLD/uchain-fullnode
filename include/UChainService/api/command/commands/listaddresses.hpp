@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2018-2020 uc developers
  *
- * This file is part of UChain-explorer.
+ * This file is part of UChain-api.
  *
  * UChain-explorer is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License with

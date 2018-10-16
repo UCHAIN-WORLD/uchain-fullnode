@@ -491,7 +491,7 @@ void p2p::thread_map_port(uint16_t map_port)
     }
     catch (...) {
         r = 0;
-        log::info("UPnP") << "Get UPnP IGDs exception";
+        log::info("upnp") << "Get UPnP IGDs exception";
     }
     if (r == 1)
     {
@@ -511,9 +511,9 @@ void p2p::thread_map_port(uint16_t map_port)
 #endif
 
                 if (r != UPNPCOMMAND_SUCCESS)
-                    log::info("UPnP") << "AddPortMapping(" << port << ", " << port << ", " << lanaddr << ") failed with code " << r << " (" << strupnperror(r) << ")";
+                    log::info("upnp") << "AddPortMapping(" << port << ", " << port << ", " << lanaddr << ") failed with code " << r << " (" << strupnperror(r) << ")";
                 else
-                    log::info("UPnP") << "Port Mapping successful.";
+                    log::info("upnp") << "Port Mapping successful.";
 
                 std::this_thread::sleep_for(asio::milliseconds(20 * 60 * 1000));
             }
@@ -521,14 +521,14 @@ void p2p::thread_map_port(uint16_t map_port)
         catch (const boost::thread_interrupted&)
         {
             r = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, port.c_str(), "TCP", 0);
-            log::info("UPnP") << "UPNP_DeletePortMapping() returned: "<< r;
+            log::info("upnp") << "UPNP_DeletePortMapping() returned: "<< r;
             freeUPNPDevlist(devlist); devlist = nullptr;
             FreeUPNPUrls(&urls);
             throw;
         }
     }
     else {
-        log::info("UPnP") << "No valid UPnP IGDs found";
+        log::info("upnp") << "No valid UPnP IGDs found";
         freeUPNPDevlist(devlist); devlist = nullptr;
         if (r != 0)
             FreeUPNPUrls(&urls);
@@ -571,14 +571,14 @@ config::authority::ptr p2p::get_out_address() {
     }
     catch (...) {
         r = 0;
-        log::info("UPnP") << "Get UPnP IGDs exception";
+        log::info("upnp") << "Get UPnP IGDs exception";
     }
     if (r == 1)
     {
         char externalIPAddress[40];
         r = UPNP_GetExternalIPAddress(urls.controlURL, data.first.servicetype, externalIPAddress);
         if (r != UPNPCOMMAND_SUCCESS)
-            log::info("UPnP") << "GetExternalIPAddress() returned " << r;
+            log::info("upnp") << "GetExternalIPAddress() returned " << r;
         else
         {
             std::string outaddressstr = std::string(externalIPAddress) + ":" + std::to_string(settings_.inbound_port);
@@ -591,7 +591,7 @@ config::authority::ptr p2p::get_out_address() {
         }
     }
 
-    //log::info("UPnP") << "No valid UPnP IGDs found";
+    //log::info("upnp") << "No valid UPnP IGDs found";
     freeUPNPDevlist(devlist); devlist = nullptr;
     if (r != 0)
         FreeUPNPUrls(&urls);
