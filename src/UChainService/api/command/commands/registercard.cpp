@@ -19,7 +19,7 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/command/commands/registermit.hpp>
+#include <UChainService/api/command/commands/registercard.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
@@ -29,7 +29,7 @@ namespace libbitcoin {
 namespace explorer {
 namespace commands {
 
-void registermit::check_symbol_content(const std::string& symbol, const std::string& content)
+void registercard::check_symbol_content(const std::string& symbol, const std::string& content)
 {
     // check symbol
     if (symbol.size() == 0) {
@@ -53,7 +53,7 @@ void registermit::check_symbol_content(const std::string& symbol, const std::str
     }
 }
 
-console_result registermit::invoke (Json::Value& jv_output,
+console_result registercard::invoke (Json::Value& jv_output,
         libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();

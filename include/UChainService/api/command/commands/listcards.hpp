@@ -30,12 +30,12 @@ namespace explorer {
 namespace commands {
 
 
-/************************ listmits *************************/
+/************************ listcards *************************/
 
-class listmits: public command_extension
+class listcards: public command_extension
 {
 public:
-    static const char* symbol(){ return "listmits";}
+    static const char* symbol(){ return "listcards";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
     const char* description() override { return "List MITs."; }

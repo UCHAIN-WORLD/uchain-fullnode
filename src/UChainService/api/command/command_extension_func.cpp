@@ -61,9 +61,9 @@
 #include <UChainService/api/command/commands/getaccounttoken.hpp>
 #include <UChainService/api/command/commands/gettokenview.hpp>
 #include <UChainService/api/command/commands/createtoken.hpp>
-#include <UChainService/api/command/commands/registermit.hpp>
+#include <UChainService/api/command/commands/registercard.hpp>
 #include <UChainService/api/command/commands/transfermit.hpp>
-#include <UChainService/api/command/commands/listmits.hpp>
+#include <UChainService/api/command/commands/listcards.hpp>
 #include <UChainService/api/command/commands/getcard.hpp>
 #include <UChainService/api/command/commands/registeruid.hpp>
 #include <UChainService/api/command/commands/send.hpp>
@@ -192,9 +192,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
 
     //os <<"\r\n";
     // mit
-    /*func(make_shared<registermit>());
+    /*func(make_shared<registercard>());
     func(make_shared<transfermit>());
-    func(make_shared<listmits>());
+    func(make_shared<listcards>());
     func(make_shared<getcard>());
 
     os <<"\r\n";*/
@@ -353,12 +353,12 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<issuecert>();*/
 
     // mit
-    /*if (symbol == registermit::symbol())
-        return make_shared<registermit>();
+    /*if (symbol == registercard::symbol())
+        return make_shared<registercard>();
     if (symbol == transfermit::symbol())
         return make_shared<transfermit>();
-    if (symbol == listmits::symbol())
-        return make_shared<listmits>();
+    if (symbol == listcards::symbol())
+        return make_shared<listcards>();
     if (symbol == getcard::symbol())
         return make_shared<getcard>();*/
 

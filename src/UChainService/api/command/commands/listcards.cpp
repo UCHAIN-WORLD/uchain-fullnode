@@ -20,7 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChainService/api/command/commands/listmits.hpp>
+#include <UChainService/api/command/commands/listcards.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/base_helper.hpp>
@@ -31,9 +31,9 @@ namespace explorer {
 namespace commands {
 using namespace bc::explorer::config;
 
-/************************ listmits *************************/
+/************************ listcards *************************/
 
-console_result listmits::invoke(Json::Value& jv_output,
+console_result listcards::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
