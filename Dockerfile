@@ -28,7 +28,7 @@ RUN cd /tmp/UChain && /bin/bash install_dependencies.sh --build-boost --build-up
 RUN cd /tmp/UChain \
   && mkdir -p build && cd build && cmake .. && make -j2 && make install \
   && rm -rf /tmp/UChain/build \
-  && rm -rf /tmp/UChain/build-uc-dependencies
+  && rm -rf /tmp/UChain/thirdlibrary
 
 # TODO...
 # Should has `make test` here

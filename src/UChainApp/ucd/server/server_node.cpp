@@ -27,7 +27,7 @@
 #include <UChain/server/configuration.hpp>
 #include <UChain/server/messages/route.hpp>
 #include <UChain/server/workers/query_worker.hpp>
-#include <UChain/mgbubble.hpp>
+#include <UChain/rest.hpp>
 
 #include <thread>
 
@@ -61,7 +61,7 @@ server_node::server_node(const configuration& configuration)
     secure_notification_worker_(authenticator_, *this, true),
     public_notification_worker_(authenticator_, *this, false),
     miner_(*this),
-    rest_server_(new mgbubble::HttpServ(webpage_path_.string().data(), *this, configuration.server.mongoose_listen)),
+    rest_server_(new mgbubble::RestServ(webpage_path_.string().data(), *this, configuration.server.mongoose_listen)),
     push_server_(new mgbubble::WsPushServ(*this, configuration.server.websocket_listen))
 {
 }

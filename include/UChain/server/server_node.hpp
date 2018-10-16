@@ -42,7 +42,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace mgbubble{
-    class HttpServ;
+    class RestServ;
     class WsPushServ;
 }
 namespace libbitcoin {
@@ -126,7 +126,7 @@ private:
     static boost::filesystem::path webpage_path_;
 
     consensus::miner miner_;
-    boost::shared_ptr<mgbubble::HttpServ> rest_server_;
+    boost::shared_ptr<mgbubble::RestServ> rest_server_;
     boost::shared_ptr<mgbubble::WsPushServ> push_server_;
     // These are thread safe.
     authenticator authenticator_;

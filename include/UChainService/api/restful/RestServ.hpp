@@ -19,25 +19,25 @@ namespace mgbubble{
 
 using namespace bc;
 
-class HttpServ : public MgServer
+class RestServ : public MgServer
 {
     typedef MgServer base;
 public:
-    explicit HttpServ(const char* webroot, libbitcoin::server::server_node &node, const std::string& srv_addr)
+    explicit RestServ(const char* webroot, libbitcoin::server::server_node &node, const std::string& srv_addr)
         : node_(node), MgServer(srv_addr)
     {
         document_root_ = webroot;
         set_document_root(document_root_.c_str());
     }
-    ~HttpServ() noexcept { stop(); };
+    ~RestServ() noexcept { stop(); };
 
     // Copy.
-    HttpServ(const HttpServ& rhs) = delete;
-    HttpServ& operator=(const HttpServ& rhs) = delete;
+    RestServ(const RestServ& rhs) = delete;
+    RestServ& operator=(const RestServ& rhs) = delete;
 
     // Move.
-    HttpServ(HttpServ&&) = delete;
-    HttpServ& operator=(HttpServ&&) = delete;
+    RestServ(RestServ&&) = delete;
+    RestServ& operator=(RestServ&&) = delete;
 
     void rpc_request(mg_connection& nc, HttpMessage data, uint8_t rpc_version = 1);
     void ws_request(mg_connection& nc, WebsocketMessage ws);

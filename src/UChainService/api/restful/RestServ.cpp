@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS).
- * Copyright (C) 2013, 2016 Swirly Cloud Limited.
+ * Copyright (C) 2013-2018 Swirly Cloud Limited.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation; either version 2 of the
@@ -17,7 +17,7 @@
 #include <exception>
 #include <functional> //hash
 
-#include <UChainService/api/restful//HttpServ.hpp>
+#include <UChainService/api/restful//RestServ.hpp>
 #include <UChainService/api/restful//exception/Instances.hpp>
 #include <UChainService/api/restful//utility/Stream_buf.hpp>
 
@@ -27,11 +27,11 @@
 
 namespace mgbubble {
 
-thread_local OStream HttpServ::out_;
-thread_local Tokeniser<'/'> HttpServ::uri_;
-thread_local int HttpServ::state_ = 0;
+thread_local OStream RestServ::out_;
+thread_local Tokeniser<'/'> RestServ::uri_;
+thread_local int RestServ::state_ = 0;
 
-void HttpServ::reset(HttpMessage& data) noexcept
+void RestServ::reset(HttpMessage& data) noexcept
 {
     state_ = 0;
 
@@ -54,7 +54,7 @@ void HttpServ::reset(HttpMessage& data) noexcept
     uri_.reset(uri);
 }
 
-void HttpServ::rpc_request(mg_connection& nc, HttpMessage data, uint8_t rpc_version)
+void RestServ::rpc_request(mg_connection& nc, HttpMessage data, uint8_t rpc_version)
 {
     reset(data);
     StreamBuf buf{ nc.send_mbuf };
@@ -129,7 +129,7 @@ void HttpServ::rpc_request(mg_connection& nc, HttpMessage data, uint8_t rpc_vers
     out_.setContentLength();
 }
 
-void HttpServ::ws_request(mg_connection& nc, WebsocketMessage ws)
+void RestServ::ws_request(mg_connection& nc, WebsocketMessage ws)
 {
     Json::Value jv_output;
 
@@ -153,14 +153,14 @@ void HttpServ::ws_request(mg_connection& nc, WebsocketMessage ws)
         send_frame(nc, jv_output.asString());
 }
 
-bool HttpServ::start()
+bool RestServ::start()
 {
     if (!attach_notify())
         return false;
     return base::start();
 }
 
-void HttpServ::spawn_to_mongoose(const std::function<void(uint64_t)>&& handler)
+void RestServ::spawn_to_mongoose(const std::function<void(uint64_t)>&& handler)
 {
     auto msg = std::make_shared<MgEvent>(std::move(handler));
     struct mg_event ev { msg->hook() };
@@ -168,7 +168,7 @@ void HttpServ::spawn_to_mongoose(const std::function<void(uint64_t)>&& handler)
         msg->unhook();
 }
 
-void HttpServ::run() {
+void RestServ::run() {
     log::info(LOG_HTTP) << "Http Service listen on " << node_.server_settings().mongoose_listen;
 
     node_.subscribe_stop([this](const libbitcoin::code & ec) { stop(); });
@@ -178,7 +178,7 @@ void HttpServ::run() {
     log::info(LOG_HTTP) << "Http Service Stopped.";
 }
 
-void HttpServ::on_http_req_handler(struct mg_connection& nc, http_message& msg)
+void RestServ::on_http_req_handler(struct mg_connection& nc, http_message& msg)
 {
     if ((mg_ncasecmp(msg.uri.p, "/rpc/v3", 7) == 0) || (mg_ncasecmp(msg.uri.p, "/rpc/v3/", 8) == 0)) {
         rpc_request(nc, HttpMessage(&msg), 3); // v3 rpc
@@ -195,7 +195,7 @@ void HttpServ::on_http_req_handler(struct mg_connection& nc, http_message& msg)
     }
 }
 
-void HttpServ::on_notify_handler(struct mg_connection& nc, struct mg_event& ev)
+void RestServ::on_notify_handler(struct mg_connection& nc, struct mg_event& ev)
 {
     static uint64_t api_call_counter = 0;
 
@@ -206,13 +206,13 @@ void HttpServ::on_notify_handler(struct mg_connection& nc, struct mg_event& ev)
     msg(++api_call_counter);
 }
 
-void HttpServ::on_ws_handshake_done_handler(struct mg_connection& nc)
+void RestServ::on_ws_handshake_done_handler(struct mg_connection& nc)
 {
     std::shared_ptr<struct mg_connection> con(&nc, [](struct mg_connection * ptr) { (void)(ptr); });
     send_frame(nc, "connected", 9);
 }
 
-void HttpServ::on_ws_frame_handler(struct mg_connection& nc, websocket_message& msg)
+void RestServ::on_ws_frame_handler(struct mg_connection& nc, websocket_message& msg)
 {
     std::istringstream iss;
     iss.str(std::string((const char*)msg.data, msg.size));
