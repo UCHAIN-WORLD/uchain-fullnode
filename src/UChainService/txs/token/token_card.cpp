@@ -25,7 +25,7 @@
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
-#include <UChain/mgbubble/utility/Compare.hpp>
+#include <UChainService/api/restful/utility/Compare.hpp>
 
 namespace libbitcoin {
 namespace chain {

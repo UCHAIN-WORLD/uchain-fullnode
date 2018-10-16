@@ -20,7 +20,7 @@
  */
 
 #include <UChain/explorer/commands/offline_commands_impl.hpp>
-#include <UChain/explorer/extensions/exception.hpp>
+#include <UChainService/api/command/exception.hpp>
 
 namespace libbitcoin {
 namespace explorer {

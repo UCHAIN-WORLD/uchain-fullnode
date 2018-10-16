@@ -25,13 +25,13 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <UChain/explorer/command.hpp>
-#include <UChain/explorer/extensions/command_extension.hpp>
-#include <UChain/explorer/extensions/command_extension_func.hpp>
+#include <UChainService/api/command/command_extension.hpp>
+#include <UChainService/api/command/command_extension_func.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/display.hpp>
 #include <UChain/explorer/generated.hpp>
 #include <UChain/explorer/parser.hpp>
-#include <UChain/explorer/extensions/exception.hpp>
+#include <UChainService/api/command/exception.hpp>
 #include <UChain/bitcoin.hpp>
 
 using namespace boost::filesystem;

@@ -25,8 +25,8 @@
 #include <string>
 #include <vector>
 #include <UChain/explorer/command.hpp>
-#include <UChain/explorer/extensions/command_extension.hpp>
-#include <UChain/explorer/extensions/command_extension_func.hpp>
+#include <UChainService/api/command/command_extension.hpp>
+#include <UChainService/api/command/command_extension_func.hpp>
 
 /********* GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY **********/
 
