@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_CHAIN_ATTACHMENT_TOKEN_ATTENUATION_MODEL_HPP
-#define UC_CHAIN_ATTACHMENT_TOKEN_ATTENUATION_MODEL_HPP
+#ifndef UC_CHAIN_UOUT_TOKEN_ATTENUATION_MODEL_HPP
+#define UC_CHAIN_UOUT_TOKEN_ATTENUATION_MODEL_HPP
 
 #include <cstdint>
 #include <UChain/bitcoin/chain/point.hpp>

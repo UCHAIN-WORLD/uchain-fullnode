@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChainService/txs/token/token.hpp>
-#include <UChainService/txs/variant_visitor.hpp>
+#include <UChainService/txs/variant.hpp>
 #include <UChainService/txs/token/token_detail.hpp>
 #include <UChainService/txs/token/token_transfer.hpp>
 #include <sstream>

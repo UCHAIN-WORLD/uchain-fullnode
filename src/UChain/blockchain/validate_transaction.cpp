@@ -782,7 +782,7 @@ code validate_transaction::check_token_cert_transaction() const
         }
         else if (!output.is_ucn() && !output.is_message())
         {
-            log::debug(LOG_BLOCKCHAIN) << "cert: illegal output attachment type:"
+            log::debug(LOG_BLOCKCHAIN) << "cert: illegal output uout type:"
                                        << output.attach_data.get_type()
                                        << ", tx: " << output.to_string(1);
             return error::token_cert_issue_error;
@@ -1038,15 +1038,15 @@ code validate_transaction::check_uid_transaction() const
 
     for (const auto& output : tx.outputs)
     {
-        if ((ret = output.check_attachment_address(chain)) != error::success)
+        if ((ret = output.check_uout_address(chain)) != error::success)
             return ret;
 
         //to_uid check(strong check)
-        if ((ret = check_attachment_to_uid(output)) != error::success)
+        if ((ret = check_uout_to_uid(output)) != error::success)
             return ret;
 
         //from_uid (weak check)
-        if ((ret = connect_attachment_from_uid(output)) != error::success) {
+        if ((ret = connect_uout_from_uid(output)) != error::success) {
             return ret;
         }
 
@@ -1182,7 +1182,7 @@ bool validate_transaction::is_uid_in_orphan_chain(const std::string& uid) const
     return false;
 }
 
-code validate_transaction::check_attachment_to_uid(const output& output) const
+code validate_transaction::check_uout_to_uid(const output& output) const
 {
     auto touid = output.attach_data.get_to_uid();
     if (touid.empty()) {
@@ -1201,13 +1201,13 @@ code validate_transaction::check_attachment_to_uid(const output& output) const
         return error::success;
     }
 
-    log::debug(LOG_BLOCKCHAIN) << "check_attachment_to_uid: "
+    log::debug(LOG_BLOCKCHAIN) << "check_uout_to_uid: "
         << touid << ", address: " << address
         << "; get uid from address is " << uid;
     return error::uid_address_not_match;
 }
 
-code validate_transaction::connect_attachment_from_uid(const output& output) const
+code validate_transaction::connect_uout_from_uid(const output& output) const
 {
     auto from_uid = output.attach_data.get_from_uid();
     if (from_uid.empty()) {
@@ -1218,7 +1218,7 @@ code validate_transaction::connect_attachment_from_uid(const output& output) con
         chain::transaction prev_tx;
         uint64_t prev_height{0};
         if (!get_previous_tx(prev_tx, prev_height, input)) {
-            log::debug(LOG_BLOCKCHAIN) << "connect_attachment_from_uid: input not found: "
+            log::debug(LOG_BLOCKCHAIN) << "connect_uout_from_uid: input not found: "
                                        << encode_hash(input.previous_output.hash);
             return error::input_not_found;
         }
@@ -1236,7 +1236,7 @@ code validate_transaction::connect_attachment_from_uid(const output& output) con
         }
     }
 
-    log::debug(LOG_BLOCKCHAIN) << "connect_attachment_from_uid: input not found for from_uid: "
+    log::debug(LOG_BLOCKCHAIN) << "connect_uout_from_uid: input not found for from_uid: "
                                << from_uid;
     return error::uid_address_not_match;
 }
@@ -1376,12 +1376,12 @@ code validate_transaction::check_transaction_basic() const
             }
         }
 
-        // check attachment, from nova version.
+        // check uout, from nova version.
         if ((tx.version >= transaction_version::check_nova_feature)
             && (!output.attach_data.is_valid())) {
-            log::debug(LOG_BLOCKCHAIN) << "invalid attachment : "
+            log::debug(LOG_BLOCKCHAIN) << "invalid uout : "
                 << output.attach_data.to_string();
-            return error::attachment_invalid;
+            return error::uout_invalid;
         }
     }
 

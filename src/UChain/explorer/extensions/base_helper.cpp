@@ -140,7 +140,7 @@ std::string get_address(const std::string& uid_or_address,
 }
 
 std::string get_address(const std::string& uid_or_address,
-    attachment& attach, bool is_from,
+    uout& attach, bool is_from,
     bc::blockchain::block_chain_impl& blockchain)
 {
     std::string address;
@@ -884,7 +884,7 @@ void base_transfer_common::sync_fetchutxo(
             std::string model_param(new_model_param_ptr->begin(), new_model_param_ptr->end());
             receiver_list_.push_back({record.addr, record.symbol,
                     0, locked_token, utxo_attach_type::token_locked_transfer,
-                    attachment(0, 0, blockchain_message(std::move(model_param))), record.output});
+                    uout(0, 0, blockchain_message(std::move(model_param))), record.output});
             // in secondary issue, locked token can also verify threshold condition
             if (is_locked_token_as_payment()) {
                 payment_token_ = (payment_token_ > locked_token)
@@ -1068,7 +1068,7 @@ void base_transfer_common::populate_ucn_change(const std::string& address)
 
         if (blockchain_.is_valid_address(addr)) {
             receiver_list_.push_back(
-                {addr, "", unspent_ucn_ - payment_ucn_, 0, utxo_attach_type::ucn, attachment()});
+                {addr, "", unspent_ucn_ - payment_ucn_, 0, utxo_attach_type::ucn, uout()});
         }
         else {
             if (addr.length() > UID_DETAIL_SYMBOL_FIX_SIZE) {
@@ -1082,7 +1082,7 @@ void base_transfer_common::populate_ucn_change(const std::string& address)
                     "mychange uid symbol " + addr + "does not exist on the blockchain"};
             }
 
-            attachment attach;
+            uout attach;
             attach.set_version(UID_ATTACH_VERIFY_VERSION);
             attach.set_to_uid(addr);
             receiver_list_.push_back(
@@ -1103,7 +1103,7 @@ void base_transfer_common::populate_token_change(const std::string& address)
 
         if (blockchain_.is_valid_address(addr)) {
             receiver_list_.push_back({addr, symbol_, 0, unspent_token_ - payment_token_,
-                utxo_attach_type::token_transfer, attachment()});
+                utxo_attach_type::token_transfer, uout()});
         }
         else {
             if (addr.length() > UID_DETAIL_SYMBOL_FIX_SIZE) {
@@ -1117,7 +1117,7 @@ void base_transfer_common::populate_token_change(const std::string& address)
                     "mychange uid symbol " + addr + "does not exist on the blockchain"};
             }
 
-            attachment attach;
+            uout attach;
             attach.set_version(UID_ATTACH_VERIFY_VERSION);
             attach.set_to_uid(addr);
             receiver_list_.push_back({uiddetail->get_address(), symbol_, 0, unspent_token_ - payment_token_,
@@ -1202,11 +1202,11 @@ void base_transfer_common::populate_tx_outputs()
         auto&& payment_script = chain::script{ get_script_operations(iter) };
 
         // generate token info
-        auto&& output_att = populate_output_attachment(iter);
-        set_uid_verify_attachment(iter, output_att);
+        auto&& output_att = populate_output_uout(iter);
+        set_uid_verify_uout(iter, output_att);
 
         if (!output_att.is_valid()) {
-            throw tx_validate_exception{"validate transaction failure, invalid output attachment."};
+            throw tx_validate_exception{"validate transaction failure, invalid output uout."};
         }
 
         // fill output
@@ -1234,7 +1234,7 @@ void base_transfer_common::populate_tx_inputs()
     }
 }
 
-void base_transfer_common::set_uid_verify_attachment(const receiver_record& record, attachment& attach)
+void base_transfer_common::set_uid_verify_uout(const receiver_record& record, uout& attach)
 {
     if (record.attach_elem.get_version() == UID_ATTACH_VERIFY_VERSION) {
         attach.set_version(UID_ATTACH_VERIFY_VERSION);
@@ -1243,17 +1243,17 @@ void base_transfer_common::set_uid_verify_attachment(const receiver_record& reco
     }
 }
 
-attachment base_transfer_common::populate_output_attachment(const receiver_record& record)
+uout base_transfer_common::populate_output_uout(const receiver_record& record)
 {
     if ((record.type == utxo_attach_type::ucn)
         || (record.type == utxo_attach_type::deposit)
         || ((record.type == utxo_attach_type::token_transfer)
             && ((record.amount > 0) && (!record.token_amount)))) { // ucn
-        return attachment(UCN_TYPE, attach_version, chain::ucn(record.amount));
+        return uout(UCN_TYPE, attach_version, chain::ucn(record.amount));
     }
     else if (record.type == utxo_attach_type::token_issue
         || record.type == utxo_attach_type::token_secondaryissue) {
-        return attachment(TOKEN_TYPE, attach_version, token(/*set on subclass*/));
+        return uout(TOKEN_TYPE, attach_version, token(/*set on subclass*/));
     }
     else if (record.type == utxo_attach_type::token_transfer
             || record.type == utxo_attach_type::token_locked_transfer
@@ -1261,27 +1261,27 @@ attachment base_transfer_common::populate_output_attachment(const receiver_recor
         auto transfer = chain::token_transfer(record.symbol, record.token_amount);
         auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid token transfer attachment"};
+            throw tx_uout_value_exception{"invalid token transfer uout"};
         }
-        return attachment(TOKEN_TYPE, attach_version, ass);
+        return uout(TOKEN_TYPE, attach_version, ass);
     }
     else if (record.type == utxo_attach_type::message) {
         auto msg = boost::get<blockchain_message>(record.attach_elem.get_attach());
         if (msg.get_content().size() > 128) {
-            throw tx_attachment_value_exception{"memo text length should be less than 128"};
+            throw tx_uout_value_exception{"memo text length should be less than 128"};
         }
         if (!msg.is_valid()) {
-            throw tx_attachment_value_exception{"invalid message attachment"};
+            throw tx_uout_value_exception{"invalid message uout"};
         }
-        return attachment(MESSAGE_TYPE, attach_version, msg);
+        return uout(MESSAGE_TYPE, attach_version, msg);
     }
     else if (record.type == utxo_attach_type::uid_register) {
         uid_detail uiddetail(symbol_, record.target);
         auto ass = uid(UID_DETAIL_TYPE, uiddetail);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid uid register attachment"};
+            throw tx_uout_value_exception{"invalid uid register uout"};
         }
-        return attachment(UID_TYPE, attach_version, ass);
+        return uout(UID_TYPE, attach_version, ass);
     }
     else if (record.type == utxo_attach_type::uid_transfer) {
         auto sh_uid = blockchain_.get_registered_uid(symbol_);
@@ -1291,9 +1291,9 @@ attachment base_transfer_common::populate_output_attachment(const receiver_recor
         sh_uid->set_address(record.target);
         auto ass = uid(UID_TRANSFERABLE_TYPE, *sh_uid);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid uid transfer attachment"};
+            throw tx_uout_value_exception{"invalid uid transfer uout"};
         }
-        return attachment(UID_TYPE, attach_version, ass);
+        return uout(UID_TYPE, attach_version, ass);
     }
     else if (record.type == utxo_attach_type::token_cert
         || record.type == utxo_attach_type::token_cert_autoissue
@@ -1321,16 +1321,16 @@ attachment base_transfer_common::populate_output_attachment(const receiver_recor
         }
 
         if (!cert_info.is_valid()) {
-            throw tx_attachment_value_exception{"invalid cert attachment"};
+            throw tx_uout_value_exception{"invalid cert uout"};
         }
-        return attachment(TOKEN_CERT_TYPE, attach_version, cert_info);
+        return uout(TOKEN_CERT_TYPE, attach_version, cert_info);
     }
     else if (record.type == utxo_attach_type::token_card
         || record.type == utxo_attach_type::token_card_transfer) {
-        return attachment(TOKEN_CARD_TYPE, attach_version, token_card(/*set on subclass*/));
+        return uout(TOKEN_CARD_TYPE, attach_version, token_card(/*set on subclass*/));
     }
 
-    throw tx_attachment_value_exception{
+    throw tx_uout_value_exception{
         "invalid utxo_attach_type value in receiver_record : "
             + std::to_string((uint32_t)record.type)};
 }
@@ -1595,7 +1595,7 @@ void base_transaction_constructor::populate_change()
         auto addr = !mychange_.empty() ? mychange_ : from_list_.begin()->addr;
         receiver_list_.push_back({addr, "", 0, 0,
             utxo_attach_type::message,
-            attachment(0, 0, blockchain_message(message_))});
+            uout(0, 0, blockchain_message(message_))});
     }
 }
 
@@ -1765,7 +1765,7 @@ void issuing_token::sum_payment_amount()
     if (amount > 0) {
         auto&& address = bc::get_developer_community_address(blockchain_.chain_settings().use_testnet_rules);
         auto&& uid = blockchain_.get_uid_from_address(address);
-        receiver_list_.push_back({address, "", amount, 0, utxo_attach_type::ucn, attachment("", uid)});
+        receiver_list_.push_back({address, "", amount, 0, utxo_attach_type::ucn, uout("", uid)});
     }
 }
 
@@ -1780,15 +1780,15 @@ issuing_token::get_script_operations(const receiver_record& record) const
     return base_transfer_helper::get_script_operations(record);
 }
 
-attachment issuing_token::populate_output_attachment(const receiver_record& record)
+uout issuing_token::populate_output_uout(const receiver_record& record)
 {
-    attachment&& attach = base_transfer_common::populate_output_attachment(record);
+    uout&& attach = base_transfer_common::populate_output_uout(record);
 
     if (record.type == utxo_attach_type::token_issue) {
         unissued_token_->set_address(record.target);
         auto ass = token(TOKEN_DETAIL_TYPE, *unissued_token_);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid token issue attachment"};
+            throw tx_uout_value_exception{"invalid token issue uout"};
         }
 
         attach.set_attach(ass);
@@ -1819,7 +1819,7 @@ void sending_token::populate_change()
         auto addr = !mychange_.empty() ? mychange_ : from_list_.begin()->addr;
         receiver_list_.push_back({addr, "", 0, 0,
             utxo_attach_type::message,
-            attachment(0, 0, blockchain_message(message_))});
+            uout(0, 0, blockchain_message(message_))});
     }
 }
 
@@ -1884,14 +1884,14 @@ void secondary_issuing_token::populate_change()
     if (payment_token_ > 0) {
         receiver_list_.push_back({target_address_, symbol_,
             0, payment_token_,
-            utxo_attach_type::token_transfer, attachment()});
+            utxo_attach_type::token_transfer, uout()});
     }
     populate_token_change(target_address_);
 }
 
-attachment secondary_issuing_token::populate_output_attachment(const receiver_record& record)
+uout secondary_issuing_token::populate_output_uout(const receiver_record& record)
 {
-    auto&& attach = base_transfer_common::populate_output_attachment(record);
+    auto&& attach = base_transfer_common::populate_output_uout(record);
 
     if (record.type == utxo_attach_type::token_secondaryissue) {
         auto token_detail = *issued_token_;
@@ -1901,7 +1901,7 @@ attachment secondary_issuing_token::populate_output_attachment(const receiver_re
         token_detail.set_issuer(record.attach_elem.get_to_uid());
         auto ass = token(TOKEN_DETAIL_TYPE, token_detail);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid token secondary issue attachment"};
+            throw tx_uout_value_exception{"invalid token secondary issue uout"};
         }
 
         attach.set_attach(ass);
@@ -1942,7 +1942,7 @@ void registering_uid::sum_payment_amount()
     if (amount > 0) {
         auto&& address = bc::get_developer_community_address(blockchain_.chain_settings().use_testnet_rules);
         auto&& uid = blockchain_.get_uid_from_address(address);
-        receiver_list_.push_back({address, "", amount, 0, utxo_attach_type::ucn, attachment("", uid)});
+        receiver_list_.push_back({address, "", amount, 0, utxo_attach_type::ucn, uout("", uid)});
     }
 }
 
@@ -2066,20 +2066,20 @@ void sending_uid::populate_unspent_list()
     populate_change();
 }
 
-attachment registering_card::populate_output_attachment(const receiver_record& record)
+uout registering_card::populate_output_uout(const receiver_record& record)
 {
-    auto&& attach = base_transfer_common::populate_output_attachment(record);
+    auto&& attach = base_transfer_common::populate_output_uout(record);
 
     if (record.type == utxo_attach_type::token_card) {
         auto iter = card_map_.find(record.symbol);
         if (iter == card_map_.end()) {
-            throw tx_attachment_value_exception{"invalid MIT issue attachment"};
+            throw tx_uout_value_exception{"invalid MIT issue uout"};
         }
 
         auto ass = token_card(record.symbol, record.target, iter->second);
         ass.set_status(CARD_STATUS_REGISTER);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid MIT issue attachment"};
+            throw tx_uout_value_exception{"invalid MIT issue uout"};
         }
 
         attach.set_attach(ass);
@@ -2088,15 +2088,15 @@ attachment registering_card::populate_output_attachment(const receiver_record& r
     return attach;
 }
 
-attachment transferring_card::populate_output_attachment(const receiver_record& record)
+uout transferring_card::populate_output_uout(const receiver_record& record)
 {
-    auto&& attach = base_transfer_common::populate_output_attachment(record);
+    auto&& attach = base_transfer_common::populate_output_uout(record);
 
     if (record.type == utxo_attach_type::token_card_transfer) {
         auto ass = token_card(record.symbol, record.target, "");
         ass.set_status(CARD_STATUS_TRANSFER);
         if (!ass.is_valid()) {
-            throw tx_attachment_value_exception{"invalid MIT transfer attachment"};
+            throw tx_uout_value_exception{"invalid MIT transfer uout"};
         }
 
         attach.set_attach(ass);

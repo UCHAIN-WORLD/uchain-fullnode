@@ -10,7 +10,7 @@
 #include "script/script.h"
 #include "serialize.h"
 #include "uint256.h"
-#include <UChainService/txs/attachment.hpp>
+#include <UChainService/txs/uout.hpp>
 
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
@@ -308,7 +308,7 @@ class CTxOut
 public:
     CAmount nValue;
     CScript scriptPubKey;
-    // add for attachment
+    // add for uout
     uint32_t version;
     uint32_t type;
     std::string fromuid;

@@ -322,7 +322,7 @@ Json::Value json_helper::prop_list(const tx_output_type& tx_output)
         tree["attenuation_model_param"] = prop_attenuation_model_param(model_param);
     }
 
-    tree["attachment"] = prop_list(const_cast<bc::chain::attachment&>(tx_output.attach_data));
+    tree["uout"] = prop_list(const_cast<bc::chain::uout&>(tx_output.attach_data));
     return tree;
 }
 
@@ -613,7 +613,7 @@ Json::Value json_helper::prop_list(const bc::chain::account_multisig& acc_multis
     return tree;
 }
 
-Json::Value json_helper::prop_list(bc::chain::attachment& attach_data)
+Json::Value json_helper::prop_list(bc::chain::uout& attach_data)
 {
     Json::Value tree;
 

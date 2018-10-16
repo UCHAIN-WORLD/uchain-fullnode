@@ -28,29 +28,29 @@ namespace libbitcoin {
 namespace explorer {
 namespace commands{
 
-/// NOTICE: this type is not equal to attachment_type and business_kind
-/// attachment_type : the collapsed type of tx output attachment, **recorded on blockchain**
-/// business_kind   : the expanded type of attachment, mainly used for database/history query
+/// NOTICE: this type is not equal to uout_type and business_kind
+/// uout_type : the collapsed type of tx output uout, **recorded on blockchain**
+/// business_kind   : the expanded type of uout, mainly used for database/history query
 /// for example :
-/// attachment_type           |  business_kind
+/// uout_type           |  business_kind
 /// -------------------------------------------------------------------
-/// attachment_ucn           --> ucn
-/// attachment_ucn_award     --> ucn_award
-/// attachment_token         --> token_issue | token_transfer
-/// attachment_message       --> message
-/// attachment_uid           --> uid_register   |  uid_transfer
-/// attachment_token_cert    --> token_cert
-/// attachment_token_card     --> token_card
+/// uout_ucn           --> ucn
+/// uout_ucn_award     --> ucn_award
+/// uout_token         --> token_issue | token_transfer
+/// uout_message       --> message
+/// uout_uid           --> uid_register   |  uid_transfer
+/// uout_token_cert    --> token_cert
+/// uout_token_card     --> token_card
 /// -------------------------------------------------------------------
 /// utxo_attach_type is only used in explorer module
-/// utxo_attach_type will be used to generate attachment with attachment_type and content
+/// utxo_attach_type will be used to generate uout with uout_type and content
 /// for example :
-/// utxo_attach_type::token_issue    --> attachment_token of token_detail
+/// utxo_attach_type::token_issue    --> uout_token of token_detail
 ///     auto token_detail = token(TOKEN_DETAIL_TYPE, token_detail);
-///     attachment(TOKEN_TYPE, attach_version, token_detail);
-/// utxo_attach_type::token_transfer --> attachment_token of token_transfer
+///     uout(TOKEN_TYPE, attach_version, token_detail);
+/// utxo_attach_type::token_transfer --> uout_token of token_transfer
 ///     auto token_transfer = token(TOKEN_TRANSFERABLE_TYPE, token_transfer);
-///     attachment(TOKEN_TYPE, attach_version, token_transfer);
+///     uout(TOKEN_TYPE, attach_version, token_transfer);
 /// NOTICE: createrawtx / createmultisigtx --type option is using these values.
 /// DO NOT CHANGE EXIST ITEMS!!!
 enum class utxo_attach_type : uint32_t
@@ -101,7 +101,7 @@ struct receiver_record
     token_cert_type token_cert{token_cert_ns::none};
 
     utxo_attach_type type{utxo_attach_type::invalid};
-    attachment attach_elem;  // used for MESSAGE_TYPE, used for information transfer etc.
+    uout attach_elem;  // used for MESSAGE_TYPE, used for information transfer etc.
     chain::input_point input_point{null_hash, max_uint32};
 
     receiver_record()
@@ -117,7 +117,7 @@ struct receiver_record
 
     receiver_record(const std::string& target_, const std::string& symbol_,
         uint64_t amount_, uint64_t token_amount_,
-        utxo_attach_type type_, const attachment& attach_elem_ = attachment(),
+        utxo_attach_type type_, const uout& attach_elem_ = uout(),
         const chain::input_point& input_point_ = {null_hash, max_uint32})
         : receiver_record(target_, symbol_, amount_, token_amount_,
             token_cert_ns::none, type_, attach_elem_, input_point_)
@@ -125,7 +125,7 @@ struct receiver_record
 
     receiver_record(const std::string& target_, const std::string& symbol_,
         uint64_t amount_, uint64_t token_amount_, token_cert_type token_cert_,
-        utxo_attach_type type_, const attachment& attach_elem_ = attachment(),
+        utxo_attach_type type_, const uout& attach_elem_ = uout(),
         const chain::input_point& input_point_ = {null_hash, max_uint32})
         : target(target_)
         , symbol(symbol_)
@@ -208,7 +208,7 @@ std::string get_address(const std::string& uid_or_address,
     bc::blockchain::block_chain_impl& blockchain);
 
 std::string get_address(const std::string& uid_or_address,
-    attachment& attach, bool is_from,
+    uout& attach, bool is_from,
     bc::blockchain::block_chain_impl& blockchain);
 
 std::string get_address_from_uid(const std::string& uid,
@@ -264,7 +264,7 @@ public:
     virtual chain::operation::stack get_script_operations(const receiver_record& record) const;
     virtual void sync_fetchutxo(
             const std::string& prikey, const std::string& addr, filter filter = FILTER_ALL);
-    virtual attachment populate_output_attachment(const receiver_record& record);
+    virtual uout populate_output_uout(const receiver_record& record);
     virtual void sum_payments();
     virtual void sum_payment_amount();
     virtual void populate_change();
@@ -302,7 +302,7 @@ public:
 
     virtual std::string get_sign_tx_multisig_script(const address_token_record& from) const;
 
-    void set_uid_verify_attachment(const receiver_record& record, attachment& attach);
+    void set_uid_verify_uout(const receiver_record& record, uout& attach);
 
 protected:
     bc::blockchain::block_chain_impl& blockchain_;
@@ -512,7 +512,7 @@ public:
 
     void sum_payments() override;
     void sum_payment_amount() override;
-    attachment populate_output_attachment(const receiver_record& record) override;
+    uout populate_output_uout(const receiver_record& record) override;
     chain::operation::stack get_script_operations(const receiver_record& record) const override;
 
 private:
@@ -540,7 +540,7 @@ public:
 
     void sum_payment_amount() override;
     void populate_change() override;
-    attachment populate_output_attachment(const receiver_record& record) override;
+    uout populate_output_uout(const receiver_record& record) override;
     chain::operation::stack get_script_operations(const receiver_record& record) const override;
 
     uint64_t get_volume() { return volume_; };
@@ -741,7 +741,7 @@ public:
         tx_.locktime = 0;
     };
 
-    attachment populate_output_attachment(const receiver_record& record) override;
+    uout populate_output_uout(const receiver_record& record) override;
 
 private:
     std::map<std::string, std::string> card_map_;
@@ -768,7 +768,7 @@ public:
         tx_.locktime = 0;
     };
 
-    attachment populate_output_attachment(const receiver_record& record) override;
+    uout populate_output_uout(const receiver_record& record) override;
 };
 
 

@@ -69,8 +69,8 @@ public:
     bool connect_uid_input(const uid& info) const;
     bool is_uid_match_address_in_orphan_chain(const std::string& symbol, const std::string& address) const;
     bool is_uid_in_orphan_chain(const std::string& uid) const;
-    code check_attachment_to_uid(const output& output) const;
-    code connect_attachment_from_uid(const output& output) const;
+    code check_uout_to_uid(const output& output) const;
+    code connect_uout_from_uid(const output& output) const;
 
     bool connect_input(const chain::transaction& previous_tx, size_t parent_height);
 

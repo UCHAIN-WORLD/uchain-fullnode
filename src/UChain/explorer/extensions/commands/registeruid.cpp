@@ -91,7 +91,7 @@ console_result registeruid::invoke(Json::Value &jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {argument_.address, argument_.symbol, 0, 0, utxo_attach_type::uid_register, attachment()}};
+        {argument_.address, argument_.symbol, 0, 0, utxo_attach_type::uid_register, uout()}};
 
     auto register_helper = registering_uid(
                                *this, blockchain, std::move(auth_.name), std::move(auth_.auth),

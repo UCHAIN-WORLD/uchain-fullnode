@@ -48,7 +48,7 @@ console_result sendtoken::invoke(Json::Value& jv_output,
         throw token_amount_exception{"invalid token amount parameter!"};
     }
 
-    attachment attach;
+    uout attach;
     std::string to_address = get_address(argument_.to, attach, false, blockchain);
     std::string change_address = get_address(option_.change, blockchain);
 

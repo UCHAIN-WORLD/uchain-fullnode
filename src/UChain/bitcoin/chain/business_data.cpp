@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChain/bitcoin/chain/business_data.hpp>
-#include <UChainService/txs/variant_visitor.hpp>
+#include <UChainService/txs/variant.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
 #include <UChain/bitcoin/utility/container_sink.hpp>

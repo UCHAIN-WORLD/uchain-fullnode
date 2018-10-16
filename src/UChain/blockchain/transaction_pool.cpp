@@ -168,14 +168,14 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
     {
         for (auto &output : txs->outputs)
         {
-            //add attachment check;avoid send with uid while transfer
+            //add uout check;avoid send with uid while transfer
             if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION)
             {
                 auto check_uid = [&uids, &uidattaches](string attach_uid) {
                     if (!attach_uid.empty() && uids.find(attach_uid) != uids.end())
                     {
                         log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat attachment uid: " + attach_uid
+                        << "check_symbol_repeat uout uid: " + attach_uid
                         << " already exists in memorypool!";
                         return false;
                     }
@@ -258,7 +258,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                 if (uidattaches.find(uidsymbol) != uidattaches.end())
                 {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat attachment uid: " + uidsymbol
+                        << "check_symbol_repeat uout uid: " + uidsymbol
                         << " already transfer in memorypool!"
                         << " " << tx->to_string(1);
                     return error::uid_exist;

@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChainService/txs/uid/uid.hpp>
-#include <UChainService/txs/variant_visitor.hpp>
+#include <UChainService/txs/variant.hpp>
 #include <UChainService/txs/uid/uid_detail.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>

@@ -131,7 +131,7 @@ console_result issuecert::invoke (Json::Value& jv_output,
     std::vector<receiver_record> receiver{
         {to_address, argument_.symbol, 0, 0,
             certs_create, utxo_attach_type::token_cert_issue,
-            attachment("", to_uid)}
+            uout("", to_uid)}
     };
 
     if (certs_create == token_cert_ns::naming) {
@@ -139,7 +139,7 @@ console_result issuecert::invoke (Json::Value& jv_output,
         receiver.push_back(
             {to_address, domain, 0, 0,
                 token_cert_ns::domain, utxo_attach_type::token_cert,
-                attachment("", to_uid)}
+                uout("", to_uid)}
         );
     }
 

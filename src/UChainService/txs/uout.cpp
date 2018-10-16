@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainService/txs/attachment.hpp>
-#include <UChainService/txs/variant_visitor.hpp>
+#include <UChainService/txs/uout.hpp>
+#include <UChainService/txs/variant.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
 #include <UChain/bitcoin/utility/container_sink.hpp>
@@ -29,14 +29,14 @@
 namespace libbitcoin {
 namespace chain {
 
-attachment::attachment()
+uout::uout()
 {
     reset();
 }
 
-attachment::attachment(const std::string& from_uid, const std::string& to_uid)
+uout::uout(const std::string& from_uid, const std::string& to_uid)
     : version(UID_ATTACH_VERIFY_VERSION)
-    , type(0) //attachment_type::attach_none;
+    , type(0) //uout_type::attach_none;
     , touid(to_uid)
     , fromuid(from_uid)
 {
@@ -44,38 +44,38 @@ attachment::attachment(const std::string& from_uid, const std::string& to_uid)
     boost::apply_visitor(visitor, attach);
 }
 
-attachment attachment::factory_from_data(const data_chunk& data)
+uout uout::factory_from_data(const data_chunk& data)
 {
-    attachment instance;
+    uout instance;
     instance.from_data(data);
     return instance;
 }
 
-attachment attachment::factory_from_data(std::istream& stream)
+uout uout::factory_from_data(std::istream& stream)
 {
-    attachment instance;
+    uout instance;
     instance.from_data(stream);
     return instance;
 }
 
-attachment attachment::factory_from_data(reader& source)
+uout uout::factory_from_data(reader& source)
 {
-    attachment instance;
+    uout instance;
     instance.from_data(source);
     return instance;
 }
 
-void attachment::reset()
+void uout::reset()
 {
     version = 0;
-    type = 0; //attachment_type::attach_none;
+    type = 0; //uout_type::attach_none;
     auto visitor = reset_visitor();
     boost::apply_visitor(visitor, attach);
     touid = "";
     fromuid = "";
 }
 
-bool attachment::is_valid() const
+bool uout::is_valid() const
 {
     if (!is_valid_type()) {
         return false;
@@ -84,7 +84,7 @@ bool attachment::is_valid() const
     return boost::apply_visitor(visitor, attach);
 }
 
-bool attachment::is_valid_type() const
+bool uout::is_valid_type() const
 {
     return ((UCN_TYPE == type)
         || (TOKEN_TYPE == type)
@@ -96,19 +96,19 @@ bool attachment::is_valid_type() const
 }
 
 
-bool attachment::from_data(const data_chunk& data)
+bool uout::from_data(const data_chunk& data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool attachment::from_data(std::istream& stream)
+bool uout::from_data(std::istream& stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool attachment::from_data(reader& source)
+bool uout::from_data(reader& source)
 {
     reset();
 
@@ -174,7 +174,7 @@ bool attachment::from_data(reader& source)
     return result;
 }
 
-data_chunk attachment::to_data() const
+data_chunk uout::to_data() const
 {
     data_chunk data;
     data_sink ostream(data);
@@ -184,13 +184,13 @@ data_chunk attachment::to_data() const
     return data;
 }
 
-void attachment::to_data(std::ostream& stream) const
+void uout::to_data(std::ostream& stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void attachment::to_data(writer& sink) const
+void uout::to_data(writer& sink) const
 {
     sink.write_4_bytes_little_endian(version);
     sink.write_4_bytes_little_endian(type);
@@ -202,7 +202,7 @@ void attachment::to_data(writer& sink) const
     boost::apply_visitor(visitor, attach);
 }
 
-uint64_t attachment::serialized_size() const
+uint64_t uout::serialized_size() const
 {
     uint64_t size = 0;
     if(version == UID_ATTACH_VERIFY_VERSION) {
@@ -218,7 +218,7 @@ uint64_t attachment::serialized_size() const
     return size;
 }
 
-std::string attachment::to_string() const
+std::string uout::to_string() const
 {
     std::ostringstream ss;
 
@@ -234,47 +234,47 @@ std::string attachment::to_string() const
     return ss.str();
 }
 
-uint32_t attachment::get_version() const
+uint32_t uout::get_version() const
 {
     return version;
 }
-void attachment::set_version(uint32_t version)
+void uout::set_version(uint32_t version)
 {
      this->version = version;
 }
 
-uint32_t attachment::get_type() const
+uint32_t uout::get_type() const
 {
     return type;
 }
-void attachment::set_type(uint32_t type)
+void uout::set_type(uint32_t type)
 {
      this->type = type;
 }
 
-std::string attachment::get_to_uid() const
+std::string uout::get_to_uid() const
 {
     return touid;
 }
-void attachment::set_to_uid(const std::string& uid)
+void uout::set_to_uid(const std::string& uid)
 {
     this->touid = uid;
 }
 
-std::string attachment::get_from_uid() const
+std::string uout::get_from_uid() const
 {
     return fromuid;
 }
-void attachment::set_from_uid(const std::string& uid)
+void uout::set_from_uid(const std::string& uid)
 {
      this->fromuid = uid;
 }
 
-attachment::attachment_data_type& attachment::get_attach()
+uout::uout_data_type& uout::get_attach()
 {
     return this->attach;
 }
-const attachment::attachment_data_type& attachment::get_attach() const
+const uout::uout_data_type& uout::get_attach() const
 {
     return this->attach;
 }

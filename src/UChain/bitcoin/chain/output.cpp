@@ -139,27 +139,27 @@ std::string output::get_script_address() const
     return payment_address.encoded();
 }
 
-code output::check_attachment_address(bc::blockchain::block_chain_impl& chain) const
+code output::check_uout_address(bc::blockchain::block_chain_impl& chain) const
 {
     bool is_token = false;
     bool is_uid = false;
-    std::string attachment_address;
+    std::string uout_address;
     if (is_token_issue() || is_token_secondaryissue() || is_token_card()) {
-        attachment_address = get_token_address();
+        uout_address = get_token_address();
         is_token = true;
     } else if (is_token_cert()) {
-        attachment_address = get_token_cert_address();
+        uout_address = get_token_cert_address();
         is_token = true;
     } else if (is_uid_register() || is_uid_transfer()) {
-        attachment_address = get_uid_address();
+        uout_address = get_uid_address();
         is_uid = true;
     }
     if (is_token || is_uid) {
         auto script_address = get_script_address();
-        if (attachment_address != script_address) {
-            log::debug("output::check_attachment_address")
+        if (uout_address != script_address) {
+            log::debug("output::check_uout_address")
                 << (is_token ? "token" : "uid")
-                << " attachment address " << attachment_address
+                << " uout address " << uout_address
                 << " is not equal to script address " << script_address;
             if (is_token) {
                 return error::token_address_not_match;

@@ -56,7 +56,7 @@ console_result deposit::invoke(Json::Value& jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {addr, "", argument_.amount, 0, utxo_attach_type::deposit, attachment()}
+        {addr, "", argument_.amount, 0, utxo_attach_type::deposit, uout()}
     };
     auto deposit_helper = depositing_ucn(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
             std::move(addr), std::move(receiver), argument_.deposit, argument_.fee);
