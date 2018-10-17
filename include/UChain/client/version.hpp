@@ -1,5 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2014-2018 libbitcoin-client developers (see COPYING).
+// Copyright (c) 2011-2018 libbitcoin developers 
+// Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
 //
 //        GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 //

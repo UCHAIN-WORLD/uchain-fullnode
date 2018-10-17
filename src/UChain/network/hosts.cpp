@@ -24,8 +24,7 @@
 #include <cstddef>
 #include <string>
 #include <vector>
-#include <UChain/bitcoin.hpp>
-#include <UChain/bitcoin/utility/path.hpp>
+#include <UChainService/txs/utility/path.hpp>
 #include <UChain/network/settings.hpp>
 
 namespace libbitcoin {

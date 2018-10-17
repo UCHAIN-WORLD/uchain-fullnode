@@ -26,7 +26,7 @@
 #include <memory>
 #include <UChain/node.hpp>
 #include <UChain/protocol.hpp>
-#include <UChain/server/configuration.hpp>
+#include <UChain/server/config.hpp>
 #include <UChain/server/define.hpp>
 #include <UChain/server/messages/message.hpp>
 #include <UChain/server/messages/route.hpp>
@@ -36,7 +36,7 @@
 #include <UChain/server/services/transaction_service.hpp>
 #include <UChain/server/utility/authenticator.hpp>
 #include <UChain/server/workers/notification_worker.hpp>
-#include <UChain/bitcoin/utility/path.hpp>
+#include <UChainService/txs/utility/path.hpp>
 #include <UChain/consensus/miner.hpp>
 
 #include <boost/shared_ptr.hpp>

@@ -16,7 +16,7 @@
 
 #include <UChain/node.hpp>
 #include <UChain/protocol.hpp>
-#include <UChain/server/configuration.hpp>
+#include <UChain/server/config.hpp>
 #include <UChain/server/define.hpp>
 #include <UChain/server/parser.hpp>
 #include <UChain/server/server_node.hpp>

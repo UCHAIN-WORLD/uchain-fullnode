@@ -27,7 +27,7 @@
 #include <boost/program_options.hpp>
 #include <boost/throw_exception.hpp>
 #include <UChain/bitcoin/unicode/ifstream.hpp>
-#include <UChain/bitcoin/utility/path.hpp>
+#include <UChainService/txs/utility/path.hpp>
 
 namespace libbitcoin {
 namespace config {

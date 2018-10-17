@@ -24,7 +24,7 @@
 #include <ostream>
 #include <UChain/bitcoin.hpp>
 #include <UChain/server/define.hpp>
-#include <UChain/server/configuration.hpp>
+#include <UChain/server/config.hpp>
 
 namespace libbitcoin {
 namespace server {

@@ -27,7 +27,7 @@
 #include <algorithm>
 #include <boost/filesystem.hpp>
 #include <UChain/bitcoin.hpp>
-#include <UChain/bitcoin/utility/path.hpp>
+#include <UChainService/txs/utility/path.hpp>
 #include <UChain/bitcoin/config/base16.hpp>  // used by db_metadata and push_asset
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/settings.hpp>

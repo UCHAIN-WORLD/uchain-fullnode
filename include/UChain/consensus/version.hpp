@@ -12,7 +12,7 @@
  * For interpretation of the versioning scheme see: http://semver.org
  */
 
-#define UC_CONSENSUS_VERSION "0.6.0"
+#define UC_CONSENSUS_VERSION "0.0.1"
 #define UC_CONSENSUS_MAJOR_VERSION 0
 #define UC_CONSENSUS_MINOR_VERSION 6
 #define UC_CONSENSUS_PATCH_VERSION 0
