@@ -14,7 +14,7 @@
 
 #define UC_VERSION "0.0.1"
 #define UC_MAJOR_VERSION 0
-#define UC_MINOR_VERSION 8
-#define UC_PATCH_VERSION 3
+#define UC_MINOR_VERSION 0
+#define UC_PATCH_VERSION 1
 
 #endif

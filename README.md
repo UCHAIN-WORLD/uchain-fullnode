@@ -72,13 +72,13 @@ $ sudo ./install_dependencies.sh --build-boost --build-upnpc
 $ sudo yum/brew/apt-get install libboost-all-dev
 ```
 
-## ZeroMQ 4.2.1+
+## ZeroMQ 4.2.5+
 Modules server/explorer required.
 
 ```bash
-$ wget https://github.com/zeromq/libzmq/releases/download/v4.2.1/zeromq-4.2.1.tar.gz
-$ tar -xzvf zeromq-4.2.1.tar.gz
-$ cd zeromq-4.2.1
+$ wget https://github.com/zeromq/libzmq/releases/download/v4.2.5/zeromq-4.2.5.tar.gz
+$ tar -xzvf zeromq-4.2.5.tar.gz
+$ cd zeromq-4.2.5
 $ ./autogen.sh
 $ ./configure
 $ make -j4

@@ -13,9 +13,9 @@
  * For interpretation of the versioning scheme see: http://semver.org
  */
 
-#define UC_CLIENT_VERSION "0.6.0"
+#define UC_CLIENT_VERSION "0.0.1"
 #define UC_CLIENT_MAJOR_VERSION 0
-#define UC_CLIENT_MINOR_VERSION 6
-#define UC_CLIENT_PATCH_VERSION 0
+#define UC_CLIENT_MINOR_VERSION 0
+#define UC_CLIENT_PATCH_VERSION 1
 
 #endif
