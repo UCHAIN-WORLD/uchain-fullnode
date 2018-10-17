@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/path.hpp>
+#include <UChainService/txs/utility/path.hpp>
 #include <UChain/bitcoin/unicode/ifstream.hpp>
 #include <boost/program_options.hpp>
 #include <jsoncpp/json/json.h>

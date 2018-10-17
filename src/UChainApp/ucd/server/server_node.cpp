@@ -24,7 +24,7 @@
 #include <functional>
 #include <memory>
 #include <UChain/node.hpp>
-#include <UChain/server/configuration.hpp>
+#include <UChain/server/config.hpp>
 #include <UChain/server/messages/route.hpp>
 #include <UChain/server/workers/query_worker.hpp>
 #include <UChain/rest.hpp>

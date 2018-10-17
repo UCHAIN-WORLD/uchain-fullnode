@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <functional>
 #include <memory>
-#include <UChain/server/configuration.hpp>
+#include <UChain/server/config.hpp>
 #include <UChain/server/messages/message.hpp>
 #include <UChain/server/server_node.hpp>
 #include <UChain/server/utility/fetch_helpers.hpp>

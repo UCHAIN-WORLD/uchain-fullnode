@@ -23,7 +23,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <UChain/blockchain.hpp>
-#include <UChain/server/configuration.hpp>
+#include <UChain/server/config.hpp>
 #include <UChain/server/messages/message.hpp>
 
 namespace libbitcoin {

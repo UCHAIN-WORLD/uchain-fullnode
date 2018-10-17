@@ -23,7 +23,7 @@
 #include <functional>
 #include <memory>
 #include <UChain/protocol.hpp>
-#include <UChain/server/configuration.hpp>
+#include <UChain/server/config.hpp>
 #include <UChain/server/server_node.hpp>
 #include <UChain/server/settings.hpp>
 

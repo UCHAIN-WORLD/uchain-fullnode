@@ -27,7 +27,7 @@
 #include <UChain/node.hpp>
 #include <UChain/server/define.hpp>
 #include <UChain/server/settings.hpp>
-#include <UChain/bitcoin/utility/path.hpp>
+#include <UChainService/txs/utility/path.hpp>
 
 BC_DECLARE_CONFIG_DEFAULT_PATH(".UChain" / "uc.conf")
 

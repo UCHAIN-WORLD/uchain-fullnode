@@ -31,8 +31,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <UChain/server.hpp>
-#include <UChain/bitcoin/utility/backtrace.hpp>
-#include <UChain/bitcoin/utility/path.hpp>
+#include <UChainService/txs/utility/callstack.hpp>
+#include <UChainService/txs/utility/path.hpp>
 
 namespace libbitcoin {
 namespace server {
@@ -308,7 +308,7 @@ void executor::handle_stop(int code)
 
     if(SIGINT != code)
     {
-        do_backtrace("signal.out");
+        do_callstack("signal.out");
     }
 
     log::info(LOG_SERVER) << format(BS_NODE_SIGNALED) % code;
