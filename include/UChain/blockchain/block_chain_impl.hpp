@@ -379,7 +379,7 @@ private:
     void fetch_serial(perform_read_functor perform_read);
     bool stopped() const;
 
-    std::string get_token_symbol_from_business_data(const business_data& data);
+    std::string get_token_symbol_from_asset_data(const asset_data& data);
 
 private:
     std::atomic<bool> stopped_;

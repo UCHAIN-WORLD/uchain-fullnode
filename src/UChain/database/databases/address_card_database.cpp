@@ -213,7 +213,7 @@ business_record::list address_card_database::get(const short_hash& key,
             // timestamp;
             //deserial.read_4_bytes_little_endian(),
 
-            business_data::factory_from_data(deserial) // 2 + 4 are in this class
+            asset_data::factory_from_data(deserial) // 2 + 4 are in this class
         };
     };
 
@@ -277,7 +277,7 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(const s
             // timestamp;
             //deserial.read_4_bytes_little_endian(),
 
-            business_data::factory_from_data(deserial) // 2 + 4 are in this class
+            asset_data::factory_from_data(deserial) // 2 + 4 are in this class
         };
     };
 
@@ -365,7 +365,7 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(const s
             // timestamp;
             //deserial.read_4_bytes_little_endian(),
 
-            business_data::factory_from_data(deserial) // 2 + 4 are in this class
+            asset_data::factory_from_data(deserial) // 2 + 4 are in this class
         };
     };
 
@@ -416,7 +416,7 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(size_t 
             // timestamp;
             //deserial.read_4_bytes_little_endian(),
 
-            business_data::factory_from_data(deserial) // 2 + 4 are in this class
+            asset_data::factory_from_data(deserial) // 2 + 4 are in this class
         };
     };
 
@@ -465,7 +465,7 @@ business_record address_card_database::get_record(size_t idx) const
             // timestamp;
             //deserial.read_4_bytes_little_endian(),
 
-            business_data::factory_from_data(deserial) // 2 + 4 are in this class
+            asset_data::factory_from_data(deserial) // 2 + 4 are in this class
         };
     };
 

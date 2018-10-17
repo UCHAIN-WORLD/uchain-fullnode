@@ -27,7 +27,7 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/primitives/record_multimap.hpp>
-#include <UChain/bitcoin/chain/business_data.hpp>
+#include <UChain/bitcoin/chain/asset_data.hpp>
 
 using namespace libbitcoin::chain;
 
@@ -74,7 +74,7 @@ public:
 
     template <class BusinessDataType>
     void store_output(const short_hash& key, const output_point& outpoint,
-        uint32_t output_height, uint64_t value, uint16_t business_kd, uint32_t timestamp, BusinessDataType& business_data)
+        uint32_t output_height, uint64_t value, uint16_t business_kd, uint32_t timestamp, BusinessDataType& asset_data)
     {
         //delete_last_row(key);
         auto write = [&](memory_ptr data)
@@ -86,7 +86,7 @@ public:
             serial.write_8_bytes_little_endian(value);  // 8
             serial.write_2_bytes_little_endian(business_kd); // 2
             serial.write_4_bytes_little_endian(timestamp); // 4
-            serial.write_data(business_data.to_data());
+            serial.write_data(asset_data.to_data());
         };
         rows_multimap_.add_row(key, write);
     }

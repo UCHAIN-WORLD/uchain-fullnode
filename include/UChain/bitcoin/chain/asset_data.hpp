@@ -67,7 +67,7 @@ enum business_status : uint8_t
     unknown = 0xff
 };
 
-class BC_API business_data
+class BC_API asset_data
 {
 public:
     typedef boost::variant<
@@ -78,11 +78,11 @@ public:
         token_cert,
         token_card,
         blockchain_message,
-        uid_detail> business_data_type;
+        uid_detail> asset_data_type;
 
-    static business_data factory_from_data(const data_chunk& data);
-    static business_data factory_from_data(std::istream& stream);
-    static business_data factory_from_data(reader& source);
+    static asset_data factory_from_data(const data_chunk& data);
+    static asset_data factory_from_data(std::istream& stream);
+    static asset_data factory_from_data(reader& source);
     static uint64_t satoshi_fixed_size();
 
     bool from_data(const data_chunk& data);
@@ -99,13 +99,13 @@ public:
     void reset();
     uint64_t serialized_size() ;
     business_kind get_kind_value() const;
-    const business_data_type& get_data() const;
+    const asset_data_type& get_data() const;
     uint32_t get_timestamp() const;
 
 private:
     business_kind kind; // 2 size
     uint32_t timestamp; // 4 size
-    business_data_type data;
+    asset_data_type data;
 
 };
 
@@ -135,7 +135,7 @@ public:
         uint64_t previous_checksum;
     } val_chk_sum;
 
-    business_data data;
+    asset_data data;
 
 #ifdef UC_DEBUG
     // just used for debug code in block_chain_impl_test.cpp
@@ -176,7 +176,7 @@ public:
         uint64_t temporary_checksum;
     };
     uint32_t status; // 0 -- unspend  1 -- confirmed
-    business_data data;  // for output only
+    asset_data data;  // for output only
 
 #ifdef UC_DEBUG
     // just used for debug code in block_chain_impl_test.cpp

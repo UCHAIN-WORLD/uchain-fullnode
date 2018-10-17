@@ -1577,7 +1577,7 @@ uint64_t block_chain_impl::get_token_volume(const std::string& token)
     return database_.tokens.get_token_volume(token);
 }
 
-std::string block_chain_impl::get_token_symbol_from_business_data(const business_data& data)
+std::string block_chain_impl::get_token_symbol_from_asset_data(const asset_data& data)
 {
     std::string token_symbol("");
     if (data.get_kind_value() == business_kind::token_issue) {
@@ -1620,7 +1620,7 @@ std::shared_ptr<business_history::list> block_chain_impl::get_address_business_h
         }
 
         // token business process
-        std::string&& token_symbol = get_token_symbol_from_business_data(iter->data);
+        std::string&& token_symbol = get_token_symbol_from_asset_data(iter->data);
         if (symbol == token_symbol) {
             ret_vector->emplace_back(std::move(*iter));
         }
@@ -1644,7 +1644,7 @@ std::shared_ptr<business_record::list> block_chain_impl::get_address_business_re
     else { // token symbol utxo
         for (auto iter = sh_vec->begin(); iter != sh_vec->end(); ++iter){
             // token business process
-            std::string&& token_symbol = get_token_symbol_from_business_data(iter->data);
+            std::string&& token_symbol = get_token_symbol_from_asset_data(iter->data);
             if (symbol == token_symbol) {
                 ret_vector->emplace_back(std::move(*iter));
             }

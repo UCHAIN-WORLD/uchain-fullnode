@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/chain/business_data.hpp>
+#include <UChain/bitcoin/chain/asset_data.hpp>
 #include <UChainService/txs/variant.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
@@ -39,40 +39,40 @@
 namespace libbitcoin {
 namespace chain {
 
-business_data business_data::factory_from_data(const data_chunk& data)
+asset_data asset_data::factory_from_data(const data_chunk& data)
 {
-    business_data instance;
+    asset_data instance;
     instance.from_data(data);
     return instance;
 }
 
-business_data business_data::factory_from_data(std::istream& stream)
+asset_data asset_data::factory_from_data(std::istream& stream)
 {
-    business_data instance;
+    asset_data instance;
     instance.from_data(stream);
     return instance;
 }
 
-business_data business_data::factory_from_data(reader& source)
+asset_data asset_data::factory_from_data(reader& source)
 {
-    business_data instance;
+    asset_data instance;
     instance.from_data(source);
     return instance;
 }
 
-void business_data::reset()
+void asset_data::reset()
 {
     kind = business_kind::ucn;
     timestamp = 0;
     auto visitor = reset_visitor();
     boost::apply_visitor(visitor, data);
 }
-bool business_data::is_valid() const
+bool asset_data::is_valid() const
 {
     return true;
 }
 
-bool business_data::is_valid_type() const
+bool asset_data::is_valid_type() const
 {
     return ((UCN_TYPE == KIND2UINT16(kind))
             || (TOKEN_ISSUE_TYPE == KIND2UINT16(kind))
@@ -85,19 +85,19 @@ bool business_data::is_valid_type() const
             || (UID_TRANSFER_TYPE == KIND2UINT16(kind));
 }
 
-bool business_data::from_data(const data_chunk& data)
+bool asset_data::from_data(const data_chunk& data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool business_data::from_data(std::istream& stream)
+bool asset_data::from_data(std::istream& stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool business_data::from_data(reader& source)
+bool asset_data::from_data(reader& source)
 {
     reset();
     kind = static_cast<business_kind>(source.read_2_bytes_little_endian());
@@ -167,7 +167,7 @@ bool business_data::from_data(reader& source)
 
 }
 
-data_chunk business_data::to_data()
+data_chunk asset_data::to_data()
 {
     data_chunk data;
     data_sink ostream(data);
@@ -176,13 +176,13 @@ data_chunk business_data::to_data()
     return data;
 }
 
-void business_data::to_data(std::ostream& stream)
+void asset_data::to_data(std::ostream& stream)
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void business_data::to_data(writer& sink)
+void asset_data::to_data(writer& sink)
 {
     sink.write_2_bytes_little_endian(KIND2UINT16(kind));
     sink.write_4_bytes_little_endian(timestamp);
@@ -190,7 +190,7 @@ void business_data::to_data(writer& sink)
     boost::apply_visitor(visitor, data);
 }
 
-uint64_t business_data::serialized_size()
+uint64_t asset_data::serialized_size()
 {
     uint64_t size = 2 + 4; // kind and timestamp
     auto visitor = serialized_size_visitor();
@@ -200,7 +200,7 @@ uint64_t business_data::serialized_size()
 }
 
 #ifdef UC_DEBUG
-std::string business_data::to_string()
+std::string asset_data::to_string()
 {
     std::ostringstream ss;
 
@@ -213,18 +213,18 @@ std::string business_data::to_string()
 }
 #endif
 
-business_kind business_data::get_kind_value() const
+business_kind asset_data::get_kind_value() const
 {
     //return KIND2UINT16(kind);
     return kind;
 }
 
-const business_data::business_data_type& business_data::get_data() const
+const asset_data::asset_data_type& asset_data::get_data() const
 {
     return data;
 }
 
-uint32_t business_data::get_timestamp() const
+uint32_t asset_data::get_timestamp() const
 {
     return timestamp;
 }
