@@ -5,7 +5,7 @@ ADD_DEFINITIONS(-DBCN_STATIC=1)
 ADD_LIBRARY(node_static STATIC ${node_SOURCES})
 SET_TARGET_PROPERTIES(node_static PROPERTIES OUTPUT_NAME uc_node)
 TARGET_LINK_LIBRARIES(node_static ${Boost_LIBRARIES} ${txs_LIBRARY} ${bitcoin_LIBRARY}
-      ${blockchain_LIBRARY} ${database_LIBRARY} ${network_LIBRARY})
+      ${blockchain_LIBRARY} ${data_LIBRARY} ${database_LIBRARY} ${network_LIBRARY})
 INSTALL(TARGETS node_static DESTINATION lib)
 
 IF(ENABLE_SHARED_LIBS)
@@ -13,6 +13,6 @@ IF(ENABLE_SHARED_LIBS)
   ADD_LIBRARY(node_shared SHARED ${node_SOURCES})
   SET_TARGET_PROPERTIES(node_shared PROPERTIES OUTPUT_NAME uc_node)
   TARGET_LINK_LIBRARIES(node_shared ${Boost_LIBRARIES} ${txs_LIBRARY} ${bitcoin_LIBRARY}
-      ${blockchain_LIBRARY} ${database_LIBRARY} ${network_LIBRARY})
+      ${blockchain_LIBRARY} ${data_LIBRARY} ${database_LIBRARY} ${network_LIBRARY})
   INSTALL(TARGETS node_shared DESTINATION lib)
 ENDIF()

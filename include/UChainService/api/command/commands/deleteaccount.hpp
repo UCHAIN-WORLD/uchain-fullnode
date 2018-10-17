@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 uc developers
+ * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
  *
  * This file is part of UChain-api.
  *
