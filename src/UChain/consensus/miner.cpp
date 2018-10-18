@@ -241,11 +241,10 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
 {
     string text;
     if (is_mainnet) {
-        //BTC height 452527 witness, sent to Satoshi:12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX
-        text = "6e64c2098b84b04a0d9f61a60d5bc8f5f80f37e19f3ad9c39bfe419db422b33c";
+        text = "2019-02-14 00:00:00 UC start running mainnet.";
     }
     else {
-        text = "2017.01.18 UC start running testnet.";
+        text = "2018-10-18 14:16:55 UC start running testnet.";
     }
 
     block_ptr pblock = make_shared<block>();
@@ -259,16 +258,16 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
 
     // init for testnet/mainnet
     if (!is_mainnet) {
-        bc::wallet::payment_address testnet_genesis_address("tPd41bKLJGf1C5RRvaiV2mytqZB6WfM1vR");
+        bc::wallet::payment_address testnet_genesis_address("tFzJJnso5tKDdwTiztMq1qMg1uHfqbbpq6");
         tx_new.outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(testnet_genesis_address));
-        pblock->header.timestamp = 1479881397;
+        pblock->header.timestamp = 1539843415;
     }
     else {
-        bc::wallet::payment_address genesis_address("MGqHvbaH9wzdr6oUDFz4S1HptjoKQcjRve");
+        bc::wallet::payment_address genesis_address("UNfrtAxhJRi83PjTPjV3yNPKnjLYR22Bhx");
         tx_new.outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(genesis_address));
-        pblock->header.timestamp = 1486796400;
+        pblock->header.timestamp = 1550073600;
     }
-    tx_new.outputs[0].value = 50000000 * coin_price();
+    tx_new.outputs[0].value = 820000000 * coin_price();
 
     // Add our coinbase tx as first transaction
     pblock->transactions.push_back(tx_new);
@@ -612,6 +611,7 @@ std::string to_string(_T const& _t)
 
 void miner::work(const wallet::payment_address pay_address)
 {
+    std::chrono::steady_clock::time_point timeStart=std::chrono::steady_clock::now();
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
     while (state_ != state::exit_) {
         block_ptr block = create_new_block(pay_address);
