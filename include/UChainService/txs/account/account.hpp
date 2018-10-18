@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2018 UChain developers 
+ * Copyright (c) 2018-2020 UChain developers 
  *
  * This file is part of UChainService.
  *

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2016 libbitcoin developers 
+ * Copyright (c) 2011-2018 libbitcoin developers 
  *
  * This file is part of UChain-protocol.
  *
