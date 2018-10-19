@@ -10,7 +10,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 
 IF(ENABLE_SHARED_LIBS)
     TARGET_LINK_LIBRARIES(uc-cli ${mongoose_LIBRARY} ${jsoncpp_LIBRARY}
-        ${txs_LIBRARY} ${bitcoin_LIBRARY} ${explorer_LIBRARY} ${api_LIBRARY})
+        ${txs_LIBRARY} ${bitcoin_LIBRARY} ${explorer_LIBRARY})
 ELSE()
     TARGET_LINK_LIBRARIES(uc-cli ${mongoose_LIBRARY} ${jsoncpp_LIBRARY}
         ${txs_LIBRARY} ${bitcoin_LIBRARY} ${explorer_LIBRARY})

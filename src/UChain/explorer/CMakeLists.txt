@@ -10,7 +10,7 @@ SET_TARGET_PROPERTIES(zmq_static PROPERTIES IMPORTED_LOCATION ${ZeroMQ_ROOT_DIR}
 ADD_LIBRARY(explorer_static STATIC ${explorer_SOURCES})
 SET_TARGET_PROPERTIES(explorer_static PROPERTIES OUTPUT_NAME uc_explorer)
 TARGET_LINK_LIBRARIES(explorer_static zmq_static ${Boost_LIBRARIES}
-    ${txs_LIBRARY} ${bitcoin_LIBRARY} ${network_LIBRARY} ${protocol_LIBRARY} ${client_LIBRARY}
+    ${txs_LIBRARY} ${api_LIBRARY} ${bitcoin_LIBRARY} ${network_LIBRARY} ${protocol_LIBRARY} ${client_LIBRARY}
     ${blockchain_LIBRARY} ${jsoncpp_LIBRARY})
 INSTALL(TARGETS explorer_static DESTINATION lib)
 
@@ -19,7 +19,7 @@ IF(ENABLE_SHARED_LIBS)
   ADD_LIBRARY(explorer_shared SHARED ${explorer_SOURCES})
   SET_TARGET_PROPERTIES(explorer_shared PROPERTIES OUTPUT_NAME uc_explorer)
   TARGET_LINK_LIBRARIES(explorer_shared ${ZeroMQ_LIBRARIES} ${Boost_LIBRARIES} 
-    ${txs_LIBRARY} ${bitcoin_LIBRARY} ${network_LIBRARY} ${protocol_LIBRARY} ${client_LIBRARY} 
+    ${txs_LIBRARY} ${api_LIBRARY} ${bitcoin_LIBRARY} ${network_LIBRARY} ${protocol_LIBRARY} ${client_LIBRARY} 
     ${blockchain_LIBRARY} ${jsoncpp_LIBRARY})
   INSTALL(TARGETS explorer_shared DESTINATION lib)
 ENDIF()
