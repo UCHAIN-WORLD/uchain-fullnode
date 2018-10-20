@@ -30,29 +30,22 @@ namespace explorer {
 namespace commands {
 
 
-/************************ createtoken *************************/
-struct non_negative_uint64
+/************************ checkaccountinfo *************************/
+
+class checkaccountinfo: public command_extension
 {
 public:
-    uint64_t volume;
-};
-
-void validate(boost::any& v, const std::vector<std::string>& values,
-    non_negative_uint64*, int);
-
-class createtoken: public command_extension
-{
-public:
-    static const char* symbol(){ return "createtoken";}
+    static const char* symbol(){ return "checkaccountinfo";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "createtoken "; }
+    const char* description() override { return "Show account details"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("ACCOUNTAUTH", 1)
+            .add("LASTWORD", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -61,6 +54,7 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(auth_.auth, "LASTWORD", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -84,38 +78,9 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
-            "rate,r",
-            value<int32_t>(&option_.registersecondarytoken_threshold),
-            "The percent threshold value when you secondary issue. \
-             0,  not allowed to secondary issue;  \
-            -1,  the token can be secondary issue freely; \
-            [1, 100], the token can be secondary issue when own percentage greater than or equal to this value. \
-            Defaults to 0."
-        )
-        (
-            "symbol,s",
-            value<std::string>(&option_.symbol)->required(),
-            "The token symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.), eg: -.LAPTOP, dot separates prefix '-', It's impossible to create any token named with '-' prefix, but this issuer."
-        )
-        (
-            "issuer,i",
-            value<std::string>(&option_.issuer)->required(),
-            "Issue must be specified as a UID symbol."
-        )
-        (
-            "volume,v",
-            value<non_negative_uint64>(&option_.maximum_supply)->required(),
-            "The token maximum supply volume, with unit of integer bits."
-        )
-        (
-            "decimalnumber,n",
-            value<uint32_t>(&option_.decimal_number),
-            "The token amount decimal number, defaults to 0."
-        )
-        (
-            "description,d",
-            value<std::string>(&option_.description),
-            "The token data chuck, defaults to empty string."
+            "LASTWORD",
+            value<std::string>(&argument_.last_word)->required(),
+            "The last word of your backup words."
         );
 
         return options;
@@ -126,30 +91,15 @@ public:
     }
 
     console_result invoke (Json::Value& jv_output,
-        libbitcoin::server::server_node& node) override;
+         libbitcoin::server::server_node& node) override;
 
     struct argument
     {
+        std::string last_word;
     } argument_;
 
     struct option
     {
-        option():
-            symbol(""),
-            maximum_supply{0},
-            decimal_number(0),
-            registersecondarytoken_threshold(0),
-            issuer(""),
-            description("")
-        {
-        };
-
-        std::string symbol;
-        non_negative_uint64 maximum_supply;
-        uint32_t decimal_number;
-        int32_t registersecondarytoken_threshold;
-        std::string issuer;
-        std::string description;
     } option_;
 
 };

@@ -20,7 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChainService/api/command/commands/listuids.hpp>
+#include <UChainService/api/command/commands/showuids.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/base_helper.hpp>
@@ -31,9 +31,9 @@ namespace explorer {
 namespace commands {
 using namespace bc::explorer::config;
 
-/************************ listuids *************************/
+/************************ showuids *************************/
 
-console_result listuids::invoke(Json::Value& jv_output,
+console_result showuids::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     // page limit & page index paramenter check

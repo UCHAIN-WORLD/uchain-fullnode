@@ -31,40 +31,40 @@
 #include <UChainService/api/command/commands/shutdown.hpp>
 #include <UChainService/api/command/commands/stopmining.hpp>
 #include <UChainService/api/command/commands/startmining.hpp>
-#include <UChainService/api/command/commands/getinfo.hpp>
-#include <UChainService/api/command/commands/getheight.hpp>
-#include <UChainService/api/command/commands/getpeerinfo.hpp>
-#include <UChainService/api/command/commands/getaddressucn.hpp>
+#include <UChainService/api/command/commands/showinfo.hpp>
+#include <UChainService/api/command/commands/showblockheight.hpp>
+#include <UChainService/api/command/commands/showpeerinfo.hpp>
+#include <UChainService/api/command/commands/showaddressucn.hpp>
 #include <UChainService/api/command/commands/addnode.hpp>
-#include <UChainService/api/command/commands/getmininginfo.hpp>
-#include <UChainService/api/command/commands/getblockheader.hpp>
-#include <UChainService/api/command/commands/fetchheaderext.hpp>
-#include <UChainService/api/command/commands/gettx.hpp>
-#include <UChainService/api/command/commands/dumpkeyfile.hpp>
+#include <UChainService/api/command/commands/showmininginfo.hpp>
+#include <UChainService/api/command/commands/showblockheader.hpp>
+#include <UChainService/api/command/commands/showheaderext.hpp>
+#include <UChainService/api/command/commands/showtx.hpp>
+#include <UChainService/api/command/commands/exportkeyfile.hpp>
 #include <UChainService/api/command/commands/importkeyfile.hpp>
 #include <UChainService/api/command/commands/importaccount.hpp>
 #include <UChainService/api/command/commands/createaccount.hpp>
-#include <UChainService/api/command/commands/getaccountinfo.hpp>
+#include <UChainService/api/command/commands/checkaccountinfo.hpp>
 #include <UChainService/api/command/commands/deleteaccount.hpp>
-#include <UChainService/api/command/commands/listaddresses.hpp>
+#include <UChainService/api/command/commands/showaddresses.hpp>
 #include <UChainService/api/command/commands/addaddress.hpp>
-#include <UChainService/api/command/commands/getblock.hpp>
+#include <UChainService/api/command/commands/showblock.hpp>
 #include <UChainService/api/command/commands/validateaddress.hpp>
-#include <UChainService/api/command/commands/listbalances.hpp>
-#include <UChainService/api/command/commands/getbalance.hpp>
-#include <UChainService/api/command/commands/listtxs.hpp>
+#include <UChainService/api/command/commands/showbalances.hpp>
+#include <UChainService/api/command/commands/showbalance.hpp>
+#include <UChainService/api/command/commands/showtxs.hpp>
 #include <UChainService/api/command/commands/deposit.hpp>
-#include <UChainService/api/command/commands/listtokens.hpp>
-#include <UChainService/api/command/commands/gettoken.hpp>
-#include <UChainService/api/command/commands/secondaryissue.hpp>
-#include <UChainService/api/command/commands/getaddresstoken.hpp>
-#include <UChainService/api/command/commands/getaccounttoken.hpp>
-#include <UChainService/api/command/commands/gettokenview.hpp>
+#include <UChainService/api/command/commands/showtokens.hpp>
+#include <UChainService/api/command/commands/showtoken.hpp>
+#include <UChainService/api/command/commands/registersecondarytoken.hpp>
+#include <UChainService/api/command/commands/showaddresstoken.hpp>
+#include <UChainService/api/command/commands/showaccounttoken.hpp>
+#include <UChainService/api/command/commands/showtokenview.hpp>
 #include <UChainService/api/command/commands/createtoken.hpp>
 #include <UChainService/api/command/commands/registercard.hpp>
-#include <UChainService/api/command/commands/transfermit.hpp>
-#include <UChainService/api/command/commands/listcards.hpp>
-#include <UChainService/api/command/commands/getcard.hpp>
+#include <UChainService/api/command/commands/transfercard.hpp>
+#include <UChainService/api/command/commands/showcards.hpp>
+#include <UChainService/api/command/commands/showcard.hpp>
 #include <UChainService/api/command/commands/registeruid.hpp>
 #include <UChainService/api/command/commands/send.hpp>
 #include <UChainService/api/command/commands/sendfrom.hpp>
@@ -72,29 +72,29 @@
 #include <UChainService/api/command/commands/sendtoken.hpp>
 #include <UChainService/api/command/commands/sendtokenfrom.hpp>
 #include <UChainService/api/command/commands/swaptoken.hpp>
-#include <UChainService/api/command/commands/listuids.hpp>
+#include <UChainService/api/command/commands/showuids.hpp>
 #include <UChainService/api/command/commands/deletetoken.hpp>
-#include <UChainService/api/command/commands/issue.hpp>
-#include <UChainService/api/command/commands/burn.hpp>
+#include <UChainService/api/command/commands/registertoken.hpp>
+#include <UChainService/api/command/commands/destroy.hpp>
 #include <UChainService/api/command/commands/transfercert.hpp>
-#include <UChainService/api/command/commands/issuecert.hpp>
-#include <UChainService/api/command/commands/getwork.hpp>
+#include <UChainService/api/command/commands/registercert.hpp>
+#include <UChainService/api/command/commands/showwork.hpp>
 #include <UChainService/api/command/commands/submitwork.hpp>
 #include <UChainService/api/command/commands/setminingaccount.hpp>
 #include <UChainService/api/command/commands/changepass.hpp>
-#include <UChainService/api/command/commands/getmemorypool.hpp>
+#include <UChainService/api/command/commands/showmemorypool.hpp>
 #include <UChainService/api/command/commands/createmultisigtx.hpp>
 #include <UChainService/api/command/commands/createrawtx.hpp>
 #include <UChainService/api/command/commands/decoderawtx.hpp>
-#include <UChainService/api/command/commands/deletemultisig.hpp>
-#include <UChainService/api/command/commands/getnewmultisig.hpp>
-#include <UChainService/api/command/commands/getpublickey.hpp>
-#include <UChainService/api/command/commands/listmultisig.hpp>
+#include <UChainService/api/command/commands/deletemultisigaddress.hpp>
+#include <UChainService/api/command/commands/createmultisigaddress.hpp>
+#include <UChainService/api/command/commands/checkpublickey.hpp>
+#include <UChainService/api/command/commands/showmultisigaddress.hpp>
 #include <UChainService/api/command/commands/sendrawtx.hpp>
 #include <UChainService/api/command/commands/signmultisigtx.hpp>
 #include <UChainService/api/command/commands/signrawtx.hpp>
-#include <UChainService/api/command/commands/uidchangeaddress.hpp>
-#include <UChainService/api/command/commands/getuid.hpp>
+#include <UChainService/api/command/commands/transferuid.hpp>
+#include <UChainService/api/command/commands/showuid.hpp>
 
 
 namespace libbitcoin {
@@ -109,40 +109,40 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     os <<"\r\n";
     // account
     func(make_shared<createaccount>());
-    func(make_shared<getaccountinfo>());
+    func(make_shared<checkaccountinfo>());
     func(make_shared<deleteaccount>());
     func(make_shared<importaccount>());
     func(make_shared<changepass>());
     func(make_shared<addaddress>());
     func(make_shared<validateaddress>());
-    func(make_shared<listaddresses>());
-    func(make_shared<dumpkeyfile>());
+    func(make_shared<showaddresses>());
+    func(make_shared<exportkeyfile>());
     func(make_shared<importkeyfile>());
 
     os <<"\r\n";
     // system
     func(make_shared<shutdown>());
-    func(make_shared<getinfo>());
+    func(make_shared<showinfo>());
     func(make_shared<addnode>());
-    func(make_shared<getpeerinfo>());
+    func(make_shared<showpeerinfo>());
 
     // miming
     func(make_shared<startmining>());
     func(make_shared<stopmining>());
-    func(make_shared<getmininginfo>());
+    func(make_shared<showmininginfo>());
     func(make_shared<setminingaccount>());
-    func(make_shared<getwork>());
+    func(make_shared<showwork>());
     func(make_shared<submitwork>());
-    func(make_shared<getmemorypool>());
+    func(make_shared<showmemorypool>());
 
     os <<"\r\n";
     // block & tx
-    func(make_shared<getheight>());
-    func(make_shared<getblock>());
-    func(make_shared<getblockheader>());
-    func(make_shared<fetchheaderext>());
-    func(make_shared<gettx>());
-    func(make_shared<listtxs>());
+    func(make_shared<showblockheight>());
+    func(make_shared<showblock>());
+    func(make_shared<showblockheader>());
+    func(make_shared<showheaderext>());
+    func(make_shared<showtx>());
+    func(make_shared<showtxs>());
 
     // raw tx
     func(make_shared<createrawtx>());
@@ -152,11 +152,11 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
 
     os <<"\r\n";
     // multi-sig
-    func(make_shared<getpublickey>());
+    func(make_shared<checkpublickey>());
     func(make_shared<createmultisigtx>());
-    func(make_shared<getnewmultisig>());
-    func(make_shared<listmultisig>());
-    func(make_shared<deletemultisig>());
+    func(make_shared<createmultisigaddress>());
+    func(make_shared<showmultisigaddress>());
+    func(make_shared<deletemultisigaddress>());
     func(make_shared<signmultisigtx>());
 
     os <<"\r\n";
@@ -165,44 +165,44 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<sendmore>());
     func(make_shared<sendfrom>());
     func(make_shared<deposit>());
-    func(make_shared<listbalances>());
-    func(make_shared<getbalance>());
-    func(make_shared<getaddressucn>());
+    func(make_shared<showbalances>());
+    func(make_shared<showbalance>());
+    func(make_shared<showaddressucn>());
 
     //os <<"\r\n";
     // token
     /*func(make_shared<createtoken>());
     func(make_shared<deletetoken>());
     func(make_shared<issue>());
-    func(make_shared<secondaryissue>());
+    func(make_shared<registersecondarytoken>());
     func(make_shared<sendtoken>());
     func(make_shared<sendtokenfrom>());
-    func(make_shared<listtokens>());
-    func(make_shared<gettoken>());
-    func(make_shared<getaccountinfotoken>());*/
-    // func(make_shared<gettokenview>());
-    /*func(make_shared<getaddresstoken>());
-    func(make_shared<burn>());
+    func(make_shared<showtokens>());
+    func(make_shared<showtoken>());
+    func(make_shared<checkaccountinfotoken>());*/
+    // func(make_shared<showtokenview>());
+    /*func(make_shared<showaddresstoken>());
+    func(make_shared<destroy>());
     func(make_shared<swaptoken>());*/
 
     //os <<"\r\n";
     // cert
-    /*func(make_shared<issuecert>());
+    /*func(make_shared<registercert>());
     func(make_shared<transfercert>());*/
 
     //os <<"\r\n";
     // mit
     /*func(make_shared<registercard>());
-    func(make_shared<transfermit>());
-    func(make_shared<listcards>());
-    func(make_shared<getcard>());
+    func(make_shared<transfercard>());
+    func(make_shared<showcards>());
+    func(make_shared<showcard>());
 
     os <<"\r\n";*/
     //uid
     /*func(make_shared<registeruid>());
-    func(make_shared<uidchangeaddress>());
-    func(make_shared<listuids>());
-    func(make_shared<getuid>());*/
+    func(make_shared<transferuid>());
+    func(make_shared<showuids>());
+    func(make_shared<showuid>());*/
 }
 
 shared_ptr<command> find_extension(const string& symbol)
@@ -213,8 +213,8 @@ shared_ptr<command> find_extension(const string& symbol)
     // account
     if (symbol == createaccount::symbol())
         return make_shared<createaccount>();
-    if (symbol == getaccountinfo::symbol())
-        return make_shared<getaccountinfo>();
+    if (symbol == checkaccountinfo::symbol())
+        return make_shared<checkaccountinfo>();
     if (symbol == deleteaccount::symbol())
         return make_shared<deleteaccount>();
     if (symbol == changepass::symbol())
@@ -223,24 +223,24 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<validateaddress>();
     if (symbol == addaddress::symbol())
         return make_shared<addaddress>();
-    if (symbol == listaddresses::symbol())
-        return make_shared<listaddresses>();
+    if (symbol == showaddresses::symbol())
+        return make_shared<showaddresses>();
     if (symbol == importaccount::symbol())
         return make_shared<importaccount>();
-    if (symbol == dumpkeyfile::symbol() || symbol == "exportaccountasfile")
-        return make_shared<dumpkeyfile>();
+    if (symbol == exportkeyfile::symbol() || symbol == "exportaccountasfile")
+        return make_shared<exportkeyfile>();
     if (symbol == importkeyfile::symbol() || symbol == "importaccountfromfile")
         return make_shared<importkeyfile>();
 
     // system
     if (symbol == shutdown::symbol())
         return make_shared<shutdown>();
-    if (symbol == getinfo::symbol())
-        return make_shared<getinfo>();
+    if (symbol == showinfo::symbol())
+        return make_shared<showinfo>();
     if (symbol == addnode::symbol())
         return make_shared<addnode>();
-    if (symbol == getpeerinfo::symbol())
-        return make_shared<getpeerinfo>();
+    if (symbol == showpeerinfo::symbol())
+        return make_shared<showpeerinfo>();
 
     // mining
     if (symbol == stopmining::symbol() || symbol == "stop")
@@ -249,34 +249,34 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<startmining>();
     if (symbol == setminingaccount::symbol())
         return make_shared<setminingaccount>();
-    if (symbol == getmininginfo::symbol())
-        return make_shared<getmininginfo>();
-    if ((symbol == getwork::symbol()) || (symbol == "eth_getWork"))
-        return make_shared<getwork>();
+    if (symbol == showmininginfo::symbol())
+        return make_shared<showmininginfo>();
+    if ((symbol == showwork::symbol()) || (symbol == "eth_showwork"))
+        return make_shared<showwork>();
     if ((symbol == submitwork::symbol()) || ( symbol == "eth_submitWork"))
         return make_shared<submitwork>();
-    if (symbol == getmemorypool::symbol())
-        return make_shared<getmemorypool>();
+    if (symbol == showmemorypool::symbol())
+        return make_shared<showmemorypool>();
 
     // block & tx
-    if (symbol == getheight::symbol())
-        return make_shared<getheight>();
+    if (symbol == showblockheight::symbol())
+        return make_shared<showblockheight>();
     if (symbol == "fetch-height")
-        return make_shared<getheight>(symbol);
-    if (symbol == getblock::symbol())
-        return make_shared<getblock>();
+        return make_shared<showblockheight>(symbol);
+    if (symbol == showblock::symbol())
+        return make_shared<showblock>();
     if (symbol == "getbestblockhash")
-        return make_shared<getblockheader>(symbol);
-    if (symbol == getblockheader::symbol() || symbol == "fetch-header" || symbol == "getbestblockheader")
-        return make_shared<getblockheader>();
-    if (symbol == fetchheaderext::symbol())
-        return make_shared<fetchheaderext>();
-    if (symbol == gettx::symbol() || symbol == "gettransaction")
-        return make_shared<gettx>();
+        return make_shared<showblockheader>(symbol);
+    if (symbol == showblockheader::symbol() || symbol == "fetch-header" || symbol == "getbestblockheader")
+        return make_shared<showblockheader>();
+    if (symbol == showheaderext::symbol())
+        return make_shared<showheaderext>();
+    if (symbol == showtx::symbol() || symbol == "gettransaction")
+        return make_shared<showtx>();
     if (symbol == "fetch-tx")
-        return make_shared<gettx>(symbol);
-    if (symbol == listtxs::symbol())
-        return make_shared<listtxs>();
+        return make_shared<showtx>(symbol);
+    if (symbol == showtxs::symbol())
+        return make_shared<showtxs>();
 
     // raw tx
     if (symbol == createrawtx::symbol())
@@ -289,26 +289,26 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<sendrawtx>();
 
     // multi-sig
-    if (symbol == getpublickey::symbol())
-        return make_shared<getpublickey>();
-    if (symbol == getnewmultisig::symbol())
-        return make_shared<getnewmultisig>();
-    if (symbol == listmultisig::symbol())
-        return make_shared<listmultisig>();
-    if (symbol == deletemultisig::symbol())
-        return make_shared<deletemultisig>();
+    if (symbol == checkpublickey::symbol())
+        return make_shared<checkpublickey>();
+    if (symbol == createmultisigaddress::symbol())
+        return make_shared<createmultisigaddress>();
+    if (symbol == showmultisigaddress::symbol())
+        return make_shared<showmultisigaddress>();
+    if (symbol == deletemultisigaddress::symbol())
+        return make_shared<deletemultisigaddress>();
     if (symbol == createmultisigtx::symbol())
         return make_shared<createmultisigtx>();
     if (symbol == signmultisigtx::symbol())
         return make_shared<signmultisigtx>();
 
     // ucn
-    if (symbol == listbalances::symbol())
-        return make_shared<listbalances>();
-    if (symbol == getbalance::symbol())
-        return make_shared<getbalance>();
-    if (symbol == getaddressucn::symbol() || symbol == "fetch-balance")
-        return make_shared<getaddressucn>();
+    if (symbol == showbalances::symbol())
+        return make_shared<showbalances>();
+    if (symbol == showbalance::symbol())
+        return make_shared<showbalance>();
+    if (symbol == showaddressucn::symbol() || symbol == "fetch-balance")
+        return make_shared<showaddressucn>();
     if (symbol == deposit::symbol())
         return make_shared<deposit>();
     if (symbol == send::symbol() || symbol == "uidsend")
@@ -323,54 +323,54 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<createtoken>();
     if (symbol == deletetoken::symbol() || symbol == "deletetoken" )
         return make_shared<deletetoken>();
-    if (symbol == listtokens::symbol())
-        return make_shared<listtokens>();
-    if (symbol == gettoken::symbol())
-        return make_shared<gettoken>();
-    if (symbol == getaccounttoken::symbol())
-        return make_shared<getaccounttoken>();*/
-    // if (symbol == gettokenview::symbol())
-    //     return make_shared<gettokenview>();
-    /*if (symbol == getaddresstoken::symbol())
-        return make_shared<getaddresstoken>();
+    if (symbol == showtokens::symbol())
+        return make_shared<showtokens>();
+    if (symbol == showtoken::symbol())
+        return make_shared<showtoken>();
+    if (symbol == showaccounttoken::symbol())
+        return make_shared<showaccounttoken>();*/
+    // if (symbol == showtokenview::symbol())
+    //     return make_shared<showtokenview>();
+    /*if (symbol == showaddresstoken::symbol())
+        return make_shared<showaddresstoken>();
     if (symbol == issue::symbol())
         return make_shared<issue>();
-    if (symbol == secondaryissue::symbol() || (symbol == "additionalissue") )
-        return make_shared<secondaryissue>();
+    if (symbol == registersecondarytoken::symbol() || (symbol == "additionalissue") )
+        return make_shared<registersecondarytoken>();
     if (symbol == sendtoken::symbol() || symbol == "uidsendtoken")
         return make_shared<sendtoken>();
     if (symbol == sendtokenfrom::symbol() || symbol == "uidsendtokenfrom")
         return make_shared<sendtokenfrom>();
-    if (symbol == burn::symbol())
-        return make_shared<burn>();
+    if (symbol == destroy::symbol())
+        return make_shared<destroy>();
     if (symbol == swaptoken::symbol())
         return make_shared<swaptoken>();*/
 
     // cert
     /*if (symbol == transfercert::symbol())
         return make_shared<transfercert>();
-    if (symbol == issuecert::symbol())
-        return make_shared<issuecert>();*/
+    if (symbol == registercert::symbol())
+        return make_shared<registercert>();*/
 
     // mit
     /*if (symbol == registercard::symbol())
         return make_shared<registercard>();
-    if (symbol == transfermit::symbol())
-        return make_shared<transfermit>();
-    if (symbol == listcards::symbol())
-        return make_shared<listcards>();
-    if (symbol == getcard::symbol())
-        return make_shared<getcard>();*/
+    if (symbol == transfercard::symbol())
+        return make_shared<transfercard>();
+    if (symbol == showcards::symbol())
+        return make_shared<showcards>();
+    if (symbol == showcard::symbol())
+        return make_shared<showcard>();*/
 
     // uid
     /*if (symbol == registeruid::symbol())
         return make_shared<registeruid>();
-    if (symbol == uidchangeaddress::symbol())
-        return make_shared<uidchangeaddress>();
-    if (symbol == listuids::symbol())
-        return make_shared<listuids>();
-    if (symbol == getuid::symbol())
-        return make_shared<getuid>();*/
+    if (symbol == transferuid::symbol())
+        return make_shared<transferuid>();
+    if (symbol == showuids::symbol())
+        return make_shared<showuids>();
+    if (symbol == showuid::symbol())
+        return make_shared<showuid>();*/
 
     return nullptr;
 }

@@ -347,7 +347,7 @@ options_metadata parser::load_settings()
     (
         "server.administrator_required",
         value<bool>(&configured.server.administrator_required),
-        "Whether wallet needs administrator to execute non-account commands(shutdown/getinfo...), defaults to false."
+        "Whether wallet needs administrator to execute non-account commands(shutdown/showinfo...), defaults to false."
     )
     (
         "server.mongoose_listen",

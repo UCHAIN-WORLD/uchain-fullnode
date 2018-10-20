@@ -30,29 +30,24 @@ namespace explorer {
 namespace commands {
 
 
-/************************ createtoken *************************/
-struct non_negative_uint64
+/************************ registercert *************************/
+
+class registercert : public command_extension
 {
 public:
-    uint64_t volume;
-};
-
-void validate(boost::any& v, const std::vector<std::string>& values,
-    non_negative_uint64*, int);
-
-class createtoken: public command_extension
-{
-public:
-    static const char* symbol(){ return "createtoken";}
+    static const char* symbol(){ return "registercert";}
     const char* name() override { return symbol();}
-    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "createtoken "; }
+    bool category(int bs) override { return (ex_online & bs ) == bs; }
+    const char* description() override { return "registercert supports define an token certification."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("ACCOUNTAUTH", 1)
+            .add("TOUID", 1)
+            .add("SYMBOL", 1)
+            .add("CERT", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -61,6 +56,9 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.to, "TOUID", variables, input, raw);
+        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
+        load_input(argument_.cert, "CERT", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -84,38 +82,24 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
-            "rate,r",
-            value<int32_t>(&option_.registersecondarytoken_threshold),
-            "The percent threshold value when you secondary issue. \
-             0,  not allowed to secondary issue;  \
-            -1,  the token can be secondary issue freely; \
-            [1, 100], the token can be secondary issue when own percentage greater than or equal to this value. \
-            Defaults to 0."
+            "TOUID",
+            value<std::string>(&argument_.to)->required(),
+            "The UID will own this cert."
         )
         (
-            "symbol,s",
-            value<std::string>(&option_.symbol)->required(),
-            "The token symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.), eg: -.LAPTOP, dot separates prefix '-', It's impossible to create any token named with '-' prefix, but this issuer."
+            "SYMBOL",
+            value<std::string>(&argument_.symbol)->required(),
+            "Cert Symbol/Name."
         )
         (
-            "issuer,i",
-            value<std::string>(&option_.issuer)->required(),
-            "Issue must be specified as a UID symbol."
+            "CERT",
+            value<std::string>(&argument_.cert)->required(),
+            "Cert type name can be: NAMING: cert of naming right of domain. The owner of domain cert can issue this type of cert by registercert with symbol like “domain.XYZ”(domain is the symbol of domain cert)."
         )
         (
-            "volume,v",
-            value<non_negative_uint64>(&option_.maximum_supply)->required(),
-            "The token maximum supply volume, with unit of integer bits."
-        )
-        (
-            "decimalnumber,n",
-            value<uint32_t>(&option_.decimal_number),
-            "The token amount decimal number, defaults to 0."
-        )
-        (
-            "description,d",
-            value<std::string>(&option_.description),
-            "The token data chuck, defaults to empty string."
+            "fee,f",
+            value<uint64_t>(&argument_.fee)->default_value(10000),
+            "Transaction fee. defaults to 10000 UCN bits"
         );
 
         return options;
@@ -126,30 +110,18 @@ public:
     }
 
     console_result invoke (Json::Value& jv_output,
-        libbitcoin::server::server_node& node) override;
+         libbitcoin::server::server_node& node) override;
 
     struct argument
     {
+        std::string to;
+        std::string symbol;
+        std::string cert;
+        uint64_t fee;
     } argument_;
 
     struct option
     {
-        option():
-            symbol(""),
-            maximum_supply{0},
-            decimal_number(0),
-            registersecondarytoken_threshold(0),
-            issuer(""),
-            description("")
-        {
-        };
-
-        std::string symbol;
-        non_negative_uint64 maximum_supply;
-        uint32_t decimal_number;
-        int32_t registersecondarytoken_threshold;
-        std::string issuer;
-        std::string description;
     } option_;
 
 };

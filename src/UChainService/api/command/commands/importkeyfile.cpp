@@ -127,7 +127,7 @@ console_result importkeyfile::invoke(Json::Value& jv_output,
 
                 // get n new sub-address
                 Json::Value jv_temp;
-                std::vector<const char *> vec_cmds = {"getnewmultisig", auth_.name.c_str(), auth_.auth.c_str(),
+                std::vector<const char *> vec_cmds = {"createmultisigaddress", auth_.name.c_str(), auth_.auth.c_str(),
                                     "-s", s.c_str(),
                                     "-m", m.c_str(),
                                     "-n", n.c_str(),
@@ -145,7 +145,7 @@ console_result importkeyfile::invoke(Json::Value& jv_output,
         }
 
         Json::Value jv_temp;
-        std::vector<const char *> vec_cmds = {"listaddresses", auth_.name.c_str(), auth_.auth.c_str()};
+        std::vector<const char *> vec_cmds = {"showaddresses", auth_.name.c_str(), auth_.auth.c_str()};
         if (dispatch_command(vec_cmds.size(), vec_cmds.data(), jv_temp, node, get_api_version()) != console_result::okay) {
             throw account_address_get_exception{std::string("Failed to list account addresses.")};
         }

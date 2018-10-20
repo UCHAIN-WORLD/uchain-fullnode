@@ -61,10 +61,10 @@ console_result createtoken::invoke(Json::Value& jv_output,
 
     if (option_.description.length() > TOKEN_DETAIL_DESCRIPTION_FIX_SIZE)
         throw token_description_length_exception{"token description length must be less than 64."};
-    auto threshold = option_.secondaryissue_threshold;
+    auto threshold = option_.registersecondarytoken_threshold;
     if ((threshold < -1) || (threshold > 100)) {
         throw token_secondaryissue_threshold_exception{
-            "secondaryissue threshold value error, it must be -1 or in the interval 0 to 100."};
+            "registersecondarytoken threshold value error, it must be -1 or in the interval 0 to 100."};
     }
 
     if (option_.decimal_number > 19u)

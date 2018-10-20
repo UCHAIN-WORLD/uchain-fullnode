@@ -28,39 +28,29 @@
 namespace libbitcoin {
 namespace explorer {
 namespace commands {
-#define DEFAULT_SWAP_FEE 100000000
 
-/************************ destroy *************************/
 
-class swaptoken: public command_extension
+/************************ showcard *************************/
+
+class showcard: public command_extension
 {
 public:
-    static const char* symbol(){ return "swaptoken";}
+    static const char* symbol(){ return "showcard";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Swap tokens for crosschain transaction."; }
+    const char* description() override { return "Get information of MIT."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1)
-            .add("TO_", 1)
-            .add("SYMBOL", 1)
-            .add("AMOUNT", 1)
-            .add("FOREIGN_ADDR", 1);
+            .add("SYMBOL", 1);
     }
 
     void load_fallbacks (std::istream& input,
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
-        load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
-        load_input(argument_.to, "TO_", variables, input, raw);
         load_input(argument_.symbol, "SYMBOL", variables, input, raw);
-        load_input(argument_.amount, "AMOUNT", variables, input, raw);
-        load_input(argument_.foreign_addr, "FOREIGN_ADDR", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -74,54 +64,29 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "ACCOUNTNAME",
-            value<std::string>(&auth_.name)->required(),
-            BX_ACCOUNT_NAME
-        )
-        (
-            "ACCOUNTAUTH",
-            value<std::string>(&auth_.auth)->required(),
-            BX_ACCOUNT_AUTH
-        )
-        (
-            "TO_",
-            value<std::string>(&argument_.to)->required(),
-            "To this uid/address the specific token will be sent. expect to be \"crosschain\"."
-        )
-        (
             "SYMBOL",
-            value<std::string>(&argument_.symbol)->required(),
-            "Asset symbol"
+            value<std::string>(&argument_.symbol),
+            "Asset symbol. If not specified then show whole network MIT symbols."
         )
         (
-            "AMOUNT",
-            value<uint64_t>(&argument_.amount)->required(),
-            "Asset integer bits. see token <decimal_number>."
+            "trace,t",
+            value<bool>(&option_.show_history)->default_value(false)->zero_tokens(),
+            "If specified then trace the history. Default is not specified."
         )
         (
-            "FOREIGN_ADDR",
-            value<std::string>(&argument_.foreign_addr)->required(),
-            "To this address of the destination chain to swap the token."
+            "limit,l",
+            value<uint32_t>(&option_.limit)->default_value(100),
+            "MIT count per page."
         )
         (
-            "change,c",
-            value<std::string>(&option_.change),
-            "Change to this uid/address"
+            "index,i",
+            value<uint32_t>(&option_.index)->default_value(1),
+            "Page index."
         )
         (
-            "from,d",
-            value<std::string>(&option_.from),
-            "From this uid/address"
-        )
-        (
-            "swapfee,s",
-            value<uint64_t>(&option_.swapfee)->default_value(DEFAULT_SWAP_FEE),
-            "Transaction fee for crosschain token swap. defaults to 1 UCN"
-        )
-        (
-            "fee,f",
-            value<uint64_t>(&option_.fee)->default_value(10000),
-            "Transaction fee for miners. defaults to 10000 UCN bits"
+            "current,c",
+            value<bool>(&option_.show_current)->default_value(false)->zero_tokens(),
+            "If specified then show the lastest information of specified MIT. Default is not specified."
         )
         ;
 
@@ -137,21 +102,26 @@ public:
 
     struct argument
     {
-        std::string to;
+        argument():
+            symbol()
+        {
+        }
+
         std::string symbol;
-        uint64_t amount;
-        std::string foreign_addr;
     } argument_;
 
     struct option
     {
-        std::string from;
-        uint64_t swapfee;
-        uint64_t fee;
-        std::string change;
+        bool show_history;
+        bool show_current;
+        uint32_t index;
+        uint32_t limit;
     } option_;
 
 };
+
+
+
 
 } // namespace commands
 } // namespace explorer

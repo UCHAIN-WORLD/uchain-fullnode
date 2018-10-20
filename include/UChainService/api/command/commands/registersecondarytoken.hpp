@@ -30,29 +30,23 @@ namespace explorer {
 namespace commands {
 
 
-/************************ createtoken *************************/
-struct non_negative_uint64
+/************************ registersecondarytoken *************************/
+class registersecondarytoken: public command_extension
 {
 public:
-    uint64_t volume;
-};
-
-void validate(boost::any& v, const std::vector<std::string>& values,
-    non_negative_uint64*, int);
-
-class createtoken: public command_extension
-{
-public:
-    static const char* symbol(){ return "createtoken";}
+    static const char* symbol(){ return "registersecondarytoken";}
     const char* name() override { return symbol();}
-    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "createtoken "; }
+    bool category(int bs) override { return (ex_online & bs ) == bs; }
+    const char* description() override { return "registersecondarytoken, alias as additionalissue."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("ACCOUNTAUTH", 1)
+            .add("TOUID", 1)
+            .add("SYMBOL", 1)
+            .add("VOLUME", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -61,6 +55,9 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.to, "TOUID", variables, input, raw);
+        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
+        load_input(argument_.volume, "VOLUME", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -84,38 +81,29 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
-            "rate,r",
-            value<int32_t>(&option_.registersecondarytoken_threshold),
-            "The percent threshold value when you secondary issue. \
-             0,  not allowed to secondary issue;  \
-            -1,  the token can be secondary issue freely; \
-            [1, 100], the token can be secondary issue when own percentage greater than or equal to this value. \
-            Defaults to 0."
+            "TOUID",
+            value<std::string>(&argument_.to)->required(),
+            "target uid to check and issue token, fee from and mychange to the address of this uid too."
         )
         (
-            "symbol,s",
-            value<std::string>(&option_.symbol)->required(),
-            "The token symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.), eg: -.LAPTOP, dot separates prefix '-', It's impossible to create any token named with '-' prefix, but this issuer."
+            "SYMBOL",
+            value<std::string>(&argument_.symbol)->required(),
+            "issued token symbol"
         )
         (
-            "issuer,i",
-            value<std::string>(&option_.issuer)->required(),
-            "Issue must be specified as a UID symbol."
+            "VOLUME",
+            value<uint64_t>(&argument_.volume)->required(),
+            "The volume of token, with unit of integer bits."
         )
         (
-            "volume,v",
-            value<non_negative_uint64>(&option_.maximum_supply)->required(),
-            "The token maximum supply volume, with unit of integer bits."
+            "model,m",
+            value<std::string>(&option_.attenuation_model_param),
+            BX_MST_OFFERING_CURVE
         )
         (
-            "decimalnumber,n",
-            value<uint32_t>(&option_.decimal_number),
-            "The token amount decimal number, defaults to 0."
-        )
-        (
-            "description,d",
-            value<std::string>(&option_.description),
-            "The token data chuck, defaults to empty string."
+            "fee,f",
+            value<uint64_t>(&argument_.fee)->default_value(10000),
+            "The fee of tx. default_value 10000 UCN bits"
         );
 
         return options;
@@ -125,35 +113,23 @@ public:
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
+    console_result invoke(Json::Value& jv_output,
         libbitcoin::server::server_node& node) override;
 
     struct argument
     {
+        std::string to;
+        std::string symbol;
+        uint64_t fee;
+        uint64_t volume;
     } argument_;
 
     struct option
     {
-        option():
-            symbol(""),
-            maximum_supply{0},
-            decimal_number(0),
-            registersecondarytoken_threshold(0),
-            issuer(""),
-            description("")
-        {
-        };
-
-        std::string symbol;
-        non_negative_uint64 maximum_supply;
-        uint32_t decimal_number;
-        int32_t registersecondarytoken_threshold;
-        std::string issuer;
-        std::string description;
+        std::string attenuation_model_param;
     } option_;
 
 };
-
 
 } // namespace commands
 } // namespace explorer
