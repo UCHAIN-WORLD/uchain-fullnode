@@ -143,15 +143,13 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showheaderext>());
     func(make_shared<showtx>());
     func(make_shared<showtxs>());
+    os <<"\r\n";
 
-    // raw tx
+    // raw tx and multi-sig
     func(make_shared<createrawtx>());
     func(make_shared<decoderawtx>());
     func(make_shared<signrawtx>());
     func(make_shared<sendrawtx>());
-
-    os <<"\r\n";
-    // multi-sig
     func(make_shared<checkpublickey>());
     func(make_shared<createmultisigtx>());
     func(make_shared<createmultisigaddress>());

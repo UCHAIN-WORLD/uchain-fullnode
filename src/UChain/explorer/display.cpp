@@ -81,8 +81,7 @@ void display_usage(std::ostream& stream)
         << std::endl << BX_COMMAND_USAGE << std::endl
         << format(BX_VERSION_MESSAGE) %
             UC_EXPLORER_VERSION << std::endl
-        << BX_COMMANDS_HEADER << std::endl
-        << std::endl;
+        << BX_COMMANDS_HEADER << std::endl;
 
     display_command_names(stream);
 }

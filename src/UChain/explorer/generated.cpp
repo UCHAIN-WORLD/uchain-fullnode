@@ -40,7 +40,7 @@ using namespace commands;
 
 void broadcast(const function<void(shared_ptr<command>)> func, std::ostream& os)
 {
-    os <<"== original commands ==\r\n";
+    /*os <<"== original commands ==\r\n";
 
     func(make_shared<help>());
     func(make_shared<settings>());
@@ -54,7 +54,7 @@ void broadcast(const function<void(shared_ptr<command>)> func, std::ostream& os)
     func(make_shared<stealth_secret>());
     func(make_shared<stealth_shared>());
 
-    os <<"\r\n== extension commands ==\r\n";
+    os <<"\r\n== extension commands ==\r\n";*/
 
     broadcast_extension(func, os);
 }
