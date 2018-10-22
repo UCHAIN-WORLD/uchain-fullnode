@@ -19,7 +19,8 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/command/commands/sendtoken.hpp>
+#include <UChain/explorer/dispatch.hpp>
+#include <UChainService/api/command/commands/sendtomulti.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
@@ -30,41 +31,34 @@ namespace explorer {
 namespace commands {
 
 
-console_result sendtoken::invoke(Json::Value& jv_output,
+console_result sendtomulti::invoke (Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
     blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
-    blockchain.uppercase_symbol(argument_.symbol);
-
-    if (!option_.memo.empty() && option_.memo.size() >= 255) {
-        throw argument_size_invalid_exception{"memo length out of bounds."};
-    }
-
-    // check token symbol
-    check_token_symbol(argument_.symbol);
-
-    if (!argument_.amount) {
-        throw token_amount_exception{"invalid token amount parameter!"};
-    }
-
-    asset attach;
-    std::string to_address = get_address(argument_.to, attach, false, blockchain);
-    std::string change_address = get_address(option_.change, blockchain);
 
     // receiver
-    utxo_attach_type attach_type = option_.attenuation_model_param.empty()
-        ? utxo_attach_type::token_transfer : utxo_attach_type::token_attenuation_transfer;
-    std::vector<receiver_record> receiver{
-        {to_address, argument_.symbol, 0, argument_.amount, attach_type, attach}
-    };
-    auto send_helper = sending_token(*this, blockchain,
-            std::move(auth_.name), std::move(auth_.auth),
-            "", std::move(argument_.symbol),
-            std::move(option_.attenuation_model_param),
-            std::move(receiver), option_.fee,
-            std::move(option_.memo),
-            std::move(change_address));
+    std::vector<receiver_record> receiver;
+
+    for (auto& each : argument_.receivers) {
+        colon_delimited2_item<std::string, uint64_t> item(each);
+
+        asset attach;
+        std::string address = get_address(item.first(), attach, false, blockchain);
+        if (item.second() <= 0) {
+            throw argument_legality_exception("invalid amount parameter for " + item.first());
+        }
+
+        receiver.push_back({address,"", item.second(), 0, utxo_attach_type::ucn, attach});
+    }
+
+    // change address
+    std::string change_address = get_address(option_.change, blockchain);
+
+    auto send_helper = sending_ucn(*this, blockchain,
+        std::move(auth_.name), std::move(auth_.auth),
+        "", std::move(receiver),
+        std::move(change_address), option_.fee);
 
     send_helper.exec();
 

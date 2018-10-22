@@ -66,10 +66,10 @@
 #include <UChainService/api/command/commands/showcards.hpp>
 #include <UChainService/api/command/commands/showcard.hpp>
 #include <UChainService/api/command/commands/registeruid.hpp>
-#include <UChainService/api/command/commands/send.hpp>
+#include <UChainService/api/command/commands/sendto.hpp>
 #include <UChainService/api/command/commands/sendfrom.hpp>
-#include <UChainService/api/command/commands/sendmore.hpp>
-#include <UChainService/api/command/commands/sendtoken.hpp>
+#include <UChainService/api/command/commands/sendtomulti.hpp>
+#include <UChainService/api/command/commands/sendtokento.hpp>
 #include <UChainService/api/command/commands/sendtokenfrom.hpp>
 #include <UChainService/api/command/commands/swaptoken.hpp>
 #include <UChainService/api/command/commands/showuids.hpp>
@@ -160,7 +160,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     os <<"\r\n";
     // ucn
     func(make_shared<send>());
-    func(make_shared<sendmore>());
+    func(make_shared<sendtomulti>());
     func(make_shared<sendfrom>());
     func(make_shared<deposit>());
     func(make_shared<showbalances>());
@@ -311,8 +311,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<deposit>();
     if (symbol == send::symbol() || symbol == "uidsend")
         return make_shared<send>();
-    if (symbol == sendmore::symbol() || symbol == "uidsendmore")
-        return make_shared<sendmore>();
+    if (symbol == sendtomulti::symbol() || symbol == "uidsendtomulti")
+        return make_shared<sendtomulti>();
     if (symbol == sendfrom::symbol() || symbol == "uidsendfrom")
         return make_shared<sendfrom>();
 

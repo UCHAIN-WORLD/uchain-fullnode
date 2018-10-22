@@ -31,12 +31,12 @@ namespace commands {
 
 
 
-/************************ sendmore *************************/
+/************************ sendtomulti *************************/
 
-class sendmore: public send_command
+class sendtomulti: public send_command
 {
 public:
-    static const char* symbol(){ return "sendmore";}
+    static const char* symbol(){ return "sendtomulti";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
     const char* description() override { return "send ucn to multi target."; }
