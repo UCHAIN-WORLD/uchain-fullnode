@@ -38,6 +38,7 @@
 
 #define LOG_HEADER "consensus"
 using namespace std;
+using namespace std::this_thread;
 
 namespace libbitcoin {
 namespace consensus {
@@ -241,7 +242,7 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
 {
     string text;
     if (is_mainnet) {
-        text = "2019-02-14 00:00:00 UC start running mainnet.";
+        text = "2018-02-14 00:00:00 UC start running mainnet.";
     }
     else {
         text = "2018-10-18 14:16:55 UC start running testnet.";
@@ -554,14 +555,15 @@ unsigned int miner::get_adjust_time(uint64_t height) const
     typedef std::chrono::system_clock wall_clock;
     const auto now = wall_clock::now();
     unsigned int t = wall_clock::to_time_t(now);
+    return t;
 
-    if (height >= future_blocktime_fork_height) {
+    /*if (height >= future_blocktime_fork_height) {
         return t;
     }
     else {
         unsigned int t_past = get_median_time_past(height);
         return max(t, t_past + 1);
-    }
+    }*/
 }
 
 unsigned int miner::get_median_time_past(uint64_t height) const
@@ -615,6 +617,7 @@ void miner::work(const wallet::payment_address pay_address)
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
     while (state_ != state::exit_) {
         block_ptr block = create_new_block(pay_address);
+        sleep_for(asio::milliseconds(500));
         if (block) {
             if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number))) {
                 boost::uint64_t height = store_block(block);

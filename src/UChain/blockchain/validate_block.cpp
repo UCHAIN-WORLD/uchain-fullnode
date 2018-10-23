@@ -216,13 +216,15 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     RETURN_IF_STOPPED();
 
     //future time check selfish mining
-    if (!is_valid_time_stamp_new(header.timestamp))
-        return error::futuristic_timestamp;
-    // last block time check
-    chain::header prev_header = fetch_block(height_ - 1);
-    if (current_block_.header.timestamp < prev_header.timestamp)
-        return error::timestamp_too_early;
-
+    if (height_ > 1)
+    {
+        if (!is_valid_time_stamp_new(header.timestamp))
+            return error::futuristic_timestamp;
+        // last block time check
+        chain::header prev_header = fetch_block(height_ - 1);
+        if (current_block_.header.timestamp < prev_header.timestamp)
+            return error::timestamp_too_early;
+    }
 
     RETURN_IF_STOPPED();
 
