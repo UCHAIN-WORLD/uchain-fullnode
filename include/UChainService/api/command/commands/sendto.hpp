@@ -30,10 +30,10 @@ namespace explorer {
 namespace commands {
 
 
-class send: public send_command
+class sendto: public send_command
 {
 public:
-    static const char* symbol(){ return "send";}
+    static const char* symbol(){ return "sendto";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
     const char* description() override { return "send ucn to a targert uid/address."; }

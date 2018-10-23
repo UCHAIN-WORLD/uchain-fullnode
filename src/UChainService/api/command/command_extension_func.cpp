@@ -159,7 +159,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
 
     os <<"\r\n";
     // ucn
-    func(make_shared<send>());
+    func(make_shared<sendto>());
     func(make_shared<sendtomulti>());
     func(make_shared<sendfrom>());
     func(make_shared<deposit>());
@@ -309,8 +309,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showaddressucn>();
     if (symbol == deposit::symbol())
         return make_shared<deposit>();
-    if (symbol == send::symbol() || symbol == "uidsend")
-        return make_shared<send>();
+    if (symbol == sendto::symbol() || symbol == "uidsendto")
+        return make_shared<sendto>();
     if (symbol == sendtomulti::symbol() || symbol == "uidsendtomulti")
         return make_shared<sendtomulti>();
     if (symbol == sendfrom::symbol() || symbol == "uidsendfrom")

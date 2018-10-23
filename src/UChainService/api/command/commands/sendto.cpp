@@ -31,7 +31,7 @@ namespace explorer {
 namespace commands {
 
 
-console_result send::invoke(Json::Value& jv_output,
+console_result sendto::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
