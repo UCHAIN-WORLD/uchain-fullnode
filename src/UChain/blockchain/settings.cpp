@@ -47,7 +47,7 @@ settings::settings(bc::settings context)
         case bc::settings::mainnet:
         {
             checkpoints.reserve(1);
-            checkpoints.push_back({ "b81848ef9ae86e84c3da26564bc6ab3a79efc628239d11471ab5cd25c0684c2d", 0 });
+            checkpoints.push_back({ "09e8c9f2ddeaf3c1df74fa3262ddc238a360c9778ca6a3140f563d48dea4bbf4", 0 });
             // fixme. header sync first has some problem.
             //checkpoints.push_back({ "250a083ddd62ea1d0907e29ff8d64e42c451f93560196f3f693fdc1bc6b84d61", 10000 });
             //checkpoints.push_back({ "e989e4b2d60ae2f8fbaa1cdb69d05afa63e7f1f99cf715589a93e4877c92fa8b", 100000 });

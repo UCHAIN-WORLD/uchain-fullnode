@@ -351,7 +351,7 @@ struct transaction_dependent {
         : dpendens(_dpendens), is_need_process(_is_need_process) { hash = make_shared<hash_digest>(_hash);}
 };
 
-miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_address)
+miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_address,  uint64_t current_block_height)
 {
     block_ptr pblock;
     vector<transaction_ptr> transactions;
@@ -363,13 +363,18 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
     vector<transaction_priority> transaction_prioritys;
     block_chain_impl& block_chain = node_.chain_impl();
 
-    uint64_t current_block_height = 0;
     header prev_header;
-    if (!block_chain.get_last_height(current_block_height)
-            || !block_chain.get_header(prev_header, current_block_height)) {
-        log::warning(LOG_HEADER) << "get_last_height or get_header fail. current_block_height:" << current_block_height;
-        return pblock;
-    } else {
+    if (current_block_height != 0)
+    {
+
+        if (!block_chain.get_last_height(current_block_height) || !block_chain.get_header(prev_header, current_block_height))
+        {
+            log::warning(LOG_HEADER) << "get_last_height or get_header fail. current_block_height:" << current_block_height;
+            return pblock;
+        }
+    }
+    else
+    {
         pblock = make_shared<block>();
     }
 
@@ -612,32 +617,69 @@ std::string to_string(_T const& _t)
     return o.str();
 }
 
+vector<std::string> mine_address_list = {"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
+                                        "UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6", 
+                                        "UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"};
+
 void miner::work(const wallet::payment_address pay_address)
 {
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
-    while (state_ != state::exit_) {
-        auto millissecond = unix_millisecond();
-        block_ptr block = create_new_block(pay_address);
-        auto sleepmin = unix_millisecond() - millissecond;
-        sleep_for(asio::milliseconds(500-sleepmin));
-        if (block) {
-            if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number))) {
-                boost::uint64_t height = store_block(block);
-                if (height == 0) {
-                    continue;
-                }
+    int index = get_mine_index(pay_address);
 
-                log::info(LOG_HEADER) << "solo miner create new block at heigth:" << height;
+    if (index == -1)
+    {
+        log::error(LOG_HEADER) << pay_address.encoded() << "is not a miner address ";
+        return;
+    }
 
-                ++new_block_number_;
-                if ((new_block_limit_ != 0) && (new_block_number_ >= new_block_limit_)) {
-                    thread_.reset();
-                    stop();
-                    break;
+    while (state_ != state::exit_)
+    {
+        uint64_t current_block_height = node_.chain_impl().get_last_height(current_block_height);
+        if (current_block_height % (mine_address_list.size() * 6) >= index * 6 && current_block_height % (mine_address_list.size() * 6) < (index + 1) * 6)
+        {
+            auto millissecond = unix_millisecond();
+
+            block_ptr block = create_new_block(pay_address, current_block_height);
+
+            if (block)
+            {
+                if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number)))
+                {
+                    boost::uint64_t height = store_block(block);
+                    if (height == 0)
+                    {
+                        continue;
+                    }
+
+                    log::info(LOG_HEADER) << "solo miner create new block at heigth:" << height;
+
+                    ++new_block_number_;
+                    if ((new_block_limit_ != 0) && (new_block_number_ >= new_block_limit_))
+                    {
+                        thread_.reset();
+                        stop();
+                        break;
+                    }
                 }
             }
+
+            auto sleepmin = unix_millisecond() - millissecond;
+            sleep_for(asio::milliseconds(500 - sleepmin));
         }
     }
+}
+
+int miner::get_mine_index(const wallet::payment_address& pay_address) const
+{
+    int index = -1;
+    for (std::string address:mine_address_list) 
+    {
+        if (address == pay_address.encoded())
+            break;       
+        
+        index++;
+    }
+    return index;
 }
 
 bool miner::is_stop_miner(uint64_t block_height) const
