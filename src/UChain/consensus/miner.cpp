@@ -620,6 +620,7 @@ std::string to_string(_T const& _t)
 vector<std::string> mine_address_list = {"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
                                         "UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6", 
                                         "UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"};
+static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 
 void miner::work(const wallet::payment_address pay_address)
 {
@@ -635,7 +636,7 @@ void miner::work(const wallet::payment_address pay_address)
     while (state_ != state::exit_)
     {
         uint64_t current_block_height = node_.chain_impl().get_last_height(current_block_height);
-        if (current_block_height % (mine_address_list.size() * 6) >= index * 6 && current_block_height % (mine_address_list.size() * 6) < (index + 1) * 6)
+        if (current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle)
         {
             auto millissecond = unix_millisecond();
 
