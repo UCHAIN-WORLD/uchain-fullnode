@@ -35,6 +35,7 @@
 #include <UChain/bitcoin/constants.hpp>
 #include <UChain/blockchain/validate_block.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/bitcoin/utility/time.hpp>
 
 #define LOG_HEADER "consensus"
 using namespace std;
@@ -613,11 +614,12 @@ std::string to_string(_T const& _t)
 
 void miner::work(const wallet::payment_address pay_address)
 {
-    std::chrono::steady_clock::time_point timeStart=std::chrono::steady_clock::now();
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
     while (state_ != state::exit_) {
+        auto millissecond = unix_millisecond();
         block_ptr block = create_new_block(pay_address);
-        sleep_for(asio::milliseconds(500));
+        auto sleepmin = unix_millisecond() - millissecond;
+        sleep_for(asio::milliseconds(500-sleepmin));
         if (block) {
             if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number))) {
                 boost::uint64_t height = store_block(block);
