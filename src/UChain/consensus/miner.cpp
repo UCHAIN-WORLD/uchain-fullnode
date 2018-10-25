@@ -619,7 +619,8 @@ std::string to_string(_T const& _t)
 
 vector<std::string> mine_address_list = {"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
                                         "UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6", 
-                                        "UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"};
+                                        "UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF",
+                                        "Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx"};
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 
 void miner::work(const wallet::payment_address pay_address)
@@ -635,10 +636,11 @@ void miner::work(const wallet::payment_address pay_address)
 
     while (state_ != state::exit_)
     {
+        auto millissecond = unix_millisecond();
         uint64_t current_block_height = node_.chain_impl().get_last_height(current_block_height);
         if (current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle)
         {
-            auto millissecond = unix_millisecond();
+            
 
             block_ptr block = create_new_block(pay_address, current_block_height);
 
@@ -663,24 +665,25 @@ void miner::work(const wallet::payment_address pay_address)
                     }
                 }
             }
-
-            auto sleepmin = unix_millisecond() - millissecond;
-            sleep_for(asio::milliseconds(500 - sleepmin));
+            
         }
+        auto sleepmin = unix_millisecond() - millissecond;
+        sleep_for(asio::milliseconds(500 - sleepmin));
     }
 }
 
 int miner::get_mine_index(const wallet::payment_address& pay_address) const
 {
-    int index = -1;
-    for (std::string address:mine_address_list) 
+    vector<std::string>::iterator it=find(mine_address_list.begin(),mine_address_list.end(),pay_address.encoded());
+ 
+    if (it==mine_address_list.end())
     {
-        if (address == pay_address.encoded())
-            break;       
-        
-        index++;
+        return -1;
     }
-    return index;
+    else
+    {
+        return std::distance(std::begin(mine_address_list), it);
+    }
 }
 
 bool miner::is_stop_miner(uint64_t block_height) const
