@@ -101,7 +101,8 @@ public:
 
 private:
     void work(const wallet::payment_address pay_address);
-    block_ptr create_new_block(const wallet::payment_address& pay_addres);
+    int get_mine_index(const wallet::payment_address& pay_address) const;
+    block_ptr create_new_block(const wallet::payment_address& pay_addres,uint64_t current_block_height = 0);
     unsigned int get_adjust_time(uint64_t height) const;
     unsigned int get_median_time_past(uint64_t height) const;
     bool get_transaction(std::vector<transaction_ptr>&, previous_out_map_t&, tx_fee_map_t&) const;
