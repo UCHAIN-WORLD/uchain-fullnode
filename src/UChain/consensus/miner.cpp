@@ -621,10 +621,11 @@ std::string to_string(_T const& _t)
     return o.str();
 }
 
-vector<std::string> mine_address_list = {"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
-                                        "UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6",
-                                        "Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx", 
-                                        "UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
+vector<std::string> mine_address_list = {
+                                            "Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
+                                            "UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6",
+                                            "Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx", 
+                                            "UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
                                         };
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 
