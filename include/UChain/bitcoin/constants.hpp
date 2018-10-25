@@ -54,7 +54,7 @@ BC_CONSTEXPR uint32_t initial_block_reward = 50;
 BC_CONSTEXPR uint32_t max_work_bits = 0x1d00ffff;
 BC_CONSTEXPR uint32_t max_input_sequence = max_uint32;
 
-BC_CONSTEXPR uint32_t total_reward = 100000000;
+BC_CONSTEXPR uint32_t total_reward = 820000000;
 
 BC_CONSTEXPR uint64_t min_fee_to_issue_token       = 10 * 100000000;
 BC_CONSTEXPR uint64_t min_fee_to_register_uid      = 1 * 100000000;
