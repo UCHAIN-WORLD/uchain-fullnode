@@ -327,7 +327,7 @@ int miner::get_lock_heights_index(uint64_t height)
 
 uint64_t miner::calculate_block_subsidy(uint64_t block_height, bool is_testnet)
 {
-    return uint64_t(3 * coin_price() * pow(0.95, block_height / bucket_size));
+    return min_fee_to_block_token;///uint64_t(3 * coin_price() * pow(0.95, block_height / bucket_size));
 }
 
 uint64_t miner::calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num)
@@ -622,10 +622,11 @@ std::string to_string(_T const& _t)
 }
 
 vector<std::string> mine_address_list = {
-                                            "Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
-                                            "UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6",
-                                            "Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx", 
-                                            "UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
+                                            //"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
+                                            //"UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6",
+                                            //"Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx", 
+                                            //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
+                                            "UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
                                         };
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 
