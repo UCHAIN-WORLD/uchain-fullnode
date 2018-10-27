@@ -32,6 +32,9 @@ namespace libbitcoin {
 
 #define BC_USER_AGENT "/UChain:" UC_VERSION "/"
 
+#define UC_BLOCK_TOKEN_SYMBOL "block"
+#define UC_VOTE_TOKEN_SYMBOL "vote"
+
 // Generic constants.
 
 BC_CONSTEXPR size_t command_size = 12;
@@ -54,11 +57,12 @@ BC_CONSTEXPR uint32_t initial_block_reward = 50;
 BC_CONSTEXPR uint32_t max_work_bits = 0x1d00ffff;
 BC_CONSTEXPR uint32_t max_input_sequence = max_uint32;
 
-BC_CONSTEXPR uint32_t total_reward = 100000000;
+BC_CONSTEXPR uint32_t total_reward = 820000000;
 
 BC_CONSTEXPR uint64_t min_fee_to_issue_token       = 10 * 100000000;
 BC_CONSTEXPR uint64_t min_fee_to_register_uid      = 1 * 100000000;
 BC_CONSTEXPR uint32_t min_fee_percentage_to_miner  = 20;
+BC_CONSTEXPR uint64_t min_fee_to_block_token       = 10000;
 
 // Threshold for nLockTime: below this value it is interpreted as block number,
 // otherwise as UNIX timestamp. [Tue Nov 5 00:53:20 1985 UTC]

@@ -633,9 +633,9 @@ void sync_fetchbalance(wallet::payment_address& address,
     blockchain.get_last_height(height);
 
     for (auto& row: rows) {
-        if (row.output_height == 0) {
+        /*if (row.output_height == 0) {
             continue;
-        }
+        }*/
 
         // spend unconfirmed (or no spend attempted)
         if ((row.spend.hash == null_hash)
@@ -710,7 +710,7 @@ bool base_transfer_common::get_spendable_output(
     } else if (tx_temp.is_coinbase()) { // incase readd deposit
         // coin base ucn maturity ucn check
         // coinbase_maturity ucn check
-        if ((row.output_height == 0) || ((row.output_height + coinbase_maturity) > height)) {
+        if (/*(row.output_height == 0) ||*/ ((row.output_height + coinbase_maturity) > height)) {
             return false;
         }
     }

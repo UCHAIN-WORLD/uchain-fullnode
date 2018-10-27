@@ -299,14 +299,22 @@ miner::transaction_ptr miner::create_coinbase_tx(
     script_number number(block_height);
     ptransaction->inputs[0].script.operations.push_back({ chain::opcode::special, number.data() });
 
-    ptransaction->outputs.resize(1);
+    ptransaction->outputs.resize(2);
     ptransaction->outputs[0].value = value;
     ptransaction->locktime = reward_lock_time;
     if (lock_height > 0) {
         ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
-    } else {
+        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
+   } else {
         ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
     }
+
+    auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, 1);
+    auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
+
+    ptransaction->outputs[1].value = 0;//1 block
+    ptransaction->outputs[1].attach_data = asset(TOKEN_TYPE, 1, ass);
 
     return ptransaction;
 }
@@ -327,7 +335,7 @@ int miner::get_lock_heights_index(uint64_t height)
 
 uint64_t miner::calculate_block_subsidy(uint64_t block_height, bool is_testnet)
 {
-    return uint64_t(3 * coin_price() * pow(0.95, block_height / bucket_size));
+    return min_fee_to_block_token;///uint64_t(3 * coin_price() * pow(0.95, block_height / bucket_size));
 }
 
 uint64_t miner::calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num)
@@ -364,14 +372,18 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
     block_chain_impl& block_chain = node_.chain_impl();
 
     header prev_header;
-    if (current_block_height != 0)
+    if (current_block_height == 0)
     {
-
         if (!block_chain.get_last_height(current_block_height) || !block_chain.get_header(prev_header, current_block_height))
         {
             log::warning(LOG_HEADER) << "get_last_height or get_header fail. current_block_height:" << current_block_height;
             return pblock;
         }
+    }
+    else if (!block_chain.get_header(prev_header, current_block_height))
+    {
+        log::warning(LOG_HEADER) << "get_last_height or get_header fail. current_block_height:" << current_block_height;
+        return pblock;
     }
     else
     {
@@ -617,10 +629,13 @@ std::string to_string(_T const& _t)
     return o.str();
 }
 
-vector<std::string> mine_address_list = {"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
-                                        "UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6", 
-                                        "UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF",
-                                        "Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx"};
+vector<std::string> mine_address_list = {
+                                            //"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
+                                            //"UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6",
+                                            //"Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx", 
+                                            //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
+                                            "UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
+                                        };
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 
 void miner::work(const wallet::payment_address pay_address)
@@ -637,38 +652,40 @@ void miner::work(const wallet::payment_address pay_address)
     while (state_ != state::exit_)
     {
         auto millissecond = unix_millisecond();
-        uint64_t current_block_height = node_.chain_impl().get_last_height(current_block_height);
-        if (current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle)
+        uint64_t current_block_height;
+        if (node_.chain_impl().get_last_height(current_block_height))
         {
-            
-
-            block_ptr block = create_new_block(pay_address, current_block_height);
-
-            if (block)
+            if (current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle)
             {
-                if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number)))
+
+                block_ptr block = create_new_block(pay_address, current_block_height);
+
+                if (block)
                 {
-                    boost::uint64_t height = store_block(block);
-                    if (height == 0)
+                    if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number)))
                     {
-                        continue;
-                    }
+                        boost::uint64_t height = store_block(block);
+                        if (height == 0)
+                        {
+                            continue;
+                        }
 
-                    log::info(LOG_HEADER) << "solo miner create new block at heigth:" << height;
+                        log::info(LOG_HEADER) << "solo miner create new block at heigth:" << height;
 
-                    ++new_block_number_;
-                    if ((new_block_limit_ != 0) && (new_block_number_ >= new_block_limit_))
-                    {
-                        thread_.reset();
-                        stop();
-                        break;
+                        ++new_block_number_;
+                        if ((new_block_limit_ != 0) && (new_block_number_ >= new_block_limit_))
+                        {
+                            thread_.reset();
+                            stop();
+                            break;
+                        }
                     }
                 }
             }
-            
         }
-        auto sleepmin = unix_millisecond() - millissecond;
-        sleep_for(asio::milliseconds(500 - sleepmin));
+        auto sleeptime = unix_millisecond() - millissecond;
+        auto sleepmin = sleeptime<500?500-sleeptime:0;
+        sleep_for(asio::milliseconds(sleepmin));
     }
 }
 
