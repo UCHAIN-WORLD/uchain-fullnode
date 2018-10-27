@@ -30,15 +30,15 @@ namespace explorer {
 namespace commands {
 
 
-/************************ sendtoken *************************/
+/************************ sendtokento *************************/
 
-class sendtoken: public command_extension
+class sendtokento: public command_extension
 {
 public:
-    static const char* symbol(){ return "sendtoken";}
+    static const char* symbol(){ return "sendtokento";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "sendtoken"; }
+    const char* description() override { return "sendtokento"; }
 
     arguments_metadata& load_arguments() override
     {

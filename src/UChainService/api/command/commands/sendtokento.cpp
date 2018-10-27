@@ -30,7 +30,7 @@ namespace explorer {
 namespace commands {
 
 
-console_result sendtoken::invoke(Json::Value& jv_output,
+console_result sendtokento::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();

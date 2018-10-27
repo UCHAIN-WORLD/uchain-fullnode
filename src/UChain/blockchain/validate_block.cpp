@@ -231,7 +231,12 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     unsigned int coinbase_count = 0;
     for (auto i : transactions) {
         if (i.is_coinbase()) {
-            if (i.outputs.size() > 1 || i.outputs[0].is_ucn() == false) {
+            if (i.outputs.size() > 2 || i.outputs[0].is_ucn() == false) {
+                return error::first_not_coinbase;
+            }
+            if (!(i.outputs.size() == 2 && i.outputs[1].is_token_transfer() 
+            && i.outputs[1].get_token_transfer().get_symbol() == "block"
+            && i.outputs[1].get_token_transfer().get_quantity() == 1)) {
                 return error::first_not_coinbase;
             }
             ++coinbase_count;

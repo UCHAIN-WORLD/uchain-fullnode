@@ -299,14 +299,22 @@ miner::transaction_ptr miner::create_coinbase_tx(
     script_number number(block_height);
     ptransaction->inputs[0].script.operations.push_back({ chain::opcode::special, number.data() });
 
-    ptransaction->outputs.resize(1);
+    ptransaction->outputs.resize(2);
     ptransaction->outputs[0].value = value;
     ptransaction->locktime = reward_lock_time;
     if (lock_height > 0) {
         ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
-    } else {
+        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
+   } else {
         ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
     }
+
+    auto transfer = chain::token_transfer("block", 1);
+    auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
+
+    ptransaction->outputs[1].value = 0;//1 block
+    ptransaction->outputs[1].attach_data = asset(TOKEN_TYPE, 1, ass);
 
     return ptransaction;
 }

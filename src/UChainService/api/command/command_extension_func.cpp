@@ -169,19 +169,19 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
 
     //os <<"\r\n";
     // token
-    /*func(make_shared<createtoken>());
+    func(make_shared<createtoken>());
     func(make_shared<deletetoken>());
-    func(make_shared<issue>());
+    func(make_shared<registertoken>());
     func(make_shared<registersecondarytoken>());
-    func(make_shared<sendtoken>());
+    func(make_shared<sendtokento>());
     func(make_shared<sendtokenfrom>());
     func(make_shared<showtokens>());
     func(make_shared<showtoken>());
-    func(make_shared<checkaccountinfotoken>());*/
+    func(make_shared<showaccounttoken>());
     // func(make_shared<showtokenview>());
-    /*func(make_shared<showaddresstoken>());
+    func(make_shared<showaddresstoken>());
     func(make_shared<destroy>());
-    func(make_shared<swaptoken>());*/
+    func(make_shared<swaptoken>());
 
     //os <<"\r\n";
     // cert
@@ -317,7 +317,7 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<sendfrom>();
 
     // token
-    /*if (symbol == createtoken::symbol())
+    if (symbol == createtoken::symbol())
         return make_shared<createtoken>();
     if (symbol == deletetoken::symbol() || symbol == "deletetoken" )
         return make_shared<deletetoken>();
@@ -326,23 +326,23 @@ shared_ptr<command> find_extension(const string& symbol)
     if (symbol == showtoken::symbol())
         return make_shared<showtoken>();
     if (symbol == showaccounttoken::symbol())
-        return make_shared<showaccounttoken>();*/
+        return make_shared<showaccounttoken>();
     // if (symbol == showtokenview::symbol())
     //     return make_shared<showtokenview>();
-    /*if (symbol == showaddresstoken::symbol())
+    if (symbol == showaddresstoken::symbol())
         return make_shared<showaddresstoken>();
-    if (symbol == issue::symbol())
-        return make_shared<issue>();
+    if (symbol == registertoken::symbol())
+        return make_shared<registertoken>();
     if (symbol == registersecondarytoken::symbol() || (symbol == "additionalissue") )
         return make_shared<registersecondarytoken>();
-    if (symbol == sendtoken::symbol() || symbol == "uidsendtoken")
-        return make_shared<sendtoken>();
+    if (symbol == sendtokento::symbol() || symbol == "uidsendtokento")
+        return make_shared<sendtokento>();
     if (symbol == sendtokenfrom::symbol() || symbol == "uidsendtokenfrom")
         return make_shared<sendtokenfrom>();
     if (symbol == destroy::symbol())
         return make_shared<destroy>();
     if (symbol == swaptoken::symbol())
-        return make_shared<swaptoken>();*/
+        return make_shared<swaptoken>();
 
     // cert
     /*if (symbol == transfercert::symbol())
