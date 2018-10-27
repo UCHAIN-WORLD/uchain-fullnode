@@ -235,7 +235,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
                 return error::first_not_coinbase;
             }
             if (!(i.outputs.size() == 2 && i.outputs[1].is_token_transfer() 
-            && i.outputs[1].get_token_transfer().get_symbol() == "block"
+            && i.outputs[1].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL
             && i.outputs[1].get_token_transfer().get_quantity() == 1)) {
                 return error::first_not_coinbase;
             }

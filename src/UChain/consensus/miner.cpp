@@ -310,7 +310,7 @@ miner::transaction_ptr miner::create_coinbase_tx(
         ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
     }
 
-    auto transfer = chain::token_transfer("block", 1);
+    auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, 1);
     auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
 
     ptransaction->outputs[1].value = 0;//1 block

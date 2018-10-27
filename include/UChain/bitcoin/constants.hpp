@@ -32,6 +32,9 @@ namespace libbitcoin {
 
 #define BC_USER_AGENT "/UChain:" UC_VERSION "/"
 
+#define UC_BLOCK_TOKEN_SYMBOL "block"
+#define UC_VOTE_TOKEN_SYMBOL "vote"
+
 // Generic constants.
 
 BC_CONSTEXPR size_t command_size = 12;
