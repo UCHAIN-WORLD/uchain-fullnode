@@ -372,7 +372,7 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
     block_chain_impl& block_chain = node_.chain_impl();
 
     header prev_header;
-    if (current_block_height == -1)
+    if (current_block_height == max_uint64)
     {
         if (!block_chain.get_last_height(current_block_height) || !block_chain.get_header(prev_header, current_block_height))
         {
