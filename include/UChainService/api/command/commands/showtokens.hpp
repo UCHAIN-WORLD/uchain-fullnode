@@ -30,7 +30,7 @@ namespace explorer {
 namespace commands {
 
 
-/************************ showtokens *************************/
+/************************  *************************/
 
 class showtokens: public command_extension
 {
