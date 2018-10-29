@@ -102,11 +102,13 @@ void executor::set_admin()
     db.stop();
 }
 
-void executor::set_blackhole_uid()
+void executor::set_blackhole_uid_block_vote()
 {
     data_base db(metadata_.configured.database);
     db.start();
     db.set_blackhole_uid();
+    db.set_token_block();
+    db.set_token_vote();
     db.stop();
 }
 
@@ -137,8 +139,8 @@ bool executor::do_initchain()
         }
         // init admin account
         set_admin();
-        // init blackhole UID
-        set_blackhole_uid();
+        // init blackhole UID,block and vote token
+        set_blackhole_uid_block_vote();
         log::info(LOG_SERVER) << BS_INITCHAIN_COMPLETE;
         return true;
     }

@@ -99,6 +99,27 @@ bool data_base::initialize_uids(const path& prefix)
     return instance.stop();
 }
 
+bool data_base::initialize_tokens(const path& prefix)
+{
+    const store paths(prefix);
+    if (paths.tokens_exist())
+        return true;
+    if (!paths.touch_tokens())
+        return false;
+
+    data_base instance(prefix, 0, 0);
+    if (!instance.create_tokens())
+        return false;
+
+    instance.set_token_block();
+    instance.set_token_vote();
+
+    log::info(LOG_DATABASE)
+        << "Upgrading token table is complete.";
+
+    return instance.stop();
+}
+
 bool data_base::initialize_certs(const path& prefix)
 {
     const store paths(prefix);
@@ -196,6 +217,44 @@ void data_base::set_blackhole_uid()
     synchronize_uids();
 }
 
+void data_base::set_token_block()
+{
+    const std::string& uid_address = wallet::payment_address::blackhole_address;
+    token_detail tokendetail(
+    UC_BLOCK_TOKEN_SYMBOL, 1,
+    1, 0, uid_detail::get_blackhole_uid_symbol(),
+    wallet::payment_address::blackhole_address, "BLOCK token is issued by blackhole,just for name not to use");
+
+    data_chunk data(uid_address.begin(), uid_address.end());
+    short_hash hash = ripemd160_hash(data);
+
+    output_point outpoint = { null_hash, max_uint32 };
+    uint32_t output_height = max_uint32;
+    uint64_t value = 0;
+
+    push_token_detail(tokendetail, hash, outpoint, output_height, value);
+    synchronize_uids();
+}
+
+void data_base::set_token_vote()
+{
+    const std::string& uid_address = wallet::payment_address::blackhole_address;
+    token_detail tokendetail(
+    UC_VOTE_TOKEN_SYMBOL, 1,
+    1, 0, uid_detail::get_blackhole_uid_symbol(),
+    wallet::payment_address::blackhole_address, "Vote token is issued by blackhole,just for name not to use");
+
+    data_chunk data(uid_address.begin(), uid_address.end());
+    short_hash hash = ripemd160_hash(data);
+
+    output_point outpoint = { null_hash, max_uint32 };
+    uint32_t output_height = max_uint32;
+    uint64_t value = 0;
+
+    push_token_detail(tokendetail, hash, outpoint, output_height, value);
+    synchronize_uids();
+}
+
 data_base::store::store(const path& prefix)
 {
     // Hash-based lookup (hash tables).
@@ -280,6 +339,22 @@ bool data_base::store::touch_uids() const
         touch_file(uids_lookup) &&
         touch_file(address_uids_lookup) &&
         touch_file(address_uids_rows);
+}
+
+bool data_base::store::tokens_exist() const
+{
+    return
+        boost::filesystem::exists(tokens_lookup) ||
+        boost::filesystem::exists(address_tokens_lookup) ||
+        boost::filesystem::exists(address_tokens_rows);
+}
+
+bool data_base::store::touch_tokens() const
+{
+    return
+        touch_file(tokens_lookup) &&
+        touch_file(address_tokens_lookup) &&
+        touch_file(address_tokens_rows);
 }
 
 bool data_base::store::certs_exist() const
@@ -540,6 +615,13 @@ bool data_base::create_uids()
     return
         uids.create() &&
         address_uids.create();
+}
+
+bool data_base::create_tokens()
+{
+    return
+        tokens.create() &&
+        address_tokens.create();
 }
 
 bool data_base::create_certs()

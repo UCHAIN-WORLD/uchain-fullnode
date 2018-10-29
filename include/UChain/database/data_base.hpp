@@ -78,6 +78,8 @@ public:
         bool touch_all() const;
         bool touch_uids() const;
         bool uids_exist() const;
+        bool touch_tokens() const;
+        bool tokens_exist() const;
         bool touch_certs() const;
         bool certs_exist() const;
         bool touch_cards() const;
@@ -156,6 +158,7 @@ public:
     /// Create and start all databases.
     bool create();
     bool create_uids();
+    bool create_tokens();
     bool create_certs();
     bool create_cards();
 
@@ -301,6 +304,8 @@ public:
 
     void set_admin(const std::string& name, const std::string& passwd);
     void set_blackhole_uid();
+    void set_token_block();
+    void set_token_vote();
    /* begin store token info into  database */
 
 protected:
@@ -314,6 +319,7 @@ private:
     typedef boost::interprocess::file_lock file_lock;
 
     static bool initialize_uids(const path& prefix);
+    static bool initialize_tokens(const path& prefix);
     static bool initialize_certs(const path& prefix);
     static bool initialize_cards(const path& prefix);
 
