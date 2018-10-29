@@ -172,7 +172,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<createtoken>());
     func(make_shared<deletetoken>());
     func(make_shared<registertoken>());
-    func(make_shared<registersecondarytoken>());
+    /*func(make_shared<registersecondarytoken>());*/
     func(make_shared<sendtokento>());
     func(make_shared<sendtokenfrom>());
     func(make_shared<showtokens>());
@@ -333,8 +333,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showaddresstoken>();
     if (symbol == registertoken::symbol())
         return make_shared<registertoken>();
-    if (symbol == registersecondarytoken::symbol() || (symbol == "additionalissue") )
-        return make_shared<registersecondarytoken>();
+    /*if (symbol == registersecondarytoken::symbol() || (symbol == "additionalissue") )
+        return make_shared<registersecondarytoken>();*/
     if (symbol == sendtokento::symbol() || symbol == "uidsendtokento")
         return make_shared<sendtokento>();
     if (symbol == sendtokenfrom::symbol() || symbol == "uidsendtokenfrom")
