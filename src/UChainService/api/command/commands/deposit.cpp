@@ -38,11 +38,11 @@ console_result deposit::invoke(Json::Value& jv_output,
     if(!argument_.address.empty() && !blockchain.is_valid_address(argument_.address))
         throw address_invalid_exception{"invalid address!"};
 
-    if (argument_.deposit != 7 && argument_.deposit != 30
-        && argument_.deposit != 90 && argument_.deposit != 182
-        && argument_.deposit != 365)
+    if (argument_.deposit != 10 && argument_.deposit != 45
+        && argument_.deposit != 120 && argument_.deposit != 240
+        && argument_.deposit != 540)
     {
-        throw account_deposit_period_exception{"deposit must be one in [7, 30, 90, 182, 365]."};
+        throw account_deposit_period_exception{"deposit must be one in [10, 45, 120, 240, 540]."};
     }
 
     auto pvaddr = blockchain.get_account_addresses(auth_.name);
