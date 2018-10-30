@@ -1,11 +1,8 @@
-
-[![Build Status](https://travis-ci.org/UCHAIN-WORLD/UChain.svg?branch=master)](https://travis-ci.org/UCHAIN-WORLD/UChain)
 [![AGPL v3](https://img.shields.io/badge/license-AGPL%20v3-brightgreen.svg)](./LICENSE)
 
 # UC Project
 UC is implemented based on [libbitcoin project](https://github.com/libbitcoin).
 
-Further Read: [Documents](http://docs.uc.org)
 
 # Build UC
 
@@ -14,7 +11,6 @@ Further Read: [Documents](http://docs.uc.org)
 | ---------| ---------------- | 
 | gcc/g++ |   5.0             |  
 | clang++ |   3.4 (8.0.0)     |  
-| MSVC    |   19.0 (VS2015)   |  
 
 C++ compiler support [C++14](http://en.cppreference.com/w/cpp/compiler_support). 
 Using `c++ -v` to check c++ version.
