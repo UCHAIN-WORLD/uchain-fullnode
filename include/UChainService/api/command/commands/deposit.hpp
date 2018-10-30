@@ -87,8 +87,8 @@ public:
         )
         (
             "deposit,d",
-            value<uint16_t>(&argument_.deposit)->default_value(7),
-            "Deposits support [10, 45, 120, 240, 540] days. defaluts to 7 days"
+            value<uint16_t>(&argument_.deposit)->default_value(10),
+            "Deposits support [10, 45, 120, 240, 540] days. defaluts to 10 days"
         )
         (
             "fee,f",
