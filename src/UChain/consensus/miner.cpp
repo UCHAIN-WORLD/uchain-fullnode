@@ -319,9 +319,9 @@ miner::transaction_ptr miner::create_coinbase_tx(
     return ptransaction;
 }
 
-int bucket_size = 500000;
-vector<uint64_t> lock_heights = {25200, 108000, 331200, 655200, 1314000};
-vector<uint64_t> coinage_rewards = {95890, 666666, 3200000, 8000000, 20000000};
+//int bucket_size = 500000;
+vector<uint64_t> lock_heights = {1728000, 7776000, 20736000, 41472000, 93312000};
+vector<uint64_t> coinage_rewards = {300000, 1990000, 5200000, 10000000, 24000000};
 
 int miner::get_lock_heights_index(uint64_t height)
 {
