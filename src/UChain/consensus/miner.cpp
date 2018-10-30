@@ -319,9 +319,9 @@ miner::transaction_ptr miner::create_coinbase_tx(
     return ptransaction;
 }
 
-int bucket_size = 500000;
-vector<uint64_t> lock_heights = {25200, 108000, 331200, 655200, 1314000};
-vector<uint64_t> coinage_rewards = {95890, 666666, 3200000, 8000000, 20000000};
+//int bucket_size = 500000;
+vector<uint64_t> lock_heights = {1728000, 7776000, 20736000, 41472000, 93312000};
+vector<uint64_t> coinage_rewards = {300000, 1990000, 5200000, 10000000, 24000000};
 
 int miner::get_lock_heights_index(uint64_t height)
 {
@@ -372,7 +372,7 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
     block_chain_impl& block_chain = node_.chain_impl();
 
     header prev_header;
-    if (current_block_height == 0)
+    if (current_block_height == max_uint64)
     {
         if (!block_chain.get_last_height(current_block_height) || !block_chain.get_header(prev_header, current_block_height))
         {
