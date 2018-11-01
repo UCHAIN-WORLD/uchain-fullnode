@@ -1437,7 +1437,7 @@ code validate_transaction::check_transaction_basic() const
             if (chain::operation::is_pay_key_hash_with_lock_height_pattern(output.script.operations)) {
                 uint64_t lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(output.script.operations);
                 if ((int)lock_height < 0
-                        || consensus::miner::get_lock_heights_index(lock_height) < 0) {
+                        /*|| consensus::miner::get_lock_heights_index(lock_height) < 0*/) {
                     return error::invalid_output_script_lock_height;
                 }
             }
@@ -1672,7 +1672,7 @@ bool validate_transaction::check_token_symbol(const transaction& tx) const
 {
     for (const auto& output : tx.outputs) {
         if (output.is_token()) {
-            if (old_symbol_in_ != output.get_token_symbol()) {
+            if (old_symbol_in_ != output.get_token_symbol() && !output.is_vote()) {
                 return false;
             }
         }

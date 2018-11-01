@@ -63,7 +63,7 @@ You can install more by specify arguments, for example:
 $ sudo ./install_dependencies.sh --build-boost --build-upnpc
 ```
 
-## boost 1.60+
+## boost 1.60(recommended)
 ```bash
 $ sudo yum/brew/apt-get install libboost-all-dev
 ```

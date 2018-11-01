@@ -92,6 +92,7 @@ public:
     uint64_t total_output_value() const;
     uint64_t serialized_size() const;
     uint64_t total_output_transfer_amount() const;
+    uint64_t total_output_vote_amount() const;
     bool has_token_issue() const;
     bool has_token_secondary_issue() const;
     bool has_token_transfer() const;

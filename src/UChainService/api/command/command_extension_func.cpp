@@ -72,6 +72,7 @@
 #include <UChainService/api/command/commands/sendtokento.hpp>
 #include <UChainService/api/command/commands/sendtokenfrom.hpp>
 #include <UChainService/api/command/commands/swaptoken.hpp>
+#include <UChainService/api/command/commands/vote.hpp>
 #include <UChainService/api/command/commands/showuids.hpp>
 #include <UChainService/api/command/commands/deletetoken.hpp>
 #include <UChainService/api/command/commands/registertoken.hpp>
@@ -182,6 +183,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showaddresstoken>());
     func(make_shared<destroy>());
     func(make_shared<swaptoken>());
+    func(make_shared<vote>());
 
     //os <<"\r\n";
     // cert
@@ -343,6 +345,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<destroy>();
     if (symbol == swaptoken::symbol())
         return make_shared<swaptoken>();
+    if (symbol == vote::symbol())
+        return make_shared<vote>();
 
     // cert
     /*if (symbol == transfercert::symbol())

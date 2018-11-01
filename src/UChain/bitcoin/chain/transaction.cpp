@@ -351,10 +351,23 @@ uint64_t transaction::total_output_transfer_amount() const
     {
         // token issue and token transfer can not co-exist in one transaction outputs.
         // token secondary issue is from air, so not add its amount to pass amount check.
-        if (output.is_token_secondaryissue()) {
+        // vote specify to count again.
+        if (output.is_token_secondaryissue() || output.is_vote()) {
             return total;
         }
         return total + output.get_token_amount();
+    };
+    return std::accumulate(outputs.begin(), outputs.end(), uint64_t(0), value);
+}
+
+uint64_t transaction::total_output_vote_amount() const
+{
+    const auto value = [](uint64_t total, const output& output)
+    {
+        if (output.is_vote()) {
+            return total + output.get_token_amount();
+        }
+        return total;
     };
     return std::accumulate(outputs.begin(), outputs.end(), uint64_t(0), value);
 }

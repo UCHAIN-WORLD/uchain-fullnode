@@ -30,20 +30,23 @@ namespace explorer {
 namespace commands {
 
 
-class deposit : public command_extension
+class vote : public command_extension
 {
 public:
-    static const char* symbol(){ return "deposit";}
+    static const char* symbol(){ return "vote";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Deposit some ucn, then get reward for frozen some ucn."; }
+    const char* description() override { return "vote to a miner's addresss, then lock some ucn for about 48h.1 ucn can get 20 votes"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
             .add("ACCOUNTAUTH", 1)
+            .add("FROM_", 1)
+            .add("TO_", 1)
             .add("AMOUNT", 1);
+            
     }
 
     void load_fallbacks (std::istream& input,
@@ -52,6 +55,8 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.from, "FROM_", variables, input, raw);
+        load_input(argument_.to, "TO_", variables, input, raw);
         load_input(argument_.amount, "AMOUNT", variables, input, raw);
     }
 
@@ -76,23 +81,23 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
+            "FROM_",
+            value<std::string>(&argument_.from),
+            "The address to deposit some ucn for 48h."
+        )
+        (
+            "TO_",
+            value<std::string>(&argument_.to),
+            "The vote target address."
+        )
+        (
             "AMOUNT",
             value<uint64_t>(&argument_.amount)->required(),
-            "UCN integer bits."
-        )
-        (
-            "address,a",
-            value<std::string>(&argument_.address),
-            "The deposit target address."
-        )
-        (
-            "deposit,d",
-            value<uint16_t>(&argument_.deposit)->default_value(10),
-            "Deposits support [10, 45, 120, 240, 540] days. defaluts to 10 days"
-        )
+            "vote amount."
+        )      
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(10000),
+            value<uint64_t>(&option_.fee)->default_value(10000),
             "Transaction fee. defaults to 10000 UCN bits"
         );
 
@@ -108,14 +113,15 @@ public:
 
     struct argument
     {
-        uint64_t amount;
-        uint64_t fee;
-        uint16_t deposit;
-        std::string address;
+        std::string from;
+        std::string to;
+        uint64_t amount;   
+        
     } argument_;
 
     struct option
     {
+        uint64_t fee;
     } option_;
 
 };
