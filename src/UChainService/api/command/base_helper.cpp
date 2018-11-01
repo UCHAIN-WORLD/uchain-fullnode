@@ -984,7 +984,7 @@ void base_transfer_common::check_payment_satisfied(filter filter) const
             + std::to_string(unspent_ucn_) + ", payment = " + std::to_string(payment_ucn_)};
     }
 
-    if ((filter & FILTER_TOKEN) && (unspent_token_ < payment_token_)) {
+    if ((filter & FILTER_TOKEN) && (unspent_token_ < payment_token_) && symbol_ != UC_VOTE_TOKEN_SYMBOL) {
         throw token_lack_exception{"not enough token amount, unspent = "
             + std::to_string(unspent_token_) + ", payment = " + std::to_string(payment_token_)};
     }
@@ -1374,7 +1374,8 @@ void base_transfer_helper::populate_unspent_list()
         }
     }
 
-    if (from_list_.empty()) {
+    //vote specify
+    if (from_list_.empty() && symbol_ != UC_VOTE_TOKEN_SYMBOL) {
         throw tx_source_exception{"not enough ucn or token in from address"
             ", or you do not own the from address!"};
     }
@@ -1688,6 +1689,38 @@ depositing_ucn_transaction::get_script_operations(const receiver_record& record)
         if((utxo_attach_type::deposit == record.type)) {
             payment_ops = chain::operation::to_pay_key_hash_with_lock_height_pattern(
                 hash, get_reward_lock_height());
+        } else {
+            payment_ops = chain::operation::to_pay_key_hash_pattern(hash); // common payment script
+        }
+    }
+    else {
+        throw toaddress_invalid_exception{std::string("not supported version target address ") + record.target};
+    }
+
+    return payment_ops;
+}
+
+uint32_t voting_token::get_reward_lock_height() const
+{
+    return 48*60*60*2;//48h
+}
+
+chain::operation::stack
+voting_token::get_script_operations(const receiver_record& record) const
+{
+    chain::operation::stack payment_ops;
+
+    // complicated script and token should be implemented in subclass
+    // generate script
+    const wallet::payment_address payment(record.target);
+    if (!payment)
+        throw toaddress_invalid_exception{"invalid target address"};
+
+    if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+        const auto& hash = payment.hash();
+        if((to_ == record.target)
+            && (utxo_attach_type::deposit == record.type)) {
+            payment_ops = chain::operation::to_pay_key_hash_with_lock_height_pattern(hash, get_reward_lock_height());
         } else {
             payment_ops = chain::operation::to_pay_key_hash_pattern(hash); // common payment script
         }

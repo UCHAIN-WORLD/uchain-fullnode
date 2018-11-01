@@ -265,7 +265,7 @@ uint64_t output::get_token_amount() const // for validate_transaction.cpp to cal
             auto detail_info = boost::get<token_detail>(token_info.get_data());
             return detail_info.get_maximum_supply();
         }
-        if (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE) {
+        if (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE ) {
             auto trans_info = boost::get<token_transfer>(token_info.get_data());
             return trans_info.get_quantity();
         }
@@ -280,6 +280,11 @@ bool output::is_token_transfer() const
         return (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE);
     }
     return false;
+}
+
+bool output::is_vote() const
+{
+    return is_token_transfer() && get_token_symbol() == UC_VOTE_TOKEN_SYMBOL;
 }
 
 bool output::is_uid_transfer() const
@@ -437,6 +442,8 @@ std::string output::get_token_symbol() const // for validate_transaction.cpp to 
     }
     return std::string("");
 }
+
+
 
 std::string output::get_token_issuer() const // for validate_transaction.cpp to calculate token transfer amount
 {
