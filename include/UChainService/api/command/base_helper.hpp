@@ -463,6 +463,30 @@ private:
     uint16_t                          deposit_{7}; // 7 days
 };
 
+class BCX_API voting_token : public base_transfer_helper
+{
+public:
+    voting_token(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+        std::string&& name, std::string&& passwd,
+        std::string&& to, receiver_record::list&& receiver_list,
+        uint16_t amount , uint64_t fee = 10000)
+        : base_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
+            "", std::move(receiver_list), fee ,std::string(UC_VOTE_TOKEN_SYMBOL))
+        , to_{std::move(to)}
+        , amount_{amount}
+    {}
+
+    ~voting_token(){}
+
+    uint32_t get_reward_lock_height() const;
+
+    chain::operation::stack get_script_operations(const receiver_record& record) const override;
+
+private:
+    std::string                       to_;
+    uint64_t                          amount_; 
+};
+
 class BCX_API sending_ucn : public base_transfer_helper
 {
 public:

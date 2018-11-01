@@ -78,6 +78,7 @@ public:
     token_cert_type get_token_cert_type() const;
     const data_chunk& get_attenuation_model_param() const;
     bool is_token() const;
+    bool is_vote() const;
     bool is_token_transfer() const;
     bool is_token_issue() const;
     bool is_token_secondaryissue() const;
