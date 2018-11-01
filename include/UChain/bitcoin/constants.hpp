@@ -33,7 +33,7 @@ namespace libbitcoin {
 #define BC_USER_AGENT "/UChain:" UC_VERSION "/"
 
 #define UC_BLOCK_TOKEN_SYMBOL "BLOCK"
-#define UC_VOTE_TOKEN_SYMBOL "VOTE"
+#define UC_VOTE_TOKEN_SYMBOL  "VOTE"
 
 // Generic constants.
 
