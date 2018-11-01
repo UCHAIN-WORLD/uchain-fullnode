@@ -633,7 +633,7 @@ vector<std::string> mine_address_list = {
                                             //"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
                                             //"UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6",
                                             //"Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx", 
-                                            "UbkBgDeQHHJyGBuT7txepqCiJbpJ3JSYZD"
+                                            "UbkBgDeQHHJyGBuT7txepqCiJbpJ3JSYZD",
                                             "UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
                                         };
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
@@ -645,7 +645,7 @@ void miner::work(const wallet::payment_address pay_address)
 
     if (index == -1)
     {
-        log::error(LOG_HEADER) << pay_address.encoded() << "is not a miner address ";
+        log::error(LOG_HEADER) << pay_address.encoded() << " is not a miner address ";
         return;
     }
 
