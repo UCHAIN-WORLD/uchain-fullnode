@@ -120,6 +120,7 @@ private:
     void check_double_spend(const code& ec, const chain::input_point& point);
     void check_fees() const;
     code check_tx_connect_input() const;
+    code check_tx_connect_output() const;
     bool check_uid_exist(const std::string& uid) const;
     bool check_token_exist(const std::string& symbol) const;
     bool check_token_cert_exist(const std::string& cert, token_cert_type cert_type) const;

@@ -115,6 +115,7 @@ enum error_code_t
     fees_out_of_range,
     coinbase_too_large,             // 45
     invalid_coinage_reward_coinbase,
+    invalid_quantity_or_value,
 
     // file system errors
     file_system,

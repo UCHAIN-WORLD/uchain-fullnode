@@ -312,7 +312,11 @@ void validate_transaction::check_fees() const
         handle_validate_(ec, tx_, {});
         return;
     }
-
+    code eo = check_tx_connect_output();
+    if (eo != error::success) {
+        handle_validate_(eo, tx_, {});
+        return;
+    }
     // Who cares?
     // Fuck the police
     // Every tx equal!
@@ -356,6 +360,18 @@ code validate_transaction::check_tx_connect_input() const
         }
     }
 
+    return error::success;
+}
+
+code validate_transaction::check_tx_connect_output() const
+{
+    auto value = tx_->outputs[0].value;
+    auto token_info = boost::get<bc::chain::token>(tx_->outputs[1].attach_data.get_attach());
+    auto trans_info = boost::get<bc::chain::token_transfer>(token_info.get_data()); 
+    auto quatity = trans_info.get_quantity();
+    if(quatity*5000 != value){    // TODO: for debug
+        return error::invalid_quantity_or_value;
+    }
     return error::success;
 }
 
