@@ -40,10 +40,10 @@ QRENCODE_ARCHIVE="qrencode-3.4.4.tar.bz2"
 
 # Boost archive.
 #------------------------------------------------------------------------------
-BOOST_URL="hhttp://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.bz2"
+BOOST_URL=""https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2
 # the following URL is not stable, sometimes it is unable to connect.
 #BOOST_URL="http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.bz2"
-BOOST_ARCHIVE="boost_11_60_0.tar.bz2"
+BOOST_ARCHIVE="boost_1_62_0.tar.bz2"
 
 # miniupnpc archive
 #------------------------------------------------------------------------------
@@ -608,7 +608,7 @@ build_from_tarball_boost()
     push_directory "$EXTRACT"
 
     # Extract the source locally.
-    wget --output-document $ARCHIVE $URL
+    #wget --output-document $ARCHIVE $URL
     tar --extract --file $ARCHIVE --$COMPRESSION --strip-components=1
 
     initialize_boost_configuration
