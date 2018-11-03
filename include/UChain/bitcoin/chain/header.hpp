@@ -66,13 +66,13 @@ public:
     header();
     header(const header& other);
     header(uint32_t version, const hash_digest& previous_block_hash,
-        const hash_digest& merkle, uint32_t timestamp, const u256& bits,
-        u64 nonce, const u256& mixhash, uint32_t number, uint64_t transaction_count=0);
+        const hash_digest& merkle, uint32_t timestamp,/*const u256& bits,
+        u64 nonce, const u256& mixhash,*/ uint32_t number, uint64_t transaction_count=0);
 
     header(header&& other);
     header(uint32_t version, hash_digest&& previous_block_hash,
-        hash_digest&& merkle, uint32_t timestamp, const u256& bits,
-        u64 nonce, const u256& mixhash, uint32_t number, uint64_t transaction_count=0);
+        hash_digest&& merkle, uint32_t timestamp,/* const u256& bits,
+        u64 nonce, const u256& mixhash,*/ uint32_t number, uint64_t transaction_count=0);
 
     /// This class is move assignable but not copy assignable.
     header& operator=(header&& other);
@@ -95,9 +95,9 @@ public:
     hash_digest previous_block_hash;
     hash_digest merkle;
     uint32_t timestamp;
-    u256 bits;
-    u64 nonce;
-    u256 mixhash;
+    //u256 bits;
+    //u64 nonce;
+    //u256 mixhash;
     uint32_t number;
 
     // The longest size (64) of a protocol variable int is deserialized here.

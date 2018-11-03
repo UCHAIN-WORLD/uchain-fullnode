@@ -30,7 +30,7 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/blockchain/block.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
-#include <UChain/consensus/miner/MinerAux.h>
+//#include <UChain/consensus/miner/MinerAux.h>
 #include <UChain/consensus/libdevcore/BasicType.h>
 #include <UChain/consensus/miner.hpp>
 #include <UChain/bitcoin/chain/output.hpp>
@@ -210,8 +210,8 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     const auto& header = current_block_.header;
 
-    if (!is_valid_proof_of_work(header))
-        return error::proof_of_work;
+    /*if (!is_valid_proof_of_work(header))
+        return error::proof_of_work;*/
 
     RETURN_IF_STOPPED();
 
@@ -484,8 +484,8 @@ size_t validate_block::legacy_sigops_count(const transaction::list& txs)
 code validate_block::accept_block() const
 {
     const auto& header = current_block_.header;
-    if (header.bits != work_required(testnet_))
-        return error::incorrect_proof_of_work;
+    /*if (header.bits != work_required(testnet_))
+        return error::incorrect_proof_of_work;*/
 
     RETURN_IF_STOPPED();
 

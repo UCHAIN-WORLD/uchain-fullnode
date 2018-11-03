@@ -25,7 +25,7 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/blockchain/block_detail.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
-#include <UChain/consensus/miner/MinerAux.h>
+//#include <UChain/consensus/miner/MinerAux.h>
 #include <UChain/blockchain/block_chain_impl.hpp>
 
 namespace libbitcoin {
@@ -48,7 +48,7 @@ validate_block_impl::validate_block_impl(simple_chain& chain,
 {
 }
 
-bool validate_block_impl::is_valid_proof_of_work(const chain::header& header) const
+/*bool validate_block_impl::is_valid_proof_of_work(const chain::header& header) const
 {
     chain::header parent_header;
     if (orphan_index_ != 0) {
@@ -58,13 +58,13 @@ bool validate_block_impl::is_valid_proof_of_work(const chain::header& header) co
         static_cast<block_chain_impl&>(chain_).get_header(parent_header, header.number - 1);
     }
     return MinerAux::verifySeal(const_cast<chain::header&>(header), parent_header);
-}
+}*/
 
-u256 validate_block_impl::previous_block_bits() const
+/*u256 validate_block_impl::previous_block_bits() const
 {
     // Read block header (top - 1) and return bits
     return fetch_block(height_ - 1).bits;
-}
+}*/
 
 validate_block::versions validate_block_impl::preceding_block_versions(
     size_t maximum) const

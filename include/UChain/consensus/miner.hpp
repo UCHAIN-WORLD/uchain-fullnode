@@ -87,7 +87,7 @@ public:
         uint64_t value, uint64_t block_height, int lock_height, uint32_t reward_lock_time);
 
     block_ptr get_block(bool is_force_create_block = false);
-    bool get_work(std::string& seed_hash, std::string& header_hash, std::string& boundary);
+    //bool get_work(std::string& seed_hash, std::string& header_hash, std::string& boundary);
     bool put_result(const std::string& nonce, const std::string& mix_hash,
         const std::string& header_hash, const uint64_t &nounce_mask);
     bool set_miner_public_key(const string& public_key);

@@ -27,7 +27,7 @@
 #include <functional>
 #include <system_error>
 #include <boost/thread.hpp>
-#include <UChain/consensus/miner/MinerAux.h>
+//#include <UChain/consensus/miner/MinerAux.h>
 #include <UChain/consensus/libdevcore/BasicType.h>
 #include <UChain/bitcoin/chain/script/operation.hpp>
 #include <UChain/bitcoin/config/hash160.hpp>
@@ -279,10 +279,10 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
     pblock->header.merkle = pblock->generate_merkle_root(pblock->transactions);
     pblock->header.transaction_count = 1;
     pblock->header.version = 1;
-    pblock->header.bits = 1;
-    pblock->header.nonce = 0;
+    /*pblock->header.bits = 1;
+    pblock->header.nonce = 0;*/
     pblock->header.number = 0;
-    pblock->header.mixhash = 0;
+    //pblock->header.mixhash = 0;
 
     return pblock;
 }
@@ -561,9 +561,9 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
     pblock->header.merkle = pblock->generate_merkle_root(pblock->transactions);
     pblock->header.timestamp = get_adjust_time(pblock->header.number);
     pblock->header.version = version;
-    pblock->header.bits = HeaderAux::calculateDifficulty(pblock->header, prev_header);
+    /*pblock->header.bits = HeaderAux::calculateDifficulty(pblock->header, prev_header);
     pblock->header.nonce = 0;
-    pblock->header.mixhash = 0;
+    pblock->header.mixhash = 0;*/
 
     return pblock;
 }
@@ -662,8 +662,8 @@ void miner::work(const wallet::payment_address pay_address)
 
                 if (block)
                 {
-                    if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number)))
-                    {
+                    /*if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number)))
+                    {*/
                         boost::uint64_t height = store_block(block);
                         if (height == 0)
                         {
@@ -679,7 +679,7 @@ void miner::work(const wallet::payment_address pay_address)
                             stop();
                             break;
                         }
-                    }
+                    //}
                 }
             }
         }
@@ -802,7 +802,7 @@ miner::block_ptr miner::get_block(bool is_force_create_block)
     return new_block_;
 }
 
-bool miner::get_work(std::string& seed_hash, std::string& header_hash, std::string& boundary)
+/*bool miner::get_work(std::string& seed_hash, std::string& header_hash, std::string& boundary)
 {
     block_ptr block = get_block();
     if (block) {
@@ -812,7 +812,7 @@ bool miner::get_work(std::string& seed_hash, std::string& header_hash, std::stri
         return true;
     }
     return false;
-}
+}*/
 
 bool miner::put_result(const std::string& nonce, const std::string& mix_hash,
                        const std::string& header_hash, const uint64_t &nounce_mask)
@@ -835,9 +835,9 @@ bool miner::put_result(const std::string& nonce, const std::string& mix_hash,
         }
 #endif
         // nounce_mask defination is moved to the caller by chengzhiping 2018-3-15.
-        uint64_t nonce_t = n_nonce ^ nounce_mask;
+        /*uint64_t nonce_t = n_nonce ^ nounce_mask;
         new_block_->header.nonce = (u64) nonce_t;
-        new_block_->header.mixhash = (FixedHash<32>::Arith)h256(mix_hash);
+        new_block_->header.mixhash = (FixedHash<32>::Arith)h256(mix_hash);*/
         uint64_t height = store_block(new_block_);
         if (height != 0) {
             log::debug(LOG_HEADER) << "put_result nonce:" << nonce << " mix_hash:"
@@ -857,7 +857,7 @@ bool miner::put_result(const std::string& nonce, const std::string& mix_hash,
     return ret;
 }
 
-void miner::get_state(uint64_t &height, uint64_t &rate, string& difficulty, bool& is_mining)
+/*void miner::get_state(uint64_t &height, uint64_t &rate, string& difficulty, bool& is_mining)
 {
     rate = MinerAux::getRate();
     block_chain_impl& block_chain = node_.chain_impl();
@@ -866,7 +866,7 @@ void miner::get_state(uint64_t &height, uint64_t &rate, string& difficulty, bool
     block_chain.get_header(prev_header, height);
     difficulty = to_string((u256)prev_header.bits);
     is_mining = thread_ ? true : false;
-}
+}*/
 
 bool miner::get_block_header(chain::header& block_header, const string& para)
 {

@@ -8,7 +8,7 @@ using namespace libbitcoin;
 DEV_SIMPLE_EXCEPTION(GenesisBlockCannotBeCalculated);
 /*****************************/
 WorkPackage::WorkPackage(libbitcoin::chain::header& _bh):
-    boundary(HeaderAux::boundary(_bh)),
+    //boundary(HeaderAux::boundary(_bh)),
     headerHash(HeaderAux::hashHead(_bh)),
     seedHash(HeaderAux::seedHash(_bh))
 {}
@@ -122,7 +122,7 @@ h256 HeaderAux::hashHead(libbitcoin::chain::header& _bi)
 {
     h256 memo;
     RLPStream s;
-    s  << (bigint) _bi.version << (bigint)_bi.bits << (bigint)_bi.number << _bi.merkle
+    s  << (bigint) _bi.version /*<< (bigint)_bi.bits*/ << (bigint)_bi.number << _bi.merkle
         << _bi.previous_block_hash << (bigint) _bi.timestamp ;
     memo = sha3(s.out());
     return memo;
@@ -140,7 +140,7 @@ uint64_t HeaderAux::dataSize(uint64_t _blockNumber)
 
 u256 HeaderAux::calculateDifficulty(libbitcoin::chain::header& _bi, libbitcoin::chain::header& _parent)
 {
-    auto minimumDifficulty = is_testnet ? bigint(10) : bigint(10);//is_testnet ? bigint(300000) : bigint(914572800);
+    /*auto minimumDifficulty = is_testnet ? bigint(10) : bigint(10);//is_testnet ? bigint(300000) : bigint(914572800);
     bigint target;
 
     // DO NOT MODIFY time_config in release
@@ -159,7 +159,8 @@ u256 HeaderAux::calculateDifficulty(libbitcoin::chain::header& _bi, libbitcoin::
     bigint result = target;
 
     result = std::max<bigint>(minimumDifficulty, result);
-    return u256(std::min<bigint>(result, std::numeric_limits<u256>::max()));
+    return u256(std::min<bigint>(result, std::numeric_limits<u256>::max()));*/
+    return 0;
 }
 
 
