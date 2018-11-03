@@ -28,7 +28,7 @@
 #include <system_error>
 #include <boost/thread.hpp>
 //#include <UChain/consensus/miner/MinerAux.h>
-#include <UChain/consensus/libdevcore/BasicType.h>
+//#include <UChain/consensus/libdevcore/BasicType.h>
 #include <UChain/bitcoin/chain/script/operation.hpp>
 #include <UChain/bitcoin/config/hash160.hpp>
 #include <UChain/bitcoin/wallet/ec_public.hpp>
@@ -74,9 +74,9 @@ miner::miner(p2p_node& node)
     , new_block_limit_(0)
     , setting_(node_.chain_impl().chain_settings())
 {
-    if (setting_.use_testnet_rules) {
+    /*if (setting_.use_testnet_rules) {
         bc::HeaderAux::set_as_testnet();
-    }
+    }*/
 }
 
 miner::~miner()
@@ -814,7 +814,7 @@ miner::block_ptr miner::get_block(bool is_force_create_block)
     return false;
 }*/
 
-bool miner::put_result(const std::string& nonce, const std::string& mix_hash,
+/*bool miner::put_result(const std::string& nonce, const std::string& mix_hash,
                        const std::string& header_hash, const uint64_t &nounce_mask)
 {
     bool ret = false;
@@ -835,9 +835,9 @@ bool miner::put_result(const std::string& nonce, const std::string& mix_hash,
         }
 #endif
         // nounce_mask defination is moved to the caller by chengzhiping 2018-3-15.
-        /*uint64_t nonce_t = n_nonce ^ nounce_mask;
+        uint64_t nonce_t = n_nonce ^ nounce_mask;
         new_block_->header.nonce = (u64) nonce_t;
-        new_block_->header.mixhash = (FixedHash<32>::Arith)h256(mix_hash);*/
+        new_block_->header.mixhash = (FixedHash<32>::Arith)h256(mix_hash);
         uint64_t height = store_block(new_block_);
         if (height != 0) {
             log::debug(LOG_HEADER) << "put_result nonce:" << nonce << " mix_hash:"
@@ -855,7 +855,7 @@ bool miner::put_result(const std::string& nonce, const std::string& mix_hash,
     }
 
     return ret;
-}
+}*/
 
 /*void miner::get_state(uint64_t &height, uint64_t &rate, string& difficulty, bool& is_mining)
 {

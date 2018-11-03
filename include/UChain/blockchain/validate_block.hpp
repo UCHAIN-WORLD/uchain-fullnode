@@ -101,7 +101,7 @@ protected:
     bool is_valid_time_stamp(uint32_t timestamp) const;
     bool is_valid_time_stamp_new(uint32_t timestamp) const;
     bool check_time_stamp(uint32_t timestamp, const asio::seconds& window) const;
-    u256 work_required(bool is_testnet) const;
+    //u256 work_required(bool is_testnet) const;
 
     static bool is_distinct_tx_set(const chain::transaction::list& txs);
     //virtual bool is_valid_proof_of_work(const chain::header& header)const = 0;
