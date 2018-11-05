@@ -47,7 +47,7 @@ console_result vote::invoke(Json::Value& jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {argument_.from, "", argument_.amount*coin_price(1)/20000, 0, utxo_attach_type::deposit, asset()},
+        {argument_.from, "", argument_.amount*coin_price(1)/20, 0, utxo_attach_type::deposit, asset()},
         {argument_.to, UC_VOTE_TOKEN_SYMBOL, 0, argument_.amount, utxo_attach_type::token_transfer, asset()}
     };
     auto vote_helper = voting_token(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),

@@ -36,7 +36,7 @@ namespace libbitcoin {
 #define UC_VOTE_TOKEN_SYMBOL "VOTE"
 
 #define LOCKED_TIME                 345600
-#define TIMES_QUANTITY_TO_VALUE    5000
+#define TIMES_QUANTITY_TO_VALUE    5E6
 // Generic constants.
 
 BC_CONSTEXPR size_t command_size = 12;
