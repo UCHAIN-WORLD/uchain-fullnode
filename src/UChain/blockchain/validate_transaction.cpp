@@ -312,11 +312,15 @@ void validate_transaction::check_fees() const
         handle_validate_(ec, tx_, {});
         return;
     }
-    code eo = check_tx_connect_output();
-    if (eo != error::success) {
-        handle_validate_(eo, tx_, {});
-        return;
+    if(tx_->has_token_vote())
+    {
+        code eo = check_tx_connect_output();
+        if (eo != error::success) {
+            handle_validate_(eo, tx_, {});
+            return;
+        }    
     }
+    
     // Who cares?
     // Fuck the police
     // Every tx equal!
@@ -365,11 +369,26 @@ code validate_transaction::check_tx_connect_input() const
 
 code validate_transaction::check_tx_connect_output() const
 {
-    uint64_t value = tx_->outputs[0].value;
-    auto token_info = boost::get<bc::chain::token>(tx_->outputs[1].attach_data.get_attach());
-    auto trans_info = boost::get<bc::chain::token_transfer>(token_info.get_data()); 
-    uint64_t quatity = trans_info.get_quantity();
-    if(quatity*5000 != value){    // TODO: for debug
+    uint64_t value = 0, quatity = 0, lock_height = 0;
+    libbitcoin::chain::token token_info;
+    libbitcoin::chain::token_transfer trans_info;
+    for(auto& ele : tx_->outputs)
+    {
+        if(chain::operation::is_pay_key_hash_with_lock_height_pattern(ele.script.operations))
+        {
+            lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(ele.script.operations);
+            if(lock_height == LOCKED_TIME)
+                value += ele.value;
+        }
+        if(ele.is_vote())
+        {
+            token_info = boost::get<bc::chain::token>(ele.attach_data.get_attach());
+            trans_info = boost::get<bc::chain::token_transfer>(token_info.get_data()); 
+            quatity += trans_info.get_quantity();
+        }
+    }
+
+    if(quatity*TIMES_QUANTITY_TO_VALUE != value){    // TODO: for debug
         return error::invalid_quantity_or_value;
     }
     return error::success;
