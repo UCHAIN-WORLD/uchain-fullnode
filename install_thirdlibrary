@@ -40,7 +40,11 @@ QRENCODE_ARCHIVE="qrencode-3.4.4.tar.bz2"
 
 # Boost archive.
 #------------------------------------------------------------------------------
+<<<<<<< Updated upstream
 BOOST_URL=""https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2
+=======
+BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.bz2"
+>>>>>>> Stashed changes
 # the following URL is not stable, sometimes it is unable to connect.
 #BOOST_URL="http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.bz2"
 BOOST_ARCHIVE="boost_1_62_0.tar.bz2"
