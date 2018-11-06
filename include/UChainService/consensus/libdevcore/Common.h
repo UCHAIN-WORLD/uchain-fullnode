@@ -49,9 +49,9 @@
 //#pragma GCC diagnostic push
 //#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <boost/version.hpp>
-#if (BOOST_VERSION == 105800)
+/*#if (BOOST_VERSION == 105800)
     #include "boost_multiprecision_number_compare_bug_workaround.hpp"
-#endif
+#endif*/
 //#include <boost/multiprecision/detail/number_compare.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <UChain/bitcoin/math/hash.hpp>

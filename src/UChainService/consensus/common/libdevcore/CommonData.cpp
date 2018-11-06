@@ -20,7 +20,7 @@
  */
 
 //#include "CommonData.h"
-#include <UChain/consensus/libdevcore/CommonData.h>
+#include <UChainService/consensus/libdevcore/CommonData.h>
 #include <random>
 
 #if defined(_MSC_VER)
@@ -33,8 +33,8 @@
 #endif
 //#include "Exceptions.h"
 //#include "Log.h"
-#include <UChain/consensus/libdevcore/Exceptions.h>
-#include <UChain/consensus/libdevcore/Log.h>
+#include <UChainService/consensus/libdevcore/Exceptions.h>
+#include <UChainService/consensus/libdevcore/Log.h>
 using namespace std;
 using namespace libbitcoin;
 

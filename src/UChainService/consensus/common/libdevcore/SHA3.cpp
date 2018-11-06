@@ -19,13 +19,13 @@
  * @date 2014
  */
 
-#include <UChain/consensus/libdevcore/SHA3.h>
+#include <UChainService/consensus/libdevcore/SHA3.h>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <UChain/consensus/libdevcore/RLP.h>
-#include <UChain/consensus/libdevcore/picosha2.h>
+#include <UChainService/consensus/libdevcore/RLP.h>
+#include <UChainService/consensus/libdevcore/picosha2.h>
 using namespace std;
 using namespace libbitcoin;
 
