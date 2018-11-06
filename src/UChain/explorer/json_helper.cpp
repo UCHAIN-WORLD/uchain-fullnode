@@ -69,9 +69,9 @@ Json::Value json_helper::prop_list(const header& header)
     tree["hash"] += hash256(block_header.hash());
     tree["merkle_tree_hash"] += hash256(block_header.merkle);
     tree["previous_block_hash"] += hash256(block_header.previous_block_hash);
-    tree["bits"] += block_header.bits;
+    /*tree["bits"] += block_header.bits;
     tree["mixhash"] += block_header.mixhash;
-    tree["nonce"] += block_header.nonce;
+    tree["nonce"] += block_header.nonce;*/
 
     if (version_ == 1) {
         tree["time_stamp"] += block_header.timestamp;

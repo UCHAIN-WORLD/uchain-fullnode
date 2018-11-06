@@ -49,7 +49,7 @@ console_result showinfo::invoke(Json::Value& jv_output,
     uint64_t rate;
     std::string difficulty;
     bool is_solo_mining;
-    node.miner().get_state(height, rate, difficulty, is_solo_mining);
+    //node.miner().get_state(height, rate, difficulty, is_solo_mining);
 
     auto& jv = jv_output;
     if (get_api_version() <= 2) {
