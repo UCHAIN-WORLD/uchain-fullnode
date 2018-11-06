@@ -401,6 +401,15 @@ bool transaction::has_token_transfer() const
     return false;
 }
 
+bool transaction::has_token_vote() const
+{
+    for (auto& elem: outputs) {
+        if(elem.is_vote()) // block #810376 has 0 token transfer without input
+            return true;
+    }
+    return false;
+}
+
 bool transaction::has_token_cert() const
 {
     for (auto& elem: outputs) {

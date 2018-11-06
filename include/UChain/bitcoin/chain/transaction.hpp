@@ -96,6 +96,7 @@ public:
     bool has_token_issue() const;
     bool has_token_secondary_issue() const;
     bool has_token_transfer() const;
+    bool has_token_vote() const;
     bool has_token_cert() const;
     bool has_token_card_transfer() const;
 
