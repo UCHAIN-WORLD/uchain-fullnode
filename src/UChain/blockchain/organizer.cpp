@@ -307,11 +307,12 @@ void organizer::replace_chain(uint64_t fork_index,
     // Compare the difficulty of the 2 forks (original and orphan)
     const auto begin_index = fork_index + 1;
 
+    delete_fork_chain_hash(orphan_chain[orphan_chain.size() - 1]->actual()->header.previous_block_hash);
+
     /*u256 main_work;
     DEBUG_ONLY(auto result =) chain_.get_difficulty(main_work, begin_index);
     BITCOIN_ASSERT(result);
-
-    delete_fork_chain_hash(orphan_chain[orphan_chain.size() - 1]->actual()->header.previous_block_hash);
+    
     if (orphan_work <= main_work)
     {
         if(orphan_chain.size() % node::locator_cap  == 0)
@@ -322,6 +323,8 @@ void organizer::replace_chain(uint64_t fork_index,
             << "Insufficient work to reorganize at [" << begin_index << "]" << "orphan_work:" << orphan_work << " main_work:" << main_work;
         return;
     }*/
+
+    
 
     // Replace! Switch!
     block_detail::list released_blocks;
