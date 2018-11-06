@@ -629,9 +629,9 @@ std::string to_string(_T const& _t)
 }
 
 vector<std::string> mine_address_list = {
-                                            "UV3yZARNnWRQ7PooQPvVtbMEE21MLz2Y66", 
-                                            "UNjBkhxLA9tekK1nkwDgxAnYp8ehoFTxeV",
-                                            "USTQDD8Q5TxFox9djAgvx5whiBUiRmAxsR", 
+                                            "UaWMHFWmZYwEFVbwEpaEeMHTm9UL451ZX8", 
+                                            "UN3hrx4KkuMUNmBibCHbhYoZ7EmDFNCR3a",
+                                            "UeeCSa6pdhCHBsnHF9MLJ2jD7DUBuVvWnf", 
                                             //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
                                             //"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
                                         };
