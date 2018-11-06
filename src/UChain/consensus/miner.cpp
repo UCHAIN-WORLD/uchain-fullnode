@@ -269,7 +269,7 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
         tx_new.outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(genesis_address));
         pblock->header.timestamp = 1550073600;
     }
-    tx_new.outputs[0].value = 820000000 * coin_price();
+    tx_new.outputs[0].value = total_reward * coin_price();
 
     // Add our coinbase tx as first transaction
     pblock->transactions.push_back(tx_new);
@@ -633,7 +633,7 @@ vector<std::string> mine_address_list = {
                                             //"Ughe1bqD5xbrBzDX4mH5t1r9cueZqu8c5x", 
                                             //"UivAWYGUkXg1q982MYwhVr27sj9d2o2Ph6",
                                             //"Ua4qr3RSiU3WQyfkrsrCkgGz8eJeLUiNKx", 
-                                            "UbkBgDeQHHJyGBuT7txepqCiJbpJ3JSYZD",
+                                            //"UbkBgDeQHHJyGBuT7txepqCiJbpJ3JSYZD",
                                             "UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
                                         };
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;

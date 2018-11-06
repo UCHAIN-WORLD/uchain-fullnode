@@ -256,8 +256,6 @@ static std::set<std::pair<uint64_t, std::string>> exception_blocks {
 void organizer::replace_chain(uint64_t fork_index,
     block_detail::list& orphan_chain)
 {
-    u256 orphan_work = 0;
-
     for (uint64_t orphan = 0; orphan < orphan_chain.size(); ++orphan)
     {
         // This verifies the block at orphan_chain[orphan]->actual()
