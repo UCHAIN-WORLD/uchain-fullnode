@@ -36,7 +36,7 @@
 #include <UChain/blockchain/validate_block.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
 #include <UChain/bitcoin/utility/time.hpp>
-
+#include <mutex>
 #define LOG_HEADER "consensus"
 using namespace std;
 using namespace std::this_thread;
