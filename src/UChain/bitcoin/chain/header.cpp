@@ -58,7 +58,7 @@ header header::factory_from_data(reader& source,
 
 uint64_t header::satoshi_fixed_size_without_transaction_count()
 {
-    return 148;
+    return 76;//148-32-8-32;
 }
 
 header::header()
@@ -67,20 +67,20 @@ header::header()
 
 header::header(const header& other)
   : header(other.version, other.previous_block_hash, other.merkle,
-        other.timestamp, other.bits, other.nonce, other.mixhash, other.number, other.transaction_count)
+        other.timestamp, /*other.bits, other.nonce, other.mixhash,*/ other.number, other.transaction_count)
 {
 }
 
 header::header(uint32_t version, const hash_digest& previous_block_hash,
-    const hash_digest& merkle, uint32_t timestamp, const u256& bits,
-    u64 nonce, const u256& mixhash, uint32_t number, uint64_t transaction_count)
+    const hash_digest& merkle, uint32_t timestamp,/* const u256& bits,
+    u64 nonce, const u256& mixhash, */uint32_t number, uint64_t transaction_count)
   : version(version),
     previous_block_hash(previous_block_hash),
     merkle(merkle),
     timestamp(timestamp),
-    bits(bits),
-    nonce(nonce),
-    mixhash(mixhash),
+    //bits(bits),
+    //nonce(nonce),
+    //mixhash(mixhash),
     number(number),
     transaction_count(transaction_count),
     hash_(nullptr)
@@ -89,21 +89,21 @@ header::header(uint32_t version, const hash_digest& previous_block_hash,
 
 header::header(header&& other)
   : header(other.version, std::forward<hash_digest>(other.previous_block_hash),
-        std::forward<hash_digest>(other.merkle), other.timestamp, other.bits,
-        other.nonce, other.mixhash, other.number, other.transaction_count)
+        std::forward<hash_digest>(other.merkle), other.timestamp, /*other.bits,
+        other.nonce, other.mixhash,*/ other.number, other.transaction_count)
 {
 }
 
 header::header(uint32_t version, hash_digest&& previous_block_hash,
-    hash_digest&& merkle, uint32_t timestamp, const u256& bits, u64 nonce, const u256& mixhash, uint32_t number,
+    hash_digest&& merkle, uint32_t timestamp, /*const u256& bits, u64 nonce, const u256& mixhash, */uint32_t number,
     uint64_t transaction_count)
   : version(version),
     previous_block_hash(std::forward<hash_digest>(previous_block_hash)),
     merkle(std::forward<hash_digest>(merkle)),
     timestamp(timestamp),
-    bits(bits),
-    nonce(nonce),
-    mixhash(mixhash),
+    //bits(bits),
+    //nonce(nonce),
+    //mixhash(mixhash),
     number(number),
     transaction_count(transaction_count),
     hash_(nullptr)
@@ -116,9 +116,9 @@ header& header::operator=(header&& other)
     previous_block_hash = std::move(other.previous_block_hash);
     merkle = std::move(other.merkle);
     timestamp = other.timestamp;
-    bits = other.bits;
-    nonce = other.nonce;
-    mixhash = other.mixhash;
+    //bits = other.bits;
+    //nonce = other.nonce;
+    //mixhash = other.mixhash;
     number = other.number;
     transaction_count = other.transaction_count;
     return *this;
@@ -131,9 +131,9 @@ header& header::operator=(const header& other)
     previous_block_hash = other.previous_block_hash;
     merkle = other.merkle;
     timestamp = other.timestamp;
-    bits = other.bits;
-    nonce = other.nonce;
-    mixhash = other.mixhash;
+    //bits = other.bits;
+    //nonce = other.nonce;
+    //mixhash = other.mixhash;
     number = other.number;
     transaction_count = other.transaction_count;
     return *this;
@@ -144,9 +144,9 @@ bool header::is_valid() const
     return (version != 0) ||
         (previous_block_hash != null_hash) ||
         (merkle != null_hash) ||
-        (timestamp != 0) ||
+        (timestamp != 0) /*||
         (bits != 0) ||
-        (nonce != 0);
+        (nonce != 0)*/;
 }
 
 void header::reset()
@@ -155,8 +155,8 @@ void header::reset()
     previous_block_hash.fill(0);
     merkle.fill(0);
     timestamp = 0;
-    bits = 0;
-    nonce = 0;
+    //bits = 0;
+    //nonce = 0;
 
     mutex_.lock();
     hash_.reset();
@@ -185,7 +185,7 @@ bool header::from_data(reader& source, bool with_transaction_count)
     merkle = source.read_hash();
     timestamp = source.read_4_bytes_little_endian();
 
-    unsigned char buff[32];
+    /*unsigned char buff[32];
     source.read_data(buff, 32);
     bits = (h256::Arith)(h256((const uint8_t*)&buff[0], h256::ConstructFromPointer));
 
@@ -193,7 +193,7 @@ bool header::from_data(reader& source, bool with_transaction_count)
     nonce = (h64::Arith)(h64((const uint8_t*)&buff[0], h64::ConstructFromPointer));
 
     source.read_data(buff, 32);
-    mixhash = (h256::Arith)(h256((const uint8_t*)&buff[0], h256::ConstructFromPointer));
+    mixhash = (h256::Arith)(h256((const uint8_t*)&buff[0], h256::ConstructFromPointer));*/
 
     number = source.read_4_bytes_little_endian();
 
@@ -233,9 +233,9 @@ void header::to_data(writer& sink, bool with_transaction_count) const
     sink.write_hash(merkle);
     sink.write_4_bytes_little_endian(timestamp);
 
-    sink.write_data((unsigned char*)h256(bits).data(), 32);
-    sink.write_data((unsigned char*)h64(nonce).data(), 8);
-    sink.write_data((unsigned char*)h256(mixhash).data(), 32);
+    //sink.write_data((unsigned char*)h256(bits).data(), 32);
+    //sink.write_data((unsigned char*)h64(nonce).data(), 8);
+    //sink.write_data((unsigned char*)h256(mixhash).data(), 32);
 
     sink.write_4_bytes_little_endian(number);
 
@@ -281,8 +281,8 @@ bool operator==(const header& left, const header& right)
         && (left.previous_block_hash == right.previous_block_hash)
         && (left.merkle == right.merkle)
         && (left.timestamp == right.timestamp)
-        && (left.bits == right.bits)
-        && (left.nonce == right.nonce)
+        /*&& (left.bits == right.bits)
+        && (left.nonce == right.nonce)*/
         && (left.transaction_count == right.transaction_count);
 }
 

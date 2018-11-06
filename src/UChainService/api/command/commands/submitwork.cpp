@@ -49,7 +49,8 @@ console_result submitwork::invoke(Json::Value& jv_output,
         argument_.nonce = argument_.nonce.substr(2, argument_.nonce.size()-2);
     }
 
-    auto ret = miner.put_result(argument_.nonce, argument_.mix_hash, argument_.header_hash, nounce_mask);
+    //auto ret = miner.put_result(argument_.nonce, argument_.mix_hash, argument_.header_hash, nounce_mask);
+    auto ret = 0;
     auto& root = jv_output;
 
     if (ret) {

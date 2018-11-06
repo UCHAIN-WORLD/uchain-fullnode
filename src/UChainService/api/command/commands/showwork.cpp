@@ -44,7 +44,8 @@ console_result showwork::invoke(Json::Value& jv_output,
     auto& blockchain = node.chain_impl();
     auto& miner = node.miner();
 
-    auto ret = miner.get_work(seed_hash, header_hash, boundary);
+    //auto ret = miner.get_work(seed_hash, header_hash, boundary);
+    auto ret = 0;
 
     auto& aroot = jv_output;
 

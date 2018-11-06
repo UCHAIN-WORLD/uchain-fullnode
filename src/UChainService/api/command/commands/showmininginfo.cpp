@@ -41,7 +41,7 @@ console_result showmininginfo::invoke(Json::Value& jv_output,
     bool is_mining;
 
     auto& miner = node.miner();
-    miner.get_state(height, rate, difficulty, is_mining);
+    //miner.get_state(height, rate, difficulty, is_mining);
 
     if (get_api_version() <= 2) {
         auto& aroot = jv_output;

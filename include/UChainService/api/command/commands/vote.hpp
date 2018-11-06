@@ -42,10 +42,7 @@ public:
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1)
-            .add("FROM_", 1)
-            .add("TO_", 1)
-            .add("AMOUNT", 1);
+            .add("ACCOUNTAUTH", 1);
             
     }
 
@@ -55,9 +52,6 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
-        load_input(argument_.from, "FROM_", variables, input, raw);
-        load_input(argument_.to, "TO_", variables, input, raw);
-        load_input(argument_.amount, "AMOUNT", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -82,19 +76,14 @@ public:
         )
         (
             "FROM_",
-            value<std::string>(&argument_.from),
+            value<std::string>(&argument_.from)->required(),
             "The address to deposit some ucn for 48h."
         )
         (
             "TO_",
-            value<std::string>(&argument_.to),
-            "The vote target address."
-        )
-        (
-            "AMOUNT",
-            value<uint64_t>(&argument_.amount)->required(),
-            "vote amount."
-        )      
+            value<std::vector<std::string>>(&argument_.to)->required(),
+            "The vote target address [uid/address:ucn_bits]."
+        )     
         (
             "fee,f",
             value<uint64_t>(&option_.fee)->default_value(10000),
@@ -114,9 +103,7 @@ public:
     struct argument
     {
         std::string from;
-        std::string to;
-        uint64_t amount;   
-        
+        std::vector<std::string> to;        
     } argument_;
 
     struct option

@@ -921,7 +921,10 @@ void base_transfer_common::sum_payments()
 {
     for (auto& iter : receiver_list_) {
         payment_ucn_ += iter.amount;
-        payment_token_ += iter.token_amount;
+        //vote token will be not counted
+        if (symbol_ != UC_VOTE_TOKEN_SYMBOL) {
+            payment_token_ += iter.token_amount;
+        }       
 
         if (iter.token_cert != token_cert_ns::none) {
             payment_token_cert_.push_back(iter.token_cert);

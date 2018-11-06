@@ -256,8 +256,6 @@ static std::set<std::pair<uint64_t, std::string>> exception_blocks {
 void organizer::replace_chain(uint64_t fork_index,
     block_detail::list& orphan_chain)
 {
-    u256 orphan_work = 0;
-
     for (uint64_t orphan = 0; orphan < orphan_chain.size(); ++orphan)
     {
         // This verifies the block at orphan_chain[orphan]->actual()
@@ -275,8 +273,8 @@ void organizer::replace_chain(uint64_t fork_index,
                     if (exception_blocks.count(std::make_pair(header.number, block_hash)))
                     {
                         orphan_chain[orphan]->set_is_checked_work_proof(true);
-                        const auto& orphan_block = orphan_chain[orphan]->actual();
-                        orphan_work += block_work(orphan_block->header.bits);
+                        //const auto& orphan_block = orphan_chain[orphan]->actual();
+                        //orphan_work += block_work(orphan_block->header.bits);
                         continue;
                     }
 
@@ -301,19 +299,20 @@ void organizer::replace_chain(uint64_t fork_index,
             }
         }
 
-        const auto& orphan_block = orphan_chain[orphan]->actual();
-        orphan_work += block_work(orphan_block->header.bits);
+        //const auto& orphan_block = orphan_chain[orphan]->actual();
+        //orphan_work += block_work(orphan_block->header.bits);
     }
 
     // All remaining blocks in orphan_chain should all be valid now
     // Compare the difficulty of the 2 forks (original and orphan)
     const auto begin_index = fork_index + 1;
 
-    u256 main_work;
+    delete_fork_chain_hash(orphan_chain[orphan_chain.size() - 1]->actual()->header.previous_block_hash);
+
+    /*u256 main_work;
     DEBUG_ONLY(auto result =) chain_.get_difficulty(main_work, begin_index);
     BITCOIN_ASSERT(result);
-
-    delete_fork_chain_hash(orphan_chain[orphan_chain.size() - 1]->actual()->header.previous_block_hash);
+    
     if (orphan_work <= main_work)
     {
         if(orphan_chain.size() % node::locator_cap  == 0)
@@ -323,7 +322,9 @@ void organizer::replace_chain(uint64_t fork_index,
         log::debug(LOG_BLOCKCHAIN)
             << "Insufficient work to reorganize at [" << begin_index << "]" << "orphan_work:" << orphan_work << " main_work:" << main_work;
         return;
-    }
+    }*/
+
+    
 
     // Replace! Switch!
     block_detail::list released_blocks;
