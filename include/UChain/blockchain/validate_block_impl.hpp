@@ -41,7 +41,7 @@ public:
         size_t height, const chain::block& block, bool testnet,
         const config::checkpoint::list& checkpoints,
         stopped_callback stopped);
-    virtual bool is_valid_proof_of_work(const chain::header& header) const;
+    //virtual bool is_valid_proof_of_work(const chain::header& header) const;
     virtual bool check_get_coinage_reward_transaction(const chain::transaction& coinage_reward_coinbase, const chain::output& output) const;
 
     virtual std::string get_uid_from_address_consider_orphan_chain(const std::string& address, const std::string& uid_symbol) const override;
@@ -55,7 +55,7 @@ public:
 
 protected:
     uint64_t median_time_past() const;
-    u256 previous_block_bits() const;
+    //u256 previous_block_bits() const;
     uint64_t actual_time_span(size_t interval) const;
     versions preceding_block_versions(size_t maximum) const;
     chain::header fetch_block(size_t fetch_height) const;

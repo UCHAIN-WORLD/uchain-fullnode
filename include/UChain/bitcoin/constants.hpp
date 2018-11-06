@@ -33,7 +33,7 @@ namespace libbitcoin {
 #define BC_USER_AGENT "/UChain:" UC_VERSION "/"
 
 #define UC_BLOCK_TOKEN_SYMBOL "BLOCK"
-#define UC_VOTE_TOKEN_SYMBOL "VOTE"
+#define UC_VOTE_TOKEN_SYMBOL  "VOTE"
 
 #define LOCKED_TIME                 345600
 #define TIMES_QUANTITY_TO_VALUE    5E6
