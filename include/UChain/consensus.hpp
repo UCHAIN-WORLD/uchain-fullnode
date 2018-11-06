@@ -14,8 +14,8 @@
  * Maintainers: Do not include this header internal to this library.
  */
 
-#include <UChain/consensus/define.hpp>
-#include <UChain/consensus/export.hpp>
-#include <UChain/consensus/version.hpp>
+#include <UChainService/consensus/define.hpp>
+#include <UChainService/consensus/export.hpp>
+#include <UChainService/consensus/version.hpp>
 
 #endif

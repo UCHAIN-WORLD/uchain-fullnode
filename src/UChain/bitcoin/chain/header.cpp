@@ -27,7 +27,7 @@
 #include <UChain/bitcoin/utility/container_source.hpp>
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
-#include <UChain/consensus/libdevcore/FixedHash.h>
+#include <UChainService/consensus/libdevcore/FixedHash.h>
 
 namespace libbitcoin {
 namespace chain {

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/consensus/miner.hpp>
+#include <UChainService/consensus/miner.hpp>
 #include <UChain/blockchain/block_chain.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
 #include <UChain/blockchain/validate_block.hpp>
@@ -27,8 +27,8 @@
 #include <functional>
 #include <system_error>
 #include <boost/thread.hpp>
-//#include <UChain/consensus/miner/MinerAux.h>
-//#include <UChain/consensus/libdevcore/BasicType.h>
+//#include <UChainService/consensus/miner/MinerAux.h>
+//#include <UChainService/consensus/libdevcore/BasicType.h>
 #include <UChain/bitcoin/chain/script/operation.hpp>
 #include <UChain/bitcoin/config/hash160.hpp>
 #include <UChain/bitcoin/wallet/ec_public.hpp>

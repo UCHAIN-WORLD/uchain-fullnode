@@ -37,7 +37,7 @@
 #include <UChain/server/utility/authenticator.hpp>
 #include <UChain/server/workers/notification_worker.hpp>
 #include <UChainService/txs/utility/path.hpp>
-#include <UChain/consensus/miner.hpp>
+#include <UChainService/consensus/miner.hpp>
 
 #include <boost/shared_ptr.hpp>
 
