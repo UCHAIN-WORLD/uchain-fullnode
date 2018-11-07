@@ -22,8 +22,8 @@
 #define UC_CONSENSUS_EXPORT_HPP
 
 #include <cstddef>
-#include <UChain/consensus/define.hpp>
-#include <UChain/consensus/version.hpp>
+#include <UChainService/consensus/define.hpp>
+#include <UChainService/consensus/version.hpp>
 
 namespace libbitcoin {
 namespace consensus {

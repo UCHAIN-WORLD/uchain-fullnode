@@ -22,8 +22,8 @@
 #define UC_CONSENSUS_CONSENSUS_HPP
 
 #include <cstddef>
-#include <UChain/consensus/define.hpp>
-#include <UChain/consensus/export.hpp>
+#include <UChainService/consensus/define.hpp>
+#include <UChainService/consensus/export.hpp>
 #include "pubkey.h"
 #include "script/script_error.h"
 

@@ -1,5 +1,5 @@
-INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/src/UChain/consensus/clone")
-INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/src/UChain/consensus/common")
+INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/src/UChainService/consensus/clone")
+INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/src/UChainService/consensus/common")
 
 FILE(GLOB_RECURSE consensus_SOURCES "*.cpp")
 

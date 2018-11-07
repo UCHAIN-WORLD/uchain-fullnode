@@ -29,7 +29,7 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/blockchain/transaction_pool.hpp>
 #include <UChain/blockchain/validate_block.hpp>
-#include <UChain/consensus/miner.hpp>
+#include <UChainService/consensus/miner.hpp>
 
 #ifdef WITH_CONSENSUS
 #include <UChain/consensus.hpp>

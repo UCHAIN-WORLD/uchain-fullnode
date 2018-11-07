@@ -30,9 +30,9 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/blockchain/block.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
-//#include <UChain/consensus/miner/MinerAux.h>
-//#include <UChain/consensus/libdevcore/BasicType.h>
-#include <UChain/consensus/miner.hpp>
+//#include <UChainService/consensus/miner/MinerAux.h>
+//#include <UChainService/consensus/libdevcore/BasicType.h>
+#include <UChainService/consensus/miner.hpp>
 #include <UChain/bitcoin/chain/output.hpp>
 
 namespace libbitcoin {

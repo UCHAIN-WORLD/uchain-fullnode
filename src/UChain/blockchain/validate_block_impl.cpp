@@ -19,13 +19,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChain/blockchain/validate_block_impl.hpp>
-#include <UChain/consensus/miner.hpp>
+#include <UChainService/consensus/miner.hpp>
 
 #include <cstddef>
 #include <UChain/bitcoin.hpp>
 #include <UChain/blockchain/block_detail.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
-//#include <UChain/consensus/miner/MinerAux.h>
+//#include <UChainService/consensus/miner/MinerAux.h>
 #include <UChain/blockchain/block_chain_impl.hpp>
 
 namespace libbitcoin {
