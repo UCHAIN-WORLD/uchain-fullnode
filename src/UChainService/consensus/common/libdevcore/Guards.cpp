@@ -14,37 +14,16 @@
     You should have received a copy of the GNU General Public License
     along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file FixedHash.cpp
+/** @file Guards.cpp
  * @author Gav Wood <i@gavwood.com>
  * @date 2014
  */
 
-#include <UChain/consensus/libdevcore/FixedHash.h>
-#include <ctime>
-#include <boost/algorithm/string.hpp>
+#include <UChainService/consensus/libdevcore/Guards.h>
 using namespace std;
 using namespace libbitcoin;
 
-boost::random_device libbitcoin::s_fixedHashEngine;
-
-h128 libbitcoin::fromUUID(std::string const& _uuid)
+namespace dev
 {
-    try
-    {
-        return h128(boost::replace_all_copy(_uuid, "-", ""));
-    }
-    catch (...)
-    {
-        return h128();
-    }
+
 }
-
-std::string libbitcoin::toUUID(h128 const& _uuid)
-{
-    std::string ret = toHex(_uuid.ref());
-    for (unsigned i: {20, 16, 12, 8})
-        ret.insert(ret.begin() + i, '-');
-    return ret;
-}
-
-

@@ -25,7 +25,7 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
-#include <UChain/consensus/libdevcore/SHA3.h>
+#include <UChainService/consensus/libdevcore/SHA3.h>
 #include <boost/algorithm/string.hpp>
 #include <regex>
 

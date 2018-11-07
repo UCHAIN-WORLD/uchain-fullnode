@@ -21,7 +21,7 @@
 #include <UChain/blockchain/settings.hpp>
 
 #include <boost/filesystem.hpp>
-#include <UChain/consensus/miner.hpp>
+#include <UChainService/consensus/miner.hpp>
 #include <UChain/bitcoin/constants.hpp>
 
 namespace libbitcoin {
