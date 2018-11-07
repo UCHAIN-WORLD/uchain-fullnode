@@ -169,7 +169,7 @@ options_metadata parser::load_settings()
     (
         "network.inbound_port",
         value<uint16_t>(&configured.network.inbound_port),
-        "The port for incoming connections, defaults to 5678."
+        "The port for incoming connections, defaults to 5682."
     )
     (
         "network.inbound_connections",
