@@ -388,7 +388,7 @@ code validate_transaction::check_tx_connect_output() const
         }
     }
 
-    if(quatity*TIMES_QUANTITY_TO_VALUE != value){    // TODO: for debug
+    if(quatity>20 || quatity*TIMES_QUANTITY_TO_VALUE != value){    // TODO: for debug
         return error::invalid_quantity_or_value;
     }
     return error::success;
