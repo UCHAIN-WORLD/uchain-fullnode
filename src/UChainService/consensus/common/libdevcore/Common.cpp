@@ -19,10 +19,10 @@
  * @date 2014
  */
 
-#include <UChain/consensus/libdevcore/Common.h>
-#include <UChain/consensus/libdevcore/Exceptions.h>
-#include <UChain/consensus/libdevcore/Log.h>
-#include <UChain/consensus/libdevcore/BuildInfo.h>
+#include <UChainService/consensus/libdevcore/Common.h>
+#include <UChainService/consensus/libdevcore/Exceptions.h>
+#include <UChainService/consensus/libdevcore/Log.h>
+#include <UChainService/consensus/libdevcore/BuildInfo.h>
 using namespace std;
 using namespace libbitcoin;
 

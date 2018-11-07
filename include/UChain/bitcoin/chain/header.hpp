@@ -35,10 +35,10 @@
 #include <UChain/bitcoin/utility/thread.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-#include <UChain/consensus/libdevcore/FixedHash.h>
-#include <UChain/consensus/libdevcore/Common.h>
-#include <UChain/consensus/libdevcore/RLP.h>
-#include <UChain/consensus/libdevcore/SHA3.h>
+#include <UChainService/consensus/libdevcore/FixedHash.h>
+#include <UChainService/consensus/libdevcore/Common.h>
+#include <UChainService/consensus/libdevcore/RLP.h>
+#include <UChainService/consensus/libdevcore/SHA3.h>
 
 namespace libbitcoin {
     using bigint = boost::multiprecision::number<boost::multiprecision::cpp_int_backend<>>;

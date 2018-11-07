@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/chain/asset_data.hpp>
+#include <UChainService/txs/asset_data.hpp>
 #include <UChainService/txs/variant.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>

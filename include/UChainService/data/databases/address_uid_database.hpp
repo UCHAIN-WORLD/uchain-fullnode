@@ -26,7 +26,7 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/primitives/record_multimap.hpp>
-#include <UChain/bitcoin/chain/asset_data.hpp>
+#include <UChainService/txs/asset_data.hpp>
 
 using namespace libbitcoin::chain;
 

@@ -1,7 +1,7 @@
 # for C library
 #ADD_SUBDIRECTORY(math/external)
 
-#INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/src/UChain/consensus/clone")
+#INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/src/UChainService/consensus/clone")
 FILE(GLOB_RECURSE txs_SOURCES "*.cpp")
 
 ADD_DEFINITIONS(-DBC_STATIC=1)

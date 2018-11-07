@@ -27,7 +27,7 @@
 /// Originally by René Nyffenegger, modified by some other guy and then devified by Gav Wood.
 
 //#include "Base64.h"
-#include <UChain/consensus/libdevcore/Base64.h>
+#include <UChainService/consensus/libdevcore/Base64.h>
 
 using namespace std;
 using namespace libbitcoin;
