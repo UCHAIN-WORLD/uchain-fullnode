@@ -607,7 +607,12 @@ code validate_block::connect_block(hash_digest& err_tx, blockchain::block_chain_
 
         for (auto& output : transactions[tx_index].outputs)
         {
-            if (chain::operation::is_pay_key_hash_with_lock_height_pattern(output.script.operations)) {
+            if (chain::operation::is_pay_key_hash_with_lock_height_pattern(output.script.operations) ) {
+                uint64_t coinbase_lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(transactions[coinage_reward_coinbase_index].outputs[0].script.operations);
+                if (coinbase_lock_height == VOTE_LOCKED_TIME) {
+                    break;
+                }
+
                 if (check_get_coinage_reward_transaction(transactions[coinage_reward_coinbase_index++], output) == false) {
                     return error::invalid_coinage_reward_coinbase;
                 }
