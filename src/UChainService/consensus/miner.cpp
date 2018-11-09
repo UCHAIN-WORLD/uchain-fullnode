@@ -629,7 +629,7 @@ std::string to_string(_T const& _t)
 }
 
 vector<std::string> mine_address_list = {
-                                            "UdVgqp3F4btw7xYJUcb3DMtxCuyd3fQuQR", 
+                                            "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4", 
                                             "UWeVjsMSNHboXVvKgz31sgRSVkEXeNCz6v",
                                             "UQHp4fbFFtg28Wv61v46FjAd4fxHNCTkhG", 
                                             //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
