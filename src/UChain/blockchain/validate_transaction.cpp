@@ -377,7 +377,7 @@ code validate_transaction::check_tx_connect_output() const
         if(chain::operation::is_pay_key_hash_with_lock_height_pattern(ele.script.operations))
         {
             lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(ele.script.operations);
-            if(lock_height == LOCKED_TIME)
+            if(lock_height == VOTE_LOCKED_TIME)
                 value += ele.value;
         }
         if(ele.is_vote())
