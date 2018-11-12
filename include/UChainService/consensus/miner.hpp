@@ -30,6 +30,7 @@
 #include "UChain/bitcoin/chain/input.hpp"
 #include <UChain/bitcoin/wallet/ec_public.hpp>
 #include <UChain/blockchain/settings.hpp>
+#include <mutex>
 
 namespace libbitcoin {
 namespace node {

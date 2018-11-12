@@ -36,7 +36,6 @@
 #include <UChain/blockchain/validate_block.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
 #include <UChain/bitcoin/utility/time.hpp>
-
 #define LOG_HEADER "consensus"
 using namespace std;
 using namespace std::this_thread;
@@ -630,9 +629,9 @@ std::string to_string(_T const& _t)
 }
 
 vector<std::string> mine_address_list = {
-                                            "UV3yZARNnWRQ7PooQPvVtbMEE21MLz2Y66", 
-                                            "UNjBkhxLA9tekK1nkwDgxAnYp8ehoFTxeV",
-                                            "USTQDD8Q5TxFox9djAgvx5whiBUiRmAxsR", 
+                                            "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4", 
+                                            "UWeVjsMSNHboXVvKgz31sgRSVkEXeNCz6v",
+                                            "UQHp4fbFFtg28Wv61v46FjAd4fxHNCTkhG", 
                                             //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
                                             //"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
                                         };
