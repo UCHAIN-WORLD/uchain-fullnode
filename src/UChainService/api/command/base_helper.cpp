@@ -1623,7 +1623,7 @@ void base_transaction_constructor::populate_unspent_list()
     populate_change();
 }
 
-const std::vector<uint16_t> depositing_ucn::vec_cycle{7, 30, 90, 182, 365};
+const std::vector<uint16_t> depositing_ucn::vec_cycle{10, 45, 120, 240, 540};
 
 uint32_t depositing_ucn::get_reward_lock_height() const
 {
