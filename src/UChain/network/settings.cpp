@@ -74,7 +74,7 @@ settings::settings(bc::settings context)
             seeds.push_back({ "main-uchain-d.live", 5682 });
             seeds.push_back({ "main-uchain-e.live", 5682 });
             seeds.push_back({ "main-uchain-f.live", 5682 });
-            seeds.push_back({ "seed.getuc.org", 5682 });
+            seeds.push_back({ "116.62.238.230"/*"seed.getuc.org"*/, 5682 });
             break;
         }
 

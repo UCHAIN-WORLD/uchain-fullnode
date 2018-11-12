@@ -12,9 +12,9 @@
  * For interpretation of the versioning scheme see: http://semver.org
  */
 
-#define UC_VERSION "0.0.1"
+#define UC_VERSION "0.0.2"
 #define UC_MAJOR_VERSION 0
 #define UC_MINOR_VERSION 0
-#define UC_PATCH_VERSION 1
+#define UC_PATCH_VERSION 2
 
 #endif

@@ -111,7 +111,7 @@ public:
         (
             "model,m",
             value<std::string>(&option_.attenuation_model_param),
-            BX_MST_OFFERING_CURVE
+            BX_TOKEN_OFFERING_CURVE
         )
         (
             "fee,f",

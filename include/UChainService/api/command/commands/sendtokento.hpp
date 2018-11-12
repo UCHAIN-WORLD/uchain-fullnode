@@ -89,7 +89,7 @@ public:
         (
             "TOKEN",
             value<std::string>(&argument_.symbol)->required(),
-            "Asset MST symbol."
+            "Asset token symbol."
         )
         (
             "AMOUNT",
@@ -104,7 +104,7 @@ public:
         (
             "model,m",
             value<std::string>(&option_.attenuation_model_param)->default_value(""),
-            BX_MST_OFFERING_CURVE
+            BX_TOKEN_OFFERING_CURVE
         )
         (
             "fee,f",
