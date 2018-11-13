@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -44,13 +44,13 @@ console_result showcard::invoke(Json::Value& jv_output,
 
     if (option_.show_current) {
         if (argument_.symbol.empty()) {
-            throw argument_legality_exception("MIT symbol not privided while displaying the current status of MIT!");
+            throw argument_legality_exception("card symbol not privided while displaying the current status of card!");
         }
     }
 
     if (option_.show_history) {
         if (argument_.symbol.empty()) {
-            throw argument_legality_exception("MIT symbol not privided while tracing history!");
+            throw argument_legality_exception("card symbol not privided while tracing history!");
         }
 
         // page limit & page index paramenter check
