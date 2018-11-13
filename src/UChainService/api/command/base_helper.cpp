@@ -155,7 +155,7 @@ std::string get_address(const std::string& uid_or_address,
         else {
             attach.set_to_uid(uid_or_address);
         }
-        attach.set_version(UID_ATTACH_VERIFY_VERSION);
+        attach.set_version(UID_ASSET_VERIFY_VERSION);
     }
     return address;
 }
@@ -1086,7 +1086,7 @@ void base_transfer_common::populate_ucn_change(const std::string& address)
             }
 
             asset attach;
-            attach.set_version(UID_ATTACH_VERIFY_VERSION);
+            attach.set_version(UID_ASSET_VERIFY_VERSION);
             attach.set_to_uid(addr);
             receiver_list_.push_back(
                 {uiddetail->get_address(), "", unspent_ucn_ - payment_ucn_, 0, utxo_attach_type::ucn, attach});
@@ -1121,7 +1121,7 @@ void base_transfer_common::populate_token_change(const std::string& address)
             }
 
             asset attach;
-            attach.set_version(UID_ATTACH_VERIFY_VERSION);
+            attach.set_version(UID_ASSET_VERIFY_VERSION);
             attach.set_to_uid(addr);
             receiver_list_.push_back({uiddetail->get_address(), symbol_, 0, unspent_token_ - payment_token_,
                 utxo_attach_type::token_transfer, attach});
@@ -1239,8 +1239,8 @@ void base_transfer_common::populate_tx_inputs()
 
 void base_transfer_common::set_uid_verify_asset(const receiver_record& record, asset& attach)
 {
-    if (record.attach_elem.get_version() == UID_ATTACH_VERIFY_VERSION) {
-        attach.set_version(UID_ATTACH_VERIFY_VERSION);
+    if (record.attach_elem.get_version() == UID_ASSET_VERIFY_VERSION) {
+        attach.set_version(UID_ASSET_VERIFY_VERSION);
         attach.set_to_uid(record.attach_elem.get_to_uid());
         attach.set_from_uid(record.attach_elem.get_from_uid());
     }

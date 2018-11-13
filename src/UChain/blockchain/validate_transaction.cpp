@@ -1128,7 +1128,7 @@ code validate_transaction::check_uid_transaction() const
             }
         }
         else if (output.is_token_issue() || output.is_token_secondaryissue()) {
-            if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION
+            if (output.attach_data.get_version() == UID_ASSET_VERIFY_VERSION
                     && output.get_token_issuer() != output.attach_data.get_to_uid()) {
                 log::debug(LOG_BLOCKCHAIN)
                         << "token issuer " << output.get_token_issuer()
@@ -1138,7 +1138,7 @@ code validate_transaction::check_uid_transaction() const
             }
         }
         else if (output.is_token_cert()) {
-            if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION) {
+            if (output.attach_data.get_version() == UID_ASSET_VERIFY_VERSION) {
                 if (output.get_token_cert_owner() != output.attach_data.get_to_uid()) {
                     log::debug(LOG_BLOCKCHAIN)
                             << "cert owner " << output.get_token_cert_owner()
