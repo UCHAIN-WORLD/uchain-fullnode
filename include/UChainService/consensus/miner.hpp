@@ -44,9 +44,10 @@ namespace consensus {
 BC_CONSTEXPR unsigned int min_tx_fee_per_kb = 1000;
 BC_CONSTEXPR unsigned int median_time_span = 11;
 BC_CONSTEXPR uint32_t version = 1;
-BC_CONSTEXPR uint64_t future_blocktime_fork_height = 1030000;
 
-extern int bucket_size;
+extern vector<std::string> mine_address_list;
+
+//extern int bucket_size;
 extern vector<uint64_t> lock_heights;
 
 class miner
