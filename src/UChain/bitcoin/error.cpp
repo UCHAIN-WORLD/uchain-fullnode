@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -253,13 +253,13 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
 
         // mit errors
         case error::card_error:
-            return "MIT token error";
+            return "card token error";
         case error::card_exist:
-            return "MIT token already exists";
+            return "card token already exists";
         case error::card_register_error:
-            return "MIT token register error";
+            return "card token register error";
         case error::card_symbol_invalid:
-            return "MIT symbol invalid";
+            return "card symbol invalid";
 
         // unknown errors
         case error::unknown:

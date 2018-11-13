@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -933,7 +933,7 @@ void base_transfer_common::sum_payments()
         if (iter.type == utxo_attach_type::token_card_transfer) {
             ++payment_card_;
             if (payment_card_ > 1) {
-                throw std::logic_error{"maximum one MIT can be transfered"};
+                throw std::logic_error{"maximum one card can be transfered"};
             }
         }
         else if (iter.type == utxo_attach_type::uid_transfer) {
@@ -993,7 +993,7 @@ void base_transfer_common::check_payment_satisfied(filter filter) const
     }
 
     if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_card_ < payment_card_)) {
-        throw token_lack_exception{"not enough MIT amount, unspent = "
+        throw token_lack_exception{"not enough card amount, unspent = "
             + std::to_string(unspent_card_) + ", payment = " + std::to_string(payment_card_)};
     }
 
@@ -2109,13 +2109,13 @@ asset registering_card::populate_output_asset(const receiver_record& record)
     if (record.type == utxo_attach_type::token_card) {
         auto iter = card_map_.find(record.symbol);
         if (iter == card_map_.end()) {
-            throw tx_asset_value_exception{"invalid MIT issue asset"};
+            throw tx_asset_value_exception{"invalid card issue asset"};
         }
 
         auto ass = token_card(record.symbol, record.target, iter->second);
         ass.set_status(CARD_STATUS_REGISTER);
         if (!ass.is_valid()) {
-            throw tx_asset_value_exception{"invalid MIT issue asset"};
+            throw tx_asset_value_exception{"invalid card issue asset"};
         }
 
         attach.set_attach(ass);
@@ -2132,7 +2132,7 @@ asset transferring_card::populate_output_asset(const receiver_record& record)
         auto ass = token_card(record.symbol, record.target, "");
         ass.set_status(CARD_STATUS_TRANSFER);
         if (!ass.is_valid()) {
-            throw tx_asset_value_exception{"invalid MIT transfer asset"};
+            throw tx_asset_value_exception{"invalid card transfer asset"};
         }
 
         attach.set_attach(ass);
