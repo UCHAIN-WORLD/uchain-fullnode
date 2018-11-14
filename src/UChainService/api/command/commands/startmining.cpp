@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -41,7 +41,7 @@ console_result startmining::invoke(Json::Value& jv_output,
     uint64_t rate;
     std::string difficulty;
     bool is_solo_mining;
-    //node.miner().get_state(height, rate, difficulty, is_solo_mining);
+    node.miner().get_state(height, rate, difficulty, is_solo_mining);
     if (is_solo_mining) {
         throw setting_required_exception{"Currently mining, please use command <stopmining> to stop the running mining."};
     }

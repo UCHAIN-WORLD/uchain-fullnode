@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-api.
  *
@@ -42,8 +42,9 @@ public:
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
-            
+            .add("ACCOUNTAUTH", 1)
+            .add("FROM_", 1)
+            .add("TO_", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -52,6 +53,8 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.from, "FROM_", variables, input, raw);
+        load_input(argument_.to, "TO_", variables, input, raw);
     }
 
     options_metadata& load_options() override

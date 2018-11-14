@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-api.
  *
@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "showcards";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "List MITs."; }
+    const char* description() override { return "List cards."; }
 
     arguments_metadata& load_arguments() override
     {

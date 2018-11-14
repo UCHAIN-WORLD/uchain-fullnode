@@ -35,7 +35,7 @@ asset::asset()
 }
 
 asset::asset(const std::string& from_uid, const std::string& to_uid)
-    : version(UID_ATTACH_VERIFY_VERSION)
+    : version(UID_ASSET_VERIFY_VERSION)
     , type(0) //asset_type::attach_none;
     , touid(to_uid)
     , fromuid(from_uid)
@@ -118,7 +118,7 @@ bool asset::from_data(reader& source)
     if (result)
         type = source.read_4_bytes_little_endian();
 
-    if (result && version == UID_ATTACH_VERIFY_VERSION) {
+    if (result && version == UID_ASSET_VERIFY_VERSION) {
             touid = source.read_string();
             fromuid = source.read_string();
     }
@@ -194,7 +194,7 @@ void asset::to_data(writer& sink) const
 {
     sink.write_4_bytes_little_endian(version);
     sink.write_4_bytes_little_endian(type);
-    if (version == UID_ATTACH_VERIFY_VERSION) {
+    if (version == UID_ASSET_VERIFY_VERSION) {
         sink.write_string(touid);
         sink.write_string(fromuid);
     }
@@ -205,7 +205,7 @@ void asset::to_data(writer& sink) const
 uint64_t asset::serialized_size() const
 {
     uint64_t size = 0;
-    if(version == UID_ATTACH_VERIFY_VERSION) {
+    if(version == UID_ASSET_VERIFY_VERSION) {
         size = 4 + 4 + (touid.size() + 1) + (fromuid.size() + 1);
     }
     else {
@@ -224,7 +224,7 @@ std::string asset::to_string() const
 
     ss << "\t version = " << version << "\n"
         << "\t type = " << type << "\n";
-    if (version == UID_ATTACH_VERIFY_VERSION) {
+    if (version == UID_ASSET_VERIFY_VERSION) {
         ss << "\t fromuid = " << fromuid << "\n"
             << "\t touid = " << touid << "\n";
     }

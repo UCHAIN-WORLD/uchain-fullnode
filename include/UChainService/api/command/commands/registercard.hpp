@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-api.
  *
@@ -87,12 +87,12 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol)->default_value(""),
-            "MIT symbol"
+            "card symbol"
         )
         (
             "content,c",
             value<std::string>(&option_.content)->default_value(""),
-            "Content of MIT"
+            "Content of card"
         )
         (
             "mits,m",

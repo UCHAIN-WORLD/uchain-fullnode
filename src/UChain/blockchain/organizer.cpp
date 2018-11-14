@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -239,20 +239,6 @@ void organizer::process(block_detail::ptr process_block)
     }
 }
 
-/*********************************************************************
- * this set include blocks which cause consensus validation problems.
- ********************************************************************/
-// the pair's structure: first is block height, second is block hash
-static std::set<std::pair<uint64_t, std::string>> exception_blocks {
-    // this block has error of merkle_mismatch,
-    // because it exist a too long memo text which is more than 300 bytes.
-    // memo text length should be less than 256 bytes limited by the database record design.
-    // we will add this length verification in the transaction validation after nova version.
-    {1211234, "3a17c696ba0d506b07e85b8440a99d868ae93c985064eaf4c616d13911bd97cb"},
-    // this block does not satisfy new consensus verify of input/output
-    {1258192, "d7d5d80c8cb760b794f156c36b519ad9b4b10b9dfcd4e123c8f54be3c71432d3"}
-};
-
 void organizer::replace_chain(uint64_t fork_index,
     block_detail::list& orphan_chain)
 {
@@ -269,14 +255,6 @@ void organizer::replace_chain(uint64_t fork_index,
                 {
                     const auto& header = orphan_chain[orphan]->actual()->header;
                     const auto block_hash = encode_hash(header.hash());
-
-                    if (exception_blocks.count(std::make_pair(header.number, block_hash)))
-                    {
-                        orphan_chain[orphan]->set_is_checked_work_proof(true);
-                        //const auto& orphan_block = orphan_chain[orphan]->actual();
-                        //orphan_work += block_work(orphan_block->header.bits);
-                        continue;
-                    }
 
                     log::warning(LOG_BLOCKCHAIN)
                         << "Invalid block [" << block_hash << "] " << ec.message();

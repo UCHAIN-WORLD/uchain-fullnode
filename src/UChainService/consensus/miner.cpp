@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -856,16 +856,16 @@ miner::block_ptr miner::get_block(bool is_force_create_block)
     return ret;
 }*/
 
-/*void miner::get_state(uint64_t &height, uint64_t &rate, string& difficulty, bool& is_mining)
+void miner::get_state(uint64_t &height, uint64_t &rate, string& difficulty, bool& is_mining)
 {
-    rate = MinerAux::getRate();
+    //rate = MinerAux::getRate();
     block_chain_impl& block_chain = node_.chain_impl();
     header prev_header;
     block_chain.get_last_height(height);
     block_chain.get_header(prev_header, height);
-    difficulty = to_string((u256)prev_header.bits);
+    //difficulty = to_string((u256)prev_header.bits);
     is_mining = thread_ ? true : false;
-}*/
+}
 
 bool miner::get_block_header(chain::header& block_header, const string& para)
 {
