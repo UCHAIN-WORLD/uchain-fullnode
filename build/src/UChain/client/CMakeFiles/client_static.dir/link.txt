@@ -1,2 +1,0 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc ../../../lib/libuc_client.a  CMakeFiles/client_static.dir/dealer.cpp.o CMakeFiles/client_static.dir/obelisk_client.cpp.o CMakeFiles/client_static.dir/proxy.cpp.o CMakeFiles/client_static.dir/socket_stream.cpp.o
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib ../../../lib/libuc_client.a
