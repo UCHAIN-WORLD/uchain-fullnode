@@ -38,10 +38,11 @@ console_result startmining::invoke(Json::Value& jv_output,
     auto& miner = node.miner();
 
     uint64_t height;
-    uint64_t rate;
-    std::string difficulty;
+    //uint64_t rate;
+    //std::string difficulty;
+    uint32_t miners;
     bool is_solo_mining;
-    node.miner().get_state(height, rate, difficulty, is_solo_mining);
+    node.miner().get_state(height, miners,/*rate, difficulty,*/ is_solo_mining);
     if (is_solo_mining) {
         throw setting_required_exception{"Currently mining, please use command <stopmining> to stop the running mining."};
     }
