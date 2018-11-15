@@ -136,7 +136,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showminers>());
     func(make_shared<showwork>());
     func(make_shared<submitwork>());
-    func(make_shared<showmemorypool>());
+    
 
     os <<"\r\n";
     // block & tx
@@ -144,6 +144,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showblock>());
     func(make_shared<showblockheader>());
     func(make_shared<showheaderext>());
+    func(make_shared<showmemorypool>());
     func(make_shared<showtx>());
     func(make_shared<showtxs>());
     os <<"\r\n";
@@ -257,8 +258,6 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showwork>();
     if ((symbol == submitwork::symbol()) || ( symbol == "eth_submitWork"))
         return make_shared<submitwork>();
-    if (symbol == showmemorypool::symbol())
-        return make_shared<showmemorypool>();
     if (symbol == showminers::symbol())
         return make_shared<showminers>();
 
@@ -275,6 +274,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showblockheader>();
     if (symbol == showheaderext::symbol())
         return make_shared<showheaderext>();
+    if (symbol == showmemorypool::symbol())
+        return make_shared<showmemorypool>();
     if (symbol == showtx::symbol() || symbol == "gettransaction")
         return make_shared<showtx>();
     if (symbol == "fetch-tx")
