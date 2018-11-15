@@ -29,12 +29,12 @@ namespace explorer {
 namespace commands {
 
 
-/************************ addnode *************************/
+/************************ addpeer *************************/
 
-class addnode: public command_extension
+class addpeer: public command_extension
 {
 public:
-    static const char* symbol(){ return "addnode";}
+    static const char* symbol(){ return "addpeer";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
     const char* description() override { return "This command is used to add/remove p2p node."; }

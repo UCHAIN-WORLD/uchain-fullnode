@@ -629,11 +629,11 @@ std::string to_string(_T const& _t)
 }
 
 vector<std::string> mine_address_list = {
-                                            "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4", 
-                                            "UWeVjsMSNHboXVvKgz31sgRSVkEXeNCz6v",
-                                            "UQHp4fbFFtg28Wv61v46FjAd4fxHNCTkhG", 
+                                            //"USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4", 
+                                            //"UWeVjsMSNHboXVvKgz31sgRSVkEXeNCz6v",
+                                            //"UQHp4fbFFtg28Wv61v46FjAd4fxHNCTkhG", 
                                             //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
-                                            //"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
+                                            "UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
                                         };
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 
@@ -856,7 +856,7 @@ miner::block_ptr miner::get_block(bool is_force_create_block)
     return ret;
 }*/
 
-void miner::get_state(uint64_t &height, uint64_t &rate, string& difficulty, bool& is_mining)
+void miner::get_state(uint64_t &height, uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining)
 {
     //rate = MinerAux::getRate();
     block_chain_impl& block_chain = node_.chain_impl();
@@ -865,6 +865,12 @@ void miner::get_state(uint64_t &height, uint64_t &rate, string& difficulty, bool
     block_chain.get_header(prev_header, height);
     //difficulty = to_string((u256)prev_header.bits);
     is_mining = thread_ ? true : false;
+    miners = mine_address_list.size();
+}
+
+vector<std::string>& miner::get_miners()
+{
+    return mine_address_list;
 }
 
 bool miner::get_block_header(chain::header& block_header, const string& para)

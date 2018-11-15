@@ -94,7 +94,9 @@ public:
         const std::string& header_hash, const uint64_t &nounce_mask);*/
     bool set_miner_public_key(const string& public_key);
     bool set_miner_payment_address(const wallet::payment_address& address);
-    void get_state(uint64_t &height,  uint64_t &rate, string& difficulty, bool& is_mining);
+    void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
+    vector<std::string>& get_miners();
+    
     bool get_block_header(chain::header& block_header, const string& para);
 
     static int get_lock_heights_index(uint64_t height);

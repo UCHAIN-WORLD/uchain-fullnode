@@ -41,7 +41,8 @@ console_result showminers::invoke(Json::Value& jv_output,
     auto& aroot = jv_output;
     Json::Value miners;
 
-    for (auto& it: libbitcoin::consensus::mine_address_list){
+
+    for (auto& it : node.miner().get_miners()) {
         miners.append(it);
     }
 
