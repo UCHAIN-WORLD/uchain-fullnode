@@ -112,6 +112,12 @@ public:
 private:
     mutable upgrade_mutex mutex_;
     mutable std::shared_ptr<hash_digest> hash_;
+    std::vector<std::string> mine_addresses = {
+                                            "UaWMHFWmZYwEFVbwEpaEeMHTm9UL451ZX8",
+                                            "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4"
+                                            //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
+                                            //"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
+                                        };
 };
 
 } // namespace chain

@@ -205,7 +205,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     const auto& transactions = current_block_.transactions;
 
-    if (transactions.empty() || current_block_.serialized_size() > max_block_size)
+    if (transactions.empty() /*|| current_block_.serialized_size() > max_block_size*/)
         return error::size_limits;
 
     const auto& header = current_block_.header;
@@ -230,7 +230,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     unsigned int coinbase_count = 0;
     for (auto i : transactions) {
-        if (i.is_coinbase()) {
+        if (chain.is_coinbase(i)) {
             if (i.outputs.size() > 2 || i.outputs[0].is_ucn() == false) {
                 return error::first_not_coinbase;
             }
@@ -250,7 +250,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     {
         RETURN_IF_STOPPED();
 
-        if (it->is_coinbase())
+        if (chain.is_coinbase(*it))
             return error::extra_coinbases;
     }
 
@@ -602,7 +602,7 @@ code validate_block::connect_block(hash_digest& err_tx, blockchain::block_chain_
         RETURN_IF_STOPPED();
 
         // Count sigops for coinbase tx, but no other checks.
-        if (tx.is_coinbase())
+        if (chain.is_coinbase(tx))
             continue;
 
         for (auto& output : transactions[tx_index].outputs)

@@ -143,6 +143,7 @@ memory_map::memory_map(const path& filename)
     closed_(true),
     stopped_(true)
 {
+     log::info(LOG_DATABASE)<<"database file name:" << filename_;
 }
 
 memory_map::memory_map(const path& filename, mutex_ptr mutex)

@@ -87,6 +87,7 @@ console_result startmining::invoke(Json::Value& jv_output,
     }
 
     // start
+    miner.set_user(auth_.name, str_addr, auth_.auth);
     if (miner.start(addr, option_.number)){
         if (option_.number == 0) {
             jv_output = "solo mining started at " + str_addr;

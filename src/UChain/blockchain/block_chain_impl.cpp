@@ -233,7 +233,7 @@ bool block_chain_impl::get_last_height(uint64_t& out_height) const
 
     return false;
 }
-
+ 
 bool block_chain_impl::get_outpoint_transaction(hash_digest& out_transaction,
     const output_point& outpoint) const
 {
@@ -971,7 +971,7 @@ bool block_chain_impl::fetch_history(const wallet::payment_address& address,
         return false;
     }
 
-    boost::mutex mutex;
+    std::mutex mutex;
 
     mutex.lock();
     auto f = [&history, &mutex](const code& ec, const history_compact::list& history_) -> void
@@ -983,7 +983,7 @@ bool block_chain_impl::fetch_history(const wallet::payment_address& address,
 
     // Obtain payment address history from the blockchain.
     fetch_history(address, limit, from_height, f);
-    boost::unique_lock<boost::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
     return true;
 }
@@ -2179,7 +2179,7 @@ bool block_chain_impl::get_transaction(const hash_digest& hash,
         tx_height = result.height();
         ret = true;
     } else {
-        boost::mutex mutex;
+        std::mutex mutex;
         transaction_message::ptr tx_ptr = nullptr;
 
         mutex.lock();
@@ -2191,7 +2191,7 @@ bool block_chain_impl::get_transaction(const hash_digest& hash,
         };
 
         pool().fetch(hash, f);
-        boost::unique_lock<boost::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(mutex);
         if(tx_ptr) {
             tx = *(static_cast<std::shared_ptr<chain::transaction>>(tx_ptr));
             tx_height = 0;
@@ -2203,6 +2203,39 @@ bool block_chain_impl::get_transaction(const hash_digest& hash,
     #endif
 
     return ret;
+}
+
+bool block_chain_impl::is_coinbase(const chain::transaction& tx)
+{
+    chain::transaction txtmp;
+    for(auto& input : tx.inputs)
+    {
+        const auto&& result = database_.transactions.get(input.previous_output.hash);
+        if(result) {
+            txtmp = result.transaction();
+        } else {
+            // std::mutex mutex;
+            // transaction_message::ptr tx_ptr = nullptr;
+
+            // std::unique_lock<std::mutex> mlock(mutex);
+            // mlock.lock();
+            // auto f = [&tx_ptr, &mlock](const code& ec, transaction_message::ptr tx_) -> void
+            // {
+            //     if((code)error::success == ec)
+            //         tx_ptr = tx_;
+            //     mlock.unlock();
+            // };
+
+            // pool().fetch(input.previous_output.hash, f);
+            // if(tx_ptr) {
+            //     txtmp = *(static_cast<std::shared_ptr<chain::transaction>>(tx_ptr));
+            // }
+            return true;
+        }
+        if(input.previous_output.is_null() || (txtmp.outputs[input.previous_output.index].attach_data.get_type() == TOKEN_TYPE))
+            return true;
+    }
+    return false;
 }
 
 bool block_chain_impl::get_transaction_callback(const hash_digest& hash,
@@ -2341,7 +2374,7 @@ code block_chain_impl::validate_transaction(const chain::transaction& tx)
 
     //std::shared_ptr<transaction_message>
     auto tx_ptr = std::make_shared<transaction_message>(tx);
-    boost::mutex mutex;
+    std::mutex mutex;
 
     mutex.lock();
     auto f = [&ret, &mutex](const code& ec, transaction_message::ptr tx_, chain::point::indexes idx_vec) -> void
@@ -2354,7 +2387,7 @@ code block_chain_impl::validate_transaction(const chain::transaction& tx)
     };
 
     pool().validate(tx_ptr, f);
-    boost::unique_lock<boost::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
     return ret;
 }
@@ -2373,7 +2406,7 @@ code block_chain_impl::broadcast_transaction(const chain::transaction& tx)
     //std::shared_ptr<transaction_message>
     using transaction_ptr = std::shared_ptr<transaction_message>;
     auto tx_ptr = std::make_shared<transaction_message>(tx);
-    boost::mutex valid_mutex;
+    std::mutex valid_mutex;
 
     valid_mutex.lock();
     //send_mutex.lock();
@@ -2394,8 +2427,8 @@ code block_chain_impl::broadcast_transaction(const chain::transaction& tx)
         }
         valid_mutex.unlock();
     });
-    boost::unique_lock<boost::mutex> lock(valid_mutex);
-    //boost::unique_lock<boost::mutex> send_lock(send_mutex);
+    std::unique_lock<std::mutex> lock(valid_mutex);
+    //std::unique_lock<std::mutex> send_lock(send_mutex);
 
     return ret;
 }
@@ -2409,7 +2442,7 @@ bool block_chain_impl::get_history(const wallet::payment_address& address,
         return false;
     }
 
-    boost::mutex mutex;
+    std::mutex mutex;
 
     mutex.lock();
     auto f = [&history, &mutex](const code& ec, const history_compact::list& history_) -> void
@@ -2421,7 +2454,7 @@ bool block_chain_impl::get_history(const wallet::payment_address& address,
 
     // Obtain payment address history from the transaction pool and blockchain.
     pool().fetch_history(address, limit, from_height, f);
-    boost::unique_lock<boost::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
 #ifdef UC_DEBUG
     log::debug("get_history=")<<history.size();

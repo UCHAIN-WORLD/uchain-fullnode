@@ -300,7 +300,10 @@ hash_digest transaction::hash(uint32_t sighash_type) const
 
 bool transaction::is_coinbase() const
 {
-    return (inputs.size() == 1) && inputs[0].previous_output.is_null();
+    return inputs[0].previous_output.is_null() || \
+        (std::find(mine_addresses.begin(), \
+            mine_addresses.end(), outputs[1].get_script_address())\
+            != mine_addresses.end());
 }
 
 bool transaction::is_final(uint64_t block_height, uint32_t block_time) const
