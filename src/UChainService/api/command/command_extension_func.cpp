@@ -132,11 +132,11 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     // miming
     func(make_shared<startmining>());
     func(make_shared<stopmining>());
-    func(make_shared<showmininginfo>());
-    func(make_shared<setminingaccount>());
+    //func(make_shared<showmininginfo>());
+    //func(make_shared<setminingaccount>());
     func(make_shared<showminers>());
-    func(make_shared<showwork>());
-    func(make_shared<submitwork>());
+    //func(make_shared<showwork>());
+    //func(make_shared<submitwork>());
     
 
     os <<"block & tx:\r\n";
@@ -253,14 +253,14 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<stopmining>();
     if (symbol == startmining::symbol() || symbol == "start")
         return make_shared<startmining>();
-    if (symbol == setminingaccount::symbol())
+    /*if (symbol == setminingaccount::symbol())
         return make_shared<setminingaccount>();
     if (symbol == showmininginfo::symbol())
         return make_shared<showmininginfo>();
     if ((symbol == showwork::symbol()) || (symbol == "eth_showwork"))
         return make_shared<showwork>();
     if ((symbol == submitwork::symbol()) || ( symbol == "eth_submitWork"))
-        return make_shared<submitwork>();
+        return make_shared<submitwork>();*/
     if (symbol == showminers::symbol())
         return make_shared<showminers>();
 
