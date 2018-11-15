@@ -108,7 +108,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     using namespace std;
     using namespace commands;
 
-    os <<"\r\n";
+    os <<"account:\r\n";
     // account
     func(make_shared<createaccount>());
     func(make_shared<checkaccountinfo>());
@@ -121,13 +121,14 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<exportkeyfile>());
     func(make_shared<importkeyfile>());
 
-    os <<"\r\n";
+    os <<"system:\r\n";
     // system
     func(make_shared<shutdown>());
     func(make_shared<showinfo>());
     func(make_shared<addpeer>());
     func(make_shared<showpeerinfo>());
-
+    
+    os <<"miming:\r\n";
     // miming
     func(make_shared<startmining>());
     func(make_shared<stopmining>());
@@ -138,7 +139,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<submitwork>());
     
 
-    os <<"\r\n";
+    os <<"block & tx:\r\n";
     // block & tx
     func(make_shared<showblockheight>());
     func(make_shared<showblock>());
@@ -147,9 +148,10 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showmemorypool>());
     func(make_shared<showtx>());
     func(make_shared<showtxs>());
-    os <<"\r\n";
+    
 
     // raw tx and multi-sig
+    os <<"raw tx and multi-sig:\r\n";
     func(make_shared<createrawtx>());
     func(make_shared<decoderawtx>());
     func(make_shared<signrawtx>());
@@ -160,9 +162,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showmultisigaddress>());
     func(make_shared<deletemultisigaddress>());
     func(make_shared<signmultisigtx>());
-
-    os <<"\r\n";
+    
     // ucn
+    os <<"ucn:\r\n";
     func(make_shared<sendto>());
     func(make_shared<sendtomulti>());
     func(make_shared<sendfrom>());
@@ -171,8 +173,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showbalance>());
     func(make_shared<showaddressucn>());
 
-    //os <<"\r\n";
+    
     // token
+    os <<"token:\r\n";
     func(make_shared<createtoken>());
     func(make_shared<deletetoken>());
     func(make_shared<registertoken>());
