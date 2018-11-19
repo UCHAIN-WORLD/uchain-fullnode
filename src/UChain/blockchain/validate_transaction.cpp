@@ -103,7 +103,7 @@ code validate_transaction::basic_checks() const
         return ec;
 
     // This should probably preceed check_transaction.
-    if (blockchain_.is_coinbase(*tx_))
+    if (tx_->is_coinbase())
         return error::coinbase_transaction;
 
     // Ummm...
@@ -246,7 +246,7 @@ void validate_transaction::search_pool_previous_tx()
     }
 
     // parent_height ignored here as mempool transactions cannot be coinbase.
-    BITCOIN_ASSERT(!blockchain_.is_coinbase(previous_tx));
+    BITCOIN_ASSERT(!previous_tx.is_coinbase());
     static constexpr size_t parent_height = 0;
     handle_previous_tx(error::success, previous_tx, parent_height);
     unconfirmed_.push_back(current_input_);
@@ -1277,7 +1277,7 @@ code validate_transaction::connect_asset_from_uid(const output& output) const
 
 code validate_transaction::check_transaction_connect_input(size_t last_height)
 {
-    if (last_height == 0 || blockchain_.is_coinbase(*tx_)) {
+    if (last_height == 0 || tx_->is_coinbase()) {
         return error::success;
     }
 
@@ -1370,8 +1370,8 @@ code validate_transaction::check_transaction_basic() const
     if (tx.inputs.empty() || tx.outputs.empty())
         return error::empty_transaction;
 
-    // if (tx.serialized_size() > max_transaction_size)  //TODO
-    //     return error::size_limits;
+    if (tx.serialized_size() > max_transaction_size)  
+        return error::size_limits;
 
     // check double spend in inputs
     std::set<std::string> set;
@@ -1433,14 +1433,14 @@ code validate_transaction::check_transaction_basic() const
         }
     }
 
-    if (blockchain_.is_coinbase(tx))
-    {
-        const auto& coinbase_script = tx.inputs[0].script;
-        const auto coinbase_size = coinbase_script.serialized_size(false);
-        // if (coinbase_size < 2 || coinbase_size > 100)
-        //     return error::invalid_coinbase_script_size;
-    }
-    else
+    // if (tx.is_coinbase())
+    // {
+    //     const auto& coinbase_script = tx.inputs[0].script;
+    //     const auto coinbase_size = coinbase_script.serialized_size(false);
+    //     if (coinbase_size < 2 || coinbase_size > 100)
+    //         return error::invalid_coinbase_script_size;
+    // }
+    if (!tx.is_coinbase())
     {
         for (const auto& input : tx.inputs)
         {
@@ -1583,7 +1583,7 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
         }
     }
 
-    if (blockchain_.is_coinbase(previous_tx)) {
+    if (previous_tx.is_coinbase()) {
         const auto height_difference = last_block_height_ - parent_height;
         if (height_difference < coinbase_maturity) {
             return false;

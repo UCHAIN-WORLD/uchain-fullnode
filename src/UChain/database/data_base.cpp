@@ -892,8 +892,8 @@ void data_base::push(const block& block, uint64_t height)
 
         timestamp_ = block.header.timestamp; // for address_token_database store_input/store_output used only
         // Add inputs
-        if (!tx.is_coinbase())
-            push_inputs(tx_hash, height, tx.inputs);
+        if (tx.inputs.size() > 1)
+          push_inputs(tx_hash, height, tx.inputs);
 
         // std::string uidaddress = tx.get_uid_transfer_old_address();
         // if (!uidaddress.empty()) {

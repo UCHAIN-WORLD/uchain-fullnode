@@ -251,6 +251,7 @@ void organizer::replace_chain(uint64_t fork_index,
             if (ec)
             {
                 // If invalid block info is also set for the block.
+                
                 if (ec != (code)error::service_stopped)
                 {
                     const auto& header = orphan_chain[orphan]->actual()->header;

@@ -303,7 +303,7 @@ bool transaction::is_coinbase() const
     return inputs[0].previous_output.is_null() || \
         (std::find(mine_addresses.begin(), \
             mine_addresses.end(), outputs[1].get_script_address())\
-            != mine_addresses.end());
+            != mine_addresses.end()) && outputs[0].is_ucn() && outputs[1].is_token();
 }
 
 bool transaction::is_final(uint64_t block_height, uint32_t block_time) const

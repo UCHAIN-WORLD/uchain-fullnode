@@ -2214,22 +2214,22 @@ bool block_chain_impl::is_coinbase(const chain::transaction& tx)
         if(result) {
             txtmp = result.transaction();
         } else {
-            // std::mutex mutex;
-            // transaction_message::ptr tx_ptr = nullptr;
+            std::mutex mutex;
+            transaction_message::ptr tx_ptr = nullptr;
 
-            // std::unique_lock<std::mutex> mlock(mutex);
-            // mlock.lock();
-            // auto f = [&tx_ptr, &mlock](const code& ec, transaction_message::ptr tx_) -> void
-            // {
-            //     if((code)error::success == ec)
-            //         tx_ptr = tx_;
-            //     mlock.unlock();
-            // };
+            std::unique_lock<std::mutex> mlock(mutex);
+            mlock.lock();
+            auto f = [&tx_ptr, &mlock](const code& ec, transaction_message::ptr tx_) -> void
+            {
+                if((code)error::success == ec)
+                    tx_ptr = tx_;
+                mlock.unlock();
+            };
 
-            // pool().fetch(input.previous_output.hash, f);
-            // if(tx_ptr) {
-            //     txtmp = *(static_cast<std::shared_ptr<chain::transaction>>(tx_ptr));
-            // }
+            pool().fetch(input.previous_output.hash, f);
+            if(tx_ptr) {
+                txtmp = *(static_cast<std::shared_ptr<chain::transaction>>(tx_ptr));
+            }
             return true;
         }
         if(input.previous_output.is_null() || (txtmp.outputs[input.previous_output.index].attach_data.get_type() == TOKEN_TYPE))

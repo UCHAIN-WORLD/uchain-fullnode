@@ -134,11 +134,6 @@ void transaction_pool::handle_validated(const code& ec, transaction_ptr tx,
 
     if (ec)
     {
-        if(ec == error::invalid_coinbase_script_size)
-        {
-            handler(error::success, tx, {});
-            return;
-        }
         BITCOIN_ASSERT(unconfirmed.empty());
         handler(ec, tx, {});
         return;

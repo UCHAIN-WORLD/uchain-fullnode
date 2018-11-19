@@ -28,7 +28,6 @@
 #include "UChain/blockchain/transaction_pool.hpp"
 #include "UChain/bitcoin/chain/block.hpp"
 #include "UChain/bitcoin/chain/input.hpp"
-//#include "UChainService/api/command/base_helper.hpp"
 #include <UChain/bitcoin/wallet/ec_public.hpp>
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/explorer/config/ec_private.hpp>
@@ -49,12 +48,10 @@ BC_CONSTEXPR unsigned int min_tx_fee_per_kb = 1000;
 BC_CONSTEXPR unsigned int median_time_span = 11;
 BC_CONSTEXPR uint32_t version = 1;
 
-extern vector<std::string> mine_address_list;
-
 //extern int bucket_size;
 extern vector<uint64_t> lock_heights;
 
-class miner //: public libbitcoin::explorer::commands::base_transfer_common
+class miner 
 {
 public:
     typedef message::block_message block;
@@ -65,7 +62,6 @@ public:
     typedef blockchain::block_chain_impl block_chain_impl;
     typedef blockchain::transaction_pool transaction_pool;
     typedef libbitcoin::node::p2p_node p2p_node;
-    //typedef libbitcoin::explorer::commands::base_transfer_common    transfer_common;
 
     // prev_output_point -> (prev_block_height, prev_output)
     typedef std::unordered_map<chain::point, std::pair<uint64_t, chain::output>> previous_out_map_t;
@@ -103,8 +99,7 @@ public:
     bool get_block_header(chain::header& block_header, const string& para);
 
     void set_user(const std::string& name, const std::string& address, const std::string& passwd) const;
-    bool fetch_utxo(const std::string& prikey, const std::string& addr, message::transaction_message& tx);
-    void send_tx(block_chain_impl& blockchain, message::transaction_message& tx);
+    int fetch_utxo(transaction_ptr ptx);
     bool get_spendable_output(chain::output& output, const chain::history& row, uint64_t height);
     static int get_lock_heights_index(uint64_t height);
     static uint64_t calculate_block_subsidy(uint64_t height, bool is_testnet);
@@ -134,11 +129,9 @@ private:
     const blockchain::settings& setting_;
 
     //user identity
-    std::string name;
-    std::string addr;
-    std::string passwd;
-
-    //std::unique_ptr<transfer_common> bs_transfer_com_;
+    std::string name_;
+    std::string addr_;
+    std::string passwd_;
 };
 
 }

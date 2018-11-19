@@ -129,6 +129,8 @@ BC_API hash_number max_target();
 
 BC_API std::string get_developer_community_address(bool is_testnet);
 
+extern std::vector<std::string> mine_addresses ;
+
 } // namespace libbitcoin
 
 #endif

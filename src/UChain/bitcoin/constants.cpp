@@ -39,4 +39,11 @@ std::string get_developer_community_address(bool is_testnet)
     return address;
 }
 
+std::vector<std::string> mine_addresses = {
+                                        "UaWMHFWmZYwEFVbwEpaEeMHTm9UL451ZX8",
+                                        "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4",
+                                        "UZQBebHPQbnesfuFV382AXaoihvucVFqYt"
+                                        //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
+                                        //"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
+                                    };
 } // namespace libbitcoin
