@@ -198,6 +198,16 @@ bool validate_block::stopped() const
     return stop_callback_();
 }
 
+bool validate_block::check_coinbase_block_token(const transaction& tx) const
+{
+
+    return  tx.inputs.size() == 1 
+            && tx.outputs.size() <= 2
+            && tx.outputs[0].is_token_transfer() 
+            && tx.outputs[0].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL;
+
+}
+
 code validate_block::check_block(blockchain::block_chain_impl& chain) const
 {
     // These are checks that are independent of the blockchain
@@ -207,6 +217,10 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     if (transactions.empty() || current_block_.serialized_size() > max_block_size)
         return error::size_limits;
+
+    if (!check_coinbase_block_token(transactions[0])) {
+        return error::first_not_coinbase;
+    }
 
     const auto& header = current_block_.header;
 
@@ -226,33 +240,9 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
             return error::timestamp_too_early;
     }
 
-    RETURN_IF_STOPPED();
+    
 
     unsigned int coinbase_count = 0;
-    for (auto i : transactions) {
-        if (i.is_coinbase()) {
-            if (i.outputs.size() > 2 || i.outputs[0].is_ucn() == false) {
-                return error::first_not_coinbase;
-            }
-            if (!(i.outputs.size() == 2 && i.outputs[1].is_token_transfer() 
-            && i.outputs[1].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL
-            && i.outputs[1].get_token_transfer().get_quantity() == 1)) {
-                return error::first_not_coinbase;
-            }
-            ++coinbase_count;
-        }
-    }
-    if (coinbase_count == 0) {
-        return error::first_not_coinbase;
-    }
-
-    for (auto it = transactions.begin() + coinbase_count; it != transactions.end(); ++it)
-    {
-        RETURN_IF_STOPPED();
-
-        if (it->is_coinbase())
-            return error::extra_coinbases;
-    }
 
     std::set<string> tokens;
     std::set<string> token_certs;
@@ -263,6 +253,9 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     for (const auto& tx : transactions)
     {
         RETURN_IF_STOPPED();
+        if (check_coinbase_block_token(tx)) {
+            ++coinbase_count;
+        }
 
         const auto validate_tx = std::make_shared<validate_transaction>(chain, tx, *this);
         auto ec = validate_tx->check_transaction();
@@ -336,6 +329,10 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
             }
             chain.pool().delete_tx(tx.hash());
         }
+    }
+
+    if (coinbase_count != 1) {
+        return error::extra_coinbases;
     }
 
     if (first_tx_ec) {

@@ -44,6 +44,7 @@ constexpr uint32_t max_block_script_sigops = max_block_size / 50;
 class BCB_API validate_block
 {
 public:
+    bool check_coinbase_block_token(const transaction& tx) const;
     code check_block(blockchain::block_chain_impl& chain) const;
     code accept_block() const;
     code connect_block(hash_digest& err_tx, blockchain::block_chain_impl& chain) const;

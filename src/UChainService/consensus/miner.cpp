@@ -304,7 +304,7 @@ miner::transaction_ptr miner::create_coinbase_tx(
     if (value > 0)
     {
         ptransaction->outputs.resize(2);
-        ptransaction->outputs[0].value = value;
+        
         ptransaction->locktime = reward_lock_time;
         if (lock_height > 0)
         {
@@ -320,8 +320,10 @@ miner::transaction_ptr miner::create_coinbase_tx(
         auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
         auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
 
-        ptransaction->outputs[1].value = 0; //1 block
-        ptransaction->outputs[1].attach_data = asset(TOKEN_TYPE, 1, ass);
+        ptransaction->outputs[0].value = 0; //1 block
+        ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
+
+        ptransaction->outputs[1].value = value;
     }
     else
     {
