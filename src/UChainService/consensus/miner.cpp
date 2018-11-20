@@ -291,31 +291,188 @@ miner::transaction_ptr miner::create_coinbase_tx(
     uint64_t block_height, int lock_height, uint32_t reward_lock_time)
 {
     transaction_ptr ptransaction = make_shared<message::transaction_message>();
-
-    ptransaction->inputs.resize(1);
     ptransaction->version = version;
-    ptransaction->inputs[0].previous_output = {null_hash, max_uint32};
-    script_number number(block_height);
-    ptransaction->inputs[0].script.operations.push_back({ chain::opcode::special, number.data() });
-
-    ptransaction->outputs.resize(2);
-    ptransaction->outputs[0].value = value;
-    ptransaction->locktime = reward_lock_time;
-    if (lock_height > 0) {
-        ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
-        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
-   } else {
-        ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
-        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+    const uint64_t unspent_token = fetch_utxo(ptransaction,pay_address);
+    if(!unspent_token)
+    {
+        ptransaction->inputs.resize(1);
+        ptransaction->inputs[0].previous_output = {null_hash, max_uint32};
+        script_number number(block_height);
+        ptransaction->inputs[0].script.operations.push_back({ chain::opcode::special, number.data() });
     }
 
-    auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, 1);
-    auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
+    if (value > 0)
+    {
+        ptransaction->outputs.resize(2);
+        ptransaction->outputs[0].value = value;
+        ptransaction->locktime = reward_lock_time;
+        if (lock_height > 0)
+        {
+            ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
+            ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
+        }
+        else
+        {
+            ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+            ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+        }
 
-    ptransaction->outputs[1].value = 0;//1 block
-    ptransaction->outputs[1].attach_data = asset(TOKEN_TYPE, 1, ass);
+        auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
+        auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
+
+        ptransaction->outputs[1].value = 0; //1 block
+        ptransaction->outputs[1].attach_data = asset(TOKEN_TYPE, 1, ass);
+    }
+    else
+    {
+        ptransaction->outputs.resize(1);
+        ptransaction->locktime = reward_lock_time;
+        if (lock_height > 0)
+        {
+            ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
+        }
+        else
+        {
+            ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+        }
+
+        auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
+        auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
+
+        ptransaction->outputs[0].value = 0; //1 block
+        ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
+    }
 
     return ptransaction;
+}
+
+uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const wallet::payment_address &address)
+{
+    block_chain_impl &block_chain = node_.chain_impl();
+    auto &&rows = block_chain.get_address_history(address, true);
+    if (!rows.size())
+    {
+        return false;
+    }
+    uint64_t height = 0, index = 0, unspent_ucn{0}, unspent_token{0};
+    block_chain.get_last_height(height);
+
+    for (auto &row : rows)
+    {
+        chain::output output;
+        chain::input input;
+        if (!get_spendable_output(output, row, height))
+        {
+            continue;
+        }
+
+        if (output.get_script_address() != address.encoded())
+        {
+            continue;
+        }
+
+        auto token_symbol = output.get_token_symbol();
+
+        if (!(output.is_token_transfer() && token_symbol == UC_BLOCK_TOKEN_SYMBOL))
+        {
+            continue;
+        }
+
+        auto ucn_amount = row.value;
+        auto token_total_amount = output.get_token_amount();
+        auto cert_type = output.get_token_cert_type();
+
+        BITCOIN_ASSERT(ucn_amount == 0);
+        BITCOIN_ASSERT(cert_type == token_cert_ns::none);
+        if (token_total_amount == 0)
+            continue;
+
+        if (index && row.output.hash == ptx->inputs[index - 1].previous_output.hash && row.output.index == ptx->inputs[index - 1].previous_output.index)
+            continue;
+        input.previous_output = {row.output.hash, row.output.index};
+        //input.script = output.script;
+        input.sequence = max_input_sequence;
+        ptx->inputs.push_back(input);
+        //spend UTXO
+        bc::chain::script ss;
+        bc::explorer::config::hashtype sign_type;
+        uint8_t hash_type = (signature_hash_algorithm)sign_type;
+        bc::explorer::config::ec_private config_private_key(pri_key);
+        const ec_secret &private_key = config_private_key;
+
+        bc::explorer::config::script config_contract(output.script);
+        const bc::chain::script &contract = config_contract;
+
+        // gen sign
+        bc::endorsement endorse;
+        if (!bc::chain::script::create_endorsement(endorse, private_key,
+                                                   contract, *ptx, index, hash_type))
+        {
+            return false;
+        }
+
+        // do script
+        bc::wallet::ec_private ec_private_key(private_key, 0u, true);
+        auto &&public_key = ec_private_key.to_public();
+        data_chunk public_key_data;
+        public_key.to_data(public_key_data);
+
+        ss.operations.push_back({bc::chain::opcode::special, endorse});
+        ss.operations.push_back({bc::chain::opcode::special, public_key_data});
+
+        // if pre-output script is deposit tx.
+        if (contract.pattern() == bc::chain::script_pattern::pay_key_hash_with_lock_height)
+        {
+            uint64_t lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(
+                contract.operations);
+            ss.operations.push_back({bc::chain::opcode::special, script_number(lock_height).data()});
+        }
+        ptx->inputs[index++].script = ss;
+        // unspent_ucn += row.value;
+        unspent_token += output.get_token_amount();
+    }
+    rows.clear();
+    return unspent_token;
+}
+
+bool miner::get_spendable_output(chain::output& output, const chain::history& row, uint64_t height)
+{
+    if (row.spend.hash != null_hash) {
+        return false;
+    }
+
+    block_chain_impl& block_chain = node_.chain_impl();
+    chain::transaction tx_temp;
+    uint64_t tx_height;
+    if (!block_chain.get_transaction(row.output.hash, tx_temp, tx_height)) {
+        return false;
+    }
+
+    BITCOIN_ASSERT(row.output.index < tx_temp.outputs.size());
+    output = tx_temp.outputs.at(row.output.index);
+
+    if (chain::operation::is_pay_key_hash_with_lock_height_pattern(output.script.operations)) {
+        if (row.output_height == 0) {
+            // deposit utxo in transaction pool
+            return false;
+        } else {
+            // deposit utxo in block
+            auto lock_height = chain::operation::
+                get_lock_height_from_pay_key_hash_with_lock_height(output.script.operations);
+            if ((row.output_height + lock_height) > height) {
+                // utxo already in block but deposit not expire
+                return false;
+            }
+        }
+    } else if (tx_temp.is_coinbase()) { // incase readd deposit
+        // coin base ucn maturity ucn check
+        // coinbase_maturity ucn check
+        if (/*(row.output_height == 0) ||*/ ((row.output_height + coinbase_maturity) > height)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 //int bucket_size = 500000;
@@ -334,7 +491,7 @@ int miner::get_lock_heights_index(uint64_t height)
 
 uint64_t miner::calculate_block_subsidy(uint64_t block_height, bool is_testnet)
 {
-    return min_fee_to_block_token;///uint64_t(3 * coin_price() * pow(0.95, block_height / bucket_size));
+    return 0;//min_fee_to_block_token;///uint64_t(3 * coin_price() * pow(0.95, block_height / bucket_size));
 }
 
 uint64_t miner::calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num)
@@ -746,7 +903,7 @@ uint64_t miner::get_height() const
     return height;
 }
 
-bool miner::set_miner_public_key(const string& public_key)
+/*bool miner::set_miner_public_key(const string& public_key)
 {
     libbitcoin::wallet::ec_public ec_public_key(public_key);
     pay_address_ = ec_public_key.to_payment_address();
@@ -758,6 +915,11 @@ bool miner::set_miner_public_key(const string& public_key)
         log::error(LOG_HEADER) << "set_miner_public_key[" << public_key << "] is not availabe!";
         return false;
     }
+}*/
+
+bool miner::set_miner_pri_key(const string& pri_key)
+{
+    this->pri_key = pri_key;
 }
 
 bool miner::set_miner_payment_address(const bc::wallet::payment_address& address)
