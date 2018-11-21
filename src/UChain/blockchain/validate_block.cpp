@@ -198,16 +198,6 @@ bool validate_block::stopped() const
     return stop_callback_();
 }
 
-bool validate_block::check_coinbase_block_token(const transaction& tx) const
-{
-
-    return  tx.inputs.size() == 1 
-            && tx.outputs.size() <= 2
-            && tx.outputs[0].is_token_transfer() 
-            && tx.outputs[0].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL;
-
-}
-
 code validate_block::check_block(blockchain::block_chain_impl& chain) const
 {
     // These are checks that are independent of the blockchain
@@ -218,7 +208,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     if (transactions.empty() || current_block_.serialized_size() > max_block_size)
         return error::size_limits;
 
-    if (!check_coinbase_block_token(transactions[0])) {
+    if (!transactions[0].is_coinbase()) {
         return error::first_not_coinbase;
     }
 
@@ -253,7 +243,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     for (const auto& tx : transactions)
     {
         RETURN_IF_STOPPED();
-        if (check_coinbase_block_token(tx)) {
+        if (tx.is_coinbase()) {
             ++coinbase_count;
         }
 
