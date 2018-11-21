@@ -108,7 +108,7 @@ validate_block::validate_block(size_t height, const block& block, bool testnet,
 
 void validate_block::initialize_context()
 {
-    const auto bip30_exception_height1 = testnet_ ?
+    /*const auto bip30_exception_height1 = testnet_ ?
                                          testnet_bip30_exception_height1 :
                                          mainnet_bip30_exception_height1;
 
@@ -170,7 +170,13 @@ void validate_block::initialize_context()
 
     // bip16 was activated with a one-time test on mainnet/testnet (~55% rule).
     if (height_ >= bip16_activation_height)
-        activations_ |= script_context::bip16_enabled;
+        activations_ |= script_context::bip16_enabled;*/
+    activations_ |= script_context::attenuation_enabled;
+    activations_ |= script_context::bip65_enabled;
+    activations_ |= script_context::bip66_enabled;
+    activations_ |= script_context::bip34_enabled;
+    activations_ |= script_context::bip30_enabled;
+    activations_ |= script_context::bip16_enabled;
 }
 
 // initialize_context must be called first (to set activations_).

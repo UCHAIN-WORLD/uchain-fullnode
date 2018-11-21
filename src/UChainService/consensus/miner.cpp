@@ -291,14 +291,19 @@ miner::transaction_ptr miner::create_coinbase_tx(
     uint64_t block_height, int lock_height, uint32_t reward_lock_time)
 {
     transaction_ptr ptransaction = make_shared<message::transaction_message>();
-    ptransaction->version = version;
+    
     const uint64_t unspent_token = fetch_utxo(ptransaction,pay_address);
     if(!unspent_token)
     {
+        ptransaction->version = version;
         ptransaction->inputs.resize(1);
         ptransaction->inputs[0].previous_output = {null_hash, max_uint32};
         script_number number(block_height);
         ptransaction->inputs[0].script.operations.push_back({ chain::opcode::special, number.data() });
+    }
+    else
+    {
+        ptransaction->version = transaction_version::check_output_script;
     }
 
     if (value > 0)
