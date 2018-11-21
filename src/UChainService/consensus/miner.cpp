@@ -432,6 +432,7 @@ uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const wallet::payment_ad
         ptx->inputs[index++].script = ss;
         // unspent_ucn += row.value;
         unspent_token += output.get_token_amount();
+        break;
     }
     rows.clear();
     return unspent_token;
@@ -469,7 +470,7 @@ bool miner::get_spendable_output(chain::output& output, const chain::history& ro
     } else if (tx_temp.is_coinbase()) { // incase readd deposit
         // coin base ucn maturity ucn check
         // coinbase_maturity ucn check
-        if (/*(row.output_height == 0) ||*/ ((row.output_height + coinbase_maturity) > height)) {
+        if (row.output_height == 0 /*|| ((row.output_height + coinbase_maturity) > height)*/) {
             return false;
         }
     }

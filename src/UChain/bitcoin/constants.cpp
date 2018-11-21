@@ -21,7 +21,7 @@
 #include <UChain/bitcoin/constants.hpp>
 
 namespace libbitcoin {
-uint32_t coinbase_maturity = 1000;
+uint32_t coinbase_maturity = 14;
 
 hash_number max_target()
 {
