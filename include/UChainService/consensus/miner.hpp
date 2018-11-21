@@ -136,10 +136,7 @@ private:
     std::string passwd_;
 
     vector<std::string> mine_address_list = {
-                                                "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4", 
-                                                "UWeVjsMSNHboXVvKgz31sgRSVkEXeNCz6v",
-                                                "UQHp4fbFFtg28Wv61v46FjAd4fxHNCTkhG", 
-                                                "UNrsUBgdr1DeaL77RziBVcAq4acmb6c54m",
+                                                "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4",
                                             };
 
 };
