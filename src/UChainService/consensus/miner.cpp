@@ -787,13 +787,6 @@ std::string to_string(_T const& _t)
     return o.str();
 }
 
-vector<std::string> mine_address_list = {
-                                            //"USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4", 
-                                            //"UWeVjsMSNHboXVvKgz31sgRSVkEXeNCz6v",
-                                            //"UQHp4fbFFtg28Wv61v46FjAd4fxHNCTkhG", 
-                                            //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
-                                            "UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
-                                        };
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 
 void miner::work(const wallet::payment_address pay_address)
@@ -801,11 +794,13 @@ void miner::work(const wallet::payment_address pay_address)
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
     int index = get_mine_index(pay_address);
 
-    if (index == -1)
-    {
-        log::error(LOG_HEADER) << pay_address.encoded() << " is not a miner address ";
-        return;
-    }
+    // if (index == -1)
+    // {
+    //     log::error(LOG_HEADER) << pay_address.encoded() << " is not a miner address ";
+    //     thread_.reset();
+    //     stop();
+    //     return;
+    // }
 
     while (state_ != state::exit_)
     {
@@ -849,7 +844,7 @@ void miner::work(const wallet::payment_address pay_address)
 
 int miner::get_mine_index(const wallet::payment_address& pay_address) const
 {
-    vector<std::string>::iterator it=find(mine_address_list.begin(),mine_address_list.end(),pay_address.encoded());
+    vector<std::string>::const_iterator it=find(mine_address_list.begin(),mine_address_list.end(), pay_address.encoded());
  
     if (it==mine_address_list.end())
     {
@@ -922,6 +917,17 @@ uint64_t miner::get_height() const
 bool miner::set_miner_pri_key(const string& pri_key)
 {
     this->pri_key = pri_key;
+}
+
+void miner::set_user(const std::string& name, const std::string& passwd)
+{
+    this->name_ = name;
+    this->passwd_ = passwd;
+}
+
+bool miner::check_user(const std::string& name, const std::string& passwd)
+{
+    return this->name_== name && this->passwd_ == passwd;
 }
 
 bool miner::set_miner_payment_address(const bc::wallet::payment_address& address)

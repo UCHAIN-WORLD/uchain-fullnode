@@ -30,7 +30,7 @@ namespace libbitcoin {
 namespace explorer {
 namespace commands {
 
-void administrator_required_checker(bc::server::server_node& node,
+bool administrator_required_checker(bc::server::server_node& node,
         const std::string& name, const std::string& auth);
 
 uint64_t get_last_height(bc::server::server_node& node);

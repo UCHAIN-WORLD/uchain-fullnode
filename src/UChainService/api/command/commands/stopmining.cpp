@@ -35,9 +35,10 @@ namespace commands {
 console_result stopmining::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
-    administrator_required_checker(node, auth_.name, auth_.auth);
-
     auto& miner = node.miner();
+    if(!administrator_required_checker(node, auth_.name, auth_.auth) && \
+        !miner.check_user(auth_.name, auth_.auth))
+            throw account_authority_exception{"account not found or incorrect password."};
     auto ret = miner.stop();
 
     if (ret) {

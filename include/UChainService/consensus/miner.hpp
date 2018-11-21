@@ -48,8 +48,6 @@ BC_CONSTEXPR unsigned int min_tx_fee_per_kb = 1000;
 BC_CONSTEXPR unsigned int median_time_span = 11;
 BC_CONSTEXPR uint32_t version = 1;
 
-extern vector<std::string> mine_address_list;
-
 //extern int bucket_size;
 extern vector<uint64_t> lock_heights;
 
@@ -100,6 +98,8 @@ public:
     bool get_spendable_output(chain::output& output, const chain::history& row, uint64_t height);
     bool set_miner_payment_address(const wallet::payment_address& address);
     bool set_miner_pri_key(const std::string& pri_key);
+    void set_user(const std::string& name, const std::string& passwd);
+    bool check_user(const std::string& name, const std::string& passwd);
     void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
     vector<std::string>& get_miners();
     
@@ -132,6 +132,16 @@ private:
     wallet::payment_address pay_address_;
     const blockchain::settings& setting_;
     std::string pri_key;
+    std::string name_;
+    std::string passwd_;
+
+    vector<std::string> mine_address_list = {
+                                                "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4", 
+                                                "UWeVjsMSNHboXVvKgz31sgRSVkEXeNCz6v",
+                                                "UQHp4fbFFtg28Wv61v46FjAd4fxHNCTkhG", 
+                                                "UNrsUBgdr1DeaL77RziBVcAq4acmb6c54m",
+                                            };
+
 };
 
 }
