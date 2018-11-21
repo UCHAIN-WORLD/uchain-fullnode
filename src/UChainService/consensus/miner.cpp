@@ -470,7 +470,7 @@ bool miner::get_spendable_output(chain::output& output, const chain::history& ro
     } else if (tx_temp.is_coinbase()) { // incase readd deposit
         // coin base ucn maturity ucn check
         // coinbase_maturity ucn check
-        if (row.output_height == 0 /*|| ((row.output_height + coinbase_maturity) > height)*/) {
+        if (row.output_height == 0 /*|| (row.output_height + coinbase_maturity) > height*/) {
             return false;
         }
     }

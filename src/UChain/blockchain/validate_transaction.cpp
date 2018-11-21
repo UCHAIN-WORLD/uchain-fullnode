@@ -1583,12 +1583,12 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
         }
     }
 
-    if (previous_tx.is_coinbase()) {
+    /*if (previous_tx.is_coinbase()) {
         const auto height_difference = last_block_height_ - parent_height;
         if (height_difference < coinbase_maturity) {
             return false;
         }
-    }
+    }*/
 
     if (!check_consensus(previous_output.script, *tx_, current_input_, script_context::all_enabled)) {
         log::debug(LOG_BLOCKCHAIN) << "check_consensus failed";

@@ -588,7 +588,7 @@ code validate_block::connect_block(hash_digest& err_tx, blockchain::block_chain_
 
         RETURN_IF_STOPPED();
 
-        // Count sigops for coinbase tx, but no other checks.
+        // coinbase that has no inputs does not need to check
         if (tx.is_coinbase())
             continue;
 
@@ -662,7 +662,7 @@ bool validate_block::is_spent_duplicate(const transaction& tx) const
 bool validate_block::validate_inputs(const transaction& tx,
                                      size_t index_in_parent, uint64_t& value_in, size_t& total_sigops) const
 {
-    BITCOIN_ASSERT(!tx.is_coinbase());
+    //BITCOIN_ASSERT(!tx.is_coinbase());
 
     ////////////// TODO: parallelize. //////////////
     for (size_t input_index = 0; input_index < tx.inputs.size(); ++input_index)

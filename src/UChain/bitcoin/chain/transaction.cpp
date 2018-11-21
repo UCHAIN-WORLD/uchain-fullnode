@@ -307,6 +307,11 @@ bool transaction::is_coinbase() const
             && outputs[0].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL;
 }
 
+bool transaction::is_strict_coinbase() const
+{
+    return (inputs.size() == 1) && inputs[0].previous_output.is_null();
+}
+
 bool transaction::is_final(uint64_t block_height, uint32_t block_time) const
 {
     if (locktime == 0)
