@@ -89,6 +89,8 @@ public:
     bool script_hash_signature_operations_count(size_t &count, const chain::input& input,
         vector<transaction_ptr>& transactions);
     transaction_ptr create_coinbase_tx(const wallet::payment_address& pay_addres,
+        uint64_t value,uint64_t block_height);
+    transaction_ptr create_lock_coinbase_tx(const wallet::payment_address& pay_addres,
         uint64_t value, uint64_t block_height, int lock_height, uint32_t reward_lock_time);
 
     block_ptr get_block(bool is_force_create_block = false);

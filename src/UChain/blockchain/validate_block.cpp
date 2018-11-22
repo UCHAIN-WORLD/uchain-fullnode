@@ -238,7 +238,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     
 
-    unsigned int coinbase_count = 0;
+    //unsigned int coinbase_count = 0;
 
     std::set<string> tokens;
     std::set<string> token_certs;
@@ -249,9 +249,9 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     for (const auto& tx : transactions)
     {
         RETURN_IF_STOPPED();
-        if (tx.is_coinbase()) {
+        /*if (tx.is_coinbase()) {
             ++coinbase_count;
-        }
+        }*/
 
         const auto validate_tx = std::make_shared<validate_transaction>(chain, tx, *this);
         auto ec = validate_tx->check_transaction();
@@ -327,9 +327,9 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
         }
     }
 
-    if (coinbase_count != 1) {
+    /*if (coinbase_count != 1) {
         return error::extra_coinbases;
-    }
+    }*/
 
     if (first_tx_ec) {
         return first_tx_ec;
