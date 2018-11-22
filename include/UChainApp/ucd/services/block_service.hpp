@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -18,14 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_SERVER_HEARTBEAT_SERVICE_HPP
-#define UC_SERVER_HEARTBEAT_SERVICE_HPP
+#ifndef UC_SERVER_BLOCK_SERVICE_HPP
+#define UC_SERVER_BLOCK_SERVICE_HPP
 
 #include <cstdint>
 #include <memory>
 #include <UChain/protocol.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/settings.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/settings.hpp>
 
 namespace libbitcoin {
 namespace server {
@@ -33,36 +32,52 @@ namespace server {
 class server_node;
 
 // This class is thread safe.
-// Subscribe to a pulse from a dedicated service endpoint.
-class BCS_API heartbeat_service
+// Subscribe to block acceptances into the long chain.
+class BCS_API block_service
   : public bc::protocol::zmq::worker
 {
 public:
-    typedef std::shared_ptr<heartbeat_service> ptr;
+    typedef std::shared_ptr<block_service> ptr;
 
-    /// Construct a heartbeat endpoint.
-    heartbeat_service(bc::protocol::zmq::authenticator& authenticator,
+    /// The fixed inprocess worker endpoints.
+    static const config::endpoint public_worker;
+    static const config::endpoint secure_worker;
+
+    /// Construct a block service.
+    block_service(bc::protocol::zmq::authenticator& authenticator,
         server_node& node, bool secure);
+
+    /// Start the service.
+    bool start() override;
+
+    /// Stop the service.
+    bool stop() override;
 
 protected:
     typedef bc::protocol::zmq::socket socket;
 
-    virtual bool bind(socket& publisher);
-    virtual bool unbind(socket& publisher);
+    virtual bool bind(socket& xpub, socket& xsub);
+    virtual bool unbind(socket& xpub, socket& xsub);
 
     // Implement the service.
     virtual void work();
 
-    // Publish the heartbeat (integrated worker).
-    void publish(uint32_t count, socket& socket);
-
 private:
-    const server::settings& settings_;
-    const int32_t period_;
-    const bool secure_;
+    typedef bc::message::block_message::ptr block_ptr;
+    typedef bc::message::block_message::ptr_list block_list;
 
-    // This is thread safe.
+    bool handle_reorganization(const code& ec, uint64_t fork_point,
+        const block_list& new_blocks, const block_list&);
+    void publish_blocks(uint32_t fork_point, const block_list& blocks);
+    void publish_block(socket& publisher, uint32_t height,
+        const block_ptr block);
+
+    const bool secure_;
+    const server::settings& settings_;
+
+    // These are thread safe.
     bc::protocol::zmq::authenticator& authenticator_;
+    server_node& node_;
 };
 
 } // namespace server

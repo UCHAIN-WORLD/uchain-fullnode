@@ -32,7 +32,7 @@
 #include <UChainService/consensus/miner.hpp>
 
 #ifdef WITH_CONSENSUS
-#include <UChain/consensus.hpp>
+#include <UChainService/consensus.hpp>
 #endif
 
 namespace libbitcoin {

@@ -24,11 +24,11 @@
 #include <cstdint>
 #include <memory>
 #include <UChain/bitcoin.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/messages/message.hpp>
-#include <UChain/server/messages/route.hpp>
-#include <UChain/server/settings.hpp>
-#include <UChain/server/utility/address_key.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/route.hpp>
+#include <UChainApp/ucd/settings.hpp>
+#include <UChainApp/ucd/utility/address_key.hpp>
 
 namespace libbitcoin {
 namespace server {

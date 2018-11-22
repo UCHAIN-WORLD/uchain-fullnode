@@ -24,7 +24,7 @@
 #include <iostream>
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 

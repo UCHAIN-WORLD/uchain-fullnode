@@ -27,7 +27,7 @@
 #include <boost/filesystem.hpp>
 #include <UChain/node.hpp>
 #include <UChain/protocol.hpp>
-#include <UChain/server/define.hpp>
+#include <UChainApp/ucd/define.hpp>
 
 namespace libbitcoin {
 namespace server {

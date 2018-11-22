@@ -26,7 +26,7 @@
 
 #include <UChain/client.hpp>
 #include <UChain/blockchain.hpp>
-#include <UChain/server/services/query_service.hpp> //public_query
+#include <UChainApp/ucd/services/query_service.hpp> //public_query
 
 namespace libbitcoin{
 namespace server{

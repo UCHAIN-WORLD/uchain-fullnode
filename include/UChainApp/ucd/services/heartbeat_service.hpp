@@ -18,35 +18,51 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_SERVER_SECURE_AUTHENTICATOR_HPP
-#define UC_SERVER_SECURE_AUTHENTICATOR_HPP
+#ifndef UC_SERVER_HEARTBEAT_SERVICE_HPP
+#define UC_SERVER_HEARTBEAT_SERVICE_HPP
 
+#include <cstdint>
 #include <memory>
 #include <UChain/protocol.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/settings.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/settings.hpp>
 
 namespace libbitcoin {
 namespace server {
 
 class server_node;
 
-class BCS_API authenticator
-  : public bc::protocol::zmq::authenticator
+// This class is thread safe.
+// Subscribe to a pulse from a dedicated service endpoint.
+class BCS_API heartbeat_service
+  : public bc::protocol::zmq::worker
 {
 public:
-    typedef std::shared_ptr<authenticator> ptr;
+    typedef std::shared_ptr<heartbeat_service> ptr;
 
-    /// Construct an instance of the authenticator.
-    authenticator(server_node& node);
+    /// Construct a heartbeat endpoint.
+    heartbeat_service(bc::protocol::zmq::authenticator& authenticator,
+        server_node& node, bool secure);
 
-    /// This class is not copyable.
-    authenticator(const authenticator&) = delete;
-    void operator=(const authenticator&) = delete;
+protected:
+    typedef bc::protocol::zmq::socket socket;
 
-    /// Apply authentication to the socket.
-    bool apply(bc::protocol::zmq::socket& socket, const std::string& domain,
-        bool secure);
+    virtual bool bind(socket& publisher);
+    virtual bool unbind(socket& publisher);
+
+    // Implement the service.
+    virtual void work();
+
+    // Publish the heartbeat (integrated worker).
+    void publish(uint32_t count, socket& socket);
+
+private:
+    const server::settings& settings_;
+    const int32_t period_;
+    const bool secure_;
+
+    // This is thread safe.
+    bc::protocol::zmq::authenticator& authenticator_;
 };
 
 } // namespace server

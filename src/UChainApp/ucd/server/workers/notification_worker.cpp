@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/server/workers/notification_worker.hpp>
+#include <UChainApp/ucd/workers/notification_worker.hpp>
 
 #include <algorithm>
 #include <cstdint>
@@ -26,12 +26,12 @@
 #include <memory>
 #include <string>
 #include <UChain/protocol.hpp>
-#include <UChain/server/messages/message.hpp>
-#include <UChain/server/messages/route.hpp>
-#include <UChain/server/server_node.hpp>
-#include <UChain/server/services/query_service.hpp>
-#include <UChain/server/settings.hpp>
-#include <UChain/server/utility/fetch_helpers.hpp>
+#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/route.hpp>
+#include <UChainApp/ucd/server_node.hpp>
+#include <UChainApp/ucd/services/query_service.hpp>
+#include <UChainApp/ucd/settings.hpp>
+#include <UChainApp/ucd/utility/fetch_helpers.hpp>
 
 namespace libbitcoin {
 namespace server {
