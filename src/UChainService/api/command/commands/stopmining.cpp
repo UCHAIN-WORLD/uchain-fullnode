@@ -35,10 +35,12 @@ namespace commands {
 console_result stopmining::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
+    auto& blockchain = node.chain_impl();
     auto& miner = node.miner();
+    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
     if(!administrator_required_checker(node, auth_.name, auth_.auth) && \
-        !miner.check_user(auth_.name, auth_.auth))
-            throw account_authority_exception{"account not found or incorrect password."};
+        !blockchain.get_account_address(auth_.name, miner.get_miner_address()))
+            throw account_authority_exception{"not the miner account."};
     auto ret = miner.stop();
 
     if (ret) {

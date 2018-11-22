@@ -97,8 +97,9 @@ public:
     uint64_t fetch_utxo(const transaction_ptr& ptx,const wallet::payment_address& address);
     bool get_spendable_output(chain::output& output, const chain::history& row, uint64_t height);
     bool set_miner_payment_address(const wallet::payment_address& address);
+    const std::string get_miner_address();
     bool set_miner_pri_key(const std::string& pri_key);
-    void set_user(const std::string& name, const std::string& passwd);
+    //void set_user(const std::string& name, const std::string& passwd);
     bool check_user(const std::string& name, const std::string& passwd);
     void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
     vector<std::string>& get_miners();

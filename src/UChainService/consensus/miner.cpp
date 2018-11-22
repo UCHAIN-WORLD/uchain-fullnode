@@ -868,6 +868,7 @@ bool miner::start(const wallet::payment_address& pay_address, uint16_t number)
         new_block_limit_ = number;
         thread_.reset(new boost::thread(bind(&miner::work, this, pay_address)));
     }
+    pay_address_ = pay_address;
     return true;
 }
 
@@ -920,11 +921,11 @@ bool miner::set_miner_pri_key(const string& pri_key)
     this->pri_key = pri_key;
 }
 
-void miner::set_user(const std::string& name, const std::string& passwd)
-{
-    this->name_ = name;
-    this->passwd_ = passwd;
-}
+// void miner::set_user(const std::string& name, const std::string& passwd)
+// {
+//     this->name_ = name;
+//     this->passwd_ = passwd;
+// }
 
 bool miner::check_user(const std::string& name, const std::string& passwd)
 {
@@ -943,6 +944,11 @@ bool miner::set_miner_payment_address(const bc::wallet::payment_address& address
 
     pay_address_ = address;
     return true;
+}
+
+const std::string miner::get_miner_address()
+{
+    return pay_address_.encoded();
 }
 
 miner::block_ptr miner::get_block(bool is_force_create_block)

@@ -47,43 +47,22 @@ console_result startmining::invoke(Json::Value& jv_output,
         throw setting_required_exception{"Currently mining, please use command <stopmining> to stop the running mining."};
     }
 
-    auto str_addr = option_.address;
+    auto str_addr = argument_.address;
 
-    if (str_addr.empty()) {
-        Json::Value jv_temp;
+    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
-        // get new address
-        const char* cmds2[]{"addaddress", auth_.name.c_str(), auth_.auth.c_str()};
-
-        if (dispatch_command(3, cmds2, jv_temp, node, get_api_version()) != console_result::okay) {
-            throw address_generate_exception(jv_temp.asString());
-        }
-
-        if (get_api_version() == 1) {
-            str_addr = jv_temp.asString();
-        }
-        else if (get_api_version() == 2) {
-            str_addr = jv_temp["addresses"][0].asString();
-        }
-        else {
-            str_addr = jv_temp[0].asString();
-        }
+    if (!blockchain.is_valid_address(str_addr)) {
+        throw address_invalid_exception{"invalid address parameter! " + str_addr};
     }
-    else {
-        blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    
+    vector<string>& miner_address = miner.get_miners();
+    if(std::find(miner_address.begin(), miner_address.end(), str_addr) == miner_address.end()) 
+        throw address_invalid_exception{str_addr + " is not a miner address "};
 
-        if (!blockchain.is_valid_address(str_addr)) {
-            throw address_invalid_exception{"invalid address parameter! " + str_addr};
-        }
-        
-        vector<string>& miner_address = miner.get_miners();
-        if(std::find(miner_address.begin(), miner_address.end(), str_addr) == miner_address.end()) 
-            throw address_invalid_exception{str_addr + " is not a miner address "};
-
-        if (!blockchain.get_account_address(auth_.name, str_addr)) {
-            throw address_dismatch_account_exception{"target address does not match account. " + str_addr};
-        }
+    if (!blockchain.get_account_address(auth_.name, str_addr)) {
+        throw address_dismatch_account_exception{"target address does not match account. " + str_addr};
     }
+    
 
     bc::wallet::payment_address addr(str_addr);
 
@@ -94,7 +73,6 @@ console_result startmining::invoke(Json::Value& jv_output,
     // start
     const auto& spaddr = blockchain.get_account_address(auth_.name, str_addr);
     miner.set_miner_pri_key(spaddr->get_prv_key(auth_.auth));
-    miner.set_user(auth_.name, auth_.auth);
     if (miner.start(addr, option_.number)){
         if (option_.number == 0) {
             jv_output = "solo mining started at " + str_addr;

@@ -1137,35 +1137,34 @@ base_transfer_common::get_script_operations(const receiver_record& record) const
     // complicated script and token should be implemented in subclass
     // generate script
     const wallet::payment_address payment(record.target);
+    if (!payment)
+        throw toaddress_invalid_exception{"invalid target address"};
+
     const auto& hash = payment.hash();
     if (blockchain_.is_blackhole_address(record.target)) {
         payment_ops = chain::operation::to_pay_blackhole_pattern(hash);
-    }else{
-        if (!payment)
-            throw toaddress_invalid_exception{"invalid target address"};
-        else if (payment.version() == wallet::payment_address::mainnet_p2kh) {
-            if (record.type == utxo_attach_type::token_locked_transfer) { // for token locked change only
-                const auto& attenuation_model_param =
-                    boost::get<blockchain_message>(record.attach_elem.get_attach()).get_content();
-                if (!attenuation_model::check_model_param_format(to_chunk(attenuation_model_param))) {
-                    throw token_attenuation_model_exception(
-                        "check token locked transfer attenuation model param failed: "
-                        + attenuation_model_param);
-                }
-                payment_ops = chain::operation::to_pay_key_hash_with_attenuation_model_pattern(
-                    hash, attenuation_model_param, record.input_point);
-            } else {
-                payment_ops = chain::operation::to_pay_key_hash_pattern(hash);
+    }
+    else if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+        if (record.type == utxo_attach_type::token_locked_transfer) { // for token locked change only
+            const auto& attenuation_model_param =
+                boost::get<blockchain_message>(record.attach_elem.get_attach()).get_content();
+            if (!attenuation_model::check_model_param_format(to_chunk(attenuation_model_param))) {
+                throw token_attenuation_model_exception(
+                    "check token locked transfer attenuation model param failed: "
+                    + attenuation_model_param);
             }
-        }
-        else if (payment.version() == wallet::payment_address::mainnet_p2sh) {
-            payment_ops = chain::operation::to_pay_script_hash_pattern(hash);
-        }
-        else {
-            throw toaddress_unrecognized_exception{"unrecognized target address : " + payment.encoded()};
+            payment_ops = chain::operation::to_pay_key_hash_with_attenuation_model_pattern(
+                hash, attenuation_model_param, record.input_point);
+        } else {
+            payment_ops = chain::operation::to_pay_key_hash_pattern(hash);
         }
     }
-    
+    else if (payment.version() == wallet::payment_address::mainnet_p2sh) {
+        payment_ops = chain::operation::to_pay_script_hash_pattern(hash);
+    }
+    else {
+        throw toaddress_unrecognized_exception{"unrecognized target address : " + payment.encoded()};
+    }
 
     return payment_ops;
 }

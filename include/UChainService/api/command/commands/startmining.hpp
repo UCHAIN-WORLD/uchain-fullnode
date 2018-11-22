@@ -44,7 +44,8 @@ public:
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("ACCOUNTAUTH", 1)
+            .add("ADDRESS", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -53,6 +54,7 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.address, "ADDRESS", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -76,8 +78,8 @@ public:
             BX_ACCOUNT_AUTH
         )
         (
-            "address,a",
-            value<std::string>(&option_.address)->required(),
+            "ADDRESS",
+            value<std::string>(&argument_.address)->required(),
             "The mining target address. Defaults to empty, means a new address will be generated."
         )
         (
@@ -98,11 +100,11 @@ public:
 
     struct argument
     {
+        std::string address;
     } argument_;
 
     struct option
     {
-        std::string address;
         uint16_t number;
     } option_;
 
