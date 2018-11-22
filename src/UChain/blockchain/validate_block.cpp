@@ -108,7 +108,7 @@ validate_block::validate_block(size_t height, const block& block, bool testnet,
 
 void validate_block::initialize_context()
 {
-    const auto bip30_exception_height1 = testnet_ ?
+    /*const auto bip30_exception_height1 = testnet_ ?
                                          testnet_bip30_exception_height1 :
                                          mainnet_bip30_exception_height1;
 
@@ -170,7 +170,13 @@ void validate_block::initialize_context()
 
     // bip16 was activated with a one-time test on mainnet/testnet (~55% rule).
     if (height_ >= bip16_activation_height)
-        activations_ |= script_context::bip16_enabled;
+        activations_ |= script_context::bip16_enabled;*/
+    activations_ |= script_context::attenuation_enabled;
+    activations_ |= script_context::bip65_enabled;
+    activations_ |= script_context::bip66_enabled;
+    activations_ |= script_context::bip34_enabled;
+    activations_ |= script_context::bip30_enabled;
+    activations_ |= script_context::bip16_enabled;
 }
 
 // initialize_context must be called first (to set activations_).
@@ -232,7 +238,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     
 
-    unsigned int coinbase_count = 0;
+    //unsigned int coinbase_count = 0;
 
     std::set<string> tokens;
     std::set<string> token_certs;
@@ -243,9 +249,9 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     for (const auto& tx : transactions)
     {
         RETURN_IF_STOPPED();
-        if (tx.is_coinbase()) {
+        /*if (tx.is_coinbase()) {
             ++coinbase_count;
-        }
+        }*/
 
         const auto validate_tx = std::make_shared<validate_transaction>(chain, tx, *this);
         auto ec = validate_tx->check_transaction();
@@ -321,9 +327,9 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
         }
     }
 
-    if (coinbase_count != 1) {
+    /*if (coinbase_count != 1) {
         return error::extra_coinbases;
-    }
+    }*/
 
     if (first_tx_ec) {
         return first_tx_ec;
@@ -588,7 +594,7 @@ code validate_block::connect_block(hash_digest& err_tx, blockchain::block_chain_
 
         RETURN_IF_STOPPED();
 
-        // Count sigops for coinbase tx, but no other checks.
+        // coinbase that has no inputs does not need to check
         if (tx.is_coinbase())
             continue;
 
@@ -662,7 +668,7 @@ bool validate_block::is_spent_duplicate(const transaction& tx) const
 bool validate_block::validate_inputs(const transaction& tx,
                                      size_t index_in_parent, uint64_t& value_in, size_t& total_sigops) const
 {
-    BITCOIN_ASSERT(!tx.is_coinbase());
+    //BITCOIN_ASSERT(!tx.is_coinbase());
 
     ////////////// TODO: parallelize. //////////////
     for (size_t input_index = 0; input_index < tx.inputs.size(); ++input_index)

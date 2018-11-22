@@ -287,35 +287,34 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
 }
 
 miner::transaction_ptr miner::create_coinbase_tx(
-    const wallet::payment_address& pay_address, uint64_t value,
-    uint64_t block_height, int lock_height, uint32_t reward_lock_time)
+    const wallet::payment_address& pay_address, uint64_t value, uint64_t block_height)
 {
     transaction_ptr ptransaction = make_shared<message::transaction_message>();
-    ptransaction->version = version;
+    
     const uint64_t unspent_token = fetch_utxo(ptransaction,pay_address);
     if(!unspent_token)
     {
+        ptransaction->version = version;
         ptransaction->inputs.resize(1);
         ptransaction->inputs[0].previous_output = {null_hash, max_uint32};
         script_number number(block_height);
         ptransaction->inputs[0].script.operations.push_back({ chain::opcode::special, number.data() });
     }
+    else
+    {
+        ptransaction->version = transaction_version::check_output_script;
+    }
+    ptransaction->locktime = 0;
 
     if (value > 0)
     {
         ptransaction->outputs.resize(2);
         
-        ptransaction->locktime = reward_lock_time;
-        if (lock_height > 0)
-        {
-            ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
-            ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
-        }
-        else
-        {
-            ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
-            ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
-        }
+        
+
+        ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+        
 
         auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
         auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
@@ -328,15 +327,8 @@ miner::transaction_ptr miner::create_coinbase_tx(
     else
     {
         ptransaction->outputs.resize(1);
-        ptransaction->locktime = reward_lock_time;
-        if (lock_height > 0)
-        {
-            ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
-        }
-        else
-        {
-            ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
-        }
+       
+        ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));       
 
         auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
         auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
@@ -344,6 +336,35 @@ miner::transaction_ptr miner::create_coinbase_tx(
         ptransaction->outputs[0].value = 0; //1 block
         ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
     }
+
+    return ptransaction;
+}
+
+miner::transaction_ptr miner::create_lock_coinbase_tx(
+    const wallet::payment_address &pay_address, uint64_t value,
+    uint64_t block_height, int lock_height, uint32_t reward_lock_time)
+{
+
+    if (!(lock_height > 0 && value > 0))
+    {
+        return nullptr;
+    }
+
+    transaction_ptr ptransaction = make_shared<message::transaction_message>();
+
+    ptransaction->version = version;
+    ptransaction->inputs.resize(1);
+    ptransaction->inputs[0].previous_output = {null_hash, max_uint32};
+    script_number number(block_height);
+    ptransaction->inputs[0].script.operations.push_back({chain::opcode::special, number.data()});
+
+    ptransaction->outputs.resize(1);
+
+    ptransaction->locktime = reward_lock_time;
+
+    ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_with_lock_height_pattern(short_hash(pay_address), lock_height);
+
+    ptransaction->outputs[0].value = value;
 
     return ptransaction;
 }
@@ -470,7 +491,7 @@ bool miner::get_spendable_output(chain::output& output, const chain::history& ro
     } else if (tx_temp.is_coinbase()) { // incase readd deposit
         // coin base ucn maturity ucn check
         // coinbase_maturity ucn check
-        if (row.output_height == 0 /*|| ((row.output_height + coinbase_maturity) > height)*/) {
+        if (row.output_height == 0 /*|| (row.output_height + coinbase_maturity) > height*/) {
             return false;
         }
     }
@@ -550,7 +571,7 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
     }
 
     // Create coinbase tx
-    pblock->transactions.push_back(*create_coinbase_tx(pay_address, 0, current_block_height + 1, 0, 0));
+    pblock->transactions.push_back(*create_coinbase_tx(pay_address, 0, current_block_height + 1));
 
     // Largest block you're willing to create:
     unsigned int block_max_size = blockchain::max_block_size / 2;
@@ -646,9 +667,13 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
         for (const auto& output : ptx->outputs) {
             if (chain::operation::is_pay_key_hash_with_lock_height_pattern(output.script.operations)) {
                 int lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(output.script.operations);
-                coinage_reward_coinbase = create_coinbase_tx(wallet::payment_address::extract(ptx->outputs[0].script),
+                coinage_reward_coinbase = create_lock_coinbase_tx(wallet::payment_address::extract(ptx->outputs[0].script),
                                           calculate_lockblock_reward(lock_height, output.value),
                                           current_block_height + 1, lock_height, reward_lock_time);
+
+                if (!coinage_reward_coinbase) {
+                    continue;
+                }
                 unsigned int tx_sig_length = blockchain::validate_block::validate_block::legacy_sigops_count(*coinage_reward_coinbase);
                 if (total_tx_sig_length + tx_sig_length >= blockchain::max_block_script_sigops) {
                     continue;
@@ -921,16 +946,7 @@ bool miner::set_miner_pri_key(const string& pri_key)
     this->pri_key = pri_key;
 }
 
-// void miner::set_user(const std::string& name, const std::string& passwd)
-// {
-//     this->name_ = name;
-//     this->passwd_ = passwd;
-// }
 
-bool miner::check_user(const std::string& name, const std::string& passwd)
-{
-    return this->name_== name && this->passwd_ == passwd;
-}
 
 bool miner::set_miner_payment_address(const bc::wallet::payment_address& address)
 {

@@ -87,6 +87,8 @@ public:
     bool script_hash_signature_operations_count(size_t &count, const chain::input& input,
         vector<transaction_ptr>& transactions);
     transaction_ptr create_coinbase_tx(const wallet::payment_address& pay_addres,
+        uint64_t value,uint64_t block_height);
+    transaction_ptr create_lock_coinbase_tx(const wallet::payment_address& pay_addres,
         uint64_t value, uint64_t block_height, int lock_height, uint32_t reward_lock_time);
 
     block_ptr get_block(bool is_force_create_block = false);
@@ -100,7 +102,6 @@ public:
     const std::string get_miner_address();
     bool set_miner_pri_key(const std::string& pri_key);
     //void set_user(const std::string& name, const std::string& passwd);
-    bool check_user(const std::string& name, const std::string& passwd);
     void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
     vector<std::string>& get_miners();
     

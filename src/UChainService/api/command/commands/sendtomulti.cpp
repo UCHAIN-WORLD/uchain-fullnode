@@ -54,7 +54,10 @@ console_result sendtomulti::invoke (Json::Value& jv_output,
 
     // change address
     std::string change_address = get_address(option_.change, blockchain);
-
+    //should own the address
+    if(!blockchain.get_account_address(auth_.name, change_address))
+        throw account_authority_exception{"change address not belongs to you."};
+        
     auto send_helper = sending_ucn(*this, blockchain,
         std::move(auth_.name), std::move(auth_.auth),
         "", std::move(receiver),

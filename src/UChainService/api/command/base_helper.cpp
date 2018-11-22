@@ -707,13 +707,13 @@ bool base_transfer_common::get_spendable_output(
                 return false;
             }
         }
-    } else if (tx_temp.is_coinbase()) { // incase readd deposit
+    } //else if (tx_temp.is_coinbase()) { // incase readd deposit
         // coin base ucn maturity ucn check
         // coinbase_maturity ucn check
-        if (/*(row.output_height == 0) ||*/ ((row.output_height + coinbase_maturity) > height)) {
-            return false;
-        }
-    }
+        //if (/*(row.output_height == 0) ||*/ ((row.output_height + coinbase_maturity) > height)) {
+        //    return false;
+        //}
+    //}
 
     return true;
 }
