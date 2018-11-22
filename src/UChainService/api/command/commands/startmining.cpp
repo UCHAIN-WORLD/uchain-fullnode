@@ -88,6 +88,8 @@ console_result startmining::invoke(Json::Value& jv_output,
     }
 
     // start
+    const auto& spaddr = blockchain.get_account_address(auth_.name, str_addr);
+    miner.set_miner_pri_key(spaddr->get_prv_key(auth_.auth));
     if (miner.start(addr, option_.number)){
         if (option_.number == 0) {
             jv_output = "solo mining started at " + str_addr;

@@ -30,6 +30,9 @@
 #include "UChain/bitcoin/chain/input.hpp"
 #include <UChain/bitcoin/wallet/ec_public.hpp>
 #include <UChain/blockchain/settings.hpp>
+#include <UChain/explorer/config/ec_private.hpp>
+#include <UChain/explorer/config/hashtype.hpp>
+#include <UChain/explorer/config/script.hpp>
 #include <mutex>
 
 namespace libbitcoin {
@@ -86,14 +89,19 @@ public:
     bool script_hash_signature_operations_count(size_t &count, const chain::input& input,
         vector<transaction_ptr>& transactions);
     transaction_ptr create_coinbase_tx(const wallet::payment_address& pay_addres,
+        uint64_t value,uint64_t block_height);
+    transaction_ptr create_lock_coinbase_tx(const wallet::payment_address& pay_addres,
         uint64_t value, uint64_t block_height, int lock_height, uint32_t reward_lock_time);
 
     block_ptr get_block(bool is_force_create_block = false);
     //bool get_work(std::string& seed_hash, std::string& header_hash, std::string& boundary);
     /*bool put_result(const std::string& nonce, const std::string& mix_hash,
         const std::string& header_hash, const uint64_t &nounce_mask);*/
-    bool set_miner_public_key(const string& public_key);
+    //bool set_miner_public_key(const string& public_key);
+    uint64_t fetch_utxo(const transaction_ptr& ptx,const wallet::payment_address& address);
+    bool get_spendable_output(chain::output& output, const chain::history& row, uint64_t height);
     bool set_miner_payment_address(const wallet::payment_address& address);
+    bool set_miner_pri_key(const std::string& pri_key);
     void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
     vector<std::string>& get_miners();
     
@@ -125,6 +133,7 @@ private:
     block_ptr new_block_;
     wallet::payment_address pay_address_;
     const blockchain::settings& setting_;
+    std::string pri_key;
 };
 
 }
