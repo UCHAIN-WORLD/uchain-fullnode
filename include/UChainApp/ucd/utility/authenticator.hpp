@@ -18,31 +18,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainApp/ucd/messages/route.hpp>
+#ifndef UC_SERVER_SECURE_AUTHENTICATOR_HPP
+#define UC_SERVER_SECURE_AUTHENTICATOR_HPP
 
-#include <string>
-#include <boost/functional/hash_fwd.hpp>
-#include <UChain/bitcoin.hpp>
+#include <memory>
+#include <UChain/protocol.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/settings.hpp>
 
 namespace libbitcoin {
 namespace server {
 
-route::route()
-  : secure(false), delimited(false)
-{
-}
+class server_node;
 
-std::string route::display() const
+class BCS_API authenticator
+  : public bc::protocol::zmq::authenticator
 {
-    return "[" + encode_base16(address1) +
-        /*":" + encode_base16(address2) +*/ "]";
-}
+public:
+    typedef std::shared_ptr<authenticator> ptr;
 
-bool route::operator==(const route& other) const
-{
-    return secure == other.secure && /*delimited == other.delimited &&*/
-        address1 == other.address1 /*&& address2 == other.address2*/;
-}
+    /// Construct an instance of the authenticator.
+    authenticator(server_node& node);
+
+    /// This class is not copyable.
+    authenticator(const authenticator&) = delete;
+    void operator=(const authenticator&) = delete;
+
+    /// Apply authentication to the socket.
+    bool apply(bc::protocol::zmq::socket& socket, const std::string& domain,
+        bool secure);
+};
 
 } // namespace server
 } // namespace libbitcoin
+
+#endif

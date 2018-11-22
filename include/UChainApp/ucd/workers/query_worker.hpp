@@ -25,9 +25,9 @@
 #include <string>
 #include <unordered_map>
 #include <UChain/protocol.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/messages/message.hpp>
-#include <UChain/server/settings.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/settings.hpp>
 
 namespace libbitcoin {
 namespace server {

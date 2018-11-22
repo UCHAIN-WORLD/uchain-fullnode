@@ -24,8 +24,8 @@
 #include <cstddef>
 #include <boost/functional/hash_fwd.hpp>
 #include <UChain/bitcoin.hpp>
-#include <UChain/server/messages/route.hpp>
-#include <UChain/server/define.hpp>
+#include <UChainApp/ucd/messages/route.hpp>
+#include <UChainApp/ucd/define.hpp>
 
 namespace libbitcoin {
 namespace server {

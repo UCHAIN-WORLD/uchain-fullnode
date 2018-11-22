@@ -19,11 +19,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <iostream>
-#include <UChain/server.hpp>
+#include <UChainApp/ucd.hpp>
 #include <UChainService/txs/utility/callstack.hpp>
 #include <UChainService/txs/utility/daemon.hpp>
 #include "executor.hpp"
-#include <UChain/server/utility/coredump.hpp>
+#include <UChainApp/ucd/utility/coredump.hpp>
 
 BC_USE_UC_MAIN
 

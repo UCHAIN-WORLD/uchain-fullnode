@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/server/services/query_service.hpp>
+#include <UChainApp/ucd/services/query_service.hpp>
 
 #include <UChain/protocol.hpp>
-#include <UChain/server/server_node.hpp>
-#include <UChain/server/settings.hpp>
+#include <UChainApp/ucd/server_node.hpp>
+#include <UChainApp/ucd/settings.hpp>
 
 namespace libbitcoin {
 namespace server {

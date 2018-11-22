@@ -27,7 +27,7 @@
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/command.hpp>
 #include <UChainService/txs/token/token_detail.hpp>  // used for createtoken
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 namespace libbitcoin {
 namespace explorer {

@@ -19,7 +19,7 @@
 #include <sstream>
 #include <UChain/explorer/json_helper.hpp>
 #include <UChainService/api/restful//WsPushServ.hpp>
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 namespace mgbubble {
 constexpr auto EV_VERSION     = "version";

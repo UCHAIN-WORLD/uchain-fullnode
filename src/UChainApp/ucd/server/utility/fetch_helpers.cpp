@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/server/utility/fetch_helpers.hpp>
+#include <UChainApp/ucd/utility/fetch_helpers.hpp>
 
 #include <cstdint>
 #include <cstddef>
 #include <UChain/blockchain.hpp>
-#include <UChain/server/config.hpp>
-#include <UChain/server/messages/message.hpp>
+#include <UChainApp/ucd/config.hpp>
+#include <UChainApp/ucd/messages/message.hpp>
 
 namespace libbitcoin {
 namespace server {

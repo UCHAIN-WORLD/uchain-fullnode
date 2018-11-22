@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/server/utility/authenticator.hpp>
+#include <UChainApp/ucd/utility/authenticator.hpp>
 
 #include <string>
 #include <UChain/protocol.hpp>
-#include <UChain/server/config.hpp>
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/config.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 namespace libbitcoin {
 namespace server {

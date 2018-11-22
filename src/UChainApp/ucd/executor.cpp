@@ -30,7 +30,7 @@
 #include <string>
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
-#include <UChain/server.hpp>
+#include <UChainApp/ucd.hpp>
 #include <UChainService/txs/utility/callstack.hpp>
 #include <UChainService/txs/utility/path.hpp>
 
