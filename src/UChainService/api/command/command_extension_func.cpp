@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -47,6 +47,7 @@
 #include <UChainService/api/command/commands/checkaccountinfo.hpp>
 #include <UChainService/api/command/commands/deleteaccount.hpp>
 #include <UChainService/api/command/commands/showaddresses.hpp>
+#include <UChainService/api/command/commands/showminers.hpp>
 #include <UChainService/api/command/commands/addaddress.hpp>
 #include <UChainService/api/command/commands/showblock.hpp>
 #include <UChainService/api/command/commands/validateaddress.hpp>
@@ -132,6 +133,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<stopmining>());
     func(make_shared<showmininginfo>());
     func(make_shared<setminingaccount>());
+    func(make_shared<showminers>());
     func(make_shared<showwork>());
     func(make_shared<submitwork>());
     func(make_shared<showmemorypool>());
@@ -257,6 +259,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<submitwork>();
     if (symbol == showmemorypool::symbol())
         return make_shared<showmemorypool>();
+    if (symbol == showminers::symbol())
+        return make_shared<showminers>();
 
     // block & tx
     if (symbol == showblockheight::symbol())

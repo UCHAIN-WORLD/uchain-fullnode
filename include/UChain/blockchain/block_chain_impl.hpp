@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -336,6 +336,7 @@ public:
     organizer& get_organizer();
     bool get_transaction(const hash_digest& hash,
         chain::transaction& tx, uint64_t& tx_height);
+    bool is_coinbase(const chain::transaction& tx);
     bool get_transaction_callback(const hash_digest& hash,
     std::function<void(const code&, const chain::transaction&)> handler);
     bool get_history_callback(const payment_address& address,

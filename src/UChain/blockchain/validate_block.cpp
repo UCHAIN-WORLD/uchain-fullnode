@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -236,11 +236,11 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
             }
             if (!(i.outputs.size() == 2 && i.outputs[1].is_token_transfer() 
             && i.outputs[1].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL
-            && i.outputs[1].get_token_transfer().get_quantity() == 1)) {
+            /*&& i.outputs[1].get_token_transfer().get_quantity() == 1*/)) {
                 return error::first_not_coinbase;
             }
             ++coinbase_count;
-        }
+        }  
     }
     if (coinbase_count == 0) {
         return error::first_not_coinbase;
@@ -336,6 +336,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
             }
             chain.pool().delete_tx(tx.hash());
         }
+        
     }
 
     if (first_tx_ec) {

@@ -46,7 +46,7 @@ using namespace libbitcoin::chain;
 #define TOKEN_CERT_TYPE TYPE2UINT32(asset::asset_type::asset_token_cert)
 #define TOKEN_CARD_TYPE  TYPE2UINT32(asset::asset_type::asset_token_card)
 
-#define UID_ATTACH_VERIFY_VERSION       TYPE2UINT32(207)
+#define UID_ASSET_VERIFY_VERSION       TYPE2UINT32(7)
 
 
 namespace libbitcoin {

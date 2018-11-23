@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-api.
  *
@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "showcard";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Get information of MIT."; }
+    const char* description() override { return "Get information of card."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -66,7 +66,7 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol),
-            "Asset symbol. If not specified then show whole network MIT symbols."
+            "Asset symbol. If not specified then show whole network card symbols."
         )
         (
             "trace,t",
@@ -76,7 +76,7 @@ public:
         (
             "limit,l",
             value<uint32_t>(&option_.limit)->default_value(100),
-            "MIT count per page."
+            "card count per page."
         )
         (
             "index,i",
@@ -86,7 +86,7 @@ public:
         (
             "current,c",
             value<bool>(&option_.show_current)->default_value(false)->zero_tokens(),
-            "If specified then show the lastest information of specified MIT. Default is not specified."
+            "If specified then show the lastest information of specified card. Default is not specified."
         )
         ;
 

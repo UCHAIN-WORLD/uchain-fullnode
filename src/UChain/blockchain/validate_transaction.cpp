@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -353,7 +353,7 @@ code validate_transaction::check_tx_connect_input() const
 
     if (tx_->has_token_card_transfer()) {
         if (!check_token_card(*tx_)) {
-            log::debug(LOG_BLOCKCHAIN) << "failed to check MIT token." << tx_->to_string(1);
+            log::debug(LOG_BLOCKCHAIN) << "failed to check card token." << tx_->to_string(1);
             return error::card_error;
         }
     }
@@ -370,25 +370,24 @@ code validate_transaction::check_tx_connect_input() const
 code validate_transaction::check_tx_connect_output() const
 {
     uint64_t value = 0, quatity = 0, lock_height = 0;
-    libbitcoin::chain::token token_info;
-    libbitcoin::chain::token_transfer trans_info;
-    for(auto& ele : tx_->outputs)
+
+    for (auto &ele : tx_->outputs)
     {
-        if(chain::operation::is_pay_key_hash_with_lock_height_pattern(ele.script.operations))
+        if (chain::operation::is_pay_key_hash_with_lock_height_pattern(ele.script.operations))
         {
             lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(ele.script.operations);
-            if(lock_height == VOTE_LOCKED_TIME)
+            if (lock_height == VOTE_LOCKED_TIME)
                 value += ele.value;
         }
-        if(ele.is_vote())
+        if (ele.is_vote())
         {
-            token_info = boost::get<bc::chain::token>(ele.attach_data.get_attach());
-            trans_info = boost::get<bc::chain::token_transfer>(token_info.get_data()); 
-            quatity += trans_info.get_quantity();
+            auto&& token_transfer = ele.get_token_transfer();
+            quatity += token_transfer.get_quantity();
         }
     }
 
-    if(quatity>20 || quatity*TIMES_QUANTITY_TO_VALUE != value){    // TODO: for debug
+    if (quatity * TIMES_QUANTITY_TO_VALUE != value)
+    { // TODO: for debug
         return error::invalid_quantity_or_value;
     }
     return error::success;
@@ -893,7 +892,7 @@ code validate_transaction::check_token_card_transaction() const
             token_symbol = token_info.get_symbol();
 
             if (!check_same(token_address, token_info.get_address())) {
-                log::debug(LOG_BLOCKCHAIN) << "register MIT: "
+                log::debug(LOG_BLOCKCHAIN) << "register card: "
                                            << " address is not same. "
                                            << token_address << " != " << token_info.get_address();
                 return error::card_register_error;
@@ -901,14 +900,14 @@ code validate_transaction::check_token_card_transaction() const
 
             // check token not exists
             if (check_token_card_exist(token_symbol)) {
-                log::debug(LOG_BLOCKCHAIN) << "register MIT: "
+                log::debug(LOG_BLOCKCHAIN) << "register card: "
                                            << token_symbol << " already exists.";
                 return error::card_exist;
             }
         }
         else if (output.is_token_card_transfer()) {
             if (++num_card_transfer > 1) {
-                log::debug(LOG_BLOCKCHAIN) << "transfer MIT: more than on MIT output." << output.to_string(1);
+                log::debug(LOG_BLOCKCHAIN) << "transfer card: more than on card output." << output.to_string(1);
                 return error::card_error;
             }
 
@@ -917,14 +916,14 @@ code validate_transaction::check_token_card_transaction() const
         }
         else if (output.is_ucn()) {
             if (!check_same(token_address, output.get_script_address())) {
-                log::debug(LOG_BLOCKCHAIN) << "MIT: "
+                log::debug(LOG_BLOCKCHAIN) << "card: "
                                            << " address is not same. "
                                            << token_address << " != " << output.get_script_address();
                 return error::card_register_error;
             }
         }
         else if (!output.is_message()) {
-            log::debug(LOG_BLOCKCHAIN) << "MIT: illegal output, "
+            log::debug(LOG_BLOCKCHAIN) << "card: illegal output, "
                                        << token_symbol << " : " << output.to_string(1);
             return error::card_error;
         }
@@ -932,7 +931,7 @@ code validate_transaction::check_token_card_transaction() const
 
     if ((num_card_register == 0 && num_card_transfer == 0)
         || (num_card_register > 0 && num_card_transfer > 0)) {
-        log::debug(LOG_BLOCKCHAIN) << "MIT: illegal output.";
+        log::debug(LOG_BLOCKCHAIN) << "card: illegal output.";
         return error::card_error;
     }
 
@@ -942,7 +941,7 @@ code validate_transaction::check_token_card_transaction() const
         chain::transaction prev_tx;
         uint64_t prev_height{0};
         if (!get_previous_tx(prev_tx, prev_height, input)) {
-            log::debug(LOG_BLOCKCHAIN) << "MIT: input not found: "
+            log::debug(LOG_BLOCKCHAIN) << "card: input not found: "
                                        << encode_hash(input.previous_output.hash);
             return error::input_not_found;
         }
@@ -951,7 +950,7 @@ code validate_transaction::check_token_card_transaction() const
         if (prev_output.is_ucn()) {
             auto&& token_address_in = prev_output.get_script_address();
             if (token_address != token_address_in) {
-                log::debug(LOG_BLOCKCHAIN) << "MIT: invalid input address to pay fee: "
+                log::debug(LOG_BLOCKCHAIN) << "card: invalid input address to pay fee: "
                                             << token_address_in << " != " << token_address;
                 return error::validate_inputs_failed;
             }
@@ -959,7 +958,7 @@ code validate_transaction::check_token_card_transaction() const
         else if (prev_output.is_token_card()) {
             auto&& token_info = prev_output.get_token_card();
             if (token_symbol != token_info.get_symbol()) {
-                log::debug(LOG_BLOCKCHAIN) << "MIT: invalid MIT to transfer: "
+                log::debug(LOG_BLOCKCHAIN) << "card: invalid card to transfer: "
                                             << token_info.get_symbol() << " != " << token_symbol;
                 return error::validate_inputs_failed;
             }
@@ -969,7 +968,7 @@ code validate_transaction::check_token_card_transaction() const
     }
 
     if (num_card_transfer > 0 && !has_input_transfer) {
-        log::debug(LOG_BLOCKCHAIN) << "MIT: no input MIT to transfer " << token_symbol;
+        log::debug(LOG_BLOCKCHAIN) << "card: no input card to transfer " << token_symbol;
         return error::validate_inputs_failed;
     }
 
@@ -1128,7 +1127,7 @@ code validate_transaction::check_uid_transaction() const
             }
         }
         else if (output.is_token_issue() || output.is_token_secondaryissue()) {
-            if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION
+            if (output.attach_data.get_version() == UID_ASSET_VERIFY_VERSION
                     && output.get_token_issuer() != output.attach_data.get_to_uid()) {
                 log::debug(LOG_BLOCKCHAIN)
                         << "token issuer " << output.get_token_issuer()
@@ -1138,7 +1137,7 @@ code validate_transaction::check_uid_transaction() const
             }
         }
         else if (output.is_token_cert()) {
-            if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION) {
+            if (output.attach_data.get_version() == UID_ASSET_VERIFY_VERSION) {
                 if (output.get_token_cert_owner() != output.attach_data.get_to_uid()) {
                     log::debug(LOG_BLOCKCHAIN)
                             << "cert owner " << output.get_token_cert_owner()
@@ -1371,7 +1370,7 @@ code validate_transaction::check_transaction_basic() const
     if (tx.inputs.empty() || tx.outputs.empty())
         return error::empty_transaction;
 
-    if (tx.serialized_size() > max_transaction_size)
+    if (tx.serialized_size() > max_transaction_size)  
         return error::size_limits;
 
     // check double spend in inputs
@@ -1434,14 +1433,14 @@ code validate_transaction::check_transaction_basic() const
         }
     }
 
-    if (tx.is_coinbase())
-    {
-        const auto& coinbase_script = tx.inputs[0].script;
-        const auto coinbase_size = coinbase_script.serialized_size(false);
-        if (coinbase_size < 2 || coinbase_size > 100)
-            return error::invalid_coinbase_script_size;
-    }
-    else
+    // if (tx.is_coinbase())
+    // {
+    //     const auto& coinbase_script = tx.inputs[0].script;
+    //     const auto coinbase_size = coinbase_script.serialized_size(false);
+    //     if (coinbase_size < 2 || coinbase_size > 100)
+    //         return error::invalid_coinbase_script_size;
+    // }
+    if (!tx.is_coinbase())
     {
         for (const auto& input : tx.inputs)
         {

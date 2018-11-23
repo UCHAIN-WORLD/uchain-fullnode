@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -21,7 +21,7 @@
 #include <UChain/bitcoin/constants.hpp>
 
 namespace libbitcoin {
-uint32_t coinbase_maturity = 1000;
+uint32_t coinbase_maturity = 10;
 
 hash_number max_target()
 {
@@ -39,4 +39,11 @@ std::string get_developer_community_address(bool is_testnet)
     return address;
 }
 
+std::vector<std::string> mine_addresses = {
+                                        "UaWMHFWmZYwEFVbwEpaEeMHTm9UL451ZX8",
+                                        "USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4",
+                                        "UZQBebHPQbnesfuFV382AXaoihvucVFqYt"
+                                        //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
+                                        //"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
+                                    };
 } // namespace libbitcoin

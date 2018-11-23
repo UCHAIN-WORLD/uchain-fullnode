@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -128,6 +128,8 @@ BC_CONSTEXPR message::network_address unspecified_network_address
 BC_API hash_number max_target();
 
 BC_API std::string get_developer_community_address(bool is_testnet);
+
+extern std::vector<std::string> mine_addresses ;
 
 } // namespace libbitcoin
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-consensus.
  *
@@ -30,6 +30,9 @@
 #include "UChain/bitcoin/chain/input.hpp"
 #include <UChain/bitcoin/wallet/ec_public.hpp>
 #include <UChain/blockchain/settings.hpp>
+#include <UChain/explorer/config/ec_private.hpp>
+#include <UChain/explorer/config/hashtype.hpp>
+#include <UChain/explorer/config/script.hpp>
 #include <mutex>
 
 namespace libbitcoin {
@@ -44,12 +47,11 @@ namespace consensus {
 BC_CONSTEXPR unsigned int min_tx_fee_per_kb = 1000;
 BC_CONSTEXPR unsigned int median_time_span = 11;
 BC_CONSTEXPR uint32_t version = 1;
-BC_CONSTEXPR uint64_t future_blocktime_fork_height = 1030000;
 
-extern int bucket_size;
+//extern int bucket_size;
 extern vector<uint64_t> lock_heights;
 
-class miner
+class miner 
 {
 public:
     typedef message::block_message block;
@@ -96,6 +98,9 @@ public:
     void get_state(uint64_t &height,  uint64_t &rate, string& difficulty, bool& is_mining);
     bool get_block_header(chain::header& block_header, const string& para);
 
+    void set_user(const std::string& name, const std::string& address, const std::string& passwd) const;
+    int fetch_utxo(transaction_ptr ptx);
+    bool get_spendable_output(chain::output& output, const chain::history& row, uint64_t height);
     static int get_lock_heights_index(uint64_t height);
     static uint64_t calculate_block_subsidy(uint64_t height, bool is_testnet);
     static uint64_t calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num);
@@ -122,6 +127,11 @@ private:
     block_ptr new_block_;
     wallet::payment_address pay_address_;
     const blockchain::settings& setting_;
+
+    //user identity
+    std::string name_;
+    std::string addr_;
+    std::string passwd_;
 };
 
 }

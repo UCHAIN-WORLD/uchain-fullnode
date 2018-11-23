@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -169,7 +169,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
         for (auto &output : txs->outputs)
         {
             //add asset check;avoid send with uid while transfer
-            if (output.attach_data.get_version() == UID_ATTACH_VERIFY_VERSION)
+            if (output.attach_data.get_version() == UID_ASSET_VERIFY_VERSION)
             {
                 auto check_uid = [&uids, &uidattaches](string attach_uid) {
                     if (!attach_uid.empty() && uids.find(attach_uid) != uids.end())

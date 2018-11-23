@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -155,7 +155,7 @@ std::string get_address(const std::string& uid_or_address,
         else {
             attach.set_to_uid(uid_or_address);
         }
-        attach.set_version(UID_ATTACH_VERIFY_VERSION);
+        attach.set_version(UID_ASSET_VERIFY_VERSION);
     }
     return address;
 }
@@ -933,7 +933,7 @@ void base_transfer_common::sum_payments()
         if (iter.type == utxo_attach_type::token_card_transfer) {
             ++payment_card_;
             if (payment_card_ > 1) {
-                throw std::logic_error{"maximum one MIT can be transfered"};
+                throw std::logic_error{"maximum one card can be transfered"};
             }
         }
         else if (iter.type == utxo_attach_type::uid_transfer) {
@@ -993,7 +993,7 @@ void base_transfer_common::check_payment_satisfied(filter filter) const
     }
 
     if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_card_ < payment_card_)) {
-        throw token_lack_exception{"not enough MIT amount, unspent = "
+        throw token_lack_exception{"not enough card amount, unspent = "
             + std::to_string(unspent_card_) + ", payment = " + std::to_string(payment_card_)};
     }
 
@@ -1086,7 +1086,7 @@ void base_transfer_common::populate_ucn_change(const std::string& address)
             }
 
             asset attach;
-            attach.set_version(UID_ATTACH_VERIFY_VERSION);
+            attach.set_version(UID_ASSET_VERIFY_VERSION);
             attach.set_to_uid(addr);
             receiver_list_.push_back(
                 {uiddetail->get_address(), "", unspent_ucn_ - payment_ucn_, 0, utxo_attach_type::ucn, attach});
@@ -1121,7 +1121,7 @@ void base_transfer_common::populate_token_change(const std::string& address)
             }
 
             asset attach;
-            attach.set_version(UID_ATTACH_VERIFY_VERSION);
+            attach.set_version(UID_ASSET_VERIFY_VERSION);
             attach.set_to_uid(addr);
             receiver_list_.push_back({uiddetail->get_address(), symbol_, 0, unspent_token_ - payment_token_,
                 utxo_attach_type::token_transfer, attach});
@@ -1239,8 +1239,8 @@ void base_transfer_common::populate_tx_inputs()
 
 void base_transfer_common::set_uid_verify_asset(const receiver_record& record, asset& attach)
 {
-    if (record.attach_elem.get_version() == UID_ATTACH_VERIFY_VERSION) {
-        attach.set_version(UID_ATTACH_VERIFY_VERSION);
+    if (record.attach_elem.get_version() == UID_ASSET_VERIFY_VERSION) {
+        attach.set_version(UID_ASSET_VERIFY_VERSION);
         attach.set_to_uid(record.attach_elem.get_to_uid());
         attach.set_from_uid(record.attach_elem.get_from_uid());
     }
@@ -1623,7 +1623,7 @@ void base_transaction_constructor::populate_unspent_list()
     populate_change();
 }
 
-const std::vector<uint16_t> depositing_ucn::vec_cycle{7, 30, 90, 182, 365};
+const std::vector<uint16_t> depositing_ucn::vec_cycle{10, 45, 120, 240, 540};
 
 uint32_t depositing_ucn::get_reward_lock_height() const
 {
@@ -1663,7 +1663,7 @@ depositing_ucn::get_script_operations(const receiver_record& record) const
     return payment_ops;
 }
 
-const std::vector<uint16_t> depositing_ucn_transaction::vec_cycle{7, 30, 90, 182, 365};
+const std::vector<uint16_t> depositing_ucn_transaction::vec_cycle{10, 45, 120, 240, 540};
 
 uint32_t depositing_ucn_transaction::get_reward_lock_height() const
 {
@@ -2109,13 +2109,13 @@ asset registering_card::populate_output_asset(const receiver_record& record)
     if (record.type == utxo_attach_type::token_card) {
         auto iter = card_map_.find(record.symbol);
         if (iter == card_map_.end()) {
-            throw tx_asset_value_exception{"invalid MIT issue asset"};
+            throw tx_asset_value_exception{"invalid card issue asset"};
         }
 
         auto ass = token_card(record.symbol, record.target, iter->second);
         ass.set_status(CARD_STATUS_REGISTER);
         if (!ass.is_valid()) {
-            throw tx_asset_value_exception{"invalid MIT issue asset"};
+            throw tx_asset_value_exception{"invalid card issue asset"};
         }
 
         attach.set_attach(ass);
@@ -2132,7 +2132,7 @@ asset transferring_card::populate_output_asset(const receiver_record& record)
         auto ass = token_card(record.symbol, record.target, "");
         ass.set_status(CARD_STATUS_TRANSFER);
         if (!ass.is_valid()) {
-            throw tx_asset_value_exception{"invalid MIT transfer asset"};
+            throw tx_asset_value_exception{"invalid card transfer asset"};
         }
 
         attach.set_attach(ass);
