@@ -301,6 +301,9 @@ hash_digest transaction::hash(uint32_t sighash_type) const
 bool transaction::is_coinbase() const
 {
     //return (inputs.size() == 1) && inputs[0].previous_output.is_null();
+    if (is_strict_coinbase()) {
+        return true;
+    }
     return  inputs.size() == 1 
             && outputs.size() <= 2
             && outputs[0].is_token_transfer() 

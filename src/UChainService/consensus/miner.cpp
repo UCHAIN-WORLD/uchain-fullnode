@@ -401,11 +401,11 @@ uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const wallet::payment_ad
             continue;
         }
 
-        auto ucn_amount = row.value;
+        //auto ucn_amount = row.value;
         auto token_total_amount = output.get_token_amount();
         auto cert_type = output.get_token_cert_type();
 
-        BITCOIN_ASSERT(ucn_amount == 0);
+        //BITCOIN_ASSERT(ucn_amount == 0);
         BITCOIN_ASSERT(cert_type == token_cert_ns::none);
         if (token_total_amount == 0)
             continue;
