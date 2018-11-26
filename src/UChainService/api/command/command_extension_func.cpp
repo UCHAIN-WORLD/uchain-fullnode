@@ -176,9 +176,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     
     // token
     os <<"token:\r\n";
-    func(make_shared<createtoken>());
+    /*func(make_shared<createtoken>());
     func(make_shared<deletetoken>());
-    func(make_shared<registertoken>());
+    func(make_shared<registertoken>());*/
     /*func(make_shared<registersecondarytoken>());*/
     func(make_shared<sendtokento>());
     func(make_shared<sendtokenfrom>());
@@ -327,10 +327,10 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<sendfrom>();
 
     // token
-    if (symbol == createtoken::symbol())
+    /*if (symbol == createtoken::symbol())
         return make_shared<createtoken>();
     if (symbol == deletetoken::symbol() || symbol == "deletetoken" )
-        return make_shared<deletetoken>();
+        return make_shared<deletetoken>();*/
     if (symbol == showtokens::symbol())
         return make_shared<showtokens>();
     if (symbol == showtoken::symbol())
@@ -341,8 +341,8 @@ shared_ptr<command> find_extension(const string& symbol)
     //     return make_shared<showtokenview>();
     if (symbol == showaddresstoken::symbol())
         return make_shared<showaddresstoken>();
-    if (symbol == registertoken::symbol())
-        return make_shared<registertoken>();
+    /*if (symbol == registertoken::symbol())
+        return make_shared<registertoken>();*/
     /*if (symbol == registersecondarytoken::symbol() || (symbol == "additionalissue") )
         return make_shared<registersecondarytoken>();*/
     if (symbol == sendtokento::symbol() || symbol == "uidsendtokento")
