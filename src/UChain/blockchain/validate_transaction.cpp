@@ -1277,7 +1277,7 @@ code validate_transaction::connect_asset_from_uid(const output& output) const
 
 code validate_transaction::check_transaction_connect_input(size_t last_height)
 {
-    if (last_height == 0 || tx_->is_coinbase()) {
+    if (last_height == 0 || tx_->is_strict_coinbase()) {
         return error::success;
     }
 
@@ -1596,7 +1596,15 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
     }
 
     value_in_ += output_value;
-    token_amount_in_ += token_transfer_amount;
+
+    //for block token amount +1
+    if (previous_tx.is_coinbase()) {
+        token_amount_in_ += (token_transfer_amount+1);
+    }
+    else {
+        token_amount_in_ += token_transfer_amount;
+    }
+    
     if (token_certs != token_cert_ns::none) {
         token_certs_in_.push_back(token_certs);
     }
@@ -1685,7 +1693,11 @@ bool validate_transaction::tally_fees(blockchain::block_chain_impl& chain,
         return false;
 
     const auto fee = value_in - value_out;
-    if (fee < min_tx_fee) {
+    if (tx.is_token_block_coinbase()) {
+        if (fee!=0)
+            return false;
+    }
+    else if (fee < min_tx_fee) {
         return false;
     }
 
