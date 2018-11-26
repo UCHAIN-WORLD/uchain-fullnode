@@ -1351,6 +1351,11 @@ void base_transfer_helper::populate_unspent_list()
         throw address_list_nullptr_exception{"nullptr for address list"};
     }
 
+    if(!from_.empty() && filter_out_address(from_))
+    {
+        throw tx_source_exception{"from address cannot be multi-signed. "};
+    }
+
     // get from address balances
     for (auto& each : *pvaddr) {
         const auto& address = each.get_address();

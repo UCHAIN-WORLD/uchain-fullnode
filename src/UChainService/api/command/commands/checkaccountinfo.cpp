@@ -58,7 +58,7 @@ console_result checkaccountinfo::invoke(Json::Value& jv_output,
     else {
         root["name"] = acc->get_name();
         root["mnemonic"] = mnemonic;
-        root["address_count"] = acc->get_hd_index() + 1;
+        root["address_count"] = acc->get_hd_index();
     }
 
     return console_result::okay;
