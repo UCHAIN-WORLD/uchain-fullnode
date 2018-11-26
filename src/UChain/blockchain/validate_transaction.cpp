@@ -103,7 +103,7 @@ code validate_transaction::basic_checks() const
         return ec;
 
     // This should probably preceed check_transaction.
-    if (tx_->is_coinbase())
+    if (tx_->is_strict_coinbase())
         return error::coinbase_transaction;
 
     // Ummm...

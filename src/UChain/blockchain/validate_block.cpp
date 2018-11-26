@@ -595,7 +595,7 @@ code validate_block::connect_block(hash_digest& err_tx, blockchain::block_chain_
         RETURN_IF_STOPPED();
 
         // coinbase that has no inputs does not need to check
-        if (tx.is_coinbase())
+        if (tx.is_strict_coinbase())
             continue;
 
         for (auto& output : transactions[tx_index].outputs)
