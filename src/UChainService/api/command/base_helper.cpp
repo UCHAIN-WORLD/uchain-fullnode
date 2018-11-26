@@ -1385,7 +1385,7 @@ void base_transfer_helper::populate_unspent_list()
     //vote specify
     if (from_list_.empty() && symbol_ != UC_VOTE_TOKEN_SYMBOL) {
         throw tx_source_exception{"not enough ucn or token in from address"
-            ", or you do not own the from address!"};
+            ", or you do not own the from address!(multisig address balance cannot be used in this way)"};
     }
 
     check_payment_satisfied();
