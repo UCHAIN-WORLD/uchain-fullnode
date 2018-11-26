@@ -188,7 +188,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     // func(make_shared<showtokenview>());
     func(make_shared<showaddresstoken>());
     func(make_shared<destroy>());
-    func(make_shared<swaptoken>());
+    //func(make_shared<swaptoken>());
     func(make_shared<vote>());
 
     //os <<"\r\n";
@@ -351,8 +351,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<sendtokenfrom>();
     if (symbol == destroy::symbol())
         return make_shared<destroy>();
-    if (symbol == swaptoken::symbol())
-        return make_shared<swaptoken>();
+    /*if (symbol == swaptoken::symbol())
+        return make_shared<swaptoken>();*/
     if (symbol == vote::symbol())
         return make_shared<vote>();
 
