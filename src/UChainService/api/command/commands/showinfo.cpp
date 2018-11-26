@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -46,10 +46,11 @@ console_result showinfo::invoke(Json::Value& jv_output,
     }
 
     uint64_t height;
-    uint64_t rate;
-    std::string difficulty;
+    //uint64_t rate;
+    uint32_t minercount;
+    //std::string difficulty;
     bool is_solo_mining;
-    //node.miner().get_state(height, rate, difficulty, is_solo_mining);
+    node.miner().get_state(height, minercount, is_solo_mining);
 
     auto& jv = jv_output;
     if (get_api_version() <= 2) {
@@ -63,9 +64,10 @@ console_result showinfo::invoke(Json::Value& jv_output,
         jv["wallet-account-count"] = static_cast<uint64_t>(blockchain.get_accounts()->size());
 
         jv["height"] = height;
-        jv["difficulty"] = difficulty;
+        //jv["difficulty"] = difficulty;
         jv["is-mining"] = is_solo_mining;
-        jv["hash-rate"] = rate;
+        jv["miner-count"] = minercount;
+        //jv["hash-rate"] = rate;
     }
     else {
         jv["protocol_version"] = node.network_settings().protocol;
@@ -78,9 +80,10 @@ console_result showinfo::invoke(Json::Value& jv_output,
         jv["wallet_account_count"] = static_cast<uint64_t>(blockchain.get_accounts()->size());
 
         jv["height"] = height;
-        jv["difficulty"] = difficulty;
+        //jv["miner-count"] = minercount;jv["difficulty"] = difficulty;
         jv["is_mining"] = is_solo_mining;
-        jv["hash_rate"] = rate;
+        jv["miner-count"] = minercount;
+        //jv["hash_rate"] = rate;
     }
 
     return console_result::okay;

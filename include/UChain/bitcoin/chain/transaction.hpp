@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -87,6 +87,7 @@ public:
     // sighash_type is used by OP_CHECKSIG
     hash_digest hash(uint32_t sighash_type) const;
     bool is_coinbase() const;
+    bool is_strict_coinbase() const;
     bool is_final(uint64_t block_height, uint32_t block_time) const;
     bool is_locktime_conflict() const;
     uint64_t total_output_value() const;

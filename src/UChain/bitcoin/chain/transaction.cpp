@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -299,6 +299,15 @@ hash_digest transaction::hash(uint32_t sighash_type) const
 }
 
 bool transaction::is_coinbase() const
+{
+    //return (inputs.size() == 1) && inputs[0].previous_output.is_null();
+    return  inputs.size() == 1 
+            && outputs.size() <= 2
+            && outputs[0].is_token_transfer() 
+            && outputs[0].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL;
+}
+
+bool transaction::is_strict_coinbase() const
 {
     return (inputs.size() == 1) && inputs[0].previous_output.is_null();
 }

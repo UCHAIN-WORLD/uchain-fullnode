@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -58,7 +58,7 @@ console_result checkaccountinfo::invoke(Json::Value& jv_output,
     else {
         root["name"] = acc->get_name();
         root["mnemonic"] = mnemonic;
-        root["address_count"] = acc->get_hd_index() + 1;
+        root["address_count"] = acc->get_hd_index();
     }
 
     return console_result::okay;

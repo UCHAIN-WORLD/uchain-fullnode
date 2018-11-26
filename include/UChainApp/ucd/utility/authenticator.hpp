@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -18,33 +18,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_SERVER_PROTOCOL_HPP
-#define UC_SERVER_PROTOCOL_HPP
+#ifndef UC_SERVER_SECURE_AUTHENTICATOR_HPP
+#define UC_SERVER_SECURE_AUTHENTICATOR_HPP
 
-#include <cstddef>
-#include <UChain/server/define.hpp>
-#include <UChain/server/messages/message.hpp>
-#include <UChain/server/server_node.hpp>
+#include <memory>
+#include <UChain/protocol.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/settings.hpp>
 
 namespace libbitcoin {
 namespace server {
 
-/// Protocol interface.
-/// Class and method names are published and mapped to the zeromq interface.
-class BCS_API protocol
+class server_node;
+
+class BCS_API authenticator
+  : public bc::protocol::zmq::authenticator
 {
 public:
-    /// Broadcast a transaction to all connected peers.
-    static void broadcast_transaction(server_node& node,
-        const message& request, send_handler handler);
+    typedef std::shared_ptr<authenticator> ptr;
 
-    /// Determine the count of all connected peers.
-    static void total_connections(server_node& node,
-        const message& request, send_handler handler);
+    /// Construct an instance of the authenticator.
+    authenticator(server_node& node);
 
-private:
-    static void handle_total_connections(size_t count,
-        const message& request, send_handler handler);
+    /// This class is not copyable.
+    authenticator(const authenticator&) = delete;
+    void operator=(const authenticator&) = delete;
+
+    /// Apply authentication to the socket.
+    bool apply(bc::protocol::zmq::socket& socket, const std::string& domain,
+        bool secure);
 };
 
 } // namespace server

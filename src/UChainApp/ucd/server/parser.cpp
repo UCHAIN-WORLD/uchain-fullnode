@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/server/parser.hpp>
+#include <UChainApp/ucd/parser.hpp>
 
 #include <cstdint>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <UChain/node.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/settings.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/settings.hpp>
 #include <UChainService/txs/utility/path.hpp>
 
 BC_DECLARE_CONFIG_DEFAULT_PATH(".UChain" / "uc.conf")

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -30,7 +30,7 @@
 #include <string>
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
-#include <UChain/server.hpp>
+#include <UChainApp/ucd.hpp>
 #include <UChainService/txs/utility/callstack.hpp>
 #include <UChainService/txs/utility/path.hpp>
 

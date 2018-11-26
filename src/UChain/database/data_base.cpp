@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -892,7 +892,7 @@ void data_base::push(const block& block, uint64_t height)
 
         timestamp_ = block.header.timestamp; // for address_token_database store_input/store_output used only
         // Add inputs
-        if (!tx.is_coinbase())
+        if (!tx.is_strict_coinbase())
             push_inputs(tx_hash, height, tx.inputs);
 
         // std::string uidaddress = tx.get_uid_transfer_old_address();
@@ -1053,7 +1053,7 @@ chain::block data_base::pop()
         transactions.remove(tx->hash());
         pop_outputs(tx->outputs, height);
 
-        if (!tx->is_coinbase())
+        if (!tx->is_strict_coinbase())
             pop_inputs(tx->inputs, height);
     }
 

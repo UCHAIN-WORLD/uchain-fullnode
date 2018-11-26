@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -26,16 +26,16 @@
 #include <memory>
 #include <UChain/node.hpp>
 #include <UChain/protocol.hpp>
-#include <UChain/server/config.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/messages/message.hpp>
-#include <UChain/server/messages/route.hpp>
-#include <UChain/server/services/block_service.hpp>
-#include <UChain/server/services/heartbeat_service.hpp>
-#include <UChain/server/services/query_service.hpp>
-#include <UChain/server/services/transaction_service.hpp>
-#include <UChain/server/utility/authenticator.hpp>
-#include <UChain/server/workers/notification_worker.hpp>
+#include <UChainApp/ucd/config.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/route.hpp>
+#include <UChainApp/ucd/services/block_service.hpp>
+#include <UChainApp/ucd/services/heartbeat_service.hpp>
+#include <UChainApp/ucd/services/query_service.hpp>
+#include <UChainApp/ucd/services/transaction_service.hpp>
+#include <UChainApp/ucd/utility/authenticator.hpp>
+#include <UChainApp/ucd/workers/notification_worker.hpp>
 #include <UChainService/txs/utility/path.hpp>
 #include <UChainService/consensus/miner.hpp>
 

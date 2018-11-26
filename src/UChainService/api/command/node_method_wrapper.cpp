@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -27,7 +27,7 @@ namespace commands {
 
 // ----------------------------- checker methods ------------------------------
 
-void administrator_required_checker(bc::server::server_node& node,
+bool administrator_required_checker(bc::server::server_node& node,
         const std::string& name, const std::string& auth)
 {
     auto& blockchain = node.chain_impl();
@@ -37,6 +37,9 @@ void administrator_required_checker(bc::server::server_node& node,
             throw account_authority_exception{"Administrator name must be [administerator],incorrect vocabulary @_@."};
 
         blockchain.is_account_passwd_valid(name, auth);
+        return true;
+    }else{
+        return false;
     }
 }
 

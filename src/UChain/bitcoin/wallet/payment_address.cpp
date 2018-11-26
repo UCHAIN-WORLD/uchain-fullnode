@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
  *
@@ -36,7 +36,7 @@ namespace wallet {
 uint8_t payment_address::mainnet_p2kh = 0x44;
 const uint8_t payment_address::mainnet_p2sh = 0x05;
 
-const std::string payment_address::blackhole_address = "U000000000000000000000000000000000";
+const std::string payment_address::blackhole_address = "1111111111111111111114oLvT2";
 
 payment_address::payment_address()
   : valid_(false), version_(0), hash_(null_short_hash)

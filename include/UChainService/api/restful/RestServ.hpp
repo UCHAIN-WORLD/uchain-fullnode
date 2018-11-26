@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS) 
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS) 
  *
  * This file is part of uc-node.
  *
@@ -26,7 +26,7 @@
 
 #include <UChain/client.hpp>
 #include <UChain/blockchain.hpp>
-#include <UChain/server/services/query_service.hpp> //public_query
+#include <UChainApp/ucd/services/query_service.hpp> //public_query
 
 namespace libbitcoin{
 namespace server{

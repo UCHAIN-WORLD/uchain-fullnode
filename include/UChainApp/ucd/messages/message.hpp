@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -24,8 +24,8 @@
 #include <cstdint>
 #include <string>
 #include <UChain/protocol.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/messages/route.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/messages/route.hpp>
 
 namespace libbitcoin {
 namespace server {

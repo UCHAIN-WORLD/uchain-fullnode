@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -68,7 +68,7 @@ console_result registercard::invoke (Json::Value& jv_output,
 
         // check symbol not registered
         if (blockchain.get_registered_card(argument_.symbol)) {
-            throw token_symbol_existed_exception{"MIT already exists in blockchain. " + argument_.symbol};
+            throw token_symbol_existed_exception{"card already exists in blockchain. " + argument_.symbol};
         }
 
         card_map[argument_.symbol] = option_.content;
@@ -113,7 +113,7 @@ console_result registercard::invoke (Json::Value& jv_output,
 
         // check symbol not registered
         if (blockchain.get_registered_card(symbol)) {
-            throw token_symbol_existed_exception{"MIT already exists in blockchain. " + symbol};
+            throw token_symbol_existed_exception{"card already exists in blockchain. " + symbol};
         }
 
         card_map[symbol] = content;

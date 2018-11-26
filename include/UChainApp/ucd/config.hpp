@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -22,8 +22,8 @@
 #define UC_SERVER_CONFIGURATION_HPP
 
 #include <UChain/node.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/settings.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/settings.hpp>
 
 namespace libbitcoin {
 namespace server {

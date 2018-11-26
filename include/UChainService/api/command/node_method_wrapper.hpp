@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-api.
  *
@@ -24,13 +24,13 @@
 #include <string>
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 namespace libbitcoin {
 namespace explorer {
 namespace commands {
 
-void administrator_required_checker(bc::server::server_node& node,
+bool administrator_required_checker(bc::server::server_node& node,
         const std::string& name, const std::string& auth);
 
 uint64_t get_last_height(bc::server::server_node& node);

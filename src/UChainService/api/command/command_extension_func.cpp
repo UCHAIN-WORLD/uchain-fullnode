@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -35,7 +35,7 @@
 #include <UChainService/api/command/commands/showblockheight.hpp>
 #include <UChainService/api/command/commands/showpeerinfo.hpp>
 #include <UChainService/api/command/commands/showaddressucn.hpp>
-#include <UChainService/api/command/commands/addnode.hpp>
+#include <UChainService/api/command/commands/addpeer.hpp>
 #include <UChainService/api/command/commands/showmininginfo.hpp>
 #include <UChainService/api/command/commands/showblockheader.hpp>
 #include <UChainService/api/command/commands/showheaderext.hpp>
@@ -47,6 +47,7 @@
 #include <UChainService/api/command/commands/checkaccountinfo.hpp>
 #include <UChainService/api/command/commands/deleteaccount.hpp>
 #include <UChainService/api/command/commands/showaddresses.hpp>
+#include <UChainService/api/command/commands/showminers.hpp>
 #include <UChainService/api/command/commands/addaddress.hpp>
 #include <UChainService/api/command/commands/showblock.hpp>
 #include <UChainService/api/command/commands/validateaddress.hpp>
@@ -107,7 +108,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     using namespace std;
     using namespace commands;
 
-    os <<"\r\n";
+    os <<"account:\r\n";
     // account
     func(make_shared<createaccount>());
     func(make_shared<checkaccountinfo>());
@@ -120,33 +121,37 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<exportkeyfile>());
     func(make_shared<importkeyfile>());
 
-    os <<"\r\n";
+    os <<"system:\r\n";
     // system
     func(make_shared<shutdown>());
     func(make_shared<showinfo>());
-    func(make_shared<addnode>());
+    func(make_shared<addpeer>());
     func(make_shared<showpeerinfo>());
-
+    
+    os <<"miming:\r\n";
     // miming
     func(make_shared<startmining>());
     func(make_shared<stopmining>());
-    func(make_shared<showmininginfo>());
-    func(make_shared<setminingaccount>());
-    func(make_shared<showwork>());
-    func(make_shared<submitwork>());
-    func(make_shared<showmemorypool>());
+    //func(make_shared<showmininginfo>());
+    //func(make_shared<setminingaccount>());
+    func(make_shared<showminers>());
+    //func(make_shared<showwork>());
+    //func(make_shared<submitwork>());
+    
 
-    os <<"\r\n";
+    os <<"block & tx:\r\n";
     // block & tx
     func(make_shared<showblockheight>());
     func(make_shared<showblock>());
     func(make_shared<showblockheader>());
     func(make_shared<showheaderext>());
+    func(make_shared<showmemorypool>());
     func(make_shared<showtx>());
     func(make_shared<showtxs>());
-    os <<"\r\n";
+    
 
     // raw tx and multi-sig
+    os <<"raw tx and multi-sig:\r\n";
     func(make_shared<createrawtx>());
     func(make_shared<decoderawtx>());
     func(make_shared<signrawtx>());
@@ -157,9 +162,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showmultisigaddress>());
     func(make_shared<deletemultisigaddress>());
     func(make_shared<signmultisigtx>());
-
-    os <<"\r\n";
+    
     // ucn
+    os <<"ucn:\r\n";
     func(make_shared<sendto>());
     func(make_shared<sendtomulti>());
     func(make_shared<sendfrom>());
@@ -168,8 +173,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showbalance>());
     func(make_shared<showaddressucn>());
 
-    //os <<"\r\n";
+    
     // token
+    os <<"token:\r\n";
     func(make_shared<createtoken>());
     func(make_shared<deletetoken>());
     func(make_shared<registertoken>());
@@ -237,8 +243,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<shutdown>();
     if (symbol == showinfo::symbol())
         return make_shared<showinfo>();
-    if (symbol == addnode::symbol())
-        return make_shared<addnode>();
+    if (symbol == addpeer::symbol())
+        return make_shared<addpeer>();
     if (symbol == showpeerinfo::symbol())
         return make_shared<showpeerinfo>();
 
@@ -247,16 +253,16 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<stopmining>();
     if (symbol == startmining::symbol() || symbol == "start")
         return make_shared<startmining>();
-    if (symbol == setminingaccount::symbol())
+    /*if (symbol == setminingaccount::symbol())
         return make_shared<setminingaccount>();
     if (symbol == showmininginfo::symbol())
         return make_shared<showmininginfo>();
     if ((symbol == showwork::symbol()) || (symbol == "eth_showwork"))
         return make_shared<showwork>();
     if ((symbol == submitwork::symbol()) || ( symbol == "eth_submitWork"))
-        return make_shared<submitwork>();
-    if (symbol == showmemorypool::symbol())
-        return make_shared<showmemorypool>();
+        return make_shared<submitwork>();*/
+    if (symbol == showminers::symbol())
+        return make_shared<showminers>();
 
     // block & tx
     if (symbol == showblockheight::symbol())
@@ -271,6 +277,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showblockheader>();
     if (symbol == showheaderext::symbol())
         return make_shared<showheaderext>();
+    if (symbol == showmemorypool::symbol())
+        return make_shared<showmemorypool>();
     if (symbol == showtx::symbol() || symbol == "gettransaction")
         return make_shared<showtx>();
     if (symbol == "fetch-tx")

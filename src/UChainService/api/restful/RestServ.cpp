@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS).
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS).
  * Copyright (C) 2013-2018 Swirly Cloud Limited.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
@@ -23,7 +23,7 @@
 
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/exception.hpp>
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 namespace mgbubble {
 

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS).
+* Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS).
 * Copyright (C) 2013-2018 Swirly Cloud Limited.
 *
 * This program is free software; you can redistribute it and/or modify it under the terms of the
@@ -19,7 +19,7 @@
 #include <sstream>
 #include <UChain/explorer/json_helper.hpp>
 #include <UChainService/api/restful//WsPushServ.hpp>
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 namespace mgbubble {
 constexpr auto EV_VERSION     = "version";

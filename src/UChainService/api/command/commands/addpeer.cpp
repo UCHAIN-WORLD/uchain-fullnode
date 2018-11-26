@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -20,7 +20,7 @@
 
 
 #include <UChain/explorer/dispatch.hpp>
-#include <UChainService/api/command/commands/addnode.hpp>
+#include <UChainService/api/command/commands/addpeer.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/node_method_wrapper.hpp>
@@ -32,9 +32,9 @@ namespace explorer {
 namespace commands {
 
 
-/************************ addnode *************************/
+/************************ addpeer *************************/
 
-console_result addnode::invoke(Json::Value& jv_output,
+console_result addpeer::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();

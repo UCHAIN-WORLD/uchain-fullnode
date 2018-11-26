@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-api.
  *
@@ -18,31 +18,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #pragma once
-#include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
-#include <UChainService/api/command/command_extension_func.hpp>
-#include <UChainService/api/command/command_assistant.hpp>
+#include <UChainService/api/command/node_method_wrapper.hpp>
 
 namespace libbitcoin {
 namespace explorer {
 namespace commands {
 
 
-/************************ addnode *************************/
+/************************ showminers *************************/
 
-class addnode: public command_extension
+class showminers: public command_extension
 {
 public:
-    static const char* symbol(){ return "addnode";}
+    showminers() noexcept {};
+
+    static const char* symbol(){ return "showminers";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "This command is used to add/remove p2p node."; }
+    const char* description() override { return "Get blockchain miners for now."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("NODEADDRESS", 1)
             .add("ADMINNAME", 1)
             .add("ADMINAUTH", 1);
     }
@@ -51,7 +51,6 @@ public:
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(argument_.address, "NODEADDRESS", variables, input, raw);
         load_input(auth_.name, "ADMINNAME", variables, input, raw);
         load_input(auth_.auth, "ADMINAUTH", variables, input, raw);
     }
@@ -67,24 +66,14 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "NODEADDRESS",
-            value<std::string>(&argument_.address)->required(),
-            "The target node address[x.x.x.x:port]."
-        )
-        (
             "ADMINNAME",
             value<std::string>(&auth_.name),
-            "admin name."
+            BX_ADMIN_NAME
         )
         (
             "ADMINAUTH",
             value<std::string>(&auth_.auth),
-            "admin password/authorization."
-        )
-        (
-            "operation,o",
-            value<std::string>(&option_.operation),
-            "The operation[ add|ban ] to the target node address. default: add."
+            BX_ADMIN_AUTH
         );
 
         return options;
@@ -99,17 +88,14 @@ public:
 
     struct argument
     {
-        std::string address;
     } argument_;
 
     struct option
     {
-        std::string operation;
+        bool is_fetch_height{false};
     } option_;
 
 };
-
-
 
 
 } // namespace commands

@@ -340,7 +340,7 @@ public:
         (::SerReadWrite(s, (*(CScriptBase*)(&scriptPubKey)), nType, nVersion, CSerActionSerialize()));
         (::SerReadWrite(s, (version), nType, nVersion, CSerActionSerialize()));
         (::SerReadWrite(s, (type), nType, nVersion, CSerActionSerialize()));
-        if (version == UID_ATTACH_VERIFY_VERSION) {
+        if (version == UID_ASSET_VERIFY_VERSION) {
             (::SerReadWrite(s, (fromuid), nType, nVersion, CSerActionSerialize()));
             (::SerReadWrite(s, (touid), nType, nVersion, CSerActionSerialize()));
         }
@@ -374,7 +374,7 @@ public:
         (::SerReadWrite(s, (*(CScriptBase*)(&scriptPubKey)), nType, nVersion, CSerActionUnserialize()));
         (::SerReadWrite(s, (version), nType, nVersion, CSerActionUnserialize()));
         (::SerReadWrite(s, (type), nType, nVersion, CSerActionUnserialize()));
-        if (version == UID_ATTACH_VERIFY_VERSION) {
+        if (version == UID_ASSET_VERIFY_VERSION) {
             (::SerReadWrite(s, (fromuid), nType, nVersion, CSerActionUnserialize()));
             (::SerReadWrite(s, (touid), nType, nVersion, CSerActionUnserialize()));
         }

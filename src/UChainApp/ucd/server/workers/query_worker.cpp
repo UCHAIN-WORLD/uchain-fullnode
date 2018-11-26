@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -18,18 +18,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/server/workers/query_worker.hpp>
+#include <UChainApp/ucd/workers/query_worker.hpp>
 
 #include <functional>
 #include <string>
 #include <UChain/protocol.hpp>
-#include <UChain/server/define.hpp>
-#include <UChain/server/interface/address.hpp>
-#include <UChain/server/interface/blockchain.hpp>
-#include <UChain/server/interface/protocol.hpp>
-#include <UChain/server/interface/transaction_pool.hpp>
-#include <UChain/server/messages/message.hpp>
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/define.hpp>
+#include <UChainApp/ucd/interface/address.hpp>
+#include <UChainApp/ucd/interface/blockchain.hpp>
+#include <UChainApp/ucd/interface/protocol.hpp>
+#include <UChainApp/ucd/interface/transaction_pool.hpp>
+#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 namespace libbitcoin {
 namespace server {

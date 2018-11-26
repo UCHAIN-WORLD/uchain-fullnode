@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-explorer.
  *
@@ -24,7 +24,7 @@
 #include <iostream>
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
-#include <UChain/server/server_node.hpp>
+#include <UChainApp/ucd/server_node.hpp>
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 

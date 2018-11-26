@@ -17,7 +17,7 @@
 #include <UChain/database.hpp>
 
 #ifdef WITH_CONSENSUS
-#include <UChain/consensus.hpp>
+#include <UChainService/consensus.hpp>
 #endif
 
 #include <UChain/blockchain/block.hpp>

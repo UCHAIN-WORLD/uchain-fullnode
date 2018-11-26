@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011-2018 libbitcoin developers 
- * Copyright (c) 2018-2020 UChain core developers (see UC-AUTHORS)
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain-server.
  *
@@ -18,29 +18,43 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_SERVER_ADDRESS_KEY_HPP
-#define UC_SERVER_ADDRESS_KEY_HPP
+#ifndef UC_SERVER_ROUTE
+#define UC_SERVER_ROUTE
 
 #include <cstddef>
+#include <string>
 #include <boost/functional/hash_fwd.hpp>
 #include <UChain/bitcoin.hpp>
-#include <UChain/server/messages/route.hpp>
-#include <UChain/server/define.hpp>
+#include <UChainApp/ucd/define.hpp>
 
 namespace libbitcoin {
 namespace server {
 
-class BCS_API address_key
+/// This class is not thread safe.
+/// The route is fixed in compliance with v2/v3 limitations.
+class BCS_API route
 {
 public:
-    address_key(const route& reply_to, const binary& prefix_filter);
-    bool operator==(const address_key& other) const;
-    const route& reply_to() const;
-    const binary& prefix_filter() const;
+    /// Construct a route.
+    route();
 
-private:
-    const route& reply_to_;
-    const binary& prefix_filter_;
+    /// A printable address for logging only.
+    std::string display() const;
+
+    /// Equality operator.
+    bool operator==(const route& other) const;
+
+    /// The message requires a secure port.
+    bool secure;
+
+    /// The message route is delimited using an empty frame.
+    bool delimited;
+
+    /// The first address.
+    data_chunk address1;
+
+    /// The second address.
+    data_chunk address2;
 };
 
 } // namespace server
@@ -49,19 +63,15 @@ private:
 namespace std
 {
     template<>
-    struct hash<bc::server::address_key>
+    struct hash<bc::server::route>
     {
-        size_t operator()(const bc::server::address_key& value) const
+        size_t operator()(const bc::server::route& value) const
         {
-            // boost::hash_combine uses boost::hash declarations., but these
-            // are defined as std::hash (for use with std::map). So we must
-            // explicity perform the hash operation before combining.
-            const auto to = std::hash<bc::server::route>()(value.reply_to());
-            const auto filter = std::hash<bc::binary>()(value.prefix_filter());
-
             size_t seed = 0;
-            boost::hash_combine(seed, to);
-            boost::hash_combine(seed, filter);
+            boost::hash_combine(seed, value.secure);
+            ////boost::hash_combine(seed, value.delimited);
+            boost::hash_combine(seed, value.address1);
+            ////boost::hash_combine(seed, value.address2);
             return seed;
         }
     };
