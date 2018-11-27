@@ -46,7 +46,7 @@ console_result sendto::invoke(Json::Value& jv_output,
     }
 
     //should own the address
-    if(!blockchain.get_account_address(auth_.name, change_address))
+    if (!change_address.empty() && !blockchain.get_account_address(auth_.name, change_address))
         throw account_authority_exception{"change address not belongs to you."};
 
     // receiver
