@@ -1598,7 +1598,7 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
     value_in_ += output_value;
 
     //for block token amount +1
-    if (previous_tx.is_coinbase()) {
+    if (tx_->is_coinbase()) {
         token_amount_in_ += (token_transfer_amount+1);
     }
     else {
