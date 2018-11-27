@@ -98,6 +98,17 @@ void check_token_symbol(const std::string& symbol, bool check_sensitive)
     }
 }
 
+void check_token_symbol_with_consensus(const std::string& symbol,const consensus::miner& miner)
+{
+    if (symbol == UC_BLOCK_TOKEN_SYMBOL && miner.is_creating_block()) {
+        throw token_symbol_name_exception{"Block cannot be sended when you are producing block.Please wait some seconds."};
+    }
+
+    if (symbol == UC_VOTE_TOKEN_SYMBOL) {
+        throw token_symbol_name_exception{"Cannot send 'VOTE' token in this way.Please use vote command."};
+    }
+}
+
 void check_card_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (symbol.empty()) {

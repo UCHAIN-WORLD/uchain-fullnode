@@ -23,6 +23,7 @@
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/command.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
+#include <UChainService/consensus/miner.hpp>
 
 namespace libbitcoin {
 namespace explorer {
@@ -219,6 +220,7 @@ std::string get_fee_dividend_address(bc::blockchain::block_chain_impl& blockchai
 void check_token_symbol(const std::string& symbol, bool check_sensitive=false);
 void check_card_symbol(const std::string& symbol, bool check_sensitive=false);
 void check_uid_symbol(const std::string& symbol,  bool check_sensitive=false);
+void check_token_symbol_with_consensus(const std::string& symbol,const consensus::miner& miner);
 
 class BCX_API base_transfer_common
 {

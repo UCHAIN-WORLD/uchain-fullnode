@@ -830,13 +830,14 @@ void miner::work(const wallet::payment_address pay_address)
 
     while (state_ != state::exit_)
     {
+        state_ = state::init_;
         auto millissecond = unix_millisecond();
         uint64_t current_block_height;
         if (node_.chain_impl().get_last_height(current_block_height))
         {
             if (current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle)
             {
-
+                state_ = state::creating_block_;
                 block_ptr block = create_new_block(pay_address, current_block_height);
 
                 if (block)
@@ -862,6 +863,7 @@ void miner::work(const wallet::payment_address pay_address)
                 }
             }
         }
+        
         auto sleeptime = unix_millisecond() - millissecond;
         auto sleepmin = sleeptime<500?500-sleeptime:0;
         sleep_for(asio::milliseconds(sleepmin));
@@ -1059,6 +1061,10 @@ void miner::get_state(uint64_t &height, uint32_t &miners,/*uint64_t &rate, strin
     //difficulty = to_string((u256)prev_header.bits);
     is_mining = thread_ ? true : false;
     miners = mine_address_list.size();
+}
+
+bool miner::is_creating_block() const {
+    return state_ == state::creating_block_;
 }
 
 vector<std::string>& miner::get_miners()

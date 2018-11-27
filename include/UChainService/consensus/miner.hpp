@@ -75,7 +75,8 @@ public:
     enum state
     {
         init_,
-        exit_
+        exit_,
+        creating_block_
     };
 
     bool start(const wallet::payment_address& pay_address, uint16_t number = 0);
@@ -104,6 +105,7 @@ public:
     //void set_user(const std::string& name, const std::string& passwd);
     void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
     vector<std::string>& get_miners();
+    bool is_creating_block() const;
     
     bool get_block_header(chain::header& block_header, const string& para);
 
