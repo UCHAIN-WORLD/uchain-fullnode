@@ -1689,19 +1689,23 @@ bool validate_transaction::tally_fees(blockchain::block_chain_impl& chain,
 {
     const auto value_out = tx.total_output_value();
 
-    if (value_in < value_out)
-        return false;
-
-    const auto fee = value_in - value_out;
-    if (tx.is_token_block_coinbase()) {
-        if (fee!=0)
+    if (tx.is_coinbase() && value_in==0) {
+        return true;
+    }
+    else 
+    {
+        if (value_in < value_out)
             return false;
-    }
-    else if (fee < min_tx_fee) {
-        return false;
-    }
 
-    total_fees += fee;
+        const auto fee = value_in - value_out;
+        
+        if (fee < min_tx_fee) {
+            return false;
+        }
+
+        total_fees += fee;
+    }
+    
     return total_fees <= max_money();
 }
 
