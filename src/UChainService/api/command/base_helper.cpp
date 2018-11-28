@@ -98,9 +98,10 @@ void check_token_symbol(const std::string& symbol, bool check_sensitive)
     }
 }
 
-void check_token_symbol_with_consensus(const std::string& symbol,const consensus::miner& miner)
+void check_token_symbol_with_consensus(const std::string& symbol,const consensus::miner& miner,const std::string& address)
 {
-    if (symbol == UC_BLOCK_TOKEN_SYMBOL && miner.is_creating_block()) {
+    if (symbol == UC_BLOCK_TOKEN_SYMBOL && miner.is_creating_block() 
+       && (!address.empty() && miner.get_miner_address() == address)) {
         throw token_symbol_name_exception{"'BLOCK' token cannot be sended when you are producing block.Please wait several seconds."};
     }
 

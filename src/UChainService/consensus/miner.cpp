@@ -964,7 +964,7 @@ bool miner::set_miner_payment_address(const bc::wallet::payment_address& address
     return true;
 }
 
-const std::string miner::get_miner_address()
+const std::string miner::get_miner_address() const
 {
     return pay_address_.encoded();
 }

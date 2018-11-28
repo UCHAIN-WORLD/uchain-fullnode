@@ -305,8 +305,8 @@ void organizer::replace_chain(uint64_t fork_index,
     
 
     // Replace! Switch!
-    /*block_detail::list released_blocks;
-    auto success = chain_.pop_from(released_blocks, begin_index);
+    block_detail::list released_blocks;
+    /*auto success = chain_.pop_from(released_blocks, begin_index);
 
     if (!released_blocks.empty())
         log::warning(LOG_BLOCKCHAIN)
@@ -369,9 +369,9 @@ void organizer::replace_chain(uint64_t fork_index,
         {
             log::warning(LOG_BLOCKCHAIN) << " forked transaction hash:" << encode_hash(tx.hash()) << " data:" << tx.to_string(0);
         }
-    }
+    }*/
 
-    notify_reorganize(fork_index, orphan_chain, released_blocks);*/
+    notify_reorganize(fork_index, orphan_chain, released_blocks);
 }
 
 void organizer::remove_processed(block_detail::ptr remove_block)
