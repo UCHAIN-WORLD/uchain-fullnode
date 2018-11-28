@@ -372,7 +372,7 @@ miner::transaction_ptr miner::create_lock_coinbase_tx(
 uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const wallet::payment_address &address)
 {
     block_chain_impl &block_chain = node_.chain_impl();
-    auto &&rows = block_chain.get_address_history(address);
+    auto &&rows = block_chain.get_address_history(address,true);
     if (!rows.size())
     {
         return false;
