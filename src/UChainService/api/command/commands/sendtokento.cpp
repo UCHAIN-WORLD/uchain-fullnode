@@ -44,8 +44,12 @@ console_result sendtokento::invoke(Json::Value& jv_output,
     // check token symbol
     check_token_symbol(argument_.symbol);
 
-    if (argument_.symbol == UC_VOTE_TOKEN_SYMBOL) {
-        throw token_symbol_name_exception{"'BLOCK' token can only be sent by sendtokenfrom command."};
+    if (argument_.symbol == UC_BLOCK_VOTE_SYMBOL) {
+        throw token_symbol_name_exception{"Cannot send 'VOTE' token in this way.Please use vote command."};
+    }
+
+    if (argument_.symbol == UC_BLOCK_TOKEN_SYMBOL) {
+        throw token_symbol_name_exception{"Cannot send 'BLOCK' token in this way.Please use sendtokenfrom command."};
     }
 
     if (!argument_.amount) {
