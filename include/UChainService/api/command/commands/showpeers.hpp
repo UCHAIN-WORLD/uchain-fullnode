@@ -30,15 +30,15 @@ namespace explorer {
 namespace commands {
 
 
-/************************ showpeerinfo *************************/
+/************************ showpeers *************************/
 
-class showpeerinfo: public command_extension
+class showpeers: public command_extension
 {
 public:
-    static const char* symbol(){ return "showpeerinfo";}
+    static const char* symbol(){ return "showpeers";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "showpeerinfo "; }
+    const char* description() override { return "showpeers "; }
 
     arguments_metadata& load_arguments() override
     {

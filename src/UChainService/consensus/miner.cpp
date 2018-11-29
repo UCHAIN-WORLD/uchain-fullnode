@@ -814,19 +814,26 @@ std::string to_string(_T const& _t)
 }
 
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
+std::vector<std::string> mine_address_list = {
+                        /*"UPqb2AfKPpfqFoxAaujmH7Ay3CiGQgue7h",
+                        "UeBhVsr28ovcBS5DjxqXtHa3ueCP6o2FQi",
+                        "UcuW7wVu198Nuzok8eeMDUNEZQoGqQRRz5"*/
+                        "UXFQvGKWh8GzEtV1RNw2Vo1abnynPy58u1",
+                        "UiyoSgUnCbfSFVKcufwMZALVMURmiEfswq"
+                    };
 
 void miner::work(const wallet::payment_address pay_address)
 {
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
-    int index = get_mine_index(pay_address);
+    int index = get_mine_index(pay_address.encoded());
 
-    // if (index == -1)
-    // {
-    //     log::error(LOG_HEADER) << pay_address.encoded() << " is not a miner address ";
-    //     thread_.reset();
-    //     stop();
-    //     return;
-    // }
+    if (index == -1)
+    {
+         log::error(LOG_HEADER) << pay_address.encoded() << " is not a miner address ";
+         thread_.reset();
+         stop();
+         return;
+    }
 
     while (state_ != state::exit_)
     {
@@ -850,7 +857,7 @@ void miner::work(const wallet::payment_address pay_address)
                             continue;
                         }
 
-                        log::info(LOG_HEADER) << "solo miner create new block at heigth:" << height;
+                        log::debug(LOG_HEADER) << "solo miner create new block at heigth:" << height;
 
                         ++new_block_number_;
                         if ((new_block_limit_ != 0) && (new_block_number_ >= new_block_limit_))
@@ -870,9 +877,9 @@ void miner::work(const wallet::payment_address pay_address)
     }
 }
 
-int miner::get_mine_index(const wallet::payment_address& pay_address) const
+int miner::get_mine_index(const string& pay_address)
 {
-    vector<std::string>::const_iterator it=find(mine_address_list.begin(),mine_address_list.end(), pay_address.encoded());
+    auto it=find(mine_address_list.begin(),mine_address_list.end(), pay_address);
  
     if (it==mine_address_list.end())
     {
@@ -880,8 +887,30 @@ int miner::get_mine_index(const wallet::payment_address& pay_address) const
     }
     else
     {
-        return std::distance(std::begin(mine_address_list), it);
+        return it - mine_address_list.begin();
     }
+}
+
+bool miner::is_address_inturn(const string& pay_address) const
+{
+    uint64_t current_block_height;
+    if (!node_.chain_impl().get_last_height(current_block_height)) {
+        return false;
+    }
+    int index = get_mine_index(pay_address);
+    if (index == -1) {
+        return false;
+    }
+    return current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle;
+}
+
+bool miner::is_address_in_turn_with_now_height(uint64_t height,const string& pay_address)
+{
+    int index = get_mine_index(pay_address);
+    if (index == -1) {
+        return false;
+    }
+    return height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle;
 }
 
 bool miner::is_stop_miner(uint64_t block_height) const

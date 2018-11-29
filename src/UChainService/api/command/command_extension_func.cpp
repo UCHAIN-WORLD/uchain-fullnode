@@ -33,7 +33,7 @@
 #include <UChainService/api/command/commands/startmining.hpp>
 #include <UChainService/api/command/commands/showinfo.hpp>
 #include <UChainService/api/command/commands/showblockheight.hpp>
-#include <UChainService/api/command/commands/showpeerinfo.hpp>
+#include <UChainService/api/command/commands/showpeers.hpp>
 #include <UChainService/api/command/commands/showaddressucn.hpp>
 #include <UChainService/api/command/commands/addpeer.hpp>
 #include <UChainService/api/command/commands/showmininginfo.hpp>
@@ -126,7 +126,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<shutdown>());
     func(make_shared<showinfo>());
     func(make_shared<addpeer>());
-    func(make_shared<showpeerinfo>());
+    func(make_shared<showpeers>());
     
     os <<"miming:\r\n";
     // miming
@@ -245,8 +245,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showinfo>();
     if (symbol == addpeer::symbol())
         return make_shared<addpeer>();
-    if (symbol == showpeerinfo::symbol())
-        return make_shared<showpeerinfo>();
+    if (symbol == showpeers::symbol())
+        return make_shared<showpeers>();
 
     // mining
     if (symbol == stopmining::symbol() || symbol == "stop")

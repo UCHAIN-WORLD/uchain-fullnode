@@ -234,6 +234,10 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
         chain::header prev_header = fetch_block(height_ - 1);
         if (current_block_.header.timestamp < prev_header.timestamp)
             return error::timestamp_too_early;
+
+        if(!consensus::miner::is_address_in_turn_with_now_height(height_-1,transactions[0].outputs[0].get_script_address())) {
+            return error::first_coinbase_index_error;
+        }
     }
 
     

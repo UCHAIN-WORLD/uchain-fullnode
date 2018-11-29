@@ -178,6 +178,8 @@ enum error_code_t
     card_symbol_invalid,
     card_not_exist,
 
+    //block ext
+    first_coinbase_index_error
 };
 
 enum error_condition_t
