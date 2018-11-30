@@ -306,36 +306,16 @@ miner::transaction_ptr miner::create_coinbase_tx(
     }
     ptransaction->locktime = 0;
 
-    if (value > 0)
-    {
-        ptransaction->outputs.resize(2);
-        
-        
-
-        ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
-        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
-        
-
-        auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
-        auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
-
-        ptransaction->outputs[0].value = 0; //1 block
-        ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
-
-        ptransaction->outputs[1].value = value;
-    }
-    else
-    {
-        ptransaction->outputs.resize(1);
+    
+    ptransaction->outputs.resize(1);
        
-        ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));       
+    ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));       
 
-        auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
-        auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
+    auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
+    auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
 
-        ptransaction->outputs[0].value = 0; //1 block
-        ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
-    }
+    ptransaction->outputs[0].value = 0; //1 block
+    ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
 
     return ptransaction;
 }
@@ -735,8 +715,16 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
         pblock->transactions.push_back(*i);
     }
 
-    pblock->transactions[0].outputs[0].value =
+    uint64_t total_value =
         total_fee + calculate_block_subsidy(current_block_height + 1, setting_.use_testnet_rules);
+    
+    if (total_value > 0)
+    {
+        pblock->transactions[0].outputs.resize(2);
+        pblock->transactions[0].outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+        pblock->transactions[0].outputs[1].value = total_value;
+    }
+    
 
     // Fill in header
     pblock->header.number = current_block_height + 1;
@@ -817,8 +805,8 @@ static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 std::vector<std::string> mine_address_list = {
                         /*"UPqb2AfKPpfqFoxAaujmH7Ay3CiGQgue7h",
                         "UeBhVsr28ovcBS5DjxqXtHa3ueCP6o2FQi",
-                        "UcuW7wVu198Nuzok8eeMDUNEZQoGqQRRz5"
-                        "UXFQvGKWh8GzEtV1RNw2Vo1abnynPy58u1",*/
+                        "UcuW7wVu198Nuzok8eeMDUNEZQoGqQRRz5"*/
+                        "UXFQvGKWh8GzEtV1RNw2Vo1abnynPy58u1",
                         "UiyoSgUnCbfSFVKcufwMZALVMURmiEfswq"
                     };
 
