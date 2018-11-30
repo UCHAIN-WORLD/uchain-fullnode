@@ -70,6 +70,7 @@ console_result createrawtx::invoke(Json::Value& jv_output,
     else if (type == utxo_attach_type::token_transfer) {
         blockchain.uppercase_symbol(option_.symbol);
 
+
         // check token symbol
         check_token_symbol(option_.symbol);
     }
@@ -112,6 +113,8 @@ console_result createrawtx::invoke(Json::Value& jv_output,
     switch (type) {
         case utxo_attach_type::ucn:
         case utxo_attach_type::token_transfer: {
+            check_token_symbol_with_method(option_.symbol);
+
             sp_send_helper = std::make_shared<base_transaction_constructor>(blockchain, type,
                              std::move(option_.senders), std::move(receivers),
                              std::move(option_.symbol), std::move(option_.mychange_address),

@@ -75,6 +75,9 @@ console_result createmultisigtx::invoke(
         case utxo_attach_type::token_transfer: {
             blockchain.uppercase_symbol(option_.symbol);
             check_token_symbol(option_.symbol);
+            if (option_.symbol == UC_VOTE_TOKEN_SYMBOL) {
+                throw token_symbol_name_exception{"Cannot send 'VOTE' token in this way.Please use vote command."};
+            }
             receiver.push_back({argument_.to, option_.symbol, 0, argument_.amount, type, asset()});
             break;
         }

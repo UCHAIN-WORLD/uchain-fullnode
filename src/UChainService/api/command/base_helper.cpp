@@ -98,7 +98,7 @@ void check_token_symbol(const std::string& symbol, bool check_sensitive)
     }
 }
 
-void check_token_symbol_with_consensus(const std::string& symbol,const consensus::miner& miner, const std::string& address)
+void check_token_symbol_with_miner(const std::string& symbol,const consensus::miner& miner, const std::string& address)
 {
     if (symbol == UC_VOTE_TOKEN_SYMBOL) {
         throw token_symbol_name_exception{"Cannot send 'VOTE' token in this way.Please use vote command."};
@@ -107,6 +107,17 @@ void check_token_symbol_with_consensus(const std::string& symbol,const consensus
     if (symbol == UC_BLOCK_TOKEN_SYMBOL && miner.is_address_inturn(address)) {
         throw token_symbol_name_exception{"'BLOCK' token cannot be sended when the address is in producing block turn.Please wait several seconds."};
     } 
+}
+
+void check_token_symbol_with_method (const std::string& symbol) 
+{
+    if (symbol == UC_VOTE_TOKEN_SYMBOL) {
+        throw token_symbol_name_exception{"Cannot send 'VOTE' token in this way.Please use vote command."};
+    }
+
+    if (symbol == UC_BLOCK_TOKEN_SYMBOL) {
+        throw token_symbol_name_exception{"Cannot send 'BLOCK' token in this way.Please use sendtokenfrom command."};
+    }
 }
 
 void check_card_symbol(const std::string& symbol, bool check_sensitive)
