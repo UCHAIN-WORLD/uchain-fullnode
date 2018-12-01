@@ -91,7 +91,7 @@
 #include <UChainService/api/command/commands/deletemultisigaddress.hpp>
 #include <UChainService/api/command/commands/createmultisigaddress.hpp>
 #include <UChainService/api/command/commands/checkpublickey.hpp>
-#include <UChainService/api/command/commands/showmultisigaddress.hpp>
+#include <UChainService/api/command/commands/showmultisigaddresses.hpp>
 #include <UChainService/api/command/commands/sendrawtx.hpp>
 #include <UChainService/api/command/commands/signmultisigtx.hpp>
 #include <UChainService/api/command/commands/signrawtx.hpp>
@@ -159,7 +159,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<checkpublickey>());
     func(make_shared<createmultisigtx>());
     func(make_shared<createmultisigaddress>());
-    func(make_shared<showmultisigaddress>());
+    func(make_shared<showmultisigaddresses>());
     func(make_shared<deletemultisigaddress>());
     func(make_shared<signmultisigtx>());
     
@@ -301,8 +301,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<checkpublickey>();
     if (symbol == createmultisigaddress::symbol())
         return make_shared<createmultisigaddress>();
-    if (symbol == showmultisigaddress::symbol())
-        return make_shared<showmultisigaddress>();
+    if (symbol == showmultisigaddresses::symbol())
+        return make_shared<showmultisigaddresses>();
     if (symbol == deletemultisigaddress::symbol())
         return make_shared<deletemultisigaddress>();
     if (symbol == createmultisigtx::symbol())

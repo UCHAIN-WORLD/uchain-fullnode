@@ -30,15 +30,15 @@ namespace explorer {
 namespace commands {
 
 
-/************************ showmultisigaddress *************************/
+/************************ showmultisigaddresses *************************/
 
-class showmultisigaddress: public command_extension
+class showmultisigaddresses: public command_extension
 {
 public:
-    static const char* symbol(){ return "showmultisigaddress";}
+    static const char* symbol(){ return "showmultisigaddresses";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "showmultisigaddress "; }
+    const char* description() override { return "showmultisigaddresses "; }
 
     arguments_metadata& load_arguments() override
     {
