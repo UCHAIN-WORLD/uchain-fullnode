@@ -108,6 +108,13 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     using namespace std;
     using namespace commands;
 
+    os <<"system:\r\n";
+    // system
+    func(make_shared<shutdown>());
+    func(make_shared<showinfo>());
+    func(make_shared<addpeer>());
+    func(make_shared<showpeers>());
+
     os <<"account:\r\n";
     // account
     func(make_shared<createaccount>());
@@ -121,12 +128,16 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<exportkeyfile>());
     func(make_shared<importkeyfile>());
 
-    os <<"system:\r\n";
-    // system
-    func(make_shared<shutdown>());
-    func(make_shared<showinfo>());
-    func(make_shared<addpeer>());
-    func(make_shared<showpeers>());
+
+    // ucn
+    os <<"ucn:\r\n";
+    func(make_shared<sendto>());
+    func(make_shared<sendtomulti>());
+    func(make_shared<sendfrom>());
+    func(make_shared<deposit>());
+    func(make_shared<showbalances>());
+    func(make_shared<showbalance>());
+    func(make_shared<showaddressucn>());
     
     os <<"miming:\r\n";
     // miming
@@ -149,30 +160,6 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showtx>());
     func(make_shared<showtxs>());
     
-
-    // raw tx and multi-sig
-    os <<"raw tx and multi-sig:\r\n";
-    func(make_shared<createrawtx>());
-    func(make_shared<decoderawtx>());
-    func(make_shared<signrawtx>());
-    func(make_shared<sendrawtx>());
-    func(make_shared<checkpublickey>());
-    func(make_shared<createmultisigtx>());
-    func(make_shared<createmultisigaddress>());
-    func(make_shared<showmultisigaddresses>());
-    func(make_shared<deletemultisigaddress>());
-    func(make_shared<signmultisigtx>());
-    
-    // ucn
-    os <<"ucn:\r\n";
-    func(make_shared<sendto>());
-    func(make_shared<sendtomulti>());
-    func(make_shared<sendfrom>());
-    func(make_shared<deposit>());
-    func(make_shared<showbalances>());
-    func(make_shared<showbalance>());
-    func(make_shared<showaddressucn>());
-
     
     // token
     os <<"token:\r\n";
@@ -190,6 +177,19 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<destroy>());
     //func(make_shared<swaptoken>());
     func(make_shared<vote>());
+
+    // raw tx and multi-sig
+    os <<"raw tx and multi-sig:\r\n";
+    func(make_shared<createrawtx>());
+    func(make_shared<decoderawtx>());
+    func(make_shared<signrawtx>());
+    func(make_shared<sendrawtx>());
+    func(make_shared<checkpublickey>());
+    func(make_shared<createmultisigtx>());
+    func(make_shared<createmultisigaddress>());
+    func(make_shared<showmultisigaddresses>());
+    func(make_shared<deletemultisigaddress>());
+    func(make_shared<signmultisigtx>());
 
     //os <<"\r\n";
     // cert
