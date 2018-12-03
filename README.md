@@ -114,7 +114,7 @@ After UC is built successfully, there are two executable files in the _bin_ dire
    Sent your request to the server, the server will process it and return response to your client.
 
 Go to _bin_ diretory, and run the program.
-More information please reference to [Command line usage]( https://github.com/UCHAIN-WORLD/uchain-fullnode/wiki/commands) and [Configuration file](https://github.com/UCHAIN-WORLD/uchain-fullnode/wiki/config-file.md).
+More information please reference to [Command line usage]( https://github.com/UCHAIN-WORLD/uchain-fullnode/wiki/commands).
 ```bash
 $ cd bin
 $ ./ucd
