@@ -108,9 +108,9 @@ console_result signmultisigtx::invoke(
         }
 
         for (auto& acc_multisig : *multisig_vec) {
-            if (!option_.self_publickey.empty() && option_.self_publickey != acc_multisig.get_pub_key()) {
+            /*if (!option_.self_publickey.empty() && option_.self_publickey != acc_multisig.get_pub_key()) {
                 continue;
-            }
+            }*/
 
             if (option_.self_publickey.empty()) {
                 addr_prikey = "";
