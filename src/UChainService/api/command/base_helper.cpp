@@ -98,6 +98,28 @@ void check_token_symbol(const std::string& symbol, bool check_sensitive)
     }
 }
 
+void check_token_symbol_with_miner(const std::string& symbol,const consensus::miner& miner, const std::string& address)
+{
+    if (symbol == UC_VOTE_TOKEN_SYMBOL) {
+        throw token_symbol_name_exception{"Cannot send 'VOTE' token in this way.Please use vote command."};
+    }
+
+    if (symbol == UC_BLOCK_TOKEN_SYMBOL && miner.is_address_inturn(address)) {
+        throw token_symbol_name_exception{"'BLOCK' token cannot be sended when the address is in producing block turn.Please wait several seconds."};
+    } 
+}
+
+void check_token_symbol_with_method (const std::string& symbol) 
+{
+    if (symbol == UC_VOTE_TOKEN_SYMBOL) {
+        throw token_symbol_name_exception{"Cannot send 'VOTE' token in this way.Please use vote command."};
+    }
+
+    if (symbol == UC_BLOCK_TOKEN_SYMBOL) {
+        throw token_symbol_name_exception{"Cannot send 'BLOCK' token in this way.Please use sendtokenfrom command."};
+    }
+}
+
 void check_card_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (symbol.empty()) {
@@ -1351,6 +1373,11 @@ void base_transfer_helper::populate_unspent_list()
         throw address_list_nullptr_exception{"nullptr for address list"};
     }
 
+    if(!from_.empty() && filter_out_address(from_))
+    {
+        throw tx_source_exception{"from address cannot be multi-signed. "};
+    }
+
     // get from address balances
     for (auto& each : *pvaddr) {
         const auto& address = each.get_address();
@@ -1380,7 +1407,7 @@ void base_transfer_helper::populate_unspent_list()
     //vote specify
     if (from_list_.empty() && symbol_ != UC_VOTE_TOKEN_SYMBOL) {
         throw tx_source_exception{"not enough ucn or token in from address"
-            ", or you do not own the from address!"};
+            ", or you do not own the from address!(multisig address balance cannot be used in this way)"};
     }
 
     check_payment_satisfied();

@@ -40,8 +40,12 @@ console_result sendtokenfrom::invoke(Json::Value& jv_output,
     // check token symbol
     check_token_symbol(argument_.symbol);
 
+    
+
     asset attach;
     std::string from_address = get_address(argument_.from, attach, true, blockchain);
+
+    check_token_symbol_with_miner(argument_.symbol, node.miner(), from_address);
     std::string to_address = get_address(argument_.to, attach, false, blockchain);
     std::string change_address = get_address(option_.change, blockchain);
 

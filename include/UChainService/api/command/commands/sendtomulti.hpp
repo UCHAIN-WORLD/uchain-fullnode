@@ -82,9 +82,9 @@ public:
             "Send to [uid/address:ucn_bits]."
         )
         (
-            "mychange,m",
+            "change,c",
             value<std::string>(&option_.change),
-            "Change to this uid/address"
+            "Change to this uid/address,should be yours."
         )
         (
             "fee,f",

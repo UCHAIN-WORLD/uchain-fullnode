@@ -21,7 +21,7 @@
 
 #include <UChain/node/p2p_node.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChainService/api/command/commands/showpeerinfo.hpp>
+#include <UChainService/api/command/commands/showpeers.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/node_method_wrapper.hpp>
@@ -31,9 +31,9 @@ namespace explorer {
 namespace commands {
 using namespace bc::explorer::config;
 
-/************************ showpeerinfo *************************/
+/************************ showpeers *************************/
 
-console_result showpeerinfo::invoke(Json::Value& jv_output,
+console_result showpeers::invoke(Json::Value& jv_output,
                                    libbitcoin::server::server_node& node)
 {
     administrator_required_checker(node, auth_.name, auth_.auth);

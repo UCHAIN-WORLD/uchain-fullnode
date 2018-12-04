@@ -1,5 +1,6 @@
 [![AGPL v3](https://img.shields.io/badge/license-AGPL%20v3-brightgreen.svg)](./LICENSE)
-
+# UC Achitect
+![image](https://raw.githubusercontent.com/wiki/yangguanglu/pics/uchainachitect.jpeg)
 # UC Project
 UC is implemented based on [libbitcoin project](https://github.com/libbitcoin).
 
@@ -14,7 +15,6 @@ UC is implemented based on [libbitcoin project](https://github.com/libbitcoin).
 
 C++ compiler support [C++14](http://en.cppreference.com/w/cpp/compiler_support). 
 Using `c++ -v` to check c++ version.
-- [Simple guide to upgrade GCC](http://docs.uc.org/helpdoc/upgrade-gcc.html).
 - [Upgrade guide for Debian/ubuntuu](https://github.com/libbitcoin/libbitcoin#debianubuntu)
 - [Upgrade guide for OSX](https://github.com/libbitcoin/libbitcoin#macintosh)
 - [Upgrade guide for windows](https://github.com/libbitcoin/libbitcoin#windows)
@@ -54,13 +54,13 @@ $ make doc  (should install doxygen and graphviz)
 
 Installing by bash script (sudo required).
 ```bash
-$ sudo ./install_dependencies.sh
+$ sudo ./install_thirdlibrary
 ```
-By default, `./install_dependencies.sh` will install `ZeroMQ` `secp256k1`.  
+By default, `./install_thirdlibrary` will install `ZeroMQ` `secp256k1`.  
 You can install more by specify arguments, for example:
 ```bash
 # --build-upnpc is needed is you want UPnP supporting.
-$ sudo ./install_dependencies.sh --build-boost --build-upnpc
+$ sudo ./install_thirdlibrary --build-boost --build-upnpc
 ```
 
 ## boost 1.60(recommended)
@@ -114,7 +114,7 @@ After UC is built successfully, there are two executable files in the _bin_ dire
    Sent your request to the server, the server will process it and return response to your client.
 
 Go to _bin_ diretory, and run the program.
-More information please reference to [Command line usage](https://github.com/UCHAIN-WORLD/uchain-fullnode/wiki/command-line.md) and [Configuration file](https://github.com/UCHAIN-WORLD/uchain-fullnode/wiki/config-file.md).
+More information please reference to [Command line usage]( https://github.com/UCHAIN-WORLD/uchain-fullnode/wiki/commands).
 ```bash
 $ cd bin
 $ ./ucd

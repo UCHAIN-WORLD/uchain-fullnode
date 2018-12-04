@@ -61,7 +61,7 @@ console_result destroy::invoke(Json::Value& jv_output,
 
         auto&& amount = std::to_string(argument_.amount);
         const char* cmds[] {
-            "sendtoken", auth_.name.c_str(), auth_.auth.c_str(),
+            "sendtokento", auth_.name.c_str(), auth_.auth.c_str(),
             blackhole_uid.c_str(), argument_.symbol.c_str(), amount.c_str()
         };
 

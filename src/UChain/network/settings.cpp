@@ -63,7 +63,8 @@ settings::settings(bc::settings context)
     {
         case bc::settings::mainnet:
         {
-            identifier = 0x4d53564d;
+            //identifier = 0x4d53564d;
+            identifier = 1234567891;
             inbound_port = 5682;
 
             // Seeds based on uc.live/network/dns-servers
@@ -72,8 +73,10 @@ settings::settings(bc::settings context)
             seeds.push_back({ "main-uchain-b.live", 5682 });
             seeds.push_back({ "main-uchain-c.live", 5682 });
             seeds.push_back({ "main-uchain-d.live", 5682 });
-            seeds.push_back({ "main-uchain-e.live", 5682 });
-            seeds.push_back({ "main-uchain-f.live", 5682 });
+            //seeds.push_back({ "main-uchain-e.live", 5682 });
+            //seeds.push_back({ "main-uchain-f.live", 5682 });
+            seeds.push_back({ "112.74.181.29", 5682 });
+            seeds.push_back({ "120.78.209.248", 5682 });
             seeds.push_back({ "116.62.238.230"/*"seed.getuc.org"*/, 5682 });
             break;
         }

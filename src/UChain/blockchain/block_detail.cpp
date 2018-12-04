@@ -37,8 +37,8 @@ block_detail::block_detail(block_ptr actual_block)
   : code_(error::success),
     processed_(false),
     height_(orphan_height),
-    actual_block_(actual_block),
-    is_checked_work_proof_(false)
+    actual_block_(actual_block)/*,
+    is_checked_work_proof_(false)*/
 {
 }
 
@@ -74,7 +74,7 @@ uint64_t block_detail::height() const
     return height_.load();
 }
 
-void block_detail::set_is_checked_work_proof(bool is_checked)
+/*void block_detail::set_is_checked_work_proof(bool is_checked)
 {
     is_checked_work_proof_.store(is_checked);
 }
@@ -82,7 +82,7 @@ void block_detail::set_is_checked_work_proof(bool is_checked)
 bool block_detail::get_is_checked_work_proof() const
 {
     return is_checked_work_proof_.load();
-}
+}*/
 
 void block_detail::set_error(const code& code)
 {

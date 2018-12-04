@@ -33,7 +33,7 @@
 #include <UChainService/api/command/commands/startmining.hpp>
 #include <UChainService/api/command/commands/showinfo.hpp>
 #include <UChainService/api/command/commands/showblockheight.hpp>
-#include <UChainService/api/command/commands/showpeerinfo.hpp>
+#include <UChainService/api/command/commands/showpeers.hpp>
 #include <UChainService/api/command/commands/showaddressucn.hpp>
 #include <UChainService/api/command/commands/addpeer.hpp>
 #include <UChainService/api/command/commands/showmininginfo.hpp>
@@ -91,7 +91,7 @@
 #include <UChainService/api/command/commands/deletemultisigaddress.hpp>
 #include <UChainService/api/command/commands/createmultisigaddress.hpp>
 #include <UChainService/api/command/commands/checkpublickey.hpp>
-#include <UChainService/api/command/commands/showmultisigaddress.hpp>
+#include <UChainService/api/command/commands/showmultisigaddresses.hpp>
 #include <UChainService/api/command/commands/sendrawtx.hpp>
 #include <UChainService/api/command/commands/signmultisigtx.hpp>
 #include <UChainService/api/command/commands/signrawtx.hpp>
@@ -108,6 +108,13 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     using namespace std;
     using namespace commands;
 
+    os <<"system:\r\n";
+    // system
+    func(make_shared<shutdown>());
+    func(make_shared<showinfo>());
+    func(make_shared<addpeer>());
+    func(make_shared<showpeers>());
+
     os <<"account:\r\n";
     // account
     func(make_shared<createaccount>());
@@ -121,12 +128,16 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<exportkeyfile>());
     func(make_shared<importkeyfile>());
 
-    os <<"system:\r\n";
-    // system
-    func(make_shared<shutdown>());
-    func(make_shared<showinfo>());
-    func(make_shared<addpeer>());
-    func(make_shared<showpeerinfo>());
+
+    // ucn
+    os <<"ucn:\r\n";
+    func(make_shared<sendto>());
+    func(make_shared<sendtomulti>());
+    func(make_shared<sendfrom>());
+    func(make_shared<deposit>());
+    func(make_shared<showbalances>());
+    func(make_shared<showbalance>());
+    func(make_shared<showaddressucn>());
     
     os <<"miming:\r\n";
     // miming
@@ -149,6 +160,23 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showtx>());
     func(make_shared<showtxs>());
     
+    
+    // token
+    os <<"token:\r\n";
+    /*func(make_shared<createtoken>());
+    func(make_shared<deletetoken>());
+    func(make_shared<registertoken>());*/
+    /*func(make_shared<registersecondarytoken>());*/
+    func(make_shared<sendtokento>());
+    func(make_shared<sendtokenfrom>());
+    func(make_shared<showtokens>());
+    func(make_shared<showtoken>());
+    func(make_shared<showaccounttoken>());
+    // func(make_shared<showtokenview>());
+    func(make_shared<showaddresstoken>());
+    func(make_shared<destroy>());
+    //func(make_shared<swaptoken>());
+    func(make_shared<vote>());
 
     // raw tx and multi-sig
     os <<"raw tx and multi-sig:\r\n";
@@ -159,37 +187,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<checkpublickey>());
     func(make_shared<createmultisigtx>());
     func(make_shared<createmultisigaddress>());
-    func(make_shared<showmultisigaddress>());
+    func(make_shared<showmultisigaddresses>());
     func(make_shared<deletemultisigaddress>());
     func(make_shared<signmultisigtx>());
-    
-    // ucn
-    os <<"ucn:\r\n";
-    func(make_shared<sendto>());
-    func(make_shared<sendtomulti>());
-    func(make_shared<sendfrom>());
-    func(make_shared<deposit>());
-    func(make_shared<showbalances>());
-    func(make_shared<showbalance>());
-    func(make_shared<showaddressucn>());
-
-    
-    // token
-    os <<"token:\r\n";
-    func(make_shared<createtoken>());
-    func(make_shared<deletetoken>());
-    func(make_shared<registertoken>());
-    /*func(make_shared<registersecondarytoken>());*/
-    func(make_shared<sendtokento>());
-    func(make_shared<sendtokenfrom>());
-    func(make_shared<showtokens>());
-    func(make_shared<showtoken>());
-    func(make_shared<showaccounttoken>());
-    // func(make_shared<showtokenview>());
-    func(make_shared<showaddresstoken>());
-    func(make_shared<destroy>());
-    func(make_shared<swaptoken>());
-    func(make_shared<vote>());
 
     //os <<"\r\n";
     // cert
@@ -245,8 +245,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showinfo>();
     if (symbol == addpeer::symbol())
         return make_shared<addpeer>();
-    if (symbol == showpeerinfo::symbol())
-        return make_shared<showpeerinfo>();
+    if (symbol == showpeers::symbol())
+        return make_shared<showpeers>();
 
     // mining
     if (symbol == stopmining::symbol() || symbol == "stop")
@@ -301,8 +301,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<checkpublickey>();
     if (symbol == createmultisigaddress::symbol())
         return make_shared<createmultisigaddress>();
-    if (symbol == showmultisigaddress::symbol())
-        return make_shared<showmultisigaddress>();
+    if (symbol == showmultisigaddresses::symbol())
+        return make_shared<showmultisigaddresses>();
     if (symbol == deletemultisigaddress::symbol())
         return make_shared<deletemultisigaddress>();
     if (symbol == createmultisigtx::symbol())
@@ -327,10 +327,10 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<sendfrom>();
 
     // token
-    if (symbol == createtoken::symbol())
+    /*if (symbol == createtoken::symbol())
         return make_shared<createtoken>();
     if (symbol == deletetoken::symbol() || symbol == "deletetoken" )
-        return make_shared<deletetoken>();
+        return make_shared<deletetoken>();*/
     if (symbol == showtokens::symbol())
         return make_shared<showtokens>();
     if (symbol == showtoken::symbol())
@@ -341,8 +341,8 @@ shared_ptr<command> find_extension(const string& symbol)
     //     return make_shared<showtokenview>();
     if (symbol == showaddresstoken::symbol())
         return make_shared<showaddresstoken>();
-    if (symbol == registertoken::symbol())
-        return make_shared<registertoken>();
+    /*if (symbol == registertoken::symbol())
+        return make_shared<registertoken>();*/
     /*if (symbol == registersecondarytoken::symbol() || (symbol == "additionalissue") )
         return make_shared<registersecondarytoken>();*/
     if (symbol == sendtokento::symbol() || symbol == "uidsendtokento")
@@ -351,8 +351,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<sendtokenfrom>();
     if (symbol == destroy::symbol())
         return make_shared<destroy>();
-    if (symbol == swaptoken::symbol())
-        return make_shared<swaptoken>();
+    /*if (symbol == swaptoken::symbol())
+        return make_shared<swaptoken>();*/
     if (symbol == vote::symbol())
         return make_shared<vote>();
 

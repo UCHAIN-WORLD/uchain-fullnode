@@ -45,6 +45,10 @@ console_result sendto::invoke(Json::Value& jv_output,
         throw argument_legality_exception("invalid amount parameter!");
     }
 
+    //should own the address
+    if (!change_address.empty() && !blockchain.get_account_address(auth_.name, change_address))
+        throw account_authority_exception{"change address not belongs to you."};
+
     // receiver
     std::vector<receiver_record> receiver{
         {to_address, "", argument_.amount, 0, utxo_attach_type::ucn, attach}

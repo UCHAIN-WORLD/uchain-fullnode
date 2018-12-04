@@ -48,10 +48,9 @@ BC_CONSTEXPR unsigned int min_tx_fee_per_kb = 1000;
 BC_CONSTEXPR unsigned int median_time_span = 11;
 BC_CONSTEXPR uint32_t version = 1;
 
-extern vector<std::string> mine_address_list;
-
 //extern int bucket_size;
 extern vector<uint64_t> lock_heights;
+extern vector<std::string> mine_address_list;
 
 class miner
 {
@@ -77,7 +76,8 @@ public:
     enum state
     {
         init_,
-        exit_
+        exit_,
+        creating_block_
     };
 
     bool start(const wallet::payment_address& pay_address, uint16_t number = 0);
@@ -101,19 +101,24 @@ public:
     uint64_t fetch_utxo(const transaction_ptr& ptx,const wallet::payment_address& address);
     bool get_spendable_output(chain::output& output, const chain::history& row, uint64_t height);
     bool set_miner_payment_address(const wallet::payment_address& address);
+    const std::string get_miner_address() const;
     bool set_miner_pri_key(const std::string& pri_key);
+    //void set_user(const std::string& name, const std::string& passwd);
     void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
     vector<std::string>& get_miners();
-    
+    bool is_creating_block() const;
+    bool is_address_inturn(const string& pay_address) const;
     bool get_block_header(chain::header& block_header, const string& para);
 
+    static bool is_address_in_turn_with_now_height(uint64_t height, const string& pay_address);
     static int get_lock_heights_index(uint64_t height);
     static uint64_t calculate_block_subsidy(uint64_t height, bool is_testnet);
     static uint64_t calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num);
+    static int get_mine_index(const string& pay_address);
 
 private:
     void work(const wallet::payment_address pay_address);
-    int get_mine_index(const wallet::payment_address& pay_address) const;
+    
     block_ptr create_new_block(const wallet::payment_address& pay_addres,uint64_t current_block_height = max_uint64);
     unsigned int get_adjust_time(uint64_t height) const;
     unsigned int get_median_time_past(uint64_t height) const;
@@ -134,6 +139,11 @@ private:
     wallet::payment_address pay_address_;
     const blockchain::settings& setting_;
     std::string pri_key;
+    std::string name_;
+    std::string passwd_;
+
+    
+
 };
 
 }

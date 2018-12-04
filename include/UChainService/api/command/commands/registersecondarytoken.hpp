@@ -83,7 +83,7 @@ public:
         (
             "TOUID",
             value<std::string>(&argument_.to)->required(),
-            "target uid to check and issue token, fee from and mychange to the address of this uid too."
+            "target uid to check and issue token, fee from and change to the address of this uid too."
         )
         (
             "SYMBOL",

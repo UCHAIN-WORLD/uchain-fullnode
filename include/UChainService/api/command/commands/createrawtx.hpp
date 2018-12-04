@@ -83,13 +83,13 @@ public:
         )
         (
             "deposit,d",
-            value<uint16_t>(&option_.deposit)->default_value(7),
-            "Deposits support [7, 30, 90, 182, 365] days. defaluts to 7 days"
+            value<uint16_t>(&option_.deposit)->default_value(10),
+            "Deposits support [10, 45, 120, 240, 540] days. defaluts to 10 days"
         )
         (
-            "mychange,m",
+            "change,c",
             value<std::string>(&option_.mychange_address),
-            "Mychange to this address, includes ucn and token change"
+            "change to this address, includes ucn and token change"
         )
         (
             "message,i",

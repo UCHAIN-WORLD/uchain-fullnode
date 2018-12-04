@@ -103,7 +103,7 @@ code validate_transaction::basic_checks() const
         return ec;
 
     // This should probably preceed check_transaction.
-    if (tx_->is_coinbase())
+    if (tx_->is_strict_coinbase())
         return error::coinbase_transaction;
 
     // Ummm...
@@ -1277,7 +1277,7 @@ code validate_transaction::connect_asset_from_uid(const output& output) const
 
 code validate_transaction::check_transaction_connect_input(size_t last_height)
 {
-    if (last_height == 0 || tx_->is_coinbase()) {
+    if (last_height == 0 || tx_->is_strict_coinbase()) {
         return error::success;
     }
 
@@ -1596,7 +1596,15 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
     }
 
     value_in_ += output_value;
-    token_amount_in_ += token_transfer_amount;
+
+    //for block token amount +1
+    if (tx_->is_coinbase()) {
+        token_amount_in_ += (token_transfer_amount+1);
+    }
+    else {
+        token_amount_in_ += token_transfer_amount;
+    }
+    
     if (token_certs != token_cert_ns::none) {
         token_certs_in_.push_back(token_certs);
     }
@@ -1681,15 +1689,23 @@ bool validate_transaction::tally_fees(blockchain::block_chain_impl& chain,
 {
     const auto value_out = tx.total_output_value();
 
-    if (value_in < value_out)
-        return false;
-
-    const auto fee = value_in - value_out;
-    if (fee < min_tx_fee) {
-        return false;
+    if (tx.is_coinbase() && value_in==0) {
+        return true;
     }
+    else 
+    {
+        if (value_in < value_out)
+            return false;
 
-    total_fees += fee;
+        const auto fee = value_in - value_out;
+        
+        if (fee < min_tx_fee) {
+            return false;
+        }
+
+        total_fees += fee;
+    }
+    
     return total_fees <= max_money();
 }
 

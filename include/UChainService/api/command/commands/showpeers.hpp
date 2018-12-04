@@ -30,29 +30,29 @@ namespace explorer {
 namespace commands {
 
 
-/************************ showmultisigaddress *************************/
+/************************ showpeers *************************/
 
-class showmultisigaddress: public command_extension
+class showpeers: public command_extension
 {
 public:
-    static const char* symbol(){ return "showmultisigaddress";}
+    static const char* symbol(){ return "showpeers";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "showmultisigaddress "; }
+    const char* description() override { return "showpeers "; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("ADMINNAME", 1)
+            .add("ADMINAUTH", 1);
     }
 
     void load_fallbacks (std::istream& input,
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
-        load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(auth_.name, "ADMINNAME", variables, input, raw);
+        load_input(auth_.auth, "ADMINAUTH", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -66,16 +66,15 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "ACCOUNTNAME",
-            value<std::string>(&auth_.name)->required(),
-            BX_ACCOUNT_NAME
+            "ADMINNAME",
+            value<std::string>(&auth_.name),
+            BX_ADMIN_NAME
         )
         (
-            "ACCOUNTAUTH",
-            value<std::string>(&auth_.auth)->required(),
-            BX_ACCOUNT_AUTH
-        )
-        ;
+            "ADMINAUTH",
+            value<std::string>(&auth_.auth),
+            BX_ADMIN_AUTH
+        );
 
         return options;
     }
@@ -89,22 +88,16 @@ public:
 
     struct argument
     {
-        argument()
-        {
-        }
     } argument_;
 
     struct option
     {
-        option()
-          : index(0)
-        {
-        }
-
-        uint16_t index;
     } option_;
 
 };
+
+
+
 
 } // namespace commands
 } // namespace explorer

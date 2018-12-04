@@ -83,9 +83,9 @@ public:
             "The address to deposit some ucn for 48h."
         )
         (
-            "TO_",
+            "receivers,r",
             value<std::vector<std::string>>(&argument_.to)->required(),
-            "The vote target address [uid/address:ucn_bits]."
+            "vote to [uid/address:ucn_bits]."
         )     
         (
             "fee,f",

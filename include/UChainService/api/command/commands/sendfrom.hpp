@@ -99,7 +99,7 @@ public:
         (
             "change,c",
             value<std::string>(&option_.change)->default_value(""),
-            "Change to this uid/address"
+            "Change to this uid/address,should be yours."
         )
         (
             "memo,m",

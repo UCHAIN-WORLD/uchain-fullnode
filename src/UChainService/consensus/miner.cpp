@@ -306,36 +306,16 @@ miner::transaction_ptr miner::create_coinbase_tx(
     }
     ptransaction->locktime = 0;
 
-    if (value > 0)
-    {
-        ptransaction->outputs.resize(2);
-        
-        
-
-        ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
-        ptransaction->outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
-        
-
-        auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
-        auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
-
-        ptransaction->outputs[0].value = 0; //1 block
-        ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
-
-        ptransaction->outputs[1].value = value;
-    }
-    else
-    {
-        ptransaction->outputs.resize(1);
+    
+    ptransaction->outputs.resize(1);
        
-        ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));       
+    ptransaction->outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));       
 
-        auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
-        auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
+    auto transfer = chain::token_transfer(UC_BLOCK_TOKEN_SYMBOL, unspent_token + 1);
+    auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
 
-        ptransaction->outputs[0].value = 0; //1 block
-        ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
-    }
+    ptransaction->outputs[0].value = 0; //1 block
+    ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
 
     return ptransaction;
 }
@@ -372,7 +352,7 @@ miner::transaction_ptr miner::create_lock_coinbase_tx(
 uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const wallet::payment_address &address)
 {
     block_chain_impl &block_chain = node_.chain_impl();
-    auto &&rows = block_chain.get_address_history(address);
+    auto &&rows = block_chain.get_address_history(address,true);
     if (!rows.size())
     {
         return false;
@@ -401,11 +381,11 @@ uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const wallet::payment_ad
             continue;
         }
 
-        auto ucn_amount = row.value;
+        //auto ucn_amount = row.value;
         auto token_total_amount = output.get_token_amount();
         auto cert_type = output.get_token_cert_type();
 
-        BITCOIN_ASSERT(ucn_amount == 0);
+        //BITCOIN_ASSERT(ucn_amount == 0);
         BITCOIN_ASSERT(cert_type == token_cert_ns::none);
         if (token_total_amount == 0)
             continue;
@@ -735,8 +715,16 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
         pblock->transactions.push_back(*i);
     }
 
-    pblock->transactions[0].outputs[0].value =
+    uint64_t total_value =
         total_fee + calculate_block_subsidy(current_block_height + 1, setting_.use_testnet_rules);
+    
+    if (total_value > 0)
+    {
+        pblock->transactions[0].outputs.resize(2);
+        pblock->transactions[0].outputs[1].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(pay_address));
+        pblock->transactions[0].outputs[1].value = total_value;
+    }
+    
 
     // Fill in header
     pblock->header.number = current_block_height + 1;
@@ -813,36 +801,38 @@ std::string to_string(_T const& _t)
     return o.str();
 }
 
-vector<std::string> mine_address_list = {
-                                            //"USa9SKiMHZ3TRcodvJi6oGVgS65iy47Hh4", 
-                                            //"UWeVjsMSNHboXVvKgz31sgRSVkEXeNCz6v",
-                                            //"UQHp4fbFFtg28Wv61v46FjAd4fxHNCTkhG", 
-                                            //"UTgD8ZE5JkKZ5LFPDrSGb5vDzidSudL2tF"
-                                            "UPqb2AfKPpfqFoxAaujmH7Ay3CiGQgue7h",
-                                            "UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"
-                                        };
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
+std::vector<std::string> mine_address_list = {
+                        /*"UPqb2AfKPpfqFoxAaujmH7Ay3CiGQgue7h",
+                        "UeBhVsr28ovcBS5DjxqXtHa3ueCP6o2FQi",
+                        "UcuW7wVu198Nuzok8eeMDUNEZQoGqQRRz5"*/
+                        "UXFQvGKWh8GzEtV1RNw2Vo1abnynPy58u1",
+                        "UiyoSgUnCbfSFVKcufwMZALVMURmiEfswq"
+                    };
 
 void miner::work(const wallet::payment_address pay_address)
 {
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
-    int index = get_mine_index(pay_address);
+    int index = get_mine_index(pay_address.encoded());
 
     if (index == -1)
     {
-        log::error(LOG_HEADER) << pay_address.encoded() << " is not a miner address ";
-        return;
+         log::error(LOG_HEADER) << pay_address.encoded() << " is not a miner address ";
+         thread_.reset();
+         stop();
+         return;
     }
 
     while (state_ != state::exit_)
     {
+        state_ = state::init_;
         auto millissecond = unix_millisecond();
         uint64_t current_block_height;
         if (node_.chain_impl().get_last_height(current_block_height))
         {
             if (current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle)
             {
-
+                state_ = state::creating_block_;
                 block_ptr block = create_new_block(pay_address, current_block_height);
 
                 if (block)
@@ -855,7 +845,7 @@ void miner::work(const wallet::payment_address pay_address)
                             continue;
                         }
 
-                        log::info(LOG_HEADER) << "solo miner create new block at heigth:" << height;
+                        log::debug(LOG_HEADER) << "solo miner create new block at heigth:" << height;
 
                         ++new_block_number_;
                         if ((new_block_limit_ != 0) && (new_block_number_ >= new_block_limit_))
@@ -868,15 +858,16 @@ void miner::work(const wallet::payment_address pay_address)
                 }
             }
         }
+        
         auto sleeptime = unix_millisecond() - millissecond;
         auto sleepmin = sleeptime<500?500-sleeptime:0;
         sleep_for(asio::milliseconds(sleepmin));
     }
 }
 
-int miner::get_mine_index(const wallet::payment_address& pay_address) const
+int miner::get_mine_index(const string& pay_address)
 {
-    vector<std::string>::iterator it=find(mine_address_list.begin(),mine_address_list.end(),pay_address.encoded());
+    auto it=find(mine_address_list.begin(),mine_address_list.end(), pay_address);
  
     if (it==mine_address_list.end())
     {
@@ -884,8 +875,30 @@ int miner::get_mine_index(const wallet::payment_address& pay_address) const
     }
     else
     {
-        return std::distance(std::begin(mine_address_list), it);
+        return it - mine_address_list.begin();
     }
+}
+
+bool miner::is_address_inturn(const string& pay_address) const
+{
+    uint64_t current_block_height;
+    if (!node_.chain_impl().get_last_height(current_block_height)) {
+        return false;
+    }
+    int index = get_mine_index(pay_address);
+    if (index == -1) {
+        return false;
+    }
+    return current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle;
+}
+
+bool miner::is_address_in_turn_with_now_height(uint64_t height,const string& pay_address)
+{
+    int index = get_mine_index(pay_address);
+    if (index == -1) {
+        return false;
+    }
+    return height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle;
 }
 
 bool miner::is_stop_miner(uint64_t block_height) const
@@ -899,6 +912,7 @@ bool miner::start(const wallet::payment_address& pay_address, uint16_t number)
         new_block_limit_ = number;
         thread_.reset(new boost::thread(bind(&miner::work, this, pay_address)));
     }
+    pay_address_ = pay_address;
     return true;
 }
 
@@ -951,6 +965,8 @@ bool miner::set_miner_pri_key(const string& pri_key)
     this->pri_key = pri_key;
 }
 
+
+
 bool miner::set_miner_payment_address(const bc::wallet::payment_address& address)
 {
     if (address) {
@@ -963,6 +979,11 @@ bool miner::set_miner_payment_address(const bc::wallet::payment_address& address
 
     pay_address_ = address;
     return true;
+}
+
+const std::string miner::get_miner_address() const
+{
+    return pay_address_.encoded();
 }
 
 miner::block_ptr miner::get_block(bool is_force_create_block)
@@ -1057,6 +1078,10 @@ void miner::get_state(uint64_t &height, uint32_t &miners,/*uint64_t &rate, strin
     //difficulty = to_string((u256)prev_header.bits);
     is_mining = thread_ ? true : false;
     miners = mine_address_list.size();
+}
+
+bool miner::is_creating_block() const {
+    return state_ == state::creating_block_;
 }
 
 vector<std::string>& miner::get_miners()

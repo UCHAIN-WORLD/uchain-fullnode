@@ -20,7 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChainService/api/command/commands/showmultisigaddress.hpp>
+#include <UChainService/api/command/commands/showmultisigaddresses.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
@@ -31,7 +31,7 @@ namespace commands {
 
 using namespace bc::explorer::config;
 
-console_result showmultisigaddress::invoke(Json::Value& jv_output,
+console_result showmultisigaddresses::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();

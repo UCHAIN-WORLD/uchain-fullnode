@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "destroy";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "destroy token to blackhole address U000000000000000000000000000000000."; }
+    const char* description() override { return "destroy token to blackhole address 1111111111111111111114oLvT2."; }
 
     arguments_metadata& load_arguments() override
     {

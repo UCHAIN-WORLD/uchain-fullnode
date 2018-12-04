@@ -234,6 +234,11 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
         chain::header prev_header = fetch_block(height_ - 1);
         if (current_block_.header.timestamp < prev_header.timestamp)
             return error::timestamp_too_early;
+
+        //Todo cannot check
+        /*if(!consensus::miner::is_address_in_turn_with_now_height(height_-1,transactions[0].outputs[0].get_script_address())) {
+            return error::first_coinbase_index_error;
+        }*/
     }
 
     
@@ -595,16 +600,18 @@ code validate_block::connect_block(hash_digest& err_tx, blockchain::block_chain_
         RETURN_IF_STOPPED();
 
         // coinbase that has no inputs does not need to check
-        if (tx.is_coinbase())
+        if (tx.is_strict_coinbase())
             continue;
 
         for (auto& output : transactions[tx_index].outputs)
         {
             if (chain::operation::is_pay_key_hash_with_lock_height_pattern(output.script.operations) ) {
-                uint64_t coinbase_lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(transactions[coinage_reward_coinbase_index].outputs[0].script.operations);
-                if (coinbase_lock_height == VOTE_LOCKED_TIME) {
+                uint64_t lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(output.script.operations);
+                
+                if (lock_height == VOTE_LOCKED_TIME) {
                     break;
                 }
+                uint64_t coinbase_lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(transactions[coinage_reward_coinbase_index].outputs[0].script.operations);
 
                 if (check_get_coinage_reward_transaction(transactions[coinage_reward_coinbase_index++], output) == false) {
                     return error::invalid_coinage_reward_coinbase;

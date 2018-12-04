@@ -44,6 +44,8 @@ console_result sendtokento::invoke(Json::Value& jv_output,
     // check token symbol
     check_token_symbol(argument_.symbol);
 
+    check_token_symbol_with_method(argument_.symbol);
+
     if (!argument_.amount) {
         throw token_amount_exception{"invalid token amount parameter!"};
     }
