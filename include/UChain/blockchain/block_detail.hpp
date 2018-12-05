@@ -62,15 +62,15 @@ public:
     const hash_digest hash() const;
 
     // Set if work proof is checked.
-    //void set_is_checked_work_proof(bool is_checked);
-    //bool get_is_checked_work_proof() const;
+    void set_is_checked_work_proof(bool is_checked);
+    bool get_is_checked_work_proof() const;
 
 private:
     bc::atomic<code> code_;
     std::atomic<bool> processed_;
     std::atomic<uint64_t> height_;
     const block_ptr actual_block_;
-    //std::atomic<bool> is_checked_work_proof_;
+    std::atomic<bool> is_checked_work_proof_;
 };
 
 } // namespace blockchain

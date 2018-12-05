@@ -90,7 +90,7 @@ private:
 
     /// This method is thread safe.
     void notify_reorganize(uint64_t fork_point,
-        const detail_list& orphan_chain, const detail_list& replaced_chain);
+        const detail_list& orphan_chain/*, const detail_list& replaced_chain*/);
 
     std::atomic<bool> stopped_;
     const bool use_testnet_rules_;
