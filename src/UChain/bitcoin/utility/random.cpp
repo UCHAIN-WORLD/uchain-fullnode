@@ -37,9 +37,20 @@ namespace libbitcoin {
 // This may be truly random depending on the underlying device.
 uint64_t pseudo_random()
 {
+#ifdef __MINGW32__
+    srand(time(0));
+    long long seed = rand();
+
+    std::default_random_engine rand_num{static_cast<long unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
+    //                            
+    std::uniform_int_distribution<uint64_t> distribution;
+
+    return distribution(rand_num);
+#else
     std::random_device device;
     std::uniform_int_distribution<uint64_t> distribution;
     return distribution(device);
+#endif    
 }
 
 // Not fully testable due to lack of random engine injection.

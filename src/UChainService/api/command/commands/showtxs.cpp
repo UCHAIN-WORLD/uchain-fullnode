@@ -253,7 +253,7 @@ console_result showtxs::invoke(Json::Value& jv_output,
             auto attach_data = op.attach_data;
             Json::Value tree = json_helper.prop_list(attach_data);
 
-            if (attach_data.get_type() == TOKEN_TYPE) {
+            if (attach_data.get_type() == UC_TOKEN_TYPE) {
                 auto token_info = boost::get<bc::chain::token>(attach_data.get_attach());
                 if (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE) {
                     // token_transfer dose not contain decimal_number message,

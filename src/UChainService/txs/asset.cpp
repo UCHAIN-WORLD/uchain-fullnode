@@ -87,7 +87,7 @@ bool asset::is_valid() const
 bool asset::is_valid_type() const
 {
     return ((UCN_TYPE == type)
-        || (TOKEN_TYPE == type)
+        || (UC_TOKEN_TYPE == type)
         || (TOKEN_CERT_TYPE == type)
         || (TOKEN_CARD_TYPE == type)
         || (MESSAGE_TYPE == type)
@@ -136,7 +136,7 @@ bool asset::from_data(reader& source)
                 attach = ucn_award();
                 break;
             }
-            case TOKEN_TYPE:
+            case UC_TOKEN_TYPE:
             {
                 attach = token();
                 break;
