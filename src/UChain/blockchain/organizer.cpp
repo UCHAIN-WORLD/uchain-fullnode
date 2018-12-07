@@ -242,11 +242,13 @@ void organizer::process(block_detail::ptr process_block)
 void organizer::replace_chain(uint64_t fork_index,
     block_detail::list& orphan_chain)
 {
+    u256 orphan_work = 0;
+
     for (uint64_t orphan = 0; orphan < orphan_chain.size(); ++orphan)
     {
         // This verifies the block at orphan_chain[orphan]->actual()
-        /*if(!orphan_chain[orphan]->get_is_checked_work_proof())
-        {*/
+        if(!orphan_chain[orphan]->get_is_checked_work_proof())
+        {
             const auto ec = verify(fork_index, orphan_chain, orphan);
             if (ec)
             {
@@ -270,27 +272,26 @@ void organizer::replace_chain(uint64_t fork_index,
 
                 // Stop summing work once we discover an invalid block
                 break;
-            /*}
+            }
             else
             {
                 orphan_chain[orphan]->set_is_checked_work_proof(true);
-            }*/
+            }
         }
 
-        //const auto& orphan_block = orphan_chain[orphan]->actual();
-        //orphan_work += block_work(orphan_block->header.bits);
+        const auto& orphan_block = orphan_chain[orphan]->actual();
+        orphan_work += block_work(orphan_block->header.timestamp);
     }
 
     // All remaining blocks in orphan_chain should all be valid now
     // Compare the difficulty of the 2 forks (original and orphan)
-    /*const auto begin_index = fork_index + 1;
-
-    //delete_fork_chain_hash(orphan_chain[orphan_chain.size() - 1]->actual()->header.previous_block_hash);
+    const auto begin_index = fork_index + 1;
 
     u256 main_work;
     DEBUG_ONLY(auto result =) chain_.get_difficulty(main_work, begin_index);
     BITCOIN_ASSERT(result);
-    
+
+    delete_fork_chain_hash(orphan_chain[orphan_chain.size() - 1]->actual()->header.previous_block_hash);
     if (orphan_work <= main_work)
     {
         if(orphan_chain.size() % node::locator_cap  == 0)
@@ -300,13 +301,11 @@ void organizer::replace_chain(uint64_t fork_index,
         log::debug(LOG_BLOCKCHAIN)
             << "Insufficient work to reorganize at [" << begin_index << "]" << "orphan_work:" << orphan_work << " main_work:" << main_work;
         return;
-    }*/
-
-    
+    }
 
     // Replace! Switch!
     block_detail::list released_blocks;
-    /*auto success = chain_.pop_from(released_blocks, begin_index);
+    auto success = chain_.pop_from(released_blocks, begin_index);
 
     if (!released_blocks.empty())
         log::warning(LOG_BLOCKCHAIN)
@@ -318,7 +317,7 @@ void organizer::replace_chain(uint64_t fork_index,
     if (!success) {
         log::warning(LOG_BLOCKCHAIN) << " pop_from begin_height:" << begin_index << "failed";
         return;
-    }*/
+    }
 
     // We add the arriving blocks first to the main chain because if
     // we add the blocks being replaced back to the pool first then
@@ -356,7 +355,7 @@ void organizer::replace_chain(uint64_t fork_index,
     }
 
     // Add the old blocks back to the pool (as processed with orphan height).
-    /*for (const auto replaced_block: released_blocks)
+    for (const auto replaced_block: released_blocks)
     {
         replaced_block->set_processed();
         orphan_pool_.add(replaced_block);
@@ -369,7 +368,7 @@ void organizer::replace_chain(uint64_t fork_index,
         {
             log::warning(LOG_BLOCKCHAIN) << " forked transaction hash:" << encode_hash(tx.hash()) << " data:" << tx.to_string(0);
         }
-    }*/
+    }
 
     notify_reorganize(fork_index, orphan_chain, released_blocks);
 }

@@ -71,10 +71,12 @@ settings::settings(bc::settings context)
             seeds.reserve(6);
             seeds.push_back({ "main-uchain-a.live", 5682 });
             seeds.push_back({ "main-uchain-b.live", 5682 });
-            seeds.push_back({ "main-uchain-c.live", 5682 });
-            seeds.push_back({ "main-uchain-d.live", 5682 });
+            //seeds.push_back({ "main-uchain-c.live", 5682 });
+            //seeds.push_back({ "main-uchain-d.live", 5682 });
             //seeds.push_back({ "main-uchain-e.live", 5682 });
             //seeds.push_back({ "main-uchain-f.live", 5682 });
+            seeds.push_back({ "35.182.225.90", 5682 });
+            seeds.push_back({ "13.124.250.27", 5682 });
             seeds.push_back({ "112.74.181.29", 5682 });
             seeds.push_back({ "120.78.209.248", 5682 });
             seeds.push_back({ "116.62.238.230"/*"seed.getuc.org"*/, 5682 });

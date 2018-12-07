@@ -93,12 +93,12 @@ options_metadata parser::load_options()
             default_value(false)->zero_tokens(),
         "Run in daemon mode (unix/apple)."
     )
-    (
+    /*(
         "testnet,t",
         value<bool>(&configured.use_testnet_rules)->
             default_value(false)->zero_tokens(),
         "Use testnet rules for determination of work required, defaults to false."
-    )
+    )*/
     (
         BS_DATADIR_VARIABLE ",D",
         value<path>(&configured.data_dir)->

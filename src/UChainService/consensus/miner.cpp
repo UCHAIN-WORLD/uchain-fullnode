@@ -806,8 +806,9 @@ std::vector<std::string> mine_address_list = {
                         /*"UPqb2AfKPpfqFoxAaujmH7Ay3CiGQgue7h",
                         "UeBhVsr28ovcBS5DjxqXtHa3ueCP6o2FQi",
                         "UcuW7wVu198Nuzok8eeMDUNEZQoGqQRRz5"*/
-                        "UXFQvGKWh8GzEtV1RNw2Vo1abnynPy58u1",
-                        "UiyoSgUnCbfSFVKcufwMZALVMURmiEfswq"
+                        "UcuW7wVu198Nuzok8eeMDUNEZQoGqQRRz5",
+                        "URaJN6xB2vmFGQcXDkLkrDjaSxu9qJN4Zr",
+                        "UeBhVsr28ovcBS5DjxqXtHa3ueCP6o2FQi"
                     };
 
 void miner::work(const wallet::payment_address pay_address)
