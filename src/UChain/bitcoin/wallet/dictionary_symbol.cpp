@@ -48,7 +48,7 @@ namespace symbol {
         "FUCK",
         "SHIT",
         "198964",
-        "gongdHANDANG",
+        "GONGCHANDANG",
         "GCD",
         "TUGONG",
         "COMMUNISM",
