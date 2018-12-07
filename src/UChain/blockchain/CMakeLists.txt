@@ -1,0 +1,15 @@
+FILE(GLOB_RECURSE blockchain_SOURCES "*.cpp")
+
+ADD_DEFINITIONS(-DBCB_STATIC=1 -DWITH_CONSENSUS)
+ADD_LIBRARY(blockchain_static STATIC ${blockchain_SOURCES})
+SET_TARGET_PROPERTIES(blockchain_static PROPERTIES OUTPUT_NAME uc_blockchain)
+TARGET_LINK_LIBRARIES(blockchain_static ${Boost_LIBRARIES} ${txs_LIBRARY} ${bitcoin_LIBRARY} ${data_LIBRARY} ${database_LIBRARY} ${consensus_LIBRARY})
+INSTALL(TARGETS blockchain_static DESTINATION lib)
+
+IF(ENABLE_SHARED_LIBS)
+    ADD_DEFINITIONS(-DBCB_DLL=1 -DWITH_CONSENSUS)
+  ADD_LIBRARY(blockchain_shared SHARED ${blockchain_SOURCES})
+  SET_TARGET_PROPERTIES(blockchain_shared PROPERTIES OUTPUT_NAME uc_blockchain)
+  TARGET_LINK_LIBRARIES(blockchain_shared ${Boost_LIBRARIES} ${txs_LIBRARY} ${bitcoin_LIBRARY} ${data_LIBRARY} ${database_LIBRARY} ${consensus_LIBRARY})
+  INSTALL(TARGETS blockchain_shared DESTINATION lib)
+ENDIF()
