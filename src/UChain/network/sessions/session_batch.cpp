@@ -149,7 +149,7 @@ void session_batch::handle_connect(const code& ec, channel::ptr channel,
 
     if (ec)
     {
-        log::info(LOG_NETWORK)
+        log::trace(LOG_NETWORK)
             << "Failure connecting to [" << host << "] " << count << ","
             << ec.message();
         if (ec == error::channel_timeout) // if connect is not aviliable, change it into inactive state
@@ -162,7 +162,7 @@ void session_batch::handle_connect(const code& ec, channel::ptr channel,
 
     store(host.to_network_address());
 
-    log::info(LOG_NETWORK)
+    log::trace(LOG_NETWORK)
         << "Connected to [" << channel->authority() << "]";
 
     // This is the end of the connect sequence.

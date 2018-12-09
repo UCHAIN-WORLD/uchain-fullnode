@@ -26,7 +26,14 @@
 #include <array>
 #include <cstdint>
 #include <algorithm>
-#include <boost/random/random_device.hpp>
+#include <chrono>
+#include <cstdint>
+#include <stdexcept>
+#ifdef __MINGW32__
+    #include <boost/random/random_device.hpp>
+#else    
+    #include <random>
+#endif    
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/functional/hash.hpp>
 #include "CommonData.h"
@@ -36,8 +43,11 @@ namespace libbitcoin
 /// Compile-time calculation of Log2 of constant values.
 template <unsigned N> struct StaticLog2 { enum { result = 1 + StaticLog2<N/2>::result }; };
 template <> struct StaticLog2<1> { enum { result = 0 }; };
-
-extern boost::random_device s_fixedHashEngine;
+#ifdef __MINGW32__
+    extern boost::random_device s_fixedHashEngine;
+#else
+    extern std::random_device s_fixedHashEngine;
+#endif
 
 /// Fixed-size raw-byte array container type, with an API optimised for storing hashes.
 /// Transparently converts to/from the corresponding arithmetic type; this will
@@ -290,8 +300,12 @@ public:
 
     bytesConstRef ref() const { return FixedHash<T>::ref(); }
     byte const* data() const { return FixedHash<T>::data(); }
-
+    // #ifdef __MINGW32__
+    // std::default_random_engine sm{)};                        
+    // static SecureFixedHash<T> random() { SecureFixedHash<T> ret; ret.randomize(sm); return ret; }
+    // #else
     static SecureFixedHash<T> random() { SecureFixedHash<T> ret; ret.randomize(s_fixedHashEngine); return ret; }
+    //#endif
     using FixedHash<T>::firstBitSet;
 
     void clear() { ref().cleanse(); }

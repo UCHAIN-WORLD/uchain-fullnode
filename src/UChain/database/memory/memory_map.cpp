@@ -25,6 +25,7 @@
 #ifdef _WIN32
     #include <io.h>
     #include "../mman-win32/mman.h"
+  
     #define FILE_OPEN_PERMISSIONS _S_IREAD | _S_IWRITE
 #else
     #include <unistd.h>

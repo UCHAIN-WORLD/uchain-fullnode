@@ -20,10 +20,14 @@
  */
 #include <UChain/bitcoin/utility/random.hpp>
 
-#include <chrono>
+//#include <chrono>
 #include <cstdint>
 #include <stdexcept>
-#include <random>
+#ifdef __MINGW32__
+    #include <boost/random/random_device.hpp>
+#else    
+    #include <random>
+#endif    
 #include <UChain/bitcoin/utility/asio.hpp>
 #include <UChain/bitcoin/utility/assert.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
@@ -38,19 +42,12 @@ namespace libbitcoin {
 uint64_t pseudo_random()
 {
 #ifdef __MINGW32__
-    srand(time(0));
-    long long seed = rand();
-
-    std::default_random_engine rand_num{static_cast<long unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
-    //                            
-    std::uniform_int_distribution<uint64_t> distribution;
-
-    return distribution(rand_num);
+    boost::random_device device;
 #else
     std::random_device device;
+#endif    
     std::uniform_int_distribution<uint64_t> distribution;
     return distribution(device);
-#endif    
 }
 
 // Not fully testable due to lack of random engine injection.
@@ -72,7 +69,11 @@ uint64_t nonzero_pseudo_random()
 // This may be truly random depending on the underlying device.
 void pseudo_random_fill(data_chunk& chunk)
 {
+#ifdef __MINGW32__
+    boost::random_device device;
+#else
     std::random_device device;
+#endif      
     std::uniform_int_distribution<uint16_t> distribution;
     for (uint8_t& byte: chunk)
     {
