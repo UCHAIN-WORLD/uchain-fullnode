@@ -92,7 +92,7 @@ bool parser::load_configuration_variables(variables_map& variables,
     const std::string& option_name)
 {
     const auto config_settings = load_settings();
-    auto config_path = default_data_path() / get_config_option(variables, option_name);
+    auto config_path = get_config_option(variables, option_name);
 
     // If the existence test errors out we pretend there's no file :/.
     error_code code;
