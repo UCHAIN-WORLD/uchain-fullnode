@@ -803,12 +803,11 @@ std::string to_string(_T const& _t)
 
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 std::vector<std::string> mine_address_list = {
-                        /*"UPqb2AfKPpfqFoxAaujmH7Ay3CiGQgue7h",
-                        "UeBhVsr28ovcBS5DjxqXtHa3ueCP6o2FQi",
-                        "UcuW7wVu198Nuzok8eeMDUNEZQoGqQRRz5"*/
+                        /*
                         "UcuW7wVu198Nuzok8eeMDUNEZQoGqQRRz5",
                         "URaJN6xB2vmFGQcXDkLkrDjaSxu9qJN4Zr",
-                        "UeBhVsr28ovcBS5DjxqXtHa3ueCP6o2FQi"
+                        "UeBhVsr28ovcBS5DjxqXtHa3ueCP6o2FQi"*/
+                        "UPqVLpaoDceFvEuTiwijaqXiZCiqHvjZ3C"
                     };
 
 void miner::work(const wallet::payment_address pay_address)
