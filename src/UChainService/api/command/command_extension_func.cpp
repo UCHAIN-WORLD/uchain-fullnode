@@ -362,7 +362,7 @@ shared_ptr<command> find_extension(const string& symbol)
     if (symbol == registercert::symbol())
         return make_shared<registercert>();*/
 
-    // mit
+    // card
     /*if (symbol == registercard::symbol())
         return make_shared<registercard>();
     if (symbol == transfercard::symbol())
