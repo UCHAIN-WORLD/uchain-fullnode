@@ -52,6 +52,11 @@ ELSEIF("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     SET(CMAKE_CXX_FLAGS "-std=c++14 ${COMMON_ARGS} -Wno-reorder -Wno-ignored-qualifiers -Wno-inconsistent-missing-override -Wno-missing-braces -Wno-mismatched-tags -Wno-overloaded-virtual -Wno-sometimes-uninitialized -Wno-macro-redefined -Wno-uninitialized -Wno-unused-private-field -Wno-unused-function -Wno-implicit-fallthrough")
 ENDIF()
 
+if(MINGW OR MSYS)
+	set(CMAKE_CXX_STANDARD_LIBRARIES "${CMAKE_CXX_STANDARD_LIBRARIES} -lwsock32 -lws2_32 -lgmp -static")
+	set(CMAKE_C_STANDARD_LIBRARIES "${CMAKE_C_STANDARD_LIBRARIES} -lwsock32 -lws2_32 -lgmp -static")
+ENDIF()
+	
 SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fPIC")
 
 # --------------- Macro Definitions ------------------
@@ -79,7 +84,7 @@ ELSE()
 ENDIF()
 
 # use UPNP
-SET(USE_UPNP ON CACHE BOOL "Use UPNP.")
+SET(USE_UPNP OFF CACHE BOOL "Use UPNP.")
 IF(USE_UPNP)
     ADD_DEFINITIONS(-DUSE_UPNP=1)
     FIND_PACKAGE(miniupnpc REQUIRED)
