@@ -315,7 +315,7 @@ miner::transaction_ptr miner::create_coinbase_tx(
     auto ass = token(TOKEN_TRANSFERABLE_TYPE, transfer);
 
     ptransaction->outputs[0].value = 0; //1 block
-    ptransaction->outputs[0].attach_data = asset(TOKEN_TYPE, 1, ass);
+    ptransaction->outputs[0].attach_data = asset(UC_TOKEN_TYPE, 1, ass);
 
     return ptransaction;
 }

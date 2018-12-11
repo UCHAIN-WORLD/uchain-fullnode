@@ -27,6 +27,7 @@ Recommends Ubuntu 16.04/CentOS 7.2/Visual Studio 2015 to develop/debug/build UC.
 - cmake 3.0+
 - git
 - automake (speck256k1/ZeroMQ required)
+- make (mingw is supported)
 
 ```bash
 $ yum/brew/apt-get install git cmake

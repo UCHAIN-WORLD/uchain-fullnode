@@ -24,7 +24,11 @@
 
 #ifdef _WIN32
     #include <io.h>
-    #include "../mman-win32/mman.h"
+    #ifdef __MINGW32__
+        #include "../mman-mingw/mman.h"
+    #else
+        #include "../mman-win32/mman.h"
+    #endif  
     #define FILE_OPEN_PERMISSIONS _S_IREAD | _S_IWRITE
 #else
     #include <unistd.h>

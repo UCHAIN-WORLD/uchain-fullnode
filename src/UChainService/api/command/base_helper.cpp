@@ -1278,7 +1278,7 @@ asset base_transfer_common::populate_output_asset(const receiver_record& record)
     }
     else if (record.type == utxo_attach_type::token_issue
         || record.type == utxo_attach_type::token_secondaryissue) {
-        return asset(TOKEN_TYPE, attach_version, token(/*set on subclass*/));
+        return asset(UC_TOKEN_TYPE, attach_version, token(/*set on subclass*/));
     }
     else if (record.type == utxo_attach_type::token_transfer
             || record.type == utxo_attach_type::token_locked_transfer
@@ -1288,7 +1288,7 @@ asset base_transfer_common::populate_output_asset(const receiver_record& record)
         if (!ass.is_valid()) {
             throw tx_asset_value_exception{"invalid token transfer asset"};
         }
-        return asset(TOKEN_TYPE, attach_version, ass);
+        return asset(UC_TOKEN_TYPE, attach_version, ass);
     }
     else if (record.type == utxo_attach_type::message) {
         auto msg = boost::get<blockchain_message>(record.attach_elem.get_attach());

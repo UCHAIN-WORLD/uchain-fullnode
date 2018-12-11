@@ -40,7 +40,7 @@ using namespace libbitcoin::chain;
 
 #define UCN_TYPE        TYPE2UINT32(asset::asset_type::asset_ucn)
 #define UCN_AWARD_TYPE  TYPE2UINT32(asset::asset_type::asset_ucn_award)
-#define TOKEN_TYPE      TYPE2UINT32(asset::asset_type::asset_token)
+#define UC_TOKEN_TYPE      TYPE2UINT32(asset::asset_type::asset_token)
 #define MESSAGE_TYPE    TYPE2UINT32(asset::asset_type::asset_message)
 #define UID_TYPE        TYPE2UINT32(asset::asset_type::asset_uid)
 #define TOKEN_CERT_TYPE TYPE2UINT32(asset::asset_type::asset_token_cert)
