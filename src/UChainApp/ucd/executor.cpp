@@ -335,6 +335,10 @@ void executor::initialize_output()
                         ? metadata_.configured.file:default_data_path() / metadata_.configured.file;
     if(metadata_.configured.file.string().compare("uc.conf"))
     {
+        if(boost::filesystem::exists(default_data_path()/"conf"))
+        {
+            boost::filesystem::remove(default_data_path()/"conf");
+        }
     #ifdef __WIN32__
         CreateSymbolicLinkA(default_data_path()/"conf", metadata_.configured.file.string(), 0) ;
     #else
