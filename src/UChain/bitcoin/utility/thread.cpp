@@ -22,7 +22,7 @@
 
 #include <stdexcept>
 
-#ifdef _MSC_VER
+#ifdef _WIN32
     #include <windows.h>
 #else
     #include <unistd.h>
@@ -63,7 +63,7 @@ void set_thread_priority(thread_priority priority)
 {
     const auto prioritization = get_thread_priority(priority);
 
-#if defined(_MSC_VER)
+#if defined(_WIN32)
     SetThreadPriority(GetCurrentThread(), prioritization);
 #elif defined(PRIO_THREAD)
     sucnriority(PRIO_THREAD, pthread_self(), prioritization);

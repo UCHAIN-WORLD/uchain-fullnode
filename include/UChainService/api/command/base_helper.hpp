@@ -48,10 +48,10 @@ namespace commands{
 /// for example :
 /// utxo_attach_type::token_issue    --> asset_token of token_detail
 ///     auto token_detail = token(TOKEN_DETAIL_TYPE, token_detail);
-///     asset(TOKEN_TYPE, attach_version, token_detail);
+///     asset(UC_TOKEN_TYPE, attach_version, token_detail);
 /// utxo_attach_type::token_transfer --> asset_token of token_transfer
 ///     auto token_transfer = token(TOKEN_TRANSFERABLE_TYPE, token_transfer);
-///     asset(TOKEN_TYPE, attach_version, token_transfer);
+///     asset(UC_TOKEN_TYPE, attach_version, token_transfer);
 /// NOTICE: createrawtx / createmultisigtx --type option is using these values.
 /// DO NOT CHANGE EXIST ITEMS!!!
 enum class utxo_attach_type : uint32_t

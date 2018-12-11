@@ -620,7 +620,7 @@ Json::Value json_helper::prop_list(bc::chain::asset& attach_data)
     if (attach_data.get_type() == UCN_TYPE) {
         tree["type"] = "ucn";
     }
-    else if (attach_data.get_type() == TOKEN_TYPE) {
+    else if (attach_data.get_type() == UC_TOKEN_TYPE) {
         auto token_info = boost::get<bc::chain::token>(attach_data.get_attach());
         if (token_info.get_status() == TOKEN_DETAIL_TYPE) {
             auto detail_info = boost::get<bc::chain::token_detail>(token_info.get_data());

@@ -57,7 +57,7 @@ console_result showinfo::invoke(Json::Value& jv_output,
         jv["protocol-version"] = node.network_settings().protocol;
         jv["wallet-version"] = UC_EXPLORER_VERSION;
         jv["database-version"] = UC_DATABASE_VERSION;
-        jv["testnet"] = blockchain.chain_settings().use_testnet_rules;
+        //jv["testnet"] = blockchain.chain_settings().use_testnet_rules;
         jv["peers"] = get_connections_count(node);
 
         jv["network-tokens-count"] = static_cast<uint64_t>(symbols.size());
@@ -74,7 +74,7 @@ console_result showinfo::invoke(Json::Value& jv_output,
         jv["protocol_version"] = node.network_settings().protocol;
         jv["wallet_version"] = UC_EXPLORER_VERSION;
         jv["database_version"] = UC_DATABASE_VERSION;
-        jv["testnet"] = blockchain.chain_settings().use_testnet_rules;
+        //jv["testnet"] = blockchain.chain_settings().use_testnet_rules;
         jv["peers"] = get_connections_count(node);
 
         jv["token_count"] = static_cast<uint64_t>(symbols.size());
