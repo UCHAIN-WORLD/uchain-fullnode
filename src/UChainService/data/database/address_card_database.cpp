@@ -138,7 +138,7 @@ address_card_statinfo address_card_database::statinfo() const
 void address_card_database::store_output(const short_hash& key,
     const output_point& outpoint, uint32_t output_height,
     uint64_t value, uint16_t business_kd,
-    uint32_t timestamp, const token_card& mit)
+    uint32_t timestamp, const token_card& card)
 {
     auto write = [&](memory_ptr data)
     {
@@ -149,7 +149,7 @@ void address_card_database::store_output(const short_hash& key,
         serial.write_8_bytes_little_endian(value);  // 8
         serial.write_2_bytes_little_endian(business_kd); // 2
         serial.write_4_bytes_little_endian(timestamp); // 4
-        serial.write_data(mit.to_short_data());
+        serial.write_data(card.to_short_data());
     };
     rows_multimap_.add_row(key, write);
 }
@@ -168,7 +168,7 @@ void address_card_database::store_input(const short_hash& key,
 
         serial.write_2_bytes_little_endian(0); // 2 use ucn type fill incase invalid when deser
         serial.write_4_bytes_little_endian(timestamp); // 4
-        // mit data should be here but input has no these data
+        // card data should be here but input has no these data
     };
     rows_multimap_.add_row(key, write);
 }
@@ -308,8 +308,8 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(const s
                 if((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
                     continue; // skip previous page record
                 result->emplace_back(row);
-            } else { // mit symbol utxo
-                // mit business process
+            } else { // card symbol utxo
+                // card business process
                 auto transfer = boost::get<token_card>(row.data.get_data());
                 card_symbol = transfer.get_symbol();
 
@@ -571,7 +571,7 @@ std::shared_ptr<std::vector<business_history>> address_card_database::get_addres
 
 }
 
-// get special kind of mit in the database(blockchain)
+// get special kind of card in the database(blockchain)
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
@@ -596,7 +596,7 @@ business_history::list address_card_database::get_business_history(const std::st
 
 }
 
-// get special kind of mit in the database(blockchain)
+// get special kind of card in the database(blockchain)
 business_history::list address_card_database::get_business_history(const std::string& address,
     size_t from_height, uint32_t time_begin, uint32_t time_end) const
 {
@@ -624,7 +624,7 @@ business_history::list address_card_database::get_business_history(const std::st
     return unspent;
 }
 
-// get special kind of mit in the database(blockchain)
+// get special kind of card in the database(blockchain)
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
@@ -649,14 +649,14 @@ business_address_card::list address_card_database::get_cards(const std::string& 
         if (status == business_status::unknown)
             continue;
 
-        auto mit = boost::get<token_card>(row.data.get_data());
+        auto card = boost::get<token_card>(row.data.get_data());
         if ((kind != token_card::card_status::card_status_none)
-            && (kind != (token_card::card_status)mit.get_status())) {
+            && (kind != (token_card::card_status)card.get_status())) {
             continue;
         }
 
         business_address_card detail;
-        detail.mit = mit;
+        detail.card = card;
         detail.address = address; // account address
         detail.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);

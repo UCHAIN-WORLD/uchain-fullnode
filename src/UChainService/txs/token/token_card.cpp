@@ -30,7 +30,7 @@
 namespace libbitcoin {
 namespace chain {
 
-// use 1~127 to represent normal mit status type
+// use 1~127 to represent normal card status type
 // add plus 128 to them to make their status type in tracing state.
 // status >128 means no content should be store
 constexpr uint8_t CARD_STATUS_MASK = 0x7f;
@@ -272,18 +272,18 @@ void token_card_info::reset()
     output_height = 0;
     timestamp = 0;
     to_uid = "";
-    mit.reset();
+    card.reset();
 }
 
 bool token_card_info::operator< (const token_card_info& other) const
 {
-    return mit < other.mit;
+    return card < other.card;
 }
 
 uint64_t token_card_info::serialized_size() const
 {
-    // output_height; timestamp; to_uid; mit;
-    return 4 + 4 + (to_uid.size() +1) + mit.serialized_size();
+    // output_height; timestamp; to_uid; card;
+    return 4 + 4 + (to_uid.size() +1) + card.serialized_size();
 }
 
 token_card_info token_card_info::factory_from_data(reader& source)
@@ -294,7 +294,7 @@ token_card_info token_card_info::factory_from_data(reader& source)
     instance.output_height = source.read_4_bytes_little_endian();
     instance.timestamp = source.read_4_bytes_little_endian();
     instance.to_uid = source.read_string();
-    instance.mit = token_card::factory_from_data(source);
+    instance.card = token_card::factory_from_data(source);
 
     auto result = static_cast<bool>(source);
     if (!result) {
@@ -313,7 +313,7 @@ data_chunk token_card_info::to_data() const
     sink.write_4_bytes_little_endian(output_height);
     sink.write_4_bytes_little_endian(timestamp);
     sink.write_string(to_uid);
-    sink.write_data(mit.to_data());
+    sink.write_data(card.to_data());
 
     ostream.flush();
     return data;
@@ -328,7 +328,7 @@ data_chunk token_card_info::to_short_data() const
     sink.write_4_bytes_little_endian(output_height);
     sink.write_4_bytes_little_endian(timestamp);
     sink.write_string(to_uid);
-    sink.write_data(mit.to_short_data());
+    sink.write_data(card.to_short_data());
 
     ostream.flush();
     return data;

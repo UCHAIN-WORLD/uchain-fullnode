@@ -50,7 +50,7 @@ BC_CONSTEXPR size_t TOKEN_CARD_FIX_SIZE = (TOKEN_CARD_SYMBOL_FIX_SIZE
 BC_CONSTEXPR size_t TOKEN_CARD_TRANSFER_FIX_SIZE = (
             TOKEN_CARD_FIX_SIZE - TOKEN_CARD_CONTENT_FIX_SIZE);
 
-// output_height; timestamp; to_uid; mit;
+// output_height; timestamp; to_uid; card;
 BC_CONSTEXPR size_t TOKEN_CARD_INFO_FIX_SIZE = 4 + 4 + 64 + TOKEN_CARD_TRANSFER_FIX_SIZE;
 
 class BC_API token_card
@@ -125,7 +125,7 @@ struct BC_API token_card_info
     uint32_t output_height;
     uint32_t timestamp;
     std::string to_uid;
-    token_card mit;
+    token_card card;
 
     uint64_t serialized_size() const;
     void reset();

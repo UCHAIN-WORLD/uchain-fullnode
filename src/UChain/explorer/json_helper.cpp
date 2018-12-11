@@ -559,12 +559,12 @@ Json::Value json_helper::prop_list(const bc::chain::token_card_info& card_info, 
     }
 
     tree["to_uid"] = card_info.to_uid;
-    tree["symbol"] = card_info.mit.get_symbol();
-    tree["address"] = card_info.mit.get_address();
-    tree["status"] = card_info.mit.get_status_name();
+    tree["symbol"] = card_info.card.get_symbol();
+    tree["address"] = card_info.card.get_address();
+    tree["status"] = card_info.card.get_status_name();
 
-    if (always_show_content || card_info.mit.is_register_status()) {
-        tree["content"] = card_info.mit.get_content();
+    if (always_show_content || card_info.card.is_register_status()) {
+        tree["content"] = card_info.card.get_content();
     }
 
     return tree;
@@ -642,7 +642,7 @@ Json::Value json_helper::prop_list(bc::chain::asset& attach_data)
     else if (attach_data.get_type() == TOKEN_CARD_TYPE) {
         auto token_info = boost::get<bc::chain::token_card>(attach_data.get_attach());
         tree = prop_list(token_info);
-        tree["type"] = "mit";
+        tree["type"] = "card";
     }
     else if (attach_data.get_type() == TOKEN_CERT_TYPE) {
         auto cert_info = boost::get<bc::chain::token_cert>(attach_data.get_attach());

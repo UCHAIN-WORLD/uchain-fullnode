@@ -63,7 +63,7 @@ console_result showcards::invoke(Json::Value& jv_output,
                 if (!elem.is_register_status()) {
                     auto token = blockchain.get_registered_card(elem.get_symbol());
                     if (nullptr != token) {
-                        elem.set_content(token->mit.get_content());
+                        elem.set_content(token->card.get_content());
                     }
                 }
 

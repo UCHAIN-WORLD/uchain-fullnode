@@ -75,7 +75,7 @@ console_result showcard::invoke(Json::Value& jv_output,
         auto sh_vec = blockchain.get_registered_cards();
         std::sort(sh_vec->begin(), sh_vec->end());
         for (auto& elem : *sh_vec) {
-            json_value.append(elem.mit.get_symbol());
+            json_value.append(elem.card.get_symbol());
         }
 
         if (get_api_version() <=2 ) {
@@ -111,7 +111,7 @@ console_result showcard::invoke(Json::Value& jv_output,
                     auto& card_info = *last_iter;
                     auto reg_card = blockchain.get_registered_card(argument_.symbol);
                     if (nullptr != reg_card) {
-                        card_info.mit.set_content(reg_card->mit.get_content());
+                        card_info.card.set_content(reg_card->card.get_content());
                     }
 
                     json_value = json_helper.prop_list(card_info, true);

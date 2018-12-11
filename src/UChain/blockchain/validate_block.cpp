@@ -294,7 +294,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
                 auto r = token_cards.insert(output.get_token_symbol());
                 if (r.second == false) {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_block mit " + output.get_token_symbol()
+                        << "check_block card " + output.get_token_symbol()
                         << " already exists in block!"
                         << " " << tx.to_string(1);
                     ec = error::card_exist;

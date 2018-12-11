@@ -1023,13 +1023,13 @@ bool validate_transaction::check_token_cert_exist(const std::string& cert, token
     return height != max_uint64;
 }
 
-bool validate_transaction::check_token_card_exist(const std::string& mit) const
+bool validate_transaction::check_token_card_exist(const std::string& card) const
 {
-    uint64_t height = blockchain_.get_token_card_height(mit);
+    uint64_t height = blockchain_.get_token_card_height(card);
 
     if (validate_block_) {
         //register before fork or find in orphan chain
-        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_card_in_orphan_chain(mit)) {
+        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_card_in_orphan_chain(card)) {
             return true;
         }
 

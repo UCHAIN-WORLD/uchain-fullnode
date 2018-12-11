@@ -87,11 +87,11 @@ console_result registercard::invoke (Json::Value& jv_output,
     }
 
     // check multi symbol and content
-    for (const auto& mit : option_.multimits) {
+    for (const auto& card : option_.multimits) {
         std::string symbol, content;
-        auto pos = mit.find_first_of(":");
+        auto pos = card.find_first_of(":");
         if (pos == std::string::npos) {
-            symbol = mit;
+            symbol = card;
 
             if (use_unified_content) {
                 content = option_.content;
@@ -101,8 +101,8 @@ console_result registercard::invoke (Json::Value& jv_output,
             }
         }
         else {
-            symbol = mit.substr(0, pos);
-            content = mit.substr(pos + 1);
+            symbol = card.substr(0, pos);
+            content = card.substr(pos + 1);
         }
 
         check_symbol_content(symbol, content);

@@ -227,7 +227,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                 if (r.second == false)
                 {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat mit " + output.get_token_symbol()
+                        << "check_symbol_repeat card " + output.get_token_symbol()
                         << " already exists in memorypool!"
                         << " " << tx->to_string(1);
                     return error::card_exist;

@@ -225,7 +225,7 @@ public:
     void push_uid_detail(const uid_detail& sp_detail, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_card(const token_card& mit, const short_hash& key,
+    void push_card(const token_card& card, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value,
                 const std::string from_uid, std::string to_uid);
 

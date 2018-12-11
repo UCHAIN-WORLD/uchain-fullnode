@@ -174,12 +174,12 @@ uint64_t blockchain_card_database::get_register_height(const std::string & card_
 
 void blockchain_card_database::store(const token_card_info& card_info)
 {
-    const auto& key_str = card_info.mit.get_symbol();
+    const auto& key_str = card_info.card.get_symbol();
     const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
     const auto key = sha256_hash(data);
 
 #ifdef UC_DEBUG
-    log::debug("blockchain_card_database::store") << card_info.mit.to_string();
+    log::debug("blockchain_card_database::store") << card_info.card.to_string();
 #endif
 
     // Write block data.

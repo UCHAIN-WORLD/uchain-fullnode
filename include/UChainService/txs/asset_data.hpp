@@ -251,7 +251,7 @@ public:
 
     std::string  address;
     uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
-    token_card mit;
+    token_card card;
 
 #ifdef UC_DEBUG
     // just used for unit test in block_chain_impl_test.cpp
@@ -261,7 +261,7 @@ public:
 
         ss << "\t address = " << address
             << "\t status = " << std::to_string(status)
-            << "\t mit = " << mit.to_string() << "\n";
+            << "\t card = " << card.to_string() << "\n";
 
         return ss.str();
     }

@@ -158,7 +158,7 @@ card_history_statinfo card_history_database::statinfo() const
 // ----------------------------------------------------------------------------
 void card_history_database::store(const token_card_info& card_info)
 {
-    const auto& key_str = card_info.mit.get_symbol();
+    const auto& key_str = card_info.card.get_symbol();
     const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
     const auto key = ripemd160_hash(data);
 

@@ -82,7 +82,7 @@ public:
 
     void store_output(const short_hash& key, const output_point& outpoint,
         uint32_t output_height, uint64_t value, uint16_t business_kd,
-        uint32_t timestamp, const token_card& mit);
+        uint32_t timestamp, const token_card& card);
 
     void store_input(const short_hash& key,
         const output_point& inpoint, uint32_t input_height,

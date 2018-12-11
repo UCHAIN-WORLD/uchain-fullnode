@@ -481,7 +481,7 @@ token_card output::get_token_card() const
     if (is_token_card()) {
         return boost::get<token_card>(attach_data.get_attach());
     }
-    log::error("output::get_token_card") << "Asset type is not an mit.";
+    log::error("output::get_token_card") << "Asset type is not an card.";
     return token_card();
 }
 

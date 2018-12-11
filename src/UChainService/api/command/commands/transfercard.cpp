@@ -52,8 +52,8 @@ console_result transfercard::invoke (Json::Value& jv_output,
         throw token_lack_exception("Not enough token '" + argument_.symbol +  "'");
     }
 
-    auto& mit = *(mits->begin());
-    std::string from_address(mit.get_address());
+    auto& card = *(mits->begin());
+    std::string from_address(card.get_address());
     bool is_multisig_address = blockchain.is_script_address(from_address);
 
     account_multisig acc_multisig;

@@ -151,7 +151,7 @@ bool data_base::initialize_cards(const path& prefix)
         return false;
 
     log::info(LOG_DATABASE)
-        << "Upgrading mit table is complete.";
+        << "Upgrading card table is complete.";
 
     return instance.stop();
 }
@@ -182,7 +182,7 @@ bool data_base::upgrade_version_63(const path& prefix)
 
     if (!initialize_cards(prefix)) {
         log::error(LOG_DATABASE)
-            << "Failed to upgrade mit database.";
+            << "Failed to upgrade card database.";
         return false;
     }
 
@@ -1111,7 +1111,7 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
             data_chunk data(address_str.begin(), address_str.end());
             short_hash hash = ripemd160_hash(data);
             bc::chain::output op = *output;
-            // NOTICE: pop only the pushed row, at present uid and mit is
+            // NOTICE: pop only the pushed row, at present uid and card is
             // not stored in address_token, but stored separately
             // in address_uid and address_uid
             if (!op.is_uid() && !op.is_token_card()) {
@@ -1171,14 +1171,14 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
             else if (op.is_token_card()) {
                 address_cards.delete_last_row(hash);
 
-                const auto mit = op.get_token_card();
-                auto symbol = mit.get_symbol();
+                const auto card = op.get_token_card();
+                auto symbol = card.get_symbol();
                 const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
 
                 const auto symbol_short_hash = ripemd160_hash(symbol_data);
                 card_history.delete_last_row(symbol_short_hash);
 
-                if (mit.is_register_status()) {
+                if (card.is_register_status()) {
                     const auto symbol_hash = sha256_hash(symbol_data);
                     mits.remove(symbol_hash);
                 }
@@ -1299,27 +1299,27 @@ void data_base::push_uid_detail(const uid_detail& sp_detail, const short_hash& k
 
 /* end store uid related info into database */
 
-/* begin store mit related info into database */
-void data_base::push_card(const token_card& mit, const short_hash& key,
+/* begin store card related info into database */
+void data_base::push_card(const token_card& card, const short_hash& key,
     const output_point& outpoint, uint32_t output_height, uint64_t value,
     const std::string from_uid, std::string to_uid)
 {
-    token_card_info card_info{output_height, timestamp_, to_uid, mit};
+    token_card_info card_info{output_height, timestamp_, to_uid, card};
 
-    if (mit.is_register_status()) {
+    if (card.is_register_status()) {
         mits.store(card_info);
         mits.sync();
     }
 
     address_cards.store_output(key, outpoint, output_height, value,
         static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_card),
-        timestamp_, mit);
+        timestamp_, card);
     address_cards.sync();
 
     card_history.store(card_info);
     card_history.sync();
 }
-/* end store mit related info into database */
+/* end store card related info into database */
 
 } // namespace data_base
 } // namespace libbitcoin
