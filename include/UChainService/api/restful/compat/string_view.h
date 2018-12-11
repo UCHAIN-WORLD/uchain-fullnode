@@ -20,7 +20,7 @@
 #ifndef UC___STRING_VIEW__
 #define UC___STRING_VIEW__
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include <boost/utility/string_view_fwd.hpp>
 #include <boost/utility/string_view.hpp>
 #define string_view boost::string_view

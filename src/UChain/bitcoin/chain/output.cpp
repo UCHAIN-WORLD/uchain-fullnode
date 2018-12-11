@@ -259,7 +259,7 @@ std::string output::to_string(uint32_t flags) const
 
 uint64_t output::get_token_amount() const // for validate_transaction.cpp to calculate token transfer amount
 {
-    if (attach_data.get_type() == TOKEN_TYPE) {
+    if (attach_data.get_type() == UC_TOKEN_TYPE) {
         auto token_info = boost::get<token>(attach_data.get_attach());
         if (token_info.get_status() == TOKEN_DETAIL_TYPE) {
             auto detail_info = boost::get<token_detail>(token_info.get_data());
@@ -275,7 +275,7 @@ uint64_t output::get_token_amount() const // for validate_transaction.cpp to cal
 
 bool output::is_token_transfer() const
 {
-    if (attach_data.get_type() == TOKEN_TYPE) {
+    if (attach_data.get_type() == UC_TOKEN_TYPE) {
         auto token_info = boost::get<token>(attach_data.get_attach());
         return (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE);
     }
@@ -298,7 +298,7 @@ bool output::is_uid_transfer() const
 
 bool output::is_token_issue() const
 {
-    if(attach_data.get_type() == TOKEN_TYPE) {
+    if(attach_data.get_type() == UC_TOKEN_TYPE) {
         auto token_info = boost::get<token>(attach_data.get_attach());
         if(token_info.get_status() == TOKEN_DETAIL_TYPE) {
             auto detail_info = boost::get<token_detail>(token_info.get_data());
@@ -310,7 +310,7 @@ bool output::is_token_issue() const
 
 bool output::is_token_secondaryissue() const
 {
-    if(attach_data.get_type() == TOKEN_TYPE) {
+    if(attach_data.get_type() == UC_TOKEN_TYPE) {
         auto token_info = boost::get<token>(attach_data.get_attach());
         if(token_info.get_status() == TOKEN_DETAIL_TYPE) {
             auto detail_info = boost::get<token_detail>(token_info.get_data());
@@ -396,7 +396,7 @@ bool output::is_token_cert_transfer() const
 
 bool output::is_token() const
 {
-    return (attach_data.get_type() == TOKEN_TYPE);
+    return (attach_data.get_type() == UC_TOKEN_TYPE);
 }
 
 bool output::is_uid() const
@@ -572,7 +572,7 @@ uid output::get_uid() const
 
 token_transfer output::get_token_transfer() const
 {
-    if (attach_data.get_type() == TOKEN_TYPE) {
+    if (attach_data.get_type() == UC_TOKEN_TYPE) {
         auto token_info = boost::get<token>(attach_data.get_attach());
         if (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE) {
             return boost::get<token_transfer>(token_info.get_data());
@@ -584,7 +584,7 @@ token_transfer output::get_token_transfer() const
 
 token_detail output::get_token_detail() const
 {
-    if (attach_data.get_type() == TOKEN_TYPE) {
+    if (attach_data.get_type() == UC_TOKEN_TYPE) {
         auto token_info = boost::get<token>(attach_data.get_attach());
         if (token_info.get_status() == TOKEN_DETAIL_TYPE) {
             return boost::get<token_detail>(token_info.get_data());

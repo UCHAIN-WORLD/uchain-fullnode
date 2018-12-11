@@ -24,8 +24,11 @@
 #include <boost/algorithm/string.hpp>
 using namespace std;
 using namespace libbitcoin;
-
-boost::random_device libbitcoin::s_fixedHashEngine;
+#ifdef __MINGW32__
+    boost::random_device libbitcoin::s_fixedHashEngine;
+#else    
+    std::random_device libbitcoin::s_fixedHashEngine;
+#endif    
 
 h128 libbitcoin::fromUUID(std::string const& _uuid)
 {

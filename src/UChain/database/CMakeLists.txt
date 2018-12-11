@@ -1,4 +1,4 @@
-FILE(GLOB_RECURSE database_SOURCES "*.cpp")
+FILE(GLOB_RECURSE database_SOURCES "*.c" "*.h" "*.cpp")
 
 ADD_DEFINITIONS(-DBCD_STATIC=1)
 
