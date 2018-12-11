@@ -57,6 +57,9 @@ console_result sendtokenfrom::invoke(Json::Value& jv_output,
         throw argument_size_invalid_exception{"memo length out of bounds."};
     }
 
+    if (!change_address.empty() && !blockchain.get_account_address(auth_.name, change_address))
+        throw account_authority_exception{"change address not belongs to you."};
+        
     // receiver
     utxo_attach_type attach_type = option_.attenuation_model_param.empty()
         ? utxo_attach_type::token_transfer : utxo_attach_type::token_attenuation_transfer;
