@@ -15,7 +15,10 @@ SET_TARGET_PROPERTIES(zmq_static PROPERTIES IMPORTED_LOCATION ${ZeroMQ_ROOT_DIR}
 
 ADD_LIBRARY(explorer_static STATIC ${explorer_SOURCES})
 SET_TARGET_PROPERTIES(explorer_static PROPERTIES OUTPUT_NAME uc_explorer)
-TARGET_LINK_LIBRARIES(explorer_static iphlpapi_static zmq_static ${Boost_LIBRARIES}
+if(MINGW OR MSYS)
+    TARGET_LINK_LIBRARIES(explorer_static iphlpapi_static)
+ENDIF()
+TARGET_LINK_LIBRARIES(explorer_static zmq_static ${Boost_LIBRARIES}
     ${txs_LIBRARY} ${api_LIBRARY} ${bitcoin_LIBRARY} ${network_LIBRARY} ${protocol_LIBRARY} ${client_LIBRARY}
     ${blockchain_LIBRARY} ${jsoncpp_LIBRARY})
 INSTALL(TARGETS explorer_static DESTINATION lib)
