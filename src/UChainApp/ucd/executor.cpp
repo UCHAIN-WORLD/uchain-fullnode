@@ -331,8 +331,17 @@ void executor::initialize_output()
 {
     //log::info(LOG_SERVER) << BS_LOG_HEADER;
 
-    auto file = default_data_path() / metadata_.configured.file;
-
+    auto file = metadata_.configured.file.string().compare("uc.conf") \
+                        ? metadata_.configured.file:default_data_path() / metadata_.configured.file;
+    if(metadata_.configured.file.string().compare("uc.conf"))
+    {
+    #ifdef __WIN32__
+        CreateSymbolicLinkA(default_data_path()/"conf", metadata_.configured.file.string(), 0) ;
+    #else
+        symlink(metadata_.configured.file.string().c_str(), (default_data_path()/"conf").string().c_str());
+    #endif
+    }
+   
     if (file.empty())
         log::info(LOG_SERVER) << BS_USING_DEFAULT_CONFIG;
     else
