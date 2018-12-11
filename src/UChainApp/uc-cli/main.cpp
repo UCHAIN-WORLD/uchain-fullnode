@@ -65,7 +65,7 @@ int bc::main(int argc, char* argv[])
 {
     bc::set_utf8_stdout();
     auto work_path = bc::default_data_path();
-    auto&& config_file = work_path / "uc.conf";
+    auto&& config_file = boost::filesystem::exists(work_path / "conf") ? work_path / "conf" : work_path / "uc.conf";
     std::string url{"127.0.0.1:8707/rpc/v3"};
 
     if (boost::filesystem::exists(config_file)) {
