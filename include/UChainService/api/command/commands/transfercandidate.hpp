@@ -30,26 +30,32 @@ namespace explorer {
 namespace commands {
 
 
-/************************ showcard *************************/
+/************************ transfercandidate *************************/
 
-class showcard: public command_extension
+class transfercandidate : public command_extension
 {
 public:
-    static const char* symbol(){ return "showcard";}
+    static const char* symbol() { return "transfercandidate";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Get information of card."; }
+    const char* description() override { return "Transfer candidate to other UID"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("SYMBOL", 1);
+               .add("ACCOUNTNAME", 1)
+               .add("ACCOUNTAUTH", 1)
+               .add("TOUID", 1)
+               .add("SYMBOL", 1);
     }
 
     void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+                         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
+        load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
+        load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.to, "TOUID", variables, input, raw);
         load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
@@ -64,31 +70,30 @@ public:
             "Get a description and instructions for this command."
         )
         (
+            "ACCOUNTNAME",
+            value<std::string>(&auth_.name)->required(),
+            BX_ACCOUNT_NAME
+        )
+        (
+            "ACCOUNTAUTH",
+            value<std::string>(&auth_.auth)->required(),
+            BX_ACCOUNT_AUTH
+        )
+        (
+            "TOUID",
+            value<std::string>(&argument_.to)->required(),
+            "Target uid"
+        )
+        (
             "SYMBOL",
-            value<std::string>(&argument_.symbol),
-            "Asset symbol. If not specified then show whole network card symbols."
+            value<std::string>(&argument_.symbol)->required(),
+            "Asset candidate symbol"
         )
         (
-            "trace,t",
-            value<bool>(&option_.show_history)->default_value(false)->zero_tokens(),
-            "If specified then trace the history. Default is not specified."
-        )
-        (
-            "limit,l",
-            value<uint32_t>(&option_.limit)->default_value(100),
-            "card count per page."
-        )
-        (
-            "index,i",
-            value<uint32_t>(&option_.index)->default_value(1),
-            "Page index."
-        )
-        (
-            "current,c",
-            value<bool>(&option_.show_current)->default_value(false)->zero_tokens(),
-            "If specified then show the lastest information of specified card. Default is not specified."
-        )
-        ;
+            "fee,f",
+            value<uint64_t>(&argument_.fee)->default_value(10000),
+            "Transaction fee. defaults to 10000 UCN bits"
+        );
 
         return options;
     }
@@ -98,29 +103,20 @@ public:
     }
 
     console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+                           libbitcoin::server::server_node& node) override;
 
     struct argument
     {
-        argument():
-            symbol()
-        {
-        }
-
+        std::string to;
         std::string symbol;
+        uint64_t fee;
     } argument_;
 
     struct option
     {
-        bool show_history;
-        bool show_current;
-        uint32_t index;
-        uint32_t limit;
     } option_;
 
 };
-
-
 
 
 } // namespace commands

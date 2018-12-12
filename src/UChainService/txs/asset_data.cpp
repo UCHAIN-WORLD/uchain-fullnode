@@ -31,7 +31,7 @@
 #define TOKEN_ISSUE_TYPE    KIND2UINT16(business_kind::token_issue)
 #define TOKEN_TRANSFER_TYPE KIND2UINT16(business_kind::token_transfer)
 #define TOKEN_CERT_TYPE     KIND2UINT16(business_kind::token_cert)
-#define TOKEN_CARD_TYPE      KIND2UINT16(business_kind::token_card)
+#define TOKEN_CANDIDATE_TYPE      KIND2UINT16(business_kind::token_candidate)
 #define MESSAGE_TYPE        KIND2UINT16(business_kind::message)
 #define UID_REGISTER_TYPE   KIND2UINT16(business_kind::uid_register)
 #define UID_TRANSFER_TYPE   KIND2UINT16(business_kind::uid_transfer)
@@ -78,7 +78,7 @@ bool asset_data::is_valid_type() const
             || (TOKEN_ISSUE_TYPE == KIND2UINT16(kind))
             || (TOKEN_TRANSFER_TYPE == KIND2UINT16(kind))
             || (TOKEN_CERT_TYPE == KIND2UINT16(kind))
-            || (TOKEN_CARD_TYPE == KIND2UINT16(kind)))
+            || (TOKEN_CANDIDATE_TYPE == KIND2UINT16(kind)))
             || (UCN_AWARD_TYPE == KIND2UINT16(kind))
             || (MESSAGE_TYPE == KIND2UINT16(kind))
             || (UID_REGISTER_TYPE == KIND2UINT16(kind))
@@ -133,9 +133,9 @@ bool asset_data::from_data(reader& source)
                 data = token_cert();
                 break;
             }
-            case TOKEN_CARD_TYPE:
+            case TOKEN_CANDIDATE_TYPE:
             {
-                data = token_card();
+                data = token_candidate();
                 break;
             }
             case MESSAGE_TYPE:

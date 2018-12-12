@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainService/data/databases/address_card_database.hpp>
+#include <UChainService/data/databases/address_candidate_database.hpp>
 
 #include <cstdint>
 #include <cstddef>
@@ -28,7 +28,7 @@
 #include <UChain/database/primitives/record_multimap_iterable.hpp>
 #include <UChain/database/primitives/record_multimap_iterator.hpp>
 
-#define  LOG_ADDRESS_CARD_DATABASE  "address_card_database"
+#define  LOG_ADDRESS_CANDIDATE_DATABASE  "address_candidate_database"
 
 namespace libbitcoin {
 namespace database {
@@ -42,10 +42,10 @@ BC_CONSTEXPR size_t initial_lookup_file_size = header_size + minimum_records_siz
 
 BC_CONSTEXPR size_t record_size = hash_table_multimap_record_size<short_hash>();
 
-BC_CONSTEXPR size_t card_transfer_record_size = 1 + 36 + 4 + 8 + 2 + 4 + TOKEN_CARD_TRANSFER_FIX_SIZE;
-BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(card_transfer_record_size);
+BC_CONSTEXPR size_t candidate_transfer_record_size = 1 + 36 + 4 + 8 + 2 + 4 + TOKEN_CANDIDATE_TRANSFER_FIX_SIZE;
+BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(candidate_transfer_record_size);
 
-address_card_database::address_card_database(const path& lookup_filename,
+address_candidate_database::address_candidate_database(const path& lookup_filename,
     const path& rows_filename, std::shared_ptr<shared_mutex> mutex)
   : lookup_file_(lookup_filename, mutex),
     lookup_header_(lookup_file_, number_buckets),
@@ -59,7 +59,7 @@ address_card_database::address_card_database(const path& lookup_filename,
 }
 
 // Close does not call stop because there is no way to detect thread join.
-address_card_database::~address_card_database()
+address_candidate_database::~address_candidate_database()
 {
     close();
 }
@@ -68,7 +68,7 @@ address_card_database::~address_card_database()
 // ----------------------------------------------------------------------------
 
 // Initialize files and start.
-bool address_card_database::create()
+bool address_candidate_database::create()
 {
     // Resize and create require a started file.
     if (!lookup_file_.start() ||
@@ -94,7 +94,7 @@ bool address_card_database::create()
 // Startup and shutdown.
 // ----------------------------------------------------------------------------
 
-bool address_card_database::start()
+bool address_candidate_database::start()
 {
     return
         lookup_file_.start() &&
@@ -104,27 +104,27 @@ bool address_card_database::start()
         rows_manager_.start();
 }
 
-bool address_card_database::stop()
+bool address_candidate_database::stop()
 {
     return
         lookup_file_.stop() &&
         rows_file_.stop();
 }
 
-bool address_card_database::close()
+bool address_candidate_database::close()
 {
     return
         lookup_file_.close() &&
         rows_file_.close();
 }
 
-void address_card_database::sync()
+void address_candidate_database::sync()
 {
     lookup_manager_.sync();
     rows_manager_.sync();
 }
 
-address_card_statinfo address_card_database::statinfo() const
+address_candidate_statinfo address_candidate_database::statinfo() const
 {
     return
     {
@@ -135,10 +135,10 @@ address_card_statinfo address_card_database::statinfo() const
 }
 
 // ----------------------------------------------------------------------------
-void address_card_database::store_output(const short_hash& key,
+void address_candidate_database::store_output(const short_hash& key,
     const output_point& outpoint, uint32_t output_height,
     uint64_t value, uint16_t business_kd,
-    uint32_t timestamp, const token_card& card)
+    uint32_t timestamp, const token_candidate& candidate)
 {
     auto write = [&](memory_ptr data)
     {
@@ -149,12 +149,12 @@ void address_card_database::store_output(const short_hash& key,
         serial.write_8_bytes_little_endian(value);  // 8
         serial.write_2_bytes_little_endian(business_kd); // 2
         serial.write_4_bytes_little_endian(timestamp); // 4
-        serial.write_data(card.to_short_data());
+        serial.write_data(candidate.to_short_data());
     };
     rows_multimap_.add_row(key, write);
 }
 
-void address_card_database::store_input(const short_hash& key,
+void address_candidate_database::store_input(const short_hash& key,
     const output_point& inpoint, uint32_t input_height,
     const input_point& previous, uint32_t timestamp)
 {
@@ -168,18 +168,18 @@ void address_card_database::store_input(const short_hash& key,
 
         serial.write_2_bytes_little_endian(0); // 2 use ucn type fill incase invalid when deser
         serial.write_4_bytes_little_endian(timestamp); // 4
-        // card data should be here but input has no these data
+        // candidate data should be here but input has no these data
     };
     rows_multimap_.add_row(key, write);
 }
 
-void address_card_database::delete_last_row(const short_hash& key)
+void address_candidate_database::delete_last_row(const short_hash& key)
 {
     rows_multimap_.delete_last_row(key);
 }
 
 /// get all record of key from database
-business_record::list address_card_database::get(const short_hash& key,
+business_record::list address_candidate_database::get(const short_hash& key,
     size_t from_height, size_t limit) const
 {
     // Read the height value from the row.
@@ -240,7 +240,7 @@ business_record::list address_card_database::get(const short_hash& key,
     return result;
 }
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_card_database::get(const std::string& address, const std::string& symbol,
+std::shared_ptr<std::vector<business_record>> address_candidate_database::get(const std::string& address, const std::string& symbol,
     size_t start_height, size_t end_height, uint64_t limit, uint64_t page_number) const
 {
     data_chunk addr_data(address.begin(), address.end());
@@ -296,7 +296,7 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(const s
         const auto record = rows_list_.get(index);
         const auto address = REMAP_ADDRESS(record);
         auto height = read_height(address);
-        std::string card_symbol;
+        std::string candidate_symbol;
 
         // Skip rows below from_height.
         if (((start_height == 0)&&(end_height == 0))
@@ -308,12 +308,12 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(const s
                 if((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
                     continue; // skip previous page record
                 result->emplace_back(row);
-            } else { // card symbol utxo
-                // card business process
-                auto transfer = boost::get<token_card>(row.data.get_data());
-                card_symbol = transfer.get_symbol();
+            } else { // candidate symbol utxo
+                // candidate business process
+                auto transfer = boost::get<token_candidate>(row.data.get_data());
+                candidate_symbol = transfer.get_symbol();
 
-                if (symbol == card_symbol) {
+                if (symbol == candidate_symbol) {
                     cnt++;
                     if((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
                         continue; // skip previous page record
@@ -328,7 +328,7 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(const s
 }
 
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_card_database::get(const std::string& address, size_t start_height,
+std::shared_ptr<std::vector<business_record>> address_candidate_database::get(const std::string& address, size_t start_height,
     size_t end_height) const
 {
     data_chunk addr_data(address.begin(), address.end());
@@ -391,7 +391,7 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(const s
 
 
 /// get all record of key from database
-std::shared_ptr<std::vector<business_record>> address_card_database::get(size_t idx) const
+std::shared_ptr<std::vector<business_record>> address_candidate_database::get(size_t idx) const
 {
     // Read a row from the data for the history list.
     const auto read_row = [](uint8_t* data)
@@ -440,7 +440,7 @@ std::shared_ptr<std::vector<business_record>> address_card_database::get(size_t 
     return result;
 }
 /// get one record by index from row_list
-business_record address_card_database::get_record(size_t idx) const
+business_record address_candidate_database::get_record(size_t idx) const
 {
     // Read a row from the data for the history list.
     const auto read_row = [](uint8_t* data)
@@ -474,7 +474,7 @@ business_record address_card_database::get_record(size_t idx) const
     const auto address = REMAP_ADDRESS(record);
     return read_row(address);
 }
-business_history::list address_card_database::get_business_history(const short_hash& key,
+business_history::list address_candidate_database::get_business_history(const short_hash& key,
         size_t from_height) const
 {
     business_record::list compact = get(key, from_height, 0);
@@ -544,8 +544,8 @@ business_history::list address_card_database::get_business_history(const short_h
     return result;
 }
 
-// get address cards in the database(blockchain)
-std::shared_ptr<std::vector<business_history>> address_card_database::get_address_business_history(const std::string& address,
+// get address candidates in the database(blockchain)
+std::shared_ptr<std::vector<business_history>> address_candidate_database::get_address_business_history(const std::string& address,
     size_t from_height) const
 {
     data_chunk data(address.begin(), address.end());
@@ -571,11 +571,11 @@ std::shared_ptr<std::vector<business_history>> address_card_database::get_addres
 
 }
 
-// get special kind of card in the database(blockchain)
+// get special kind of candidate in the database(blockchain)
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
-business_history::list address_card_database::get_business_history(const std::string& address,
+business_history::list address_candidate_database::get_business_history(const std::string& address,
     size_t from_height, uint8_t status) const
 {
     data_chunk data(address.begin(), address.end());
@@ -596,8 +596,8 @@ business_history::list address_card_database::get_business_history(const std::st
 
 }
 
-// get special kind of card in the database(blockchain)
-business_history::list address_card_database::get_business_history(const std::string& address,
+// get special kind of candidate in the database(blockchain)
+business_history::list address_candidate_database::get_business_history(const std::string& address,
     size_t from_height, uint32_t time_begin, uint32_t time_end) const
 {
     data_chunk data(address.begin(), address.end());
@@ -624,17 +624,17 @@ business_history::list address_card_database::get_business_history(const std::st
     return unspent;
 }
 
-// get special kind of card in the database(blockchain)
+// get special kind of candidate in the database(blockchain)
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
-business_address_card::list address_card_database::get_cards(const std::string& address,
-    size_t from_height, token_card::card_status kind) const
+business_address_candidate::list address_candidate_database::get_candidates(const std::string& address,
+    size_t from_height, token_candidate::candidate_status kind) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
-    business_address_card::list unspent;
+    business_address_candidate::list unspent;
 
     for (const auto& row: result)
     {
@@ -649,14 +649,14 @@ business_address_card::list address_card_database::get_cards(const std::string& 
         if (status == business_status::unknown)
             continue;
 
-        auto card = boost::get<token_card>(row.data.get_data());
-        if ((kind != token_card::card_status::card_status_none)
-            && (kind != (token_card::card_status)card.get_status())) {
+        auto candidate = boost::get<token_candidate>(row.data.get_data());
+        if ((kind != token_candidate::candidate_status::candidate_status_none)
+            && (kind != (token_candidate::candidate_status)candidate.get_status())) {
             continue;
         }
 
-        business_address_card detail;
-        detail.card = card;
+        business_address_candidate detail;
+        detail.candidate = candidate;
         detail.address = address; // account address
         detail.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);

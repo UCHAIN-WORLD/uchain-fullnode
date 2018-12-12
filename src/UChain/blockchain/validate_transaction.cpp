@@ -351,10 +351,10 @@ code validate_transaction::check_tx_connect_input() const
         }
     }
 
-    if (tx_->has_token_card_transfer()) {
-        if (!check_token_card(*tx_)) {
-            log::debug(LOG_BLOCKCHAIN) << "failed to check card token." << tx_->to_string(1);
-            return error::card_error;
+    if (tx_->has_token_candidate_transfer()) {
+        if (!check_token_candidate(*tx_)) {
+            log::debug(LOG_BLOCKCHAIN) << "failed to check candidate token." << tx_->to_string(1);
+            return error::candidate_error;
         }
     }
 
@@ -862,77 +862,77 @@ code validate_transaction::check_token_cert_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_token_card_transaction() const
+code validate_transaction::check_token_candidate_transaction() const
 {
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& chain = blockchain_;
 
-    bool is_token_card{false};
+    bool is_token_candidate{false};
     for (auto& output : tx.outputs) {
-        if (output.is_token_card()) {
-            is_token_card = true;
+        if (output.is_token_candidate()) {
+            is_token_candidate = true;
             break;
         }
     }
 
-    if (!is_token_card) {
+    if (!is_token_candidate) {
         return error::success;
     }
 
     std::string token_symbol;
     std::string token_address;
-    size_t num_card_transfer = 0;
-    size_t num_card_register = 0;
+    size_t num_candidate_transfer = 0;
+    size_t num_candidate_register = 0;
     for (auto& output : tx.outputs)
     {
-        if (output.is_token_card_register()) {
-            ++num_card_register;
+        if (output.is_token_candidate_register()) {
+            ++num_candidate_register;
 
-            auto&& token_info = output.get_token_card();
+            auto&& token_info = output.get_token_candidate();
             token_symbol = token_info.get_symbol();
 
             if (!check_same(token_address, token_info.get_address())) {
-                log::debug(LOG_BLOCKCHAIN) << "register card: "
+                log::debug(LOG_BLOCKCHAIN) << "register candidate: "
                                            << " address is not same. "
                                            << token_address << " != " << token_info.get_address();
-                return error::card_register_error;
+                return error::candidate_register_error;
             }
 
             // check token not exists
-            if (check_token_card_exist(token_symbol)) {
-                log::debug(LOG_BLOCKCHAIN) << "register card: "
+            if (check_token_candidate_exist(token_symbol)) {
+                log::debug(LOG_BLOCKCHAIN) << "register candidate: "
                                            << token_symbol << " already exists.";
-                return error::card_exist;
+                return error::candidate_exist;
             }
         }
-        else if (output.is_token_card_transfer()) {
-            if (++num_card_transfer > 1) {
-                log::debug(LOG_BLOCKCHAIN) << "transfer card: more than on card output." << output.to_string(1);
-                return error::card_error;
+        else if (output.is_token_candidate_transfer()) {
+            if (++num_candidate_transfer > 1) {
+                log::debug(LOG_BLOCKCHAIN) << "transfer candidate: more than on candidate output." << output.to_string(1);
+                return error::candidate_error;
             }
 
-            auto&& token_info = output.get_token_card();
+            auto&& token_info = output.get_token_candidate();
             token_symbol = token_info.get_symbol();
         }
         else if (output.is_ucn()) {
             if (!check_same(token_address, output.get_script_address())) {
-                log::debug(LOG_BLOCKCHAIN) << "card: "
+                log::debug(LOG_BLOCKCHAIN) << "candidate: "
                                            << " address is not same. "
                                            << token_address << " != " << output.get_script_address();
-                return error::card_register_error;
+                return error::candidate_register_error;
             }
         }
         else if (!output.is_message()) {
-            log::debug(LOG_BLOCKCHAIN) << "card: illegal output, "
+            log::debug(LOG_BLOCKCHAIN) << "candidate: illegal output, "
                                        << token_symbol << " : " << output.to_string(1);
-            return error::card_error;
+            return error::candidate_error;
         }
     }
 
-    if ((num_card_register == 0 && num_card_transfer == 0)
-        || (num_card_register > 0 && num_card_transfer > 0)) {
-        log::debug(LOG_BLOCKCHAIN) << "card: illegal output.";
-        return error::card_error;
+    if ((num_candidate_register == 0 && num_candidate_transfer == 0)
+        || (num_candidate_register > 0 && num_candidate_transfer > 0)) {
+        log::debug(LOG_BLOCKCHAIN) << "candidate: illegal output.";
+        return error::candidate_error;
     }
 
     // check inputs
@@ -941,7 +941,7 @@ code validate_transaction::check_token_card_transaction() const
         chain::transaction prev_tx;
         uint64_t prev_height{0};
         if (!get_previous_tx(prev_tx, prev_height, input)) {
-            log::debug(LOG_BLOCKCHAIN) << "card: input not found: "
+            log::debug(LOG_BLOCKCHAIN) << "candidate: input not found: "
                                        << encode_hash(input.previous_output.hash);
             return error::input_not_found;
         }
@@ -950,15 +950,15 @@ code validate_transaction::check_token_card_transaction() const
         if (prev_output.is_ucn()) {
             auto&& token_address_in = prev_output.get_script_address();
             if (token_address != token_address_in) {
-                log::debug(LOG_BLOCKCHAIN) << "card: invalid input address to pay fee: "
+                log::debug(LOG_BLOCKCHAIN) << "candidate: invalid input address to pay fee: "
                                             << token_address_in << " != " << token_address;
                 return error::validate_inputs_failed;
             }
         }
-        else if (prev_output.is_token_card()) {
-            auto&& token_info = prev_output.get_token_card();
+        else if (prev_output.is_token_candidate()) {
+            auto&& token_info = prev_output.get_token_candidate();
             if (token_symbol != token_info.get_symbol()) {
-                log::debug(LOG_BLOCKCHAIN) << "card: invalid card to transfer: "
+                log::debug(LOG_BLOCKCHAIN) << "candidate: invalid candidate to transfer: "
                                             << token_info.get_symbol() << " != " << token_symbol;
                 return error::validate_inputs_failed;
             }
@@ -967,8 +967,8 @@ code validate_transaction::check_token_card_transaction() const
         }
     }
 
-    if (num_card_transfer > 0 && !has_input_transfer) {
-        log::debug(LOG_BLOCKCHAIN) << "card: no input card to transfer " << token_symbol;
+    if (num_candidate_transfer > 0 && !has_input_transfer) {
+        log::debug(LOG_BLOCKCHAIN) << "candidate: no input candidate to transfer " << token_symbol;
         return error::validate_inputs_failed;
     }
 
@@ -1023,13 +1023,13 @@ bool validate_transaction::check_token_cert_exist(const std::string& cert, token
     return height != max_uint64;
 }
 
-bool validate_transaction::check_token_card_exist(const std::string& card) const
+bool validate_transaction::check_token_candidate_exist(const std::string& candidate) const
 {
-    uint64_t height = blockchain_.get_token_card_height(card);
+    uint64_t height = blockchain_.get_token_candidate_height(candidate);
 
     if (validate_block_) {
         //register before fork or find in orphan chain
-        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_card_in_orphan_chain(card)) {
+        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_candidate_in_orphan_chain(candidate)) {
             return true;
         }
 
@@ -1324,7 +1324,7 @@ code validate_transaction::check_transaction() const
             return ret;
         }
 
-        if ((ret = check_token_card_transaction()) != error::success) {
+        if ((ret = check_token_candidate_transaction()) != error::success) {
             return ret;
         }
 
@@ -1418,9 +1418,9 @@ code validate_transaction::check_transaction_basic() const
                 return error::uid_symbol_invalid;
             }
         }
-        else if (output.is_token_card_register()) {
-            if (!chain::output::is_valid_card_symbol(output.get_token_symbol(), true)) {
-                return error::card_symbol_invalid;
+        else if (output.is_token_candidate_register()) {
+            if (!chain::output::is_valid_candidate_symbol(output.get_token_symbol(), true)) {
+                return error::candidate_symbol_invalid;
             }
         }
 
@@ -1571,8 +1571,8 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
             return false;
         }
     }
-    else if (previous_output.is_token_card()) {
-        if (!check_same(old_symbol_in_, previous_output.get_token_card_symbol())) {
+    else if (previous_output.is_token_candidate()) {
+        if (!check_same(old_symbol_in_, previous_output.get_token_candidate_symbol())) {
             return false;
         }
     }
@@ -1835,16 +1835,16 @@ bool validate_transaction::check_token_certs(const transaction& tx) const
     return true;
 }
 
-bool validate_transaction::check_token_card(const transaction& tx) const
+bool validate_transaction::check_token_candidate(const transaction& tx) const
 {
-    size_t num_card = 0;
+    size_t num_candidate = 0;
     for (const auto& output : tx.outputs) {
-        if (output.is_token_card_transfer()) {
-            if (++num_card > 1) {
+        if (output.is_token_candidate_transfer()) {
+            if (++num_candidate > 1) {
                 return false;
             }
 
-            auto&& token_info = output.get_token_card();
+            auto&& token_info = output.get_token_candidate();
             if (old_symbol_in_ != token_info.get_symbol()) {
                 return false;
             }
@@ -1854,7 +1854,7 @@ bool validate_transaction::check_token_card(const transaction& tx) const
         }
     }
 
-    return (num_card == 1);
+    return (num_candidate == 1);
 }
 
 bool validate_transaction::check_uid_symbol_match(const transaction& tx) const

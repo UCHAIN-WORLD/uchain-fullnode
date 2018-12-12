@@ -303,7 +303,7 @@ const dictionary en =
         "captain",
         "car",
         "carbon",
-        "card",
+        "candidate",
         "cargo",
         "carpet",
         "carry",

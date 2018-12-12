@@ -19,7 +19,7 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/command/commands/registercard.hpp>
+#include <UChainService/api/command/commands/registercandidate.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
@@ -29,7 +29,7 @@ namespace libbitcoin {
 namespace explorer {
 namespace commands {
 
-void registercard::check_symbol_content(const std::string& symbol, const std::string& content)
+void registercandidate::check_symbol_content(const std::string& symbol, const std::string& content)
 {
     // check symbol
     if (symbol.size() == 0) {
@@ -37,29 +37,29 @@ void registercard::check_symbol_content(const std::string& symbol, const std::st
     }
 
     // reserve 4 bytes
-    if (symbol.size() > (TOKEN_CARD_SYMBOL_FIX_SIZE - 4)) {
+    if (symbol.size() > (TOKEN_CANDIDATE_SYMBOL_FIX_SIZE - 4)) {
         throw token_symbol_length_exception{"Symbol length must be less than "
-            + std::to_string(TOKEN_CARD_SYMBOL_FIX_SIZE - 4) + ". " + symbol};
+            + std::to_string(TOKEN_CANDIDATE_SYMBOL_FIX_SIZE - 4) + ". " + symbol};
     }
 
     // check symbol
-    check_card_symbol(symbol, true);
+    check_candidate_symbol(symbol, true);
 
     // check content
-    if (content.size() > TOKEN_CARD_CONTENT_FIX_SIZE) {
+    if (content.size() > TOKEN_CANDIDATE_CONTENT_FIX_SIZE) {
         throw argument_size_invalid_exception(
             "Content length must be less than "
-            + std::to_string(TOKEN_CARD_CONTENT_FIX_SIZE) + ". " + content);
+            + std::to_string(TOKEN_CANDIDATE_CONTENT_FIX_SIZE) + ". " + content);
     }
 }
 
-console_result registercard::invoke (Json::Value& jv_output,
+console_result registercandidate::invoke (Json::Value& jv_output,
         libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
     blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
-    std::map<std::string, std::string> card_map;
+    std::map<std::string, std::string> candidate_map;
 
     bool use_unified_content = false;
     // check single symbol and content
@@ -67,19 +67,19 @@ console_result registercard::invoke (Json::Value& jv_output,
         check_symbol_content(argument_.symbol, option_.content);
 
         // check symbol not registered
-        if (blockchain.get_registered_card(argument_.symbol)) {
-            throw token_symbol_existed_exception{"card already exists in blockchain. " + argument_.symbol};
+        if (blockchain.get_registered_candidate(argument_.symbol)) {
+            throw token_symbol_existed_exception{"candidate already exists in blockchain. " + argument_.symbol};
         }
 
-        card_map[argument_.symbol] = option_.content;
+        candidate_map[argument_.symbol] = option_.content;
     }
     else {
         if (option_.content.size() > 0) {
             // check content
-            if (option_.content.size() > TOKEN_CARD_CONTENT_FIX_SIZE) {
+            if (option_.content.size() > TOKEN_CANDIDATE_CONTENT_FIX_SIZE) {
                 throw argument_size_invalid_exception(
                     "Content length must be less than "
-                    + std::to_string(TOKEN_CARD_CONTENT_FIX_SIZE) + ". " + option_.content);
+                    + std::to_string(TOKEN_CANDIDATE_CONTENT_FIX_SIZE) + ". " + option_.content);
             }
 
             use_unified_content = true;
@@ -87,11 +87,11 @@ console_result registercard::invoke (Json::Value& jv_output,
     }
 
     // check multi symbol and content
-    for (const auto& card : option_.multimits) {
+    for (const auto& candidate : option_.multimits) {
         std::string symbol, content;
-        auto pos = card.find_first_of(":");
+        auto pos = candidate.find_first_of(":");
         if (pos == std::string::npos) {
-            symbol = card;
+            symbol = candidate;
 
             if (use_unified_content) {
                 content = option_.content;
@@ -101,25 +101,25 @@ console_result registercard::invoke (Json::Value& jv_output,
             }
         }
         else {
-            symbol = card.substr(0, pos);
-            content = card.substr(pos + 1);
+            symbol = candidate.substr(0, pos);
+            content = candidate.substr(pos + 1);
         }
 
         check_symbol_content(symbol, content);
 
-        if (card_map.find(symbol) != card_map.end()) {
+        if (candidate_map.find(symbol) != candidate_map.end()) {
             throw token_symbol_existed_exception{"Duplicate symbol: " + symbol};
         }
 
         // check symbol not registered
-        if (blockchain.get_registered_card(symbol)) {
-            throw token_symbol_existed_exception{"card already exists in blockchain. " + symbol};
+        if (blockchain.get_registered_candidate(symbol)) {
+            throw token_symbol_existed_exception{"candidate already exists in blockchain. " + symbol};
         }
 
-        card_map[symbol] = content;
+        candidate_map[symbol] = content;
     }
 
-    if (card_map.empty()) {
+    if (candidate_map.empty()) {
         throw argument_legality_exception{"No symbol provided."};
     }
 
@@ -135,20 +135,20 @@ console_result registercard::invoke (Json::Value& jv_output,
 
     // receiver
     std::vector<receiver_record> receiver;
-    for (auto& pair : card_map) {
+    for (auto& pair : candidate_map) {
         receiver.push_back(
             {
                 to_address, pair.first, 0, 0, 0,
-                utxo_attach_type::token_card, asset(to_uid, to_uid)
+                utxo_attach_type::token_candidate, asset(to_uid, to_uid)
             }
         );
     }
 
-    auto helper = registering_card(
+    auto helper = registering_candidate(
                       *this, blockchain,
                       std::move(auth_.name), std::move(auth_.auth),
                       std::move(to_address),
-                      "", std::move(card_map),
+                      "", std::move(candidate_map),
                       std::move(receiver), argument_.fee);
 
     helper.exec();

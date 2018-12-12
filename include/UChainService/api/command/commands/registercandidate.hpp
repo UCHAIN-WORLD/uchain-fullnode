@@ -30,21 +30,23 @@ namespace explorer {
 namespace commands {
 
 
-/************************ showcards *************************/
+/************************ registercandidate *************************/
 
-class showcards: public command_extension
+class registercandidate : public command_extension
 {
 public:
-    static const char* symbol(){ return "showcards";}
+    static const char* symbol(){ return "registercandidate";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "List cards."; }
+    const char* description() override { return "Register Candidate"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
             .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("ACCOUNTAUTH", 1)
+            .add("TOUID", 1)
+            .add("SYMBOL", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -53,6 +55,8 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(argument_.to, "TOUID", variables, input, raw);
+        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -67,13 +71,38 @@ public:
         )
         (
             "ACCOUNTNAME",
-            value<std::string>(&auth_.name),
+            value<std::string>(&auth_.name)->required(),
             BX_ACCOUNT_NAME
         )
         (
             "ACCOUNTAUTH",
-            value<std::string>(&auth_.auth),
+            value<std::string>(&auth_.auth)->required(),
             BX_ACCOUNT_AUTH
+        )
+        (
+            "TOUID",
+            value<std::string>(&argument_.to)->required(),
+            "Target uid"
+        )
+        (
+            "SYMBOL",
+            value<std::string>(&argument_.symbol)->default_value(""),
+            "candidate symbol"
+        )
+        (
+            "content,c",
+            value<std::string>(&option_.content)->default_value(""),
+            "Content of candidate"
+        )
+        (
+            "candidates,m",
+            value<std::vector<std::string>>(&option_.multimits),
+            "List of symbol and content pair. Symbol and content are separated by a ':'"
+        )
+        (
+            "fee,f",
+            value<uint64_t>(&argument_.fee)->default_value(10000),
+            "Transaction fee. defaults to 10000 UCN bits"
         );
 
         return options;
@@ -88,11 +117,20 @@ public:
 
     struct argument
     {
+        std::string to;
+        std::string symbol;
+        uint64_t fee;
     } argument_;
 
+    struct option
+    {
+        std::string content;
+        std::vector<std::string> multimits;
+    } option_;
+
+private:
+    void check_symbol_content(const std::string& symbol, const std::string& content);
 };
-
-
 
 
 } // namespace commands

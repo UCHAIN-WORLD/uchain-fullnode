@@ -138,20 +138,20 @@ bool data_base::initialize_certs(const path& prefix)
     return instance.stop();
 }
 
-bool data_base::initialize_cards(const path& prefix)
+bool data_base::initialize_candidates(const path& prefix)
 {
     const store paths(prefix);
     if (paths.mits_exist())
         return true;
-    if (!paths.touch_cards())
+    if (!paths.touch_candidates())
         return false;
 
     data_base instance(prefix, 0, 0);
-    if (!instance.create_cards())
+    if (!instance.create_candidates())
         return false;
 
     log::info(LOG_DATABASE)
-        << "Upgrading card table is complete.";
+        << "Upgrading candidate table is complete.";
 
     return instance.stop();
 }
@@ -180,9 +180,9 @@ bool data_base::upgrade_version_63(const path& prefix)
         return false;
     }
 
-    if (!initialize_cards(prefix)) {
+    if (!initialize_candidates(prefix)) {
         log::error(LOG_DATABASE)
-            << "Failed to upgrade card database.";
+            << "Failed to upgrade candidate database.";
         return false;
     }
 
@@ -276,11 +276,11 @@ data_base::store::store(const path& prefix)
     account_addresses_lookup = prefix / "account_address_table";
     account_addresses_rows = prefix / "account_address_rows";
     /* end database for account, token, address_token relationship */
-    mits_lookup = prefix / "card_table";
-    address_cards_lookup = prefix / "address_card_table"; // for blockchain
-    address_cards_rows = prefix / "address_card_row"; // for blockchain
-    card_history_lookup = prefix / "card_history_table"; // for blockchain
-    card_history_rows = prefix / "card_history_row"; // for blockchain
+    mits_lookup = prefix / "candidate_table";
+    address_candidates_lookup = prefix / "address_candidate_table"; // for blockchain
+    address_candidates_rows = prefix / "address_candidate_row"; // for blockchain
+    candidate_history_lookup = prefix / "candidate_history_table"; // for blockchain
+    candidate_history_rows = prefix / "candidate_history_row"; // for blockchain
 
     // Height-based (reverse) lookup.
     blocks_index = prefix / "block_index";
@@ -319,10 +319,10 @@ bool data_base::store::touch_all() const
         touch_file(account_addresses_rows) &&
         /* end database for account, token, address_token relationship */
         touch_file(mits_lookup) &&
-        touch_file(address_cards_lookup) &&
-        touch_file(address_cards_rows) &&
-        touch_file(card_history_lookup) &&
-        touch_file(card_history_rows);
+        touch_file(address_candidates_lookup) &&
+        touch_file(address_candidates_rows) &&
+        touch_file(candidate_history_lookup) &&
+        touch_file(candidate_history_rows);
 }
 
 bool data_base::store::uids_exist() const
@@ -371,20 +371,20 @@ bool data_base::store::mits_exist() const
 {
     return
         boost::filesystem::exists(mits_lookup) ||
-        boost::filesystem::exists(address_cards_lookup) ||
-        boost::filesystem::exists(address_cards_rows) ||
-        boost::filesystem::exists(card_history_lookup) ||
-        boost::filesystem::exists(card_history_rows);
+        boost::filesystem::exists(address_candidates_lookup) ||
+        boost::filesystem::exists(address_candidates_rows) ||
+        boost::filesystem::exists(candidate_history_lookup) ||
+        boost::filesystem::exists(candidate_history_rows);
 }
 
-bool data_base::store::touch_cards() const
+bool data_base::store::touch_candidates() const
 {
     return
         touch_file(mits_lookup) &&
-        touch_file(address_cards_lookup) &&
-        touch_file(address_cards_rows) &&
-        touch_file(card_history_lookup) &&
-        touch_file(card_history_rows);
+        touch_file(address_candidates_lookup) &&
+        touch_file(address_candidates_rows) &&
+        touch_file(candidate_history_lookup) &&
+        touch_file(candidate_history_rows);
 }
 
 data_base::db_metadata::db_metadata():version_("")
@@ -544,9 +544,9 @@ data_base::data_base(const store& paths, size_t history_height,
     address_uids(paths.address_uids_lookup, paths.address_uids_rows, mutex_),
     account_addresses(paths.account_addresses_lookup, paths.account_addresses_rows, mutex_),
     /* end database for account, token, address_token, uid relationship */
-    cards(paths.mits_lookup, mutex_),
-    address_cards(paths.address_cards_lookup, paths.address_cards_rows, mutex_),
-    card_history(paths.card_history_lookup, paths.card_history_rows, mutex_)
+    candidates(paths.mits_lookup, mutex_),
+    address_candidates(paths.address_candidates_lookup, paths.address_candidates_rows, mutex_),
+    candidate_history(paths.candidate_history_lookup, paths.candidate_history_rows, mutex_)
 {
 }
 
@@ -604,9 +604,9 @@ bool data_base::create()
         address_uids.create() &&
         account_addresses.create() &&
         /* end database for account, token, address_token relationship */
-        cards.create() &&
-        address_cards.create() &&
-        card_history.create()
+        candidates.create() &&
+        address_candidates.create() &&
+        candidate_history.create()
         ;
 }
 
@@ -630,12 +630,12 @@ bool data_base::create_certs()
         certs.create();
 }
 
-bool data_base::create_cards()
+bool data_base::create_candidates()
 {
     return
-        cards.create() &&
-        address_cards.create() &&
-        card_history.create();
+        candidates.create() &&
+        address_candidates.create() &&
+        candidate_history.create();
 }
 
 // Start must be called before performing queries.
@@ -673,9 +673,9 @@ bool data_base::start()
         address_uids.start() &&
         account_addresses.start() &&
         /* end database for account, token, address_token relationship */
-        cards.start() &&
-        address_cards.start() &&
-        card_history.start()
+        candidates.start() &&
+        address_candidates.start() &&
+        candidate_history.start()
         ;
     const auto end_exclusive = end_write();
 
@@ -702,9 +702,9 @@ bool data_base::stop()
     const auto address_uids_stop = address_uids.stop();
     const auto account_addresses_stop = account_addresses.stop();
     /* end database for account, token, address_token relationship */
-    const auto mits_stop = cards.stop();
-    const auto address_cards_stop = address_cards.stop();
-    const auto card_history_stop = card_history.stop();
+    const auto mits_stop = candidates.stop();
+    const auto address_candidates_stop = address_candidates.stop();
+    const auto candidate_history_stop = candidate_history.stop();
     const auto end_exclusive = end_write();
 
     // This should remove the lock file. This is not important for locking
@@ -731,8 +731,8 @@ bool data_base::stop()
         account_addresses_stop &&
         /* end database for account, token, address_token relationship */
         mits_stop &&
-        address_cards_stop &&
-        card_history_stop &&
+        address_candidates_stop &&
+        candidate_history_stop &&
         end_exclusive;
 }
 
@@ -754,9 +754,9 @@ bool data_base::close()
     const auto uids_close = uids.close();
     const auto account_addresses_close = account_addresses.close();
     /* end database for account, token, address_token relationship */
-    const auto mits_close = cards.close();
-    const auto address_cards_close = address_cards.close();
-    const auto card_history_close = card_history.close();
+    const auto mits_close = candidates.close();
+    const auto address_candidates_close = address_candidates.close();
+    const auto candidate_history_close = candidate_history.close();
 
     // Return the cumulative result of the database closes.
     return
@@ -776,8 +776,8 @@ bool data_base::close()
         account_addresses_close &&
         /* end database for account, token, address_token relationship */
         mits_close &&
-        address_cards_close &&
-        card_history_close
+        address_candidates_close &&
+        candidate_history_close
         ;
 }
 
@@ -848,9 +848,9 @@ void data_base::synchronize()
     address_uids.sync();
     account_addresses.sync();
     /* end database for account, token, address_token relationship */
-    cards.sync();
-    address_cards.sync();
-    card_history.sync();
+    candidates.sync();
+    address_candidates.sync();
+    candidate_history.sync();
     blocks.sync();
 }
 
@@ -865,11 +865,11 @@ void data_base::synchronize_certs()
     certs.sync();
 }
 
-void data_base::synchronize_cards()
+void data_base::synchronize_candidates()
 {
-    cards.sync();
-    address_cards.sync();
-    card_history.sync();
+    candidates.sync();
+    address_candidates.sync();
+    candidate_history.sync();
 }
 
 void data_base::push(const block& block)
@@ -1111,10 +1111,10 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
             data_chunk data(address_str.begin(), address_str.end());
             short_hash hash = ripemd160_hash(data);
             bc::chain::output op = *output;
-            // NOTICE: pop only the pushed row, at present uid and card is
+            // NOTICE: pop only the pushed row, at present uid and candidate is
             // not stored in address_token, but stored separately
             // in address_uid and address_uid
-            if (!op.is_uid() && !op.is_token_card()) {
+            if (!op.is_uid() && !op.is_token_candidate()) {
                 address_tokens.delete_last_row(hash);
             }
             // remove token or uid from database
@@ -1168,19 +1168,19 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
                     certs.remove(key_hash);
                 }
             }
-            else if (op.is_token_card()) {
-                address_cards.delete_last_row(hash);
+            else if (op.is_token_candidate()) {
+                address_candidates.delete_last_row(hash);
 
-                const auto card = op.get_token_card();
-                auto symbol = card.get_symbol();
+                const auto candidate = op.get_token_candidate();
+                auto symbol = candidate.get_symbol();
                 const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
 
                 const auto symbol_short_hash = ripemd160_hash(symbol_data);
-                card_history.delete_last_row(symbol_short_hash);
+                candidate_history.delete_last_row(symbol_short_hash);
 
-                if (card.is_register_status()) {
+                if (candidate.is_register_status()) {
                     const auto symbol_hash = sha256_hash(symbol_data);
-                    cards.remove(symbol_hash);
+                    candidates.remove(symbol_hash);
                 }
             }
         }
@@ -1299,27 +1299,27 @@ void data_base::push_uid_detail(const uid_detail& sp_detail, const short_hash& k
 
 /* end store uid related info into database */
 
-/* begin store card related info into database */
-void data_base::push_card(const token_card& card, const short_hash& key,
+/* begin store candidate related info into database */
+void data_base::push_candidate(const token_candidate& candidate, const short_hash& key,
     const output_point& outpoint, uint32_t output_height, uint64_t value,
     const std::string from_uid, std::string to_uid)
 {
-    token_card_info card_info{output_height, timestamp_, to_uid, card};
+    token_candidate_info candidate_info{output_height, timestamp_, to_uid, candidate};
 
-    if (card.is_register_status()) {
-        cards.store(card_info);
-        cards.sync();
+    if (candidate.is_register_status()) {
+        candidates.store(candidate_info);
+        candidates.sync();
     }
 
-    address_cards.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_card),
-        timestamp_, card);
-    address_cards.sync();
+    address_candidates.store_output(key, outpoint, output_height, value,
+        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_candidate),
+        timestamp_, candidate);
+    address_candidates.sync();
 
-    card_history.store(card_info);
-    card_history.sync();
+    candidate_history.store(candidate_info);
+    candidate_history.sync();
 }
-/* end store card related info into database */
+/* end store candidate related info into database */
 
 } // namespace data_base
 } // namespace libbitcoin

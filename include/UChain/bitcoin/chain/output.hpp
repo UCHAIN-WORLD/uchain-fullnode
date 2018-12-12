@@ -54,7 +54,7 @@ public:
     static uint64_t satoshi_fixed_size();
     static bool is_valid_symbol(const std::string& symbol, uint32_t tx_version);
     static bool is_valid_uid_symbol(const std::string& symbol,  bool check_sensitive = false);
-    static bool is_valid_card_symbol(const std::string& symbol,  bool check_sensitive = false);
+    static bool is_valid_candidate_symbol(const std::string& symbol,  bool check_sensitive = false);
     bool from_data(const data_chunk& data);
     bool from_data(std::istream& stream);
     bool from_data(reader& source);
@@ -72,7 +72,7 @@ public:
     std::string get_token_issuer() const;
     std::string get_token_address() const;
     std::string get_token_cert_symbol() const;
-    std::string get_token_card_symbol() const;
+    std::string get_token_candidate_symbol() const;
     std::string get_token_cert_owner() const;
     std::string get_token_cert_address() const;
     token_cert_type get_token_cert_type() const;
@@ -82,9 +82,9 @@ public:
     bool is_token_transfer() const;
     bool is_token_issue() const;
     bool is_token_secondaryissue() const;
-    bool is_token_card() const;
-    bool is_token_card_register() const;
-    bool is_token_card_transfer() const;
+    bool is_token_candidate() const;
+    bool is_token_candidate_register() const;
+    bool is_token_candidate_transfer() const;
     bool is_token_cert() const;
     bool is_token_cert_issue() const;
     bool is_token_cert_transfer() const;
@@ -98,7 +98,7 @@ public:
     token_detail get_token_detail() const;
     token_transfer get_token_transfer() const;
     token_cert get_token_cert() const;
-    token_card get_token_card() const;
+    token_candidate get_token_candidate() const;
     std::string get_uid_symbol() const;
     std::string get_uid_address() const;
     uid get_uid() const;

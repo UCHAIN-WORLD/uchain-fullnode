@@ -30,33 +30,29 @@ namespace explorer {
 namespace commands {
 
 
-/************************ transfercard *************************/
+/************************ showcandidates *************************/
 
-class transfercard : public command_extension
+class showcandidates: public command_extension
 {
 public:
-    static const char* symbol() { return "transfercard";}
+    static const char* symbol(){ return "showcandidates";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Transfer card to other UID"; }
+    const char* description() override { return "List candidates."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-               .add("ACCOUNTNAME", 1)
-               .add("ACCOUNTAUTH", 1)
-               .add("TOUID", 1)
-               .add("SYMBOL", 1);
+            .add("ACCOUNTNAME", 1)
+            .add("ACCOUNTAUTH", 1);
     }
 
     void load_fallbacks (std::istream& input,
-                         po::variables_map& variables) override
+        po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
-        load_input(argument_.to, "TOUID", variables, input, raw);
-        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -71,28 +67,13 @@ public:
         )
         (
             "ACCOUNTNAME",
-            value<std::string>(&auth_.name)->required(),
+            value<std::string>(&auth_.name),
             BX_ACCOUNT_NAME
         )
         (
             "ACCOUNTAUTH",
-            value<std::string>(&auth_.auth)->required(),
+            value<std::string>(&auth_.auth),
             BX_ACCOUNT_AUTH
-        )
-        (
-            "TOUID",
-            value<std::string>(&argument_.to)->required(),
-            "Target uid"
-        )
-        (
-            "SYMBOL",
-            value<std::string>(&argument_.symbol)->required(),
-            "Asset card symbol"
-        )
-        (
-            "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
         );
 
         return options;
@@ -103,20 +84,15 @@ public:
     }
 
     console_result invoke (Json::Value& jv_output,
-                           libbitcoin::server::server_node& node) override;
+         libbitcoin::server::server_node& node) override;
 
     struct argument
     {
-        std::string to;
-        std::string symbol;
-        uint64_t fee;
     } argument_;
 
-    struct option
-    {
-    } option_;
-
 };
+
+
 
 
 } // namespace commands

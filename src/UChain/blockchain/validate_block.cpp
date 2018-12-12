@@ -247,7 +247,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     std::set<string> tokens;
     std::set<string> token_certs;
-    std::set<string> token_cards;
+    std::set<string> token_candidates;
     std::set<string> uids;
     std::set<string> uidaddreses;
     code first_tx_ec = error::success;
@@ -290,14 +290,14 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
                     break;
                 }
             }
-            else if (output.is_token_card()) {
-                auto r = token_cards.insert(output.get_token_symbol());
+            else if (output.is_token_candidate()) {
+                auto r = token_candidates.insert(output.get_token_symbol());
                 if (r.second == false) {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_block card " + output.get_token_symbol()
+                        << "check_block candidate " + output.get_token_symbol()
                         << " already exists in block!"
                         << " " << tx.to_string(1);
-                    ec = error::card_exist;
+                    ec = error::candidate_exist;
                     break;
                 }
             }

@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_DATABASE_ADDRESS_CARD_DATABASE_HPP
-#define UC_DATABASE_ADDRESS_CARD_DATABASE_HPP
+#ifndef UC_DATABASE_CANDIDATE_HISTORY_DATABASE_HPP
+#define UC_DATABASE_CANDIDATE_HISTORY_DATABASE_HPP
 
 #include <memory>
 #include <boost/filesystem.hpp>
@@ -33,7 +33,7 @@ using namespace libbitcoin::chain;
 namespace libbitcoin {
 namespace database {
 
-struct BCD_API address_card_statinfo
+struct BCD_API candidate_history_statinfo
 {
     /// Number of buckets used in the hashtable.
     /// load factor = addrs / buckets
@@ -47,19 +47,19 @@ struct BCD_API address_card_statinfo
 };
 
 /// This is a multimap where the key is the Bitcoin address hash,
-/// which returns several rows giving the address_card for that address.
-class BCD_API address_card_database
+/// which returns several rows giving the candidate_history for that address.
+class BCD_API candidate_history_database
 {
 public:
     /// Construct the database.
-    address_card_database(const boost::filesystem::path& lookup_filename,
+    candidate_history_database(const boost::filesystem::path& lookup_filename,
         const boost::filesystem::path& rows_filename,
         std::shared_ptr<shared_mutex> mutex=nullptr);
 
     /// Close the database (all threads must first be stopped).
-    ~address_card_database();
+    ~candidate_history_database();
 
-    /// Initialize a new address_card database.
+    /// Initialize a new candidate_history database.
     bool create();
 
     /// Call before using the database.
@@ -78,32 +78,19 @@ public:
     void sync();
 
     /// Return statistical info about the database.
-    address_card_statinfo statinfo() const;
+    candidate_history_statinfo statinfo() const;
 
-    void store_output(const short_hash& key, const output_point& outpoint,
-        uint32_t output_height, uint64_t value, uint16_t business_kd,
-        uint32_t timestamp, const token_card& card);
+    void store(const token_candidate_info& candidate_info);
 
-    void store_input(const short_hash& key,
-        const output_point& inpoint, uint32_t input_height,
-        const input_point& previous, uint32_t timestamp);
+    std::shared_ptr<token_candidate_info> get(const short_hash& key) const;
 
-    business_record::list get(const short_hash& key, size_t from_height, size_t limit) const;
-    std::shared_ptr<std::vector<business_record>> get(const std::string& address, size_t start, size_t end) const;
-    std::shared_ptr<std::vector<business_record>> get(const std::string& address, const std::string& symbol,
-        size_t start_height, size_t end_height, uint64_t limit, uint64_t page_number) const;
-    std::shared_ptr<std::vector<business_record>> get(size_t idx) const;
-    business_record get_record(size_t idx) const;
-    business_history::list get_business_history(const short_hash& key,
-            size_t from_height) const;
-    business_history::list get_business_history(const std::string& address,
-        size_t from_height, uint8_t status) const;
-    business_history::list get_business_history(const std::string& address,
-        size_t from_height, uint32_t time_begin, uint32_t time_end) const;
-    std::shared_ptr<std::vector<business_history>> get_address_business_history(const std::string& address,
-        size_t from_height) const;
-    business_address_card::list get_cards(const std::string& address, size_t from_height,
-        token_card::card_status kind = token_card::card_status::card_status_none) const;
+    std::shared_ptr<token_candidate_info::list> get_history_candidates_by_height(const short_hash& key,
+        uint32_t start_height = 0, uint32_t end_height = 0,
+        uint64_t limit = 0, uint64_t page_number = 0) const;
+
+    std::shared_ptr<token_candidate_info::list> get_history_candidates_by_time(const short_hash& key,
+        uint32_t time_begin, uint32_t time_end,
+        uint64_t limit = 0, uint64_t page_number = 0) const;
 
 private:
     typedef record_hash_table<short_hash> record_map;
@@ -115,7 +102,7 @@ private:
     record_manager lookup_manager_;
     record_map lookup_map_;
 
-    /// List of address_card rows.
+    /// List of candidate_history rows.
     memory_map rows_file_;
     record_manager rows_manager_;
     record_list rows_list_;

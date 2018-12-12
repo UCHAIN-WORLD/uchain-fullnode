@@ -329,7 +329,7 @@ bool validate_block_impl::is_token_cert_in_orphan_chain(const std::string& symbo
     return false;
 }
 
-bool validate_block_impl::is_token_card_in_orphan_chain(const std::string& symbol) const
+bool validate_block_impl::is_token_candidate_in_orphan_chain(const std::string& symbol) const
 {
     BITCOIN_ASSERT(!symbol.empty());
 
@@ -337,8 +337,8 @@ bool validate_block_impl::is_token_card_in_orphan_chain(const std::string& symbo
         const auto& orphan_block = orphan_chain_[orphan]->actual();
         for (const auto& orphan_tx : orphan_block->transactions) {
             for (const auto& output : orphan_tx.outputs) {
-                if (output.is_token_card_register()) {
-                    if (symbol == output.get_token_card_symbol()) {
+                if (output.is_token_candidate_register()) {
+                    if (symbol == output.get_token_candidate_symbol()) {
                         return true;
                     }
                 }

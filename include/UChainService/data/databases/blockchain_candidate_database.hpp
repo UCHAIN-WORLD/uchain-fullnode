@@ -30,15 +30,15 @@
 namespace libbitcoin {
 namespace database {
 
-class BCD_API blockchain_card_database
+class BCD_API blockchain_candidate_database
 {
 public:
     /// Construct the database.
-    blockchain_card_database(const boost::filesystem::path& map_filename,
+    blockchain_candidate_database(const boost::filesystem::path& map_filename,
         std::shared_ptr<shared_mutex> mutex=nullptr);
 
     /// Close the database (all threads must first be stopped).
-    ~blockchain_card_database();
+    ~blockchain_candidate_database();
 
     /// Initialize a new transaction database.
     bool create();
@@ -52,17 +52,17 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    std::shared_ptr<token_card_info> get(const hash_digest& hash) const;
+    std::shared_ptr<token_candidate_info> get(const hash_digest& hash) const;
 
     /// Get all token certs
-    std::shared_ptr<token_card_info::list> get_blockchain_cards() const;
+    std::shared_ptr<token_candidate_info::list> get_blockchain_candidates() const;
 
     /// 
-    std::shared_ptr<token_card_info> get_register_history(const std::string & card_symbol) const;
+    std::shared_ptr<token_candidate_info> get_register_history(const std::string & candidate_symbol) const;
     ///
-    uint64_t get_register_height(const std::string & card_symbol) const;
+    uint64_t get_register_height(const std::string & candidate_symbol) const;
 
-    void store(const token_card_info& card_info);
+    void store(const token_candidate_info& candidate_info);
 
     /// Delete a transaction from database.
     void remove(const hash_digest& hash);

@@ -41,7 +41,7 @@ namespace commands{
 /// asset_message       --> message
 /// asset_uid           --> uid_register   |  uid_transfer
 /// asset_token_cert    --> token_cert
-/// asset_token_card     --> token_card
+/// asset_token_candidate     --> token_candidate
 /// -------------------------------------------------------------------
 /// utxo_attach_type is only used in explorer module
 /// utxo_attach_type will be used to generate asset with asset_type and content
@@ -70,8 +70,8 @@ enum class utxo_attach_type : uint32_t
     token_cert_issue = 11,
     token_cert_transfer = 12,
     token_cert_autoissue = 13,
-    token_card = 14,
-    token_card_transfer = 15,
+    token_candidate = 14,
+    token_candidate_transfer = 15,
     invalid = 0xffffffff
 };
 
@@ -218,7 +218,7 @@ std::string get_address_from_uid(const std::string& uid,
 std::string get_fee_dividend_address(bc::blockchain::block_chain_impl& blockchain);
 
 void check_token_symbol(const std::string& symbol, bool check_sensitive=false);
-void check_card_symbol(const std::string& symbol, bool check_sensitive=false);
+void check_candidate_symbol(const std::string& symbol, bool check_sensitive=false);
 void check_uid_symbol(const std::string& symbol,  bool check_sensitive=false);
 void check_token_symbol_with_miner(const std::string& symbol, const consensus::miner& miner, const std::string& address);
 void check_token_symbol_with_method(const std::string& symbol);
@@ -322,8 +322,8 @@ protected:
     std::vector<token_cert_type>      unspent_token_cert_;
     uint8_t                           payment_uid_{0};
     uint8_t                           unspent_uid_{0};
-    uint8_t                           payment_card_{0};
-    uint8_t                           unspent_card_{0};
+    uint8_t                           payment_candidate_{0};
+    uint8_t                           unspent_candidate_{0};
     std::vector<receiver_record>      receiver_list_;
     std::vector<address_token_record> from_list_;
 };
@@ -748,19 +748,19 @@ public:
         tx_.locktime = 0;
     };
 };
-class BCX_API registering_card : public base_transfer_helper
+class BCX_API registering_candidate : public base_transfer_helper
 {
 public:
-    registering_card(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    registering_candidate(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
-        std::string&& from, std::string&& symbol, std::map<std::string, std::string>&& card_map,
+        std::string&& from, std::string&& symbol, std::map<std::string, std::string>&& candidate_map,
         receiver_record::list&& receiver_list, uint64_t fee)
         : base_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
             std::move(from), std::move(receiver_list), fee, std::move(symbol))
-        , card_map_(card_map)
+        , candidate_map_(candidate_map)
     {}
 
-    ~registering_card()
+    ~registering_candidate()
     {}
 
     void populate_tx_header() override {
@@ -771,13 +771,13 @@ public:
     asset populate_output_asset(const receiver_record& record) override;
 
 private:
-    std::map<std::string, std::string> card_map_;
+    std::map<std::string, std::string> candidate_map_;
 };
 
-class BCX_API transferring_card : public base_multisig_transfer_helper
+class BCX_API transferring_candidate : public base_multisig_transfer_helper
 {
 public:
-    transferring_card(command& cmd, bc::blockchain::block_chain_impl& blockchain,
+    transferring_candidate(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         receiver_record::list&& receiver_list, uint64_t fee,
@@ -787,7 +787,7 @@ public:
             std::move(multisig_from))
     {}
 
-    ~transferring_card()
+    ~transferring_candidate()
     {}
 
     void populate_tx_header() override {

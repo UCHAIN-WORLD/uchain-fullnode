@@ -48,8 +48,8 @@ utxo_attach_type get_utxo_attach_type(const chain::output& output_)
     if (output.is_token_cert()) {
         return utxo_attach_type::token_cert;
     }
-    if (output.is_token_card()) {
-        return utxo_attach_type::token_card;
+    if (output.is_token_candidate()) {
+        return utxo_attach_type::token_candidate;
     }
     if (output.is_uid_register()) {
         return utxo_attach_type::uid_register;
@@ -120,15 +120,15 @@ void check_token_symbol_with_method (const std::string& symbol)
     }
 }
 
-void check_card_symbol(const std::string& symbol, bool check_sensitive)
+void check_candidate_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (symbol.empty()) {
         throw token_symbol_length_exception{"Symbol cannot be empty."};
     }
 
-    if (symbol.length() > TOKEN_CARD_SYMBOL_FIX_SIZE) {
+    if (symbol.length() > TOKEN_CANDIDATE_SYMBOL_FIX_SIZE) {
         throw token_symbol_length_exception{"Symbol length must be less than "
-            + std::to_string(TOKEN_CARD_SYMBOL_FIX_SIZE) + "."};
+            + std::to_string(TOKEN_CANDIDATE_SYMBOL_FIX_SIZE) + "."};
     }
 
     // char check
@@ -380,7 +380,7 @@ void sync_unspend_output(bc::blockchain::block_chain_impl& blockchain, const inp
     auto is_filter = [filter](const output & output_){
         if (((filter & base_transfer_common::FILTER_UCN) && output_.is_ucn())
         || ( (filter & base_transfer_common::FILTER_TOKEN) && output_.is_token())
-        || ( (filter & base_transfer_common::FILTER_IDENTIFIABLE_TOKEN) && output_.is_token_card())
+        || ( (filter & base_transfer_common::FILTER_IDENTIFIABLE_TOKEN) && output_.is_token_candidate())
         || ( (filter & base_transfer_common::FILTER_TOKENCERT) && output_.is_token_cert())
         || ( (filter & base_transfer_common::FILTER_UID) && output_.is_uid())){
             return true;
@@ -799,19 +799,19 @@ void base_transfer_common::sync_fetchutxo(
                 continue;
             }
         }
-        else if ((filter & FILTER_IDENTIFIABLE_TOKEN) && output.is_token_card()) {
+        else if ((filter & FILTER_IDENTIFIABLE_TOKEN) && output.is_token_candidate()) {
             BITCOIN_ASSERT(ucn_amount == 0);
             BITCOIN_ASSERT(token_total_amount == 0);
             BITCOIN_ASSERT(cert_type == token_cert_ns::none);
 
-            if (payment_card_ <= unspent_card_) {
+            if (payment_candidate_ <= unspent_candidate_) {
                 continue;
             }
 
             if (symbol_ != output.get_token_symbol())
                 continue;
 
-            ++unspent_card_;
+            ++unspent_candidate_;
         }
         else if ((filter & FILTER_TOKENCERT) && output.is_token_cert()) { // cert related
             BITCOIN_ASSERT(ucn_amount == 0);
@@ -952,10 +952,10 @@ void base_transfer_common::sum_payments()
             payment_token_cert_.push_back(iter.token_cert);
         }
 
-        if (iter.type == utxo_attach_type::token_card_transfer) {
-            ++payment_card_;
-            if (payment_card_ > 1) {
-                throw std::logic_error{"maximum one card can be transfered"};
+        if (iter.type == utxo_attach_type::token_candidate_transfer) {
+            ++payment_candidate_;
+            if (payment_candidate_ > 1) {
+                throw std::logic_error{"maximum one candidate can be transfered"};
             }
         }
         else if (iter.type == utxo_attach_type::uid_transfer) {
@@ -989,7 +989,7 @@ bool base_transfer_common::is_payment_satisfied(filter filter) const
     if ((filter & FILTER_TOKEN) && (unspent_token_ < payment_token_))
         return false;
 
-    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_card_ < payment_card_))
+    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_candidate_ < payment_candidate_))
         return false;
 
     if ((filter & FILTER_TOKENCERT)
@@ -1014,9 +1014,9 @@ void base_transfer_common::check_payment_satisfied(filter filter) const
             + std::to_string(unspent_token_) + ", payment = " + std::to_string(payment_token_)};
     }
 
-    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_card_ < payment_card_)) {
-        throw token_lack_exception{"not enough card amount, unspent = "
-            + std::to_string(unspent_card_) + ", payment = " + std::to_string(payment_card_)};
+    if ((filter & FILTER_IDENTIFIABLE_TOKEN) && (unspent_candidate_ < payment_candidate_)) {
+        throw token_lack_exception{"not enough candidate amount, unspent = "
+            + std::to_string(unspent_candidate_) + ", payment = " + std::to_string(payment_candidate_)};
     }
 
     if ((filter & FILTER_TOKENCERT)
@@ -1350,9 +1350,9 @@ asset base_transfer_common::populate_output_asset(const receiver_record& record)
         }
         return asset(TOKEN_CERT_TYPE, attach_version, cert_info);
     }
-    else if (record.type == utxo_attach_type::token_card
-        || record.type == utxo_attach_type::token_card_transfer) {
-        return asset(TOKEN_CARD_TYPE, attach_version, token_card(/*set on subclass*/));
+    else if (record.type == utxo_attach_type::token_candidate
+        || record.type == utxo_attach_type::token_candidate_transfer) {
+        return asset(TOKEN_CANDIDATE_TYPE, attach_version, token_candidate(/*set on subclass*/));
     }
 
     throw tx_asset_value_exception{
@@ -2129,20 +2129,20 @@ void sending_uid::populate_unspent_list()
     populate_change();
 }
 
-asset registering_card::populate_output_asset(const receiver_record& record)
+asset registering_candidate::populate_output_asset(const receiver_record& record)
 {
     auto&& attach = base_transfer_common::populate_output_asset(record);
 
-    if (record.type == utxo_attach_type::token_card) {
-        auto iter = card_map_.find(record.symbol);
-        if (iter == card_map_.end()) {
-            throw tx_asset_value_exception{"invalid card issue asset"};
+    if (record.type == utxo_attach_type::token_candidate) {
+        auto iter = candidate_map_.find(record.symbol);
+        if (iter == candidate_map_.end()) {
+            throw tx_asset_value_exception{"invalid candidate issue asset"};
         }
 
-        auto ass = token_card(record.symbol, record.target, iter->second);
-        ass.set_status(CARD_STATUS_REGISTER);
+        auto ass = token_candidate(record.symbol, record.target, iter->second);
+        ass.set_status(CANDIDATE_STATUS_REGISTER);
         if (!ass.is_valid()) {
-            throw tx_asset_value_exception{"invalid card issue asset"};
+            throw tx_asset_value_exception{"invalid candidate issue asset"};
         }
 
         attach.set_attach(ass);
@@ -2151,15 +2151,15 @@ asset registering_card::populate_output_asset(const receiver_record& record)
     return attach;
 }
 
-asset transferring_card::populate_output_asset(const receiver_record& record)
+asset transferring_candidate::populate_output_asset(const receiver_record& record)
 {
     auto&& attach = base_transfer_common::populate_output_asset(record);
 
-    if (record.type == utxo_attach_type::token_card_transfer) {
-        auto ass = token_card(record.symbol, record.target, "");
-        ass.set_status(CARD_STATUS_TRANSFER);
+    if (record.type == utxo_attach_type::token_candidate_transfer) {
+        auto ass = token_candidate(record.symbol, record.target, "");
+        ass.set_status(CANDIDATE_STATUS_TRANSFER);
         if (!ass.is_valid()) {
-            throw tx_asset_value_exception{"invalid card transfer asset"};
+            throw tx_asset_value_exception{"invalid candidate transfer asset"};
         }
 
         attach.set_attach(ass);

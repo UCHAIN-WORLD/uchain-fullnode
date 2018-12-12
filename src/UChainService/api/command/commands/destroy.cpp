@@ -38,9 +38,9 @@ console_result destroy::invoke(Json::Value& jv_output,
 
     std::string blackhole_uid = uid_detail::get_blackhole_uid_symbol();
 
-    if (option_.is_card) {
+    if (option_.is_candidate) {
         const char* cmds[] {
-            "transfercard", auth_.name.c_str(), auth_.auth.c_str(),
+            "transfercandidate", auth_.name.c_str(), auth_.auth.c_str(),
             blackhole_uid.c_str(), argument_.symbol.c_str()
         };
 

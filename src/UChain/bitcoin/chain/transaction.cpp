@@ -432,10 +432,10 @@ bool transaction::has_token_cert() const
     return false;
 }
 
-bool transaction::has_token_card_transfer() const
+bool transaction::has_token_candidate_transfer() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_token_card_transfer())
+        if(elem.is_token_candidate_transfer())
             return true;
     }
     return false;

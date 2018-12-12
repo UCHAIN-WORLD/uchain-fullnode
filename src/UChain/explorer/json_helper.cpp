@@ -532,39 +532,39 @@ Json::Value json_helper::prop_list(const bc::chain::token_cert& cert_info)
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::token_card& card_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::token_candidate& candidate_info, bool always_show_content)
 {
     Json::Value tree;
-    tree["symbol"] = card_info.get_symbol();
-    tree["address"] = card_info.get_address();
-    tree["status"] = card_info.get_status_name();
+    tree["symbol"] = candidate_info.get_symbol();
+    tree["address"] = candidate_info.get_address();
+    tree["status"] = candidate_info.get_status_name();
 
-    if (always_show_content || card_info.is_register_status()) {
-        tree["content"] = card_info.get_content();
+    if (always_show_content || candidate_info.is_register_status()) {
+        tree["content"] = candidate_info.get_content();
     }
 
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::token_card_info& card_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::token_candidate_info& candidate_info, bool always_show_content)
 {
     Json::Value tree;
 
-    tree["height"] = card_info.output_height;
+    tree["height"] = candidate_info.output_height;
     if (version_ <= 2) {
-        tree["time_stamp"] = card_info.timestamp;
+        tree["time_stamp"] = candidate_info.timestamp;
     }
     else {
-        tree["timestamp"] = card_info.timestamp;
+        tree["timestamp"] = candidate_info.timestamp;
     }
 
-    tree["to_uid"] = card_info.to_uid;
-    tree["symbol"] = card_info.card.get_symbol();
-    tree["address"] = card_info.card.get_address();
-    tree["status"] = card_info.card.get_status_name();
+    tree["to_uid"] = candidate_info.to_uid;
+    tree["symbol"] = candidate_info.candidate.get_symbol();
+    tree["address"] = candidate_info.candidate.get_address();
+    tree["status"] = candidate_info.candidate.get_status_name();
 
-    if (always_show_content || card_info.card.is_register_status()) {
-        tree["content"] = card_info.card.get_content();
+    if (always_show_content || candidate_info.candidate.is_register_status()) {
+        tree["content"] = candidate_info.candidate.get_content();
     }
 
     return tree;
@@ -639,10 +639,10 @@ Json::Value json_helper::prop_list(bc::chain::asset& attach_data)
             tree["type"] = "token-transfer";
         }
     }
-    else if (attach_data.get_type() == TOKEN_CARD_TYPE) {
-        auto token_info = boost::get<bc::chain::token_card>(attach_data.get_attach());
+    else if (attach_data.get_type() == TOKEN_CANDIDATE_TYPE) {
+        auto token_info = boost::get<bc::chain::token_candidate>(attach_data.get_attach());
         tree = prop_list(token_info);
-        tree["type"] = "card";
+        tree["type"] = "candidate";
     }
     else if (attach_data.get_type() == TOKEN_CERT_TYPE) {
         auto cert_info = boost::get<bc::chain::token_cert>(attach_data.get_attach());

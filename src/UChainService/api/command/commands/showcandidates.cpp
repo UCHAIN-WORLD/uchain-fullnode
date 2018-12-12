@@ -20,7 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
-#include <UChainService/api/command/commands/showcards.hpp>
+#include <UChainService/api/command/commands/showcandidates.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/base_helper.hpp>
@@ -31,9 +31,9 @@ namespace explorer {
 namespace commands {
 using namespace bc::explorer::config;
 
-/************************ showcards *************************/
+/************************ showcandidates *************************/
 
-console_result showcards::invoke(Json::Value& jv_output,
+console_result showcandidates::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
@@ -42,7 +42,7 @@ console_result showcards::invoke(Json::Value& jv_output,
 
     if (auth_.name.empty()) {
         // no account -- list whole tokens in blockchain
-        auto sh_vec = blockchain.get_registered_cards();
+        auto sh_vec = blockchain.get_registered_candidates();
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem : *sh_vec) {
@@ -55,15 +55,15 @@ console_result showcards::invoke(Json::Value& jv_output,
         blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
         // list tokens owned by account
-        auto sh_vec = blockchain.get_account_cards(auth_.name);
+        auto sh_vec = blockchain.get_account_candidates(auth_.name);
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem : *sh_vec) {
                 // update content if it's transfered from others
                 if (!elem.is_register_status()) {
-                    auto token = blockchain.get_registered_card(elem.get_symbol());
+                    auto token = blockchain.get_registered_candidate(elem.get_symbol());
                     if (nullptr != token) {
-                        elem.set_content(token->card.get_content());
+                        elem.set_content(token->candidate.get_content());
                     }
                 }
 
@@ -74,7 +74,7 @@ console_result showcards::invoke(Json::Value& jv_output,
     }
 
     if (get_api_version() <= 2) {
-        jv_output["cards"] = json_value;
+        jv_output["candidates"] = json_value;
     }
     else {
         if(json_value.isNull())

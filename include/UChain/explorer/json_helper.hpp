@@ -466,8 +466,8 @@ BCX_API Json::Value prop_list(const bc::chain::token_cert& cert_info);
  * @param[in]  cert_info        The identifiable token.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::token_card& card_info, bool always_show_content=false);
-BCX_API Json::Value prop_list(const bc::chain::token_card_info& card_info, bool always_show_content=false);
+BCX_API Json::Value prop_list(const bc::chain::token_candidate& candidate_info, bool always_show_content=false);
+BCX_API Json::Value prop_list(const bc::chain::token_candidate_info& candidate_info, bool always_show_content=false);
 
 /**
  * Generate a property list for a multisign.

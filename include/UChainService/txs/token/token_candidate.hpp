@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_CHAIN_ATTACH_TOKEN_CARD_HPP
-#define UC_CHAIN_ATTACH_TOKEN_CARD_HPP
+#ifndef UC_CHAIN_ATTACH_TOKEN_CANDIDATE_HPP
+#define UC_CHAIN_ATTACH_TOKEN_CANDIDATE_HPP
 
 #include <cstdint>
 #include <istream>
@@ -28,55 +28,55 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-#define CARD_STATUS2UINT32(kd)  (static_cast<typename std::underlying_type<token_card::card_status>::type>(kd))
+#define CANDIDATE_STATUS2UINT32(kd)  (static_cast<typename std::underlying_type<token_candidate::candidate_status>::type>(kd))
 
-#define CARD_STATUS_NONE        CARD_STATUS2UINT32(token_card::card_status::card_status_none)
-#define CARD_STATUS_REGISTER    CARD_STATUS2UINT32(token_card::card_status::card_status_register)
-#define CARD_STATUS_TRANSFER    CARD_STATUS2UINT32(token_card::card_status::card_status_transfer)
-#define CARD_STATUS_MAX         CARD_STATUS2UINT32(token_card::card_status::card_status_max)
+#define CANDIDATE_STATUS_NONE        CANDIDATE_STATUS2UINT32(token_candidate::candidate_status::candidate_status_none)
+#define CANDIDATE_STATUS_REGISTER    CANDIDATE_STATUS2UINT32(token_candidate::candidate_status::candidate_status_register)
+#define CANDIDATE_STATUS_TRANSFER    CANDIDATE_STATUS2UINT32(token_candidate::candidate_status::candidate_status_transfer)
+#define CANDIDATE_STATUS_MAX         CANDIDATE_STATUS2UINT32(token_candidate::candidate_status::candidate_status_max)
 
 namespace libbitcoin {
 namespace chain {
 
-BC_CONSTEXPR size_t TOKEN_CARD_SYMBOL_FIX_SIZE  = 64;
-BC_CONSTEXPR size_t TOKEN_CARD_ADDRESS_FIX_SIZE = 64;
-BC_CONSTEXPR size_t TOKEN_CARD_CONTENT_FIX_SIZE = 256;
-BC_CONSTEXPR size_t TOKEN_CARD_STATUS_FIX_SIZE  = 1;
+BC_CONSTEXPR size_t TOKEN_CANDIDATE_SYMBOL_FIX_SIZE  = 64;
+BC_CONSTEXPR size_t TOKEN_CANDIDATE_ADDRESS_FIX_SIZE = 64;
+BC_CONSTEXPR size_t TOKEN_CANDIDATE_CONTENT_FIX_SIZE = 256;
+BC_CONSTEXPR size_t TOKEN_CANDIDATE_STATUS_FIX_SIZE  = 1;
 
-BC_CONSTEXPR size_t TOKEN_CARD_FIX_SIZE = (TOKEN_CARD_SYMBOL_FIX_SIZE
-        + TOKEN_CARD_ADDRESS_FIX_SIZE + TOKEN_CARD_CONTENT_FIX_SIZE
-        + TOKEN_CARD_STATUS_FIX_SIZE);
+BC_CONSTEXPR size_t TOKEN_CANDIDATE_FIX_SIZE = (TOKEN_CANDIDATE_SYMBOL_FIX_SIZE
+        + TOKEN_CANDIDATE_ADDRESS_FIX_SIZE + TOKEN_CANDIDATE_CONTENT_FIX_SIZE
+        + TOKEN_CANDIDATE_STATUS_FIX_SIZE);
 
-BC_CONSTEXPR size_t TOKEN_CARD_TRANSFER_FIX_SIZE = (
-            TOKEN_CARD_FIX_SIZE - TOKEN_CARD_CONTENT_FIX_SIZE);
+BC_CONSTEXPR size_t TOKEN_CANDIDATE_TRANSFER_FIX_SIZE = (
+            TOKEN_CANDIDATE_FIX_SIZE - TOKEN_CANDIDATE_CONTENT_FIX_SIZE);
 
-// output_height; timestamp; to_uid; card;
-BC_CONSTEXPR size_t TOKEN_CARD_INFO_FIX_SIZE = 4 + 4 + 64 + TOKEN_CARD_TRANSFER_FIX_SIZE;
+// output_height; timestamp; to_uid; candidate;
+BC_CONSTEXPR size_t TOKEN_CANDIDATE_INFO_FIX_SIZE = 4 + 4 + 64 + TOKEN_CANDIDATE_TRANSFER_FIX_SIZE;
 
-class BC_API token_card
+class BC_API token_candidate
 {
 public:
-    typedef std::vector<token_card> list;
+    typedef std::vector<token_candidate> list;
 
-    enum class card_status : uint8_t
+    enum class candidate_status : uint8_t
     {
-        card_status_none     = 0,
-        card_status_register = 1,
-        card_status_transfer = 2,
-        card_status_max      = 3,
+        candidate_status_none     = 0,
+        candidate_status_register = 1,
+        candidate_status_transfer = 2,
+        candidate_status_max      = 3,
     };
 
-    token_card();
-    token_card(const std::string& symbol, const std::string& address,
+    token_candidate();
+    token_candidate(const std::string& symbol, const std::string& address,
               const std::string& content);
 
     void reset();
     bool is_valid() const;
-    bool operator< (const token_card& other) const;
+    bool operator< (const token_candidate& other) const;
 
-    static token_card factory_from_data(const data_chunk& data);
-    static token_card factory_from_data(std::istream& stream);
-    static token_card factory_from_data(reader& source);
+    static token_candidate factory_from_data(const data_chunk& data);
+    static token_candidate factory_from_data(std::istream& stream);
+    static token_candidate factory_from_data(reader& source);
 
     bool from_data(const data_chunk& data);
     bool from_data(std::istream& stream);
@@ -112,26 +112,26 @@ public:
 
 private:
     // NOTICE: ref CAssetMit in transaction.h
-    // token_card and CAssetMit should have the same size and order.
+    // token_candidate and CAssetMit should have the same size and order.
     uint8_t status_;        // token status
     std::string symbol_;    // token name/symbol
     std::string address_;   // address that owned token cert
     std::string content_;   // the content of the token, only serialization in register.
 };
 
-struct BC_API token_card_info
+struct BC_API token_candidate_info
 {
-    typedef std::vector<token_card_info> list;
+    typedef std::vector<token_candidate_info> list;
     uint32_t output_height;
     uint32_t timestamp;
     std::string to_uid;
-    token_card card;
+    token_candidate candidate;
 
     uint64_t serialized_size() const;
     void reset();
-    bool operator< (const token_card_info& other) const;
+    bool operator< (const token_candidate_info& other) const;
 
-    static token_card_info factory_from_data(reader& source);
+    static token_candidate_info factory_from_data(reader& source);
     data_chunk to_data() const;
     data_chunk to_short_data() const;
 };

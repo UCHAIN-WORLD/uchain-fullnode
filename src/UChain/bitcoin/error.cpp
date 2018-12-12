@@ -251,15 +251,15 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
         case error::nova_feature_not_activated:
             return "nova feature is not activated, it will be activated when block height is larger than 1270000";
 
-        // card errors
-        case error::card_error:
-            return "card token error";
-        case error::card_exist:
-            return "card token already exists";
-        case error::card_register_error:
-            return "card token register error";
-        case error::card_symbol_invalid:
-            return "card symbol invalid";
+        // candidate errors
+        case error::candidate_error:
+            return "candidate token error";
+        case error::candidate_exist:
+            return "candidate token already exists";
+        case error::candidate_register_error:
+            return "candidate token register error";
+        case error::candidate_symbol_invalid:
+            return "candidate symbol invalid";
 
         //block ext
         case error::first_coinbase_index_error:
