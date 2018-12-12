@@ -100,7 +100,7 @@ public:
     bool has_token_transfer() const;
     bool has_token_vote() const;
     bool has_token_cert() const;
-    bool has_token_card_transfer() const;
+    bool has_token_candidate_transfer() const;
 
     bool has_uid_register() const;
     bool has_uid_transfer() const;

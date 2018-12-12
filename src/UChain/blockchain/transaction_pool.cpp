@@ -159,7 +159,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
 {
     std::set<string> tokens;
     std::set<string> token_certs;
-    std::set<string> token_cards;
+    std::set<string> token_candidates;
     std::set<string> uids;
     std::set<string> uidaddreses;
     std::set<string> uidattaches;
@@ -221,16 +221,16 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                     return error::token_cert_exist;
                 }
             }
-            else if (output.is_token_card())
+            else if (output.is_token_candidate())
             {
-                auto r = token_cards.insert(output.get_token_symbol());
+                auto r = token_candidates.insert(output.get_token_symbol());
                 if (r.second == false)
                 {
                     log::debug(LOG_BLOCKCHAIN)
-                        << "check_symbol_repeat mit " + output.get_token_symbol()
+                        << "check_symbol_repeat candidate " + output.get_token_symbol()
                         << " already exists in memorypool!"
                         << " " << tx->to_string(1);
-                    return error::card_exist;
+                    return error::candidate_exist;
                 }
             }
             else if (output.is_uid())

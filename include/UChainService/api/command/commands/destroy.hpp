@@ -95,9 +95,9 @@ public:
             "If specified, then only destroy related cert. Default is not specified."
         )
         (
-            "card,m",
-            value<bool>(&option_.is_card)->default_value(false)->zero_tokens(),
-            "If specified, then only destroy related card. Default is not specified."
+            "candidate,m",
+            value<bool>(&option_.is_candidate)->default_value(false)->zero_tokens(),
+            "If specified, then only destroy related candidate. Default is not specified."
         )
         ;
 
@@ -122,10 +122,10 @@ public:
 
     struct option
     {
-        option(): is_card(false), cert_type("")
+        option(): is_candidate(false), cert_type("")
         {}
 
-        bool is_card;
+        bool is_candidate;
         std::string cert_type;
     } option_;
 

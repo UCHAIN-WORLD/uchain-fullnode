@@ -62,10 +62,10 @@
 #include <UChainService/api/command/commands/showaccounttoken.hpp>
 #include <UChainService/api/command/commands/showtokenview.hpp>
 #include <UChainService/api/command/commands/createtoken.hpp>
-#include <UChainService/api/command/commands/registercard.hpp>
-#include <UChainService/api/command/commands/transfercard.hpp>
-#include <UChainService/api/command/commands/showcards.hpp>
-#include <UChainService/api/command/commands/showcard.hpp>
+#include <UChainService/api/command/commands/registercandidate.hpp>
+#include <UChainService/api/command/commands/transfercandidate.hpp>
+#include <UChainService/api/command/commands/showcandidates.hpp>
+#include <UChainService/api/command/commands/showcandidate.hpp>
 #include <UChainService/api/command/commands/registeruid.hpp>
 #include <UChainService/api/command/commands/sendto.hpp>
 #include <UChainService/api/command/commands/sendfrom.hpp>
@@ -163,9 +163,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     
     // token
     os <<"token:\r\n";
-    /*func(make_shared<createtoken>());
+    func(make_shared<createtoken>());
     func(make_shared<deletetoken>());
-    func(make_shared<registertoken>());*/
+    func(make_shared<registertoken>());
     /*func(make_shared<registersecondarytoken>());*/
     func(make_shared<sendtokento>());
     func(make_shared<sendtokenfrom>());
@@ -197,18 +197,18 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<transfercert>());*/
 
     //os <<"\r\n";
-    // mit
-    /*func(make_shared<registercard>());
-    func(make_shared<transfercard>());
-    func(make_shared<showcards>());
-    func(make_shared<showcard>());
-
-    os <<"\r\n";*/
+    // candidate
+    /*func(make_shared<registercandidate>());
+    func(make_shared<transfercandidate>());
+    func(make_shared<showcandidates>());
+    func(make_shared<showcandidate>());
+    */
+    os <<"uids:\r\n";
     //uid
-    /*func(make_shared<registeruid>());
+    func(make_shared<registeruid>());
     func(make_shared<transferuid>());
     func(make_shared<showuids>());
-    func(make_shared<showuid>());*/
+    func(make_shared<showuid>());
 }
 
 shared_ptr<command> find_extension(const string& symbol)
@@ -327,10 +327,10 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<sendfrom>();
 
     // token
-    /*if (symbol == createtoken::symbol())
+    if (symbol == createtoken::symbol())
         return make_shared<createtoken>();
     if (symbol == deletetoken::symbol() || symbol == "deletetoken" )
-        return make_shared<deletetoken>();*/
+        return make_shared<deletetoken>();
     if (symbol == showtokens::symbol())
         return make_shared<showtokens>();
     if (symbol == showtoken::symbol())
@@ -341,8 +341,8 @@ shared_ptr<command> find_extension(const string& symbol)
     //     return make_shared<showtokenview>();
     if (symbol == showaddresstoken::symbol())
         return make_shared<showaddresstoken>();
-    /*if (symbol == registertoken::symbol())
-        return make_shared<registertoken>();*/
+    if (symbol == registertoken::symbol())
+        return make_shared<registertoken>();
     /*if (symbol == registersecondarytoken::symbol() || (symbol == "additionalissue") )
         return make_shared<registersecondarytoken>();*/
     if (symbol == sendtokento::symbol() || symbol == "uidsendtokento")
@@ -362,25 +362,25 @@ shared_ptr<command> find_extension(const string& symbol)
     if (symbol == registercert::symbol())
         return make_shared<registercert>();*/
 
-    // mit
-    /*if (symbol == registercard::symbol())
-        return make_shared<registercard>();
-    if (symbol == transfercard::symbol())
-        return make_shared<transfercard>();
-    if (symbol == showcards::symbol())
-        return make_shared<showcards>();
-    if (symbol == showcard::symbol())
-        return make_shared<showcard>();*/
+    // candidate
+    /*if (symbol == registercandidate::symbol())
+        return make_shared<registercandidate>();
+    if (symbol == transfercandidate::symbol())
+        return make_shared<transfercandidate>();
+    if (symbol == showcandidates::symbol())
+        return make_shared<showcandidates>();
+    if (symbol == showcandidate::symbol())
+        return make_shared<showcandidate>();*/
 
     // uid
-    /*if (symbol == registeruid::symbol())
+    if (symbol == registeruid::symbol())
         return make_shared<registeruid>();
     if (symbol == transferuid::symbol())
         return make_shared<transferuid>();
     if (symbol == showuids::symbol())
         return make_shared<showuids>();
     if (symbol == showuid::symbol())
-        return make_shared<showuid>();*/
+        return make_shared<showuid>();
 
     return nullptr;
 }

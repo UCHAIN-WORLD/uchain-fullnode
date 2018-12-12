@@ -102,7 +102,7 @@ bool get_blocks::from_data(uint32_t version, reader& source)
 {
     reset();
 
-    // Discard protocol version because it is stupid.
+    // discard protocol version because it is stupid.
     source.read_4_bytes_little_endian();
 
     const auto count = source.read_variable_uint_little_endian();

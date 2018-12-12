@@ -29,7 +29,7 @@
 #include <UChainService/txs/token/token_detail.hpp>
 #include <UChainService/txs/token/token_transfer.hpp>
 #include <UChainService/txs/token/token_cert.hpp>
-#include <UChainService/txs/token/token_card.hpp>
+#include <UChainService/txs/token/token_candidate.hpp>
 #include <UChainService/txs/uid/uid_detail.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
 #include <UChainService/txs/ucn/ucn_award.hpp>
@@ -54,7 +54,7 @@ enum class business_kind : uint16_t
     uid_register = 5,
     uid_transfer = 6,
     token_cert = 7,
-    token_card = 8,
+    token_candidate = 8,
     unknown = 0xffff
 };
 
@@ -76,7 +76,7 @@ public:
         token_detail,
         token_transfer,
         token_cert,
-        token_card,
+        token_candidate,
         blockchain_message,
         uid_detail> asset_data_type;
 
@@ -244,14 +244,14 @@ public:
 #endif
 };
 
-class BC_API business_address_card
+class BC_API business_address_candidate
 {
 public:
-    typedef std::vector<business_address_card> list;
+    typedef std::vector<business_address_candidate> list;
 
     std::string  address;
     uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
-    token_card mit;
+    token_candidate candidate;
 
 #ifdef UC_DEBUG
     // just used for unit test in block_chain_impl_test.cpp
@@ -261,7 +261,7 @@ public:
 
         ss << "\t address = " << address
             << "\t status = " << std::to_string(status)
-            << "\t mit = " << mit.to_string() << "\n";
+            << "\t candidate = " << candidate.to_string() << "\n";
 
         return ss.str();
     }

@@ -223,7 +223,7 @@ public:
         READWRITE(status);
         READWRITE(symbol);
         READWRITE(address);
-        if (status == CARD_STATUS_REGISTER) {
+        if (status == CANDIDATE_STATUS_REGISTER) {
             READWRITE(content);
         }
     }

@@ -30,27 +30,27 @@ namespace explorer {
 namespace commands {
 
 
-/************************ registercard *************************/
+/************************ transfercandidate *************************/
 
-class registercard : public command_extension
+class transfercandidate : public command_extension
 {
 public:
-    static const char* symbol(){ return "registercard";}
+    static const char* symbol() { return "transfercandidate";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Register MIT"; }
+    const char* description() override { return "Transfer candidate to other UID"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1)
-            .add("TOUID", 1)
-            .add("SYMBOL", 1);
+               .add("ACCOUNTNAME", 1)
+               .add("ACCOUNTAUTH", 1)
+               .add("TOUID", 1)
+               .add("SYMBOL", 1);
     }
 
     void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+                         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
@@ -86,18 +86,8 @@ public:
         )
         (
             "SYMBOL",
-            value<std::string>(&argument_.symbol)->default_value(""),
-            "card symbol"
-        )
-        (
-            "content,c",
-            value<std::string>(&option_.content)->default_value(""),
-            "Content of card"
-        )
-        (
-            "mits,m",
-            value<std::vector<std::string>>(&option_.multimits),
-            "List of symbol and content pair. Symbol and content are separated by a ':'"
+            value<std::string>(&argument_.symbol)->required(),
+            "Asset candidate symbol"
         )
         (
             "fee,f",
@@ -113,7 +103,7 @@ public:
     }
 
     console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+                           libbitcoin::server::server_node& node) override;
 
     struct argument
     {
@@ -124,12 +114,8 @@ public:
 
     struct option
     {
-        std::string content;
-        std::vector<std::string> multimits;
     } option_;
 
-private:
-    void check_symbol_content(const std::string& symbol, const std::string& content);
 };
 
 

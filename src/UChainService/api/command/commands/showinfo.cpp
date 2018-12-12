@@ -67,6 +67,7 @@ console_result showinfo::invoke(Json::Value& jv_output,
         //jv["difficulty"] = difficulty;
         jv["is-mining"] = is_solo_mining;
         jv["miner-count"] = minercount;
+        jv["identifier"] = node.network_settings().identifier;
         //jv["hash-rate"] = rate;
     }
     else {
@@ -83,6 +84,7 @@ console_result showinfo::invoke(Json::Value& jv_output,
         //jv["miner-count"] = minercount;jv["difficulty"] = difficulty;
         jv["is_mining"] = is_solo_mining;
         jv["miner-count"] = minercount;
+        jv["identifier"] = node.network_settings().identifier;
         //jv["hash_rate"] = rate;
     }
 

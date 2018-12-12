@@ -64,7 +64,7 @@ public:
     code check_token_issue_transaction() const;
     code check_token_cert_transaction() const;
     code check_secondaryissue_transaction() const;
-    code check_token_card_transaction() const;
+    code check_token_candidate_transaction() const;
     code check_uid_transaction() const;
     bool connect_uid_input(const uid& info) const;
     bool is_uid_match_address_in_orphan_chain(const std::string& symbol, const std::string& address) const;
@@ -81,7 +81,7 @@ public:
     bool check_token_amount(const transaction& tx) const;
     bool check_token_symbol(const transaction& tx) const;
     bool check_token_certs(const transaction& tx) const;
-    bool check_token_card(const transaction& tx) const;
+    bool check_token_candidate(const transaction& tx) const;
     bool check_address_registered_uid(const std::string& address) const;
 
     //check input uid match output uid
@@ -124,7 +124,7 @@ private:
     bool check_uid_exist(const std::string& uid) const;
     bool check_token_exist(const std::string& symbol) const;
     bool check_token_cert_exist(const std::string& cert, token_cert_type cert_type) const;
-    bool check_token_card_exist(const std::string& mit) const;
+    bool check_token_candidate_exist(const std::string& candidate) const;
 
     block_chain_impl& blockchain_;
     const transaction_ptr tx_;
@@ -137,7 +137,7 @@ private:
     uint64_t value_in_;
     uint64_t token_amount_in_;
     std::vector<token_cert_type> token_certs_in_;
-    std::string old_symbol_in_; // used for check same token/uid/mit symbol in previous outputs
+    std::string old_symbol_in_; // used for check same token/uid/candidate symbol in previous outputs
     std::string old_cert_symbol_in_; // used for check same cert symbol in previous outputs
     uint32_t current_input_;
     chain::point::indexes unconfirmed_;

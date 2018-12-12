@@ -54,9 +54,9 @@
 #include <UChainService/data/databases/blockchain_token_cert_database.hpp>
 #include <UChainService/data/databases/blockchain_uid_database.hpp>
 #include <UChainService/data/databases/address_uid_database.hpp>
-#include <UChainService/data/databases/blockchain_card_database.hpp>
-#include <UChainService/data/databases/address_card_database.hpp>
-#include <UChainService/data/databases/card_history_database.hpp>
+#include <UChainService/data/databases/blockchain_candidate_database.hpp>
+#include <UChainService/data/databases/address_candidate_database.hpp>
+#include <UChainService/data/databases/candidate_history_database.hpp>
 
 using namespace libbitcoin::wallet;
 using namespace libbitcoin::chain;
@@ -82,7 +82,7 @@ public:
         bool tokens_exist() const;
         bool touch_certs() const;
         bool certs_exist() const;
-        bool touch_cards() const;
+        bool touch_candidates() const;
         bool mits_exist() const;
 
         path database_lock;
@@ -108,10 +108,10 @@ public:
         path account_addresses_rows;
         /* end database for account, token, address_token, uid ,address_uid relationship */
         path mits_lookup;
-        path address_cards_lookup;
-        path address_cards_rows;
-        path card_history_lookup;
-        path card_history_rows;
+        path address_candidates_lookup;
+        path address_candidates_rows;
+        path candidate_history_lookup;
+        path candidate_history_rows;
     };
 
     class db_metadata
@@ -160,7 +160,7 @@ public:
     bool create_uids();
     bool create_tokens();
     bool create_certs();
-    bool create_cards();
+    bool create_candidates();
 
     /// Start all databases.
     bool start();
@@ -225,7 +225,7 @@ public:
     void push_uid_detail(const uid_detail& sp_detail, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_card(const token_card& mit, const short_hash& key,
+    void push_candidate(const token_candidate& candidate, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value,
                 const std::string from_uid, std::string to_uid);
 
@@ -263,9 +263,9 @@ public:
         {
             return db_->push_uid(t, sh_hash_, outpoint_, output_height_, value_);
         }
-        void operator()(const token_card &t) const
+        void operator()(const token_candidate &t) const
         {
-            return db_->push_card(t, sh_hash_, outpoint_, output_height_, value_, from_uid_, to_uid_);
+            return db_->push_candidate(t, sh_hash_, outpoint_, output_height_, value_, from_uid_, to_uid_);
         }
     private:
         data_base* db_;
@@ -321,7 +321,7 @@ private:
     static bool initialize_uids(const path& prefix);
     static bool initialize_tokens(const path& prefix);
     static bool initialize_certs(const path& prefix);
-    static bool initialize_cards(const path& prefix);
+    static bool initialize_candidates(const path& prefix);
 
     static void uninitialize_lock(const path& lock);
     static file_lock initialize_lock(const path& lock);
@@ -329,7 +329,7 @@ private:
     void synchronize();
     void synchronize_uids();
     void synchronize_certs();
-    void synchronize_cards();
+    void synchronize_candidates();
 
     void push_inputs(const hash_digest& tx_hash, size_t height,
         const inputs& inputs);
@@ -374,9 +374,9 @@ public:
     address_uid_database address_uids;
     account_address_database account_addresses;
     /* end database for account, token, address_token relationship */
-    blockchain_card_database mits;
-    address_card_database address_cards;
-    card_history_database card_history;
+    blockchain_candidate_database candidates;
+    address_candidate_database address_candidates;
+    candidate_history_database candidate_history;
 };
 
 } // namespace database

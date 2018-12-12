@@ -19,7 +19,7 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/command/commands/transfercard.hpp>
+#include <UChainService/api/command/commands/transfercandidate.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
@@ -30,14 +30,14 @@ namespace explorer {
 namespace commands {
 
 
-console_result transfercard::invoke (Json::Value& jv_output,
+console_result transfercandidate::invoke (Json::Value& jv_output,
         libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
     auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
 
     // check symbol
-    check_card_symbol(argument_.symbol);
+    check_candidate_symbol(argument_.symbol);
 
     // check to uid
     auto to_uid = argument_.to;
@@ -47,13 +47,13 @@ console_result transfercard::invoke (Json::Value& jv_output,
     }
 
     // get identifiable token
-    auto mits = blockchain.get_account_cards(auth_.name, argument_.symbol);
-    if (mits->size() == 0) {
+    auto candidates = blockchain.get_account_candidates(auth_.name, argument_.symbol);
+    if (candidates->size() == 0) {
         throw token_lack_exception("Not enough token '" + argument_.symbol +  "'");
     }
 
-    auto& mit = *(mits->begin());
-    std::string from_address(mit.get_address());
+    auto& candidate = *(candidates->begin());
+    std::string from_address(candidate.get_address());
     bool is_multisig_address = blockchain.is_script_address(from_address);
 
     account_multisig acc_multisig;
@@ -70,11 +70,11 @@ console_result transfercard::invoke (Json::Value& jv_output,
     std::vector<receiver_record> receiver{
         {
             to_address, argument_.symbol, 0, 0, 0,
-            utxo_attach_type::token_card_transfer, asset("", to_uid)
+            utxo_attach_type::token_candidate_transfer, asset("", to_uid)
         }
     };
 
-    auto helper = transferring_card(
+    auto helper = transferring_candidate(
                       *this, blockchain,
                       std::move(auth_.name), std::move(auth_.auth),
                       is_multisig_address ? std::move(from_address) : "",

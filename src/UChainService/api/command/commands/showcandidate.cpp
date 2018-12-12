@@ -19,7 +19,7 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/command/commands/showcard.hpp>
+#include <UChainService/api/command/commands/showcandidate.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
@@ -30,27 +30,27 @@ namespace commands {
 
 using namespace bc::explorer::config;
 
-/************************ showcard *************************/
+/************************ showcandidate *************************/
 
-console_result showcard::invoke(Json::Value& jv_output,
+console_result showcandidate::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
 
     if (!argument_.symbol.empty()) {
         // check symbol
-        check_card_symbol(argument_.symbol);
+        check_candidate_symbol(argument_.symbol);
     }
 
     if (option_.show_current) {
         if (argument_.symbol.empty()) {
-            throw argument_legality_exception("card symbol not privided while displaying the current status of card!");
+            throw argument_legality_exception("candidate symbol not privided while displaying the current status of candidate!");
         }
     }
 
     if (option_.show_history) {
         if (argument_.symbol.empty()) {
-            throw argument_legality_exception("card symbol not privided while tracing history!");
+            throw argument_legality_exception("candidate symbol not privided while tracing history!");
         }
 
         // page limit & page index paramenter check
@@ -72,14 +72,14 @@ console_result showcard::invoke(Json::Value& jv_output,
 
     bool is_list = true;
     if (argument_.symbol.empty()) {
-        auto sh_vec = blockchain.get_registered_cards();
+        auto sh_vec = blockchain.get_registered_candidates();
         std::sort(sh_vec->begin(), sh_vec->end());
         for (auto& elem : *sh_vec) {
-            json_value.append(elem.mit.get_symbol());
+            json_value.append(elem.candidate.get_symbol());
         }
 
         if (get_api_version() <=2 ) {
-            jv_output["mits"] = json_value;
+            jv_output["candidates"] = json_value;
         }
         else {
             jv_output = json_value;
@@ -87,14 +87,14 @@ console_result showcard::invoke(Json::Value& jv_output,
     }
     else {
         if (option_.show_history) {
-            auto sh_vec = blockchain.get_card_history(argument_.symbol, option_.limit, option_.index);
+            auto sh_vec = blockchain.get_candidate_history(argument_.symbol, option_.limit, option_.index);
             for (auto& elem : *sh_vec) {
                 Json::Value token_data = json_helper.prop_list(elem);
                 json_value.append(token_data);
             }
 
             if (get_api_version() <=2 ) {
-                jv_output["mits"] = json_value;
+                jv_output["candidates"] = json_value;
             }
             else {
                 if(json_value.isNull())
@@ -105,22 +105,22 @@ console_result showcard::invoke(Json::Value& jv_output,
         }
         else {
             if (option_.show_current) {
-                auto sh_vec = blockchain.get_card_history(argument_.symbol, 1, 1);
+                auto sh_vec = blockchain.get_candidate_history(argument_.symbol, 1, 1);
                 if (nullptr != sh_vec && sh_vec->size() > 0) {
                     auto last_iter = --(sh_vec->end());
-                    auto& card_info = *last_iter;
-                    auto reg_card = blockchain.get_registered_card(argument_.symbol);
-                    if (nullptr != reg_card) {
-                        card_info.mit.set_content(reg_card->mit.get_content());
+                    auto& candidate_info = *last_iter;
+                    auto reg_candidate = blockchain.get_registered_candidate(argument_.symbol);
+                    if (nullptr != reg_candidate) {
+                        candidate_info.candidate.set_content(reg_candidate->candidate.get_content());
                     }
 
-                    json_value = json_helper.prop_list(card_info, true);
+                    json_value = json_helper.prop_list(candidate_info, true);
                 }
             }
             else {
-                auto card_info = blockchain.get_registered_card(argument_.symbol);
-                if (nullptr != card_info) {
-                    json_value = json_helper.prop_list(*card_info);
+                auto candidate_info = blockchain.get_registered_candidate(argument_.symbol);
+                if (nullptr != candidate_info) {
+                    json_value = json_helper.prop_list(*candidate_info);
                 }
             }
 

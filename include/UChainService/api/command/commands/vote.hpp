@@ -36,7 +36,7 @@ public:
     static const char* symbol(){ return "vote";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "vote to a miner's addresss, then lock some ucn for about 48h.1 ucn can get 20 votes"; }
+    const char* description() override { return "vote to a miner's addresss/uid, then lock some ucn for about 48h.1 ucn can get 20 votes"; }
 
     arguments_metadata& load_arguments() override
     {
@@ -80,7 +80,7 @@ public:
         (
             "FROM_",
             value<std::string>(&argument_.from)->required(),
-            "The address to deposit some ucn for 48h."
+            "The address/uid to deposit some ucn for 48h."
         )
         (
             "receivers,r",

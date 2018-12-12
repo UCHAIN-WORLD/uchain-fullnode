@@ -32,9 +32,9 @@ hash_number max_target()
 
 std::string get_developer_community_address(bool is_testnet)
 {
-    std::string address("MAwLwVGwJyFsTBfNj2j5nCUrQXGVRvHzPh");  // developer-community address for mainnet
+    std::string address("UQudmH5pc3BuBebzVrdhVeXR8P8JXGUwCZ");  // developers address for mainnet
     if (is_testnet) {
-        address = "tJNo92g6DavpaCZbYjrH45iQ8eAKnLqmms";         // developer-community address for testnet
+        address = "tJNo92g6DavpaCZbYjrH45iQ8eAKnLqmms";         // developers address for testnet
     }
     return address;
 }

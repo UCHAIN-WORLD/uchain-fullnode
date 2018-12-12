@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_DATABASE_CARD_HISTORY_DATABASE_HPP
-#define UC_DATABASE_CARD_HISTORY_DATABASE_HPP
+#ifndef UC_DATABASE_CANDIDATE_HISTORY_DATABASE_HPP
+#define UC_DATABASE_CANDIDATE_HISTORY_DATABASE_HPP
 
 #include <memory>
 #include <boost/filesystem.hpp>
@@ -33,7 +33,7 @@ using namespace libbitcoin::chain;
 namespace libbitcoin {
 namespace database {
 
-struct BCD_API card_history_statinfo
+struct BCD_API candidate_history_statinfo
 {
     /// Number of buckets used in the hashtable.
     /// load factor = addrs / buckets
@@ -47,19 +47,19 @@ struct BCD_API card_history_statinfo
 };
 
 /// This is a multimap where the key is the Bitcoin address hash,
-/// which returns several rows giving the card_history for that address.
-class BCD_API card_history_database
+/// which returns several rows giving the candidate_history for that address.
+class BCD_API candidate_history_database
 {
 public:
     /// Construct the database.
-    card_history_database(const boost::filesystem::path& lookup_filename,
+    candidate_history_database(const boost::filesystem::path& lookup_filename,
         const boost::filesystem::path& rows_filename,
         std::shared_ptr<shared_mutex> mutex=nullptr);
 
     /// Close the database (all threads must first be stopped).
-    ~card_history_database();
+    ~candidate_history_database();
 
-    /// Initialize a new card_history database.
+    /// Initialize a new candidate_history database.
     bool create();
 
     /// Call before using the database.
@@ -78,17 +78,17 @@ public:
     void sync();
 
     /// Return statistical info about the database.
-    card_history_statinfo statinfo() const;
+    candidate_history_statinfo statinfo() const;
 
-    void store(const token_card_info& card_info);
+    void store(const token_candidate_info& candidate_info);
 
-    std::shared_ptr<token_card_info> get(const short_hash& key) const;
+    std::shared_ptr<token_candidate_info> get(const short_hash& key) const;
 
-    std::shared_ptr<token_card_info::list> get_history_cards_by_height(const short_hash& key,
+    std::shared_ptr<token_candidate_info::list> get_history_candidates_by_height(const short_hash& key,
         uint32_t start_height = 0, uint32_t end_height = 0,
         uint64_t limit = 0, uint64_t page_number = 0) const;
 
-    std::shared_ptr<token_card_info::list> get_history_cards_by_time(const short_hash& key,
+    std::shared_ptr<token_candidate_info::list> get_history_candidates_by_time(const short_hash& key,
         uint32_t time_begin, uint32_t time_end,
         uint64_t limit = 0, uint64_t page_number = 0) const;
 
@@ -102,7 +102,7 @@ private:
     record_manager lookup_manager_;
     record_map lookup_map_;
 
-    /// List of card_history rows.
+    /// List of candidate_history rows.
     memory_map rows_file_;
     record_manager rows_manager_;
     record_list rows_list_;

@@ -30,15 +30,15 @@ namespace explorer {
 namespace commands {
 
 
-/************************ showcard *************************/
+/************************ showcandidate *************************/
 
-class showcard: public command_extension
+class showcandidate: public command_extension
 {
 public:
-    static const char* symbol(){ return "showcard";}
+    static const char* symbol(){ return "showcandidate";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Get information of card."; }
+    const char* description() override { return "Get information of candidate."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -66,7 +66,7 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol),
-            "Asset symbol. If not specified then show whole network card symbols."
+            "Asset symbol. If not specified then show whole network candidate symbols."
         )
         (
             "trace,t",
@@ -76,7 +76,7 @@ public:
         (
             "limit,l",
             value<uint32_t>(&option_.limit)->default_value(100),
-            "card count per page."
+            "candidate count per page."
         )
         (
             "index,i",
@@ -86,7 +86,7 @@ public:
         (
             "current,c",
             value<bool>(&option_.show_current)->default_value(false)->zero_tokens(),
-            "If specified then show the lastest information of specified card. Default is not specified."
+            "If specified then show the lastest information of specified candidate. Default is not specified."
         )
         ;
 

@@ -172,11 +172,11 @@ enum error_code_t
     nova_feature_not_activated,     // 85
 
     // identifier token
-    card_error,
-    card_exist,
-    card_register_error,
-    card_symbol_invalid,
-    card_not_exist,
+    candidate_error,
+    candidate_exist,
+    candidate_register_error,
+    candidate_symbol_invalid,
+    candidate_not_exist,
 
     //block ext
     first_coinbase_index_error
