@@ -544,7 +544,7 @@ business_history::list address_card_database::get_business_history(const short_h
     return result;
 }
 
-// get address mits in the database(blockchain)
+// get address cards in the database(blockchain)
 std::shared_ptr<std::vector<business_history>> address_card_database::get_address_business_history(const std::string& address,
     size_t from_height) const
 {

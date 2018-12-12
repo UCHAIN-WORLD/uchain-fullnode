@@ -544,7 +544,7 @@ data_base::data_base(const store& paths, size_t history_height,
     address_uids(paths.address_uids_lookup, paths.address_uids_rows, mutex_),
     account_addresses(paths.account_addresses_lookup, paths.account_addresses_rows, mutex_),
     /* end database for account, token, address_token, uid relationship */
-    mits(paths.mits_lookup, mutex_),
+    cards(paths.mits_lookup, mutex_),
     address_cards(paths.address_cards_lookup, paths.address_cards_rows, mutex_),
     card_history(paths.card_history_lookup, paths.card_history_rows, mutex_)
 {
@@ -604,7 +604,7 @@ bool data_base::create()
         address_uids.create() &&
         account_addresses.create() &&
         /* end database for account, token, address_token relationship */
-        mits.create() &&
+        cards.create() &&
         address_cards.create() &&
         card_history.create()
         ;
@@ -633,7 +633,7 @@ bool data_base::create_certs()
 bool data_base::create_cards()
 {
     return
-        mits.create() &&
+        cards.create() &&
         address_cards.create() &&
         card_history.create();
 }
@@ -673,7 +673,7 @@ bool data_base::start()
         address_uids.start() &&
         account_addresses.start() &&
         /* end database for account, token, address_token relationship */
-        mits.start() &&
+        cards.start() &&
         address_cards.start() &&
         card_history.start()
         ;
@@ -702,7 +702,7 @@ bool data_base::stop()
     const auto address_uids_stop = address_uids.stop();
     const auto account_addresses_stop = account_addresses.stop();
     /* end database for account, token, address_token relationship */
-    const auto mits_stop = mits.stop();
+    const auto mits_stop = cards.stop();
     const auto address_cards_stop = address_cards.stop();
     const auto card_history_stop = card_history.stop();
     const auto end_exclusive = end_write();
@@ -754,7 +754,7 @@ bool data_base::close()
     const auto uids_close = uids.close();
     const auto account_addresses_close = account_addresses.close();
     /* end database for account, token, address_token relationship */
-    const auto mits_close = mits.close();
+    const auto mits_close = cards.close();
     const auto address_cards_close = address_cards.close();
     const auto card_history_close = card_history.close();
 
@@ -848,7 +848,7 @@ void data_base::synchronize()
     address_uids.sync();
     account_addresses.sync();
     /* end database for account, token, address_token relationship */
-    mits.sync();
+    cards.sync();
     address_cards.sync();
     card_history.sync();
     blocks.sync();
@@ -867,7 +867,7 @@ void data_base::synchronize_certs()
 
 void data_base::synchronize_cards()
 {
-    mits.sync();
+    cards.sync();
     address_cards.sync();
     card_history.sync();
 }
@@ -1180,7 +1180,7 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
 
                 if (card.is_register_status()) {
                     const auto symbol_hash = sha256_hash(symbol_data);
-                    mits.remove(symbol_hash);
+                    cards.remove(symbol_hash);
                 }
             }
         }
@@ -1307,8 +1307,8 @@ void data_base::push_card(const token_card& card, const short_hash& key,
     token_card_info card_info{output_height, timestamp_, to_uid, card};
 
     if (card.is_register_status()) {
-        mits.store(card_info);
-        mits.sync();
+        cards.store(card_info);
+        cards.sync();
     }
 
     address_cards.store_output(key, outpoint, output_height, value,

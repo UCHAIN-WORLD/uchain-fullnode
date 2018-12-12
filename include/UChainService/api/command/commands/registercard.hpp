@@ -95,7 +95,7 @@ public:
             "Content of card"
         )
         (
-            "mits,m",
+            "cards,m",
             value<std::vector<std::string>>(&option_.multimits),
             "List of symbol and content pair. Symbol and content are separated by a ':'"
         )

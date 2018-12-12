@@ -1475,13 +1475,13 @@ std::shared_ptr<token_card_info> block_chain_impl::get_registered_card(const std
 {
     BITCOIN_ASSERT(!symbol.empty());
     // return the registered identifiable token, its status must be CARD_STATUS_REGISTER
-    return database_.mits.get(get_hash(symbol));
+    return database_.cards.get(get_hash(symbol));
 }
 
 std::shared_ptr<token_card_info::list> block_chain_impl::get_registered_cards()
 {
     // return the registered identifiable tokens, their status must be CARD_STATUS_REGISTER
-    return database_.mits.get_blockchain_cards();
+    return database_.cards.get_blockchain_cards();
 }
 
 std::shared_ptr<token_card_info::list> block_chain_impl::get_card_history(
@@ -2096,7 +2096,7 @@ uint64_t block_chain_impl::get_token_cert_height(const std::string& cert_symbol,
 
 uint64_t block_chain_impl::get_token_card_height(const std::string& card_symbol) const
 {
-    return database_.mits.get_register_height(card_symbol);
+    return database_.cards.get_register_height(card_symbol);
 }
 
 /// get token from local database including all account's tokens

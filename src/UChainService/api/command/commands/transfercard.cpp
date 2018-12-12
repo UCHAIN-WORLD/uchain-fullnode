@@ -47,12 +47,12 @@ console_result transfercard::invoke (Json::Value& jv_output,
     }
 
     // get identifiable token
-    auto mits = blockchain.get_account_cards(auth_.name, argument_.symbol);
-    if (mits->size() == 0) {
+    auto cards = blockchain.get_account_cards(auth_.name, argument_.symbol);
+    if (cards->size() == 0) {
         throw token_lack_exception("Not enough token '" + argument_.symbol +  "'");
     }
 
-    auto& card = *(mits->begin());
+    auto& card = *(cards->begin());
     std::string from_address(card.get_address());
     bool is_multisig_address = blockchain.is_script_address(from_address);
 

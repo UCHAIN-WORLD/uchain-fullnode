@@ -79,7 +79,7 @@ console_result showcard::invoke(Json::Value& jv_output,
         }
 
         if (get_api_version() <=2 ) {
-            jv_output["mits"] = json_value;
+            jv_output["cards"] = json_value;
         }
         else {
             jv_output = json_value;
@@ -94,7 +94,7 @@ console_result showcard::invoke(Json::Value& jv_output,
             }
 
             if (get_api_version() <=2 ) {
-                jv_output["mits"] = json_value;
+                jv_output["cards"] = json_value;
             }
             else {
                 if(json_value.isNull())

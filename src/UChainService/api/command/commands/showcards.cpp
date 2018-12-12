@@ -74,7 +74,7 @@ console_result showcards::invoke(Json::Value& jv_output,
     }
 
     if (get_api_version() <= 2) {
-        jv_output["mits"] = json_value;
+        jv_output["cards"] = json_value;
     }
     else {
         if(json_value.isNull())

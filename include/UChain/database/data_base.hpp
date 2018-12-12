@@ -374,7 +374,7 @@ public:
     address_uid_database address_uids;
     account_address_database account_addresses;
     /* end database for account, token, address_token relationship */
-    blockchain_card_database mits;
+    blockchain_card_database cards;
     address_card_database address_cards;
     card_history_database card_history;
 };
