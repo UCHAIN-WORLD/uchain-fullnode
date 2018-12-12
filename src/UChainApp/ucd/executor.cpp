@@ -330,12 +330,11 @@ void executor::stop(const code& ec)
 void executor::initialize_output()
 {
     //log::info(LOG_SERVER) << BS_LOG_HEADER;
-
+    boost::filesystem::remove(default_data_path()/"conf");  
     auto file = metadata_.configured.file.string().compare("uc.conf") \
                         ? metadata_.configured.file:default_data_path() / metadata_.configured.file;
     if(!metadata_.configured.file.string().empty() && metadata_.configured.file.string().compare("uc.conf"))
     {
-        boost::filesystem::remove(default_data_path()/"conf");  
         boost::filesystem::create_symlink(metadata_.configured.file, default_data_path()/"conf");
     }
    

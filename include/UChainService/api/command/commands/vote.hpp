@@ -44,7 +44,7 @@ public:
             .add("ACCOUNTNAME", 1)
             .add("ACCOUNTAUTH", 1)
             .add("FROM_", 1)
-            .add("TO_", 1);
+            .add("RECEIVERS_", 20);
     }
 
     void load_fallbacks (std::istream& input,
@@ -54,7 +54,7 @@ public:
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
         load_input(argument_.from, "FROM_", variables, input, raw);
-        load_input(argument_.to, "TO_", variables, input, raw);
+        load_input(argument_.to, "RECEIVERS_", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -83,7 +83,7 @@ public:
             "The address to deposit some ucn for 48h."
         )
         (
-            "receivers,r",
+            "RECEIVERS_",
             value<std::vector<std::string>>(&argument_.to)->required(),
             "vote to [uid/address:ucn_bits]."
         )     
