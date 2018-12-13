@@ -111,8 +111,8 @@ public:
     bool is_invalid_status() const;
 
 private:
-    // NOTICE: ref CAssetMit in transaction.h
-    // token_candidate and CAssetMit should have the same size and order.
+    // NOTICE: ref CTokenCandidate in transaction.h
+    // token_candidate and CTokenCandidate should have the same size and order.
     uint8_t status_;        // token status
     std::string symbol_;    // token name/symbol
     std::string address_;   // address that owned token cert

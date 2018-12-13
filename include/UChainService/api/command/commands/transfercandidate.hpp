@@ -87,7 +87,7 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol)->required(),
-            "Asset candidate symbol"
+            "Token candidate symbol"
         )
         (
             "fee,f",

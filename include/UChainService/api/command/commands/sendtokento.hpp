@@ -84,17 +84,17 @@ public:
         (
             "TO_",
             value<std::string>(&argument_.to)->required(),
-            "Asset receiver uid/address."
+            "Token receiver uid/address."
         )
         (
             "TOKEN",
             value<std::string>(&argument_.symbol)->required(),
-            "Asset token symbol."
+            "Token token symbol."
         )
         (
             "AMOUNT",
             value<uint64_t>(&argument_.amount)->required(),
-            "Asset integer bits. see token <decimal_number>."
+            "Token integer bits. see token <decimal_number>."
         )
         (
             "change,c",

@@ -66,12 +66,12 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol),
-            "Asset symbol."
+            "Token symbol."
         )
         (
             "limit,l",
             value<uint64_t>(&argument_.limit)->default_value(100),
-            "Asset count per page."
+            "Token count per page."
         )
         (
             "index,i",

@@ -66,7 +66,7 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol),
-            "Asset symbol. If not specified then show whole network candidate symbols."
+            "Candidate symbol. If not specified then show whole network candidate symbols."
         )
         (
             "trace,t",

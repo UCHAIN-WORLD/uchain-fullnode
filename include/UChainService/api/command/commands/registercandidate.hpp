@@ -96,7 +96,7 @@ public:
         )
         (
             "candidates,m",
-            value<std::vector<std::string>>(&option_.multimits),
+            value<std::vector<std::string>>(&option_.multicandidates),
             "List of symbol and content pair. Symbol and content are separated by a ':'"
         )
         (
@@ -125,7 +125,7 @@ public:
     struct option
     {
         std::string content;
-        std::vector<std::string> multimits;
+        std::vector<std::string> multicandidates;
     } option_;
 
 private:

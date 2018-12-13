@@ -81,7 +81,7 @@ public:
         (
             "symbol,s",
             value<std::string>(&option_.symbol)->default_value(""),
-            "Asset symbol."
+            "Token symbol."
         )
         ;
 
