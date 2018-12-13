@@ -335,7 +335,11 @@ void executor::initialize_output()
                         ? metadata_.configured.file:default_data_path() / metadata_.configured.file;
     if(!metadata_.configured.file.string().empty() && metadata_.configured.file.string().compare("uc.conf"))
     {
-        boost::filesystem::create_symlink(metadata_.configured.file, default_data_path()/"conf");
+        try{
+            boost::filesystem::create_symlink(metadata_.configured.file, default_data_path()/"conf");
+        }catch(...){
+            log::info("config") << "Please use administrator privilege to allow uc-cli access! ";
+        }
     }
    
     if (file.empty())
