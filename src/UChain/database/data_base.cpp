@@ -223,7 +223,7 @@ void data_base::set_token_block()
     token_detail tokendetail(
     UC_BLOCK_TOKEN_SYMBOL, 1,
     1, 0, uid_detail::get_blackhole_uid_symbol(),
-    wallet::payment_address::blackhole_address, "BLOCK token is issued by blackhole,just for name not to use");
+    wallet::payment_address::blackhole_address, "'BLOCK' token is issued by blackhole.Miners can use it to get reward");
 
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
@@ -242,7 +242,7 @@ void data_base::set_token_vote()
     token_detail tokendetail(
     UC_VOTE_TOKEN_SYMBOL, 1,
     1, 0, uid_detail::get_blackhole_uid_symbol(),
-    wallet::payment_address::blackhole_address, "Vote token is issued by blackhole,just for name not to use");
+    wallet::payment_address::blackhole_address, "'VOTE' token is issued by blackhole.Users can use it to vote.");
 
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
