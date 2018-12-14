@@ -133,7 +133,7 @@ void check_candidate_symbol(const std::string& symbol, bool check_sensitive)
 
     // char check
     for (const auto& i : symbol) {
-        if (!(std::isalnum(i) || i == '.'|| i == '@' || i == '_' || i == '-'))
+        if (!(std::isalnum(i) || i == '.'|| i == '@' || i == '_' || i == '-' || i == ':'))
             throw token_symbol_name_exception(
                 "Symbol " + symbol + " has invalid character.");
     }
