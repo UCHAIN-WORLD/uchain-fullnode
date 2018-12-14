@@ -21,6 +21,7 @@
 #include <UChainService/txs/utility/path.hpp>
 #include <UChain/bitcoin/unicode/ifstream.hpp>
 #include <boost/program_options.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <jsoncpp/json/json.h>
 #include <UChainService/api/restful/MongooseCli.hpp>
 #include <UChain/bitcoin/unicode/unicode.hpp>
@@ -63,9 +64,38 @@ void my_impl(const http_message* hm)
 
 int bc::main(int argc, char* argv[])
 {
+    auto cur_path = boost::filesystem::current_path();
+    //boost::filesystem::remove(cur_path/"conf"); 
     bc::set_utf8_stdout();
     auto work_path = bc::default_data_path();
-    auto&& config_file = work_path / "uc.conf";
+    int index = 0;
+    if(argc > 2)
+    {
+        std::string op = argv[1], cfg_path = argv[2];
+        boost::trim(op);
+        boost::trim(cfg_path);
+        if(!op.compare("-c"))
+        {
+            if(!boost::filesystem::exists(cfg_path))
+            {
+                log::info("config") << "uc.config path is invalid.";
+                return -1;
+            }
+            try{
+                boost::filesystem::remove(cur_path/"conf");
+                boost::filesystem::create_symlink(boost::filesystem::path(cfg_path), cur_path/"conf");
+                if(argc == 3)
+                    return 0;
+                else
+                    index = 2;
+            }catch(...){
+                log::info("config") << "Please use administrator privilege to allow uc-cli access! ";
+                return -1;
+            }
+        }
+        
+    }
+    auto&& config_file = boost::filesystem::exists(cur_path / "conf") ? cur_path / "conf" : work_path / "uc.conf";
     std::string url{"127.0.0.1:8707/rpc/v3"};
 
     if (boost::filesystem::exists(config_file)) {
@@ -99,16 +129,17 @@ int bc::main(int argc, char* argv[])
     // HTTP request call commands
     HttpReq req(url, 3000, reply_handler(my_impl));
 
+    
     Json::Value jsonvar;
     Json::Value jsonopt;
     jsonvar["jsonrpc"] = "2.0";
     jsonvar["id"] = 1;
-    jsonvar["method"] = (argc > 1) ? argv[1] : "help";
+    jsonvar["method"] = (argc < 2) ? "help" : argv[1 +index];
     jsonvar["params"] = Json::arrayValue;
 
-    if (argc > 2)
+    if (argc > 2+index)
     {
-        for (int i = 2; i < argc; i++)
+        for (int i = 2+index; i < argc; i++)
         {
             jsonvar["params"].append(argv[i]);
         }
