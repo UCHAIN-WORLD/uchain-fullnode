@@ -147,12 +147,12 @@ options_metadata parser::load_settings()
     (
         "network.identifier",
         value<uint32_t>(&configured.network.identifier),
-        "The magic number for message headers, defaults to 3652501241."
+        "The magic number for message headers, defaults to 0x4d53564d."
     )
     (
         "network.inbound_port",
         value<uint16_t>(&configured.network.inbound_port),
-        "The port for incoming connections, defaults to 8333."
+        "The port for incoming connections, defaults to 5682."
     )
     (
         "network.inbound_connections",
