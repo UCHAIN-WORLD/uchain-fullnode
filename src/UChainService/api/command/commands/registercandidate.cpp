@@ -88,7 +88,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
     }
 
     // check multi symbol and content
-    for (const auto& candidate : option_.multicandidates) {
+    /*for (const auto& candidate : option_.multicandidates) {
         std::string symbol, content;
         auto pos = candidate.find_first_of(":");
         if (pos == std::string::npos) {
@@ -118,7 +118,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
         }
 
         candidate_map[symbol] = content;
-    }
+    }*/
 
     if (candidate_map.empty()) {
         throw argument_legality_exception{"No symbol provided."};
