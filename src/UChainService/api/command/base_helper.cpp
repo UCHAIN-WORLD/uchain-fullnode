@@ -144,6 +144,17 @@ void check_candidate_symbol(const std::string& symbol, bool check_sensitive)
             throw token_symbol_name_exception{"Symbol " + symbol + " is forbidden."};
         }
     }
+
+    try {
+        const auto authority = libbitcoin::config::authority(symbol);
+        if (!authority.to_network_address().is_routable()) {
+            throw address_invalid_exception{"NODEADDRESS is not routable! "};
+        }
+    }
+    catch (...)
+    {
+        throw address_invalid_exception{"NODEADDRESS is invalid! "};
+    }
 }
 
 std::string get_address(const std::string& uid_or_address,

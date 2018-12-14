@@ -124,6 +124,17 @@ bool output::is_valid_candidate_symbol(const std::string& symbol, bool check_sen
             return false;
     }
 
+    try {
+        const auto authority = libbitcoin::config::authority(symbol);
+        if (!authority.to_network_address().is_routable()) {
+            return false;
+        }
+    }
+    catch (...)
+    {
+        return false;
+    }
+
     return true;
 }
 

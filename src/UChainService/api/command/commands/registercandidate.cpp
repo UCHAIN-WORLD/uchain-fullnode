@@ -124,20 +124,17 @@ console_result registercandidate::invoke (Json::Value& jv_output,
         throw argument_legality_exception{"No symbol provided."};
     }
 
-    const auto authority = libbitcoin::config::authority(argument_.symbol);
-
-    code errcode;
-    auto handler = [&errcode](const code& ec){
-        errcode = ec;
-    };
-
-    
-    network::channel::manual_unban(authority);
-    node.store(authority.to_network_address(), handler);
-    
-    if (errcode.value()) {
-        throw address_invalid_exception{"invalid uid parameter! " + errcode.message()};
+    try {
+        const auto authority = libbitcoin::config::authority(argument_.symbol);
+        if (!authority.to_network_address().is_routable()) {
+            throw address_invalid_exception{"NODEADDRESS is not routable! "};
+        }
     }
+    catch (...)
+    {
+        throw address_invalid_exception{"NODEADDRESS is not routable! "};
+    }   
+    
 
     // check to uid
     auto to_uid = argument_.to;
