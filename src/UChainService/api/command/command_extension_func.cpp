@@ -108,6 +108,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     using namespace std;
     using namespace commands;
 
+    os <<"uc-cli:\r\n";
+    os <<"  -c <uc.config path>\r\n";
+
     os <<"system:\r\n";
     // system
     func(make_shared<shutdown>());
