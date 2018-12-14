@@ -46,7 +46,7 @@ public:
             .add("ACCOUNTNAME", 1)
             .add("ACCOUNTAUTH", 1)
             .add("TOUID", 1)
-            .add("SYMBOL", 1);
+            .add("NODEADDRESS", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -56,7 +56,7 @@ public:
         load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
         load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
         load_input(argument_.to, "TOUID", variables, input, raw);
-        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
+        load_input(argument_.symbol, "NODEADDRESS", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -85,9 +85,9 @@ public:
             "Target uid"
         )
         (
-            "SYMBOL",
+            "NODEADDRESS",
             value<std::string>(&argument_.symbol)->default_value(""),
-            "candidate symbol"
+            "The target node address[x.x.x.x:port]."
         )
         (
             "content,c",
@@ -96,7 +96,7 @@ public:
         )
         (
             "candidates,m",
-            value<std::vector<std::string>>(&option_.multimits),
+            value<std::vector<std::string>>(&option_.multicandidates),
             "List of symbol and content pair. Symbol and content are separated by a ':'"
         )
         (
@@ -125,7 +125,7 @@ public:
     struct option
     {
         std::string content;
-        std::vector<std::string> multimits;
+        std::vector<std::string> multicandidates;
     } option_;
 
 private:

@@ -127,8 +127,8 @@ public:
     static std::string get_key(const std::string&symbol, const token_cert_type& bit);
 
 private:
-    // NOTICE: ref CAssetCert in transaction.h
-    // token_cert and CAssetCert should have the same size and order.
+    // NOTICE: ref CTokenCert in transaction.h
+    // token_cert and CTokenCert should have the same size and order.
     std::string symbol_; // token name/symbol
     std::string owner_;  // token cert owner, an digital identity
     std::string address_; // address that owned token cert

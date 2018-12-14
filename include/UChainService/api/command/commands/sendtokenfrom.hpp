@@ -96,12 +96,12 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol)->required(),
-            "Asset symbol"
+            "Token symbol"
         )
         (
             "AMOUNT",
             value<uint64_t>(&argument_.amount)->required(),
-            "Asset integer bits. see token <decimal_number>."
+            "Token integer bits. see token <decimal_number>."
         )
         (
             "change,c",

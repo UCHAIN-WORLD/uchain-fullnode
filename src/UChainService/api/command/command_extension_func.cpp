@@ -198,20 +198,20 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     // cert
     /*func(make_shared<registercert>());
     func(make_shared<transfercert>());*/
-
-    //os <<"\r\n";
-    // candidate
-    /*func(make_shared<registercandidate>());
-    func(make_shared<transfercandidate>());
-    func(make_shared<showcandidates>());
-    func(make_shared<showcandidate>());
-    */
+    
     os <<"uids:\r\n";
     //uid
     func(make_shared<registeruid>());
     func(make_shared<transferuid>());
     func(make_shared<showuids>());
     func(make_shared<showuid>());
+
+    os <<"candidates:\r\n";
+    // candidate
+    func(make_shared<registercandidate>());
+    func(make_shared<transfercandidate>());
+    func(make_shared<showcandidates>());
+    func(make_shared<showcandidate>());
 }
 
 shared_ptr<command> find_extension(const string& symbol)
@@ -366,14 +366,14 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<registercert>();*/
 
     // candidate
-    /*if (symbol == registercandidate::symbol())
+    if (symbol == registercandidate::symbol())
         return make_shared<registercandidate>();
     if (symbol == transfercandidate::symbol())
         return make_shared<transfercandidate>();
     if (symbol == showcandidates::symbol())
         return make_shared<showcandidates>();
     if (symbol == showcandidate::symbol())
-        return make_shared<showcandidate>();*/
+        return make_shared<showcandidate>();
 
     // uid
     if (symbol == registeruid::symbol())

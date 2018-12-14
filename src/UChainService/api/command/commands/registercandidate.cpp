@@ -24,6 +24,7 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
+#include <UChain/bitcoin/config/authority.hpp>
 
 namespace libbitcoin {
 namespace explorer {
@@ -87,7 +88,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
     }
 
     // check multi symbol and content
-    for (const auto& candidate : option_.multimits) {
+    for (const auto& candidate : option_.multicandidates) {
         std::string symbol, content;
         auto pos = candidate.find_first_of(":");
         if (pos == std::string::npos) {
@@ -121,6 +122,21 @@ console_result registercandidate::invoke (Json::Value& jv_output,
 
     if (candidate_map.empty()) {
         throw argument_legality_exception{"No symbol provided."};
+    }
+
+    const auto authority = libbitcoin::config::authority(argument_.symbol);
+
+    code errcode;
+    auto handler = [&errcode](const code& ec){
+        errcode = ec;
+    };
+
+    
+    network::channel::manual_unban(authority);
+    node.store(authority.to_network_address(), handler);
+    
+    if (errcode.value()) {
+        throw address_invalid_exception{"invalid uid parameter! " + errcode.message()};
     }
 
     // check to uid

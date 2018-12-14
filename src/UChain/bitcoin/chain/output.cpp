@@ -481,7 +481,7 @@ token_candidate output::get_token_candidate() const
     if (is_token_candidate()) {
         return boost::get<token_candidate>(attach_data.get_attach());
     }
-    log::error("output::get_token_candidate") << "Asset type is not an candidate.";
+    log::error("output::get_token_candidate") << "Token type is not an candidate.";
     return token_candidate();
 }
 
@@ -490,7 +490,7 @@ token_cert output::get_token_cert() const
     if (is_token_cert()) {
         return boost::get<token_cert>(attach_data.get_attach());
     }
-    log::error("output::get_token_cert") << "Asset type is not an token_cert.";
+    log::error("output::get_token_cert") << "Token type is not an token_cert.";
     return token_cert();
 }
 
@@ -578,7 +578,7 @@ token_transfer output::get_token_transfer() const
             return boost::get<token_transfer>(token_info.get_data());
         }
     }
-    log::error("output::get_token_transfer") << "Asset type is not token_transfer_TYPE.";
+    log::error("output::get_token_transfer") << "Token type is not token_transfer_TYPE.";
     return token_transfer();
 }
 
@@ -590,7 +590,7 @@ token_detail output::get_token_detail() const
             return boost::get<token_detail>(token_info.get_data());
         }
     }
-    log::error("output::get_token_detail") << "Asset type is not TOKEN_DETAIL_TYPE.";
+    log::error("output::get_token_detail") << "Token type is not TOKEN_DETAIL_TYPE.";
     return token_detail();
 }
 

@@ -66,7 +66,7 @@ public:
         (
             "SYMBOL",
             value<std::string>(&argument_.symbol),
-            "Asset symbol. If not specified, will show whole network token symbols."
+            "Token symbol. If not specified, will show whole network token symbols."
         )
         (
             "cert,c",

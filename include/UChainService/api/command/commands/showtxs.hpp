@@ -88,7 +88,7 @@ public:
         (
             "symbol,s",
             value<std::string>(&argument_.symbol),
-            "Asset symbol."
+            "Token symbol."
         )
         (
             "limit,l",

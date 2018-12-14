@@ -141,7 +141,7 @@ bool data_base::initialize_certs(const path& prefix)
 bool data_base::initialize_candidates(const path& prefix)
 {
     const store paths(prefix);
-    if (paths.mits_exist())
+    if (paths.candidates_exist())
         return true;
     if (!paths.touch_candidates())
         return false;
@@ -223,7 +223,7 @@ void data_base::set_token_block()
     token_detail tokendetail(
     UC_BLOCK_TOKEN_SYMBOL, 1,
     1, 0, uid_detail::get_blackhole_uid_symbol(),
-    wallet::payment_address::blackhole_address, "BLOCK token is issued by blackhole,just for name not to use");
+    wallet::payment_address::blackhole_address, "'BLOCK' token is issued by blackhole.Miners can use it to get reward");
 
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
@@ -242,7 +242,7 @@ void data_base::set_token_vote()
     token_detail tokendetail(
     UC_VOTE_TOKEN_SYMBOL, 1,
     1, 0, uid_detail::get_blackhole_uid_symbol(),
-    wallet::payment_address::blackhole_address, "Vote token is issued by blackhole,just for name not to use");
+    wallet::payment_address::blackhole_address, "'VOTE' token is issued by blackhole.Users can use it to vote.");
 
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
@@ -276,7 +276,7 @@ data_base::store::store(const path& prefix)
     account_addresses_lookup = prefix / "account_address_table";
     account_addresses_rows = prefix / "account_address_rows";
     /* end database for account, token, address_token relationship */
-    mits_lookup = prefix / "candidate_table";
+    candidates_lookup = prefix / "candidate_table";
     address_candidates_lookup = prefix / "address_candidate_table"; // for blockchain
     address_candidates_rows = prefix / "address_candidate_row"; // for blockchain
     candidate_history_lookup = prefix / "candidate_history_table"; // for blockchain
@@ -318,7 +318,7 @@ bool data_base::store::touch_all() const
         touch_file(account_addresses_lookup) &&
         touch_file(account_addresses_rows) &&
         /* end database for account, token, address_token relationship */
-        touch_file(mits_lookup) &&
+        touch_file(candidates_lookup) &&
         touch_file(address_candidates_lookup) &&
         touch_file(address_candidates_rows) &&
         touch_file(candidate_history_lookup) &&
@@ -367,10 +367,10 @@ bool data_base::store::touch_certs() const
     return touch_file(certs_lookup);
 }
 
-bool data_base::store::mits_exist() const
+bool data_base::store::candidates_exist() const
 {
     return
-        boost::filesystem::exists(mits_lookup) ||
+        boost::filesystem::exists(candidates_lookup) ||
         boost::filesystem::exists(address_candidates_lookup) ||
         boost::filesystem::exists(address_candidates_rows) ||
         boost::filesystem::exists(candidate_history_lookup) ||
@@ -380,7 +380,7 @@ bool data_base::store::mits_exist() const
 bool data_base::store::touch_candidates() const
 {
     return
-        touch_file(mits_lookup) &&
+        touch_file(candidates_lookup) &&
         touch_file(address_candidates_lookup) &&
         touch_file(address_candidates_rows) &&
         touch_file(candidate_history_lookup) &&
@@ -544,7 +544,7 @@ data_base::data_base(const store& paths, size_t history_height,
     address_uids(paths.address_uids_lookup, paths.address_uids_rows, mutex_),
     account_addresses(paths.account_addresses_lookup, paths.account_addresses_rows, mutex_),
     /* end database for account, token, address_token, uid relationship */
-    candidates(paths.mits_lookup, mutex_),
+    candidates(paths.candidates_lookup, mutex_),
     address_candidates(paths.address_candidates_lookup, paths.address_candidates_rows, mutex_),
     candidate_history(paths.candidate_history_lookup, paths.candidate_history_rows, mutex_)
 {
@@ -702,7 +702,7 @@ bool data_base::stop()
     const auto address_uids_stop = address_uids.stop();
     const auto account_addresses_stop = account_addresses.stop();
     /* end database for account, token, address_token relationship */
-    const auto mits_stop = candidates.stop();
+    const auto candidates_stop = candidates.stop();
     const auto address_candidates_stop = address_candidates.stop();
     const auto candidate_history_stop = candidate_history.stop();
     const auto end_exclusive = end_write();
@@ -730,7 +730,7 @@ bool data_base::stop()
         address_uids_stop &&
         account_addresses_stop &&
         /* end database for account, token, address_token relationship */
-        mits_stop &&
+        candidates_stop &&
         address_candidates_stop &&
         candidate_history_stop &&
         end_exclusive;
@@ -754,7 +754,7 @@ bool data_base::close()
     const auto uids_close = uids.close();
     const auto account_addresses_close = account_addresses.close();
     /* end database for account, token, address_token relationship */
-    const auto mits_close = candidates.close();
+    const auto candidates_close = candidates.close();
     const auto address_candidates_close = address_candidates.close();
     const auto candidate_history_close = candidate_history.close();
 
@@ -775,7 +775,7 @@ bool data_base::close()
         uids_close &&
         account_addresses_close &&
         /* end database for account, token, address_token relationship */
-        mits_close &&
+        candidates_close &&
         address_candidates_close &&
         candidate_history_close
         ;

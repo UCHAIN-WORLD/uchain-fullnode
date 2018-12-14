@@ -107,9 +107,9 @@ public:
     static bool is_secondaryissue_owns_enough(uint64_t own, uint64_t total, uint8_t threshold);
 
 private:
-    // NOTICE: ref CAssetDetail in transaction.h
-    // token_detail and CAssetDetail should have the same size and order.
-    // uint32_t token_type in CAssetDetail is divided into four uint8_t parts here.
+    // NOTICE: ref CTokenDetail in transaction.h
+    // token_detail and CTokenDetail should have the same size and order.
+    // uint32_t token_type in CTokenDetail is divided into four uint8_t parts here.
     std::string symbol;
     uint64_t maximum_supply;
     uint8_t decimal_number;

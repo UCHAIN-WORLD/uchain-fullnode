@@ -98,7 +98,7 @@ public:
 
     std::string ToString() const;
 };
-class CAssetDetail
+class CTokenDetail
 {
 public:
     std::string symbol;
@@ -120,7 +120,7 @@ public:
         READWRITE(description);
     }
 };
-class CAssetTransfer
+class CTokenTransfer
 {
 public:
     std::string address;  // symbol  -- in block
@@ -135,12 +135,12 @@ public:
     }
 };
 
-class CAsset
+class CToken
 {
 public:
     uint32_t status;
-    CAssetDetail detail;
-    CAssetTransfer trans;
+    CTokenDetail detail;
+    CTokenTransfer trans;
 
     size_t GetSerializeSize(int nType, int nVersion) const {
         CSizeComputer s(nType, nVersion);
@@ -153,10 +153,10 @@ public:
         (::SerReadWrite(s, (status), nType, nVersion, CSerActionSerialize()));
         switch(status) {
             case 1: // asset detail
-                (::SerReadWrite(s, (*(CAssetDetail*)(&detail)), nType, nVersion, CSerActionSerialize()));
+                (::SerReadWrite(s, (*(CTokenDetail*)(&detail)), nType, nVersion, CSerActionSerialize()));
                 break;
             case 2: // asset transfer
-                (::SerReadWrite(s, (*(CAssetTransfer*)(&trans)), nType, nVersion, CSerActionSerialize()));
+                (::SerReadWrite(s, (*(CTokenTransfer*)(&trans)), nType, nVersion, CSerActionSerialize()));
                 break;
         };
     }
@@ -166,10 +166,10 @@ public:
         (::SerReadWrite(s, (status), nType, nVersion, CSerActionUnserialize()));
         switch(status) {
             case 1: // asset detail
-                (::SerReadWrite(s, (*(CAssetDetail*)(&detail)), nType, nVersion, CSerActionUnserialize()));
+                (::SerReadWrite(s, (*(CTokenDetail*)(&detail)), nType, nVersion, CSerActionUnserialize()));
                 break;
             case 2: // asset transfer
-                (::SerReadWrite(s, (*(CAssetTransfer*)(&trans)), nType, nVersion, CSerActionUnserialize()));
+                (::SerReadWrite(s, (*(CTokenTransfer*)(&trans)), nType, nVersion, CSerActionUnserialize()));
                 break;
         };
     }
@@ -187,7 +187,7 @@ public:
     }
 };
 
-class CAssetCert
+class CTokenCert
 {
 public:
     std::string symbol;
@@ -208,7 +208,7 @@ public:
     }
 };
 
-class CAssetMit
+class CTokenCandidate
 {
 public:
     uint8_t status;
@@ -314,9 +314,9 @@ public:
     std::string fromuid;
     std::string touid;
 
-    CAsset asset;
-    CAssetCert assetcert;
-    CAssetMit mit;
+    CToken asset;
+    CTokenCert assetcert;
+    CTokenCandidate mit;
     CDid uid;
     CMessage message;
 
@@ -351,7 +351,7 @@ public:
                 // not data left
                 break;
             case 2: // asset
-                (::SerReadWrite(s, (*(CAsset*)(&asset)), nType, nVersion, CSerActionSerialize()));
+                (::SerReadWrite(s, (*(CToken*)(&asset)), nType, nVersion, CSerActionSerialize()));
                 break;
             case 3: // message
                 (::SerReadWrite(s, (*(CMessage*)(&message)), nType, nVersion, CSerActionSerialize()));
@@ -360,10 +360,10 @@ public:
                 (::SerReadWrite(s, (*(CDid*)(&uid)), nType, nVersion, CSerActionSerialize()));
                 break;
             case 5: // asset cert
-                (::SerReadWrite(s, (*(CAssetCert*)(&assetcert)), nType, nVersion, CSerActionSerialize()));
+                (::SerReadWrite(s, (*(CTokenCert*)(&assetcert)), nType, nVersion, CSerActionSerialize()));
                 break;
             case 6: // mit
-                (::SerReadWrite(s, (*(CAssetMit*)(&mit)), nType, nVersion, CSerActionSerialize()));
+                (::SerReadWrite(s, (*(CTokenCandidate*)(&mit)), nType, nVersion, CSerActionSerialize()));
                 break;
         };
     }
@@ -384,7 +384,7 @@ public:
                 // not data left
                 break;
             case 2: // asset
-                (::SerReadWrite(s, (*(CAsset*)(&asset)), nType, nVersion, CSerActionUnserialize()));
+                (::SerReadWrite(s, (*(CToken*)(&asset)), nType, nVersion, CSerActionUnserialize()));
                 break;
             case 3: // message
                 (::SerReadWrite(s, (*(CMessage*)(&message)), nType, nVersion, CSerActionUnserialize()));
@@ -393,10 +393,10 @@ public:
                 (::SerReadWrite(s, (*(CDid*)(&uid)), nType, nVersion, CSerActionUnserialize()));
                 break;
             case 5: // asset cert
-                (::SerReadWrite(s, (*(CAssetCert*)(&assetcert)), nType, nVersion, CSerActionUnserialize()));
+                (::SerReadWrite(s, (*(CTokenCert*)(&assetcert)), nType, nVersion, CSerActionUnserialize()));
                 break;
             case 6: // mit
-                (::SerReadWrite(s, (*(CAssetMit*)(&mit)), nType, nVersion, CSerActionUnserialize()));
+                (::SerReadWrite(s, (*(CTokenCandidate*)(&mit)), nType, nVersion, CSerActionUnserialize()));
                 break;
         };
     }

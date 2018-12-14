@@ -83,7 +83,7 @@ public:
         bool touch_certs() const;
         bool certs_exist() const;
         bool touch_candidates() const;
-        bool mits_exist() const;
+        bool candidates_exist() const;
 
         path database_lock;
         path blocks_lookup;
@@ -107,7 +107,7 @@ public:
         path account_addresses_lookup;
         path account_addresses_rows;
         /* end database for account, token, address_token, uid ,address_uid relationship */
-        path mits_lookup;
+        path candidates_lookup;
         path address_candidates_lookup;
         path address_candidates_rows;
         path candidate_history_lookup;

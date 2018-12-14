@@ -87,7 +87,7 @@ public:
         (
             "AMOUNT",
             value<uint64_t>(&argument_.amount)->default_value(0),
-            "Asset integer bits. see token <decimal_number>."
+            "Token integer bits. see token <decimal_number>."
         )
         (
             "cert,c",
