@@ -132,7 +132,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
     }
     catch (...)
     {
-        throw address_invalid_exception{"NODEADDRESS is not routable! "};
+        throw address_invalid_exception{"NODEADDRESS is not valid! "};
     }   
     
 
