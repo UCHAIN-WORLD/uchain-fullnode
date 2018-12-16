@@ -112,7 +112,7 @@ bool output::is_valid_candidate_symbol(const std::string& symbol, bool check_sen
         return false;
     // char check
     for (const auto& i : symbol) {
-        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_' || i=='-'))
+        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_' || i=='-' || i==':'))
             return false;
     }
 
@@ -122,6 +122,17 @@ bool output::is_valid_candidate_symbol(const std::string& symbol, bool check_sen
         auto upper = boost::to_upper_copy(symbol);
         if (bc::wallet::symbol::is_sensitive(upper))
             return false;
+    }
+
+    try {
+        const auto authority = libbitcoin::config::authority(symbol);
+        if (!authority.to_network_address().is_routable()) {
+            return false;
+        }
+    }
+    catch (...)
+    {
+        return false;
     }
 
     return true;

@@ -94,11 +94,11 @@ public:
             value<std::string>(&option_.content)->default_value(""),
             "Content of candidate"
         )
-        (
+        /*(
             "candidates,m",
             value<std::vector<std::string>>(&option_.multicandidates),
             "List of symbol and content pair. Symbol and content are separated by a ':'"
-        )
+        )*/
         (
             "fee,f",
             value<uint64_t>(&argument_.fee)->default_value(10000),
@@ -125,7 +125,7 @@ public:
     struct option
     {
         std::string content;
-        std::vector<std::string> multicandidates;
+        //std::vector<std::string> multicandidates;
     } option_;
 
 private:

@@ -25,6 +25,7 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/node_method_wrapper.hpp>
 #include <UChain/bitcoin/config/authority.hpp>
+#include <UChainService/api/command/exception.hpp>
 #include <UChain/network/channel.hpp>
 
 namespace libbitcoin {
@@ -40,27 +41,38 @@ console_result addpeer::invoke(Json::Value& jv_output,
     auto& blockchain = node.chain_impl();
 
     administrator_required_checker(node, auth_.name, auth_.auth);
+    try
+    {
+        const auto authority = libbitcoin::config::authority(argument_.address);
 
-    const auto authority = libbitcoin::config::authority(argument_.address);
+        code errcode;
+        auto handler = [&errcode](const code &ec) {
+            errcode = ec;
+        };
 
-    code errcode;
-    auto handler = [&errcode](const code& ec){
-        errcode = ec;
-    };
-
-    if (option_.operation == "ban") {
-        network::channel::manual_ban(authority);
-        node.connections_ptr()->stop(authority);
-    } else if ((option_.operation == "add") || (option_.operation == "")){
-        network::channel::manual_unban(authority);
-        node.store(authority.to_network_address(), handler);
-    } else {
-        jv_output = string("Invalid operation [") +option_.operation+"]." ;
-        return console_result::okay;
+        if (option_.operation == "ban")
+        {
+            network::channel::manual_ban(authority);
+            node.connections_ptr()->stop(authority);
+        }
+        else if ((option_.operation == "add") || (option_.operation == ""))
+        {
+            network::channel::manual_unban(authority);
+            node.store(authority.to_network_address(), handler);
+        }
+        else
+        {
+            jv_output = string("Invalid operation [") + option_.operation + "].";
+            return console_result::okay;
+        }
+        jv_output = errcode.message();
+    }
+    catch (...)
+    {
+        throw address_invalid_exception{"NODEADDRESS is not valid! "};
     }
 
-
-    jv_output = errcode.message();
+    
     return console_result::okay;
 }
 
