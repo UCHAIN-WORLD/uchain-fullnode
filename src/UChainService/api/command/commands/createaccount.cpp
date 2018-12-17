@@ -70,15 +70,7 @@ console_result createaccount::invoke(Json::Value& jv_output,
         throw address_generate_exception(sout.str());
     }
 
-    if (get_api_version() == 1) {
-        jv_output["mnemonic"] = words;
-        jv_output["default-address"] = jv_temp;
-    }
-    else if (get_api_version() == 2) {
-        jv_output["mnemonic"] = words;
-        jv_output["default-address"] = jv_temp["addresses"][0].asString();
-    }
-    else {
+    {
         config::json_helper::account_info acc(auth_.name, words, jv_temp);
         jv_output = config::json_helper(get_api_version()).prop_list(acc);
     }

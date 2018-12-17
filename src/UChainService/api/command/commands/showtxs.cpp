@@ -232,18 +232,10 @@ console_result showtxs::invoke(Json::Value& jv_output,
             if (chain::operation::is_pay_key_hash_with_lock_height_pattern(op.script.operations))
                 lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(op.script.operations);
 
-            if (get_api_version() == 1) {
-                pt_output["locked_height_range"] += lock_height;
-                pt_output["ucn-value"] += op.value;
-            }
-            else if (get_api_version() == 2) {
-                pt_output["locked_height_range"] = lock_height;
-                pt_output["ucn-value"] = op.value;
-            }
-            else {
-                pt_output["locked_height_range"] = lock_height;
-                pt_output["ucn_value"] = op.value;
-            }
+            
+            pt_output["locked_height_range"] = lock_height;
+            pt_output["ucn_value"] = op.value;
+            
 
             if (chain::operation::is_pay_key_hash_with_attenuation_model_pattern(op.script.operations)) {
                 const auto& model_param = op.get_attenuation_model_param();
