@@ -874,7 +874,7 @@ code attenuation_model::check_model_param(const blockchain::validate_transaction
     const transaction& tx = validate_tx.get_tx();
     const blockchain::block_chain_impl& chain = validate_tx.get_blockchain();
 
-    if (tx.version < transaction_version::check_nova_feature) {
+    if (tx.version < transaction_version::check_uid_feature) {
         return error::success;
     }
 

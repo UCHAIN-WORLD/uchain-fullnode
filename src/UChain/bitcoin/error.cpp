@@ -248,8 +248,8 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
 
         case error::asset_invalid:
             return "asset is invalid";
-        case error::nova_feature_not_activated:
-            return "nova feature is not activated, it will be activated when block height is larger than 1270000";
+        case error::uid_feature_not_activated:
+            return "uid feature is not activated, it will be activated when block height is larger than 1270000";
 
         // candidate errors
         case error::candidate_error:

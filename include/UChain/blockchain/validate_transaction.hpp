@@ -87,7 +87,7 @@ public:
     //check input uid match output uid
     bool check_uid_symbol_match(const transaction& tx) const;
 
-    static bool is_nova_feature_activated(blockchain::block_chain_impl& chain);
+    static bool is_uid_feature_activated(blockchain::block_chain_impl& chain);
 
     bool get_previous_tx(chain::transaction& prev_tx, uint64_t& prev_height, const chain::input&) const;
 

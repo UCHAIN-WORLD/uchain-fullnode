@@ -940,9 +940,9 @@ void base_transfer_common::check_fee_in_valid_range(uint64_t fee)
 void base_transfer_common::check_model_param_initial(std::string& param, uint64_t amount)
 {
     if (!param.empty()) {
-        if (!validate_transaction::is_nova_feature_activated(blockchain_)) {
+        if (!validate_transaction::is_uid_feature_activated(blockchain_)) {
             throw token_attenuation_model_exception(
-                "attenuation model should be supported after nova feature is activated.");
+                "attenuation model should be supported after uid feature is activated.");
         }
         if (!attenuation_model::check_model_param_initial(param, amount, true)) {
             throw token_attenuation_model_exception("check token attenuation model param failed");
@@ -1562,8 +1562,8 @@ void base_transfer_common::send_tx()
 void base_transfer_common::populate_tx_header()
 {
     tx_.locktime = 0;
-    if (validate_transaction::is_nova_feature_activated(blockchain_)) {
-        tx_.version = transaction_version::check_nova_feature;
+    if (validate_transaction::is_uid_feature_activated(blockchain_)) {
+        tx_.version = transaction_version::check_uid_feature;
     } else {
         tx_.version = transaction_version::check_output_script;
     }
