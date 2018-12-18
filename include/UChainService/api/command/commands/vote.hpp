@@ -89,8 +89,8 @@ public:
         )     
         (
             "fee,f",
-            value<uint64_t>(&option_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
+            value<uint64_t>(&option_.fee)->default_value(200000),
+            "Transaction fee. defaults to 200000 UCN bits."
         );
 
         return options;

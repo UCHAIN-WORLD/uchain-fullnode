@@ -91,8 +91,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(100000000),
-            "The fee of tx. defaults to 1 ucn."
+            value<uint64_t>(&argument_.fee)->default_value(200000),
+            "The fee of tx. defaults to 200000 ucn bits."
         )
         (
             "percentage,p",

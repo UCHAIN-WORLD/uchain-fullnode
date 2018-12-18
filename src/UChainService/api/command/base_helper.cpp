@@ -172,6 +172,16 @@ std::string get_address(const std::string& uid_or_address,
     return address;
 }
 
+std::string get_address_from_strict_uid(const std::string& uid_or_address,
+    asset& attach, bool is_from,
+    bc::blockchain::block_chain_impl& blockchain)
+{
+    if (blockchain.is_valid_address(uid_or_address)) {
+        throw token_symbol_name_exception{"Address is not supported."};
+    }
+    return get_address(uid_or_address, attach, is_from, blockchain);
+}
+
 std::string get_address(const std::string& uid_or_address,
     asset& attach, bool is_from,
     bc::blockchain::block_chain_impl& blockchain)

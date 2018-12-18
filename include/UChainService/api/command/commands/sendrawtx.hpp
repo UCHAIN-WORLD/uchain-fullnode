@@ -70,8 +70,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(1000000000),
-            "The max tx fee. default_value 10 ucn"
+            value<uint64_t>(&argument_.fee)->default_value(1000000000000),
+            "The max tx fee. default_value 10000 ucn."
         );
 
         return options;

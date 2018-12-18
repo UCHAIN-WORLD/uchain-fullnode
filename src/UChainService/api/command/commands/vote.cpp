@@ -45,7 +45,7 @@ console_result vote::invoke(Json::Value& jv_output,
         colon_delimited2_item<std::string, uint64_t> item(each);
 
         asset attach;
-        std::string address = get_address(item.first(), attach, false, blockchain);
+        std::string address = get_address_from_strict_uid(item.first(), attach, false, blockchain);
         if (item.second() <= 0) {
             throw argument_legality_exception("invalid amount parameter for " + item.first());
         }
@@ -56,7 +56,7 @@ console_result vote::invoke(Json::Value& jv_output,
 
 
     asset f_attach;
-    std::string from_address = get_address(argument_.from, f_attach, false, blockchain);
+    std::string from_address = get_address_from_strict_uid(argument_.from, f_attach, false, blockchain);
     receiver.push_back({from_address, "", amount*coin_price(1)/20, 0, utxo_attach_type::deposit, f_attach});
 
     auto vote_helper = voting_token(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),

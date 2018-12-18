@@ -88,8 +88,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(10 * 100000000),
-            "The fee of tx. minimum is 10 ucn."
+            value<uint64_t>(&argument_.fee)->default_value(200000),
+            "The fee of tx. minimum is 200000 ucn bits."
         )
         (
             "percentage,p",

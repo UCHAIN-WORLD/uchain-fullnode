@@ -205,6 +205,10 @@ void sync_fetch_token_cert_balance(const std::string& address, const string& sym
 std::string get_random_payment_address(std::shared_ptr<std::vector<account_address>>,
     bc::blockchain::block_chain_impl& blockchain);
 
+std::string get_address_from_strict_uid(const std::string& uid_or_address,
+    asset& attach, bool is_from,
+    bc::blockchain::block_chain_impl& blockchain);
+
 std::string get_address(const std::string& uid_or_address,
     bc::blockchain::block_chain_impl& blockchain);
 
@@ -259,7 +263,7 @@ public:
     };
 
     static const uint64_t maximum_fee{10000000000};
-    static const uint64_t minimum_fee{10000};
+    static const uint64_t minimum_fee{200000};
     static const uint64_t tx_limit{677};
     static const uint64_t attach_version{1};
 
