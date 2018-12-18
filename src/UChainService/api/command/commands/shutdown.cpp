@@ -35,12 +35,17 @@ console_result shutdown::invoke(Json::Value& jv_output,
     auto& blockchain = node.chain_impl();
 
     administrator_required_checker(node, auth_.name, auth_.auth);
+    jv_output = "sending SIGTERM to ucd.";
 
 #ifndef _WIN32
-    jv_output = "sending SIGTERM to ucd.";
     killpg(getpgrp(),SIGTERM);
 #else
-    jv_output = "not support for Windows";
+    std::thread (
+    []()
+    { 
+        Sleep(2000);
+        ExitProcess(0);
+    }).detach();
 #endif
 
     return console_result::okay;
