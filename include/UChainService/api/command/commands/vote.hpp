@@ -80,12 +80,12 @@ public:
         (
             "FROM_",
             value<std::string>(&argument_.from)->required(),
-            "The address/uid to deposit some ucn for 48h."
+            "The uid to deposit some ucn for 48h."
         )
         (
             "receivers,r",
             value<std::vector<std::string>>(&argument_.to)->required(),
-            "vote to [uid/address:ucn_bits]."
+            "vote to [uid:ucn_bits]."
         )     
         (
             "fee,f",

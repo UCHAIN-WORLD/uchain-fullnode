@@ -35,8 +35,8 @@ console_result vote::invoke(Json::Value& jv_output,
 {
     auto& blockchain = node.chain_impl();
     blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
-    if(!argument_.from.empty() && !blockchain.is_valid_address(argument_.from))
-        throw address_invalid_exception{"invalid from address!"};
+    if(!argument_.from.empty() && !chain::output::is_valid_uid_symbol(argument_.from))
+        throw uid_symbol_name_exception{"Did symbol " + argument_.from + " is not valid."};
 
     std::vector<receiver_record> receiver{
     };
@@ -49,14 +49,18 @@ console_result vote::invoke(Json::Value& jv_output,
         if (item.second() <= 0) {
             throw argument_legality_exception("invalid amount parameter for " + item.first());
         }
+        attach.set_from_uid(argument_.from);
         amount += item.second();
-        receiver.push_back({address, UC_VOTE_TOKEN_SYMBOL, 0, item.second(), utxo_attach_type::token_transfer, asset()});
+        receiver.push_back({address, UC_VOTE_TOKEN_SYMBOL, 0, item.second(), utxo_attach_type::token_transfer, attach});
     }
 
-    receiver.push_back({argument_.from, "", amount*coin_price(1)/20, 0, utxo_attach_type::deposit, asset()});
+
+    asset f_attach;
+    std::string from_address = get_address(argument_.from, f_attach, false, blockchain);
+    receiver.push_back({from_address, "", amount*coin_price(1)/20, 0, utxo_attach_type::deposit, f_attach});
 
     auto vote_helper = voting_token(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
-            std::move(argument_.from), std::move(receiver), amount, option_.fee);
+            std::move(from_address), std::move(receiver), amount, option_.fee);
 
     vote_helper.exec();
 
