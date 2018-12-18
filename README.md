@@ -21,13 +21,13 @@ Using `c++ -v` to check c++ version.
 
 Dependencies of UC are **static linked** (including libstdc++). 
 Thus, there is no extra dependency after compilation.
-Recommends Ubuntu 16.04/CentOS 7.2/Visual Studio 2015 to develop/debug/build UC.
+Recommends Ubuntu 16.04/CentOS 7.2/MinGW to develop/debug/build UC.
 
 ## Toolchain requirements
 - cmake 3.0+
 - git
 - automake (speck256k1/ZeroMQ required)
-- make ([mingw](http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20180531.exe) is supported)
+- make ([MinGW for Windows](http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20180531.exe) is supported)
 
 ```bash
 $ yum/brew/apt-get install git cmake
@@ -35,7 +35,7 @@ $ yum/brew/apt-get install autoconf automake libtool pkg-config
 ```
 
 # Library Dependencies
-
+*Needs to configure Library Dependencies firstly.*
 Installing by bash script (sudo required).
 ```bash
 $ chmod +x ./install_thirdlibrary
@@ -95,18 +95,18 @@ $ git clone https://github.com/UCHAIN-WORLD/uchain-fullnode.git
 $ cd UChain && mkdir build && cd build
 $ cmake ..
 $ make
-$ make install-strip
+$ make install
 ```
 If you do not need UPnP support, you can use `"cmake -DUSE_UPNP=OFF .."` to disable it.
-And 'make -j4' may be better (-j4 is not always the rigth parameter... could be j2 or j8 it depends by the cpu).
-Also 'make install-strip' may be better(it strips).
+<br>And `"make -j4`" may be better (-j4 is not always the rigth parameter... could be j2 or j8 it depends by the cpu).
+<br>Also `"make install-strip`" may be better(it strips).
 
 optional:
 ```bash
 $ make test (should install boost_unit_test_framework)
 $ make doc  (should install doxygen and graphviz)
 ```
-*Needs to configure Library Dependencies firstly.*
+
 
 
 # Run UC

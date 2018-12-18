@@ -50,6 +50,9 @@ void my_impl(const http_message* hm)
         else if (root["result"].isString()) {
             bc::cout << root["result"].asString() <<std::endl;
         }
+        else if (root["result"].isNumeric()){
+            bc::cout << root["result"] <<std::endl;
+        }
         else if(root["result"].isArray() || root["result"].isObject()) {
             bc::cout << root["result"].toStyledString();
         }
@@ -132,7 +135,7 @@ int bc::main(int argc, char* argv[])
     
     Json::Value jsonvar;
     Json::Value jsonopt;
-    jsonvar["jsonrpc"] = "2.0";
+    jsonvar["jsonrpc"] = "3.0";
     jsonvar["id"] = 1;
     jsonvar["method"] = (argc < 2) ? "help" : argv[1 +index];
     jsonvar["params"] = Json::arrayValue;
