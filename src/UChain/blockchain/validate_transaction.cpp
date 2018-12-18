@@ -509,7 +509,7 @@ code validate_transaction::check_secondaryissue_transaction() const
         }
     }
 
-    if (tx.version >= transaction_version::check_nova_feature
+    if (tx.version >= transaction_version::check_uid_feature
         && !token_cert::test_certs(certs_out, token_cert_ns::issue)) {
         log::debug(LOG_BLOCKCHAIN) << "secondaryissue: no issue token cert, " << token_symbol;
         return error::token_cert_error;
@@ -680,8 +680,8 @@ code validate_transaction::check_token_issue_transaction() const
         }
     }
 
-    // check cert for transactions after check_nova_feature version.
-    if (tx.version >= transaction_version::check_nova_feature) {
+    // check cert for transactions after check_uid_feature version.
+    if (tx.version >= transaction_version::check_uid_feature) {
         if (!token_cert::test_certs(cert_type, cert_mask)) {
             log::debug(LOG_BLOCKCHAIN) << "issue token: "
                                        << "not enough cert.";
@@ -1315,7 +1315,7 @@ code validate_transaction::check_transaction() const
         return ret;
     }
 
-    if (tx_->version >= transaction_version::check_nova_feature) {
+    if (tx_->version >= transaction_version::check_uid_feature) {
         if ((ret = check_token_cert_transaction()) != error::success) {
             return ret;
         }
@@ -1349,12 +1349,12 @@ code validate_transaction::check_transaction_basic() const
         return error::transaction_version_error;
     }
 
-    if (tx.version == transaction_version::check_nova_feature
-        && !is_nova_feature_activated(chain)) {
-        return error::nova_feature_not_activated;
+    if (tx.version == transaction_version::check_uid_feature
+        && !is_uid_feature_activated(chain)) {
+        return error::uid_feature_not_activated;
     }
 
-    if (tx.version == transaction_version::check_nova_testnet
+    if (tx.version == transaction_version::check_uid_testnet
         && !chain.chain_settings().use_testnet_rules) {
         return error::transaction_version_error;
     }
@@ -1424,8 +1424,8 @@ code validate_transaction::check_transaction_basic() const
             }
         }
 
-        // check asset, from nova version.
-        if ((tx.version >= transaction_version::check_nova_feature)
+        // check asset, from uid version.
+        if ((tx.version >= transaction_version::check_uid_feature)
             && (!output.attach_data.is_valid())) {
             log::debug(LOG_BLOCKCHAIN) << "invalid asset : "
                 << output.attach_data.to_string();
@@ -1872,7 +1872,7 @@ bool validate_transaction::check_uid_symbol_match(const transaction& tx) const
     return true;
 }
 
-bool validate_transaction::is_nova_feature_activated(blockchain::block_chain_impl& chain)
+bool validate_transaction::is_uid_feature_activated(blockchain::block_chain_impl& chain)
 {
     /*if (chain.chain_settings().use_testnet_rules) {
         return true;

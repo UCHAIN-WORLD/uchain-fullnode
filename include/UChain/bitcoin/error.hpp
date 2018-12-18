@@ -169,7 +169,7 @@ enum error_code_t
     token_uid_registerr_not_match,
 
     asset_invalid,
-    nova_feature_not_activated,     // 85
+    uid_feature_not_activated,     // 85
 
     // identifier token
     candidate_error,

@@ -65,7 +65,7 @@ bool output::is_valid_symbol(const std::string& symbol, uint32_t tx_version)
         if (!(std::isalnum(i) || i=='.'))
             return false;
     }
-    if (tx_version >= transaction_version::check_nova_feature) {
+    if (tx_version >= transaction_version::check_uid_feature) {
         // upper char check
         if (symbol != boost::to_upper_copy(symbol)) {
             return false;

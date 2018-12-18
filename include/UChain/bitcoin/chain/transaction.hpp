@@ -40,8 +40,8 @@ namespace chain {
 enum transaction_version {
     first = 1,   //the frist version
     check_output_script = 2,   //add check output script
-    check_nova_testnet = 3,
-    check_nova_feature = 4,
+    check_uid_testnet = 3,
+    check_uid_feature = 4,
     max_version = 5
 };
 

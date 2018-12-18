@@ -575,7 +575,7 @@ public:
     bool is_locked_token_as_payment() const override {return true;}
 
     void populate_tx_header() override {
-        tx_.version = transaction_version::check_nova_feature;
+        tx_.version = transaction_version::check_uid_feature;
         tx_.locktime = 0;
     };
 
@@ -634,7 +634,7 @@ public:
     void sum_payment_amount() override;
 
     void populate_tx_header() override {
-        tx_.version = transaction_version::check_nova_feature;
+        tx_.version = transaction_version::check_uid_feature;
         tx_.locktime = 0;
     };
 
@@ -668,7 +668,7 @@ public:
     void send_tx() override {}
 
     void populate_tx_header() override {
-        tx_.version = transaction_version::check_nova_feature;
+        tx_.version = transaction_version::check_uid_feature;
         tx_.locktime = 0;
     };
 
@@ -697,7 +697,7 @@ public:
     void populate_change() override;
 
     void populate_tx_header() override {
-        tx_.version = transaction_version::check_nova_feature;
+        tx_.version = transaction_version::check_uid_feature;
         tx_.locktime = 0;
     };
 
@@ -722,7 +722,7 @@ public:
     {}
 
     void populate_tx_header() override {
-        tx_.version = transaction_version::check_nova_feature;
+        tx_.version = transaction_version::check_uid_feature;
         tx_.locktime = 0;
     };
 };
@@ -744,7 +744,7 @@ public:
     void sum_payment_amount() override;
 
     void populate_tx_header() override {
-        tx_.version = transaction_version::check_nova_feature;
+        tx_.version = transaction_version::check_uid_feature;
         tx_.locktime = 0;
     };
 };
@@ -764,7 +764,7 @@ public:
     {}
 
     void populate_tx_header() override {
-        tx_.version = transaction_version::check_nova_feature;
+        tx_.version = transaction_version::check_uid_feature;
         tx_.locktime = 0;
     };
 
@@ -791,7 +791,7 @@ public:
     {}
 
     void populate_tx_header() override {
-        tx_.version = transaction_version::check_nova_feature;
+        tx_.version = transaction_version::check_uid_feature;
         tx_.locktime = 0;
     };
 
