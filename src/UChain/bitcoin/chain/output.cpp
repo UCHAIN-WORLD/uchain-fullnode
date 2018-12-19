@@ -336,6 +336,25 @@ bool output::is_token_candidate() const
     return (attach_data.get_type() == TOKEN_CANDIDATE_TYPE);
 }
 
+bool output::is_fromuid_filled() const
+{
+    return attach_data.get_version() == UID_ASSET_VERIFY_VERSION
+            && !attach_data.get_from_uid().empty();
+}
+
+bool output::is_touid_filled() const
+{
+    return attach_data.get_version() == UID_ASSET_VERIFY_VERSION
+            && !attach_data.get_to_uid().empty();
+}
+
+bool output::is_uid_full_filled() const
+{
+    return attach_data.get_version() == UID_ASSET_VERIFY_VERSION
+            && !attach_data.get_to_uid().empty()
+            && !attach_data.get_from_uid().empty();
+}
+
 std::string output::get_token_candidate_symbol() const
 {
     if (is_token_candidate()) {

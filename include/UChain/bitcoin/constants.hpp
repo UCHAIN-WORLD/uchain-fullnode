@@ -130,6 +130,8 @@ BC_API hash_number max_target();
 
 BC_API std::string get_developer_community_address(bool is_testnet);
 
+BC_API std::string get_foundation_address(bool is_testnet);
+
 } // namespace libbitcoin
 
 #endif

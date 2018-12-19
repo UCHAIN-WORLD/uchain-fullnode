@@ -39,4 +39,13 @@ std::string get_developer_community_address(bool is_testnet)
     return address;
 }
 
+std::string get_foundation_address(bool is_testnet)
+{
+    std::string address("UNfrtAxhJRi83PjTPjV3yNPKnjLYR22Bhx");  // foundation address for mainnet
+    if (is_testnet) {
+        address = "tFzJJnso5tKDdwTiztMq1qMg1uHfqbbpq6";         // foundation address for testnet
+    }
+    return address;
+}
+
 } // namespace libbitcoin
