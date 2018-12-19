@@ -1146,6 +1146,24 @@ code validate_transaction::check_uid_transaction() const
                     return error::token_uid_registerr_not_match;
                 }
             }
+        } else if (output.is_vote() || output.is_token_candidate_transfer() ) {
+            if (!output.is_uid_full_filled()) {
+                log::debug(LOG_BLOCKCHAIN)
+                            << "both fromuid and touid are needed , attach_data: " << output.attach_data.to_string();
+                return error::token_uid_registerr_not_match;
+            }
+        } else if (output.is_ucn_award()) {
+            if (!output.is_touid_filled()) {
+                log::debug(LOG_BLOCKCHAIN)
+                            << "touid is needed , attach_data: " << output.attach_data.to_string();
+                return error::token_uid_registerr_not_match;
+            }
+        } else if (output.is_token_candidate_register() ) {
+            if (!output.is_fromuid_filled()) {
+                log::debug(LOG_BLOCKCHAIN)
+                            << "fromuid is needed , attach_data: " << output.attach_data.to_string();
+                return error::token_uid_registerr_not_match;
+            }
         }
     }
 
