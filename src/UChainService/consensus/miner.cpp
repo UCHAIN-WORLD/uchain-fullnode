@@ -641,7 +641,8 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
         for (const auto& output : ptx->outputs) {
             if (chain::operation::is_pay_key_hash_with_lock_height_pattern(output.script.operations)) {
                 int lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(output.script.operations);
-                coinage_reward_coinbase = create_lock_coinbase_tx(wallet::payment_address::extract(ptx->outputs[0].script),
+                coinage_reward_coinbase = create_lock_coinbase_tx(ptx->has_token_candidate_register() ? \
+                    wallet::payment_address(bc::get_developer_community_address(block_chain.chain_settings().use_testnet_rules)) : wallet::payment_address::extract(ptx->outputs[0].script),
                                           calculate_lockblock_reward(lock_height, output.value),
                                           current_block_height + 1, lock_height, reward_lock_time);
 

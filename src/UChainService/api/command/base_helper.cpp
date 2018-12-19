@@ -173,13 +173,12 @@ std::string get_address(const std::string& uid_or_address,
 }
 
 std::string get_address_from_strict_uid(const std::string& uid_or_address,
-    asset& attach, bool is_from,
-    bc::blockchain::block_chain_impl& blockchain)
+            bc::blockchain::block_chain_impl& blockchain)
 {
-    if (blockchain.is_valid_address(uid_or_address)) {
+    if (!uid_or_address.empty() && blockchain.is_valid_address(uid_or_address)) {
         throw token_symbol_name_exception{"Address is not supported."};
     }
-    return get_address(uid_or_address, attach, is_from, blockchain);
+    return get_address_from_uid(uid_or_address, blockchain);
 }
 
 std::string get_address(const std::string& uid_or_address,
@@ -1769,7 +1768,39 @@ voting_token::get_script_operations(const receiver_record& record) const
 
     if (payment.version() == wallet::payment_address::mainnet_p2kh) {
         const auto& hash = payment.hash();
-        if((to_ == record.target)
+        if((from_ == record.target)
+            && (utxo_attach_type::deposit == record.type)) {
+            payment_ops = chain::operation::to_pay_key_hash_with_lock_height_pattern(hash, get_reward_lock_height());
+        } else {
+            payment_ops = chain::operation::to_pay_key_hash_pattern(hash); // common payment script
+        }
+    }
+    else {
+        throw toaddress_invalid_exception{std::string("not supported version target address ") + record.target};
+    }
+
+    return payment_ops;
+}
+
+uint32_t registering_candidate::get_reward_lock_height() const
+{
+    return 240*24*60*60*2;//48h
+}
+
+chain::operation::stack
+registering_candidate::get_script_operations(const receiver_record& record) const
+{
+    chain::operation::stack payment_ops;
+
+    // complicated script and token should be implemented in subclass
+    // generate script
+    const wallet::payment_address payment(record.target);
+    if (!payment)
+        throw toaddress_invalid_exception{"invalid target address"};
+
+    if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+        const auto& hash = payment.hash();
+        if((from_ == record.target)
             && (utxo_attach_type::deposit == record.type)) {
             payment_ops = chain::operation::to_pay_key_hash_with_lock_height_pattern(hash, get_reward_lock_height());
         } else {
