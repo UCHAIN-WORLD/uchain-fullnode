@@ -95,6 +95,9 @@ public:
     bool is_uid() const;
     bool is_uid_register() const;
     bool is_uid_transfer() const;
+    bool is_fromuid_filled() const;
+    bool is_touid_filled() const;
+    bool is_uid_full_filled() const;
     token_detail get_token_detail() const;
     token_transfer get_token_transfer() const;
     token_cert get_token_cert() const;

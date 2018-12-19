@@ -258,16 +258,10 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
     tx_new.outputs.resize(1);
 
     // init for testnet/mainnet
-    if (!is_mainnet) {
-        bc::wallet::payment_address testnet_genesis_address("tFzJJnso5tKDdwTiztMq1qMg1uHfqbbpq6");
-        tx_new.outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(testnet_genesis_address));
-        pblock->header.timestamp = 1539843415;
-    }
-    else {
-        bc::wallet::payment_address genesis_address("UNfrtAxhJRi83PjTPjV3yNPKnjLYR22Bhx");
-        tx_new.outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(genesis_address));
-        pblock->header.timestamp = 1550073600;
-    }
+    bc::wallet::payment_address genesis_address(get_foundation_address(!is_mainnet));
+    tx_new.outputs[0].script.operations = chain::operation::to_pay_key_hash_pattern(short_hash(genesis_address));
+    pblock->header.timestamp = 1550073600;
+    
     tx_new.outputs[0].value = total_reward * coin_price();
 
     // Add our coinbase tx as first transaction
