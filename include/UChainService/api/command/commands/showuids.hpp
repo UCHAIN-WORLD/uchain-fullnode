@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "showuids";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "list UIDs in detail."; }
+    const char* description() override { return "list UIDs in detail.(list all the UIDs when ACCOUNTNAME is null)"; }
 
     arguments_metadata& load_arguments() override
     {
