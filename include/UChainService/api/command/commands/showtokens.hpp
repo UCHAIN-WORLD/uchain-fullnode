@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "showtokens";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "list tokens details."; }
+    const char* description() override { return "list tokens details.(list all the tokens when ACCOUNTNAME is null)"; }
 
     arguments_metadata& load_arguments() override
     {
