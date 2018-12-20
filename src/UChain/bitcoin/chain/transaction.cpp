@@ -441,6 +441,15 @@ bool transaction::has_token_candidate_transfer() const
     return false;
 }
 
+bool transaction::has_token_candidate_register() const
+{
+    for (auto& elem: outputs) {
+        if(elem.is_token_candidate_register())
+            return true;
+    }
+    return false;
+}
+
 bool transaction::has_uid_register() const
 {
     for (auto& elem: outputs) {

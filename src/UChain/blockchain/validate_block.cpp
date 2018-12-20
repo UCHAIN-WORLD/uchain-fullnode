@@ -613,7 +613,8 @@ code validate_block::connect_block(hash_digest& err_tx, blockchain::block_chain_
                 }
                 uint64_t coinbase_lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(transactions[coinage_reward_coinbase_index].outputs[0].script.operations);
 
-                if (check_get_coinage_reward_transaction(transactions[coinage_reward_coinbase_index++], output) == false) {
+                if (check_get_coinage_reward_transaction(transactions[coinage_reward_coinbase_index++], output, transactions[tx_index].has_token_candidate_register()) == false) {
+                    err_tx = transactions[tx_index].hash();
                     return error::invalid_coinage_reward_coinbase;
                 }
                 ++get_coinage_reward_tx_count;

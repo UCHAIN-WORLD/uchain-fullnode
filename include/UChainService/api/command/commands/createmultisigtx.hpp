@@ -96,17 +96,17 @@ public:
         (
             "symbol,s",
             value<std::string>(&option_.symbol),
-            "token name, not specify this option for ucn tx"
+            "token name, not specify this option for UCN tx"
         )
         (
             "type,t",
             value<uint16_t>(&option_.type)->default_value(0),
-            "Transaction type, defaults to 0. 0 -- transfer ucn, 3 -- transfer token"
+            "Transaction type, defaults to 0. 0 -- transfer UCN, 3 -- transfer token"
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
+            value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_issue_token),
+            "Transaction fee. defaults to 10000 UCN."
         )
         ;
 

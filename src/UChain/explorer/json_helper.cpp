@@ -675,8 +675,10 @@ Json::Value json_helper::prop_list(bc::chain::asset& attach_data)
     }
 
     if (attach_data.get_version() == UID_ASSET_VERIFY_VERSION) {
-        tree["from_uid"] = attach_data.get_from_uid();
-        tree["to_uid"] =  attach_data.get_to_uid();
+        if(!attach_data.get_from_uid().empty())
+            tree["from_uid"] = attach_data.get_from_uid();
+        if(!attach_data.get_to_uid().empty())
+            tree["to_uid"] =  attach_data.get_to_uid();
     }
     return tree;
 }

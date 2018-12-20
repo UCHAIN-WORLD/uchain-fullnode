@@ -205,6 +205,9 @@ void sync_fetch_token_cert_balance(const std::string& address, const string& sym
 std::string get_random_payment_address(std::shared_ptr<std::vector<account_address>>,
     bc::blockchain::block_chain_impl& blockchain);
 
+std::string get_address_from_strict_uid(const std::string& uid_or_address,
+                bc::blockchain::block_chain_impl& blockchain);
+
 std::string get_address(const std::string& uid_or_address,
     bc::blockchain::block_chain_impl& blockchain);
 
@@ -258,8 +261,8 @@ public:
         from_list_.clear();
     };
 
-    static const uint64_t maximum_fee{10000000000};
-    static const uint64_t minimum_fee{10000};
+    static const uint64_t maximum_fee{1000000000000};
+    static const uint64_t minimum_fee{200000};
     static const uint64_t tx_limit{677};
     static const uint64_t attach_version{1};
 
@@ -420,11 +423,10 @@ class BCX_API depositing_ucn : public base_transfer_helper
 public:
     depositing_ucn(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
-        std::string&& to, receiver_record::list&& receiver_list,
+        std::string&& from, receiver_record::list&& receiver_list,
         uint16_t deposit_cycle = 7, uint64_t fee = 10000)
         : base_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
-            std::string(""), std::move(receiver_list), fee)
-        , to_{std::move(to)}
+            std::move(from), std::move(receiver_list), fee)
         , deposit_cycle_{deposit_cycle}
     {}
 
@@ -437,7 +439,6 @@ public:
     chain::operation::stack get_script_operations(const receiver_record& record) const override;
 
 private:
-    std::string                       to_;
     uint16_t                          deposit_cycle_{7}; // 7 days
 };
 
@@ -471,11 +472,10 @@ class BCX_API voting_token : public base_transfer_helper
 public:
     voting_token(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
-        std::string&& to, receiver_record::list&& receiver_list,
+        std::string&& from, receiver_record::list&& receiver_list,
         uint16_t amount , uint64_t fee = 10000)
         : base_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
-            "", std::move(receiver_list), fee ,std::string(UC_VOTE_TOKEN_SYMBOL))
-        , to_{std::move(to)}
+        std::move(from), std::move(receiver_list), fee ,std::string(UC_VOTE_TOKEN_SYMBOL))
         , amount_{amount}
     {}
 
@@ -486,7 +486,6 @@ public:
     chain::operation::stack get_script_operations(const receiver_record& record) const override;
 
 private:
-    std::string                       to_;
     uint64_t                          amount_; 
 };
 
@@ -769,7 +768,10 @@ public:
     };
 
     asset populate_output_asset(const receiver_record& record) override;
+    
+    uint32_t get_reward_lock_height() const;
 
+    chain::operation::stack get_script_operations(const receiver_record& record) const override;
 private:
     std::map<std::string, std::string> candidate_map_;
 };

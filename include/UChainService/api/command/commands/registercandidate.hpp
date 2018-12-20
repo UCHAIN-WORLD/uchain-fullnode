@@ -101,8 +101,8 @@ public:
         )*/
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
+            value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_register_uid),
+            "Transaction fee. defaults to 100 UCN."
         );
 
         return options;

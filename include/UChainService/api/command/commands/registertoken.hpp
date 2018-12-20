@@ -88,8 +88,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(10 * 100000000),
-            "The fee of tx. minimum is 10 ucn."
+            value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_issue_token),
+            "The fee of tx. minimum is 10000 UCN bits."
         )
         (
             "percentage,p",
