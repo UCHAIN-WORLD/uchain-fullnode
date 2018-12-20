@@ -102,7 +102,7 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(200000),
+            value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_block_token),
             "The fee of tx. default_value 200000 UCN bits."
         );
 

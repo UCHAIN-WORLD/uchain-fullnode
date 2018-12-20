@@ -47,11 +47,11 @@ console_result deposit::invoke(Json::Value& jv_output,
     if(!pvaddr || pvaddr->empty())
         throw address_list_nullptr_exception{"nullptr for address list"};
 
-    std::string addr;
+    std::string addr = argument_.uid;
     if (addr.empty()) {
         addr = get_random_payment_address(pvaddr, blockchain);
     }else{
-        addr = get_address_from_strict_uid(argument_.address, blockchain);
+        addr = get_address_from_strict_uid(argument_.uid, blockchain);
         auto acc_addr = blockchain.get_account_address(auth_.name, addr);
         if (!acc_addr)
             throw argument_legality_exception{"You don't own address " + addr};
@@ -59,7 +59,7 @@ console_result deposit::invoke(Json::Value& jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {addr, "", argument_.amount, 0, utxo_attach_type::deposit, asset{"", argument_.address}}
+        {addr, "", argument_.amount, 0, utxo_attach_type::deposit, asset{"", argument_.uid}}
     };
     auto deposit_helper = depositing_ucn(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
             std::move(addr), std::move(receiver), argument_.deposit, argument_.fee);

@@ -120,7 +120,7 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&option_.fee)->default_value(200000),
+            value<uint64_t>(&option_.fee)->default_value(bc::min_fee_to_block_token),
             "Transaction fee for miners. defaults to 200000 UCN bits."
         )
         ;

@@ -423,11 +423,10 @@ class BCX_API depositing_ucn : public base_transfer_helper
 public:
     depositing_ucn(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
-        std::string&& to, receiver_record::list&& receiver_list,
+        std::string&& from, receiver_record::list&& receiver_list,
         uint16_t deposit_cycle = 7, uint64_t fee = 10000)
         : base_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
-            std::string(""), std::move(receiver_list), fee)
-        , to_{std::move(to)}
+            std::move(from), std::move(receiver_list), fee)
         , deposit_cycle_{deposit_cycle}
     {}
 
@@ -440,7 +439,6 @@ public:
     chain::operation::stack get_script_operations(const receiver_record& record) const override;
 
 private:
-    std::string                       to_;
     uint16_t                          deposit_cycle_{7}; // 7 days
 };
 

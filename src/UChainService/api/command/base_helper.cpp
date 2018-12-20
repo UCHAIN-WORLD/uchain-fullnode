@@ -1696,7 +1696,7 @@ depositing_ucn::get_script_operations(const receiver_record& record) const
 
     if (payment.version() == wallet::payment_address::mainnet_p2kh) {
         const auto& hash = payment.hash();
-        if((to_ == record.target)
+        if((from_ == record.target)
             && (utxo_attach_type::deposit == record.type)) {
             payment_ops = chain::operation::to_pay_key_hash_with_lock_height_pattern(hash, get_reward_lock_height());
         } else {

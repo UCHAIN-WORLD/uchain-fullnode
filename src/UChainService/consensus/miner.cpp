@@ -797,7 +797,7 @@ std::string to_string(_T const& _t)
 }
 
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
-std::vector<std::string> mine_address_list = {};
+std::vector<std::string> mine_address_list = {"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"};
 
 void miner::work(const wallet::payment_address pay_address)
 {

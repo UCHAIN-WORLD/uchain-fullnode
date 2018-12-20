@@ -157,7 +157,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
         );
     }
 
-    receiver.push_back({to_address, "", 500000, 0, utxo_attach_type::deposit, asset{"", to_uid}});
+    receiver.push_back({to_address, "", bc::min_lock_to_issue_candidate, 0, utxo_attach_type::deposit, asset{"", to_uid}});
 
     auto helper = registering_candidate(
                       *this, blockchain,
