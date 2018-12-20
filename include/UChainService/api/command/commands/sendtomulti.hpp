@@ -39,7 +39,7 @@ public:
     static const char* symbol(){ return "sendtomulti";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "send ucn to multi target."; }
+    const char* description() override { return "send UCN to multi target."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -88,8 +88,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&option_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
+            value<uint64_t>(&option_.fee)->default_value(bc::min_fee_to_issue_token),
+            "Transaction fee. defaults to 10000 UCN."
         );
 
         return options;

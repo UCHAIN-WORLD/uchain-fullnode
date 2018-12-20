@@ -38,7 +38,7 @@ public:
     static const char* symbol(){ return "sendfrom";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "send ucn from a specified uid/address of this account to target uid/address, mychange goes to from_uid/address."; }
+    const char* description() override { return "send UCN from a specified uid/address of this account to target uid/address, mychange goes to from_uid/address."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -108,8 +108,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&option_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
+            value<uint64_t>(&option_.fee)->default_value(bc::min_fee_to_issue_token),
+            "Transaction fee. defaults to 10000 UCN."
         );
 
         return options;

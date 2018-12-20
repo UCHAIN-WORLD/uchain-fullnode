@@ -150,8 +150,8 @@ enum error_code_t
     uid_symbol_not_match,
     uid_symbol_invalid,
     uid_exist,
-    address_registered_uid,
-    uid_func_not_actived,           // 70
+    address_registered_uid,         // 70
+    uid_func_not_actived,           
     uid_address_not_match,
     uid_address_needed,
     uid_not_exist,

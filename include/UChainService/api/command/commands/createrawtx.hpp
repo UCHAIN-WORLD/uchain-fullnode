@@ -64,7 +64,7 @@ public:
         (
             "type,t",
             value<uint16_t>(&option_.type)->required(),
-            "Transaction type. 0 -- transfer ucn, 1 -- deposit ucn, 3 -- transfer token"
+            "Transaction type. 0 -- transfer UCN, 1 -- deposit UCN, 3 -- transfer token"
         )
         (
             "senders,s",
@@ -79,7 +79,7 @@ public:
         (
             "symbol,n",
             value<std::string>(&option_.symbol)->default_value(""),
-            "token name, not specify this option for ucn tx"
+            "token name, not specify this option for UCN tx"
         )
         (
             "deposit,d",
@@ -89,7 +89,7 @@ public:
         (
             "change,c",
             value<std::string>(&option_.mychange_address),
-            "change to this address, includes ucn and token change"
+            "change to this address, includes UCN and token change"
         )
         (
             "message,i",
@@ -98,8 +98,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&option_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
+            value<uint64_t>(&option_.fee)->default_value(bc::min_fee_to_issue_token),
+            "Transaction fee. defaults to 10000 UCN."
         );
 
         return options;
