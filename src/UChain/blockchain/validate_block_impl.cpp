@@ -403,13 +403,13 @@ bool validate_block_impl::check_get_coinage_reward_transaction(const chain::tran
     wallet::payment_address addr2 = wallet::payment_address::extract(output.script);
     uint64_t coinage_reward_value = libbitcoin::consensus::miner::calculate_lockblock_reward(lock_height, output.value);
 
-    if ((is_candidate || addr1 == addr2)
-            && lock_height == coinbase_lock_height
-            && coinage_reward_value == coinage_reward_coinbase.outputs[0].value) {
-        return true;
-    }
-    else {
+    if(is_candidate && output.value != bc::min_lock_to_issue_candidate)
+    {
         return false;
+    }else{
+        return (is_candidate || addr1 == addr2)
+                    && lock_height == coinbase_lock_height
+                    && coinage_reward_value == coinage_reward_coinbase.outputs[0].value;
     }
 }
 
