@@ -85,7 +85,7 @@
 /**
  * Show Account messages.
  */
-#define BX_ADMIN_NAME "Administrator .(administrator_required is true)"
+#define BX_ADMIN_NAME "Administrator .(required when administrator_required is true)"
 #define BX_ADMIN_AUTH "Administrator password."
 
 #define BX_TOKEN_OFFERING_CURVE  "The token offering model by block height. \
