@@ -72,7 +72,7 @@ protected:
         bool testnet, const config::checkpoint::list& checks,
         stopped_callback stop_callback);
 
-    virtual bool check_get_coinage_reward_transaction(const chain::transaction& coinage_reward_coinbase, const chain::output& tx) const = 0;
+    virtual bool check_get_coinage_reward_transaction(const chain::transaction& coinage_reward_coinbase, const chain::output& tx, bool is_candidate) const = 0;
     virtual uint64_t median_time_past() const = 0;
     //virtual u256 previous_block_bits() const = 0;
     virtual uint64_t actual_time_span(size_t interval) const = 0;

@@ -36,7 +36,7 @@ public:
     static const char* symbol(){ return "vote";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "vote to a miner's addresss/uid, then lock some ucn for about 48h.1 ucn can get 20 votes"; }
+    const char* description() override { return "vote to a miner's addresss/uid, then lock some UCN for about 48h.1 UCN can get 20 votes"; }
 
     arguments_metadata& load_arguments() override
     {
@@ -80,17 +80,17 @@ public:
         (
             "FROM_",
             value<std::string>(&argument_.from)->required(),
-            "The address/uid to deposit some ucn for 48h."
+            "The uid to deposit some UCN for 48h."
         )
         (
             "receivers,r",
             value<std::vector<std::string>>(&argument_.to)->required(),
-            "vote to [uid/address:ucn_bits]."
+            "vote to [uid:ucn_bits]."
         )     
         (
             "fee,f",
-            value<uint64_t>(&option_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
+            value<uint64_t>(&option_.fee)->default_value(bc::min_fee_to_block_token),
+            "Transaction fee. defaults to 200000 UCN bits."
         );
 
         return options;

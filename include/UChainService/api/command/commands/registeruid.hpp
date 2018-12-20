@@ -91,8 +91,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(100000000),
-            "The fee of tx. defaults to 1 ucn."
+            value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_register_uid),
+            "The fee of tx. defaults to 100 UCN."
         )
         (
             "percentage,p",

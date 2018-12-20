@@ -79,14 +79,14 @@
 /**
  * Show Account messages.
  */
-#define BX_ACCOUNT_NAME "Account name required."
-#define BX_ACCOUNT_AUTH "Account password(authorization) required."
+#define BX_ACCOUNT_NAME "Account name just for local."
+#define BX_ACCOUNT_AUTH "Account password(authorization) just for local."
 
 /**
  * Show Account messages.
  */
-#define BX_ADMIN_NAME "Administrator required.(administrator_required is true)"
-#define BX_ADMIN_AUTH "Administrator password required."
+#define BX_ADMIN_NAME "Administrator .(administrator_required is true)"
+#define BX_ADMIN_AUTH "Administrator password."
 
 #define BX_TOKEN_OFFERING_CURVE  "The token offering model by block height. \
     TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; \

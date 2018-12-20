@@ -35,8 +35,13 @@ console_result vote::invoke(Json::Value& jv_output,
 {
     auto& blockchain = node.chain_impl();
     blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
-    if(!argument_.from.empty() && !blockchain.is_valid_address(argument_.from))
-        throw address_invalid_exception{"invalid from address!"};
+    std::string from_address = get_address_from_strict_uid(argument_.from, blockchain);
+    if(!blockchain.is_valid_address(from_address))
+        throw uid_symbol_name_exception{"Did symbol " + argument_.from + " is not valid."};
+
+    auto acc_addr = blockchain.get_account_address(auth_.name, from_address);
+    if (!acc_addr)
+        throw argument_legality_exception{"You don't own address " + from_address};
 
     std::vector<receiver_record> receiver{
     };
@@ -44,19 +49,19 @@ console_result vote::invoke(Json::Value& jv_output,
     for (auto& each : argument_.to) {
         colon_delimited2_item<std::string, uint64_t> item(each);
 
-        asset attach;
-        std::string address = get_address(item.first(), attach, false, blockchain);
+        std::string address = get_address_from_strict_uid(item.first(), blockchain);
         if (item.second() <= 0) {
             throw argument_legality_exception("invalid amount parameter for " + item.first());
         }
         amount += item.second();
-        receiver.push_back({address, UC_VOTE_TOKEN_SYMBOL, 0, item.second(), utxo_attach_type::token_transfer, asset()});
+        receiver.push_back({address, UC_VOTE_TOKEN_SYMBOL, 0, item.second(), utxo_attach_type::token_transfer, asset{argument_.from, item.first()}});
     }
 
-    receiver.push_back({argument_.from, "", amount*coin_price(1)/20, 0, utxo_attach_type::deposit, asset()});
+
+    receiver.push_back({from_address, "", amount*coin_price(1)/20, 0, utxo_attach_type::deposit, asset{"", argument_.from}});
 
     auto vote_helper = voting_token(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
-            std::move(argument_.from), std::move(receiver), amount, option_.fee);
+            std::move(from_address), std::move(receiver), amount, option_.fee);
 
     vote_helper.exec();
 

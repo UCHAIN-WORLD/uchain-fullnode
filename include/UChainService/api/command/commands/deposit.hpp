@@ -36,7 +36,7 @@ public:
     static const char* symbol(){ return "deposit";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Deposit some ucn, then get reward for frozen some ucn."; }
+    const char* description() override { return "Deposit some UCN, then get reward for frozen some UCN."; }
 
     arguments_metadata& load_arguments() override
     {
@@ -81,9 +81,9 @@ public:
             "UCN integer bits."
         )
         (
-            "address,a",
-            value<std::string>(&argument_.address),
-            "The deposit target address/uid."
+            "uid,u",
+            value<std::string>(&argument_.uid),
+            "The deposit target uid."
         )
         (
             "deposit,d",
@@ -92,8 +92,8 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(10000),
-            "Transaction fee. defaults to 10000 UCN bits"
+            value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_block_token),
+            "Transaction fee. defaults to 200000 UCN bits."
         );
 
         return options;
@@ -111,7 +111,7 @@ public:
         uint64_t amount;
         uint64_t fee;
         uint16_t deposit;
-        std::string address;
+        std::string uid;
     } argument_;
 
     struct option

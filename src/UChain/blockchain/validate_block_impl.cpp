@@ -395,7 +395,7 @@ bool validate_block_impl::orphan_is_spent(
     return false;
 }
 
-bool validate_block_impl::check_get_coinage_reward_transaction(const chain::transaction& coinage_reward_coinbase, const chain::output& output) const
+bool validate_block_impl::check_get_coinage_reward_transaction(const chain::transaction& coinage_reward_coinbase, const chain::output& output, bool is_candidate) const
 {
     uint64_t lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(output.script.operations);
     uint64_t coinbase_lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(coinage_reward_coinbase.outputs[0].script.operations);
@@ -403,7 +403,7 @@ bool validate_block_impl::check_get_coinage_reward_transaction(const chain::tran
     wallet::payment_address addr2 = wallet::payment_address::extract(output.script);
     uint64_t coinage_reward_value = libbitcoin::consensus::miner::calculate_lockblock_reward(lock_height, output.value);
 
-    if (addr1 == addr2
+    if ((is_candidate || addr1 == addr2)
             && lock_height == coinbase_lock_height
             && coinage_reward_value == coinage_reward_coinbase.outputs[0].value) {
         return true;
