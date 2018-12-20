@@ -55,8 +55,10 @@ std::promise<code> executor::stopping_;
 executor::executor(parser& metadata, std::istream& input,
     std::ostream& output, std::ostream& error)
   : metadata_(metadata), output_(output),
-    debug_file_((default_data_path() / metadata_.configured.network.debug_file).string(), append),
-    error_file_((default_data_path() / metadata_.configured.network.error_file).string(), append)
+    debug_file_((metadata_.configured.network.debug_file == "debug.log" ? \
+                        (default_data_path() / metadata_.configured.network.debug_file) : metadata_.configured.network.debug_file).string(), append),
+    error_file_((metadata_.configured.network.error_file == "error.log" ? \
+                        (default_data_path() / metadata_.configured.network.error_file) : metadata_.configured.network.error_file).string(), append)
 {
     initialize_logging(debug_file_, error_file_, output, error, metadata_.configured.server.log_level);
     handle_stop(initialize_stop);
