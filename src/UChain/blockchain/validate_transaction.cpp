@@ -1649,7 +1649,7 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
             special_fee_type = 1;
             to_address = output.get_script_address();
         }
-        else if (output.is_uid_register()) {
+        else if (output.is_uid_register() || output.is_token_candidate_register()) {
             special_fee_type = 2;
             to_address = output.get_script_address();
         }
