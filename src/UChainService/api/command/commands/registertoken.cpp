@@ -69,7 +69,7 @@ console_result registertoken::invoke (Json::Value& jv_output,
     // local database token check
     auto sh_token = blockchain.get_account_unissued_token(auth_.name, argument_.symbol);
     if (!sh_token) {
-        throw token_symbol_notfound_exception{"token " + argument_.symbol + " not found"};
+        throw token_symbol_notfound_exception{"token " + argument_.symbol + " not found,createtoken first"};
     }
 
     auto to_uid = sh_token->get_issuer();
