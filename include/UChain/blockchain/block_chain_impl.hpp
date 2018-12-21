@@ -236,6 +236,7 @@ public:
     std::shared_ptr<std::vector<account>> get_accounts();
     operation_result delete_account(const std::string& name);
     operation_result delete_account_address(const std::string& name);
+    operation_result delete_n_account_address(const std::string& name, uint64_t count);
 
     std::shared_ptr<business_history::list> get_address_business_history(
         const std::string& addr, business_kind kind, uint8_t confirmed);
@@ -346,7 +347,7 @@ public:
     code validate_transaction(const chain::transaction& tx);
     code broadcast_transaction(const chain::transaction& tx);
     bool get_tx_inputs_ucn_value (chain::transaction& tx, uint64_t& ucn_val);
-    void safe_store_account(account& acc, std::vector<std::shared_ptr<account_address>>& addresses);
+    void safe_store_account(account& acc, const std::vector<std::shared_ptr<account_address>>& addresses);
 
 private:
     typedef std::function<bool(database::handle)> perform_read_functor;

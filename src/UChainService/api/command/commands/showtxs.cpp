@@ -20,6 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
+#include <UChainService/api/command/node_method_wrapper.hpp>
 #include <UChainService/api/command/commands/showtxs.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
@@ -68,7 +69,8 @@ console_result showtxs::invoke(Json::Value& jv_output,
 {
     using namespace libbitcoin::config; // for hash256
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    administrator_required_checker(node, auth_.name, auth_.auth);
+    //blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
     // address option check
     if (!argument_.address.empty() && !blockchain.is_valid_address(argument_.address))
         throw address_invalid_exception{"invalid address parameter!"};
