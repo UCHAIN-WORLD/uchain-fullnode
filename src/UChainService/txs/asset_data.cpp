@@ -31,7 +31,7 @@
 #define TOKEN_ISSUE_TYPE    KIND2UINT16(business_kind::token_issue)
 #define TOKEN_TRANSFER_TYPE KIND2UINT16(business_kind::token_transfer)
 #define TOKEN_CERT_TYPE     KIND2UINT16(business_kind::token_cert)
-#define TOKEN_CANDIDATE_TYPE      KIND2UINT16(business_kind::token_candidate)
+#define TOKEN_CANDIDATE_TYPE      KIND2UINT16(business_kind::candidate)
 #define MESSAGE_TYPE        KIND2UINT16(business_kind::message)
 #define UID_REGISTER_TYPE   KIND2UINT16(business_kind::uid_register)
 #define UID_TRANSFER_TYPE   KIND2UINT16(business_kind::uid_transfer)
@@ -135,7 +135,7 @@ bool asset_data::from_data(reader& source)
             }
             case TOKEN_CANDIDATE_TYPE:
             {
-                data = token_candidate();
+                data = candidate();
                 break;
             }
             case MESSAGE_TYPE:

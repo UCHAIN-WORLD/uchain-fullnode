@@ -351,8 +351,8 @@ code validate_transaction::check_tx_connect_input() const
         }
     }
 
-    if (tx_->has_token_candidate_transfer()) {
-        if (!check_token_candidate(*tx_)) {
+    if (tx_->has_candidate_transfer()) {
+        if (!check_candidate(*tx_)) {
             log::debug(LOG_BLOCKCHAIN) << "failed to check candidate token." << tx_->to_string(1);
             return error::candidate_error;
         }
@@ -862,20 +862,20 @@ code validate_transaction::check_token_cert_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_token_candidate_transaction() const
+code validate_transaction::check_candidate_transaction() const
 {
     const chain::transaction& tx = *tx_;
     blockchain::block_chain_impl& chain = blockchain_;
 
-    bool is_token_candidate{false};
+    bool is_candidate{false};
     for (auto& output : tx.outputs) {
-        if (output.is_token_candidate()) {
-            is_token_candidate = true;
+        if (output.is_candidate()) {
+            is_candidate = true;
             break;
         }
     }
 
-    if (!is_token_candidate) {
+    if (!is_candidate) {
         return error::success;
     }
 
@@ -885,10 +885,10 @@ code validate_transaction::check_token_candidate_transaction() const
     size_t num_candidate_register = 0;
     for (auto& output : tx.outputs)
     {
-        if (output.is_token_candidate_register()) {
+        if (output.is_candidate_register()) {
             ++num_candidate_register;
 
-            auto&& token_info = output.get_token_candidate();
+            auto&& token_info = output.get_candidate();
             token_symbol = token_info.get_symbol();
 
             if (!check_same(token_address, token_info.get_address())) {
@@ -899,19 +899,19 @@ code validate_transaction::check_token_candidate_transaction() const
             }
 
             // check token not exists
-            if (check_token_candidate_exist(token_symbol)) {
+            if (check_candidate_exist(token_symbol)) {
                 log::debug(LOG_BLOCKCHAIN) << "register candidate: "
                                            << token_symbol << " already exists.";
                 return error::candidate_exist;
             }
         }
-        else if (output.is_token_candidate_transfer()) {
+        else if (output.is_candidate_transfer()) {
             if (++num_candidate_transfer > 1) {
                 log::debug(LOG_BLOCKCHAIN) << "transfer candidate: more than on candidate output." << output.to_string(1);
                 return error::candidate_error;
             }
 
-            auto&& token_info = output.get_token_candidate();
+            auto&& token_info = output.get_candidate();
             token_symbol = token_info.get_symbol();
         }
         else if (output.is_ucn()) {
@@ -955,8 +955,8 @@ code validate_transaction::check_token_candidate_transaction() const
                 return error::validate_inputs_failed;
             }
         }
-        else if (prev_output.is_token_candidate()) {
-            auto&& token_info = prev_output.get_token_candidate();
+        else if (prev_output.is_candidate()) {
+            auto&& token_info = prev_output.get_candidate();
             if (token_symbol != token_info.get_symbol()) {
                 log::debug(LOG_BLOCKCHAIN) << "candidate: invalid candidate to transfer: "
                                             << token_info.get_symbol() << " != " << token_symbol;
@@ -1023,13 +1023,13 @@ bool validate_transaction::check_token_cert_exist(const std::string& cert, token
     return height != max_uint64;
 }
 
-bool validate_transaction::check_token_candidate_exist(const std::string& candidate) const
+bool validate_transaction::check_candidate_exist(const std::string& candidate) const
 {
-    uint64_t height = blockchain_.get_token_candidate_height(candidate);
+    uint64_t height = blockchain_.get_candidate_height(candidate);
 
     if (validate_block_) {
         //register before fork or find in orphan chain
-        if (height <= validate_block_->get_fork_index() || validate_block_->is_token_candidate_in_orphan_chain(candidate)) {
+        if (height <= validate_block_->get_fork_index() || validate_block_->is_candidate_in_orphan_chain(candidate)) {
             return true;
         }
 
@@ -1146,7 +1146,7 @@ code validate_transaction::check_uid_transaction() const
                     return error::token_uid_registerr_not_match;
                 }
             }
-        } else if (output.is_vote() || output.is_token_candidate_transfer() ) {
+        } else if (output.is_vote() || output.is_candidate_transfer() ) {
             if (!output.is_uid_full_filled()) {
                 log::debug(LOG_BLOCKCHAIN)
                             << "both fromuid and touid are needed , attach_data: " << output.attach_data.to_string();
@@ -1158,7 +1158,7 @@ code validate_transaction::check_uid_transaction() const
                             << "touid is needed , attach_data: " << output.attach_data.to_string();
                 return error::token_uid_registerr_not_match;
             }
-        } else if (output.is_token_candidate_register() ) {
+        } else if (output.is_candidate_register() ) {
             if (!output.is_fromuid_filled()) {
                 log::debug(LOG_BLOCKCHAIN)
                             << "fromuid is needed , attach_data: " << output.attach_data.to_string();
@@ -1342,7 +1342,7 @@ code validate_transaction::check_transaction() const
             return ret;
         }
 
-        if ((ret = check_token_candidate_transaction()) != error::success) {
+        if ((ret = check_candidate_transaction()) != error::success) {
             return ret;
         }
 
@@ -1436,7 +1436,7 @@ code validate_transaction::check_transaction_basic() const
                 return error::uid_symbol_invalid;
             }
         }
-        else if (output.is_token_candidate_register()) {
+        else if (output.is_candidate_register()) {
             if (!chain::output::is_valid_candidate_symbol(output.get_token_symbol(), true)) {
                 return error::candidate_symbol_invalid;
             }
@@ -1589,8 +1589,8 @@ bool validate_transaction::connect_input( const transaction& previous_tx, size_t
             return false;
         }
     }
-    else if (previous_output.is_token_candidate()) {
-        if (!check_same(old_symbol_in_, previous_output.get_token_candidate_symbol())) {
+    else if (previous_output.is_candidate()) {
+        if (!check_same(old_symbol_in_, previous_output.get_candidate_symbol())) {
             return false;
         }
     }
@@ -1649,7 +1649,7 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
             special_fee_type = 1;
             to_address = output.get_script_address();
         }
-        else if (output.is_uid_register() || output.is_token_candidate_register()) {
+        else if (output.is_uid_register() || output.is_candidate_register()) {
             special_fee_type = 2;
             to_address = output.get_script_address();
         }
@@ -1853,16 +1853,16 @@ bool validate_transaction::check_token_certs(const transaction& tx) const
     return true;
 }
 
-bool validate_transaction::check_token_candidate(const transaction& tx) const
+bool validate_transaction::check_candidate(const transaction& tx) const
 {
     size_t num_candidate = 0;
     for (const auto& output : tx.outputs) {
-        if (output.is_token_candidate_transfer()) {
+        if (output.is_candidate_transfer()) {
             if (++num_candidate > 1) {
                 return false;
             }
 
-            auto&& token_info = output.get_token_candidate();
+            auto&& token_info = output.get_candidate();
             if (old_symbol_in_ != token_info.get_symbol()) {
                 return false;
             }

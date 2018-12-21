@@ -48,8 +48,8 @@ utxo_attach_type get_utxo_attach_type(const chain::output& output_)
     if (output.is_token_cert()) {
         return utxo_attach_type::token_cert;
     }
-    if (output.is_token_candidate()) {
-        return utxo_attach_type::token_candidate;
+    if (output.is_candidate()) {
+        return utxo_attach_type::candidate;
     }
     if (output.is_uid_register()) {
         return utxo_attach_type::uid_register;
@@ -70,12 +70,12 @@ utxo_attach_type get_utxo_attach_type(const chain::output& output_)
 void check_uid_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (!chain::output::is_valid_uid_symbol(symbol, check_sensitive)) {
-        throw uid_symbol_name_exception{"Did symbol " + symbol + " is not valid."};
+        throw uid_symbol_name_exception{"Uid symbol " + symbol + " is not valid."};
     }
 
     if (check_sensitive) {
         if (boost::iequals(symbol, "BLACKHOLE")) {
-            throw uid_symbol_name_exception{"Did symbol cannot be blackhole."};
+            throw uid_symbol_name_exception{"Uid symbol cannot be blackhole."};
         }
     }
 }
@@ -400,7 +400,7 @@ void sync_unspend_output(bc::blockchain::block_chain_impl& blockchain, const inp
     auto is_filter = [filter](const output & output_){
         if (((filter & base_transfer_common::FILTER_UCN) && output_.is_ucn())
         || ( (filter & base_transfer_common::FILTER_TOKEN) && output_.is_token())
-        || ( (filter & base_transfer_common::FILTER_IDENTIFIABLE_TOKEN) && output_.is_token_candidate())
+        || ( (filter & base_transfer_common::FILTER_IDENTIFIABLE_TOKEN) && output_.is_candidate())
         || ( (filter & base_transfer_common::FILTER_TOKENCERT) && output_.is_token_cert())
         || ( (filter & base_transfer_common::FILTER_UID) && output_.is_uid())){
             return true;
@@ -819,7 +819,7 @@ void base_transfer_common::sync_fetchutxo(
                 continue;
             }
         }
-        else if ((filter & FILTER_IDENTIFIABLE_TOKEN) && output.is_token_candidate()) {
+        else if ((filter & FILTER_IDENTIFIABLE_TOKEN) && output.is_candidate()) {
             BITCOIN_ASSERT(ucn_amount == 0);
             BITCOIN_ASSERT(token_total_amount == 0);
             BITCOIN_ASSERT(cert_type == token_cert_ns::none);
@@ -972,7 +972,7 @@ void base_transfer_common::sum_payments()
             payment_token_cert_.push_back(iter.token_cert);
         }
 
-        if (iter.type == utxo_attach_type::token_candidate_transfer) {
+        if (iter.type == utxo_attach_type::candidate_transfer) {
             ++payment_candidate_;
             if (payment_candidate_ > 1) {
                 throw std::logic_error{"maximum one candidate can be transfered"};
@@ -1370,9 +1370,9 @@ asset base_transfer_common::populate_output_asset(const receiver_record& record)
         }
         return asset(TOKEN_CERT_TYPE, attach_version, cert_info);
     }
-    else if (record.type == utxo_attach_type::token_candidate
-        || record.type == utxo_attach_type::token_candidate_transfer) {
-        return asset(TOKEN_CANDIDATE_TYPE, attach_version, token_candidate(/*set on subclass*/));
+    else if (record.type == utxo_attach_type::candidate
+        || record.type == utxo_attach_type::candidate_transfer) {
+        return asset(TOKEN_CANDIDATE_TYPE, attach_version, candidate(/*set on subclass*/));
     }
 
     throw tx_asset_value_exception{
@@ -2185,13 +2185,13 @@ asset registering_candidate::populate_output_asset(const receiver_record& record
 {
     auto&& attach = base_transfer_common::populate_output_asset(record);
 
-    if (record.type == utxo_attach_type::token_candidate) {
+    if (record.type == utxo_attach_type::candidate) {
         auto iter = candidate_map_.find(record.symbol);
         if (iter == candidate_map_.end()) {
             throw tx_asset_value_exception{"invalid candidate issue asset"};
         }
 
-        auto ass = token_candidate(record.symbol, record.target, iter->second);
+        auto ass = candidate(record.symbol, record.target, iter->second);
         ass.set_status(CANDIDATE_STATUS_REGISTER);
         if (!ass.is_valid()) {
             throw tx_asset_value_exception{"invalid candidate issue asset"};
@@ -2207,8 +2207,8 @@ asset transferring_candidate::populate_output_asset(const receiver_record& recor
 {
     auto&& attach = base_transfer_common::populate_output_asset(record);
 
-    if (record.type == utxo_attach_type::token_candidate_transfer) {
-        auto ass = token_candidate(record.symbol, record.target, "");
+    if (record.type == utxo_attach_type::candidate_transfer) {
+        auto ass = candidate(record.symbol, record.target, "");
         ass.set_status(CANDIDATE_STATUS_TRANSFER);
         if (!ass.is_valid()) {
             throw tx_asset_value_exception{"invalid candidate transfer asset"};

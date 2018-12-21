@@ -87,7 +87,7 @@ public:
         (
             "UIDSYMBOL",
             value<std::string>(&argument_.symbol)->required(),
-            "Did symbol"
+            "Uid symbol"
         )
         (
             "fee,f",

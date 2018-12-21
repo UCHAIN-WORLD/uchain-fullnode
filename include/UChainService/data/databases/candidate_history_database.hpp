@@ -80,15 +80,15 @@ public:
     /// Return statistical info about the database.
     candidate_history_statinfo statinfo() const;
 
-    void store(const token_candidate_info& candidate_info);
+    void store(const candidate_info& candidate_info);
 
-    std::shared_ptr<token_candidate_info> get(const short_hash& key) const;
+    std::shared_ptr<candidate_info> get(const short_hash& key) const;
 
-    std::shared_ptr<token_candidate_info::list> get_history_candidates_by_height(const short_hash& key,
+    std::shared_ptr<candidate_info::list> get_history_candidates_by_height(const short_hash& key,
         uint32_t start_height = 0, uint32_t end_height = 0,
         uint64_t limit = 0, uint64_t page_number = 0) const;
 
-    std::shared_ptr<token_candidate_info::list> get_history_candidates_by_time(const short_hash& key,
+    std::shared_ptr<candidate_info::list> get_history_candidates_by_time(const short_hash& key,
         uint32_t time_begin, uint32_t time_end,
         uint64_t limit = 0, uint64_t page_number = 0) const;
 

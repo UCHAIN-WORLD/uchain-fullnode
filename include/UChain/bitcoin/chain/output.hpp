@@ -72,7 +72,7 @@ public:
     std::string get_token_issuer() const;
     std::string get_token_address() const;
     std::string get_token_cert_symbol() const;
-    std::string get_token_candidate_symbol() const;
+    std::string get_candidate_symbol() const;
     std::string get_token_cert_owner() const;
     std::string get_token_cert_address() const;
     token_cert_type get_token_cert_type() const;
@@ -82,9 +82,9 @@ public:
     bool is_token_transfer() const;
     bool is_token_issue() const;
     bool is_token_secondaryissue() const;
-    bool is_token_candidate() const;
-    bool is_token_candidate_register() const;
-    bool is_token_candidate_transfer() const;
+    bool is_candidate() const;
+    bool is_candidate_register() const;
+    bool is_candidate_transfer() const;
     bool is_token_cert() const;
     bool is_token_cert_issue() const;
     bool is_token_cert_transfer() const;
@@ -101,7 +101,7 @@ public:
     token_detail get_token_detail() const;
     token_transfer get_token_transfer() const;
     token_cert get_token_cert() const;
-    token_candidate get_token_candidate() const;
+    candidate get_candidate() const;
     std::string get_uid_symbol() const;
     std::string get_uid_address() const;
     uid get_uid() const;

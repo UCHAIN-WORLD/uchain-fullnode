@@ -52,17 +52,17 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    std::shared_ptr<token_candidate_info> get(const hash_digest& hash) const;
+    std::shared_ptr<candidate_info> get(const hash_digest& hash) const;
 
     /// Get all token certs
-    std::shared_ptr<token_candidate_info::list> get_blockchain_candidates() const;
+    std::shared_ptr<candidate_info::list> get_blockchain_candidates() const;
 
     /// 
-    std::shared_ptr<token_candidate_info> get_register_history(const std::string & candidate_symbol) const;
+    std::shared_ptr<candidate_info> get_register_history(const std::string & candidate_symbol) const;
     ///
     uint64_t get_register_height(const std::string & candidate_symbol) const;
 
-    void store(const token_candidate_info& candidate_info);
+    void store(const candidate_info& candidate_info);
 
     /// Delete a transaction from database.
     void remove(const hash_digest& hash);

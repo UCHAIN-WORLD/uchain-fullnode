@@ -70,7 +70,7 @@ console_result transfercandidate::invoke (Json::Value& jv_output,
     std::vector<receiver_record> receiver{
         {
             to_address, argument_.symbol, 0, 0, 0,
-            utxo_attach_type::token_candidate_transfer, asset("", to_uid)
+            utxo_attach_type::candidate_transfer, asset("", to_uid)
         }
     };
 

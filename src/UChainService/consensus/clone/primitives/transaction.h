@@ -229,7 +229,7 @@ public:
     }
 };
 
-class CDidDetail
+class CUidDetail
 {
 public:
     std::string symbol;
@@ -245,7 +245,7 @@ public:
     }
 };
 
-class CDidTransfer
+class CUidTransfer
 {
 public:
     std::string symbol;
@@ -261,12 +261,12 @@ public:
     }
 };
 
-class CDid
+class CUid
 {
 public:
     uint32_t status;
-    CDidDetail detail;
-    CDidTransfer trans;
+    CUidDetail detail;
+    CUidTransfer trans;
 
     size_t GetSerializeSize(int nType, int nVersion) const {
         CSizeComputer s(nType, nVersion);
@@ -279,10 +279,10 @@ public:
         (::SerReadWrite(s, (status), nType, nVersion, CSerActionSerialize()));
         switch(status) {
             case 1: // uid detail
-                (::SerReadWrite(s, (*(CDidDetail*)(&detail)), nType, nVersion, CSerActionSerialize()));
+                (::SerReadWrite(s, (*(CUidDetail*)(&detail)), nType, nVersion, CSerActionSerialize()));
                 break;
             case 2: // uid transfer
-                (::SerReadWrite(s, (*(CDidTransfer*)(&trans)), nType, nVersion, CSerActionSerialize()));
+                (::SerReadWrite(s, (*(CUidTransfer*)(&trans)), nType, nVersion, CSerActionSerialize()));
                 break;
         };
     }
@@ -292,10 +292,10 @@ public:
         (::SerReadWrite(s, (status), nType, nVersion, CSerActionUnserialize()));
         switch(status) {
             case 1: // uid detail
-                (::SerReadWrite(s, (*(CDidDetail*)(&detail)), nType, nVersion, CSerActionUnserialize()));
+                (::SerReadWrite(s, (*(CUidDetail*)(&detail)), nType, nVersion, CSerActionUnserialize()));
                 break;
             case 2: // uid transfer
-                (::SerReadWrite(s, (*(CDidTransfer*)(&trans)), nType, nVersion, CSerActionUnserialize()));
+                (::SerReadWrite(s, (*(CUidTransfer*)(&trans)), nType, nVersion, CSerActionUnserialize()));
                 break;
         };
     }
@@ -317,7 +317,7 @@ public:
     CToken asset;
     CTokenCert assetcert;
     CTokenCandidate mit;
-    CDid uid;
+    CUid uid;
     CMessage message;
 
     CTxOut()
@@ -357,7 +357,7 @@ public:
                 (::SerReadWrite(s, (*(CMessage*)(&message)), nType, nVersion, CSerActionSerialize()));
                 break;
             case 4: //uid
-                (::SerReadWrite(s, (*(CDid*)(&uid)), nType, nVersion, CSerActionSerialize()));
+                (::SerReadWrite(s, (*(CUid*)(&uid)), nType, nVersion, CSerActionSerialize()));
                 break;
             case 5: // asset cert
                 (::SerReadWrite(s, (*(CTokenCert*)(&assetcert)), nType, nVersion, CSerActionSerialize()));
@@ -390,7 +390,7 @@ public:
                 (::SerReadWrite(s, (*(CMessage*)(&message)), nType, nVersion, CSerActionUnserialize()));
                 break;
             case 4: // uid
-                (::SerReadWrite(s, (*(CDid*)(&uid)), nType, nVersion, CSerActionUnserialize()));
+                (::SerReadWrite(s, (*(CUid*)(&uid)), nType, nVersion, CSerActionUnserialize()));
                 break;
             case 5: // asset cert
                 (::SerReadWrite(s, (*(CTokenCert*)(&assetcert)), nType, nVersion, CSerActionUnserialize()));

@@ -28,7 +28,7 @@
 #include <boost/variant.hpp>
 #include <UChainService/txs/token/token.hpp>
 #include <UChainService/txs/token/token_cert.hpp>
-#include <UChainService/txs/token/token_candidate.hpp>
+#include <UChainService/txs/token/candidate.hpp>
 #include <UChainService/txs/token/attenuation_model.hpp>
 #include <UChainService/txs/uid/uid.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
@@ -44,7 +44,7 @@ using namespace libbitcoin::chain;
 #define MESSAGE_TYPE    TYPE2UINT32(asset::asset_type::asset_message)
 #define UID_TYPE        TYPE2UINT32(asset::asset_type::asset_uid)
 #define TOKEN_CERT_TYPE TYPE2UINT32(asset::asset_type::asset_token_cert)
-#define TOKEN_CANDIDATE_TYPE  TYPE2UINT32(asset::asset_type::asset_token_candidate)
+#define TOKEN_CANDIDATE_TYPE  TYPE2UINT32(asset::asset_type::asset_candidate)
 
 #define UID_ASSET_VERIFY_VERSION       TYPE2UINT32(7)
 
@@ -64,7 +64,7 @@ public:
         asset_message,
         asset_uid,
         asset_token_cert,
-        asset_token_candidate
+        asset_candidate
     };
 
     typedef boost::variant<
@@ -74,7 +74,7 @@ public:
         blockchain_message,
         uid,
         token_cert,
-        token_candidate
+        candidate
         > asset_data_type;
 
     asset();
