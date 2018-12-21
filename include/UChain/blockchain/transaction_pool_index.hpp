@@ -53,10 +53,10 @@ public:
     /// Signal stop of current work, speeds shutdown.
     void stop();
 
-    void fetch_all_history(const wallet::payment_address& address,
+    void fetch_all_history(const bc::wallet::payment_address& address,
         size_t limit, size_t from_height, fetch_handler handler);
 
-    void fetch_index_history(const wallet::payment_address& address,
+    void fetch_index_history(const bc::wallet::payment_address& address,
         query_handler handler);
 
     void add(const chain::transaction& tx, completion_handler handler);
@@ -66,7 +66,7 @@ private:
     typedef chain::spend_info spend_info;
     typedef chain::output_info output_info;
     typedef chain::history_compact::list history_list;
-    typedef wallet::payment_address payment_address;
+    typedef bc::wallet::payment_address payment_address;
     typedef std::unordered_multimap<payment_address, spend_info> spends_map;
     typedef std::unordered_multimap<payment_address, output_info> outputs_map;
 
@@ -81,12 +81,12 @@ private:
         const history_list& history, fetch_handler handler);
 
     void blockchain_history_fetched(const code& ec,
-        const history_list& history, const wallet::payment_address& address,
+        const history_list& history, const bc::wallet::payment_address& address,
         fetch_handler handler);
 
     void do_add(const chain::transaction& tx, completion_handler handler);
     void do_remove(const chain::transaction& tx, completion_handler handler);
-    void do_fetch(const wallet::payment_address& payaddr,
+    void do_fetch(const bc::wallet::payment_address& payaddr,
         query_handler handler);
 
     // This is protected by mutex.

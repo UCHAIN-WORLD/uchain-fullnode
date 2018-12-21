@@ -60,7 +60,7 @@ connection_type get_connection(const command& cmd)
 // The key may be invalid, caller may test for null secret.
 ec_secret new_key(const data_chunk& seed)
 {
-    const wallet::hd_private key(seed);
+    const bc::wallet::hd_private key(seed);
     return key.secret();
 }
 
@@ -131,7 +131,7 @@ bool starts_with(const std::string& value, const std::string& prefix)
 }
 
 // This verifies the checksum.
-bool unwrap(wallet::wrapped_data& data, data_slice wrapped)
+bool unwrap(bc::wallet::wrapped_data& data, data_slice wrapped)
 {
     if (!verify_checksum(wrapped))
         return false;
@@ -146,7 +146,7 @@ bool unwrap(wallet::wrapped_data& data, data_slice wrapped)
 }
 
 // This recalculates the checksum, ignoring what is in data.checksum.
-data_chunk wrap(const wallet::wrapped_data& data)
+data_chunk wrap(const bc::wallet::wrapped_data& data)
 {
     auto bytes = to_chunk(data.version);
     extend_data(bytes, data.payload);

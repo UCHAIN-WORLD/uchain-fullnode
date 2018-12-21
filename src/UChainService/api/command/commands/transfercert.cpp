@@ -34,7 +34,7 @@ console_result transfercert::invoke (Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     blockchain.uppercase_symbol(argument_.symbol);
     boost::to_lower(argument_.cert);
@@ -67,21 +67,21 @@ console_result transfercert::invoke (Json::Value& jv_output,
     if (!blockchain.is_valid_address(to_address))
         throw toaddress_invalid_exception{"invalid uid parameter! " + to_uid};
 
-    // check cert is owned by the account
+    // check cert is owned by the wallet
     bool exist = blockchain.is_token_cert_exist(argument_.symbol, cert_type);
     if (!exist) {
         throw token_cert_notfound_exception(
             cert_type_name + " cert '" + argument_.symbol + "' does not exist.");
     }
 
-    auto cert = blockchain.get_account_token_cert(auth_.name, argument_.symbol, cert_type);
+    auto cert = blockchain.get_wallet_token_cert(auth_.name, argument_.symbol, cert_type);
     if (!cert) {
         throw token_cert_notowned_exception(
             cert_type_name + " cert '" + argument_.symbol + "' is not owned by " + auth_.name);
     }
 
     auto from_address = cert->get_address();
-    account_multisig acc_multisig;
+    wallet_multisig acc_multisig;
     bool is_multisig_address = blockchain.is_script_address(from_address);
     if (is_multisig_address) {
         auto multisig_vec = acc->get_multisig(from_address);

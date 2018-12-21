@@ -36,7 +36,7 @@ console_result registeruid::invoke(Json::Value &jv_output,
                                    libbitcoin::server::server_node &node)
 {
     auto &blockchain = node.chain_impl();
-    auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     // check uid symbol
     check_uid_symbol(argument_.symbol, true);
@@ -65,8 +65,8 @@ console_result registeruid::invoke(Json::Value &jv_output,
         throw address_invalid_exception{"invalid address parameter!"};
     }
 
-    if (!blockchain.get_account_address(auth_.name, argument_.address)) {
-        throw address_dismatch_account_exception{
+    if (!blockchain.get_wallet_address(auth_.name, argument_.address)) {
+        throw address_dismatch_wallet_exception{
             "address " + argument_.address + " is not owned by " + auth_.name};
     }
 
@@ -78,7 +78,7 @@ console_result registeruid::invoke(Json::Value &jv_output,
     if (blockchain.is_address_registered_uid(argument_.address))
         throw uid_symbol_existed_exception{"address is already binded with some uid on the blockchain"};
 
-    account_multisig acc_multisig;
+    wallet_multisig acc_multisig;
     bool is_multisig_address = blockchain.is_script_address(argument_.address);
     if (is_multisig_address) {
         auto multisig_vec = acc->get_multisig(argument_.address);

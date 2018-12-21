@@ -58,7 +58,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
         libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     std::map<std::string, std::string> candidate_map;
 
@@ -142,8 +142,8 @@ console_result registercandidate::invoke (Json::Value& jv_output,
     if (!blockchain.is_valid_address(to_address)) {
         throw address_invalid_exception{"invalid uid parameter! " + to_uid};
     }
-    if (!blockchain.get_account_address(auth_.name, to_address)) {
-        throw address_dismatch_account_exception{"target uid does not match account. " + to_uid};
+    if (!blockchain.get_wallet_address(auth_.name, to_address)) {
+        throw address_dismatch_wallet_exception{"target uid does not match wallet. " + to_uid};
     }
 
     // receiver

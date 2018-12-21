@@ -197,13 +197,13 @@ bool data_base::upgrade_version_63(const path& prefix)
 
 void data_base::set_admin(const std::string& name, const std::string& passwd)
 {
-    accounts.set_admin(name, passwd);
+    wallets.set_admin(name, passwd);
 }
 
 void data_base::set_blackhole_uid()
 {
     const std::string uid_symbol = uid_detail::get_blackhole_uid_symbol();
-    const std::string& uid_address = wallet::payment_address::blackhole_address;
+    const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
     uid_detail uiddetail(uid_symbol, uid_address);
 
     data_chunk data(uid_address.begin(), uid_address.end());
@@ -219,11 +219,11 @@ void data_base::set_blackhole_uid()
 
 void data_base::set_token_block()
 {
-    const std::string& uid_address = wallet::payment_address::blackhole_address;
+    const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
     token_detail tokendetail(
     UC_BLOCK_TOKEN_SYMBOL, 0,
     1, 0, uid_detail::get_blackhole_uid_symbol(),
-    wallet::payment_address::blackhole_address, "'BLOCK' token is issued by blackhole.Miners can use it to get reward");
+    bc::wallet::payment_address::blackhole_address, "'BLOCK' token is issued by blackhole.Miners can use it to get reward");
 
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
@@ -238,11 +238,11 @@ void data_base::set_token_block()
 
 void data_base::set_token_vote()
 {
-    const std::string& uid_address = wallet::payment_address::blackhole_address;
+    const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
     token_detail tokendetail(
     UC_VOTE_TOKEN_SYMBOL, 0,
     1, 0, uid_detail::get_blackhole_uid_symbol(),
-    wallet::payment_address::blackhole_address, "'VOTE' token is issued by blackhole.Users can use it to vote.");
+    bc::wallet::payment_address::blackhole_address, "'VOTE' token is issued by blackhole.Users can use it to vote.");
 
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
@@ -262,20 +262,20 @@ data_base::store::store(const path& prefix)
     history_lookup = prefix / "history_table";
     spends_lookup = prefix / "spend_table";
     transactions_lookup = prefix / "transaction_table";
-    /* begin database for account, token, address_token relationship */
-    accounts_lookup = prefix / "account_table";
+    /* begin database for wallet, token, address_token relationship */
+    wallets_lookup = prefix / "wallet_table";
     tokens_lookup = prefix / "token_table";  // for blockchain tokens
     certs_lookup = prefix / "cert_table";   // for blockchain certs
     address_tokens_lookup = prefix / "address_token_table"; // for blockchain
     address_tokens_rows = prefix / "address_token_row"; // for blockchain
-    account_tokens_lookup = prefix / "account_token_table";
-    account_tokens_rows = prefix / "account_token_row";
+    wallet_tokens_lookup = prefix / "wallet_token_table";
+    wallet_tokens_rows = prefix / "wallet_token_row";
     uids_lookup = prefix / "uid_table";
     address_uids_lookup = prefix / "address_uid_table"; // for blockchain
     address_uids_rows = prefix / "address_uid_row"; // for blockchain
-    account_addresses_lookup = prefix / "account_address_table";
-    account_addresses_rows = prefix / "account_address_rows";
-    /* end database for account, token, address_token relationship */
+    wallet_addresses_lookup = prefix / "wallet_address_table";
+    wallet_addresses_rows = prefix / "wallet_address_rows";
+    /* end database for wallet, token, address_token relationship */
     candidates_lookup = prefix / "candidate_table";
     address_candidates_lookup = prefix / "address_candidate_table"; // for blockchain
     address_candidates_rows = prefix / "address_candidate_row"; // for blockchain
@@ -304,20 +304,20 @@ bool data_base::store::touch_all() const
         touch_file(stealth_rows) &&
         touch_file(spends_lookup) &&
         touch_file(transactions_lookup) &&
-        /* begin database for account, token, address_token relationship */
-        touch_file(accounts_lookup) &&
+        /* begin database for wallet, token, address_token relationship */
+        touch_file(wallets_lookup) &&
         touch_file(tokens_lookup) &&
         touch_file(certs_lookup) &&
         touch_file(address_tokens_lookup) &&
         touch_file(address_tokens_rows) &&
-        touch_file(account_tokens_lookup) &&
-        touch_file(account_tokens_rows) &&
+        touch_file(wallet_tokens_lookup) &&
+        touch_file(wallet_tokens_rows) &&
         touch_file(uids_lookup) &&
         touch_file(address_uids_lookup) &&
         touch_file(address_uids_rows) &&
-        touch_file(account_addresses_lookup) &&
-        touch_file(account_addresses_rows) &&
-        /* end database for account, token, address_token relationship */
+        touch_file(wallet_addresses_lookup) &&
+        touch_file(wallet_addresses_rows) &&
+        /* end database for wallet, token, address_token relationship */
         touch_file(candidates_lookup) &&
         touch_file(address_candidates_lookup) &&
         touch_file(address_candidates_rows) &&
@@ -534,16 +534,16 @@ data_base::data_base(const store& paths, size_t history_height,
     stealth(paths.stealth_rows, mutex_),
     spends(paths.spends_lookup, mutex_),
     transactions(paths.transactions_lookup, mutex_),
-    /* begin database for account, token, address_token, uid relationship */
-    accounts(paths.accounts_lookup, mutex_),
+    /* begin database for wallet, token, address_token, uid relationship */
+    wallets(paths.wallets_lookup, mutex_),
     tokens(paths.tokens_lookup, mutex_),
     address_tokens(paths.address_tokens_lookup, paths.address_tokens_rows, mutex_),
-    account_tokens(paths.account_tokens_lookup, paths.account_tokens_rows, mutex_),
+    wallet_tokens(paths.wallet_tokens_lookup, paths.wallet_tokens_rows, mutex_),
     certs(paths.certs_lookup, mutex_),
     uids(paths.uids_lookup, mutex_),
     address_uids(paths.address_uids_lookup, paths.address_uids_rows, mutex_),
-    account_addresses(paths.account_addresses_lookup, paths.account_addresses_rows, mutex_),
-    /* end database for account, token, address_token, uid relationship */
+    wallet_addresses(paths.wallet_addresses_lookup, paths.wallet_addresses_rows, mutex_),
+    /* end database for wallet, token, address_token, uid relationship */
     candidates(paths.candidates_lookup, mutex_),
     address_candidates(paths.address_candidates_lookup, paths.address_candidates_rows, mutex_),
     candidate_history(paths.candidate_history_lookup, paths.candidate_history_rows, mutex_)
@@ -594,16 +594,16 @@ bool data_base::create()
         spends.create() &&
         stealth.create() &&
         transactions.create() &&
-        /* begin database for account, token, address_token relationship */
-        accounts.create() &&
+        /* begin database for wallet, token, address_token relationship */
+        wallets.create() &&
         tokens.create() &&
         address_tokens.create() &&
-        account_tokens.create() &&
+        wallet_tokens.create() &&
         certs.create() &&
         uids.create() &&
         address_uids.create() &&
-        account_addresses.create() &&
-        /* end database for account, token, address_token relationship */
+        wallet_addresses.create() &&
+        /* end database for wallet, token, address_token relationship */
         candidates.create() &&
         address_candidates.create() &&
         candidate_history.create()
@@ -663,16 +663,16 @@ bool data_base::start()
         spends.start() &&
         stealth.start() &&
         transactions.start() &&
-        /* begin database for account, token, address_token relationship */
-        accounts.start() &&
+        /* begin database for wallet, token, address_token relationship */
+        wallets.start() &&
         tokens.start() &&
         address_tokens.start() &&
-        account_tokens.start() &&
+        wallet_tokens.start() &&
         certs.start() &&
         uids.start() &&
         address_uids.start() &&
-        account_addresses.start() &&
-        /* end database for account, token, address_token relationship */
+        wallet_addresses.start() &&
+        /* end database for wallet, token, address_token relationship */
         candidates.start() &&
         address_candidates.start() &&
         candidate_history.start()
@@ -692,16 +692,16 @@ bool data_base::stop()
     const auto spends_stop = spends.stop();
     const auto stealth_stop = stealth.stop();
     const auto transactions_stop = transactions.stop();
-    /* begin database for account, token, address_token relationship */
-    const auto accounts_stop = accounts.stop();
+    /* begin database for wallet, token, address_token relationship */
+    const auto wallets_stop = wallets.stop();
     const auto tokens_stop = tokens.stop();
     const auto address_tokens_stop = address_tokens.stop();
-    const auto account_tokens_stop = account_tokens.stop();
+    const auto wallet_tokens_stop = wallet_tokens.stop();
     const auto certs_stop = certs.stop();
     const auto uids_stop = uids.stop();
     const auto address_uids_stop = address_uids.stop();
-    const auto account_addresses_stop = account_addresses.stop();
-    /* end database for account, token, address_token relationship */
+    const auto wallet_addresses_stop = wallet_addresses.stop();
+    /* end database for wallet, token, address_token relationship */
     const auto candidates_stop = candidates.stop();
     const auto address_candidates_stop = address_candidates.stop();
     const auto candidate_history_stop = candidate_history.stop();
@@ -720,16 +720,16 @@ bool data_base::stop()
         spends_stop &&
         stealth_stop &&
         transactions_stop &&
-        /* begin database for account, token, address_token relationship */
-        accounts_stop &&
+        /* begin database for wallet, token, address_token relationship */
+        wallets_stop &&
         tokens_stop &&
         address_tokens_stop &&
-        account_tokens_stop &&
+        wallet_tokens_stop &&
         certs_stop &&
         uids_stop &&
         address_uids_stop &&
-        account_addresses_stop &&
-        /* end database for account, token, address_token relationship */
+        wallet_addresses_stop &&
+        /* end database for wallet, token, address_token relationship */
         candidates_stop &&
         address_candidates_stop &&
         candidate_history_stop &&
@@ -744,16 +744,16 @@ bool data_base::close()
     const auto spends_close = spends.close();
     const auto stealth_close = stealth.close();
     const auto transactions_close = transactions.close();
-    /* begin database for account, token, address_token relationship */
-    const auto accounts_close = accounts.close();
+    /* begin database for wallet, token, address_token relationship */
+    const auto wallets_close = wallets.close();
     const auto tokens_close = tokens.close();
     const auto address_tokens_close = address_tokens.close();
     const auto address_uids_close = address_uids.close();
-    const auto account_tokens_close = account_tokens.close();
+    const auto wallet_tokens_close = wallet_tokens.close();
     const auto certs_close = certs.close();
     const auto uids_close = uids.close();
-    const auto account_addresses_close = account_addresses.close();
-    /* end database for account, token, address_token relationship */
+    const auto wallet_addresses_close = wallet_addresses.close();
+    /* end database for wallet, token, address_token relationship */
     const auto candidates_close = candidates.close();
     const auto address_candidates_close = address_candidates.close();
     const auto candidate_history_close = candidate_history.close();
@@ -765,16 +765,16 @@ bool data_base::close()
         spends_close &&
         stealth_close &&
         transactions_close&&
-        /* begin database for account, token, address_token relationship */
-        accounts_close &&
+        /* begin database for wallet, token, address_token relationship */
+        wallets_close &&
         tokens_close &&
         address_tokens_close&&
         address_uids_close &&
-        account_tokens_close&&
+        wallet_tokens_close&&
         certs_close &&
         uids_close &&
-        account_addresses_close &&
-        /* end database for account, token, address_token relationship */
+        wallet_addresses_close &&
+        /* end database for wallet, token, address_token relationship */
         candidates_close &&
         address_candidates_close &&
         candidate_history_close
@@ -838,16 +838,16 @@ void data_base::synchronize()
     history.sync();
     stealth.sync();
     transactions.sync();
-    /* begin database for account, token, address_token relationship */
-    accounts.sync();
+    /* begin database for wallet, token, address_token relationship */
+    wallets.sync();
     tokens.sync();
     address_tokens.sync();
-    account_tokens.sync();
+    wallet_tokens.sync();
     certs.sync();
     uids.sync();
     address_uids.sync();
-    account_addresses.sync();
-    /* end database for account, token, address_token relationship */
+    wallet_addresses.sync();
+    /* end database for wallet, token, address_token relationship */
     candidates.sync();
     address_candidates.sync();
     candidate_history.sync();

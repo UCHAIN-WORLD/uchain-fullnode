@@ -34,7 +34,7 @@ console_result showheaderext::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     if(argument_.number.empty())
         throw block_height_get_exception{"Block number or earliest, latest, pending is needed"};
 

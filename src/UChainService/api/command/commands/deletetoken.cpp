@@ -36,7 +36,7 @@ console_result deletetoken::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     // maybe throw
     blockchain.uppercase_symbol(option_.symbol);
 
@@ -64,17 +64,17 @@ console_result deletetoken::invoke(Json::Value& jv_output,
         }
     }
 
-    std::vector<business_address_token> tokens = *blockchain.get_account_unissued_tokens(auth_.name);
+    std::vector<business_address_token> tokens = *blockchain.get_wallet_unissued_tokens(auth_.name);
     bool found = false;
     for (auto it = tokens.begin(); it != tokens.end(); ++it) {
         if (it->detail.get_symbol() == option_.symbol) {
-            if (blockchain.delete_account_token(auth_.name) == console_result::failure) {
+            if (blockchain.delete_wallet_token(auth_.name) == console_result::failure) {
                 throw token_delete_fail{"token " + option_.symbol + " delete fail."};
             }
 
             tokens.erase(it);
             for (auto token : tokens) {
-                blockchain.store_account_token(token.detail, auth_.name);
+                blockchain.store_wallet_token(token.detail, auth_.name);
             }
 
             found = true;

@@ -34,16 +34,16 @@ console_result deposit::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     if (argument_.deposit != 10 && argument_.deposit != 45
         && argument_.deposit != 120 && argument_.deposit != 240
         && argument_.deposit != 540)
     {
-        throw account_deposit_period_exception{"deposit must be one in [10, 45, 120, 240, 540]."};
+        throw wallet_deposit_period_exception{"deposit must be one in [10, 45, 120, 240, 540]."};
     }
 
-    auto pvaddr = blockchain.get_account_addresses(auth_.name);
+    auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
     if(!pvaddr || pvaddr->empty())
         throw address_list_nullptr_exception{"nullptr for address list"};
 
@@ -52,7 +52,7 @@ console_result deposit::invoke(Json::Value& jv_output,
         addr = get_random_payment_address(pvaddr, blockchain);
     }else{
         addr = get_address_from_strict_uid(argument_.uid, blockchain);
-        auto acc_addr = blockchain.get_account_address(auth_.name, addr);
+        auto acc_addr = blockchain.get_wallet_address(auth_.name, addr);
         if (!acc_addr)
             throw argument_legality_exception{"You don't own address " + addr};
     }

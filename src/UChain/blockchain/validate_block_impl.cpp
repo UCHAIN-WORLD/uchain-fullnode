@@ -399,8 +399,8 @@ bool validate_block_impl::check_get_coinage_reward_transaction(const chain::tran
 {
     uint64_t lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(output.script.operations);
     uint64_t coinbase_lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(coinage_reward_coinbase.outputs[0].script.operations);
-    wallet::payment_address addr1 = wallet::payment_address::extract(coinage_reward_coinbase.outputs[0].script);
-    wallet::payment_address addr2 = wallet::payment_address::extract(output.script);
+    bc::wallet::payment_address addr1 = bc::wallet::payment_address::extract(coinage_reward_coinbase.outputs[0].script);
+    bc::wallet::payment_address addr2 = bc::wallet::payment_address::extract(output.script);
     uint64_t coinage_reward_value = libbitcoin::consensus::miner::calculate_lockblock_reward(lock_height, output.value);
 
     if(is_candidate && output.value != bc::min_lock_to_issue_candidate)

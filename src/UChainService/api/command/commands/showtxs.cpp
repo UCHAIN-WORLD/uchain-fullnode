@@ -68,7 +68,7 @@ console_result showtxs::invoke(Json::Value& jv_output,
 {
     using namespace libbitcoin::config; // for hash256
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     // address option check
     if (!argument_.address.empty() && !blockchain.is_valid_address(argument_.address))
         throw address_invalid_exception{"invalid address parameter!"};
@@ -97,7 +97,7 @@ console_result showtxs::invoke(Json::Value& jv_output,
 
     // collect address
     if (argument_.address.empty()) {
-        auto pvaddr = blockchain.get_account_addresses(auth_.name);
+        auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
         if (!pvaddr)
             throw address_invalid_exception{"nullptr for address list"};
 
@@ -213,7 +213,7 @@ console_result showtxs::invoke(Json::Value& jv_output,
             if (address) {
                 auto&& temp_addr = address.encoded();
                 pt_output["address"] = temp_addr;
-                auto ret = blockchain.get_account_address(auth_.name, temp_addr);
+                auto ret = blockchain.get_wallet_address(auth_.name, temp_addr);
                 if (get_api_version() == 1)
                     pt_output["own"] = ret ? "true" : "false";
                 else
@@ -279,7 +279,7 @@ console_result showtxs::invoke(Json::Value& jv_output,
         // set tx direction
         // 1. receive check
         auto pos = std::find_if(vec_ip_addr.begin(), vec_ip_addr.end(), [&](const std::string & i) {
-            return blockchain.get_account_address(auth_.name, i) != nullptr;
+            return blockchain.get_wallet_address(auth_.name, i) != nullptr;
         });
 
         if (pos == vec_ip_addr.end()) {

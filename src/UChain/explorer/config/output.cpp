@@ -96,7 +96,7 @@ std::istream& operator>>(std::istream& input, output& argument)
     const auto& target = tokens.front();
 
     // Is the target a payment address?
-    const wallet::payment_address payment(target);
+    const bc::wallet::payment_address payment(target);
     if (payment)
     {
         argument.version_ = payment.version();
@@ -105,7 +105,7 @@ std::istream& operator>>(std::istream& input, output& argument)
     }
 
     // Is the target a stealth address?
-    const wallet::stealth_address stealth(target);
+    const bc::wallet::stealth_address stealth(target);
     if (stealth)
     {
         // TODO: finish stealth multisig implemetation (p2sh and !p2sh).

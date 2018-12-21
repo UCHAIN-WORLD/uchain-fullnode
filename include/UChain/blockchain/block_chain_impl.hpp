@@ -190,14 +190,14 @@ public:
         spend_fetch_handler handler);
 
     /// fetch outputs, values and spends for an address.
-    void fetch_history(const wallet::payment_address& address,
+    void fetch_history(const bc::wallet::payment_address& address,
         uint64_t limit, uint64_t from_height, history_fetch_handler handler);
 
-    bool fetch_history(const wallet::payment_address& address,
+    bool fetch_history(const bc::wallet::payment_address& address,
         uint64_t limit, uint64_t from_height, history_compact::list& history);
 
 
-    history::list get_address_history(const wallet::payment_address& addr, bool add_memory_pool = false);
+    history::list get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool = false);
 
 
     /// fetch stealth results.
@@ -225,17 +225,17 @@ public:
     std::shared_ptr<chain::transaction>  get_spends_output(const input_point& input);
 
 
-    // account related api
-    std::shared_ptr<account> is_account_passwd_valid(const std::string& name, const std::string& passwd);
-    std::string is_account_lastwd_valid(const account& acc, std::string& auth, const std::string& lastwd);
-    void set_account_passwd(const std::string& name, const std::string& passwd);
-    bool is_account_exist(const std::string& name);
-    bool is_admin_account(const std::string& name);
-    operation_result store_account(std::shared_ptr<account> acc);
-    std::shared_ptr<account> get_account(const std::string& name);
-    std::shared_ptr<std::vector<account>> get_accounts();
-    operation_result delete_account(const std::string& name);
-    operation_result delete_account_address(const std::string& name);
+    // wallet related api
+    std::shared_ptr<libbitcoin::chain::wallet> is_wallet_passwd_valid(const std::string& name, const std::string& passwd);
+    std::string is_wallet_lastwd_valid(const libbitcoin::chain::wallet& acc, std::string& auth, const std::string& lastwd);
+    void set_wallet_passwd(const std::string& name, const std::string& passwd);
+    bool is_wallet_exist(const std::string& name);
+    bool is_admin_wallet(const std::string& name);
+    operation_result store_wallet(std::shared_ptr<libbitcoin::chain::wallet> acc);
+    std::shared_ptr<libbitcoin::chain::wallet> get_wallet(const std::string& name);
+    std::shared_ptr<std::vector<libbitcoin::chain::wallet>> get_wallets();
+    operation_result delete_wallet(const std::string& name);
+    operation_result delete_wallet_address(const std::string& name);
 
     std::shared_ptr<business_history::list> get_address_business_history(
         const std::string& addr, business_kind kind, uint8_t confirmed);
@@ -243,19 +243,19 @@ public:
         const std::string& addr, business_kind kind, uint32_t time_begin, uint32_t time_end);
     std::shared_ptr<business_history::list> get_address_business_history(const std::string& addr);
 
-    // account token api
-    operation_result store_account_token(const token_detail& detail, const std::string& name);
-    operation_result store_account_token(std::shared_ptr<token_detail> detail, const std::string& name);
-    operation_result delete_account_token(const std::string& name);
-    std::shared_ptr<business_address_token::list> get_account_token(
+    // wallet token api
+    operation_result store_wallet_token(const token_detail& detail, const std::string& name);
+    operation_result store_wallet_token(std::shared_ptr<token_detail> detail, const std::string& name);
+    operation_result delete_wallet_token(const std::string& name);
+    std::shared_ptr<business_address_token::list> get_wallet_token(
         const std::string& name, const std::string& token_name, business_kind kind);
-    std::shared_ptr<business_address_token::list> get_account_token(
+    std::shared_ptr<business_address_token::list> get_wallet_token(
         const std::string& name, const std::string& token);
-    std::shared_ptr<business_address_token::list> get_account_tokens(const std::string& name);
-    std::shared_ptr<business_address_token::list> get_account_tokens(
+    std::shared_ptr<business_address_token::list> get_wallet_tokens(const std::string& name);
+    std::shared_ptr<business_address_token::list> get_wallet_tokens(
         const std::string& name, business_kind kind);
     uint64_t get_address_token_volume(const std::string& address, const std::string& token);
-    uint64_t get_account_token_volume(const std::string& account, const std::string& token);
+    uint64_t get_wallet_token_volume(const std::string& wallet, const std::string& token);
     uint64_t get_token_volume(const std::string& token);
 
     // token api
@@ -264,9 +264,9 @@ public:
     std::shared_ptr<token_detail::list> get_local_tokens();
     std::shared_ptr<token_detail::list> get_issued_tokens(const std::string& symbol="");
     std::shared_ptr<token_detail> get_issued_token(const std::string& symbol);
-    std::shared_ptr<business_address_token::list> get_account_tokens();
-    std::shared_ptr<business_address_token::list> get_account_unissued_tokens(const std::string& name);
-    std::shared_ptr<token_detail> get_account_unissued_token(
+    std::shared_ptr<business_address_token::list> get_wallet_tokens();
+    std::shared_ptr<business_address_token::list> get_wallet_unissued_tokens(const std::string& name);
+    std::shared_ptr<token_detail> get_wallet_unissued_token(
         const std::string& name, const std::string& symbol);
     
     std::shared_ptr<blockchain_token::list> get_token_register_output(const std::string& symbol);
@@ -274,10 +274,10 @@ public:
     bool is_token_cert_exist(const std::string& symbol, token_cert_type cert_type);
     uint64_t get_token_cert_height(const std::string& cert_symbol,const token_cert_type& cert_type);
     std::shared_ptr<token_cert::list> get_issued_token_certs();
-    std::shared_ptr<token_cert> get_account_token_cert(
-        const std::string& account, const std::string& symbol, token_cert_type cert_type);
-    std::shared_ptr<business_address_token_cert::list> get_account_token_certs(
-        const std::string& account, const std::string& symbol, token_cert_type cert_type);
+    std::shared_ptr<token_cert> get_wallet_token_cert(
+        const std::string& wallet, const std::string& symbol, token_cert_type cert_type);
+    std::shared_ptr<business_address_token_cert::list> get_wallet_token_certs(
+        const std::string& wallet, const std::string& symbol, token_cert_type cert_type);
     std::shared_ptr<business_address_token_cert::list> get_address_token_certs(
         const std::string& address, const std::string& symbol, token_cert_type cert_type);
 
@@ -288,23 +288,23 @@ public:
     std::shared_ptr<candidate_info::list> get_registered_candidates();
     std::shared_ptr<candidate_info::list> get_candidate_history(const std::string& symbol,
         uint64_t limit = 0, uint64_t page_number = 0);
-    std::shared_ptr<candidate::list> get_account_candidates(
-        const std::string& account, const std::string& symbol="");
+    std::shared_ptr<candidate::list> get_wallet_candidates(
+        const std::string& wallet, const std::string& symbol="");
 
-    // account uid api
+    // wallet uid api
     bool is_uid_exist(const std::string& symbol);
     uint64_t get_uid_height(const std::string& symbol) const;
     bool is_address_registered_uid(const std::string& address, uint64_t fork_index = max_uint64);
-    bool is_account_owned_uid(const std::string& account, const std::string& symbol);
+    bool is_wallet_owned_uid(const std::string& wallet, const std::string& symbol);
     std::string get_uid_from_address(const std::string& address, uint64_t fork_index = max_uint64);
     std::shared_ptr<uid_detail> get_registered_uid(const std::string& symbol);
     std::shared_ptr<uid_detail::list> get_registered_uids();
-    std::shared_ptr<uid_detail::list> get_account_uids(const std::string& account);
+    std::shared_ptr<uid_detail::list> get_wallet_uids(const std::string& wallet);
 
     //get history addresses from uid symbol
     std::shared_ptr<blockchain_uid::list>  get_uid_history_addresses(const std::string & symbol);
 
-    std::shared_ptr<business_history::list> get_account_business_history(
+    std::shared_ptr<business_history::list> get_wallet_business_history(
         const std::string& name, business_kind kind, uint32_t time_begin, uint32_t time_end);
     std::shared_ptr<business_history::list> get_address_business_history(
         const std::string& addr, const std::string& symbol, business_kind kind, uint8_t confirmed);
@@ -315,15 +315,15 @@ public:
     std::shared_ptr<business_record::list> get_address_business_record(
         const std::string& address, const std::string& symbol, size_t start_height, size_t end_height,
         uint64_t limit, uint64_t page_number) const;
-    std::shared_ptr<account_address::list> get_addresses();
+    std::shared_ptr<wallet_address::list> get_addresses();
 
-    // account message api
-    std::shared_ptr<business_address_message::list> get_account_messages(const std::string& name);
+    // wallet message api
+    std::shared_ptr<business_address_message::list> get_wallet_messages(const std::string& name);
 
-    // account adress related api
-    operation_result store_account_address(std::shared_ptr<account_address> address);
-    std::shared_ptr<account_address> get_account_address(const std::string& name, const std::string& address);
-    std::shared_ptr<account_address::list> get_account_addresses(const std::string& name);
+    // wallet adress related api
+    operation_result store_wallet_address(std::shared_ptr<wallet_address> address);
+    std::shared_ptr<wallet_address> get_wallet_address(const std::string& name, const std::string& address);
+    std::shared_ptr<wallet_address::list> get_wallet_addresses(const std::string& name);
     void uppercase_symbol(std::string& symbol);
 
     static bool is_valid_address(const std::string& address);
@@ -341,12 +341,12 @@ public:
     bool get_history_callback(const payment_address& address,
         size_t limit, size_t from_height,
         std::function<void(const code&, chain::history::list&)> handler);
-    bool get_history(const wallet::payment_address& address,
+    bool get_history(const bc::wallet::payment_address& address,
         uint64_t limit, uint64_t from_height, history_compact::list& history);
     code validate_transaction(const chain::transaction& tx);
     code broadcast_transaction(const chain::transaction& tx);
     bool get_tx_inputs_ucn_value (chain::transaction& tx, uint64_t& ucn_val);
-    void safe_store_account(account& acc, std::vector<std::shared_ptr<account_address>>& addresses);
+    void safe_store_wallet(libbitcoin::chain::wallet& acc, std::vector<std::shared_ptr<wallet_address>>& addresses);
 
 private:
     typedef std::function<bool(database::handle)> perform_read_functor;

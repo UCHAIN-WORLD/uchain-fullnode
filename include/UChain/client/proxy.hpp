@@ -87,29 +87,29 @@ public:
         uint32_t from_height=0);
 
     void blockchain_fetch_history(error_handler on_error,
-        history_handler on_reply, const wallet::payment_address& address,
+        history_handler on_reply, const bc::wallet::payment_address& address,
         uint32_t from_height = 0);
 
     /// sx and bs 2.0 only (obsolete in bs 3.0).
     void address_fetch_history(error_handler on_error,
-        history_handler on_reply, const wallet::payment_address& address,
+        history_handler on_reply, const bc::wallet::payment_address& address,
         uint32_t from_height=0);
 
     /// bs 2.0 and later.
     void address_fetch_history2(error_handler on_error,
-        history_handler on_reply, const wallet::payment_address& address,
+        history_handler on_reply, const bc::wallet::payment_address& address,
         uint32_t from_height=0);
 
     void address_fetch_unspent_outputs(error_handler on_error,
-        points_info_handler on_reply, const wallet::payment_address& address,
+        points_info_handler on_reply, const bc::wallet::payment_address& address,
         const uint64_t satoshi,
-        const wallet::select_outputs::algorithm algorithm);
+        const bc::wallet::select_outputs::algorithm algorithm);
 
     // Subscribers.
     //-------------------------------------------------------------------------
 
     void address_subscribe(error_handler on_error, empty_handler on_reply,
-        const wallet::payment_address& address);
+        const bc::wallet::payment_address& address);
 
     void address_subscribe(error_handler on_error, empty_handler on_reply,
         chain::subscribe_type type, const binary& prefix);

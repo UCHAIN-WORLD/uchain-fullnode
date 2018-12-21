@@ -139,7 +139,7 @@ bool executor::do_initchain()
             remove_all(data_path);
             throw std::runtime_error{ "initialize chain failed" };
         }
-        // init admin account
+        // init admin wallet
         set_admin();
         // init blackhole UID,block and vote token
         set_blackhole_uid_block_vote();

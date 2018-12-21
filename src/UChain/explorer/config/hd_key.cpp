@@ -43,7 +43,7 @@ uint32_t hd_key::version() const
     return from_big_endian_unsafe<uint32_t>(value_.begin());
 }
 
-hd_key::operator const wallet::hd_key&() const
+hd_key::operator const bc::wallet::hd_key&() const
 {
     return value_;
 }
@@ -54,7 +54,7 @@ std::istream& operator>>(std::istream& input, hd_key& argument)
     input >> base58;
 
     data_chunk value;
-    if (!decode_base58(value, base58) || value.size() != wallet::hd_key_size)
+    if (!decode_base58(value, base58) || value.size() != bc::wallet::hd_key_size)
     {
         BOOST_THROW_EXCEPTION(invalid_option_value(base58));
     }

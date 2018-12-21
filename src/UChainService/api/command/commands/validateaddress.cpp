@@ -39,7 +39,7 @@ console_result validateaddress::invoke(Json::Value& jv_output,
 
     auto& blockchain = node.chain_impl();
     const bool use_testnet_rules{blockchain.chain_settings().use_testnet_rules};
-    wallet::payment_address payment_address(argument_.address);
+    bc::wallet::payment_address payment_address(argument_.address);
 
     if (blockchain.is_blackhole_address(argument_.address)) {
         version_info = "p2blackhole";

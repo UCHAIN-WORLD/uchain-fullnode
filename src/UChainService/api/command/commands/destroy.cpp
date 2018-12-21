@@ -34,7 +34,7 @@ console_result destroy::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     std::string blackhole_uid = uid_detail::get_blackhole_uid_symbol();
 

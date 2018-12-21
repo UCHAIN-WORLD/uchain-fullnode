@@ -38,7 +38,7 @@ console_result createmultisigtx::invoke(
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    auto account = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto wallet = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     // check from address
     if (!blockchain.is_valid_address(argument_.from)) {
@@ -50,12 +50,12 @@ console_result createmultisigtx::invoke(
         throw fromaddress_invalid_exception{"from address is not a script address."};
     }
 
-    auto multisig_vec = account->get_multisig(argument_.from);
+    auto multisig_vec = wallet->get_multisig(argument_.from);
     if (!multisig_vec || multisig_vec->empty()) {
         throw multisig_notfound_exception{"multisig of from address not found."};
     }
 
-    account_multisig acc_multisig = *(multisig_vec->begin());
+    wallet_multisig acc_multisig = *(multisig_vec->begin());
 
     // check to address
     if (!blockchain.is_valid_address(argument_.to)) {

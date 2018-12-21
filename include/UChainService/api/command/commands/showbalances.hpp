@@ -38,21 +38,21 @@ public:
     static const char* symbol(){ return "showbalances";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "List balance details of each address of this account. defaults show non-zero unspent address."; }
+    const char* description() override { return "List balance details of each address of this wallet. defaults show non-zero unspent address."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1);
+            .add("WALLETNAME", 1)
+            .add("WALLETAUTH", 1);
     }
 
     void load_fallbacks (std::istream& input,
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
-        load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(auth_.name, "WALLETNAME", variables, input, raw);
+        load_input(auth_.auth, "WALLETAUTH", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -86,14 +86,14 @@ public:
             "Lesser than UCN bits."
         )
         (
-            "ACCOUNTNAME",
+            "WALLETNAME",
             value<std::string>(&auth_.name)->required(),
-            BX_ACCOUNT_NAME
+            BX_WALLET_NAME
         )
         (
-            "ACCOUNTAUTH",
+            "WALLETAUTH",
             value<std::string>(&auth_.auth)->required(),
-            BX_ACCOUNT_AUTH
+            BX_WALLET_AUTH
         );
 
         return options;

@@ -50,13 +50,13 @@ console_result showuids::invoke(Json::Value& jv_output,
     auto& blockchain = node.chain_impl();
     std::shared_ptr<uid_detail::list> sh_vec;
     if (auth_.name.empty()) {
-        // no account -- list all uids in blockchain
+        // no wallet -- list all uids in blockchain
         sh_vec = blockchain.get_registered_uids();
     }
     else {
-        // list uids owned by the account
-        blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
-        sh_vec = blockchain.get_account_uids(auth_.name);
+        // list uids owned by the wallet
+        blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
+        sh_vec = blockchain.get_wallet_uids(auth_.name);
     }
 
     uint64_t limit = argument_.limit;

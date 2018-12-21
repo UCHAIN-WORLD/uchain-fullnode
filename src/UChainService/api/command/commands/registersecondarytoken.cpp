@@ -37,7 +37,7 @@ console_result registersecondarytoken::invoke(Json::Value& jv_output,
 {
     auto& blockchain = node.chain_impl();
 
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     blockchain.uppercase_symbol(argument_.symbol);
 
     // check token symbol
@@ -48,8 +48,8 @@ console_result registersecondarytoken::invoke(Json::Value& jv_output,
     if (!blockchain.is_valid_address(to_address))
         throw address_invalid_exception{"invalid uid parameter! " + to_uid};
 
-    if (!blockchain.get_account_address(auth_.name, to_address))
-        throw address_dismatch_account_exception{"target uid does not match account. " + to_uid};
+    if (!blockchain.get_wallet_address(auth_.name, to_address))
+        throw address_dismatch_wallet_exception{"target uid does not match wallet. " + to_uid};
 
     auto token = blockchain.get_issued_token(argument_.symbol);
     if (!token) {
@@ -61,8 +61,8 @@ console_result registersecondarytoken::invoke(Json::Value& jv_output,
         throw token_secondaryissue_threshold_exception{"token is not allowed to do secondary issue, or the threshold is illegal."};
 
     if (blockchain.is_token_cert_exist(argument_.symbol, token_cert_ns::issue)) {
-        // check whether it belongs to the account.
-        auto cert = blockchain.get_account_token_cert(auth_.name, argument_.symbol, token_cert_ns::issue);
+        // check whether it belongs to the wallet.
+        auto cert = blockchain.get_wallet_token_cert(auth_.name, argument_.symbol, token_cert_ns::issue);
         if (!cert) {
             throw token_cert_notowned_exception("no issue cert " + argument_.symbol + " owned by " + auth_.name);
         }

@@ -32,15 +32,15 @@ std::string ec_to_xxx_impl(const std::string& cmd, const std::string& fromkey)
         explorer::config::ec_private secret{fromkey};
         ec_compressed point;
         bc::secret_to_public(point, secret);
-        wallet::ec_public ec_pubkey(point, true); // compressed for UC always
+        bc::wallet::ec_public ec_pubkey(point, true); // compressed for UC always
 
         return ec_pubkey.encoded();
     }
 
     if (cmd == "ec-to-address") {
 
-        wallet::ec_public point{fromkey};
-        wallet::payment_address pay_addr(point, wallet::payment_address::mainnet_p2kh);
+        bc::wallet::ec_public point{fromkey};
+        bc::wallet::payment_address pay_addr(point, bc::wallet::payment_address::mainnet_p2kh);
 
         return pay_addr.encoded();
     }

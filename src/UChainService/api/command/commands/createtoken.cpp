@@ -49,7 +49,7 @@ console_result createtoken::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     blockchain.uppercase_symbol(option_.symbol);
 
     // check token symbol
@@ -78,8 +78,8 @@ console_result createtoken::invoke(Json::Value& jv_output,
             "The uid '" + issued_uid + "' does not exist on the blockchain, maybe you should registeruid first"};
     }
 
-    // check uid is owned by the account
-    if (!blockchain.is_account_owned_uid(auth_.name, issued_uid)) {
+    // check uid is owned by the wallet
+    if (!blockchain.is_wallet_owned_uid(auth_.name, issued_uid)) {
         throw uid_symbol_notowned_exception{
             "The uid '" + issued_uid + "' is not owned by " + auth_.name};
     }
@@ -89,7 +89,7 @@ console_result createtoken::invoke(Json::Value& jv_output,
         throw token_symbol_existed_exception{"symbol is already used."};
 
     // local database token check
-    auto sh_token = blockchain.get_account_unissued_token(auth_.name, option_.symbol);
+    auto sh_token = blockchain.get_wallet_unissued_token(auth_.name, option_.symbol);
     if (sh_token) {
         throw token_symbol_duplicate_exception{option_.symbol
             + " already created, you can delete and recreate it."};
@@ -105,7 +105,7 @@ console_result createtoken::invoke(Json::Value& jv_output,
     acc->set_secondaryissue_threshold((threshold == -1) ?
         token_detail::freely_secondaryissue_threshold : static_cast<uint8_t>(threshold));
 
-    blockchain.store_account_token(acc, auth_.name);
+    blockchain.store_wallet_token(acc, auth_.name);
 
     if (get_api_version() <= 2) {
         Json::Value token_data = config::json_helper(get_api_version()).prop_list(*acc, true);

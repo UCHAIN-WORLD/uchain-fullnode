@@ -34,14 +34,14 @@ console_result signmultisigtx::invoke(
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    auto account = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto wallet = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     tx_type tx_ = argument_.transaction;
 
-    // get all address of this account
-    auto pvaddr = blockchain.get_account_addresses(auth_.name);
+    // get all address of this wallet
+    auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
     if (!pvaddr) {
-        throw address_list_empty_exception{"empty address list for this account."};
+        throw address_list_empty_exception{"empty address list for this wallet."};
     }
 
     std::string addr_prikey("");
@@ -95,13 +95,13 @@ console_result signmultisigtx::invoke(
         auto hash_address = address.encoded(); // pay address
 
         // 2. get address prikey
-        auto multisig_vec = account->get_multisig(hash_address);
+        auto multisig_vec = wallet->get_multisig(hash_address);
         if (!multisig_vec || multisig_vec->empty()) {
             throw multisig_notfound_exception(hash_address + " multisig record not found.");
         }
 
         // signed, nothing to do (2 == zero + encoded-script)
-        account_multisig acc_multisig = *(multisig_vec->begin());
+        wallet_multisig acc_multisig = *(multisig_vec->begin());
         if (input_script.operations.size() >= acc_multisig.get_m() + 2) {
             index++;
             continue;
