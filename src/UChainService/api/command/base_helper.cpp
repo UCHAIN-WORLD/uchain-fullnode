@@ -1765,8 +1765,9 @@ voting_token::get_script_operations(const receiver_record& record) const
     const wallet::payment_address payment(record.target);
     if (!payment)
         throw toaddress_invalid_exception{"invalid target address"};
-
-    if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+    if (blockchain_.is_blackhole_address(record.target)) {
+        payment_ops = chain::operation::to_pay_blackhole_pattern(payment.hash());
+    }else if (payment.version() == wallet::payment_address::mainnet_p2kh) {
         const auto& hash = payment.hash();
         if((from_ == record.target)
             && (utxo_attach_type::deposit == record.type)) {
