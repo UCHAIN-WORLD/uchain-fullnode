@@ -37,11 +37,11 @@ console_result showbalance::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     auto& aroot = jv_output;
 
-    auto vaddr = blockchain.get_account_addresses(auth_.name);
+    auto vaddr = blockchain.get_wallet_addresses(auth_.name);
     if(!vaddr) throw address_list_nullptr_exception{"nullptr for address list"};
 
     uint64_t total_confirmed = 0;
@@ -51,7 +51,7 @@ console_result showbalance::invoke(Json::Value& jv_output,
 
     for (auto& i: *vaddr) {
         balances addr_balance{0, 0, 0, 0};
-        auto waddr = wallet::payment_address(i.get_address());
+        auto waddr = bc::wallet::payment_address(i.get_address());
         sync_fetchbalance(waddr, blockchain, addr_balance);
 
         total_confirmed += addr_balance.confirmed_balance;

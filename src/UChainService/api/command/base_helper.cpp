@@ -215,7 +215,7 @@ std::string get_address_from_uid(const std::string& uid,
 }
 
 std::string get_random_payment_address(
-    std::shared_ptr<account_address::list> sp_addresses,
+    std::shared_ptr<wallet_address::list> sp_addresses,
     bc::blockchain::block_chain_impl& blockchain)
 {
     if (sp_addresses && !sp_addresses->empty()) {
@@ -229,7 +229,7 @@ std::string get_random_payment_address(
             }
         }
         // then, real bad luck, lets filter only the payment address
-        account_address::list filtered_addresses;
+        wallet_address::list filtered_addresses;
         std::copy_if(sp_addresses->begin(), sp_addresses->end(),
             std::back_inserter(filtered_addresses),
             [&blockchain](const auto& each){
@@ -253,7 +253,7 @@ void sync_fetch_token_cert_balance(const std::string& address, const string& sym
     chain::transaction tx_temp;
     uint64_t tx_height;
 
-    auto&& rows = blockchain.get_address_history(wallet::payment_address(address));
+    auto&& rows = blockchain.get_address_history(bc::wallet::payment_address(address));
     for (auto& row: rows)
     {
         // spend unconfirmed (or no spend attempted)
@@ -285,7 +285,7 @@ void sync_fetch_token_balance(const std::string& address, bool sum_all,
     bc::blockchain::block_chain_impl& blockchain,
     std::shared_ptr<token_balances::list> sh_token_vec)
 {
-    auto&& rows = blockchain.get_address_history(wallet::payment_address(address));
+    auto&& rows = blockchain.get_address_history(bc::wallet::payment_address(address));
 
     chain::transaction tx_temp;
     uint64_t tx_height;
@@ -342,7 +342,7 @@ void sync_fetch_token_deposited_balance(const std::string& address,
     bc::blockchain::block_chain_impl& blockchain,
     std::shared_ptr<token_deposited_balance::list> sh_token_vec)
 {
-    auto&& rows = blockchain.get_address_history(wallet::payment_address(address));
+    auto&& rows = blockchain.get_address_history(bc::wallet::payment_address(address));
 
     chain::transaction tx_temp;
     uint64_t tx_height;
@@ -580,9 +580,9 @@ auto sync_fetch_token_view(const std::string& symbol,
 }
 
 static uint32_t get_domain_cert_count(bc::blockchain::block_chain_impl& blockchain,
-    const std::string& account_name)
+    const std::string& wallet_name)
 {
-    auto pvaddr = blockchain.get_account_addresses(account_name);
+    auto pvaddr = blockchain.get_wallet_addresses(wallet_name);
     if (!pvaddr) {
         return 0;
     }
@@ -595,7 +595,7 @@ static uint32_t get_domain_cert_count(bc::blockchain::block_chain_impl& blockcha
     return sh_vec->size();
 }
 
-void sync_fetch_deposited_balance(wallet::payment_address& address,
+void sync_fetch_deposited_balance(bc::wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, std::shared_ptr<deposited_balance::list> sh_vec)
 {
     chain::transaction tx_temp;
@@ -659,7 +659,7 @@ void sync_fetch_deposited_balance(wallet::payment_address& address,
     }
 }
 
-void sync_fetchbalance(wallet::payment_address& address,
+void sync_fetchbalance(bc::wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, balances& addr_balance)
 {
     auto&& rows = blockchain.get_address_history(address, false);
@@ -765,7 +765,7 @@ bool base_transfer_common::get_spendable_output(
 void base_transfer_common::sync_fetchutxo(
         const std::string& prikey, const std::string& addr, filter filter)
 {
-    auto&& waddr = wallet::payment_address(addr);
+    auto&& waddr = bc::wallet::payment_address(addr);
     auto&& rows = blockchain_.get_address_history(waddr, true);
 
     uint64_t height = 0;
@@ -1025,7 +1025,7 @@ bool base_transfer_common::is_payment_satisfied(filter filter) const
 void base_transfer_common::check_payment_satisfied(filter filter) const
 {
     if ((filter & FILTER_UCN) && (unspent_ucn_ < payment_ucn_)) {
-        throw account_balance_lack_exception{"not enough balance, unspent = "
+        throw wallet_balance_lack_exception{"not enough balance, unspent = "
             + std::to_string(unspent_ucn_) + ", payment = " + std::to_string(payment_ucn_)};
     }
 
@@ -1178,7 +1178,7 @@ base_transfer_common::get_script_operations(const receiver_record& record) const
 
     // complicated script and token should be implemented in subclass
     // generate script
-    const wallet::payment_address payment(record.target);
+    const bc::wallet::payment_address payment(record.target);
     if (!payment)
         throw toaddress_invalid_exception{"invalid target address"};
 
@@ -1186,7 +1186,7 @@ base_transfer_common::get_script_operations(const receiver_record& record) const
     if (blockchain_.is_blackhole_address(record.target)) {
         payment_ops = chain::operation::to_pay_blackhole_pattern(hash);
     }
-    else if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+    else if (payment.version() == bc::wallet::payment_address::mainnet_p2kh) {
         if (record.type == utxo_attach_type::token_locked_transfer) { // for token locked change only
             const auto& attenuation_model_param =
                 boost::get<blockchain_message>(record.attach_elem.get_attach()).get_content();
@@ -1201,7 +1201,7 @@ base_transfer_common::get_script_operations(const receiver_record& record) const
             payment_ops = chain::operation::to_pay_key_hash_pattern(hash);
         }
     }
-    else if (payment.version() == wallet::payment_address::mainnet_p2sh) {
+    else if (payment.version() == bc::wallet::payment_address::mainnet_p2sh) {
         payment_ops = chain::operation::to_pay_script_hash_pattern(hash);
     }
     else {
@@ -1219,12 +1219,12 @@ base_transfer_common::get_pay_key_hash_with_attenuation_model_operations(
         throw token_attenuation_model_exception("attenuation model param is empty.");
     }
 
-    const wallet::payment_address payment(record.target);
+    const bc::wallet::payment_address payment(record.target);
     if (!payment) {
         throw toaddress_invalid_exception{"invalid target address"};
     }
 
-    if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+    if (payment.version() == bc::wallet::payment_address::mainnet_p2kh) {
         return chain::operation::to_pay_key_hash_with_attenuation_model_pattern(
                 payment.hash(), model_param, record.input_point);
     }
@@ -1388,7 +1388,7 @@ bool base_transfer_common::filter_out_address(const std::string& address) const
 void base_transfer_helper::populate_unspent_list()
 {
     // get address list
-    auto pvaddr = blockchain_.get_account_addresses(name_);
+    auto pvaddr = blockchain_.get_wallet_addresses(name_);
     if (!pvaddr) {
         throw address_list_nullptr_exception{"nullptr for address list"};
     }
@@ -1690,11 +1690,11 @@ depositing_ucn::get_script_operations(const receiver_record& record) const
 
     // complicated script and token should be implemented in subclass
     // generate script
-    const wallet::payment_address payment(record.target);
+    const bc::wallet::payment_address payment(record.target);
     if (!payment)
         throw toaddress_invalid_exception{"invalid target address"};
 
-    if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+    if (payment.version() == bc::wallet::payment_address::mainnet_p2kh) {
         const auto& hash = payment.hash();
         if((from_ == record.target)
             && (utxo_attach_type::deposit == record.type)) {
@@ -1730,11 +1730,11 @@ depositing_ucn_transaction::get_script_operations(const receiver_record& record)
 
     // complicated script and token should be implemented in subclass
     // generate script
-    const wallet::payment_address payment(record.target);
+    const bc::wallet::payment_address payment(record.target);
     if (!payment)
         throw toaddress_invalid_exception{"invalid target address"};
 
-    if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+    if (payment.version() == bc::wallet::payment_address::mainnet_p2kh) {
         const auto& hash = payment.hash();
         if((utxo_attach_type::deposit == record.type)) {
             payment_ops = chain::operation::to_pay_key_hash_with_lock_height_pattern(
@@ -1762,11 +1762,11 @@ voting_token::get_script_operations(const receiver_record& record) const
 
     // complicated script and token should be implemented in subclass
     // generate script
-    const wallet::payment_address payment(record.target);
+    const bc::wallet::payment_address payment(record.target);
     if (!payment)
         throw toaddress_invalid_exception{"invalid target address"};
 
-    if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+    if (payment.version() == bc::wallet::payment_address::mainnet_p2kh) {
         const auto& hash = payment.hash();
         if((from_ == record.target)
             && (utxo_attach_type::deposit == record.type)) {
@@ -1794,11 +1794,11 @@ registering_candidate::get_script_operations(const receiver_record& record) cons
 
     // complicated script and token should be implemented in subclass
     // generate script
-    const wallet::payment_address payment(record.target);
+    const bc::wallet::payment_address payment(record.target);
     if (!payment)
         throw toaddress_invalid_exception{"invalid target address"};
 
-    if (payment.version() == wallet::payment_address::mainnet_p2kh) {
+    if (payment.version() == bc::wallet::payment_address::mainnet_p2kh) {
         const auto& hash = payment.hash();
         if((from_ == record.target)
             && (utxo_attach_type::deposit == record.type)) {
@@ -1860,7 +1860,7 @@ void issuing_token::sum_payment_amount()
 {
     base_transfer_common::sum_payment_amount();
 
-    unissued_token_ = blockchain_.get_account_unissued_token(name_, symbol_);
+    unissued_token_ = blockchain_.get_wallet_unissued_token(name_, symbol_);
     if (!unissued_token_) {
         throw token_symbol_notfound_exception{symbol_ + " not created"};
     }
@@ -2091,7 +2091,7 @@ void sending_multisig_uid::populate_change()
 void sending_multisig_uid::populate_unspent_list()
 {
     // get address list
-    auto pvaddr = blockchain_.get_account_addresses(name_);
+    auto pvaddr = blockchain_.get_wallet_addresses(name_);
     if (!pvaddr) {
         throw address_list_nullptr_exception{"nullptr for address list"};
     }
@@ -2143,7 +2143,7 @@ void sending_uid::populate_change()
 void sending_uid::populate_unspent_list()
 {
     // get address list
-    auto pvaddr = blockchain_.get_account_addresses(name_);
+    auto pvaddr = blockchain_.get_wallet_addresses(name_);
     if (!pvaddr) {
         throw address_list_nullptr_exception{"nullptr for address list"};
     }

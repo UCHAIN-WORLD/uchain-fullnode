@@ -34,7 +34,7 @@ console_result transfercandidate::invoke (Json::Value& jv_output,
         libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     // check symbol
     check_candidate_symbol(argument_.symbol);
@@ -47,7 +47,7 @@ console_result transfercandidate::invoke (Json::Value& jv_output,
     }
 
     // get identifiable token
-    auto candidates = blockchain.get_account_candidates(auth_.name, argument_.symbol);
+    auto candidates = blockchain.get_wallet_candidates(auth_.name, argument_.symbol);
     if (candidates->size() == 0) {
         throw token_lack_exception("Not enough token '" + argument_.symbol +  "'");
     }
@@ -56,7 +56,7 @@ console_result transfercandidate::invoke (Json::Value& jv_output,
     std::string from_address(candidate.get_address());
     bool is_multisig_address = blockchain.is_script_address(from_address);
 
-    account_multisig acc_multisig;
+    wallet_multisig acc_multisig;
     if (is_multisig_address) {
         auto multisig_vec = acc->get_multisig(from_address);
         if (!multisig_vec || multisig_vec->empty()) {

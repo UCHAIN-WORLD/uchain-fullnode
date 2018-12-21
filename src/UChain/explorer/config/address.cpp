@@ -45,14 +45,14 @@ std::istream& operator>>(std::istream& input, address& argument)
     std::string base58;
     input >> base58;
 
-    wallet::payment_address payment(base58);
+    bc::wallet::payment_address payment(base58);
     if (payment)
     {
         argument.value_ = base58;
         return input;
     }
 
-    wallet::stealth_address stealth(base58);
+    bc::wallet::stealth_address stealth(base58);
     if (stealth)
     {
         argument.value_ = base58;

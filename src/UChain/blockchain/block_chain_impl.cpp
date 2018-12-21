@@ -39,7 +39,7 @@
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/blockchain/transaction_pool.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
-#include <UChain/blockchain/account_security_strategy.hpp>
+#include <UChain/blockchain/wallet_security_strategy.hpp>
 namespace libbitcoin {
 namespace blockchain {
 
@@ -112,7 +112,7 @@ bool block_chain_impl::start()
     transaction_pool_.start();
 
     //init the single instance here, to avoid multi-thread init confilict
-    auto* temp = account_security_strategy::get_instance();
+    auto* temp = wallet_security_strategy::get_instance();
 
     return true;
 }
@@ -944,7 +944,7 @@ void block_chain_impl::fetch_spend(const chain::output_point& outpoint,
     fetch_serial(do_fetch);
 }
 
-void block_chain_impl::fetch_history(const wallet::payment_address& address,
+void block_chain_impl::fetch_history(const bc::wallet::payment_address& address,
     uint64_t limit, uint64_t from_height, history_fetch_handler handler)
 {
     if (stopped())
@@ -963,7 +963,7 @@ void block_chain_impl::fetch_history(const wallet::payment_address& address,
     fetch_serial(do_fetch);
 }
 
-bool block_chain_impl::fetch_history(const wallet::payment_address& address,
+bool block_chain_impl::fetch_history(const bc::wallet::payment_address& address,
     uint64_t limit, uint64_t from_height, history_compact::list& history)
 {
     if (stopped())
@@ -1032,28 +1032,28 @@ std::shared_ptr<chain::transaction> block_chain_impl::get_spends_output(const in
     return nullptr;
 }
 
-std::shared_ptr<account> block_chain_impl::is_account_passwd_valid
+std::shared_ptr<libbitcoin::chain::wallet> block_chain_impl::is_wallet_passwd_valid
     (const std::string& name, const std::string& passwd)
 {
-    //added by chengzhiping to protect accounts from brute force password attacks.
-    auto *ass = account_security_strategy::get_instance();
+    //added by chengzhiping to protect wallets from brute force password attacks.
+    auto *ass = wallet_security_strategy::get_instance();
     ass->check_locked(name);
 
-    auto account = get_account(name);
-    if (account && account->get_passwd() == get_hash(passwd)) { // account exist
+    auto wallet = get_wallet(name);
+    if (wallet && wallet->get_passwd() == get_hash(passwd)) { // wallet exist
         ass->on_auth_passwd(name, true);
-        return account;
+        return wallet;
     }
 
     ass->on_auth_passwd(name, false);
-    throw std::logic_error{"account not found or incorrect password"};
+    throw std::logic_error{"wallet not found or incorrect password"};
     return nullptr;
 }
 
-std::string block_chain_impl::is_account_lastwd_valid(const account& acc, std::string& auth, const std::string& lastwd)
+std::string block_chain_impl::is_wallet_lastwd_valid(const libbitcoin::chain::wallet& acc, std::string& auth, const std::string& lastwd)
 {
-    //added by chengzhiping to protect accounts from brute force password attacks.
-    auto *ass = account_security_strategy::get_instance();
+    //added by chengzhiping to protect wallets from brute force password attacks.
+    auto *ass = wallet_security_strategy::get_instance();
 
     std::string mnemonic;
     acc.get_mnemonic(auth, mnemonic);
@@ -1068,65 +1068,65 @@ std::string block_chain_impl::is_account_lastwd_valid(const account& acc, std::s
     return mnemonic;
 }
 
-void block_chain_impl::set_account_passwd(const std::string& name, const std::string& passwd)
+void block_chain_impl::set_wallet_passwd(const std::string& name, const std::string& passwd)
 {
-    auto account = get_account(name);
-    if (account) {
-        account->set_passwd(passwd);
-        store_account(account);
+    auto wallet = get_wallet(name);
+    if (wallet) {
+        wallet->set_passwd(passwd);
+        store_wallet(wallet);
     }
     else{
-        throw std::logic_error{"account not found"};
+        throw std::logic_error{"wallet not found"};
     }
 }
 
-bool block_chain_impl::is_admin_account(const std::string& name)
+bool block_chain_impl::is_admin_wallet(const std::string& name)
 {
-    auto account = get_account(name);
-    if (account) {
-        return account_priority::administrator == account->get_priority();
+    auto wallet = get_wallet(name);
+    if (wallet) {
+        return wallet_priority::administrator == wallet->get_priority();
     }
     return false;
 }
 
-bool block_chain_impl::is_account_exist(const std::string& name)
+bool block_chain_impl::is_wallet_exist(const std::string& name)
 {
-    return nullptr != get_account(name);
+    return nullptr != get_wallet(name);
 }
 
-operation_result block_chain_impl::store_account(std::shared_ptr<account> acc)
+operation_result block_chain_impl::store_wallet(std::shared_ptr<libbitcoin::chain::wallet> acc)
 {
     if (stopped()) {
         return operation_result::failure;
     }
 
     if (!(acc)) {
-        throw std::runtime_error{"nullptr for account"};
+        throw std::runtime_error{"nullptr for wallet"};
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section.
     unique_lock lock(mutex_);
 
-    database_.accounts.store(*acc);
-    database_.accounts.sync();
+    database_.wallets.store(*acc);
+    database_.wallets.sync();
     ///////////////////////////////////////////////////////////////////////////
     return operation_result::okay;
 }
 
-std::shared_ptr<account> block_chain_impl::get_account(const std::string& name)
+std::shared_ptr<libbitcoin::chain::wallet> block_chain_impl::get_wallet(const std::string& name)
 {
-    return database_.accounts.get_account_result(get_hash(name)).get_account_detail();
+    return database_.wallets.get_wallet_result(get_hash(name)).get_wallet_detail();
 }
 
-/// get all the accounts in account database
-std::shared_ptr<std::vector<account>> block_chain_impl::get_accounts()
+/// get all the wallets in wallet database
+std::shared_ptr<std::vector<libbitcoin::chain::wallet>> block_chain_impl::get_wallets()
 {
-    return database_.accounts.get_accounts();
+    return database_.wallets.get_wallets();
 }
 
-/// delete account according account name
-operation_result block_chain_impl::delete_account(const std::string& name)
+/// delete wallet according wallet name
+operation_result block_chain_impl::delete_wallet(const std::string& name)
 {
     if (stopped()) {
         return operation_result::failure;
@@ -1136,14 +1136,14 @@ operation_result block_chain_impl::delete_account(const std::string& name)
     // Critical Section.
     unique_lock lock(mutex_);
 
-    database_.accounts.remove(get_hash(name));
-    database_.accounts.sync();
+    database_.wallets.remove(get_hash(name));
+    database_.wallets.sync();
     ///////////////////////////////////////////////////////////////////////////
     return operation_result::okay;
 }
 
 /// just store data into database "not do same address check"  -- todo
-operation_result block_chain_impl::store_account_address(std::shared_ptr<account_address> address)
+operation_result block_chain_impl::store_wallet_address(std::shared_ptr<wallet_address> address)
 {
     if (stopped()) {
         return operation_result::failure;
@@ -1157,14 +1157,14 @@ operation_result block_chain_impl::store_account_address(std::shared_ptr<account
     unique_lock lock(mutex_);
 
     const auto hash = get_short_hash(address->get_name());
-    database_.account_addresses.store(hash, *address);
-    database_.account_addresses.sync();
+    database_.wallet_addresses.store(hash, *address);
+    database_.wallet_addresses.sync();
     ///////////////////////////////////////////////////////////////////////////
     return operation_result::okay;
 }
 
-/// only delete the last address of account
-operation_result block_chain_impl::delete_account_address(const std::string& name)
+/// only delete the last address of wallet
+operation_result block_chain_impl::delete_wallet_address(const std::string& name)
 {
     if (stopped()) {
         return operation_result::failure;
@@ -1175,28 +1175,28 @@ operation_result block_chain_impl::delete_account_address(const std::string& nam
     unique_lock lock(mutex_);
 
     auto hash = get_short_hash(name);
-    auto addr_vec = database_.account_addresses.get(hash);
+    auto addr_vec = database_.wallet_addresses.get(hash);
     for( auto each : addr_vec )
-        database_.account_addresses.delete_last_row(hash);
-    database_.account_addresses.sync();
+        database_.wallet_addresses.delete_last_row(hash);
+    database_.wallet_addresses.sync();
     ///////////////////////////////////////////////////////////////////////////
     return operation_result::okay;
 }
 
-std::shared_ptr<account_address> block_chain_impl::get_account_address(
+std::shared_ptr<wallet_address> block_chain_impl::get_wallet_address(
     const std::string& name, const std::string& address)
 {
-    return database_.account_addresses.get(get_short_hash(name), address);
+    return database_.wallet_addresses.get(get_short_hash(name), address);
 }
 
-std::shared_ptr<account_address::list> block_chain_impl::get_account_addresses(
+std::shared_ptr<wallet_address::list> block_chain_impl::get_wallet_addresses(
     const std::string& name)
 {
-    auto sp_addr = std::make_shared<account_address::list>();
-    auto result = database_.account_addresses.get(get_short_hash(name));
+    auto sp_addr = std::make_shared<wallet_address::list>();
+    auto result = database_.wallet_addresses.get(get_short_hash(name));
     if (result.size()) {
-        //sp_addr = std::make_shared<account_address::list>();
-        const auto action = [&sp_addr](const account_address& elem)
+        //sp_addr = std::make_shared<wallet_address::list>();
+        const auto action = [&sp_addr](const wallet_address& elem)
         {
             sp_addr->emplace_back(std::move(elem));
         };
@@ -1205,7 +1205,7 @@ std::shared_ptr<account_address::list> block_chain_impl::get_account_addresses(
     return sp_addr;
 }
 
-operation_result block_chain_impl::store_account_token(
+operation_result block_chain_impl::store_wallet_token(
     const token_detail& detail,
     const string& name)
 {
@@ -1218,24 +1218,24 @@ operation_result block_chain_impl::store_account_token(
     unique_lock lock(mutex_);
 
     const auto hash = get_short_hash(name);
-    database_.account_tokens.store(hash, detail);
-    database_.account_tokens.sync();
+    database_.wallet_tokens.store(hash, detail);
+    database_.wallet_tokens.sync();
     ///////////////////////////////////////////////////////////////////////////
     return operation_result::okay;
 }
 
-operation_result block_chain_impl::store_account_token(
+operation_result block_chain_impl::store_wallet_token(
     std::shared_ptr<token_detail> detail,
     const string& name)
 {
     if (!(detail)) {
         throw std::runtime_error{"nullptr for token"};
     }
-    return store_account_token(*detail, name);
+    return store_wallet_token(*detail, name);
 }
 
-/// delete account token by account name
-operation_result block_chain_impl::delete_account_token(const std::string& name)
+/// delete wallet token by wallet name
+operation_result block_chain_impl::delete_wallet_token(const std::string& name)
 {
     if (stopped()) {
         return operation_result::failure;
@@ -1246,18 +1246,18 @@ operation_result block_chain_impl::delete_account_token(const std::string& name)
     unique_lock lock(mutex_);
 
     auto hash = get_short_hash(name);
-    auto token_vec = database_.account_tokens.get(hash);
+    auto token_vec = database_.wallet_tokens.get(hash);
     for( auto each : token_vec ) // just use token count
-        database_.account_tokens.delete_last_row(hash);
-    database_.account_tokens.sync();
+        database_.wallet_tokens.delete_last_row(hash);
+    database_.wallet_tokens.sync();
     ///////////////////////////////////////////////////////////////////////////
     return operation_result::okay;
 }
 
-std::shared_ptr<business_address_token::list> block_chain_impl::get_account_token(
+std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_token(
     const std::string& name, const std::string& token_name, business_kind kind)
 {
-    auto sp_token_vec = get_account_tokens(name, kind);
+    auto sp_token_vec = get_wallet_tokens(name, kind);
     auto ret_vector = std::make_shared<business_address_token::list>();
 
     const auto action = [&](const business_address_token& addr_token)
@@ -1271,10 +1271,10 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_account_toke
     return ret_vector;
 }
 
-std::shared_ptr<business_address_token::list> block_chain_impl::get_account_token(
+std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_token(
     const std::string& name, const std::string& token_name)
 {
-    auto sp_token_vec = get_account_tokens(name);
+    auto sp_token_vec = get_wallet_tokens(name);
     auto ret_vector = std::make_shared<business_address_token::list>();
 
     const auto action = [&](const business_address_token& addr_token)
@@ -1366,7 +1366,7 @@ static history::list expand_history(history_compact::list& compact)
     return result;
 }
 
-history::list block_chain_impl::get_address_history(const wallet::payment_address& addr, bool add_memory_pool)
+history::list block_chain_impl::get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool)
 {
     history_compact::list cmp_history;
     bool result = true;
@@ -1381,13 +1381,13 @@ history::list block_chain_impl::get_address_history(const wallet::payment_addres
     return history::list();
 }
 
-std::shared_ptr<token_cert> block_chain_impl::get_account_token_cert(
-    const std::string& account, const std::string& symbol, token_cert_type cert_type)
+std::shared_ptr<token_cert> block_chain_impl::get_wallet_token_cert(
+    const std::string& wallet, const std::string& symbol, token_cert_type cert_type)
 {
     BITCOIN_ASSERT(!symbol.empty());
     BITCOIN_ASSERT(cert_type != token_cert_ns::none);
 
-    auto pvaddr = get_account_addresses(account);
+    auto pvaddr = get_wallet_addresses(wallet);
     if (!pvaddr)
         return nullptr;
 
@@ -1395,7 +1395,7 @@ std::shared_ptr<token_cert> block_chain_impl::get_account_token_cert(
     uint64_t tx_height;
 
     for (auto& each : *pvaddr){
-        wallet::payment_address payment_address(each.get_address());
+        bc::wallet::payment_address payment_address(each.get_address());
         auto&& rows = get_address_history(payment_address);
 
         for (auto& row: rows) {
@@ -1432,14 +1432,14 @@ block_chain_impl::get_address_token_certs(const std::string& address, const std:
 }
 
 std::shared_ptr<business_address_token_cert::list>
-block_chain_impl::get_account_token_certs(const std::string& account, const std::string& symbol, token_cert_type cert_type)
+block_chain_impl::get_wallet_token_certs(const std::string& wallet, const std::string& symbol, token_cert_type cert_type)
 {
     auto ret_vector = std::make_shared<business_address_token_cert::list>();
-    auto pvaddr = get_account_addresses(account);
+    auto pvaddr = get_wallet_addresses(wallet);
     if (pvaddr) {
-        for (const auto& account_address : *pvaddr) {
+        for (const auto& wallet_address : *pvaddr) {
             auto&& business_certs = database_.address_tokens.
-                get_token_certs(account_address.get_address(), symbol, cert_type, 0);
+                get_token_certs(wallet_address.get_address(), symbol, cert_type, 0);
             for (auto& business_cert : business_certs) {
                 ret_vector->emplace_back(std::move(business_cert));
             }
@@ -1492,12 +1492,12 @@ std::shared_ptr<candidate_info::list> block_chain_impl::get_candidate_history(
     return database_.candidate_history.get_history_candidates_by_height(get_short_hash(symbol), 0, 0, limit, page_number);
 }
 
-std::shared_ptr<candidate::list> block_chain_impl::get_account_candidates(
-    const std::string& account, const std::string& symbol)
+std::shared_ptr<candidate::list> block_chain_impl::get_wallet_candidates(
+    const std::string& wallet, const std::string& symbol)
 {
     auto sp_vec = std::make_shared<candidate::list>();
 
-    auto pvaddr = get_account_addresses(account);
+    auto pvaddr = get_wallet_addresses(wallet);
     if (!pvaddr)
         return sp_vec;
 
@@ -1505,7 +1505,7 @@ std::shared_ptr<candidate::list> block_chain_impl::get_account_candidates(
     uint64_t tx_height;
 
     for (auto& each : *pvaddr){
-        wallet::payment_address payment_address(each.get_address());
+        bc::wallet::payment_address payment_address(each.get_address());
         auto&& rows = get_address_history(payment_address);
 
         for (auto& row: rows) {
@@ -1559,10 +1559,10 @@ uint64_t block_chain_impl::get_address_token_volume(const std::string& addr, con
     return token_volume;
 }
 
-uint64_t block_chain_impl::get_account_token_volume(const std::string& account, const std::string& token)
+uint64_t block_chain_impl::get_wallet_token_volume(const std::string& wallet, const std::string& token)
 {
     uint64_t volume = 0;
-    auto pvaddr = get_account_addresses(account);
+    auto pvaddr = get_wallet_addresses(wallet);
     if (pvaddr) {
         for (auto& each : *pvaddr) {
             volume += get_address_token_volume(each.get_address(), token);
@@ -1595,7 +1595,7 @@ std::string block_chain_impl::get_token_symbol_from_asset_data(const asset_data&
     return token_symbol;
 }
 
-// get special tokens of the account/name, just used for token_detail/token_transfer
+// get special tokens of the wallet/name, just used for token_detail/token_transfer
 std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string& addr,
     const std::string& symbol, business_kind kind, uint8_t confirmed)
 {
@@ -1629,7 +1629,7 @@ std::shared_ptr<business_history::list> block_chain_impl::get_address_business_h
     return ret_vector;
 }
 
-// get special tokens of the account/name, just used for token_detail/token_transfer
+// get special tokens of the wallet/name, just used for token_detail/token_transfer
 std::shared_ptr<business_record::list> block_chain_impl::get_address_business_record(const std::string& addr,
     uint64_t start, uint64_t end, const std::string& symbol)
 {
@@ -1654,14 +1654,14 @@ std::shared_ptr<business_record::list> block_chain_impl::get_address_business_re
     return ret_vector;
 }
 
-// get special tokens of the account/name, just used for token_detail/token_transfer
+// get special tokens of the wallet/name, just used for token_detail/token_transfer
 std::shared_ptr<business_record::list> block_chain_impl::get_address_business_record(const std::string& address,
     const std::string& symbol, size_t start_height, size_t end_height, uint64_t limit, uint64_t page_number) const
 {
     return database_.address_tokens.get(address, symbol, start_height, end_height, limit, page_number);
 }
 
-// get special tokens of the account/name, just used for token_detail/token_transfer
+// get special tokens of the wallet/name, just used for token_detail/token_transfer
 std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string& addr,
     business_kind kind, uint8_t confirmed)
 {
@@ -1677,11 +1677,11 @@ std::shared_ptr<business_history::list> block_chain_impl::get_address_business_h
     return sp_token_vec;
 }
 
-// get account owned business history between begin and end
-std::shared_ptr<business_history::list> block_chain_impl::get_account_business_history(const std::string& name,
+// get wallet owned business history between begin and end
+std::shared_ptr<business_history::list> block_chain_impl::get_wallet_business_history(const std::string& name,
     business_kind kind, uint32_t time_begin, uint32_t time_end)
 {
-    auto account_addr_vec = get_account_addresses(name);
+    auto wallet_addr_vec = get_wallet_addresses(name);
     auto sp_token_vec = std::make_shared<business_history::list>();
 
     // copy each token_vec element to sp_token
@@ -1690,13 +1690,13 @@ std::shared_ptr<business_history::list> block_chain_impl::get_account_business_h
         sp_token_vec->emplace_back(std::move(addr_token));
     };
 
-    // search all tokens belongs to this address which is owned by account
-    const auto action = [&](const account_address& elem)
+    // search all tokens belongs to this address which is owned by wallet
+    const auto action = [&](const wallet_address& elem)
     {
         auto token_vec = database_.address_tokens.get_business_history(elem.get_address(), 0, kind, time_begin, time_end);
         std::for_each(token_vec.begin(), token_vec.end(), add_token);
     };
-    std::for_each(account_addr_vec->begin(), account_addr_vec->end(), action);
+    std::for_each(wallet_addr_vec->begin(), wallet_addr_vec->end(), action);
 
     return sp_token_vec;
 }
@@ -1746,18 +1746,18 @@ std::shared_ptr<business_record::list> block_chain_impl::get_address_business_re
     return sp_token_vec;
 }
 
-// get all tokens belongs to the account/name
-std::shared_ptr<business_address_token::list> block_chain_impl::get_account_tokens(
+// get all tokens belongs to the wallet/name
+std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_tokens(
     const std::string& name)
 {
-    return get_account_tokens(name, business_kind::unknown);
+    return get_wallet_tokens(name, business_kind::unknown);
 }
 
-// get special tokens of the account/name, just used for token_detail/token_transfer
-std::shared_ptr<business_address_token::list> block_chain_impl::get_account_tokens(
+// get special tokens of the wallet/name, just used for token_detail/token_transfer
+std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_tokens(
     const std::string& name, business_kind kind)
 {
-    auto account_addr_vec = get_account_addresses(name);
+    auto wallet_addr_vec = get_wallet_addresses(name);
     auto sp_token_vec = std::make_shared<business_address_token::list>();
 
     // copy each token_vec element to sp_token
@@ -1766,25 +1766,25 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_account_toke
         sp_token_vec->emplace_back(std::move(addr_token));
     };
 
-    // search all tokens belongs to this address which is owned by account
-    const auto action = [&](const account_address& elem)
+    // search all tokens belongs to this address which is owned by wallet
+    const auto action = [&](const wallet_address& elem)
     {
         business_address_token::list token_vec = database_.address_tokens.get_tokens(elem.get_address(), 0, kind);
         std::for_each(token_vec.begin(), token_vec.end(), add_token);
     };
-    std::for_each(account_addr_vec->begin(), account_addr_vec->end(), action);
+    std::for_each(wallet_addr_vec->begin(), wallet_addr_vec->end(), action);
 
     return sp_token_vec;
 }
 
 // get all unissued tokens which stored in local database
-std::shared_ptr<business_address_token::list> block_chain_impl::get_account_tokens()
+std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_tokens()
 {
-    auto sh_acc_vec = get_accounts();
+    auto sh_acc_vec = get_wallets();
     auto ret_vector = std::make_shared<business_address_token::list>();
 
     for (auto& acc : *sh_acc_vec) {
-        auto sh_vec = get_account_tokens(acc.get_name());
+        auto sh_vec = get_wallet_tokens(acc.get_name());
         const auto action = [&](const business_address_token& addr_token)
         {
             ret_vector->emplace_back(std::move(addr_token));
@@ -1795,13 +1795,13 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_account_toke
     return ret_vector;
 }
 
-std::shared_ptr<token_detail> block_chain_impl::get_account_unissued_token(const std::string& name,
+std::shared_ptr<token_detail> block_chain_impl::get_wallet_unissued_token(const std::string& name,
     const std::string& symbol)
 {
     std::shared_ptr<token_detail> sp_token(nullptr);
 
-    // get account token which is not issued (not in blockchain)
-    auto no_issued_tokens = database_.account_tokens.get_unissued_tokens(get_short_hash(name));
+    // get wallet token which is not issued (not in blockchain)
+    auto no_issued_tokens = database_.wallet_tokens.get_unissued_tokens(get_short_hash(name));
     const auto match = [&](const business_address_token& addr_token) {
         return addr_token.detail.get_symbol() == symbol;
     };
@@ -1813,8 +1813,8 @@ std::shared_ptr<token_detail> block_chain_impl::get_account_unissued_token(const
     return sp_token;
 }
 
-// get all local unissued tokens belongs to the account/name
-std::shared_ptr<business_address_token::list> block_chain_impl::get_account_unissued_tokens(const std::string& name)
+// get all local unissued tokens belongs to the wallet/name
+std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_unissued_tokens(const std::string& name)
 {
     auto sp_token_vec = std::make_shared<business_address_token::list>();
     auto sp_issues_token_vec = get_issued_tokens();
@@ -1832,8 +1832,8 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_account_unis
         }
     };
 
-    // get account token which is not issued (not in blockchain)
-    auto no_issued_tokens = database_.account_tokens.get_unissued_tokens(get_short_hash(name));
+    // get wallet token which is not issued (not in blockchain)
+    auto no_issued_tokens = database_.wallet_tokens.get_unissued_tokens(get_short_hash(name));
     std::for_each(no_issued_tokens->begin(), no_issued_tokens->end(), add_token);
 
     return sp_token_vec;
@@ -1884,16 +1884,16 @@ bool block_chain_impl::is_address_registered_uid(const std::string& uid_address,
     return !get_uid_from_address(uid_address, fork_index).empty();
 }
 
-bool block_chain_impl::is_account_owned_uid(const std::string& account, const std::string& symbol)
+bool block_chain_impl::is_wallet_owned_uid(const std::string& wallet, const std::string& symbol)
 {
     auto uid_detail = get_registered_uid(symbol);
     if (!uid_detail) {
         return false;
     }
 
-    auto pvaddr = get_account_addresses(account);
+    auto pvaddr = get_wallet_addresses(wallet);
     if (pvaddr) {
-        const auto match = [&uid_detail](const account_address& item) {
+        const auto match = [&uid_detail](const wallet_address& item) {
             return item.get_address() == uid_detail->get_address();
         };
         auto iter = std::find_if(pvaddr->begin(), pvaddr->end(), match);
@@ -1903,13 +1903,13 @@ bool block_chain_impl::is_account_owned_uid(const std::string& account, const st
     return false;
 }
 
-std::shared_ptr<uid_detail::list> block_chain_impl::get_account_uids(const std::string& account)
+std::shared_ptr<uid_detail::list> block_chain_impl::get_wallet_uids(const std::string& wallet)
 {
     auto sh_vec = std::make_shared<uid_detail::list>();
-    auto pvaddr = get_account_addresses(account);
+    auto pvaddr = get_wallet_addresses(wallet);
     if (pvaddr) {
-        for (const auto& account_address : *pvaddr) {
-            auto uid_address = account_address.get_address();
+        for (const auto& wallet_address : *pvaddr) {
+            auto uid_address = wallet_address.get_address();
             auto uid_symbol = get_uid_from_address(uid_address);
             if (!uid_symbol.empty()) {
                 sh_vec->emplace_back(uid_detail(uid_symbol, uid_address));
@@ -2002,25 +2002,25 @@ std::shared_ptr<token_detail> block_chain_impl::get_issued_token(const std::stri
 }
 
 // get all addresses
-std::shared_ptr<account_address::list> block_chain_impl::get_addresses()
+std::shared_ptr<wallet_address::list> block_chain_impl::get_addresses()
 {
-    auto sh_acc_vec = get_accounts();
-    auto ret_vector = std::make_shared<account_address::list>();
-    const auto action = [&](const account_address& addr) {
+    auto sh_acc_vec = get_wallets();
+    auto ret_vector = std::make_shared<wallet_address::list>();
+    const auto action = [&](const wallet_address& addr) {
         ret_vector->emplace_back(std::move(addr));
     };
 
     for(auto& acc : *sh_acc_vec) {
-        auto sh_vec = get_account_addresses(acc.get_name());
+        auto sh_vec = get_wallet_addresses(acc.get_name());
         std::for_each(sh_vec->begin(), sh_vec->end(), action);
     }
 
     return ret_vector;
 }
 
-std::shared_ptr<business_address_message::list> block_chain_impl::get_account_messages(const std::string& name)
+std::shared_ptr<business_address_message::list> block_chain_impl::get_wallet_messages(const std::string& name)
 {
-    auto account_addr_vec = get_account_addresses(name);
+    auto wallet_addr_vec = get_wallet_addresses(name);
     auto sp_token_vec = std::make_shared<business_address_message::list>();
 
     // copy each token_vec element to sp_token
@@ -2029,13 +2029,13 @@ std::shared_ptr<business_address_message::list> block_chain_impl::get_account_me
         sp_token_vec->emplace_back(std::move(addr_token));
     };
 
-    // search all tokens belongs to this address which is owned by account
-    const auto action = [&](const account_address& elem)
+    // search all tokens belongs to this address which is owned by wallet
+    const auto action = [&](const wallet_address& elem)
     {
         business_address_message::list token_vec = database_.address_tokens.get_messages(elem.get_address(), 0);
         std::for_each(token_vec.begin(), token_vec.end(), add_token);
     };
-    std::for_each(account_addr_vec->begin(), account_addr_vec->end(), action);
+    std::for_each(wallet_addr_vec->begin(), wallet_addr_vec->end(), action);
 
     return sp_token_vec;
 }
@@ -2048,7 +2048,7 @@ void block_chain_impl::fired()
 /* find token symbol exist or not
 *  find steps:
 *  1. find from blockchain
-*  2. find from local database(includes account created token) if check_local_db = true
+*  2. find from local database(includes wallet created token) if check_local_db = true
 */
 bool block_chain_impl::is_token_exist(const std::string& token_name, bool check_local_db)
 {
@@ -2059,7 +2059,7 @@ bool block_chain_impl::is_token_exist(const std::string& token_name, bool check_
     // 2. find from local database token
     if (check_local_db) {
         auto sh_acc_vec = get_local_tokens();
-        // scan all account token
+        // scan all wallet token
         for (auto& acc : *sh_acc_vec) {
             if (token_name == acc.get_symbol())
                 return true;
@@ -2099,14 +2099,14 @@ uint64_t block_chain_impl::get_candidate_height(const std::string& candidate_sym
     return database_.candidates.get_register_height(candidate_symbol);
 }
 
-/// get token from local database including all account's tokens
+/// get token from local database including all wallet's tokens
 std::shared_ptr<token_detail::list> block_chain_impl::get_local_tokens()
 {
     auto ret_vec = std::make_shared<token_detail::list>();
-    auto sh_acc_vec = get_accounts();
-    // scan all account token -- maybe the token has been issued
+    auto sh_acc_vec = get_wallets();
+    // scan all wallet token -- maybe the token has been issued
     for(auto& acc : *sh_acc_vec) {
-        auto no_issued_tokens = database_.account_tokens.get(get_short_hash(acc.get_name()));
+        auto no_issued_tokens = database_.wallet_tokens.get(get_short_hash(acc.get_name()));
         for (auto& detail : no_issued_tokens){
             ret_vec->emplace_back(std::move(detail));
         }
@@ -2135,26 +2135,26 @@ bool block_chain_impl::is_valid_address(const std::string& address)
 
 bool block_chain_impl::is_blackhole_address(const std::string& address)
 {
-    return (address == wallet::payment_address::blackhole_address);
+    return (address == bc::wallet::payment_address::blackhole_address);
 }
 
 bool block_chain_impl::is_stealth_address(const std::string& address)
 {
-    wallet::stealth_address addr{address};
-    return (addr && (addr.version() == wallet::stealth_address::mainnet_p2kh));
+    bc::wallet::stealth_address addr{address};
+    return (addr && (addr.version() == bc::wallet::stealth_address::mainnet_p2kh));
 }
 
 bool block_chain_impl::is_payment_address(const std::string& address)
 {
-    wallet::payment_address addr{address};
-    return (addr && (addr.version() == wallet::payment_address::mainnet_p2kh));
+    bc::wallet::payment_address addr{address};
+    return (addr && (addr.version() == bc::wallet::payment_address::mainnet_p2kh));
 }
 
 // stupid name for this function. should be is_p2sh_address.
 bool block_chain_impl::is_script_address(const std::string& address)
 {
-    wallet::payment_address addr{address};
-    return (addr && (addr.version() == wallet::payment_address::mainnet_p2sh));
+    bc::wallet::payment_address addr{address};
+    return (addr && (addr.version() == bc::wallet::payment_address::mainnet_p2sh));
 }
 
 organizer& block_chain_impl::get_organizer()
@@ -2400,7 +2400,7 @@ code block_chain_impl::broadcast_transaction(const chain::transaction& tx)
     return ret;
 }
 
-bool block_chain_impl::get_history(const wallet::payment_address& address,
+bool block_chain_impl::get_history(const bc::wallet::payment_address& address,
     uint64_t limit, uint64_t from_height, history_compact::list& history)
 {
     if (stopped())
@@ -2451,19 +2451,19 @@ bool block_chain_impl::get_tx_inputs_ucn_value (chain::transaction& tx, uint64_t
     return true;
 }
 
-void block_chain_impl::safe_store_account(account& acc, std::vector<std::shared_ptr<account_address>>& addresses)
+void block_chain_impl::safe_store_wallet(libbitcoin::chain::wallet& acc, std::vector<std::shared_ptr<wallet_address>>& addresses)
 {
     if (stopped())
         return;
 
     for(auto& address:addresses) {
         const auto hash = get_short_hash(address->get_name());
-        database_.account_addresses.safe_store(hash, *address);
+        database_.wallet_addresses.safe_store(hash, *address);
     }
-    database_.account_addresses.sync();
+    database_.wallet_addresses.sync();
 
-    database_.accounts.store(acc);
-    database_.accounts.sync();
+    database_.wallets.store(acc);
+    database_.wallets.sync();
 }
 
 

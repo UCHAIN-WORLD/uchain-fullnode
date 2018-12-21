@@ -35,7 +35,7 @@ console_result checkpublickey::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     if (!argument_.address.empty() && !blockchain.is_valid_address(argument_.address))
         throw address_invalid_exception{"invalid address parameter!"};
 
@@ -43,7 +43,7 @@ console_result checkpublickey::invoke(Json::Value& jv_output,
     if(addr.version() == bc::wallet::payment_address::mainnet_p2sh) // for multisig address
         throw argument_legality_exception{"script address parameter not allowed!"};
 
-    auto pvaddr = blockchain.get_account_addresses(auth_.name);
+    auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
     if(!pvaddr)
         throw address_list_nullptr_exception{"nullptr for address list"};
 
@@ -67,7 +67,7 @@ console_result checkpublickey::invoke(Json::Value& jv_output,
     }
 
     if(!found) {
-        throw account_address_get_exception{pub_key};
+        throw wallet_address_get_exception{pub_key};
     }
 
     auto& root = jv_output;

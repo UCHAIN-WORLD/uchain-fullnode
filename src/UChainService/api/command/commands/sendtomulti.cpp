@@ -35,7 +35,7 @@ console_result sendtomulti::invoke (Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     // receiver
     std::vector<receiver_record> receiver;
@@ -55,8 +55,8 @@ console_result sendtomulti::invoke (Json::Value& jv_output,
     // change address
     std::string change_address = get_address(option_.change, blockchain);
     //should own the address
-    if (!change_address.empty() && !blockchain.get_account_address(auth_.name, change_address))
-        throw account_authority_exception{"change address not belongs to you."};
+    if (!change_address.empty() && !blockchain.get_wallet_address(auth_.name, change_address))
+        throw wallet_authority_exception{"change address not belongs to you."};
         
     auto send_helper = sending_ucn(*this, blockchain,
         std::move(auth_.name), std::move(auth_.auth),

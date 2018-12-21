@@ -204,8 +204,8 @@ void proxy::address_fetch_history2(error_handler on_error,
 }
 
 void proxy::address_fetch_unspent_outputs(error_handler on_error,
-    points_info_handler on_reply, const wallet::payment_address& address,
-    const uint64_t satoshi, const wallet::select_outputs::algorithm algorithm)
+    points_info_handler on_reply, const bc::wallet::payment_address& address,
+    const uint64_t satoshi, const bc::wallet::select_outputs::algorithm algorithm)
 {
     static constexpr uint32_t from_height = 0;
 
@@ -225,7 +225,7 @@ void proxy::address_fetch_unspent_outputs(error_handler on_error,
                 unspent.push_back({row.output, row.value});
 
         chain::points_info selected_utxos;
-        wallet::select_outputs::select(selected_utxos, unspent, satoshi,
+        bc::wallet::select_outputs::select(selected_utxos, unspent, satoshi,
             algorithm);
 
         on_reply(selected_utxos);

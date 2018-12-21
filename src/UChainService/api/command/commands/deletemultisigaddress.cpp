@@ -35,7 +35,7 @@ console_result deletemultisigaddress::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     if (!blockchain.is_valid_address(option_.address)) {
         throw fromaddress_invalid_exception("invalid address! "  + option_.address);
@@ -57,21 +57,21 @@ console_result deletemultisigaddress::invoke(Json::Value& jv_output,
         acc->remove_multisig(acc_multisig);
     }
 
-    // change account type
+    // change wallet type
     if (acc->get_multisig_vec().empty()) {
-        acc->set_type(account_type::common);
+        acc->set_type(wallet_type::common);
     }
 
     // flush to db
-    blockchain.store_account(acc);
+    blockchain.store_wallet(acc);
 
-    // delete account address
-    auto vaddr = blockchain.get_account_addresses(auth_.name);
+    // delete wallet address
+    auto vaddr = blockchain.get_wallet_addresses(auth_.name);
     if (!vaddr) {
-        throw address_list_empty_exception{"empty address list for this account"};
+        throw address_list_empty_exception{"empty address list for this wallet"};
     }
 
-    blockchain.delete_account_address(auth_.name);
+    blockchain.delete_wallet_address(auth_.name);
     for (auto it = vaddr->begin(); it != vaddr->end();) {
         if (it->get_address() == option_.address) {
             it = vaddr->erase(it);
@@ -83,8 +83,8 @@ console_result deletemultisigaddress::invoke(Json::Value& jv_output,
 
     // restore address
     for (auto& each : *vaddr) {
-        auto addr = std::make_shared<bc::chain::account_address>(each);
-        blockchain.store_account_address(addr);
+        auto addr = std::make_shared<bc::chain::wallet_address>(each);
+        blockchain.store_wallet_address(addr);
     }
 
     // output json

@@ -81,22 +81,22 @@ DEFINE_EXPLORER_EXCEPTION(argument_size_invalid_exception, 2002);
 DEFINE_EXPLORER_EXCEPTION(argument_legality_exception, 2003);
 DEFINE_EXPLORER_EXCEPTION(argument_dismatch_exception, 2004);
 
-DEFINE_EXPLORER_EXCEPTION(account_existed_exception, 3001);
-DEFINE_EXPLORER_EXCEPTION(account_authority_exception, 3002);
-DEFINE_EXPLORER_EXCEPTION(account_notfound_exception, 3003);
+DEFINE_EXPLORER_EXCEPTION(wallet_existed_exception, 3001);
+DEFINE_EXPLORER_EXCEPTION(wallet_authority_exception, 3002);
+DEFINE_EXPLORER_EXCEPTION(wallet_notfound_exception, 3003);
 
 
-DEFINE_EXPLORER_EXCEPTION(account_name_exception, 3201);
-DEFINE_EXPLORER_EXCEPTION(account_length_exception, 3202);
-DEFINE_EXPLORER_EXCEPTION(account_address_get_exception, 3203);
+DEFINE_EXPLORER_EXCEPTION(wallet_name_exception, 3201);
+DEFINE_EXPLORER_EXCEPTION(wallet_length_exception, 3202);
+DEFINE_EXPLORER_EXCEPTION(wallet_address_get_exception, 3203);
 
-DEFINE_EXPLORER_EXCEPTION(account_deposit_period_exception, 3301);
-DEFINE_EXPLORER_EXCEPTION(account_balance_lack_exception, 3302);
+DEFINE_EXPLORER_EXCEPTION(wallet_deposit_period_exception, 3301);
+DEFINE_EXPLORER_EXCEPTION(wallet_balance_lack_exception, 3302);
 
 
 DEFINE_EXPLORER_EXCEPTION(address_list_empty_exception, 4001);
 DEFINE_EXPLORER_EXCEPTION(address_list_nullptr_exception, 4002);
-DEFINE_EXPLORER_EXCEPTION(address_dismatch_account_exception, 4003);
+DEFINE_EXPLORER_EXCEPTION(address_dismatch_wallet_exception, 4003);
 DEFINE_EXPLORER_EXCEPTION(address_amount_exception, 4004);
 DEFINE_EXPLORER_EXCEPTION(address_notfound_exception, 4005);
 DEFINE_EXPLORER_EXCEPTION(address_generate_exception, 4005);

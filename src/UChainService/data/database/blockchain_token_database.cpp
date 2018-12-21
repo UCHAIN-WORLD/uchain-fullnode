@@ -154,7 +154,7 @@ std::shared_ptr<std::vector<blockchain_token>> blockchain_token_database::get_bl
     uint64_t i = 0;
     for( i = 0; i < number_buckets; i++ ) {
         auto memo = lookup_map_.find(i);
-        //log::debug("get_accounts size=")<<memo->size();
+        //log::debug("get_wallets size=")<<memo->size();
         if (memo->size()) {
             const auto action = [&](memory_ptr elem)
             {

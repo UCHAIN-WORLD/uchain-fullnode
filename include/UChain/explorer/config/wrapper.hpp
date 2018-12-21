@@ -60,13 +60,13 @@ public:
      * Initialization constructor.
      * @param[in]  wrapped  The wrapped value to initialize with.
      */
-    wrapper(const wallet::wrapped_data& wrapped);
+    wrapper(const bc::wallet::wrapped_data& wrapped);
 
     /**
      * Initialization constructor.
      * @param[in]  address  The payment address to initialize with.
      */
-    wrapper(const wallet::payment_address& address);
+    wrapper(const bc::wallet::payment_address& address);
 
     /**
      * Initialization constructor.
@@ -91,7 +91,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const wallet::wrapped_data&() const;
+    operator const bc::wallet::wrapped_data&() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -116,7 +116,7 @@ private:
     /**
      * The state of this object's data.
      */
-    wallet::wrapped_data value_;
+    bc::wallet::wrapped_data value_;
 };
 
 } // namespace explorer

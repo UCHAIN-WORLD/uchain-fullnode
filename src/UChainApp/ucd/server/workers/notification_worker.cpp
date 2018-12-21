@@ -248,7 +248,7 @@ void notification_worker::send(const route& reply_to,
 }
 
 void notification_worker::send_payment(const route& reply_to, uint32_t id,
-    const wallet::payment_address& address, uint32_t height,
+    const bc::wallet::payment_address& address, uint32_t height,
     const hash_digest& block_hash, const chain::transaction& tx)
 {
     // [ address.version:1 ]

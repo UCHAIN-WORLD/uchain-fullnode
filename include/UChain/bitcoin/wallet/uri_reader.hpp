@@ -47,7 +47,7 @@ public:
     template <class UriReader>
     static UriReader parse(const std::string& uri, bool strict=true)
     {
-        wallet::uri parsed;
+        bc::wallet::uri parsed;
         if (!parsed.decode(uri, strict))
             return UriReader();
 

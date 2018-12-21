@@ -24,11 +24,11 @@ if ./uc-cli shutdown|grep "message"; then
        	alert
 	fi
 BLOCK
-if ./uc-cli  createaccount ceshi1 123456|grep "message"; then
+if ./uc-cli  createwallet ceshi1 123456|grep "message"; then
         alert
 	fi
 
-if ./uc-cli checkaccountinfo yujiali3 123456 island|grep "message" ; then
+if ./uc-cli checkwalletinfo yujiali3 123456 island|grep "message" ; then
 	        alert
 	fi
 
@@ -45,7 +45,7 @@ if  ./uc-cli showaddresses yujiali3 123456|grep "message"; then
 if  ./uc-cli exportkeyfile yujiali3 123456 island /test/ucd/bin|grep "message"; then                     
 	       alert
 	       fi
- if  ./uc-cli deleteaccount yujiali3 123456 island /test/ucd/bin|grep "message"; then
+ if  ./uc-cli deletewallet yujiali3 123456 island /test/ucd/bin|grep "message"; then
 	 alert
  fi
  if  ./uc-cli changepass -p 12345 yujiali3 123456|grep "message"; then
@@ -230,7 +230,7 @@ if ./uc-cli showtokens |grep "message"; then
 if ./uc-cli showtoken |grep "message"; then
     alert
     fi
-if ./uc-cli showaccounttoken yujiali3 123456 |grep "message"; then
+if ./uc-cli showwallettoken yujiali3 123456 |grep "message"; then
     alert
     fi
 if ./uc-cli showaddresstoken  Ub9Utbs3hHMharWZBenvU8TjbygAXNtD5L |grep "message"; then

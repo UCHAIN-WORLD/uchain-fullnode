@@ -37,10 +37,10 @@ console_result stopmining::invoke(Json::Value& jv_output,
 {
     auto& blockchain = node.chain_impl();
     auto& miner = node.miner();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     if(!administrator_required_checker(node, auth_.name, auth_.auth) && \
-        !blockchain.get_account_address(auth_.name, miner.get_miner_address()))
-            throw account_authority_exception{"not the miner account."};
+        !blockchain.get_wallet_address(auth_.name, miner.get_miner_address()))
+            throw wallet_authority_exception{"not the miner wallet."};
     auto ret = miner.stop();
 
     if (ret) {

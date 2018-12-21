@@ -20,7 +20,7 @@
 
 
 #include <UChainService/api/command/commands/exportkeyfile.hpp>
-#include <UChainService/api/command/account_info.hpp>
+#include <UChainService/api/command/wallet_info.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChain/bitcoin/formats/base_64.hpp>
 #include <cryptojs/cryptojs_impl.h>
@@ -30,20 +30,20 @@ namespace explorer {
 namespace commands {
 namespace fs = boost::filesystem;
 using namespace bc::explorer::config;
-/************************ exportaccountasfile *************************/
+/************************ exportwalletasfile *************************/
 
 console_result exportkeyfile::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    std::string&& mnemonic = blockchain.is_account_lastwd_valid(*acc, auth_.auth, argument_.last_word);
+    std::string&& mnemonic = blockchain.is_wallet_lastwd_valid(*acc, auth_.auth, argument_.last_word);
 
     std::string keyfile_name = "uc_keystore_" + auth_.name + ".json";
 
-    // account address info
-    auto pvaddr = blockchain.get_account_addresses(auth_.name);
+    // wallet address info
+    auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
     if(!pvaddr) throw address_list_nullptr_exception{"nullptr for address list"};
 
     Json::Value file_root;
@@ -53,7 +53,7 @@ console_result exportkeyfile::invoke(Json::Value& jv_output,
     file_root["algo"] = "aes";
     file_root["index"] = uint32_t(pvaddr->size() - acc->get_multisig_vec().size());
     file_root["mnemonic"] = libbitcoin::encode_base64( cryptojs::encrypt("\"" + mnemonic + "\"", auth_.auth) );
-    //file_root["accounts"] =  ss.str();
+    //file_root["wallets"] =  ss.str();
 
     Json::Value multisig_lst;
     multisig_lst.resize(0);

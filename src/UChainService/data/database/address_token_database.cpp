@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChainService/data/databases/address_token_database.hpp>
-//#include <UChainService/txs/account/address_token.hpp>
+//#include <UChainService/txs/wallet/address_token.hpp>
 
 #include <cstdint>
 #include <cstddef>
@@ -691,7 +691,7 @@ business_address_token::list address_token_database::get_tokens(const std::strin
             detail.detail.set_symbol(transfer_info.get_symbol());
         }
 
-        detail.address = address; // account address
+        detail.address = address; // wallet address
         detail.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);
     }
@@ -723,7 +723,7 @@ business_address_message::list address_token_database::get_messages(const std::s
         auto issue_info = boost::get<chain::blockchain_message>(row.data.get_data());
         detail.msg = issue_info;
 
-        detail.address = address; // account address
+        detail.address = address; // wallet address
         detail.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);
     }
@@ -770,7 +770,7 @@ business_address_token_cert::list address_token_database::get_token_certs(const 
 
         business_address_token_cert cert;
         cert.certs = cert_info;
-        cert.address = address; // account address
+        cert.address = address; // wallet address
         cert.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(cert);
     }

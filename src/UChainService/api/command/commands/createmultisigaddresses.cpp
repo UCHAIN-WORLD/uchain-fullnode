@@ -37,7 +37,7 @@ console_result createmultisigaddress::invoke(
     auto& blockchain = node.chain_impl();
 
     // check auth
-    auto account = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto wallet = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     auto& pubkey_vec = option_.public_keys;
     if (pubkey_vec.empty()) {
@@ -81,7 +81,7 @@ console_result createmultisigaddress::invoke(
     }
 
     // get private key according public key
-    auto pvaddr = blockchain.get_account_addresses(auth_.name);
+    auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
     if (!pvaddr) {
         throw address_list_nullptr_exception{ "nullptr for address list" };
     }
@@ -98,11 +98,11 @@ console_result createmultisigaddress::invoke(
     }
 
     if (!found) {
-        throw pubkey_dismatch_exception{ self_pubkey + " does not belongs to this account" };
+        throw pubkey_dismatch_exception{ self_pubkey + " does not belongs to this wallet" };
     }
 
-    // generate multisig account
-    account_multisig acc_multisig;
+    // generate multisig wallet
+    wallet_multisig acc_multisig;
     acc_multisig.set_hd_index(0);
     acc_multisig.set_m(option_.m);
     acc_multisig.set_n(option_.n);
@@ -110,20 +110,20 @@ console_result createmultisigaddress::invoke(
     acc_multisig.set_cosigner_pubkeys(std::move(pubkey_vec));
     acc_multisig.set_description(option_.description);
 
-    // check same multisig account not exists
-    if (account->is_multisig_exist(acc_multisig))
+    // check same multisig wallet not exists
+    if (wallet->is_multisig_exist(acc_multisig))
         throw multisig_exist_exception{ "multisig already exists." };
 
     // update index
-    acc_multisig.set_index(account->get_multisig_vec().size() + 1);
+    acc_multisig.set_index(wallet->get_multisig_vec().size() + 1);
 
-    // change account type
-    account->set_type(account_type::multisignature);
+    // change wallet type
+    wallet->set_type(wallet_type::multisignature);
 
-    // create account address
-    auto account_address = std::make_shared<bc::chain::account_address>();
-    account_address->set_name(auth_.name);
-    account_address->set_prv_key(self_prvkey, auth_.auth);
+    // create wallet address
+    auto wallet_address = std::make_shared<bc::chain::wallet_address>();
+    wallet_address->set_name(auth_.name);
+    wallet_address->set_prv_key(self_prvkey, auth_.auth);
 
     // create payment script and address
     auto multisig_script = acc_multisig.get_multisig_script();
@@ -135,17 +135,17 @@ console_result createmultisigaddress::invoke(
     payment_address address(payment_script, payment_address::mainnet_p2sh);
     auto hash_address = address.encoded();
 
-    // update account and multisig account
-    // account_address->set_status(1); // 1 -- enable address
-    account_address->set_address(hash_address);
-    account_address->set_status(account_address_status::multisig_addr);
+    // update wallet and multisig wallet
+    // wallet_address->set_status(1); // 1 -- enable address
+    wallet_address->set_address(hash_address);
+    wallet_address->set_status(wallet_address_status::multisig_addr);
 
     acc_multisig.set_address(hash_address);
-    account->set_multisig(acc_multisig);
+    wallet->set_multisig(acc_multisig);
 
     // store them
-    blockchain.store_account(account);
-    blockchain.store_account_address(account_address);
+    blockchain.store_wallet(wallet);
+    blockchain.store_wallet_address(wallet_address);
 
     // output json
     jv_output = config::json_helper(get_api_version()).prop_list(acc_multisig);

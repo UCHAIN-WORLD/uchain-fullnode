@@ -78,7 +78,7 @@ public:
     void fetch(const hash_digest& tx_hash, fetch_handler handler);
     void fetch(fetch_all_handler handler);
     void delete_tx(const hash_digest& tx_hash);
-    void fetch_history(const wallet::payment_address& address, size_t limit,
+    void fetch_history(const bc::wallet::payment_address& address, size_t limit,
         size_t from_height, block_chain::history_fetch_handler handler);
     void exists(const hash_digest& tx_hash, result_handler handler);
     void filter(get_data_ptr message, result_handler handler);

@@ -363,7 +363,7 @@ void organizer::replace_chain(uint64_t fork_index,
         log::warning(LOG_BLOCKCHAIN)
             << " blockchain fork old block number:" << replaced_block->actual()->header.number
             << " hash_index:"  << encode_hash(replaced_block->actual()->header.hash())
-            << " miner address:"  << wallet::payment_address::extract(replaced_block->actual()->transactions[0].outputs[0].script);
+            << " miner address:"  << bc::wallet::payment_address::extract(replaced_block->actual()->transactions[0].outputs[0].script);
         for(auto& tx : replaced_block->actual()->transactions)
         {
             log::warning(LOG_BLOCKCHAIN) << " forked transaction hash:" << encode_hash(tx.hash()) << " data:" << tx.to_string(0);

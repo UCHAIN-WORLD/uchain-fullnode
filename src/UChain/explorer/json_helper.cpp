@@ -570,7 +570,7 @@ Json::Value json_helper::prop_list(const bc::chain::candidate_info& candidate_in
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::account_multisig& acc_multisig)
+Json::Value json_helper::prop_list(const bc::chain::wallet_multisig& acc_multisig)
 {
     Json::Value tree, pubkeys;
     for (const auto& each : acc_multisig.get_cosigner_pubkeys()) {
@@ -831,7 +831,7 @@ Json::Value json_helper::prop_tree(const std::vector<transaction>& transactions,
 
 // wrapper
 
-Json::Value json_helper::prop_list(const wallet::wrapped_data& wrapper)
+Json::Value json_helper::prop_list(const bc::wallet::wrapped_data& wrapper)
 {
     Json::Value tree;
     tree["checksum"] += wrapper.checksum;
@@ -839,7 +839,7 @@ Json::Value json_helper::prop_list(const wallet::wrapped_data& wrapper)
     tree["version"] += wrapper.version;
     return tree;
 }
-Json::Value json_helper::prop_tree(const wallet::wrapped_data& wrapper)
+Json::Value json_helper::prop_tree(const bc::wallet::wrapped_data& wrapper)
 {
     Json::Value tree;
     tree["wrapper"] = prop_list(wrapper);
@@ -1013,7 +1013,7 @@ Json::Value json_helper::prop_tree(const block& block, bool json, bool tx_json)
     return tree;
 }
 
-Json::Value json_helper::prop_list(const account_info& acc)
+Json::Value json_helper::prop_list(const wallet_info& acc)
 {
     Json::Value tree;
     tree["name"] = std::get<0>(acc);

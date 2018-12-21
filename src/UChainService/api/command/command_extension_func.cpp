@@ -42,10 +42,10 @@
 #include <UChainService/api/command/commands/showtx.hpp>
 #include <UChainService/api/command/commands/exportkeyfile.hpp>
 #include <UChainService/api/command/commands/importkeyfile.hpp>
-#include <UChainService/api/command/commands/importaccount.hpp>
-#include <UChainService/api/command/commands/createaccount.hpp>
-#include <UChainService/api/command/commands/checkaccountinfo.hpp>
-#include <UChainService/api/command/commands/deleteaccount.hpp>
+#include <UChainService/api/command/commands/importwallet.hpp>
+#include <UChainService/api/command/commands/createwallet.hpp>
+#include <UChainService/api/command/commands/checkwalletinfo.hpp>
+#include <UChainService/api/command/commands/deletewallet.hpp>
 #include <UChainService/api/command/commands/showaddresses.hpp>
 #include <UChainService/api/command/commands/showminers.hpp>
 #include <UChainService/api/command/commands/addaddress.hpp>
@@ -59,7 +59,7 @@
 #include <UChainService/api/command/commands/showtoken.hpp>
 #include <UChainService/api/command/commands/registersecondarytoken.hpp>
 #include <UChainService/api/command/commands/showaddresstoken.hpp>
-#include <UChainService/api/command/commands/showaccounttoken.hpp>
+#include <UChainService/api/command/commands/showwallettoken.hpp>
 #include <UChainService/api/command/commands/showtokenview.hpp>
 #include <UChainService/api/command/commands/createtoken.hpp>
 #include <UChainService/api/command/commands/registercandidate.hpp>
@@ -82,7 +82,7 @@
 #include <UChainService/api/command/commands/registercert.hpp>
 #include <UChainService/api/command/commands/showwork.hpp>
 #include <UChainService/api/command/commands/submitwork.hpp>
-#include <UChainService/api/command/commands/setminingaccount.hpp>
+#include <UChainService/api/command/commands/setminingwallet.hpp>
 #include <UChainService/api/command/commands/changepass.hpp>
 #include <UChainService/api/command/commands/showmemorypool.hpp>
 #include <UChainService/api/command/commands/createmultisigtx.hpp>
@@ -118,12 +118,12 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<addpeer>());
     func(make_shared<showpeers>());
 
-    os <<"account:\r\n";
-    // account
-    func(make_shared<createaccount>());
-    func(make_shared<checkaccountinfo>());
-    func(make_shared<deleteaccount>());
-    func(make_shared<importaccount>());
+    os <<"wallet:\r\n";
+    // wallet
+    func(make_shared<createwallet>());
+    func(make_shared<checkwalletinfo>());
+    func(make_shared<deletewallet>());
+    func(make_shared<importwallet>());
     func(make_shared<changepass>());
     func(make_shared<addaddress>());
     func(make_shared<validateaddress>());
@@ -147,7 +147,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<startmining>());
     func(make_shared<stopmining>());
     //func(make_shared<showmininginfo>());
-    //func(make_shared<setminingaccount>());
+    //func(make_shared<setminingwallet>());
     func(make_shared<showminers>());
     //func(make_shared<showwork>());
     //func(make_shared<submitwork>());
@@ -174,7 +174,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<sendtokenfrom>());
     func(make_shared<showtokens>());
     func(make_shared<showtoken>());
-    func(make_shared<showaccounttoken>());
+    func(make_shared<showwallettoken>());
     // func(make_shared<showtokenview>());
     func(make_shared<showaddresstoken>());
     func(make_shared<destroy>());
@@ -219,13 +219,13 @@ shared_ptr<command> find_extension(const string& symbol)
     using namespace std;
     using namespace commands;
 
-    // account
-    if (symbol == createaccount::symbol())
-        return make_shared<createaccount>();
-    if (symbol == checkaccountinfo::symbol())
-        return make_shared<checkaccountinfo>();
-    if (symbol == deleteaccount::symbol())
-        return make_shared<deleteaccount>();
+    // wallet
+    if (symbol == createwallet::symbol())
+        return make_shared<createwallet>();
+    if (symbol == checkwalletinfo::symbol())
+        return make_shared<checkwalletinfo>();
+    if (symbol == deletewallet::symbol())
+        return make_shared<deletewallet>();
     if (symbol == changepass::symbol())
         return make_shared<changepass>();
     if (symbol == validateaddress::symbol())
@@ -234,11 +234,11 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<addaddress>();
     if (symbol == showaddresses::symbol())
         return make_shared<showaddresses>();
-    if (symbol == importaccount::symbol())
-        return make_shared<importaccount>();
-    if (symbol == exportkeyfile::symbol() || symbol == "exportaccountasfile")
+    if (symbol == importwallet::symbol())
+        return make_shared<importwallet>();
+    if (symbol == exportkeyfile::symbol() || symbol == "exportwalletasfile")
         return make_shared<exportkeyfile>();
-    if (symbol == importkeyfile::symbol() || symbol == "importaccountfromfile")
+    if (symbol == importkeyfile::symbol() || symbol == "importwalletfromfile")
         return make_shared<importkeyfile>();
 
     // system
@@ -256,8 +256,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<stopmining>();
     if (symbol == startmining::symbol() || symbol == "start")
         return make_shared<startmining>();
-    /*if (symbol == setminingaccount::symbol())
-        return make_shared<setminingaccount>();
+    /*if (symbol == setminingwallet::symbol())
+        return make_shared<setminingwallet>();
     if (symbol == showmininginfo::symbol())
         return make_shared<showmininginfo>();
     if ((symbol == showwork::symbol()) || (symbol == "eth_showwork"))
@@ -338,8 +338,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showtokens>();
     if (symbol == showtoken::symbol())
         return make_shared<showtoken>();
-    if (symbol == showaccounttoken::symbol())
-        return make_shared<showaccounttoken>();
+    if (symbol == showwallettoken::symbol())
+        return make_shared<showwallettoken>();
     // if (symbol == showtokenview::symbol())
     //     return make_shared<showtokenview>();
     if (symbol == showaddresstoken::symbol())

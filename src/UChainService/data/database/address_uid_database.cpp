@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChainService/data/databases/address_uid_database.hpp>
-//#include <UChainService/txs/account/address_uid.hpp>
+//#include <UChainService/txs/wallet/address_uid.hpp>
 
 #include <cstdint>
 #include <cstddef>
@@ -663,7 +663,7 @@ business_address_uid::list address_uid_database::get_uids(const std::string& add
             detail.detail = issue_info;
         }
 
-        detail.address = address; // account address
+        detail.address = address; // wallet address
         detail.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);
     }
@@ -685,7 +685,7 @@ business_address_uid::list address_uid_database::get_uids(const std::string& add
             && (row.data.get_kind_value() != business_kind::uid_transfer))  // uid_transfer
             continue;
 
-        if(address != wallet::payment_address::blackhole_address)
+        if(address != bc::wallet::payment_address::blackhole_address)
         {
             if (row.output_height > to_height) {
                 continue;
@@ -712,7 +712,7 @@ business_address_uid::list address_uid_database::get_uids(const std::string& add
             detail.detail = transfer_info;
         }
 
-        detail.address = address; // account address
+        detail.address = address; // wallet address
         detail.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);
     }
@@ -744,7 +744,7 @@ business_address_message::list address_uid_database::get_messages(const std::str
         auto issue_info = boost::get<chain::blockchain_message>(row.data.get_data());
         detail.msg = issue_info;
 
-        detail.address = address; // account address
+        detail.address = address; // wallet address
         detail.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);
     }
