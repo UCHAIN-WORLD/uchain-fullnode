@@ -432,19 +432,19 @@ bool transaction::has_token_cert() const
     return false;
 }
 
-bool transaction::has_token_candidate_transfer() const
+bool transaction::has_candidate_transfer() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_token_candidate_transfer())
+        if(elem.is_candidate_transfer())
             return true;
     }
     return false;
 }
 
-bool transaction::has_token_candidate_register() const
+bool transaction::has_candidate_register() const
 {
     for (auto& elem: outputs) {
-        if(elem.is_token_candidate_register())
+        if(elem.is_candidate_register())
             return true;
     }
     return false;

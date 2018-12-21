@@ -44,7 +44,7 @@ console_result transferuid::invoke(Json::Value& jv_output,
     // check uid exsits
     auto uid_detail = blockchain.get_registered_uid(uid);
     if (!uid_detail) {
-        throw uid_symbol_notfound_exception{"Did '" + uid + "' does not exist on the blockchain"};
+        throw uid_symbol_notfound_exception{"Uid '" + uid + "' does not exist on the blockchain"};
     }
 
     auto from_address = uid_detail->get_address();
@@ -52,7 +52,7 @@ console_result transferuid::invoke(Json::Value& jv_output,
     // check uid is owned by the account
     if (!blockchain.get_account_address(auth_.name, from_address)) {
         throw uid_symbol_notowned_exception{
-            "Did '" + uid + "' is not owned by " + auth_.name};
+            "Uid '" + uid + "' is not owned by " + auth_.name};
     }
 
     // check to address is valid

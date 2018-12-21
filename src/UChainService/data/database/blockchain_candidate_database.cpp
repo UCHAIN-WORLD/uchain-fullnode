@@ -110,24 +110,24 @@ void blockchain_candidate_database::sync()
     lookup_manager_.sync();
 }
 
-std::shared_ptr<token_candidate_info> blockchain_candidate_database::get(const hash_digest& hash) const
+std::shared_ptr<candidate_info> blockchain_candidate_database::get(const hash_digest& hash) const
 {
-    std::shared_ptr<token_candidate_info> detail(nullptr);
+    std::shared_ptr<candidate_info> detail(nullptr);
 
     const auto raw_memory = lookup_map_.find(hash);
     if(raw_memory) {
         const auto memory = REMAP_ADDRESS(raw_memory);
-        detail = std::make_shared<token_candidate_info>();
+        detail = std::make_shared<candidate_info>();
         auto deserial = make_deserializer_unsafe(memory);
-        *detail = token_candidate_info::factory_from_data(deserial);
+        *detail = candidate_info::factory_from_data(deserial);
     }
 
     return detail;
 }
 
-std::shared_ptr<token_candidate_info::list> blockchain_candidate_database::get_blockchain_candidates() const
+std::shared_ptr<candidate_info::list> blockchain_candidate_database::get_blockchain_candidates() const
 {
-    auto vec_acc = std::make_shared<std::vector<token_candidate_info>>();
+    auto vec_acc = std::make_shared<std::vector<candidate_info>>();
     for( uint64_t i = 0; i < number_buckets; i++ ) {
         auto memo = lookup_map_.find(i);
         if (memo->size()) {
@@ -135,7 +135,7 @@ std::shared_ptr<token_candidate_info::list> blockchain_candidate_database::get_b
             {
                 const auto memory = REMAP_ADDRESS(elem);
                 auto deserial = make_deserializer_unsafe(memory);
-                vec_acc->push_back(token_candidate_info::factory_from_data(deserial));
+                vec_acc->push_back(candidate_info::factory_from_data(deserial));
             };
             std::for_each(memo->begin(), memo->end(), action);
         }
@@ -144,35 +144,35 @@ std::shared_ptr<token_candidate_info::list> blockchain_candidate_database::get_b
 }
 
 /// 
-std::shared_ptr<token_candidate_info> blockchain_candidate_database::get_register_history(const std::string & candidate_symbol) const
+std::shared_ptr<candidate_info> blockchain_candidate_database::get_register_history(const std::string & candidate_symbol) const
 {
-    std::shared_ptr<token_candidate_info> token_candidate_ = nullptr;
+    std::shared_ptr<candidate_info> candidate_ = nullptr;
     data_chunk data(candidate_symbol.begin(), candidate_symbol.end());
     auto key = sha256_hash(data);
 
     auto memo = lookup_map_.rfind(key);
     if(memo)
     {
-        token_candidate_ = std::make_shared<token_candidate_info>();
+        candidate_ = std::make_shared<candidate_info>();
         const auto memory = REMAP_ADDRESS(memo);
         auto deserial = make_deserializer_unsafe(memory);
-        *token_candidate_ = token_candidate_info::factory_from_data(deserial);
+        *candidate_ = candidate_info::factory_from_data(deserial);
     }
 
-    return token_candidate_;
+    return candidate_;
 }
 
 ///
 uint64_t blockchain_candidate_database::get_register_height(const std::string & candidate_symbol) const
 {
-    std::shared_ptr<token_candidate_info> token_candidate_ = get_register_history(candidate_symbol);
-    if(token_candidate_)
-        return token_candidate_->output_height;
+    std::shared_ptr<candidate_info> candidate_ = get_register_history(candidate_symbol);
+    if(candidate_)
+        return candidate_->output_height;
         
     return max_uint64;
 }
 
-void blockchain_candidate_database::store(const token_candidate_info& candidate_info)
+void blockchain_candidate_database::store(const candidate_info& candidate_info)
 {
     const auto& key_str = candidate_info.candidate.get_symbol();
     const data_chunk& data = data_chunk(key_str.begin(), key_str.end());

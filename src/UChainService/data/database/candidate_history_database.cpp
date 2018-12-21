@@ -50,10 +50,10 @@ namespace {
     };
 
     // Read a row from the data for the history list.
-    token_candidate_info read_row(uint8_t* data)
+    candidate_info read_row(uint8_t* data)
     {
         auto deserial = make_deserializer_unsafe(data);
-        return token_candidate_info::factory_from_data(deserial);
+        return candidate_info::factory_from_data(deserial);
     };
 } // end of namespace anonymous
 
@@ -156,7 +156,7 @@ candidate_history_statinfo candidate_history_database::statinfo() const
 }
 
 // ----------------------------------------------------------------------------
-void candidate_history_database::store(const token_candidate_info& candidate_info)
+void candidate_history_database::store(const candidate_info& candidate_info)
 {
     const auto& key_str = candidate_info.candidate.get_symbol();
     const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
@@ -175,7 +175,7 @@ void candidate_history_database::delete_last_row(const short_hash& key)
     rows_multimap_.delete_last_row(key);
 }
 
-std::shared_ptr<token_candidate_info> candidate_history_database::get(const short_hash& key) const
+std::shared_ptr<candidate_info> candidate_history_database::get(const short_hash& key) const
 {
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
@@ -186,18 +186,18 @@ std::shared_ptr<token_candidate_info> candidate_history_database::get(const shor
         const auto record = rows_list_.get(index);
         const auto address = REMAP_ADDRESS(record);
 
-        return std::make_shared<token_candidate_info>(read_row(address));
+        return std::make_shared<candidate_info>(read_row(address));
     }
 
     return nullptr;
 }
 
-std::shared_ptr<token_candidate_info::list> candidate_history_database::get_history_candidates_by_height(
+std::shared_ptr<candidate_info::list> candidate_history_database::get_history_candidates_by_height(
     const short_hash& key, uint32_t start_height, uint32_t end_height,
     uint64_t limit, uint64_t page_number) const
 {
     // use map to sort by height, decreasely
-    std::map<uint32_t, token_candidate_info, std::greater<uint32_t>> height_candidate_map;
+    std::map<uint32_t, candidate_info, std::greater<uint32_t>> height_candidate_map;
 
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
@@ -236,19 +236,19 @@ std::shared_ptr<token_candidate_info::list> candidate_history_database::get_hist
         height_candidate_map[height] = row;
     }
 
-    auto result = std::make_shared<token_candidate_info::list>();
+    auto result = std::make_shared<candidate_info::list>();
     for (const auto& pair : height_candidate_map) {
         result->emplace_back(std::move(pair.second));
     }
     return result;
 }
 
-std::shared_ptr<token_candidate_info::list> candidate_history_database::get_history_candidates_by_time(
+std::shared_ptr<candidate_info::list> candidate_history_database::get_history_candidates_by_time(
     const short_hash& key, uint32_t time_begin, uint32_t time_end,
     uint64_t limit, uint64_t page_number) const
 {
     // use map to sort by time, decreasely
-    std::map<uint32_t, token_candidate_info, std::greater<uint32_t>> time_candidate_map;
+    std::map<uint32_t, candidate_info, std::greater<uint32_t>> time_candidate_map;
 
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
@@ -287,7 +287,7 @@ std::shared_ptr<token_candidate_info::list> candidate_history_database::get_hist
         time_candidate_map[time] = row;
     }
 
-    auto result = std::make_shared<token_candidate_info::list>();
+    auto result = std::make_shared<candidate_info::list>();
     for (const auto& pair : time_candidate_map) {
         result->emplace_back(std::move(pair.second));
     }

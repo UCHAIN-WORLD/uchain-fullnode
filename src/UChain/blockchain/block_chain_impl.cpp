@@ -1466,25 +1466,25 @@ bool block_chain_impl::is_token_cert_exist(const std::string& symbol, token_cert
     return database_.certs.get(key) != nullptr;
 }
 
-bool block_chain_impl::is_token_candidate_exist(const std::string& symbol)
+bool block_chain_impl::is_candidate_exist(const std::string& symbol)
 {
     return get_registered_candidate(symbol) != nullptr;
 }
 
-std::shared_ptr<token_candidate_info> block_chain_impl::get_registered_candidate(const std::string& symbol)
+std::shared_ptr<candidate_info> block_chain_impl::get_registered_candidate(const std::string& symbol)
 {
     BITCOIN_ASSERT(!symbol.empty());
     // return the registered identifiable token, its status must be CANDIDATE_STATUS_REGISTER
     return database_.candidates.get(get_hash(symbol));
 }
 
-std::shared_ptr<token_candidate_info::list> block_chain_impl::get_registered_candidates()
+std::shared_ptr<candidate_info::list> block_chain_impl::get_registered_candidates()
 {
     // return the registered identifiable tokens, their status must be CANDIDATE_STATUS_REGISTER
     return database_.candidates.get_blockchain_candidates();
 }
 
-std::shared_ptr<token_candidate_info::list> block_chain_impl::get_candidate_history(
+std::shared_ptr<candidate_info::list> block_chain_impl::get_candidate_history(
     const std::string& symbol, uint64_t limit, uint64_t page_number)
 {
     BITCOIN_ASSERT(!symbol.empty());
@@ -1492,10 +1492,10 @@ std::shared_ptr<token_candidate_info::list> block_chain_impl::get_candidate_hist
     return database_.candidate_history.get_history_candidates_by_height(get_short_hash(symbol), 0, 0, limit, page_number);
 }
 
-std::shared_ptr<token_candidate::list> block_chain_impl::get_account_candidates(
+std::shared_ptr<candidate::list> block_chain_impl::get_account_candidates(
     const std::string& account, const std::string& symbol)
 {
-    auto sp_vec = std::make_shared<token_candidate::list>();
+    auto sp_vec = std::make_shared<candidate::list>();
 
     auto pvaddr = get_account_addresses(account);
     if (!pvaddr)
@@ -1515,8 +1515,8 @@ std::shared_ptr<token_candidate::list> block_chain_impl::get_account_candidates(
             {
                 BITCOIN_ASSERT(row.output.index < tx_temp.outputs.size());
                 const auto& output = tx_temp.outputs.at(row.output.index);
-                if (output.is_token_candidate()) {
-                    auto&& token = output.get_token_candidate();
+                if (output.is_candidate()) {
+                    auto&& token = output.get_candidate();
                     if (symbol.empty()) {
                         sp_vec->emplace_back(std::move(token));
                     }
@@ -2094,7 +2094,7 @@ uint64_t block_chain_impl::get_token_cert_height(const std::string& cert_symbol,
     return max_uint64;
 }
 
-uint64_t block_chain_impl::get_token_candidate_height(const std::string& candidate_symbol) const
+uint64_t block_chain_impl::get_candidate_height(const std::string& candidate_symbol) const
 {
     return database_.candidates.get_register_height(candidate_symbol);
 }

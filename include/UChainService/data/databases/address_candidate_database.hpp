@@ -82,7 +82,7 @@ public:
 
     void store_output(const short_hash& key, const output_point& outpoint,
         uint32_t output_height, uint64_t value, uint16_t business_kd,
-        uint32_t timestamp, const token_candidate& candidate);
+        uint32_t timestamp, const candidate& candidate);
 
     void store_input(const short_hash& key,
         const output_point& inpoint, uint32_t input_height,
@@ -103,7 +103,7 @@ public:
     std::shared_ptr<std::vector<business_history>> get_address_business_history(const std::string& address,
         size_t from_height) const;
     business_address_candidate::list get_candidates(const std::string& address, size_t from_height,
-        token_candidate::candidate_status kind = token_candidate::candidate_status::candidate_status_none) const;
+        candidate::candidate_status kind = candidate::candidate_status::candidate_status_none) const;
 
 private:
     typedef record_hash_table<short_hash> record_map;

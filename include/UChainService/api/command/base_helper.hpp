@@ -41,7 +41,7 @@ namespace commands{
 /// asset_message       --> message
 /// asset_uid           --> uid_register   |  uid_transfer
 /// asset_token_cert    --> token_cert
-/// asset_token_candidate     --> token_candidate
+/// asset_candidate     --> candidate
 /// -------------------------------------------------------------------
 /// utxo_attach_type is only used in explorer module
 /// utxo_attach_type will be used to generate asset with asset_type and content
@@ -70,8 +70,8 @@ enum class utxo_attach_type : uint32_t
     token_cert_issue = 11,
     token_cert_transfer = 12,
     token_cert_autoissue = 13,
-    token_candidate = 14,
-    token_candidate_transfer = 15,
+    candidate = 14,
+    candidate_transfer = 15,
     invalid = 0xffffffff
 };
 

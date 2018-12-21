@@ -60,7 +60,7 @@ public:
     virtual bool is_uid_in_orphan_chain(const std::string& symbol) const = 0;
     virtual bool is_token_in_orphan_chain(const std::string& symbol) const = 0;
     virtual bool is_token_cert_in_orphan_chain(const std::string& symbol, token_cert_type cert_type) const = 0;
-    virtual bool is_token_candidate_in_orphan_chain(const std::string& symbol) const = 0;
+    virtual bool is_candidate_in_orphan_chain(const std::string& symbol) const = 0;
 
     virtual size_t get_fork_index() const { return max_size_t; }
 

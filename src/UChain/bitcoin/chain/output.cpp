@@ -155,7 +155,7 @@ code output::check_asset_address(bc::blockchain::block_chain_impl& chain) const
     bool is_token = false;
     bool is_uid = false;
     std::string asset_address;
-    if (is_token_issue() || is_token_secondaryissue() || is_token_candidate()) {
+    if (is_token_issue() || is_token_secondaryissue() || is_candidate()) {
         asset_address = get_token_address();
         is_token = true;
     } else if (is_token_cert()) {
@@ -331,7 +331,7 @@ bool output::is_token_secondaryissue() const
     return false;
 }
 
-bool output::is_token_candidate() const
+bool output::is_candidate() const
 {
     return (attach_data.get_type() == TOKEN_CANDIDATE_TYPE);
 }
@@ -355,19 +355,19 @@ bool output::is_uid_full_filled() const
             && !attach_data.get_from_uid().empty();
 }
 
-std::string output::get_token_candidate_symbol() const
+std::string output::get_candidate_symbol() const
 {
-    if (is_token_candidate()) {
-        auto candidate_info = boost::get<token_candidate>(attach_data.get_attach());
+    if (is_candidate()) {
+        auto candidate_info = boost::get<candidate>(attach_data.get_attach());
         return candidate_info.get_symbol();
     }
     return std::string("");
 }
 
-bool output::is_token_candidate_register() const
+bool output::is_candidate_register() const
 {
-    if (is_token_candidate()) {
-        auto token_info = boost::get<token_candidate>(attach_data.get_attach());
+    if (is_candidate()) {
+        auto token_info = boost::get<candidate>(attach_data.get_attach());
         if (token_info.is_register_status()) {
             return true;
         }
@@ -375,10 +375,10 @@ bool output::is_token_candidate_register() const
     return false;
 }
 
-bool output::is_token_candidate_transfer() const
+bool output::is_candidate_transfer() const
 {
-    if (is_token_candidate()) {
-        auto token_info = boost::get<token_candidate>(attach_data.get_attach());
+    if (is_candidate()) {
+        auto token_info = boost::get<candidate>(attach_data.get_attach());
         if (token_info.is_transfer_status()) {
             return true;
         }
@@ -462,8 +462,8 @@ std::string output::get_token_symbol() const // for validate_transaction.cpp to 
             return trans_info.get_symbol();
         }
     }
-    else if (is_token_candidate()) {
-        auto token_info = boost::get<token_candidate>(attach_data.get_attach());
+    else if (is_candidate()) {
+        auto token_info = boost::get<candidate>(attach_data.get_attach());
         return token_info.get_symbol();
     }
     else if (is_token_cert()) {
@@ -484,7 +484,7 @@ std::string output::get_token_issuer() const // for validate_transaction.cpp to 
             return detail_info.get_issuer();
         }
     }
-    else if (is_token_candidate()) {
+    else if (is_candidate()) {
         BITCOIN_ASSERT(false);
     }
     return std::string("");
@@ -499,20 +499,20 @@ std::string output::get_token_address() const // for validate_transaction.cpp to
             return detail_info.get_address();
         }
     }
-    else if (is_token_candidate()) {
-        auto token_info = boost::get<token_candidate>(attach_data.get_attach());
+    else if (is_candidate()) {
+        auto token_info = boost::get<candidate>(attach_data.get_attach());
         return token_info.get_address();
     }
     return std::string("");
 }
 
-token_candidate output::get_token_candidate() const
+candidate output::get_candidate() const
 {
-    if (is_token_candidate()) {
-        return boost::get<token_candidate>(attach_data.get_attach());
+    if (is_candidate()) {
+        return boost::get<candidate>(attach_data.get_attach());
     }
-    log::error("output::get_token_candidate") << "Token type is not an candidate.";
-    return token_candidate();
+    log::error("output::get_candidate") << "Token type is not an candidate.";
+    return candidate();
 }
 
 token_cert output::get_token_cert() const

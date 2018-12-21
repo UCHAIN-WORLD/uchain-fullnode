@@ -225,7 +225,7 @@ public:
     void push_uid_detail(const uid_detail& sp_detail, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value);
 
-    void push_candidate(const token_candidate& candidate, const short_hash& key,
+    void push_candidate(const candidate& candidate, const short_hash& key,
                 const output_point& outpoint, uint32_t output_height, uint64_t value,
                 const std::string from_uid, std::string to_uid);
 
@@ -263,7 +263,7 @@ public:
         {
             return db_->push_uid(t, sh_hash_, outpoint_, output_height_, value_);
         }
-        void operator()(const token_candidate &t) const
+        void operator()(const candidate &t) const
         {
             return db_->push_candidate(t, sh_hash_, outpoint_, output_height_, value_, from_uid_, to_uid_);
         }

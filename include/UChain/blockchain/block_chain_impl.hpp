@@ -282,13 +282,13 @@ public:
         const std::string& address, const std::string& symbol, token_cert_type cert_type);
 
     // identifiable token
-    bool is_token_candidate_exist(const std::string& symbol);
-    uint64_t get_token_candidate_height(const std::string& candidate_symbol)const;
-    std::shared_ptr<token_candidate_info> get_registered_candidate(const std::string& symbol);
-    std::shared_ptr<token_candidate_info::list> get_registered_candidates();
-    std::shared_ptr<token_candidate_info::list> get_candidate_history(const std::string& symbol,
+    bool is_candidate_exist(const std::string& symbol);
+    uint64_t get_candidate_height(const std::string& candidate_symbol)const;
+    std::shared_ptr<candidate_info> get_registered_candidate(const std::string& symbol);
+    std::shared_ptr<candidate_info::list> get_registered_candidates();
+    std::shared_ptr<candidate_info::list> get_candidate_history(const std::string& symbol,
         uint64_t limit = 0, uint64_t page_number = 0);
-    std::shared_ptr<token_candidate::list> get_account_candidates(
+    std::shared_ptr<candidate::list> get_account_candidates(
         const std::string& account, const std::string& symbol="");
 
     // account uid api

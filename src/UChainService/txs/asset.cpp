@@ -148,7 +148,7 @@ bool asset::from_data(reader& source)
             }
             case TOKEN_CANDIDATE_TYPE:
             {
-                attach = token_candidate();
+                attach = candidate();
                 break;
             }
             case MESSAGE_TYPE:
