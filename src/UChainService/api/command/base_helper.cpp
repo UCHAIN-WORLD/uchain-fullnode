@@ -283,14 +283,17 @@ void sync_fetch_token_cert_balance(const std::string& address, const string& sym
 
 void sync_fetch_token_balance(const std::string& address, bool sum_all,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<token_balances::list> sh_token_vec)
+    std::shared_ptr<token_balances::list> sh_token_vec, uint64_t start_height, uint64_t end_height)
 {
-    auto&& rows = blockchain.get_address_history(bc::wallet::payment_address(address));
+    auto&& rows = blockchain.get_address_history(bc::wallet::payment_address(address),start_height);
 
     chain::transaction tx_temp;
     uint64_t tx_height;
     uint64_t height = 0;
     blockchain.get_last_height(height);
+    if (end_height == 0) {
+        end_height = height;
+    }
 
     for (auto& row: rows)
     {
@@ -333,6 +336,11 @@ void sync_fetch_token_balance(const std::string& address, bool sum_all,
                     iter->unspent_token += token_amount;
                     iter->locked_token += locked_amount;
                 }
+            }
+
+            if (row.output_height == end_height)
+            {
+                break;
             }
         }
     }

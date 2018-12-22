@@ -30,29 +30,29 @@ namespace explorer {
 namespace commands {
 
 
-/************************ stopmining *************************/
+/************************ showvote *************************/
 
-class stopmining: public command_extension
+class showvote: public command_extension
 {
 public:
-    static const char* symbol(){ return "stopmining";}
+    static const char* symbol(){ return "showvote";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "stop CPU solo mining."; }
+    const char* description() override { return "show vote amount of uid from a START_HEIGHT to a END_HEIGHT"; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("WALLET_NAME", 1)
-            .add("WALLET_AUTH", 1);
+            .add("UID", 1)
+            .add("START_HEIGHT", 1)
+            .add("END_HEIGHT", 1);
     }
 
     void load_fallbacks (std::istream& input,
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(auth_.name, "WALLET_NAME", variables, input, raw);
-        load_input(auth_.auth, "WALLET_AUTH", variables, input, raw);
+        load_input(argument_.uid, "UID", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -66,15 +66,21 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "WALLET_NAME",
-            value<std::string>(&auth_.name)->required(),
-            BX_ADMIN_NAME
+            "UID",
+            value<std::string>(&argument_.uid)->required(),
+            "uid"
         )
         (
-            "WALLET_AUTH",
-            value<std::string>(&auth_.auth)->required(),
-            BX_ADMIN_AUTH
-        );
+            "START_HEIGHT",
+            value<uint64_t>(&argument_.startheight)->required(),
+            "The start height of blockchain."
+        )
+        (
+            "END_HEIGHT",
+            value<uint64_t>(&argument_.endheight)->required(),
+            "The start height of blockchain."
+        )
+        ;
 
         return options;
     }
@@ -88,13 +94,13 @@ public:
 
     struct argument
     {
+        std::string uid;
+        uint64_t startheight;
+        uint64_t endheight;
     } argument_;
-
-    struct option
-    {
-    } option_;
-
 };
+
+
 
 
 } // namespace commands

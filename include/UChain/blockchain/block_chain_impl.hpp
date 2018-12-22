@@ -197,7 +197,8 @@ public:
         uint64_t limit, uint64_t from_height, history_compact::list& history);
 
 
-    history::list get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool = false);
+    history::list get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool = false, uint64_t from_height = 0);
+
 
 
     /// fetch stealth results.

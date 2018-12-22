@@ -1366,14 +1366,14 @@ static history::list expand_history(history_compact::list& compact)
     return result;
 }
 
-history::list block_chain_impl::get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool)
+history::list block_chain_impl::get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool, uint64_t from_height)
 {
     history_compact::list cmp_history;
     bool result = true;
     if (add_memory_pool) {
-        result = get_history(addr, 0, 0, cmp_history);
+        result = get_history(addr, 0, from_height, cmp_history);
     } else {
-        result = fetch_history(addr, 0, 0, cmp_history);
+        result = fetch_history(addr, 0, from_height, cmp_history);
     }
     if (result) {
         return expand_history(cmp_history);
