@@ -43,7 +43,7 @@ using namespace std::this_thread;
 namespace libbitcoin {
 namespace consensus {
 
-static BC_CONSTEXPR unsigned int min_tx_fee = 10000;
+static BC_CONSTEXPR unsigned int min_tx_fee = 100000;
 
 // tuples: (priority, fee_per_kb, fee, transaction_ptr)
 typedef boost::tuple<double, double, uint64_t, miner::transaction_ptr> transaction_priority;
@@ -489,7 +489,7 @@ int miner::get_lock_heights_index(uint64_t height)
 
 uint64_t miner::calculate_block_subsidy(uint64_t block_height, bool is_testnet)
 {
-    return 0;//min_fee_to_block_token;///uint64_t(3 * coin_price() * pow(0.95, block_height / bucket_size));
+    return 0;//min_tx_fee;///uint64_t(3 * coin_price() * pow(0.95, block_height / bucket_size));
 }
 
 uint64_t miner::calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num)

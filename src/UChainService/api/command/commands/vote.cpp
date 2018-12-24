@@ -37,7 +37,7 @@ console_result vote::invoke(Json::Value& jv_output,
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     std::string from_address = get_address_from_strict_uid(argument_.from, blockchain);
     if(!blockchain.is_valid_address(from_address))
-        throw uid_symbol_name_exception{"Did symbol " + argument_.from + " is not valid."};
+        throw uid_symbol_name_exception{"Uid symbol " + argument_.from + " is not valid."};
 
     auto acc_addr = blockchain.get_wallet_address(auth_.name, from_address);
     if (!acc_addr)

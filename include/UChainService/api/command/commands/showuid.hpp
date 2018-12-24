@@ -43,14 +43,14 @@ public:
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("DidOrAddress", 1);
+            .add("UidOrAddress", 1);
     }
 
     void load_fallbacks (std::istream& input,
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(option_.symbol, "DidOrAddress", variables, input, raw);
+        load_input(option_.symbol, "UidOrAddress", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -64,9 +64,9 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "DidOrAddress",
+            "UidOrAddress",
             value<std::string>(&option_.symbol),
-            "Did symbol or standard address; If no input parameters, then display whole network UIDs."
+            "Uid symbol or standard address; If no input parameters, then display whole network UIDs."
         );
 
         return options;

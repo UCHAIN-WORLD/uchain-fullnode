@@ -98,8 +98,9 @@ public:
         )
         (
             "fee,f",
-            value<uint64_t>(&option_.fee)->default_value(bc::min_fee_to_issue_token),
-            "Transaction fee. defaults to 10000 UCN."
+            value<uint64_t>(&option_.fee)->default_value(bc::min_tx_fee),
+            "Transaction fee. defaults to 200000 UCN bits."
+
         );
 
         return options;

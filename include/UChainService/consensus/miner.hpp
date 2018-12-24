@@ -44,7 +44,7 @@ class p2p_node;
 namespace libbitcoin {
 namespace consensus {
 
-BC_CONSTEXPR unsigned int min_tx_fee_per_kb = 1000;
+BC_CONSTEXPR unsigned int min_tx_fee_per_kb = 10000;
 BC_CONSTEXPR unsigned int median_time_span = 11;
 BC_CONSTEXPR uint32_t version = 1;
 

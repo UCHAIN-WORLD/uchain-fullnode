@@ -87,11 +87,11 @@ public:
         (
             "UIDSYMBOL",
             value<std::string>(&argument_.symbol)->required(),
-            "Did symbol"
+            "Uid symbol"
         )
         (
             "fee,f",
-            value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_block_token),
+            value<uint64_t>(&argument_.fee)->default_value(bc::min_tx_fee),
             "Transaction fee. defaults to 200000 UCN bits."
         );
 

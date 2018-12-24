@@ -70,12 +70,12 @@ utxo_attach_type get_utxo_attach_type(const chain::output& output_)
 void check_uid_symbol(const std::string& symbol, bool check_sensitive)
 {
     if (!chain::output::is_valid_uid_symbol(symbol, check_sensitive)) {
-        throw uid_symbol_name_exception{"Did symbol " + symbol + " is not valid."};
+        throw uid_symbol_name_exception{"Uid symbol " + symbol + " is not valid."};
     }
 
     if (check_sensitive) {
         if (boost::iequals(symbol, "BLACKHOLE")) {
-            throw uid_symbol_name_exception{"Did symbol cannot be blackhole."};
+            throw uid_symbol_name_exception{"Uid symbol cannot be blackhole."};
         }
     }
 }
