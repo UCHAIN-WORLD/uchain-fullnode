@@ -197,7 +197,8 @@ public:
         uint64_t limit, uint64_t from_height, history_compact::list& history);
 
 
-    history::list get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool = false);
+    history::list get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool = false, uint64_t from_height = 0);
+
 
 
     /// fetch stealth results.
@@ -284,13 +285,14 @@ public:
         const std::string& address, const std::string& symbol, token_cert_type cert_type);
 
     // identifiable token
-    bool is_token_candidate_exist(const std::string& symbol);
-    uint64_t get_token_candidate_height(const std::string& candidate_symbol)const;
-    std::shared_ptr<token_candidate_info> get_registered_candidate(const std::string& symbol);
-    std::shared_ptr<token_candidate_info::list> get_registered_candidates();
-    std::shared_ptr<token_candidate_info::list> get_candidate_history(const std::string& symbol,
+    bool is_candidate_exist(const std::string& symbol);
+    uint64_t get_candidate_height(const std::string& candidate_symbol)const;
+    std::shared_ptr<candidate_info> get_registered_candidate(const std::string& symbol);
+    std::shared_ptr<candidate_info::list> get_registered_candidates();
+    std::shared_ptr<candidate_info::list> get_candidate_history(const std::string& symbol,
+
         uint64_t limit = 0, uint64_t page_number = 0);
-    std::shared_ptr<libbitcoin::chain::token_candidate::list> get_wallet_candidates(
+    std::shared_ptr<candidate::list> get_wallet_candidates(
         const std::string& wallet, const std::string& symbol="");
 
     // wallet uid api

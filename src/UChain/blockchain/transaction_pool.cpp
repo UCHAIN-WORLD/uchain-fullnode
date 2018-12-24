@@ -159,7 +159,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
 {
     std::set<string> tokens;
     std::set<string> token_certs;
-    std::set<string> token_candidates;
+    std::set<string> candidates;
     std::set<string> uids;
     std::set<string> uidaddreses;
     std::set<string> uidattaches;
@@ -221,9 +221,9 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                     return error::token_cert_exist;
                 }
             }
-            else if (output.is_token_candidate())
+            else if (output.is_candidate())
             {
-                auto r = token_candidates.insert(output.get_token_symbol());
+                auto r = candidates.insert(output.get_token_symbol());
                 if (r.second == false)
                 {
                     log::debug(LOG_BLOCKCHAIN)

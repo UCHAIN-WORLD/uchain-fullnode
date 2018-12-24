@@ -41,7 +41,7 @@ namespace commands{
 /// asset_message       --> message
 /// asset_uid           --> uid_register   |  uid_transfer
 /// asset_token_cert    --> token_cert
-/// asset_token_candidate     --> token_candidate
+/// asset_candidate     --> candidate
 /// -------------------------------------------------------------------
 /// utxo_attach_type is only used in explorer module
 /// utxo_attach_type will be used to generate asset with asset_type and content
@@ -70,8 +70,8 @@ enum class utxo_attach_type : uint32_t
     token_cert_issue = 11,
     token_cert_transfer = 12,
     token_cert_autoissue = 13,
-    token_candidate = 14,
-    token_candidate_transfer = 15,
+    candidate = 14,
+    candidate_transfer = 15,
     invalid = 0xffffffff
 };
 
@@ -179,12 +179,15 @@ struct deposited_balance {
 void sync_fetchbalance(bc::wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, balances& addr_balance);
 
+void sync_fetchbalance(bc::wallet::payment_address& address,
+    bc::blockchain::block_chain_impl& blockchain, balances& addr_balance);
+
 void sync_fetch_deposited_balance(bc::wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, std::shared_ptr<deposited_balance::list> sh_vec);
 
 void sync_fetch_token_balance(const std::string& address, bool sum_all,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<token_balances::list> sh_token_vec);
+    std::shared_ptr<token_balances::list> sh_token_vec, uint64_t start_height = 0, uint64_t end_height = 0);
 
 void sync_fetch_token_deposited_balance(const std::string& address,
     bc::blockchain::block_chain_impl& blockchain,

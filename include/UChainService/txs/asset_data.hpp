@@ -29,7 +29,7 @@
 #include <UChainService/txs/token/token_detail.hpp>
 #include <UChainService/txs/token/token_transfer.hpp>
 #include <UChainService/txs/token/token_cert.hpp>
-#include <UChainService/txs/token/token_candidate.hpp>
+#include <UChainService/txs/token/candidate.hpp>
 #include <UChainService/txs/uid/uid_detail.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
 #include <UChainService/txs/ucn/ucn_award.hpp>
@@ -54,7 +54,7 @@ enum class business_kind : uint16_t
     uid_register = 5,
     uid_transfer = 6,
     token_cert = 7,
-    token_candidate = 8,
+    candidate = 8,
     unknown = 0xffff
 };
 
@@ -76,7 +76,7 @@ public:
         token_detail,
         token_transfer,
         token_cert,
-        token_candidate,
+        candidate,
         blockchain_message,
         uid_detail> asset_data_type;
 
@@ -251,7 +251,7 @@ public:
 
     std::string  address;
     uint8_t status; // 0 -- unspent  1 -- confirmed  2 -- local token not issued
-    token_candidate candidate;
+    libbitcoin::chain::candidate candidate;
 
 #ifdef UC_DEBUG
     // just used for unit test in block_chain_impl_test.cpp

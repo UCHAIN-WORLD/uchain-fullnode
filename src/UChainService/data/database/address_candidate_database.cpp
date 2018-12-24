@@ -138,7 +138,7 @@ address_candidate_statinfo address_candidate_database::statinfo() const
 void address_candidate_database::store_output(const short_hash& key,
     const output_point& outpoint, uint32_t output_height,
     uint64_t value, uint16_t business_kd,
-    uint32_t timestamp, const token_candidate& candidate)
+    uint32_t timestamp, const candidate& candidate)
 {
     auto write = [&](memory_ptr data)
     {
@@ -310,7 +310,7 @@ std::shared_ptr<std::vector<business_record>> address_candidate_database::get(co
                 result->emplace_back(row);
             } else { // candidate symbol utxo
                 // candidate business process
-                auto transfer = boost::get<token_candidate>(row.data.get_data());
+                auto transfer = boost::get<candidate>(row.data.get_data());
                 candidate_symbol = transfer.get_symbol();
 
                 if (symbol == candidate_symbol) {
@@ -629,7 +629,7 @@ business_history::list address_candidate_database::get_business_history(const st
  status -- // 0 -- unspent  1 -- confirmed
 */
 business_address_candidate::list address_candidate_database::get_candidates(const std::string& address,
-    size_t from_height, token_candidate::candidate_status kind) const
+    size_t from_height, candidate::candidate_status kind) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
@@ -649,9 +649,9 @@ business_address_candidate::list address_candidate_database::get_candidates(cons
         if (status == business_status::unknown)
             continue;
 
-        auto candidate = boost::get<token_candidate>(row.data.get_data());
-        if ((kind != token_candidate::candidate_status::candidate_status_none)
-            && (kind != (token_candidate::candidate_status)candidate.get_status())) {
+        auto candidate = boost::get<libbitcoin::chain::candidate>(row.data.get_data());
+        if ((kind != candidate::candidate_status::candidate_status_none)
+            && (kind != (candidate::candidate_status)candidate.get_status())) {
             continue;
         }
 

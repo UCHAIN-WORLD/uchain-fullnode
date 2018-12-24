@@ -1114,7 +1114,7 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
             // NOTICE: pop only the pushed row, at present uid and candidate is
             // not stored in address_token, but stored separately
             // in address_uid and address_uid
-            if (!op.is_uid() && !op.is_token_candidate()) {
+            if (!op.is_uid() && !op.is_candidate()) {
                 address_tokens.delete_last_row(hash);
             }
             // remove token or uid from database
@@ -1168,10 +1168,10 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
                     certs.remove(key_hash);
                 }
             }
-            else if (op.is_token_candidate()) {
+            else if (op.is_candidate()) {
                 address_candidates.delete_last_row(hash);
 
-                const auto candidate = op.get_token_candidate();
+                const auto candidate = op.get_candidate();
                 auto symbol = candidate.get_symbol();
                 const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
 
@@ -1300,11 +1300,11 @@ void data_base::push_uid_detail(const uid_detail& sp_detail, const short_hash& k
 /* end store uid related info into database */
 
 /* begin store candidate related info into database */
-void data_base::push_candidate(const token_candidate& candidate, const short_hash& key,
+void data_base::push_candidate(const candidate& candidate, const short_hash& key,
     const output_point& outpoint, uint32_t output_height, uint64_t value,
     const std::string from_uid, std::string to_uid)
 {
-    token_candidate_info candidate_info{output_height, timestamp_, to_uid, candidate};
+    candidate_info candidate_info{output_height, timestamp_, to_uid, candidate};
 
     if (candidate.is_register_status()) {
         candidates.store(candidate_info);
@@ -1312,7 +1312,7 @@ void data_base::push_candidate(const token_candidate& candidate, const short_has
     }
 
     address_candidates.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_candidate),
+        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::candidate),
         timestamp_, candidate);
     address_candidates.sync();
 

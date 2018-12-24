@@ -28,12 +28,12 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-#define CANDIDATE_STATUS2UINT32(kd)  (static_cast<typename std::underlying_type<token_candidate::candidate_status>::type>(kd))
+#define CANDIDATE_STATUS2UINT32(kd)  (static_cast<typename std::underlying_type<candidate::candidate_status>::type>(kd))
 
-#define CANDIDATE_STATUS_NONE        CANDIDATE_STATUS2UINT32(token_candidate::candidate_status::candidate_status_none)
-#define CANDIDATE_STATUS_REGISTER    CANDIDATE_STATUS2UINT32(token_candidate::candidate_status::candidate_status_register)
-#define CANDIDATE_STATUS_TRANSFER    CANDIDATE_STATUS2UINT32(token_candidate::candidate_status::candidate_status_transfer)
-#define CANDIDATE_STATUS_MAX         CANDIDATE_STATUS2UINT32(token_candidate::candidate_status::candidate_status_max)
+#define CANDIDATE_STATUS_NONE        CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_none)
+#define CANDIDATE_STATUS_REGISTER    CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_register)
+#define CANDIDATE_STATUS_TRANSFER    CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_transfer)
+#define CANDIDATE_STATUS_MAX         CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_max)
 
 namespace libbitcoin {
 namespace chain {
@@ -53,10 +53,10 @@ BC_CONSTEXPR size_t TOKEN_CANDIDATE_TRANSFER_FIX_SIZE = (
 // output_height; timestamp; to_uid; candidate;
 BC_CONSTEXPR size_t TOKEN_CANDIDATE_INFO_FIX_SIZE = 4 + 4 + 64 + TOKEN_CANDIDATE_TRANSFER_FIX_SIZE;
 
-class BC_API token_candidate
+class BC_API candidate
 {
 public:
-    typedef std::vector<token_candidate> list;
+    typedef std::vector<candidate> list;
 
     enum class candidate_status : uint8_t
     {
@@ -66,17 +66,17 @@ public:
         candidate_status_max      = 3,
     };
 
-    token_candidate();
-    token_candidate(const std::string& symbol, const std::string& address,
+    candidate();
+    candidate(const std::string& symbol, const std::string& address,
               const std::string& content);
 
     void reset();
     bool is_valid() const;
-    bool operator< (const token_candidate& other) const;
+    bool operator< (const candidate& other) const;
 
-    static token_candidate factory_from_data(const data_chunk& data);
-    static token_candidate factory_from_data(std::istream& stream);
-    static token_candidate factory_from_data(reader& source);
+    static candidate factory_from_data(const data_chunk& data);
+    static candidate factory_from_data(std::istream& stream);
+    static candidate factory_from_data(reader& source);
 
     bool from_data(const data_chunk& data);
     bool from_data(std::istream& stream);
@@ -112,26 +112,26 @@ public:
 
 private:
     // NOTICE: ref CTokenCandidate in transaction.h
-    // token_candidate and CTokenCandidate should have the same size and order.
+    // candidate and CTokenCandidate should have the same size and order.
     uint8_t status_;        // token status
     std::string symbol_;    // token name/symbol
     std::string address_;   // address that owned token cert
     std::string content_;   // the content of the token, only serialization in register.
 };
 
-struct BC_API token_candidate_info
+struct BC_API candidate_info
 {
-    typedef std::vector<token_candidate_info> list;
+    typedef std::vector<candidate_info> list;
     uint32_t output_height;
     uint32_t timestamp;
     std::string to_uid;
-    token_candidate candidate;
+    libbitcoin::chain::candidate candidate;
 
     uint64_t serialized_size() const;
     void reset();
-    bool operator< (const token_candidate_info& other) const;
+    bool operator< (const candidate_info& other) const;
 
-    static token_candidate_info factory_from_data(reader& source);
+    static candidate_info factory_from_data(reader& source);
     data_chunk to_data() const;
     data_chunk to_short_data() const;
 };

@@ -247,7 +247,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
 
     std::set<string> tokens;
     std::set<string> token_certs;
-    std::set<string> token_candidates;
+    std::set<string> candidates;
     std::set<string> uids;
     std::set<string> uidaddreses;
     code first_tx_ec = error::success;
@@ -290,8 +290,8 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
                     break;
                 }
             }
-            else if (output.is_token_candidate()) {
-                auto r = token_candidates.insert(output.get_token_symbol());
+            else if (output.is_candidate()) {
+                auto r = candidates.insert(output.get_token_symbol());
                 if (r.second == false) {
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_block candidate " + output.get_token_symbol()
@@ -613,7 +613,7 @@ code validate_block::connect_block(hash_digest& err_tx, blockchain::block_chain_
                 }
                 uint64_t coinbase_lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(transactions[coinage_reward_coinbase_index].outputs[0].script.operations);
 
-                if (check_get_coinage_reward_transaction(transactions[coinage_reward_coinbase_index++], output, transactions[tx_index].has_token_candidate_register()) == false) {
+                if (check_get_coinage_reward_transaction(transactions[coinage_reward_coinbase_index++], output, transactions[tx_index].has_candidate_register()) == false) {
                     err_tx = transactions[tx_index].hash();
                     return error::invalid_coinage_reward_coinbase;
                 }

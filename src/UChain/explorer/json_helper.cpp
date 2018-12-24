@@ -532,7 +532,7 @@ Json::Value json_helper::prop_list(const bc::chain::token_cert& cert_info)
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::token_candidate& candidate_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::candidate& candidate_info, bool always_show_content)
 {
     Json::Value tree;
     tree["symbol"] = candidate_info.get_symbol();
@@ -546,7 +546,7 @@ Json::Value json_helper::prop_list(const bc::chain::token_candidate& candidate_i
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::token_candidate_info& candidate_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::candidate_info& candidate_info, bool always_show_content)
 {
     Json::Value tree;
 
@@ -640,7 +640,7 @@ Json::Value json_helper::prop_list(bc::chain::asset& attach_data)
         }
     }
     else if (attach_data.get_type() == TOKEN_CANDIDATE_TYPE) {
-        auto token_info = boost::get<bc::chain::token_candidate>(attach_data.get_attach());
+        auto token_info = boost::get<bc::chain::candidate>(attach_data.get_attach());
         tree = prop_list(token_info);
         tree["type"] = "candidate";
     }
