@@ -97,7 +97,7 @@ public:
         (
             "percentage,p",
             value<uint32_t>(&argument_.percentage)->default_value(20),
-            "Percentage of fee send to miner. minimum is 20."
+            "Percentage of fee send to miner. minimum is 20 which is the default value."
         );
 
         return options;

@@ -238,6 +238,8 @@ public:
     operation_result delete_wallet(const std::string& name);
     operation_result delete_wallet_address(const std::string& name);
 
+    operation_result delete_n_wallet_address(const std::string& name, uint64_t count);
+
     std::shared_ptr<business_history::list> get_address_business_history(
         const std::string& addr, business_kind kind, uint8_t confirmed);
     std::shared_ptr<business_history::list> get_address_business_history(
@@ -288,6 +290,7 @@ public:
     std::shared_ptr<candidate_info> get_registered_candidate(const std::string& symbol);
     std::shared_ptr<candidate_info::list> get_registered_candidates();
     std::shared_ptr<candidate_info::list> get_candidate_history(const std::string& symbol,
+
         uint64_t limit = 0, uint64_t page_number = 0);
     std::shared_ptr<candidate::list> get_wallet_candidates(
         const std::string& wallet, const std::string& symbol="");
@@ -347,7 +350,7 @@ public:
     code validate_transaction(const chain::transaction& tx);
     code broadcast_transaction(const chain::transaction& tx);
     bool get_tx_inputs_ucn_value (chain::transaction& tx, uint64_t& ucn_val);
-    void safe_store_wallet(libbitcoin::chain::wallet& acc, std::vector<std::shared_ptr<wallet_address>>& addresses);
+    void safe_store_wallet(libbitcoin::chain::wallet& acc, const std::vector<std::shared_ptr<wallet_address>>& addresses);
 
 private:
     typedef std::function<bool(database::handle)> perform_read_functor;

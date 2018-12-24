@@ -1183,6 +1183,28 @@ operation_result block_chain_impl::delete_wallet_address(const std::string& name
     return operation_result::okay;
 }
 
+/// delete some of the address from the last
+operation_result block_chain_impl::delete_n_wallet_address(const std::string& name, uint64_t count)
+{
+    if (stopped()) {
+        return operation_result::failure;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Critical Section.
+    unique_lock lock(mutex_);
+
+    auto hash = get_short_hash(name);
+    auto addr_vec = database_.wallet_addresses.get(hash);
+    if(count >= addr_vec.size())
+        throw std::logic_error{"Parameter count should less than the count of your address!"};
+    for( size_t i = 0;i < count; i++)
+        database_.wallet_addresses.delete_last_row(hash);
+    database_.wallet_addresses.sync();
+    ///////////////////////////////////////////////////////////////////////////
+    return operation_result::okay;
+}
+
 std::shared_ptr<wallet_address> block_chain_impl::get_wallet_address(
     const std::string& name, const std::string& address)
 {
@@ -2451,7 +2473,7 @@ bool block_chain_impl::get_tx_inputs_ucn_value (chain::transaction& tx, uint64_t
     return true;
 }
 
-void block_chain_impl::safe_store_wallet(libbitcoin::chain::wallet& acc, std::vector<std::shared_ptr<wallet_address>>& addresses)
+void block_chain_impl::safe_store_wallet(libbitcoin::chain::wallet& acc, const std::vector<std::shared_ptr<wallet_address>>& addresses)
 {
     if (stopped())
         return;

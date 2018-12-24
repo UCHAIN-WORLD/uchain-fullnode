@@ -20,6 +20,13 @@ IF(NOT CMAKE_EXPORT_COMPILE_COMMANDS)
     SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 ENDIF()
 
+# --------------- Check os verson---------------------
+if ( NOT WINDOWS )	
+    string (REGEX MATCH "Linux-([0-9]*)" _ ${CMAKE_SYSTEM})
+    set(os_version_suffix ${CMAKE_MATCH_1})
+
+endif ( NOT WINDOWS )	
+
 # --------------- Compiler Settings ------------------
 # Common Definitions 
 
