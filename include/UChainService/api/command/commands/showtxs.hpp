@@ -38,21 +38,21 @@ public:
     static const char* symbol() { return "showtxs";}
     const char* name() override { return symbol();}
     bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "List transactions details of this account."; }
+    const char* description() override { return "List transactions details of this wallet."; }
 
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-                .add("ADMINNAME", 1)
-                .add("ADMINAUTH", 1);
+               .add("WALLETNAME", 1)
+               .add("WALLETAUTH", 1);
     }
 
     void load_fallbacks (std::istream& input,
                          po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(auth_.name, "ADMINNAME", variables, input, raw);
-        load_input(auth_.auth, "ADMINAUTH", variables, input, raw);
+        load_input(auth_.name, "WALLETNAME", variables, input, raw);
+        load_input(auth_.auth, "WALLETAUTH", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -66,14 +66,14 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "ADMINNAME",
+            "WALLETNAME",
             value<std::string>(&auth_.name),
-            BX_ACCOUNT_NAME
+            BX_WALLET_NAME
         )
         (
-            "ADMINAUTH",
+            "WALLETAUTH",
             value<std::string>(&auth_.auth),
-            BX_ACCOUNT_AUTH
+            BX_WALLET_AUTH
         )
         (
             "address,a",

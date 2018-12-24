@@ -176,10 +176,10 @@ struct deposited_balance {
 };
 
 // helper function
-void sync_fetchbalance(wallet::payment_address& address,
+void sync_fetchbalance(bc::wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, balances& addr_balance);
 
-void sync_fetch_deposited_balance(wallet::payment_address& address,
+void sync_fetch_deposited_balance(bc::wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, std::shared_ptr<deposited_balance::list> sh_vec);
 
 void sync_fetch_token_balance(const std::string& address, bool sum_all,
@@ -202,7 +202,7 @@ void sync_fetch_token_cert_balance(const std::string& address, const string& sym
     bc::blockchain::block_chain_impl& blockchain,
     std::shared_ptr<token_cert::list> sh_vec, token_cert_type cert_type=token_cert_ns::none);
 
-std::string get_random_payment_address(std::shared_ptr<std::vector<account_address>>,
+std::string get_random_payment_address(std::shared_ptr<std::vector<wallet_address>>,
     bc::blockchain::block_chain_impl& blockchain);
 
 std::string get_address_from_strict_uid(const std::string& uid_or_address,
@@ -365,7 +365,7 @@ public:
         std::string&& name, std::string&& passwd,
         std::string&& from, receiver_record::list&& receiver_list,
         uint64_t fee, std::string&& symbol,
-        account_multisig&& multisig_from)
+        wallet_multisig&& multisig_from)
         : base_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
             std::move(from), std::move(receiver_list), fee, std::move(symbol))
         , multisig_(std::move(multisig_from))
@@ -382,7 +382,7 @@ public:
 
 protected:
     // for multisig address
-    account_multisig multisig_;
+    wallet_multisig multisig_;
 };
 
 class BCX_API base_transaction_constructor : public base_transfer_common
@@ -509,7 +509,7 @@ public:
     sending_multisig_tx(command& cmd, bc::blockchain::block_chain_impl& blockchain,
         std::string&& name, std::string&& passwd,
         std::string&& from, receiver_record::list&& receiver_list, uint64_t fee,
-        account_multisig& multisig, std::string&& symbol = std::string(""))
+        wallet_multisig& multisig, std::string&& symbol = std::string(""))
         : base_multisig_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
             std::move(from), std::move(receiver_list), fee, std::move(symbol),
             std::move(multisig))
@@ -620,7 +620,7 @@ public:
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol, receiver_record::list&& receiver_list,
         uint64_t fee, uint32_t fee_percentage_to_miner,
-        account_multisig&& multisig)
+        wallet_multisig&& multisig)
         : base_multisig_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
             std::move(from), std::move(receiver_list), fee, std::move(symbol),
             std::move(multisig))
@@ -648,7 +648,7 @@ public:
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& feefrom, std::string&& symbol,
         receiver_record::list&& receiver_list
-        , uint64_t fee, account_multisig&& multisig, account_multisig&& multisigto)
+        , uint64_t fee, wallet_multisig&& multisig, wallet_multisig&& multisigto)
         : base_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
             std::move(from), std::move(receiver_list), fee, std::move(symbol))
         , fromfee(feefrom), multisig_from_(std::move(multisig)), multisig_to_(std::move(multisigto))
@@ -673,8 +673,8 @@ public:
 
 private:
     std::string fromfee;
-    account_multisig multisig_from_;
-    account_multisig multisig_to_;
+    wallet_multisig multisig_from_;
+    wallet_multisig multisig_to_;
 };
 
 class BCX_API sending_uid : public base_transfer_helper
@@ -711,7 +711,7 @@ public:
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         receiver_record::list&& receiver_list, uint64_t fee,
-        account_multisig&& multisig_from)
+        wallet_multisig&& multisig_from)
         : base_multisig_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
             std::move(from), std::move(receiver_list), fee, std::move(symbol),
             std::move(multisig_from))
@@ -783,7 +783,7 @@ public:
         std::string&& name, std::string&& passwd,
         std::string&& from, std::string&& symbol,
         receiver_record::list&& receiver_list, uint64_t fee,
-        account_multisig&& multisig_from)
+        wallet_multisig&& multisig_from)
         : base_multisig_transfer_helper(cmd, blockchain, std::move(name), std::move(passwd),
             std::move(from), std::move(receiver_list), fee, std::move(symbol),
             std::move(multisig_from))

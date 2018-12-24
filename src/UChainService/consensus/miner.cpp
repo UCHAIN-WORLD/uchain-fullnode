@@ -281,7 +281,7 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
 }
 
 miner::transaction_ptr miner::create_coinbase_tx(
-    const wallet::payment_address& pay_address, uint64_t value, uint64_t block_height)
+    const bc::wallet::payment_address& pay_address, uint64_t value, uint64_t block_height)
 {
     transaction_ptr ptransaction = make_shared<message::transaction_message>();
     
@@ -315,7 +315,7 @@ miner::transaction_ptr miner::create_coinbase_tx(
 }
 
 miner::transaction_ptr miner::create_lock_coinbase_tx(
-    const wallet::payment_address &pay_address, uint64_t value,
+    const bc::wallet::payment_address &pay_address, uint64_t value,
     uint64_t block_height, int lock_height, uint32_t reward_lock_time)
 {
 
@@ -343,7 +343,7 @@ miner::transaction_ptr miner::create_lock_coinbase_tx(
     return ptransaction;
 }
 
-uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const wallet::payment_address &address)
+uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const bc::wallet::payment_address &address)
 {
     block_chain_impl &block_chain = node_.chain_impl();
     auto &&rows = block_chain.get_address_history(address,true);
@@ -513,7 +513,7 @@ struct transaction_dependent {
         : dpendens(_dpendens), is_need_process(_is_need_process) { hash = make_shared<hash_digest>(_hash);}
 };
 
-miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_address,  uint64_t current_block_height)
+miner::block_ptr miner::create_new_block(const bc::wallet::payment_address& pay_address,  uint64_t current_block_height)
 {
     block_ptr pblock;
     vector<transaction_ptr> transactions;
@@ -642,7 +642,7 @@ miner::block_ptr miner::create_new_block(const wallet::payment_address& pay_addr
             if (chain::operation::is_pay_key_hash_with_lock_height_pattern(output.script.operations)) {
                 int lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(output.script.operations);
                 coinage_reward_coinbase = create_lock_coinbase_tx(ptx->has_token_candidate_register() ? \
-                    wallet::payment_address(bc::get_developer_community_address(block_chain.chain_settings().use_testnet_rules)) : wallet::payment_address::extract(ptx->outputs[0].script),
+                    bc::wallet::payment_address(bc::get_developer_community_address(block_chain.chain_settings().use_testnet_rules)) : bc::wallet::payment_address::extract(ptx->outputs[0].script),
                                           calculate_lockblock_reward(lock_height, output.value),
                                           current_block_height + 1, lock_height, reward_lock_time);
 
@@ -799,7 +799,7 @@ std::string to_string(_T const& _t)
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
 std::vector<std::string> mine_address_list = {"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"};
 
-void miner::work(const wallet::payment_address pay_address)
+void miner::work(const bc::wallet::payment_address pay_address)
 {
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
     int index = get_mine_index(pay_address.encoded());
@@ -895,7 +895,7 @@ bool miner::is_stop_miner(uint64_t block_height) const
     return (state_ == state::exit_) || (get_height() > block_height);
 }
 
-bool miner::start(const wallet::payment_address& pay_address, uint16_t number)
+bool miner::start(const bc::wallet::payment_address& pay_address, uint16_t number)
 {
     if (!thread_) {
         new_block_limit_ = number;
@@ -907,7 +907,7 @@ bool miner::start(const wallet::payment_address& pay_address, uint16_t number)
 
 bool miner::start(const std::string& public_key, uint16_t number)
 {
-    wallet::payment_address pay_address = libbitcoin::wallet::ec_public(public_key).to_payment_address();
+    bc::wallet::payment_address pay_address = libbitcoin::wallet::ec_public(public_key).to_payment_address();
     if (pay_address) {
         return start(pay_address, number);
     }

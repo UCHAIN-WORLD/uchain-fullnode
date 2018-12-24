@@ -33,7 +33,7 @@ console_result signrawtx::invoke(Json::Value& jv_output,
                                  libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     tx_type tx_ = argument_.transaction;
 
@@ -54,7 +54,7 @@ console_result signrawtx::invoke(Json::Value& jv_output,
             if (!address || (address.version() == 0x5)) // script address : maybe multisig
                 throw argument_legality_exception{"invalid script " + config::script(output.script).to_string()};
 
-            auto acc_addr = blockchain.get_account_address(auth_.name, address.encoded());
+            auto acc_addr = blockchain.get_wallet_address(auth_.name, address.encoded());
 
             if (!acc_addr)
                 throw argument_legality_exception{"not own address " + address.encoded()};

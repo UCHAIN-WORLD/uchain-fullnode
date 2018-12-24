@@ -101,13 +101,6 @@ If you do not need UPnP support, you can use `"cmake -DUSE_UPNP=OFF .."` to disa
 <br>And `"make -j4`" may be better (-j4 is not always the rigth parameter... could be j2 or j8 it depends by the cpu).
 <br>Also `"make install-strip`" may be better(it strips).
 
-optional:
-```bash
-$ make test (should install boost_unit_test_framework)
-$ make doc  (should install doxygen and graphviz)
-```
-
-
 
 # Run UC
 After UC is built successfully, there are two executable files in the _bin_ directory:

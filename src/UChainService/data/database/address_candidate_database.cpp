@@ -657,7 +657,7 @@ business_address_candidate::list address_candidate_database::get_candidates(cons
 
         business_address_candidate detail;
         detail.candidate = candidate;
-        detail.address = address; // account address
+        detail.address = address; // wallet address
         detail.status = status; // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);
     }

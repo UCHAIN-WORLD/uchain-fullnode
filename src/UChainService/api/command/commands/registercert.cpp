@@ -43,7 +43,7 @@ console_result registercert::invoke (Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     blockchain.uppercase_symbol(argument_.symbol);
     boost::to_lower(argument_.cert);
@@ -56,8 +56,8 @@ console_result registercert::invoke (Json::Value& jv_output,
     if (!blockchain.is_valid_address(to_address)) {
         throw address_invalid_exception{"invalid uid parameter! " + to_uid};
     }
-    if (!blockchain.get_account_address(auth_.name, to_address)) {
-        throw address_dismatch_account_exception{"target uid does not match account. " + to_uid};
+    if (!blockchain.get_wallet_address(auth_.name, to_address)) {
+        throw address_dismatch_wallet_exception{"target uid does not match wallet. " + to_uid};
     }
 
     // check token cert types
@@ -115,13 +115,13 @@ console_result registercert::invoke (Json::Value& jv_output,
                 "token symbol '" + argument_.symbol + "' already exists on the blockchain!");
         }
 
-        // check domain cert belong to this account.
+        // check domain cert belong to this wallet.
         bool exist = blockchain.is_token_cert_exist(domain, token_cert_ns::domain);
         if (!exist) {
             throw token_cert_notfound_exception("no domain cert '" + domain + "' found!");
         }
 
-        auto cert = blockchain.get_account_token_cert(auth_.name, domain, token_cert_ns::domain);
+        auto cert = blockchain.get_wallet_token_cert(auth_.name, domain, token_cert_ns::domain);
         if (!cert) {
             throw token_cert_notowned_exception("no domain cert '" + domain + "' owned by " + auth_.name);
         }

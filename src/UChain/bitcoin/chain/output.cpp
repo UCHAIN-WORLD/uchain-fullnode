@@ -146,7 +146,7 @@ bool output::is_valid() const
 
 std::string output::get_script_address() const
 {
-    auto payment_address = wallet::payment_address::extract(script);
+    auto payment_address = bc::wallet::payment_address::extract(script);
     return payment_address.encoded();
 }
 

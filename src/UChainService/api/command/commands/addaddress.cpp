@@ -36,7 +36,7 @@ console_result addaddress::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     if (!option_.count || (option_.count & 0xfff00000)) {
         throw address_amount_exception("invalid address number parameter");
@@ -44,9 +44,9 @@ console_result addaddress::invoke(Json::Value& jv_output,
     //operation
     if (option_.operation == "del")
     {
-        blockchain.delete_n_account_address(auth_.name, option_.count);
+        blockchain.delete_n_wallet_address(auth_.name, option_.count);
         acc->set_hd_index(acc->get_hd_index() - option_.count);
-        blockchain.safe_store_account(*acc, std::vector<std::shared_ptr<account_address>>{});
+        blockchain.safe_store_wallet(*acc, std::vector<std::shared_ptr<wallet_address>>{});
         jv_output["status"]= "address removed successfully";
     }
     else if ((option_.operation == "add") || (option_.operation == ""))
@@ -66,8 +66,8 @@ console_result addaddress::invoke(Json::Value& jv_output,
 
         Json::Value addresses;
         
-        std::vector<std::shared_ptr<account_address>> account_addresses;
-        account_addresses.reserve(option_.count);
+        std::vector<std::shared_ptr<wallet_address>> wallet_addresses;
+        wallet_addresses.reserve(option_.count);
         const auto seed = decode_mnemonic(words);
         libbitcoin::config::base16 bs(seed);
         const data_chunk& ds = static_cast<const data_chunk&>(bs);
@@ -83,7 +83,7 @@ console_result addaddress::invoke(Json::Value& jv_output,
 
         for (uint32_t idx = 0; idx < option_.count; idx++ ) {
 
-            auto addr = std::make_shared<bc::chain::account_address>();
+            auto addr = std::make_shared<bc::chain::wallet_address>();
             addr->set_name(auth_.name);
 
             const auto child_private_key = private_key.derive_private(acc->get_hd_index());
@@ -108,12 +108,12 @@ console_result addaddress::invoke(Json::Value& jv_output,
 
             acc->increase_hd_index();
             addr->set_hd_index(acc->get_hd_index());
-            account_addresses.push_back(addr);
+            wallet_addresses.push_back(addr);
 
             addresses.append(addr->get_address());
         }
 
-        blockchain.safe_store_account(*acc, account_addresses);
+        blockchain.safe_store_wallet(*acc, wallet_addresses);
 
         // write to output json
         

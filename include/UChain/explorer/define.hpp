@@ -77,13 +77,13 @@
 #define IN_DEVELOPING "The command is in develeping, replace it with original command."
 
 /**
- * Show Account messages.
+ * Show Wallet messages.
  */
-#define BX_ACCOUNT_NAME "Account name just for local."
-#define BX_ACCOUNT_AUTH "Account password(authorization) just for local."
+#define BX_WALLET_NAME "Wallet name just for local."
+#define BX_WALLET_AUTH "Wallet password(authorization) just for local."
 
 /**
- * Show Account messages.
+ * Show Wallet messages.
  */
 #define BX_ADMIN_NAME "Administrator .(administrator_required is true)"
 #define BX_ADMIN_AUTH "Administrator password."

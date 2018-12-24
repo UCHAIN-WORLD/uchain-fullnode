@@ -41,7 +41,7 @@ console_result showcandidates::invoke(Json::Value& jv_output,
     auto json_helper = config::json_helper(get_api_version());
 
     if (auth_.name.empty()) {
-        // no account -- list whole tokens in blockchain
+        // no wallet -- list whole tokens in blockchain
         auto sh_vec = blockchain.get_registered_candidates();
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
@@ -52,10 +52,10 @@ console_result showcandidates::invoke(Json::Value& jv_output,
         }
     }
     else {
-        blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+        blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-        // list tokens owned by account
-        auto sh_vec = blockchain.get_account_candidates(auth_.name);
+        // list tokens owned by wallet
+        auto sh_vec = blockchain.get_wallet_candidates(auth_.name);
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem : *sh_vec) {

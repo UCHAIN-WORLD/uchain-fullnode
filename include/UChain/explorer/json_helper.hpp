@@ -32,7 +32,7 @@
 #include <UChain/explorer/config/point.hpp>
 #include <UChain/explorer/config/transaction.hpp>
 #include <UChain/explorer/config/wrapper.hpp>
-#include <UChainService/txs/account/account.hpp>
+#include <UChainService/txs/wallet/wallet.hpp>
 
 #include <jsoncpp/json/json.h>
 
@@ -157,7 +157,7 @@ BCX_API Json::Value prop_tree(const chain::history::list& rows, bool json);
  * @return                      A property list.
  */
 BCX_API Json::Value prop_list(const chain::history::list& rows,
-    const wallet::payment_address& balance_address);
+    const bc::wallet::payment_address& balance_address);
 
 /**
  * Generate a property tree from balance rows for an address.
@@ -167,7 +167,7 @@ BCX_API Json::Value prop_list(const chain::history::list& rows,
  * @return                      A property tree.
  */
 BCX_API Json::Value prop_tree(const chain::history::list& rows,
-    const wallet::payment_address& balance_address);
+    const bc::wallet::payment_address& balance_address);
 
 /**
  * Generate a property list for a transaction input.
@@ -300,14 +300,14 @@ BCX_API Json::Value prop_tree(const std::vector<transaction>& transactions,
  * @param[in]  wrapper  The wrapper instance.
  * @return              A property list.
  */
-BCX_API Json::Value prop_list(const wallet::wrapped_data& wrapper);
+BCX_API Json::Value prop_list(const bc::wallet::wrapped_data& wrapper);
 
 /**
  * Generate a property tree for a wrapper.
  * @param[in]  wrapper  The wrapper instance.
  * @return              A property tree.
  */
-BCX_API Json::Value prop_tree(const wallet::wrapped_data& wrapper);
+BCX_API Json::Value prop_tree(const bc::wallet::wrapped_data& wrapper);
 
 /**
  * Generate a property list for transaction with extended data.
@@ -318,7 +318,7 @@ BCX_API Json::Value prop_tree(const wallet::wrapped_data& wrapper);
  * @return                 A property list.
  */
 BCX_API Json::Value prop_list(const tx_type& tx, const hash_digest& block_hash,
-    const wallet::payment_address& address, bool json);
+    const bc::wallet::payment_address& address, bool json);
 
 /**
  * Generate a property tree for transaction with extended data.
@@ -329,7 +329,7 @@ BCX_API Json::Value prop_list(const tx_type& tx, const hash_digest& block_hash,
  * @return                 A property tree.
  */
 BCX_API Json::Value prop_tree(const tx_type& tx, const hash_digest& block_hash,
-    const wallet::payment_address& address, bool json);
+    const bc::wallet::payment_address& address, bool json);
 
 /**
  * Generate a property list for a stealth address.
@@ -337,7 +337,7 @@ BCX_API Json::Value prop_tree(const tx_type& tx, const hash_digest& block_hash,
  * @param[in]  json             Use json array formatting.
  * @return                      A property list.
  */
-BCX_API Json::Value prop_list(const wallet::stealth_address& stealth, bool json);
+BCX_API Json::Value prop_list(const bc::wallet::stealth_address& stealth, bool json);
 
 /**
  * Generate a property tree for a stealth address.
@@ -345,7 +345,7 @@ BCX_API Json::Value prop_list(const wallet::stealth_address& stealth, bool json)
  * @param[in]  json             Use json array formatting.
  * @return                      A property tree.
  */
-BCX_API Json::Value prop_tree(const wallet::stealth_address& stealth, bool json);
+BCX_API Json::Value prop_tree(const bc::wallet::stealth_address& stealth, bool json);
 
 /**
  * Generate a property list for a stealth metadata row.
@@ -401,7 +401,7 @@ BCX_API Json::Value prop_tree(const settings_list& settings);
  * @param[in]  uri   The parsed uri.
  * @returns          A new property tree containing the settings.
  */
-BCX_API Json::Value prop_tree(const wallet::bitcoin_uri& uri);
+BCX_API Json::Value prop_tree(const bc::wallet::bitcoin_uri& uri);
 
 /**
  * Create a property tree for a parsed bitcoin uri.
@@ -474,7 +474,7 @@ BCX_API Json::Value prop_list(const bc::chain::token_candidate_info& candidate_i
  * @param[in]  multisign        The multisign.
  * @return             A property list.
  */
-BCX_API Json::Value prop_list(const bc::chain::account_multisig& multisign);
+BCX_API Json::Value prop_list(const bc::chain::wallet_multisig& multisign);
 
 /**
  * Generate a property list for a attenuation_model_param.
@@ -485,12 +485,12 @@ BCX_API Json::Value prop_attenuation_model_param(const data_chunk& param);
 BCX_API Json::Value prop_attenuation_model_param(const std::string& param);
 
 /**
- * Generate a property list for an account.
- * @param[in]  acc        The account.
+ * Generate a property list for an wallet.
+ * @param[in]  acc        The wallet.
  * @return             A property list.
  */
-typedef std::tuple<std::string, std::string, Json::Value> account_info;
-BCX_API Json::Value prop_list(const account_info& acc);
+typedef std::tuple<std::string, std::string, Json::Value> wallet_info;
+BCX_API Json::Value prop_list(const wallet_info& acc);
 
 private:
     uint8_t version_{ 1 }; //1 - api v1; 2 - api v2;

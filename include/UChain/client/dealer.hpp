@@ -33,7 +33,7 @@ namespace libbitcoin {
 namespace client {
 
 // This class is not thread safe.
-/// Matches replies and outgoing messages, accounting for timeouts and retries.
+/// Matches replies and outgoing messages, walleting for timeouts and retries.
 // This class is a pure proxy; it does not talk directly to zeromq.
 class BCC_API dealer
   : public stream
@@ -43,7 +43,7 @@ public:
     typedef std::function<void(const std::string&)> unknown_handler;
     typedef std::function<void(const binary&, size_t, const hash_digest&,
         const chain::transaction&)> stealth_update_handler;
-    typedef std::function<void(const wallet::payment_address&, size_t,
+    typedef std::function<void(const bc::wallet::payment_address&, size_t,
         const hash_digest&, const chain::transaction&)> update_handler;
 
     /// Resend is unrelated to connections.

@@ -39,7 +39,7 @@ console_result registertoken::invoke (Json::Value& jv_output,
 {
     auto& blockchain = node.chain_impl();
 
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     blockchain.uppercase_symbol(argument_.symbol);
 
     // check token symbol
@@ -67,9 +67,9 @@ console_result registertoken::invoke (Json::Value& jv_output,
     }
 
     // local database token check
-    auto sh_token = blockchain.get_account_unissued_token(auth_.name, argument_.symbol);
+    auto sh_token = blockchain.get_wallet_unissued_token(auth_.name, argument_.symbol);
     if (!sh_token) {
-        throw token_symbol_notfound_exception{"token " + argument_.symbol + " not found"};
+        throw token_symbol_notfound_exception{"token " + argument_.symbol + " not found,createtoken first"};
     }
 
     auto to_uid = sh_token->get_issuer();
@@ -93,22 +93,22 @@ console_result registertoken::invoke (Json::Value& jv_output,
             cert_symbol = domain;
         }
         else {
-            // if domain cert exists then check whether it belongs to the account.
+            // if domain cert exists then check whether it belongs to the wallet.
             is_domain_cert_exist = true;
-            auto cert = blockchain.get_account_token_cert(auth_.name, domain, token_cert_ns::domain);
+            auto cert = blockchain.get_wallet_token_cert(auth_.name, domain, token_cert_ns::domain);
             if (cert) {
                 cert_symbol = domain;
                 cert_type = cert->get_type();
             }
             else {
-                // if domain cert does not belong to the account then check naming cert
+                // if domain cert does not belong to the wallet then check naming cert
                 exist = blockchain.is_token_cert_exist(argument_.symbol, token_cert_ns::naming);
                 if (!exist) {
                     throw token_cert_notfound_exception{
                         "Domain cert " + argument_.symbol + " exists on the blockchain and is not owned by " + auth_.name};
                 }
                 else {
-                    cert = blockchain.get_account_token_cert(auth_.name, argument_.symbol, token_cert_ns::naming);
+                    cert = blockchain.get_wallet_token_cert(auth_.name, argument_.symbol, token_cert_ns::naming);
                     if (!cert) {
                         throw token_cert_notowned_exception{
                             "No domain cert or naming cert owned by " + auth_.name};

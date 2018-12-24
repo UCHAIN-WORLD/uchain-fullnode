@@ -61,7 +61,7 @@ console_result showinfo::invoke(Json::Value& jv_output,
         jv["peers"] = get_connections_count(node);
 
         jv["network-tokens-count"] = static_cast<uint64_t>(symbols.size());
-        jv["wallet-account-count"] = static_cast<uint64_t>(blockchain.get_accounts()->size());
+        jv["wallet-wallet-count"] = static_cast<uint64_t>(blockchain.get_wallets()->size());
 
         jv["height"] = height;
         //jv["difficulty"] = difficulty;
@@ -78,7 +78,7 @@ console_result showinfo::invoke(Json::Value& jv_output,
         jv["peers"] = get_connections_count(node);
 
         jv["token_count"] = static_cast<uint64_t>(symbols.size());
-        jv["wallet_account_count"] = static_cast<uint64_t>(blockchain.get_accounts()->size());
+        jv["wallet_wallet_count"] = static_cast<uint64_t>(blockchain.get_wallets()->size());
 
         jv["height"] = height;
         //jv["miner-count"] = minercount;jv["difficulty"] = difficulty;

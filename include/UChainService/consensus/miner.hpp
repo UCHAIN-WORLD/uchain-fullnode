@@ -80,7 +80,7 @@ public:
         creating_block_
     };
 
-    bool start(const wallet::payment_address& pay_address, uint16_t number = 0);
+    bool start(const bc::wallet::payment_address& pay_address, uint16_t number = 0);
     bool start(const std::string& pay_public_key, uint16_t number = 0);
     bool stop();
     static block_ptr create_genesis_block(bool is_mainnet);
@@ -88,9 +88,9 @@ public:
         vector<transaction_ptr>& transactions);
     bool script_hash_signature_operations_count(size_t &count, const chain::input& input,
         vector<transaction_ptr>& transactions);
-    transaction_ptr create_coinbase_tx(const wallet::payment_address& pay_addres,
+    transaction_ptr create_coinbase_tx(const bc::wallet::payment_address& pay_addres,
         uint64_t value,uint64_t block_height);
-    transaction_ptr create_lock_coinbase_tx(const wallet::payment_address& pay_addres,
+    transaction_ptr create_lock_coinbase_tx(const bc::wallet::payment_address& pay_addres,
         uint64_t value, uint64_t block_height, int lock_height, uint32_t reward_lock_time);
 
     block_ptr get_block(bool is_force_create_block = false);
@@ -98,9 +98,9 @@ public:
     /*bool put_result(const std::string& nonce, const std::string& mix_hash,
         const std::string& header_hash, const uint64_t &nounce_mask);*/
     //bool set_miner_public_key(const string& public_key);
-    uint64_t fetch_utxo(const transaction_ptr& ptx,const wallet::payment_address& address);
+    uint64_t fetch_utxo(const transaction_ptr& ptx,const bc::wallet::payment_address& address);
     bool get_spendable_output(chain::output& output, const chain::history& row, uint64_t height);
-    bool set_miner_payment_address(const wallet::payment_address& address);
+    bool set_miner_payment_address(const bc::wallet::payment_address& address);
     const std::string get_miner_address() const;
     bool set_miner_pri_key(const std::string& pri_key);
     //void set_user(const std::string& name, const std::string& passwd);
@@ -117,9 +117,9 @@ public:
     static int get_mine_index(const string& pay_address);
 
 private:
-    void work(const wallet::payment_address pay_address);
+    void work(const bc::wallet::payment_address pay_address);
     
-    block_ptr create_new_block(const wallet::payment_address& pay_addres,uint64_t current_block_height = max_uint64);
+    block_ptr create_new_block(const bc::wallet::payment_address& pay_addres,uint64_t current_block_height = max_uint64);
     unsigned int get_adjust_time(uint64_t height) const;
     unsigned int get_median_time_past(uint64_t height) const;
     bool get_transaction(std::vector<transaction_ptr>&, previous_out_map_t&, tx_fee_map_t&) const;
@@ -136,7 +136,7 @@ private:
     uint16_t new_block_limit_;
 
     block_ptr new_block_;
-    wallet::payment_address pay_address_;
+    bc::wallet::payment_address pay_address_;
     const blockchain::settings& setting_;
     std::string pri_key;
     std::string name_;

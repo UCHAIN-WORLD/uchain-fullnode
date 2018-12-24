@@ -46,7 +46,7 @@ console_result showtokens::invoke(Json::Value& jv_output,
     if (option_.is_cert) { // only get token certs
         json_key = "tokencerts";
 
-        if (auth_.name.empty()) { // no account -- list whole token certs in blockchain
+        if (auth_.name.empty()) { // no wallet -- list whole token certs in blockchain
             auto result_vec = blockchain.get_issued_token_certs();
             std::sort(result_vec->begin(), result_vec->end());
             for (auto& elem : *result_vec) {
@@ -54,9 +54,9 @@ console_result showtokens::invoke(Json::Value& jv_output,
                 json_value.append(token_data);
             }
         }
-        else { // list token certs owned by account
-            blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
-            auto pvaddr = blockchain.get_account_addresses(auth_.name);
+        else { // list token certs owned by wallet
+            blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
+            auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
             if (!pvaddr)
                 throw address_list_nullptr_exception{"nullptr for address list"};
 
@@ -75,7 +75,7 @@ console_result showtokens::invoke(Json::Value& jv_output,
     else {
         json_key = "tokens";
 
-        if (auth_.name.empty()) { // no account -- list whole tokens in blockchain
+        if (auth_.name.empty()) { // no wallet -- list whole tokens in blockchain
             auto sh_vec = blockchain.get_issued_tokens();
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem: *sh_vec) {
@@ -84,9 +84,9 @@ console_result showtokens::invoke(Json::Value& jv_output,
                 json_value.append(token_data);
             }
         }
-        else { // list token owned by account
-            blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
-            auto pvaddr = blockchain.get_account_addresses(auth_.name);
+        else { // list token owned by wallet
+            blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
+            auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
             if (!pvaddr)
                 throw address_list_nullptr_exception{"nullptr for address list"};
 
@@ -110,9 +110,9 @@ console_result showtokens::invoke(Json::Value& jv_output,
             }
 
             // 2. get token in local database
-            // shoudl filter all issued token which be stored in local account token database
+            // shoudl filter all issued token which be stored in local wallet token database
             sh_vec->clear();
-            auto sh_unissued = blockchain.get_account_unissued_tokens(auth_.name);
+            auto sh_unissued = blockchain.get_wallet_unissued_tokens(auth_.name);
             for (auto& elem: *sh_unissued) {
                 Json::Value token_data = json_helper.prop_list(elem.detail, false, false);
                 token_data["status"] = "unissued";

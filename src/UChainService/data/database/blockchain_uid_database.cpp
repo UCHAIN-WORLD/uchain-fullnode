@@ -151,7 +151,7 @@ std::shared_ptr<std::vector<blockchain_uid>> blockchain_uid_database::get_blockc
     uint64_t i = 0;
     for( i = 0; i < number_buckets; i++ ) {
         auto memo = lookup_map_.find(i);
-        //log::debug("get_accounts size=")<<memo->size();
+        //log::debug("get_wallets size=")<<memo->size();
         if(memo->size())
         {
             const auto action = [&](memory_ptr elem)
@@ -263,7 +263,7 @@ std::shared_ptr<std::vector<blockchain_uid> > blockchain_uid_database::getuids_f
 
             if (uid_address == address) {
                 if((height >= fromheight && height <= toheight)
-                    || (height == max_uint32 && address == wallet::payment_address::blackhole_address)) {
+                    || (height == max_uint32 && address == bc::wallet::payment_address::blackhole_address)) {
                     vec_acc->emplace_back(blockchain_uid_);
                 }
             }

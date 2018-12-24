@@ -21,7 +21,7 @@
 #include <UChain/explorer/dispatch.hpp>
 #include <UChain/explorer/json_helper.hpp>
 #include <UChainService/api/command/commands/importkeyfile.hpp>
-#include <UChainService/api/command/account_info.hpp>
+#include <UChainService/api/command/wallet_info.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChain/bitcoin/formats/base_64.hpp>
 #include <cryptojs/cryptojs_impl.h>
@@ -39,13 +39,13 @@ console_result importkeyfile::invoke(Json::Value& jv_output,
 {
     auto& blockchain = node.chain_impl();
 
-    if (blockchain.is_account_exist(auth_.name)){
-        throw account_existed_exception{auth_.name + " account already exist"};
+    if (blockchain.is_wallet_exist(auth_.name)){
+        throw wallet_existed_exception{auth_.name + " wallet already exist"};
     }
 
-    auto acc = std::make_shared<bc::chain::account>();
+    auto acc = std::make_shared<bc::chain::wallet>();
 
-    //account name and password
+    //wallet name and password
     acc->set_name(auth_.name);
     acc->set_passwd(auth_.auth);
 
@@ -89,8 +89,8 @@ console_result importkeyfile::invoke(Json::Value& jv_output,
             acc->set_mnemonic(mnemonic.substr(1, mnemonic.size()-2), auth_.auth);
         }
 
-        if (blockchain.store_account(acc) != console_result::okay) {
-            throw address_generate_exception{std::string("Failed to store account.")};
+        if (blockchain.store_wallet(acc) != console_result::okay) {
+            throw address_generate_exception{std::string("Failed to store wallet.")};
         }
 
         //address
@@ -147,29 +147,29 @@ console_result importkeyfile::invoke(Json::Value& jv_output,
         Json::Value jv_temp;
         std::vector<const char *> vec_cmds = {"showaddresses", auth_.name.c_str(), auth_.auth.c_str()};
         if (dispatch_command(vec_cmds.size(), vec_cmds.data(), jv_temp, node, get_api_version()) != console_result::okay) {
-            throw account_address_get_exception{std::string("Failed to list account addresses.")};
+            throw wallet_address_get_exception{std::string("Failed to list wallet addresses.")};
         }
 
         auto& root = jv_output;
-        config::json_helper::account_info acc(auth_.name, "", jv_temp);
+        config::json_helper::wallet_info acc(auth_.name, "", jv_temp);
         root = config::json_helper(get_api_version()).prop_list(acc);
 
         return console_result::okay;
     }
     else {
-        account_info all_info(blockchain, auth_.auth);
+        wallet_info all_info(blockchain, auth_.auth);
         std::stringstream ss(file_content);
-        // decrypt account info file first
+        // decrypt wallet info file first
         ss >> all_info;
 
         // name check
-        auto acc = all_info.get_account();
+        auto acc = all_info.get_wallet();
         auto name = acc.get_name();
         auto mnemonic = acc.get_mnemonic();
-        if (blockchain.is_account_exist(name))
-            throw account_existed_exception{name + std::string(" account is already exist")};
+        if (blockchain.is_wallet_exist(name))
+            throw wallet_existed_exception{name + std::string(" wallet is already exist")};
 
-        // store account info to db
+        // store wallet info to db
         all_info.store(name, auth_.auth);
 
         auto& root = jv_output;
@@ -177,15 +177,15 @@ console_result importkeyfile::invoke(Json::Value& jv_output,
 
         if (get_api_version() == 1) {
             root["address-count"] += acc.get_hd_index();
-            root["unissued-token-count"] += all_info.get_account_token().size();
+            root["unissued-token-count"] += all_info.get_wallet_token().size();
         }
         else if (get_api_version() <= 2) {
             root["address-count"] = acc.get_hd_index();
-            root["unissued-token-count"] = static_cast<uint64_t>(all_info.get_account_token().size());
+            root["unissued-token-count"] = static_cast<uint64_t>(all_info.get_wallet_token().size());
         }
         else {
             root["address_count"] = acc.get_hd_index();
-            root["unissued_token_count"] = static_cast<uint64_t>(all_info.get_account_token().size());
+            root["unissued_token_count"] = static_cast<uint64_t>(all_info.get_wallet_token().size());
         }
 
         return console_result::okay;

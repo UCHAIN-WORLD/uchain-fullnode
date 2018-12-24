@@ -227,14 +227,14 @@ BCX_API bool starts_with(const std::string& value, const std::string& prefix);
  * @param[in]  wrapped  The wrapped data to unwrap.
  * @return              True if input checksum validates.
  */
-BCX_API bool unwrap(wallet::wrapped_data& data, data_slice wrapped);
+BCX_API bool unwrap(bc::wallet::wrapped_data& data, data_slice wrapped);
 
 /**
  * Wrap arbitrary data.
  * @param[in]  data  The data structure to wrap.
  * @return           The wrapped data.
  */
-BCX_API data_chunk wrap(const wallet::wrapped_data& data);
+BCX_API data_chunk wrap(const bc::wallet::wrapped_data& data);
 
 /**
  * Serialize a property tree using a specified encoding.

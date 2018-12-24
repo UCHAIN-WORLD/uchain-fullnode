@@ -48,18 +48,18 @@ wrapper::wrapper(const data_chunk& wrapped)
 {
 }
 
-wrapper::wrapper(const wallet::wrapped_data& wrapped)
+wrapper::wrapper(const bc::wallet::wrapped_data& wrapped)
   : value_(wrapped)
 {
 }
 
-wrapper::wrapper(const wallet::payment_address& address)
+wrapper::wrapper(const bc::wallet::payment_address& address)
   : wrapper(encode_base16(address.to_payment()))
 {
 }
 
 wrapper::wrapper(uint8_t version, const data_chunk& payload)
-  : wrapper(wallet::wrapped_data{ version, payload, 0 })
+  : wrapper(bc::wallet::wrapped_data{ version, payload, 0 })
 {
 }
 
@@ -73,7 +73,7 @@ const data_chunk wrapper::to_data() const
     return wrap(value_);
 }
 
-wrapper::operator const wallet::wrapped_data&() const
+wrapper::operator const bc::wallet::wrapped_data&() const
 {
     return value_;
 }

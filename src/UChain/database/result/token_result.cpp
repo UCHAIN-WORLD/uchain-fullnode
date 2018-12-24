@@ -28,7 +28,7 @@ namespace libbitcoin {
 namespace database {
 
 template <typename Iterator>
-std::shared_ptr<token_detail> deserialize_account_detail(const Iterator first)
+std::shared_ptr<token_detail> deserialize_wallet_detail(const Iterator first)
 {
     auto detail = std::make_shared<token_detail>();
     auto deserial = make_deserializer_unsafe(first);
@@ -47,7 +47,7 @@ std::shared_ptr<token_detail> token_result::get_token_detail() const
     if(get_slab())
     {
         const auto memory = REMAP_ADDRESS(get_slab());
-        sp_acc = deserialize_account_detail(memory);
+        sp_acc = deserialize_wallet_detail(memory);
     }
     return sp_acc;
 }

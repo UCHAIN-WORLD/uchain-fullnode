@@ -39,17 +39,17 @@
 #include <UChainService/txs/token/token.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
 #include <UChainService/txs/message/message.hpp>
-#include <UChainService/txs/account/account.hpp>
+#include <UChainService/txs/wallet/wallet.hpp>
 #include <UChainService/txs/token/token_detail.hpp>
 #include <UChainService/txs/token/token_transfer.hpp>
 #include <UChainService/txs/asset.hpp>
 
-#include <UChainService/data/databases/account_database.hpp>
-#include <UChainService/data/databases/account_address_database.hpp>
+#include <UChainService/data/databases/wallet_database.hpp>
+#include <UChainService/data/databases/wallet_address_database.hpp>
 #include <UChainService/data/databases/token_database.hpp>
 #include <UChainService/data/databases/blockchain_token_database.hpp>
 #include <UChainService/data/databases/address_token_database.hpp>
-#include <UChainService/data/databases/account_token_database.hpp>
+#include <UChainService/data/databases/wallet_token_database.hpp>
 #include <UChainService/txs/uid/uid.hpp>
 #include <UChainService/data/databases/blockchain_token_cert_database.hpp>
 #include <UChainService/data/databases/blockchain_uid_database.hpp>
@@ -93,20 +93,20 @@ public:
         path stealth_rows;
         path spends_lookup;
         path transactions_lookup;
-        /* begin database for account, token, address_token, uid relationship */
-        path accounts_lookup;
+        /* begin database for wallet, token, address_token, uid relationship */
+        path wallets_lookup;
         path tokens_lookup;
         path certs_lookup;
         path address_tokens_lookup;
         path address_tokens_rows;
-        path account_tokens_lookup;
-        path account_tokens_rows;
+        path wallet_tokens_lookup;
+        path wallet_tokens_rows;
         path uids_lookup;
         path address_uids_lookup;
         path address_uids_rows;
-        path account_addresses_lookup;
-        path account_addresses_rows;
-        /* end database for account, token, address_token, uid ,address_uid relationship */
+        path wallet_addresses_lookup;
+        path wallet_addresses_rows;
+        /* end database for wallet, token, address_token, uid ,address_uid relationship */
         path candidates_lookup;
         path address_candidates_lookup;
         path address_candidates_rows;
@@ -364,16 +364,16 @@ public:
     spend_database spends;
     stealth_database stealth;
     transaction_database transactions;
-    /* begin database for account, token, address_token,uid relationship */
-    account_database accounts;
+    /* begin database for wallet, token, address_token,uid relationship */
+    wallet_database wallets;
     blockchain_token_database tokens;
     address_token_database address_tokens;
-    account_token_database account_tokens;
+    wallet_token_database wallet_tokens;
     blockchain_token_cert_database certs;
     blockchain_uid_database uids;
     address_uid_database address_uids;
-    account_address_database account_addresses;
-    /* end database for account, token, address_token relationship */
+    wallet_address_database wallet_addresses;
+    /* end database for wallet, token, address_token relationship */
     blockchain_candidate_database candidates;
     address_candidate_database address_candidates;
     candidate_history_database candidate_history;

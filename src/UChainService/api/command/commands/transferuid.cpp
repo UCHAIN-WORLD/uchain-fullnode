@@ -34,7 +34,7 @@ console_result transferuid::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     // check uid symbol
     auto uid = argument_.symbol;
@@ -49,8 +49,8 @@ console_result transferuid::invoke(Json::Value& jv_output,
 
     auto from_address = uid_detail->get_address();
 
-    // check uid is owned by the account
-    if (!blockchain.get_account_address(auth_.name, from_address)) {
+    // check uid is owned by the wallet
+    if (!blockchain.get_wallet_address(auth_.name, from_address)) {
         throw uid_symbol_notowned_exception{
             "Did '" + uid + "' is not owned by " + auth_.name};
     }
@@ -59,9 +59,9 @@ console_result transferuid::invoke(Json::Value& jv_output,
     if (!blockchain.is_valid_address(argument_.to))
         throw toaddress_invalid_exception{"Invalid target address parameter!"};
 
-    // check to address is owned by the account
-    if (!blockchain.get_account_address(auth_.name, argument_.to)) {
-        throw address_dismatch_account_exception{"Target address is not owned by account. " + argument_.to};
+    // check to address is owned by the wallet
+    if (!blockchain.get_wallet_address(auth_.name, argument_.to)) {
+        throw address_dismatch_wallet_exception{"Target address is not owned by wallet. " + argument_.to};
     }
 
      // fail if address is already binded with uid in blockchain
@@ -86,7 +86,7 @@ console_result transferuid::invoke(Json::Value& jv_output,
     || toaddr.version() == bc::wallet::payment_address::mainnet_p2sh) // for multisig address
     {
 
-        auto findmultisig = [&acc](account_multisig& acc_multisig, std::string address) {
+        auto findmultisig = [&acc](wallet_multisig& acc_multisig, std::string address) {
             auto multisig_vec = acc->get_multisig(address);
             if (!multisig_vec || multisig_vec->empty())
                 return false;
@@ -95,11 +95,11 @@ console_result transferuid::invoke(Json::Value& jv_output,
             return true;
         };
 
-        account_multisig acc_multisig;
+        wallet_multisig acc_multisig;
         if (addr.version() == bc::wallet::payment_address::mainnet_p2sh && !findmultisig(acc_multisig, from_address))
             throw multisig_notfound_exception{"from address multisig record not found."};
 
-        account_multisig acc_multisig_to;
+        wallet_multisig acc_multisig_to;
         if (toaddr.version() == bc::wallet::payment_address::mainnet_p2sh && !findmultisig(acc_multisig_to, argument_.to))
             throw multisig_notfound_exception{"to address multisig record not found."};
 

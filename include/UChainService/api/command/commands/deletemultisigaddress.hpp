@@ -43,8 +43,8 @@ public:
     arguments_metadata& load_arguments() override
     {
         return get_argument_metadata()
-            .add("ACCOUNTNAME", 1)
-            .add("ACCOUNTAUTH", 1)
+            .add("WALLETNAME", 1)
+            .add("WALLETAUTH", 1)
             .add("ADDRESS", 1);
     }
 
@@ -52,8 +52,8 @@ public:
         po::variables_map& variables) override
     {
         const auto raw = requires_raw_input();
-        load_input(auth_.name, "ACCOUNTNAME", variables, input, raw);
-        load_input(auth_.auth, "ACCOUNTAUTH", variables, input, raw);
+        load_input(auth_.name, "WALLETNAME", variables, input, raw);
+        load_input(auth_.auth, "WALLETAUTH", variables, input, raw);
         load_input(option_.address, "ADDRESS", variables, input, raw);
     }
 
@@ -68,14 +68,14 @@ public:
             "Get a description and instructions for this command."
         )
         (
-            "ACCOUNTNAME",
+            "WALLETNAME",
             value<std::string>(&auth_.name)->required(),
-            BX_ACCOUNT_NAME
+            BX_WALLET_NAME
         )
         (
-            "ACCOUNTAUTH",
+            "WALLETAUTH",
             value<std::string>(&auth_.auth)->required(),
-            BX_ACCOUNT_AUTH
+            BX_WALLET_AUTH
         )
         (
             "ADDRESS",

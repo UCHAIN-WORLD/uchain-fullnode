@@ -34,12 +34,12 @@ console_result vote::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     std::string from_address = get_address_from_strict_uid(argument_.from, blockchain);
     if(!blockchain.is_valid_address(from_address))
         throw uid_symbol_name_exception{"Did symbol " + argument_.from + " is not valid."};
 
-    auto acc_addr = blockchain.get_account_address(auth_.name, from_address);
+    auto acc_addr = blockchain.get_wallet_address(auth_.name, from_address);
     if (!acc_addr)
         throw argument_legality_exception{"You don't own address " + from_address};
 

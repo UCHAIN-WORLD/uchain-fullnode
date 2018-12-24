@@ -63,7 +63,7 @@ console_result showwork::invoke(Json::Value& jv_output,
         }
 
     } else {
-        throw setting_required_exception{"Use command <setminingaccount> to set mining address."};
+        throw setting_required_exception{"Use command <setminingwallet> to set mining address."};
     }
 
     return console_result::okay;

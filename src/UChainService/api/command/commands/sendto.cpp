@@ -35,7 +35,7 @@ console_result sendto::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     asset attach;
     std::string to_address = get_address(argument_.to, attach, false, blockchain);
@@ -46,8 +46,8 @@ console_result sendto::invoke(Json::Value& jv_output,
     }
 
     //should own the address
-    if (!change_address.empty() && !blockchain.get_account_address(auth_.name, change_address))
-        throw account_authority_exception{"change address not belongs to you."};
+    if (!change_address.empty() && !blockchain.get_wallet_address(auth_.name, change_address))
+        throw wallet_authority_exception{"change address not belongs to you."};
 
     // receiver
     std::vector<receiver_record> receiver{

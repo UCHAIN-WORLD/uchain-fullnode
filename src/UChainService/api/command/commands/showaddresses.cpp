@@ -36,12 +36,12 @@ console_result showaddresses::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     auto& aroot = jv_output;
     Json::Value addresses;
 
-    auto vaddr = blockchain.get_account_addresses(auth_.name);
+    auto vaddr = blockchain.get_wallet_addresses(auth_.name);
     if(!vaddr) throw address_list_nullptr_exception{"nullptr for address list"};
 
     for (auto& it: *vaddr){

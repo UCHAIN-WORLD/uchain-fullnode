@@ -35,8 +35,8 @@ console_result showmultisigaddresses::invoke(Json::Value& jv_output,
     libbitcoin::server::server_node& node)
 {
     auto& blockchain = node.chain_impl();
-    // parameter account name check
-    auto acc = blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
+    // parameter wallet name check
+    auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     Json::Value nodes;
     auto multisig_vec = acc->get_multisig_vec();
