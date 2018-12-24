@@ -87,7 +87,7 @@ bool output::is_valid_uid_symbol(const std::string& symbol, bool check_sensitive
         return false;
     // char check
     for (const auto& i : symbol) {
-        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_' || i=='-'))
+        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_'))
             return false;
     }
 
@@ -112,7 +112,7 @@ bool output::is_valid_candidate_symbol(const std::string& symbol, bool check_sen
         return false;
     // char check
     for (const auto& i : symbol) {
-        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_' || i=='-' || i==':'))
+        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_'))
             return false;
     }
 

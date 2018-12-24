@@ -306,6 +306,7 @@ public:
     void set_blackhole_uid();
     void set_token_block();
     void set_token_vote();
+    void set_reward_pool_candidate();
    /* begin store token info into  database */
 
 protected:

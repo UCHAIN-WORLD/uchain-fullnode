@@ -52,6 +52,8 @@ void registercandidate::check_symbol_content(const std::string& symbol, const st
             "Content length must be less than "
             + std::to_string(TOKEN_CANDIDATE_CONTENT_FIX_SIZE) + ". " + content);
     }
+
+    check_candidate_authority(content);
 }
 
 console_result registercandidate::invoke (Json::Value& jv_output,
@@ -65,22 +67,22 @@ console_result registercandidate::invoke (Json::Value& jv_output,
     bool use_unified_content = false;
     // check single symbol and content
     if (argument_.symbol.size() > 0) {
-        check_symbol_content(argument_.symbol, option_.content);
+        check_symbol_content(argument_.symbol, argument_.content);
 
         // check symbol not registered
         if (blockchain.get_registered_candidate(argument_.symbol)) {
             throw token_symbol_existed_exception{"candidate already exists in blockchain. " + argument_.symbol};
         }
 
-        candidate_map[argument_.symbol] = option_.content;
+        candidate_map[argument_.symbol] = argument_.content;
     }
     else {
-        if (option_.content.size() > 0) {
+        if (argument_.content.size() > 0) {
             // check content
-            if (option_.content.size() > TOKEN_CANDIDATE_CONTENT_FIX_SIZE) {
+            if (argument_.content.size() > TOKEN_CANDIDATE_CONTENT_FIX_SIZE) {
                 throw argument_size_invalid_exception(
                     "Content length must be less than "
-                    + std::to_string(TOKEN_CANDIDATE_CONTENT_FIX_SIZE) + ". " + option_.content);
+                    + std::to_string(TOKEN_CANDIDATE_CONTENT_FIX_SIZE) + ". " + argument_.content);
             }
 
             use_unified_content = true;
@@ -95,7 +97,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
             symbol = candidate;
 
             if (use_unified_content) {
-                content = option_.content;
+                content = argument_.content;
             }
             else {
                 content = "";

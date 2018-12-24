@@ -73,15 +73,15 @@ console_result showcandidates::invoke(Json::Value& jv_output,
         }
     }
 
-    if (get_api_version() <= 2) {
+    /*if (get_api_version() <= 2) {
         jv_output["candidates"] = json_value;
     }
-    else {
+    else {*/
         if(json_value.isNull())
             json_value.resize(0);  
             
         jv_output = json_value;
-    }
+    //}
 
     return console_result::okay;
 }

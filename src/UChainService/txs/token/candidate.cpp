@@ -42,11 +42,11 @@ candidate::candidate()
 }
 
 candidate::candidate(const std::string& symbol,
-                     const std::string& address, const std::string& content)
+                     const std::string& address, const std::string& content, uint8_t status)
     : symbol_(symbol)
     , address_(address)
     , content_(content)
-    , status_(CANDIDATE_STATUS_NONE)
+    , status_(status)
 {
 }
 

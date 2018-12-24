@@ -133,7 +133,7 @@ void check_candidate_symbol(const std::string& symbol, bool check_sensitive)
 
     // char check
     for (const auto& i : symbol) {
-        if (!(std::isalnum(i) || i == '.'|| i == '@' || i == '_' || i == '-' || i == ':'))
+        if (!(std::isalnum(i) || i == '.'|| i == '@' || i == '_'))
             throw token_symbol_name_exception(
                 "Symbol " + symbol + " has invalid character.");
     }
@@ -144,7 +144,10 @@ void check_candidate_symbol(const std::string& symbol, bool check_sensitive)
             throw token_symbol_name_exception{"Symbol " + symbol + " is forbidden."};
         }
     }
+}
 
+void check_candidate_authority(const std::string& symbol)
+{
     try {
         const auto authority = libbitcoin::config::authority(symbol);
         if (!authority.to_network_address().is_routable()) {

@@ -111,6 +111,7 @@ void executor::set_blackhole_uid_block_vote()
     db.set_blackhole_uid();
     db.set_token_block();
     db.set_token_vote();
+    db.set_reward_pool_candidate();
     db.stop();
 }
 

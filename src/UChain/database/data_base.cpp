@@ -150,6 +150,8 @@ bool data_base::initialize_candidates(const path& prefix)
     if (!instance.create_candidates())
         return false;
 
+    instance.set_reward_pool_candidate();
+
     log::info(LOG_DATABASE)
         << "Upgrading candidate table is complete.";
 
@@ -253,6 +255,24 @@ void data_base::set_token_vote()
 
     push_token_detail(tokendetail, hash, outpoint, output_height, value);
     synchronize_uids();
+}
+
+void data_base::set_reward_pool_candidate()
+{
+    const std::string& uid_address = get_reward_pool_address(false);
+    candidate candidatedetail(
+    UC_REWARD_POOL_CANDIDATE_SYMBOL, uid_address, 
+    "'reward_pool_miner' candidate is issued by reward_pool just to maintain blockchain when there is no any other miner.",CANDIDATE_STATUS_REGISTER);
+
+    data_chunk data(uid_address.begin(), uid_address.end());
+    short_hash hash = ripemd160_hash(data);
+
+    output_point outpoint = { null_hash, max_uint32 };
+    uint32_t output_height = max_uint32;
+    uint64_t value = 0;
+
+    push_candidate(candidatedetail, hash, outpoint, output_height, value, UC_REWARD_POOL_UID_SYMBOL,UC_REWARD_POOL_UID_SYMBOL);
+    synchronize_candidates();
 }
 
 data_base::store::store(const path& prefix)

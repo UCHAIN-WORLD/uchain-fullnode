@@ -68,7 +68,7 @@ public:
 
     candidate();
     candidate(const std::string& symbol, const std::string& address,
-              const std::string& content);
+              const std::string& content, uint8_t status = 0);
 
     void reset();
     bool is_valid() const;

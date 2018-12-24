@@ -13,9 +13,9 @@ SET_TARGET_PROPERTIES(secp256k1_static PROPERTIES IMPORTED_LOCATION ${secp256k1_
 ADD_LIBRARY(bitcoin_static STATIC ${bitcoin_SOURCES})
 SET_TARGET_PROPERTIES(bitcoin_static PROPERTIES OUTPUT_NAME uc_bitcoin)
 #Centos add gmp
-IF(${os_version_suffix} EQUAL 3)
-        TARGET_LINK_LIBRARIES(bitcoin_static gmp)
-ENDIF()
+#IF(${os_version_suffix} EQUAL 3)
+#        TARGET_LINK_LIBRARIES(bitcoin_static gmp)
+#ENDIF()
 TARGET_LINK_LIBRARIES(bitcoin_static ${Boost_LIBRARIES} secp256k1_static ${bitcoinmath_LIBRARY})
 INSTALL(TARGETS bitcoin_static DESTINATION lib)
 

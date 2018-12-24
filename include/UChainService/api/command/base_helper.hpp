@@ -225,6 +225,7 @@ std::string get_fee_dividend_address(bc::blockchain::block_chain_impl& blockchai
 
 void check_token_symbol(const std::string& symbol, bool check_sensitive=false);
 void check_candidate_symbol(const std::string& symbol, bool check_sensitive=false);
+void check_candidate_authority(const std::string& authority);
 void check_uid_symbol(const std::string& symbol,  bool check_sensitive=false);
 void check_token_symbol_with_miner(const std::string& symbol, const consensus::miner& miner, const std::string& address);
 void check_token_symbol_with_method(const std::string& symbol);

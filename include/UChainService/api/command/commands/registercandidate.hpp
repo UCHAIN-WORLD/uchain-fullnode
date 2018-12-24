@@ -45,6 +45,7 @@ public:
         return get_argument_metadata()
             .add("WALLET_NAME", 1)
             .add("WALLET_AUTH", 1)
+            .add("SYMBOL", 1)
             .add("TOUID", 1)
             .add("NODEADDRESS", 1);
     }
@@ -55,8 +56,9 @@ public:
         const auto raw = requires_raw_input();
         load_input(auth_.name, "WALLET_NAME", variables, input, raw);
         load_input(auth_.auth, "WALLET_AUTH", variables, input, raw);
+        load_input(argument_.symbol, "SYMBOL", variables, input, raw);
         load_input(argument_.to, "TOUID", variables, input, raw);
-        load_input(argument_.symbol, "NODEADDRESS", variables, input, raw);
+        load_input(argument_.content, "NODEADDRESS", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -85,20 +87,15 @@ public:
             "Target uid"
         )
         (
-            "NODEADDRESS",
-            value<std::string>(&argument_.symbol)->default_value(""),
-            "The target node address[x.x.x.x:port]."
+            "SYMBOL",
+            value<std::string>(&argument_.symbol)->required(),
+            "The symbol of global candidate, supports alphabets/numbers/(“@”, “.”, “_”), case-sensitive, maximum length is 64."
         )
         (
-            "content,c",
-            value<std::string>(&option_.content)->default_value(""),
-            "Content of candidate"
+            "NODEADDRESS",
+            value<std::string>(&argument_.content)->default_value(""),
+            "The target node address[x.x.x.x:port]."
         )
-        /*(
-            "candidates,m",
-            value<std::vector<std::string>>(&option_.multicandidates),
-            "List of symbol and content pair. Symbol and content are separated by a ':'"
-        )*/
         (
             "fee,f",
             value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_register_uid),
@@ -119,14 +116,9 @@ public:
     {
         std::string to;
         std::string symbol;
+        std::string content;
         uint64_t fee;
     } argument_;
-
-    struct option
-    {
-        std::string content;
-        //std::vector<std::string> multicandidates;
-    } option_;
 
 private:
     void check_symbol_content(const std::string& symbol, const std::string& content);
