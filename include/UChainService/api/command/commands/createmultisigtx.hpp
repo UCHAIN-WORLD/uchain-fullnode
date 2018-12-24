@@ -107,7 +107,6 @@ public:
             "fee,f",
             value<uint64_t>(&argument_.fee)->default_value(bc::min_tx_fee),
             "Transaction fee. defaults to 200000 UCN bits."
-
         )
         ;
 
