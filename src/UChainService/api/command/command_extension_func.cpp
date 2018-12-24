@@ -97,7 +97,7 @@
 #include <UChainService/api/command/commands/signrawtx.hpp>
 #include <UChainService/api/command/commands/transferuid.hpp>
 #include <UChainService/api/command/commands/showuid.hpp>
-
+#include <UChainService/api/command/commands/showvote.hpp>
 
 namespace libbitcoin {
 namespace explorer {
@@ -180,6 +180,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<destroy>());
     //func(make_shared<swaptoken>());
     func(make_shared<vote>());
+    func(make_shared<showvote>());
 
     // raw tx and multi-sig
     os <<"raw tx and multi-sig:\r\n";
@@ -358,6 +359,9 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<swaptoken>();*/
     if (symbol == vote::symbol())
         return make_shared<vote>();
+    if (symbol == showvote::symbol())
+        return make_shared<showvote>();
+    
 
     // cert
     /*if (symbol == transfercert::symbol())

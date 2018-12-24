@@ -179,12 +179,15 @@ struct deposited_balance {
 void sync_fetchbalance(bc::wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, balances& addr_balance);
 
+void sync_fetchbalance(bc::wallet::payment_address& address,
+    bc::blockchain::block_chain_impl& blockchain, balances& addr_balance);
+
 void sync_fetch_deposited_balance(bc::wallet::payment_address& address,
     bc::blockchain::block_chain_impl& blockchain, std::shared_ptr<deposited_balance::list> sh_vec);
 
 void sync_fetch_token_balance(const std::string& address, bool sum_all,
     bc::blockchain::block_chain_impl& blockchain,
-    std::shared_ptr<token_balances::list> sh_token_vec);
+    std::shared_ptr<token_balances::list> sh_token_vec, uint64_t start_height = 0, uint64_t end_height = 0);
 
 void sync_fetch_token_deposited_balance(const std::string& address,
     bc::blockchain::block_chain_impl& blockchain,
