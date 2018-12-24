@@ -85,7 +85,15 @@ bool parser::parse(std::string& out_error, std::istream& input,
     try
     {
         variables_map variables;
-
+        //no negative parameters
+        for(size_t i = 2; i<argc; i++)
+        {
+            if((argv[i][0] == '-') && argv[i][1] != '\0' && std::isdigit(argv[i][1]))
+            {
+                out_error = "Parameter cannot be negative.";
+                return false;
+            }
+        }
         // Must store before environment in order for commands to supercede.
         load_command_variables(variables, input, argc, argv);
 

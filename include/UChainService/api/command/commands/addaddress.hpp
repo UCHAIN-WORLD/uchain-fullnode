@@ -78,7 +78,12 @@ public:
         (
             "number,n",
             value<std::uint32_t>(&option_.count),
-            "The number of addresses to be generated, defaults to 1."
+            "The number of addresses to be generated/deleted, defaults to 1."
+        )
+        (
+            "operation,o",
+            value<std::string>(&option_.operation),
+            "The operation[ add|del ] to the target node address. default: add."
         );
 
         return options;
@@ -99,6 +104,7 @@ public:
     {
         option():count(1)
         {};
+        std::string operation;
         uint32_t count;
     } option_;
 

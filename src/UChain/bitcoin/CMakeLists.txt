@@ -6,11 +6,16 @@ FILE(GLOB_RECURSE bitcoin_SOURCES "*.cpp")
 
 ADD_DEFINITIONS(-DBC_STATIC=1)
 
+
 ADD_LIBRARY(secp256k1_static STATIC IMPORTED)                                         
 SET_TARGET_PROPERTIES(secp256k1_static PROPERTIES IMPORTED_LOCATION ${secp256k1_ROOT_DIR}/lib/libsecp256k1.a)
 
 ADD_LIBRARY(bitcoin_static STATIC ${bitcoin_SOURCES})
 SET_TARGET_PROPERTIES(bitcoin_static PROPERTIES OUTPUT_NAME uc_bitcoin)
+#Centos add gmp
+IF(${os_version_suffix} EQUAL 3)
+        TARGET_LINK_LIBRARIES(bitcoin_static gmp)
+ENDIF()
 TARGET_LINK_LIBRARIES(bitcoin_static ${Boost_LIBRARIES} secp256k1_static ${bitcoinmath_LIBRARY})
 INSTALL(TARGETS bitcoin_static DESTINATION lib)
 
