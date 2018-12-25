@@ -53,7 +53,7 @@ void registercandidate::check_symbol_content(const std::string& symbol, const st
             + std::to_string(TOKEN_CANDIDATE_CONTENT_FIX_SIZE) + ". " + content);
     }
 
-    check_candidate_authority(content);
+    //check_candidate_authority(content);
 }
 
 console_result registercandidate::invoke (Json::Value& jv_output,
