@@ -46,8 +46,7 @@ public:
             .add("WALLET_NAME", 1)
             .add("WALLET_AUTH", 1)
             .add("SYMBOL", 1)
-            .add("TOUID", 1)
-            .add("NODEADDRESS", 1);
+            .add("TOUID", 1);
     }
 
     void load_fallbacks (std::istream& input,
@@ -58,7 +57,6 @@ public:
         load_input(auth_.auth, "WALLET_AUTH", variables, input, raw);
         load_input(argument_.symbol, "SYMBOL", variables, input, raw);
         load_input(argument_.to, "TOUID", variables, input, raw);
-        load_input(argument_.content, "NODEADDRESS", variables, input, raw);
     }
 
     options_metadata& load_options() override
@@ -82,19 +80,19 @@ public:
             BX_WALLET_AUTH
         )
         (
-            "TOUID",
-            value<std::string>(&argument_.to)->required(),
-            "Target uid"
-        )
-        (
             "SYMBOL",
             value<std::string>(&argument_.symbol)->required(),
             "The symbol of global candidate, supports alphabets/numbers/(“@”, “.”, “_”), case-sensitive, maximum length is 64."
         )
         (
-            "NODEADDRESS",
+            "TOUID",
+            value<std::string>(&argument_.to)->required(),
+            "Target uid"
+        )
+        (
+            "content,c",
             value<std::string>(&argument_.content)->default_value(""),
-            "The target node address[x.x.x.x:port]."
+            "Declaration of candidacy."
         )
         (
             "fee,f",

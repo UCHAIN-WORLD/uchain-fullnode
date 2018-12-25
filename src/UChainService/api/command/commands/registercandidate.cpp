@@ -126,7 +126,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
         throw argument_legality_exception{"No symbol provided."};
     }
 
-    try {
+    /*try {
         const auto authority = libbitcoin::config::authority(argument_.symbol);
         if (!authority.to_network_address().is_routable()) {
             throw address_invalid_exception{"NODEADDRESS is not routable! "};
@@ -135,7 +135,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
     catch (...)
     {
         throw address_invalid_exception{"NODEADDRESS is not valid! "};
-    }   
+    }*/   
     
 
     // check to uid

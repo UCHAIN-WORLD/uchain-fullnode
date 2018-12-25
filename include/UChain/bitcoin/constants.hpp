@@ -36,6 +36,7 @@ namespace libbitcoin {
 #define UC_VOTE_TOKEN_SYMBOL  "VOTE"
 
 #define UC_REWARD_POOL_UID_SYMBOL  "reward_pool"
+#define UC_BLACKHOLE_UID_SYMBOL  "BLACKHOLE"
 #define UC_REWARD_POOL_CANDIDATE_SYMBOL  "reward_pool_miner"
 
 #define VOTE_LOCKED_TIME                 345600

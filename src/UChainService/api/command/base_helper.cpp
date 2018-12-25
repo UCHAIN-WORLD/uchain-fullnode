@@ -341,7 +341,7 @@ void sync_fetch_token_balance(const std::string& address, bool sum_all,
                 }
             }
 
-            if (row.output_height == end_height)
+            if (row.output_height >= end_height)
             {
                 break;
             }

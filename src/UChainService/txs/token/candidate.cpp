@@ -272,6 +272,7 @@ void candidate_info::reset()
     output_height = 0;
     timestamp = 0;
     to_uid = "";
+    vote = 0;
     candidate.reset();
 }
 

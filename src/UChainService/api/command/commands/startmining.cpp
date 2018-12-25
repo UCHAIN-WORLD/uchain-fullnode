@@ -55,9 +55,9 @@ console_result startmining::invoke(Json::Value& jv_output,
         throw address_invalid_exception{"invalid address parameter! " + str_addr};
     }
     
-    vector<string>& miner_address = miner.get_miners();
+    /*const vector<string>& miner_address = miner.get_miner_addresses();
     if(std::find(miner_address.begin(), miner_address.end(), str_addr) == miner_address.end()) 
-        throw address_invalid_exception{str_addr + " is not a miner address "};
+        throw address_invalid_exception{str_addr + " is not a miner address "};*/
 
     if (!blockchain.get_wallet_address(auth_.name, str_addr)) {
         throw address_dismatch_wallet_exception{"target address does not match wallet. " + str_addr};

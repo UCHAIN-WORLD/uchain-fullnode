@@ -183,10 +183,5 @@ void uid_detail::set_address(const std::string& address)
      this->address = address.substr(0, len);
 }
 
-std::string uid_detail::get_blackhole_uid_symbol()
-{
-    return "BLACKHOLE";
-}
-
 } // namspace chain
 } // namspace libbitcoin

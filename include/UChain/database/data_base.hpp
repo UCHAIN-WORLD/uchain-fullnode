@@ -303,9 +303,8 @@ public:
     };
 
     void set_admin(const std::string& name, const std::string& passwd);
-    void set_blackhole_uid();
-    void set_token_block();
-    void set_token_vote();
+    void set_blackhole_reward_pool_uid();
+    void set_block_vote_token();
     void set_reward_pool_candidate();
    /* begin store token info into  database */
 
@@ -329,6 +328,7 @@ private:
 
     void synchronize();
     void synchronize_uids();
+    void synchronize_tokens();
     void synchronize_certs();
     void synchronize_candidates();
 

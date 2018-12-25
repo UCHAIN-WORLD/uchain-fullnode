@@ -797,19 +797,124 @@ std::string to_string(_T const& _t)
 }
 
 static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
-std::vector<std::string> mine_address_list = {"UkRYvsnfJkwSTAUCcZnqCK8sE1ZYJP6so7"};
+static BC_CONSTEXPR unsigned int num_miner_node = 21;
+
+void miner::generate_miner_list()
+{
+    mine_candidate_list.clear();
+    mine_address_list.clear();
+    auto sh_vec = node_.chain_impl().get_registered_candidates();
+    if (nullptr == sh_vec)
+    {  
+        return;
+    }
+
+    uint64_t height = 0;
+    node_.chain_impl().get_last_height(height);
+    int64_t start_height = 0;
+    int64_t end_height = 0;
+    
+    if (height>num_block_per_cycle*num_miner_node)
+    {
+        uint64_t sub_height = height%(num_block_per_cycle*num_miner_node);
+        end_height = height - sub_height;
+        start_height = end_height - num_block_per_cycle*num_miner_node;
+    }
+    
+
+    for (auto &elem : *sh_vec)
+    {
+        auto &&rows = node_.chain_impl().get_address_history(bc::wallet::payment_address(elem.candidate.get_address()), start_height);
+
+        chain::transaction tx_temp;
+        uint64_t tx_height;
+
+        for (auto &row : rows)
+        {
+            // spend unconfirmed (or no spend attempted)
+            if ((row.spend.hash == null_hash) && node_.chain_impl().get_transaction(row.output.hash, tx_temp, tx_height))
+            {
+                BITCOIN_ASSERT(row.output.index < tx_temp.outputs.size());
+                const auto &output = tx_temp.outputs.at(row.output.index);
+                if (output.get_script_address() != elem.candidate.get_address())
+                {
+                    continue;
+                }
+                if (output.is_vote())
+                {
+                    auto token_amount = output.get_token_amount();
+                    uint64_t locked_amount = 0;
+                    if (token_amount && operation::is_pay_key_hash_with_attenuation_model_pattern(output.script.operations))
+                    {
+                        const auto &attenuation_model_param = output.get_attenuation_model_param();
+                        auto diff_height = row.output_height ? (height - row.output_height) : 0;
+                        auto available_amount = attenuation_model::get_available_token_amount(
+                            token_amount, diff_height, attenuation_model_param);
+                        locked_amount = token_amount - available_amount;
+                    }
+
+                    if (elem.to_uid == output.get_to_uid())
+                    {
+                        elem.vote += token_amount;
+                    }
+                }
+            }
+
+            if (row.output_height >= end_height)
+            {
+                break;
+            }
+        }
+    }
+
+    std::sort(sh_vec->begin(), sh_vec->end(), [](const candidate_info& a,const candidate_info& b) {
+        return a.vote < b.vote;
+    });
+
+    for (auto &elem : *sh_vec)
+    {
+        mine_candidate_list.push_back(elem);
+
+        mine_address_list.push_back(elem.candidate.get_address());
+
+        if (mine_candidate_list.size() == num_miner_node)
+        {
+            break;
+        }
+    }
+}
+
+vector<candidate_info> miner::mine_candidate_list = {};
+vector<std::string> miner::mine_address_list = {};
 
 void miner::work(const bc::wallet::payment_address pay_address)
 {
-    log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
-    int index = get_mine_index(pay_address.encoded());
+    
 
-    if (index == -1)
+    log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
+
+    auto sh_vec = node_.chain_impl().get_registered_candidates();
+    if (nullptr == sh_vec)
     {
-         log::error(LOG_HEADER) << pay_address.encoded() << " is not a miner address ";
-         thread_.reset();
-         stop();
-         return;
+        log::info(LOG_HEADER) << "no candidates found ";
+  
+        return;
+    }
+
+    bool ifcandidate = false;
+
+    for (auto &elem : *sh_vec)
+    {
+        if (elem.candidate.get_address() == pay_address.encoded())
+        {
+            ifcandidate = true;
+        }
+    }
+
+    if (!ifcandidate)
+    {
+        log::error(LOG_HEADER) << pay_address.encoded() << " is not a candidate address ";
+        return;
     }
 
     while (state_ != state::exit_)
@@ -819,6 +924,15 @@ void miner::work(const bc::wallet::payment_address pay_address)
         uint64_t current_block_height;
         if (node_.chain_impl().get_last_height(current_block_height))
         {
+            generate_miner_list();
+            int index = get_mine_index(pay_address.encoded());
+            if (index == -1)
+            {
+                auto sleeptime = unix_millisecond() - millissecond;
+                auto sleepmin = sleeptime<500?500-sleeptime:0;
+                sleep_for(asio::milliseconds(sleepmin));
+                continue;
+            }
             if (current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle)
             {
                 state_ = state::creating_block_;
@@ -1066,14 +1180,19 @@ void miner::get_state(uint64_t &height, uint32_t &miners,/*uint64_t &rate, strin
     block_chain.get_header(prev_header, height);
     //difficulty = to_string((u256)prev_header.bits);
     is_mining = thread_ ? true : false;
-    miners = mine_address_list.size();
+    miners = mine_candidate_list.size();
 }
 
 bool miner::is_creating_block() const {
     return state_ == state::creating_block_;
 }
 
-vector<std::string>& miner::get_miners()
+vector<candidate_info>& miner::get_miners()
+{
+    return mine_candidate_list;
+}
+
+vector<std::string>& miner::get_miner_addresses()
 {
     return mine_address_list;
 }

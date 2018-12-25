@@ -36,7 +36,7 @@ console_result destroy::invoke(Json::Value& jv_output,
     auto& blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    std::string blackhole_uid = uid_detail::get_blackhole_uid_symbol();
+    std::string blackhole_uid = UC_BLACKHOLE_UID_SYMBOL;
 
     if (option_.is_candidate) {
         const char* cmds[] {

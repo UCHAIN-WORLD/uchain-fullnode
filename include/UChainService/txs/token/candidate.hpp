@@ -125,6 +125,7 @@ struct BC_API candidate_info
     uint32_t output_height;
     uint32_t timestamp;
     std::string to_uid;
+    uint32_t vote;
     libbitcoin::chain::candidate candidate;
 
     uint64_t serialized_size() const;
