@@ -88,10 +88,13 @@ bool parser::parse(std::string& out_error, std::istream& input,
         //no negative parameters
         for(size_t i = 2; i<argc; i++)
         {
-            if((argv[i][0] == '-') && argv[i][1] != '\0' && std::isdigit(argv[i][1]))
+            for(size_t j = 0; argv[i][j] != '\0'; j++)
             {
-                out_error = "Parameter cannot be negative.";
-                return false;
+                if((argv[i][j] == '-') && argv[i][j+1] != '\0' && std::isdigit(argv[i][j+1]))
+                {
+                    out_error = "Parameter cannot be negative.";
+                    return false;
+                }
             }
         }
         // Must store before environment in order for commands to supercede.
