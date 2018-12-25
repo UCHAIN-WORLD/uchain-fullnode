@@ -65,12 +65,16 @@ console_result transfercandidate::invoke (Json::Value& jv_output,
 
         acc_multisig = *(multisig_vec->begin());
     }
-
+    auto candidate_info = blockchain.get_registered_candidate(argument_.symbol);
+    if (nullptr == candidate_info) {
+        throw token_symbol_name_exception("Invalid SYMBOL parameter! " + argument_.symbol);
+    }
+    std::string from_uid = candidate_info->to_uid;
     // receiver
     std::vector<receiver_record> receiver{
         {
             to_address, argument_.symbol, 0, 0, 0,
-            utxo_attach_type::candidate_transfer, asset("", to_uid)
+            utxo_attach_type::candidate_transfer, asset(from_uid, to_uid)
         }
     };
 
