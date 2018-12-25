@@ -85,10 +85,10 @@ code hosts::fetch(address& out, const config::authority::list& excluded_list)
             return error::service_stopped;
         }
 
-        if (fetch_times % 5 == 4 && !inactive_.empty())
-            buffer = &inactive_;
-        else
+        if (fetch_times % 5 == 4 && !buffer_.empty())
             buffer = &buffer_;
+        else
+            buffer = &inactive_;
     }
 
     for(auto entry: *buffer)
@@ -164,8 +164,8 @@ void hosts::handle_timer(const code& ec)
                 << buffer_.size() << " hosts found, inactive hosts size is " << inactive_.size();
         for (const auto& entry: buffer_)
             file << config::authority(entry) << std::endl;
-        for (const auto& entry: inactive_)
-            file << config::authority(entry) << std::endl;
+        // for (const auto& entry: inactive_)
+        //     file << config::authority(entry) << std::endl;
     }
     else
     {
@@ -215,7 +215,7 @@ code hosts::start()
                 auto network_address = host.to_network_address();
                 if(network_address.is_routable())
                 {
-                    buffer_.insert(network_address);
+                    inactive_.insert(network_address);
                 }
                 else
                 {
