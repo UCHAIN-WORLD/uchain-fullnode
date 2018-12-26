@@ -40,13 +40,9 @@ console_result addpeer::invoke(Json::Value& jv_output,
 {
     auto& blockchain = node.chain_impl();
 
-    if(!administrator_required_checker(node, auth_.name, auth_.auth))
+    if(!auth_.name.empty() && !administrator_required_checker(node, auth_.name, auth_.auth))
     {
-        const auto addr_ip = libbitcoin::config::authority(auth_.name);
-        if(addr_ip.to_network_address().is_routable())
-        {
-            throw address_invalid_exception{"You can only add one address at a time."};
-        }
+        throw address_invalid_exception{"You can only add one address at a time."};
     }
     
     try
