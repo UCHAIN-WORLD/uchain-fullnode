@@ -38,6 +38,7 @@
 #include <UChainService/api/command/commands/addpeer.hpp>
 #include <UChainService/api/command/commands/showmininginfo.hpp>
 #include <UChainService/api/command/commands/showblockheader.hpp>
+#include <UChainService/api/command/commands/showblockheaders.hpp>
 #include <UChainService/api/command/commands/showheaderext.hpp>
 #include <UChainService/api/command/commands/showtx.hpp>
 #include <UChainService/api/command/commands/exportkeyfile.hpp>
@@ -158,6 +159,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showblockheight>());
     func(make_shared<showblock>());
     func(make_shared<showblockheader>());
+    func(make_shared<showblockheaders>());
     func(make_shared<showheaderext>());
     func(make_shared<showmemorypool>());
     func(make_shared<showtx>());
@@ -279,6 +281,8 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<showblockheader>(symbol);
     if (symbol == showblockheader::symbol() || symbol == "fetch-header" || symbol == "getbestblockheader")
         return make_shared<showblockheader>();
+    if (symbol == showblockheaders::symbol())
+        return make_shared<showblockheaders>();
     if (symbol == showheaderext::symbol())
         return make_shared<showheaderext>();
     if (symbol == showmemorypool::symbol())
