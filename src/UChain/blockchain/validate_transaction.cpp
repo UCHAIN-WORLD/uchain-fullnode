@@ -1146,7 +1146,7 @@ code validate_transaction::check_uid_transaction() const
                     return error::token_uid_registerr_not_match;
                 }
             }
-        } else if (output.is_vote() || output.is_candidate_transfer() ) {
+        } else if (output.is_vote() || output.is_candidate_transfer()) {
             if (!output.is_uid_full_filled()) {
                 log::debug(LOG_BLOCKCHAIN)
                             << "both fromuid and touid are needed , attach_data: " << output.attach_data.to_string();
