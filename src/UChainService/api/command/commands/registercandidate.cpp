@@ -152,7 +152,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
         receiver.push_back(
             {
                 to_address, pair.first, 0, 0, 0,
-                utxo_attach_type::candidate, asset(to_uid, "")
+                utxo_attach_type::candidate, asset(to_uid, to_uid)
             }
         );
     }
