@@ -87,7 +87,7 @@ bool output::is_valid_uid_symbol(const std::string& symbol, bool check_sensitive
         return false;
     // char check
     for (const auto& i : symbol) {
-        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_' || i=='-'))
+        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_'))
             return false;
     }
 
@@ -112,7 +112,7 @@ bool output::is_valid_candidate_symbol(const std::string& symbol, bool check_sen
         return false;
     // char check
     for (const auto& i : symbol) {
-        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_' || i=='-' || i==':'))
+        if (!(std::isalnum(i) || i=='.'|| i=='@' || i=='_'))
             return false;
     }
 
@@ -124,7 +124,7 @@ bool output::is_valid_candidate_symbol(const std::string& symbol, bool check_sen
             return false;
     }
 
-    try {
+    /*try {
         const auto authority = libbitcoin::config::authority(symbol);
         if (!authority.to_network_address().is_routable()) {
             return false;
@@ -133,7 +133,7 @@ bool output::is_valid_candidate_symbol(const std::string& symbol, bool check_sen
     catch (...)
     {
         return false;
-    }
+    }*/
 
     return true;
 }
@@ -353,6 +353,16 @@ bool output::is_uid_full_filled() const
     return attach_data.get_version() == UID_ASSET_VERIFY_VERSION
             && !attach_data.get_to_uid().empty()
             && !attach_data.get_from_uid().empty();
+}
+
+std::string output::get_from_uid() const
+{
+    attach_data.get_from_uid();
+}
+
+std::string output::get_to_uid() const
+{
+    attach_data.get_to_uid();
 }
 
 std::string output::get_candidate_symbol() const

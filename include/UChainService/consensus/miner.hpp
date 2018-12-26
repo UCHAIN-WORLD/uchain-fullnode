@@ -33,6 +33,7 @@
 #include <UChain/explorer/config/ec_private.hpp>
 #include <UChain/explorer/config/hashtype.hpp>
 #include <UChain/explorer/config/script.hpp>
+#include <UChainService/txs/token/candidate.hpp>
 #include <mutex>
 
 namespace libbitcoin {
@@ -50,7 +51,6 @@ BC_CONSTEXPR uint32_t version = 1;
 
 //extern int bucket_size;
 extern vector<uint64_t> lock_heights;
-extern vector<std::string> mine_address_list;
 
 class miner
 {
@@ -105,7 +105,9 @@ public:
     bool set_miner_pri_key(const std::string& pri_key);
     //void set_user(const std::string& name, const std::string& passwd);
     void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
-    vector<std::string>& get_miners();
+    vector<candidate_info>& get_miners();
+    vector<std::string>& get_miner_addresses();
+    void generate_miner_list();
     bool is_creating_block() const;
     bool is_address_inturn(const string& pay_address) const;
     bool get_block_header(chain::header& block_header, const string& para);
@@ -141,9 +143,8 @@ private:
     std::string pri_key;
     std::string name_;
     std::string passwd_;
-
-    
-
+    static vector<candidate_info> mine_candidate_list;
+    static vector<std::string> mine_address_list;
 };
 
 }

@@ -91,7 +91,7 @@ bool data_base::initialize_uids(const path& prefix)
     if (!instance.create_uids())
         return false;
 
-    instance.set_blackhole_uid();
+    instance.set_blackhole_reward_pool_uid();
 
     log::info(LOG_DATABASE)
         << "Upgrading uid table is complete.";
@@ -110,9 +110,7 @@ bool data_base::initialize_tokens(const path& prefix)
     data_base instance(prefix, 0, 0);
     if (!instance.create_tokens())
         return false;
-
-    instance.set_token_block();
-    instance.set_token_vote();
+    instance.set_block_vote_token();
 
     log::info(LOG_DATABASE)
         << "Upgrading token table is complete.";
@@ -149,6 +147,8 @@ bool data_base::initialize_candidates(const path& prefix)
     data_base instance(prefix, 0, 0);
     if (!instance.create_candidates())
         return false;
+
+    instance.set_reward_pool_candidate();
 
     log::info(LOG_DATABASE)
         << "Upgrading candidate table is complete.";
@@ -200,50 +200,44 @@ void data_base::set_admin(const std::string& name, const std::string& passwd)
     wallets.set_admin(name, passwd);
 }
 
-void data_base::set_blackhole_uid()
+void data_base::set_blackhole_reward_pool_uid()
 {
-    const std::string uid_symbol = uid_detail::get_blackhole_uid_symbol();
+    const std::string uid_symbol = UC_BLACKHOLE_UID_SYMBOL;
     const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
-    uid_detail uiddetail(uid_symbol, uid_address);
+    uid_detail blackholeuiddetail(uid_symbol, uid_address);
+    data_chunk blackholedata(uid_address.begin(), uid_address.end());
+    short_hash blackholedatahash = ripemd160_hash(blackholedata);
 
-    data_chunk data(uid_address.begin(), uid_address.end());
-    short_hash hash = ripemd160_hash(data);
+    const std::string rewardpool_uid_symbol = UC_REWARD_POOL_UID_SYMBOL;
+    const std::string& rewardpool_uid_address = get_reward_pool_address(false);
+    uid_detail rewardpooluiddetail(rewardpool_uid_symbol, rewardpool_uid_address);
+    data_chunk rewardpooldata(rewardpool_uid_address.begin(), rewardpool_uid_address.end());
+    short_hash rewardpoolhash = ripemd160_hash(rewardpooldata);
 
     output_point outpoint = { null_hash, max_uint32 };
     uint32_t output_height = max_uint32;
     uint64_t value = 0;
 
-    push_uid_detail(uiddetail, hash, outpoint, output_height, value);
+    push_uid_detail(blackholeuiddetail, blackholedatahash, outpoint, output_height, value);
+    push_uid_detail(rewardpooluiddetail, rewardpoolhash, outpoint, output_height, value);
+    
     synchronize_uids();
 }
 
-void data_base::set_token_block()
+void data_base::set_block_vote_token()
 {
     const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
-    token_detail tokendetail(
+    token_detail blocktokendetail(
     UC_BLOCK_TOKEN_SYMBOL, 0,
-    1, 0, uid_detail::get_blackhole_uid_symbol(),
+    1, 0, UC_BLACKHOLE_UID_SYMBOL,
     bc::wallet::payment_address::blackhole_address, "'BLOCK' token is issued by blackhole.Miners can use it to get reward");
 
-    data_chunk data(uid_address.begin(), uid_address.end());
-    short_hash hash = ripemd160_hash(data);
-
-    output_point outpoint = { null_hash, max_uint32 };
-    uint32_t output_height = max_uint32;
-    uint64_t value = 0;
-
-    push_token_detail(tokendetail, hash, outpoint, output_height, value);
-    synchronize_uids();
-}
-
-void data_base::set_token_vote()
-{
-    const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
-    token_detail tokendetail(
+    token_detail votetokendetail(
     UC_VOTE_TOKEN_SYMBOL, 0,
-    1, 0, uid_detail::get_blackhole_uid_symbol(),
+    1, 0, UC_BLACKHOLE_UID_SYMBOL,
     bc::wallet::payment_address::blackhole_address, "'VOTE' token is issued by blackhole.Users can use it to vote.");
 
+
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
 
@@ -251,8 +245,27 @@ void data_base::set_token_vote()
     uint32_t output_height = max_uint32;
     uint64_t value = 0;
 
-    push_token_detail(tokendetail, hash, outpoint, output_height, value);
-    synchronize_uids();
+    push_token_detail(blocktokendetail, hash, outpoint, output_height, value);
+    push_token_detail(votetokendetail, hash, outpoint, output_height, value);
+    synchronize_tokens();
+}
+
+void data_base::set_reward_pool_candidate()
+{
+    const std::string& uid_address = get_reward_pool_address(false);
+    candidate candidatedetail(
+    UC_REWARD_POOL_CANDIDATE_SYMBOL, uid_address, 
+    "'reward_pool_miner' candidate is issued by reward_pool just to maintain blockchain when there is no any other miner.",CANDIDATE_STATUS_REGISTER);
+
+    data_chunk data(uid_address.begin(), uid_address.end());
+    short_hash hash = ripemd160_hash(data);
+
+    output_point outpoint = { null_hash, max_uint32 };
+    uint32_t output_height = max_uint32;
+    uint64_t value = 0;
+
+    push_candidate(candidatedetail, hash, outpoint, output_height, value, UC_REWARD_POOL_UID_SYMBOL,UC_REWARD_POOL_UID_SYMBOL);
+    synchronize_candidates();
 }
 
 data_base::store::store(const path& prefix)
@@ -872,6 +885,13 @@ void data_base::synchronize_candidates()
     candidate_history.sync();
 }
 
+void data_base::synchronize_tokens()
+{
+    tokens.sync();
+    address_tokens.sync();
+    wallet_tokens.sync();
+}
+
 void data_base::push(const block& block)
 {
     // Height is unsafe unless database locked.
@@ -1304,7 +1324,7 @@ void data_base::push_candidate(const candidate& candidate, const short_hash& key
     const output_point& outpoint, uint32_t output_height, uint64_t value,
     const std::string from_uid, std::string to_uid)
 {
-    candidate_info candidate_info{output_height, timestamp_, to_uid, candidate};
+    candidate_info candidate_info{output_height, timestamp_, to_uid, 0, candidate};
 
     if (candidate.is_register_status()) {
         candidates.store(candidate_info);

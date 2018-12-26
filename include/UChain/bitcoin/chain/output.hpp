@@ -68,6 +68,8 @@ public:
     void reset();
     uint64_t serialized_size() const;
     uint64_t get_token_amount() const;
+    std::string get_from_uid() const;
+    std::string get_to_uid() const;
     std::string get_token_symbol() const;
     std::string get_token_issuer() const;
     std::string get_token_address() const;

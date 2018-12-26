@@ -54,7 +54,7 @@ console_result showvote::invoke(Json::Value &jv_output,
     auto json_helper = config::json_helper(get_api_version());
 
     auto sh_vec = std::make_shared<token_balances::list>();
-    sync_fetch_token_balance(from_address, true, blockchain, sh_vec);
+    sync_fetch_token_balance(from_address, true, blockchain, sh_vec, argument_.startheight ,argument_.endheight);
     std::sort(sh_vec->begin(), sh_vec->end());
     for (auto &elem : *sh_vec)
     {

@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
 #include <UChainService/api/command/commands/showminers.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
@@ -40,24 +40,20 @@ console_result showminers::invoke(Json::Value& jv_output,
 
     auto& aroot = jv_output;
     Json::Value miners;
+    auto json_helper = config::json_helper(get_api_version());
 
+    auto sh_vec = node.miner().get_miners();
+    for (auto &elem : sh_vec)
+    {
+        Json::Value token_data = json_helper.prop_list(elem);
+        miners.append(token_data);
+    }
+    
 
-    for (auto& it : node.miner().get_miners()) {
-        miners.append(it);
-    }
+    if (miners.isNull())
+        miners.resize(0);
 
-    if (get_api_version() == 1 && miners.isNull()) { // compatible for v1
-        aroot["miners"] = "";
-    }
-    else if (get_api_version() <= 2) {
-        aroot["miners"] = miners;
-    }
-    else {
-        if(miners.isNull())
-            miners.resize(0);  
-
-        aroot = miners;
-    }
+    aroot = miners;
 
     return console_result::okay;
 }

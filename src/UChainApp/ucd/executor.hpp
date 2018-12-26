@@ -54,7 +54,7 @@ private:
     void do_version();
     bool do_initchain();
     void set_admin();
-    void set_blackhole_uid_block_vote();
+    void set_blackhole_rewardpool_block_vote();
 
     void initialize_output();
     bool verify_directory();

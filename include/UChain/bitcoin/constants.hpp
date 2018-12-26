@@ -35,6 +35,10 @@ namespace libbitcoin {
 #define UC_BLOCK_TOKEN_SYMBOL "BLOCK"
 #define UC_VOTE_TOKEN_SYMBOL  "VOTE"
 
+#define UC_REWARD_POOL_UID_SYMBOL  "reward_pool"
+#define UC_BLACKHOLE_UID_SYMBOL  "BLACKHOLE"
+#define UC_REWARD_POOL_CANDIDATE_SYMBOL  "reward_pool_miner"
+
 #define VOTE_LOCKED_TIME                 345600
 #define TIMES_QUANTITY_TO_VALUE    5E6
 // Generic constants.
@@ -131,6 +135,8 @@ BC_API hash_number max_target();
 BC_API std::string get_developer_community_address(bool is_testnet);
 
 BC_API std::string get_foundation_address(bool is_testnet);
+
+BC_API std::string get_reward_pool_address(bool is_testnet);
 
 } // namespace libbitcoin
 

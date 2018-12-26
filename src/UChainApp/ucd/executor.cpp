@@ -104,13 +104,13 @@ void executor::set_admin()
     db.stop();
 }
 
-void executor::set_blackhole_uid_block_vote()
+void executor::set_blackhole_rewardpool_block_vote()
 {
     data_base db(metadata_.configured.database);
     db.start();
-    db.set_blackhole_uid();
-    db.set_token_block();
-    db.set_token_vote();
+    db.set_blackhole_reward_pool_uid();
+    db.set_block_vote_token();
+    db.set_reward_pool_candidate();
     db.stop();
 }
 
@@ -142,7 +142,7 @@ bool executor::do_initchain()
         // init admin wallet
         set_admin();
         // init blackhole UID,block and vote token
-        set_blackhole_uid_block_vote();
+        set_blackhole_rewardpool_block_vote();
         log::info(LOG_SERVER) << BS_INITCHAIN_COMPLETE;
         return true;
     }

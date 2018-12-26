@@ -68,7 +68,7 @@ public:
 
     candidate();
     candidate(const std::string& symbol, const std::string& address,
-              const std::string& content);
+              const std::string& content, uint8_t status = 0);
 
     void reset();
     bool is_valid() const;
@@ -125,6 +125,7 @@ struct BC_API candidate_info
     uint32_t output_height;
     uint32_t timestamp;
     std::string to_uid;
+    uint32_t vote;
     libbitcoin::chain::candidate candidate;
 
     uint64_t serialized_size() const;
