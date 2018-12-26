@@ -164,8 +164,8 @@ void hosts::handle_timer(const code& ec)
                 << buffer_.size() << " hosts found, inactive hosts size is " << inactive_.size();
         for (const auto& entry: buffer_)
             file << config::authority(entry) << std::endl;
-        // for (const auto& entry: inactive_)
-        //     file << config::authority(entry) << std::endl;
+        for (const auto& entry: inactive_)
+            file << config::authority(entry) << std::endl;
     }
     else
     {
