@@ -13,9 +13,7 @@ SET_TARGET_PROPERTIES(secp256k1_static PROPERTIES IMPORTED_LOCATION ${secp256k1_
 ADD_LIBRARY(bitcoin_static STATIC ${bitcoin_SOURCES})
 SET_TARGET_PROPERTIES(bitcoin_static PROPERTIES OUTPUT_NAME uc_bitcoin)
 #Centos add gmp
-message("travis1:" $ENV{IS_TRAVIS_LINUX})
-message("travis2:" $ENV{IS_TRAVIS_OSX})
-IF($ENV{IS_TRAVIS_LINUX} || $ENV{IS_TRAVIS_OSX})
+IF(PLATFORM MATCHES "Redhat")
         TARGET_LINK_LIBRARIES(bitcoin_static gmp)
 ENDIF()
 TARGET_LINK_LIBRARIES(bitcoin_static ${Boost_LIBRARIES} secp256k1_static ${bitcoinmath_LIBRARY})
