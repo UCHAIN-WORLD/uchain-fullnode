@@ -99,6 +99,8 @@
 #include <UChainService/api/command/commands/transferuid.hpp>
 #include <UChainService/api/command/commands/showuid.hpp>
 #include <UChainService/api/command/commands/showvote.hpp>
+#include <UChain/explorer/commands/send-tx.hpp>
+#include <UChainService/api/command/exception.hpp>
 
 namespace libbitcoin {
 namespace explorer {
@@ -399,6 +401,24 @@ shared_ptr<command> find_extension(const string& symbol)
 std::string formerly_extension(const string& former)
 {
     return "";
+}
+
+bool check_read_only(const string& symbol)
+{
+    using namespace commands;
+    const vector<std::string> limit_command = {send_tx::symbol(), createwallet::symbol(), deletewallet::symbol(), changepass::symbol(), addaddress::symbol(), \
+                                    importwallet::symbol(), exportkeyfile::symbol(), "exportwalletasfile", importkeyfile::symbol(), "importwalletfromfile", \
+                                    shutdown::symbol(), addpeer::symbol(), stopmining::symbol(), "stop", startmining::symbol(), "start", createrawtx::symbol(), \
+                                    signrawtx::symbol(), sendrawtx::symbol(), createmultisigaddress::symbol(), deletemultisigaddress::symbol(), createmultisigtx::symbol(), \
+                                    signmultisigtx::symbol(), deposit::symbol(), sendto::symbol(), "uidsendto", sendtomulti::symbol(), "uidsendtomulti", \
+                                    sendfrom::symbol(), "uidsendfrom", createtoken::symbol(), deletetoken::symbol(), "deletetoken", registertoken::symbol(), \
+                                    sendtokento::symbol(), "uidsendtokento", sendtokenfrom::symbol(), "uidsendtokenfrom", destroy::symbol(), vote::symbol(), \
+                                    registercandidate::symbol(), transfercandidate::symbol(), registeruid::symbol(), transferuid::symbol()};
+    auto it = std::find(limit_command.begin(), limit_command.end(), symbol);                                    
+    if(it != limit_command.end())
+    {
+        throw invalid_command_exception{ "This commadn is not permmited!" };
+    }
 }
 
 } // namespace explorer

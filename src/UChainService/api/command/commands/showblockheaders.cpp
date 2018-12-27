@@ -52,15 +52,16 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
             && (option_.height.first() >= option_.height.second())) {
         throw block_height_exception{"invalid height option!"};
     }
-    if(option_.height.second() - option_.height.first() > 10000)
-    {
-        throw block_height_exception{"Cannot get block headers much than 10000!"};
-    }
+    
     uint64_t end;
     if(blockchain.get_last_height(end))
     {
         if(end > option_.height.second())
             end = option_.height.second();
+    }
+    if(end - option_.height.first() > 1000)
+    {
+        throw block_height_exception{"Cannot get block headers much than 10000!"};
     }
     
     const auto connection = get_connection(*this);

@@ -281,7 +281,6 @@ options_metadata parser::load_settings()
         value<config::endpoint::list>(&configured.network.seeds),
         "A seed node for initializing the host pool, multiple entries allowed."
     )
-
     /* [database] */
     (
         "database.history_start_height",
@@ -348,6 +347,11 @@ options_metadata parser::load_settings()
         "server.administrator_required",
         value<bool>(&configured.server.administrator_required),
         "Whether wallet needs administrator to execute non-wallet commands(shutdown/showinfo...), defaults to false."
+    )
+    (
+        "server.read_only",
+        value<bool>(&configured.server.read_only),
+        "Whether read request allowed, defaults to false."
     )
     (
         "server.mongoose_listen",
