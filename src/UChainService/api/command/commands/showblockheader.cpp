@@ -56,7 +56,7 @@ console_result showblockheader::invoke(Json::Value& jv_output,
     obelisk_client client(connection);
 
     if (!client.connect(connection)) {
-        throw connection_exception{"Could not connect to ucd port 9921."};
+        throw connection_exception{"Could not connect to ucd port " + node.server_settings().public_query_endpoint};
     }
 
     encoding json_format{"json"};

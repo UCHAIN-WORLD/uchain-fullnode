@@ -59,7 +59,7 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
         if(end > option_.height.second())
             end = option_.height.second();
     }
-    if(end - option_.height.first() > 1000)
+    if(end - option_.height.first() > 100)
     {
         throw block_height_exception{"Cannot get block headers much than 10000!"};
     }
@@ -69,7 +69,7 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
     obelisk_client client(connection);
 
     if (!client.connect(connection)) {
-        throw connection_exception{"Could not connect to ucd port 9921."};
+        throw connection_exception{"Could not connect to ucd port " + node.server_settings().public_query_endpoint};
     }
 
     encoding json_format{"json"};
