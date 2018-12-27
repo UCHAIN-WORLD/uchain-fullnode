@@ -108,7 +108,7 @@ void executor::set_blackhole_rewardpool_block_vote()
 {
     data_base db(metadata_.configured.database);
     db.start();
-    db.set_blackhole_reward_pool_uid();
+    db.set_blackhole_uid();
     db.set_block_vote_token();
     db.set_reward_pool_candidate();
     db.stop();
