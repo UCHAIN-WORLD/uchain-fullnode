@@ -112,11 +112,11 @@ public:
     bool is_address_inturn(const string& pay_address) const;
     bool get_block_header(chain::header& block_header, const string& para);
 
-    static bool is_address_in_turn_with_now_height(uint64_t height, const string& pay_address);
+    bool is_address_in_turn_with_now_height(uint64_t height, const string& pay_address);
     static int get_lock_heights_index(uint64_t height);
     static uint64_t calculate_block_subsidy(uint64_t height, bool is_testnet);
     static uint64_t calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num);
-    static int get_mine_index(const string& pay_address);
+    int get_mine_index(const string& pay_address) const;
 
 private:
     void work(const bc::wallet::payment_address pay_address);
@@ -143,8 +143,8 @@ private:
     std::string pri_key;
     std::string name_;
     std::string passwd_;
-    static vector<candidate_info> mine_candidate_list;
-    static vector<std::string> mine_address_list;
+    vector<candidate_info> mine_candidate_list;
+    vector<std::string> mine_address_list;
 };
 
 }

@@ -357,12 +357,20 @@ bool output::is_uid_full_filled() const
 
 std::string output::get_from_uid() const
 {
-    attach_data.get_from_uid();
+    if(attach_data.get_version() == UID_ASSET_VERIFY_VERSION)
+    {
+        attach_data.get_from_uid();
+    }
+    return "";
 }
 
 std::string output::get_to_uid() const
 {
-    attach_data.get_to_uid();
+    if(attach_data.get_version() == UID_ASSET_VERIFY_VERSION)
+    {
+        attach_data.get_to_uid();
+    }
+    return "";
 }
 
 std::string output::get_candidate_symbol() const

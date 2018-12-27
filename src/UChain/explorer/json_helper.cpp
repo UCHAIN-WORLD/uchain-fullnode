@@ -546,7 +546,7 @@ Json::Value json_helper::prop_list(const bc::chain::candidate& candidate_info, b
     return tree;
 }
 
-Json::Value json_helper::prop_list(const bc::chain::candidate_info& candidate_info, bool always_show_content)
+Json::Value json_helper::prop_list(const bc::chain::candidate_info& candidate_info, bool always_show_content, bool show_vote)
 {
     Json::Value tree;
 
@@ -565,6 +565,10 @@ Json::Value json_helper::prop_list(const bc::chain::candidate_info& candidate_in
 
     if (always_show_content || candidate_info.candidate.is_register_status()) {
         tree["content"] = candidate_info.candidate.get_content();
+    }
+
+    if (show_vote) {
+        tree["vote"] = candidate_info.vote;
     }
 
     return tree;
