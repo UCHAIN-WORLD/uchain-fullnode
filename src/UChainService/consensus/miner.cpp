@@ -1189,6 +1189,10 @@ bool miner::is_creating_block() const {
 
 vector<candidate_info>& miner::get_miners()
 {
+    if (!thread_) {
+        generate_miner_list();
+    }
+    
     return mine_candidate_list;
 }
 
