@@ -91,7 +91,7 @@ bool data_base::initialize_uids(const path& prefix)
     if (!instance.create_uids())
         return false;
 
-    instance.set_blackhole_reward_pool_uid();
+    instance.set_blackhole_uid();
 
     log::info(LOG_DATABASE)
         << "Upgrading uid table is complete.";
@@ -200,7 +200,7 @@ void data_base::set_admin(const std::string& name, const std::string& passwd)
     wallets.set_admin(name, passwd);
 }
 
-void data_base::set_blackhole_reward_pool_uid()
+void data_base::set_blackhole_uid()
 {
     const std::string uid_symbol = UC_BLACKHOLE_UID_SYMBOL;
     const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
@@ -208,20 +208,19 @@ void data_base::set_blackhole_reward_pool_uid()
     data_chunk blackholedata(uid_address.begin(), uid_address.end());
     short_hash blackholedatahash = ripemd160_hash(blackholedata);
 
-    const std::string rewardpool_uid_symbol = UC_REWARD_POOL_UID_SYMBOL;
+    /*const std::string rewardpool_uid_symbol = UC_REWARD_POOL_UID_SYMBOL;
     const std::string& rewardpool_uid_address = get_reward_pool_address(false);
     uid_detail rewardpooluiddetail(rewardpool_uid_symbol, rewardpool_uid_address);
     data_chunk rewardpooldata(rewardpool_uid_address.begin(), rewardpool_uid_address.end());
-    short_hash rewardpoolhash = ripemd160_hash(rewardpooldata);
+    short_hash rewardpoolhash = ripemd160_hash(rewardpooldata);*/
 
     output_point outpoint = { null_hash, max_uint32 };
-    uint32_t output_height = max_uint32;
     uint64_t value = 0;
 
-    push_uid_detail(blackholeuiddetail, blackholedatahash, outpoint, output_height, value);
-    push_uid_detail(rewardpooluiddetail, rewardpoolhash, outpoint, output_height, value);
+    push_uid_detail(blackholeuiddetail, blackholedatahash, outpoint, max_uint32, value);
+    //push_uid_detail(rewardpooluiddetail, rewardpoolhash, outpoint, 0, value);
     
-    synchronize_uids();
+    //synchronize_uids();
 }
 
 void data_base::set_block_vote_token()
@@ -247,7 +246,7 @@ void data_base::set_block_vote_token()
 
     push_token_detail(blocktokendetail, hash, outpoint, output_height, value);
     push_token_detail(votetokendetail, hash, outpoint, output_height, value);
-    synchronize_tokens();
+    //synchronize_tokens();
 }
 
 void data_base::set_reward_pool_candidate()
@@ -265,7 +264,7 @@ void data_base::set_reward_pool_candidate()
     uint64_t value = 0;
 
     push_candidate(candidatedetail, hash, outpoint, output_height, value, UC_REWARD_POOL_UID_SYMBOL,UC_REWARD_POOL_UID_SYMBOL);
-    synchronize_candidates();
+    //synchronize_candidates();
 }
 
 data_base::store::store(const path& prefix)

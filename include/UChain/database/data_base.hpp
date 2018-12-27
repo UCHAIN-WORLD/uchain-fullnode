@@ -303,7 +303,7 @@ public:
     };
 
     void set_admin(const std::string& name, const std::string& passwd);
-    void set_blackhole_reward_pool_uid();
+    void set_blackhole_uid();
     void set_block_vote_token();
     void set_reward_pool_candidate();
    /* begin store token info into  database */
