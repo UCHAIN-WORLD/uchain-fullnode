@@ -36,6 +36,7 @@ settings::settings()
     administrator_required(false),
     log_level("DEBUG"),
     secure_only(false),
+    read_only(false),
     query_service_enabled(true),
     heartbeat_service_enabled(false),
     block_service_enabled(false),
