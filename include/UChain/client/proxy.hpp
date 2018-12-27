@@ -48,6 +48,7 @@ public:
     typedef std::function<void(size_t)> height_handler;
     typedef std::function<void(size_t, size_t)> transaction_index_handler;
     typedef std::function<void(const chain::header&)> block_header_handler;
+    typedef std::function<void(const std::vector<chain::header>&)> block_headers_handler;
     typedef std::function<void(const chain::history::list&)> history_handler;
     typedef std::function<void(const chain::stealth::list&)> stealth_handler;
     typedef std::function<void(const chain::transaction&)> transaction_handler;
@@ -75,7 +76,8 @@ public:
 
     void blockchain_fetch_block_header(error_handler on_error,
         block_header_handler on_reply, uint32_t height);
-
+    void blockchain_fetch_block_headers(error_handler on_error,
+        block_headers_handler on_reply, uint32_t start, uint32_t end);
     void blockchain_fetch_block_header(error_handler on_error,
         block_header_handler on_reply, const hash_digest& block_hash);
 
@@ -124,6 +126,8 @@ private:
     static bool decode_height(reader& payload, height_handler& handler);
     static bool decode_block_header(reader& payload,
         block_header_handler& handler);
+    static bool decode_block_headers(reader& payload,
+        block_headers_handler& handler);
     static bool decode_transaction_index(reader& payload,
         transaction_index_handler& handler);
     static bool decode_validate(reader& payload, validate_handler& handler);
