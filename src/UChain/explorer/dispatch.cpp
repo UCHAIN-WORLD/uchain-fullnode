@@ -146,6 +146,8 @@ console_result dispatch_command(int argc, const char* argv[],
         display_invalid_command(output, target, superseding);
         throw invalid_command_exception{ output.str() };
     }
+    if(node.server_settings().read_only)
+        check_read_only(target);
     auto& in = get_command_input(*command, input);
 
     parser metadata(*command);

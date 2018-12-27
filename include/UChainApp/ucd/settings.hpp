@@ -49,6 +49,7 @@ public:
     std::string log_level;
     bool administrator_required;
     bool secure_only;
+    bool read_only;
 
     bool query_service_enabled;
     bool heartbeat_service_enabled;
