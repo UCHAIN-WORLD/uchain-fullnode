@@ -120,7 +120,7 @@ void blockchain::fetch_block_header(server_node& node, const message& request,
         blockchain::fetch_block_header_by_hash(node, request, handler);
     else if (data.size() == sizeof(uint32_t))
         blockchain::fetch_block_header_by_height(node, request, handler);
-    else if (data.size() == sizeof(uint64_t))
+    else if (data.size() == sizeof(uint64_t) + sizeof(bool))
         blockchain::fetch_block_header_by_height_range(node, request, handler);
     else
         handler(message(request, error::bad_stream));
@@ -158,13 +158,14 @@ void blockchain::fetch_block_header_by_height_range(server_node& node,
     const message& request, send_handler handler)
 {
     const auto& data = request.data();
-    BITCOIN_ASSERT(data.size() == sizeof(uint64_t));
+    BITCOIN_ASSERT(data.size() == sizeof(uint64_t) + sizeof(bool));
 
     auto deserial = make_deserializer(data.begin(), data.end());
     const uint64_t start = deserial.read_4_bytes_little_endian();
     const uint64_t end = deserial.read_4_bytes_little_endian();
+    const bool order = deserial.read_byte();
 
-    node.chain().fetch_block_headers(start, end,
+    node.chain().fetch_block_headers(start, end, order,
         std::bind(&blockchain::block_headers_fetched,
             _1, _2, request, handler));
 }

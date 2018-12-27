@@ -104,9 +104,11 @@ void proxy::blockchain_fetch_block_header(error_handler on_error,
 }
 
 void proxy::blockchain_fetch_block_headers(error_handler on_error,
-    block_headers_handler on_reply, uint32_t start, uint32_t end)
+    block_headers_handler on_reply, uint32_t start, uint32_t end, bool order)
 {
-    const auto data = build_chunk({ to_little_endian<uint32_t>(start), to_little_endian<uint32_t>(end)});
+    const auto data = build_chunk({ to_little_endian<uint32_t>(start), 
+                                    to_little_endian<uint32_t>(end),
+                                    to_little_endian<bool>(order)});
 
     send_request("blockchain.fetch_block_header", data, on_error,
         std::bind(decode_block_headers,

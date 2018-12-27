@@ -47,19 +47,22 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
     administrator_required_checker(node, auth_.name, auth_.auth);
     //blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
     // height check
-    if (option_.height.first()
-            && option_.height.second()
-            && (option_.height.first() >= option_.height.second())) {
-        throw block_height_exception{"invalid height option!"};
-    }
     
-    uint64_t end;
-    if(blockchain.get_last_height(end))
+    uint64_t end, start, height;
+    if(option_.height.second() > option_.height.first())
     {
-        if(end > option_.height.second())
-            end = option_.height.second();
+        start = option_.height.first();
+        end = option_.height.second();
+    }else{
+        start = option_.height.second();
+        end = option_.height.first();
     }
-    if(end - option_.height.first() > 100)
+    if(blockchain.get_last_height(height))
+    {
+        if(height < end)
+            end = height;
+    }
+    if(end - start > 100)
     {
         throw block_height_exception{"Cannot get block headers much than 100!"};
     }
@@ -98,7 +101,7 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
     // Use the null_hash as sentinel to determine whether to use height or hash.
 
  
-    client.blockchain_fetch_block_headers(on_error, on_done, option_.height.first(), end);
+    client.blockchain_fetch_block_headers(on_error, on_done, start, end, option_.height.second() > option_.height.first());
     client.wait();
  
 
