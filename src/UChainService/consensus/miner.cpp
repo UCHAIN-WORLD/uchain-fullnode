@@ -76,6 +76,8 @@ miner::miner(p2p_node& node)
     /*if (setting_.use_testnet_rules) {
         bc::HeaderAux::set_as_testnet();
     }*/
+    mine_candidate_list = {};
+    mine_address_list = {};
 }
 
 miner::~miner()
@@ -884,9 +886,6 @@ void miner::generate_miner_list()
     }
 }
 
-vector<candidate_info> miner::mine_candidate_list = {};
-vector<std::string> miner::mine_address_list = {};
-
 void miner::work(const bc::wallet::payment_address pay_address)
 {
     
@@ -968,7 +967,7 @@ void miner::work(const bc::wallet::payment_address pay_address)
     }
 }
 
-int miner::get_mine_index(const string& pay_address)
+int miner::get_mine_index(const string& pay_address) const
 {
     auto it=find(mine_address_list.begin(),mine_address_list.end(), pay_address);
  
@@ -988,7 +987,7 @@ bool miner::is_address_inturn(const string& pay_address) const
     if (!node_.chain_impl().get_last_height(current_block_height)) {
         return false;
     }
-    int index = get_mine_index(pay_address);
+    const int index = get_mine_index(pay_address);
     if (index == -1) {
         return false;
     }
@@ -1189,6 +1188,10 @@ bool miner::is_creating_block() const {
 
 vector<candidate_info>& miner::get_miners()
 {
+    if (!thread_) {
+        generate_miner_list();
+    }
+    
     return mine_candidate_list;
 }
 

@@ -45,7 +45,7 @@ console_result showminers::invoke(Json::Value& jv_output,
     auto sh_vec = node.miner().get_miners();
     for (auto &elem : sh_vec)
     {
-        Json::Value token_data = json_helper.prop_list(elem);
+        Json::Value token_data = json_helper.prop_list(elem,true,true);
         miners.append(token_data);
     }
     
