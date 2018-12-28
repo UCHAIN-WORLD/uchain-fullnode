@@ -80,7 +80,8 @@ public:
         (
             "height,e",
             value<libbitcoin::explorer::commands::colon_delimited2_item<uint64_t, uint64_t>>(&option_.height),
-            "Get block headers according height eg: -e start-height:end-height will return tx between [start-height, end-height)"
+            "Get block headers according height eg: -e start-height:end-height will return tx between [start-height, end-height], \
+            no more than 100."
         )
         ;
 
