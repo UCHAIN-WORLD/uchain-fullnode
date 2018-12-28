@@ -1537,6 +1537,19 @@ std::shared_ptr<candidate_info::list> block_chain_impl::get_registered_candidate
     return database_.candidates.get_blockchain_candidates();
 }
 
+bool block_chain_impl::exist_in_candidates(std::string uid)
+{
+    auto sh_vec = get_registered_candidates();
+    if (nullptr != sh_vec)
+    {
+        auto pred = [uid](libbitcoin::chain::candidate_info& info){
+                return info.to_uid == uid;
+        };
+        return std::find_if(sh_vec->begin(), sh_vec->end(), pred) != sh_vec->end();
+    }
+    return false;
+}
+
 std::shared_ptr<candidate_info::list> block_chain_impl::get_candidate_history(
     const std::string& symbol, uint64_t limit, uint64_t page_number)
 {

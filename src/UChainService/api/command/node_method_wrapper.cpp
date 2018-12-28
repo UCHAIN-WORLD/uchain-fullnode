@@ -79,19 +79,6 @@ uint32_t get_connections_count(bc::server::server_node& node){
     return ret;
 }
 
-bool exist_in_candidates(bc::server::server_node& node, std::string uid)
-{
-    auto& blockchain = node.chain_impl();
-    auto sh_vec = blockchain.get_registered_candidates();
-    if (nullptr != sh_vec)
-    {
-        auto pred = [uid](libbitcoin::chain::candidate_info& info){
-                return info.to_uid == uid;
-        };
-        return std::find_if(sh_vec->begin(), sh_vec->end(), pred) != sh_vec->end();
-    }
-    return false;
-}
 
 } //commands
 } // explorer

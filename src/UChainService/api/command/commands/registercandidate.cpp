@@ -19,7 +19,6 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/command/node_method_wrapper.hpp>
 #include <UChainService/api/command/commands/registercandidate.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
@@ -141,7 +140,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
 
     // check to uid
     auto to_uid = argument_.to;
-    if (exist_in_candidates(node, to_uid))
+    if (blockchain.exist_in_candidates(to_uid))
     {
         throw address_invalid_exception{ to_uid + " has been registered!"};
     }
