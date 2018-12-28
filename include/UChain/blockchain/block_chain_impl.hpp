@@ -136,7 +136,9 @@ public:
     /// fetch block header by height.
     void fetch_block_header(uint64_t height,
         block_header_fetch_handler handler);
-
+    // fetch blocks header by height range.
+    void fetch_block_headers(uint64_t start,
+        uint64_t end, bool order, locator_block_headers_fetch_handler handler);
     /// fetch block header by hash.
     void fetch_block_header(const hash_digest& hash,
         block_header_fetch_handler handler);

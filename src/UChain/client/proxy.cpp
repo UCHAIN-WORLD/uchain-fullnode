@@ -103,6 +103,18 @@ void proxy::blockchain_fetch_block_header(error_handler on_error,
             _1, on_reply));
 }
 
+void proxy::blockchain_fetch_block_headers(error_handler on_error,
+    block_headers_handler on_reply, uint32_t start, uint32_t end, bool order)
+{
+    const auto data = build_chunk({ to_little_endian<uint32_t>(start), 
+                                    to_little_endian<uint32_t>(end),
+                                    to_little_endian<bool>(order)});
+
+    send_request("blockchain.fetch_block_header", data, on_error,
+        std::bind(decode_block_headers,
+            _1, on_reply));
+}
+
 void proxy::blockchain_fetch_block_header(error_handler on_error,
     block_header_handler on_reply, const hash_digest& block_hash)
 {
@@ -328,6 +340,21 @@ bool proxy::decode_block_header(reader& payload, block_header_handler& handler)
         return false;
 
     handler(header);
+    return true;
+}
+
+bool proxy::decode_block_headers(reader& payload, block_headers_handler& handler)
+{
+    chain::header header;
+    std::vector<chain::header> headers;
+    while(!payload.is_exhausted())
+    {
+        if(header.from_data(payload))
+            headers.push_back(header);
+        else
+            return false;
+    }
+    handler(headers);
     return true;
 }
 
