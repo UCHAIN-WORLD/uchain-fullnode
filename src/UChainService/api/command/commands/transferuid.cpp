@@ -20,6 +20,7 @@
 
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/dispatch.hpp>
+#include <UChainService/api/command/node_method_wrapper.hpp>
 #include <UChainService/api/command/commands/transferuid.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
@@ -47,6 +48,10 @@ console_result transferuid::invoke(Json::Value& jv_output,
         throw uid_symbol_notfound_exception{"Uid '" + uid + "' does not exist on the blockchain"};
     }
 
+    if(exist_in_candidates(node, uid))
+    {
+        throw uid_symbol_existed_exception{"Target uid is already binded with candidate! "};
+    }
     auto from_address = uid_detail->get_address();
 
     // check uid is owned by the wallet

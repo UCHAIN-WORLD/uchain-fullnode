@@ -19,6 +19,7 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
+#include <UChainService/api/command/node_method_wrapper.hpp>
 #include <UChainService/api/command/commands/registercandidate.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
@@ -140,17 +141,9 @@ console_result registercandidate::invoke (Json::Value& jv_output,
 
     // check to uid
     auto to_uid = argument_.to;
-    auto sh_vec = blockchain.get_registered_candidates();
-    if (nullptr != sh_vec)
+    if (exist_in_candidates(node, to_uid))
     {
-        auto pred = [to_uid](libbitcoin::chain::candidate_info& info){
-                return info.to_uid == to_uid;
-        };
-
-        if(std::find_if(sh_vec->begin(), sh_vec->end(), pred) != sh_vec->end())
-        {
-            throw address_invalid_exception{ to_uid + " has been registered!"};
-        }
+        throw address_invalid_exception{ to_uid + " has been registered!"};
     }
     auto to_address = get_address_from_uid(to_uid, blockchain);
     if (!blockchain.is_valid_address(to_address)) {

@@ -36,6 +36,7 @@ bool administrator_required_checker(bc::server::server_node& node,
 uint64_t get_last_height(bc::server::server_node& node);
 
 uint32_t get_connections_count(bc::server::server_node& node);
+bool exist_in_candidates(bc::server::server_node& node, std::string uid);
 
 } // namespace commands
 } // namespace explorer
