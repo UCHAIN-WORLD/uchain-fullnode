@@ -47,21 +47,24 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
     administrator_required_checker(node, auth_.name, auth_.auth);
     //blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
     // height check
-    if (option_.height.first()
-            && option_.height.second()
-            && (option_.height.first() >= option_.height.second())) {
-        throw block_height_exception{"invalid height option!"};
-    }
     
-    uint64_t end;
-    if(blockchain.get_last_height(end))
+    uint64_t end, start, height;
+    if(option_.height.second() > option_.height.first())
     {
-        if(end > option_.height.second())
-            end = option_.height.second();
+        start = option_.height.first();
+        end = option_.height.second();
+    }else{
+        start = option_.height.second();
+        end = option_.height.first();
     }
-    if(end - option_.height.first() > 100)
+    if(blockchain.get_last_height(height))
     {
-        throw block_height_exception{"Cannot get block headers much than 10000!"};
+        if(height < end)
+            end = height;
+    }
+    if(end - start > 100)
+    {
+        throw block_height_exception{"Cannot get block headers much than 100!"};
     }
     
     const auto connection = get_connection(*this);
@@ -77,14 +80,16 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
     std::vector<Json::Value> headers;
     callback_state state(output, output, json_format);
 
-    auto on_done = [this, &jv_output, &end](const chain::header & header)
+    auto on_done = [this, &jv_output, &end](const std::vector<chain::header> & headers)
     {
-        
-        auto&& jheader = config::json_helper(get_api_version()).prop_tree(header);
-        if (!jheader.isObject() || !jheader["hash"].isString()) {
-            throw block_hash_get_exception{"getbestblockhash parser exception."};
-        }
-        jv_output.append(jheader);  
+        for(auto&& header : headers)
+        {
+            auto&& jheader = config::json_helper(get_api_version()).prop_tree(header);
+            if (!jheader.isObject() || !jheader["hash"].isString()) {
+                throw block_hash_get_exception{"getbestblockhash parser exception."};
+            }
+            jv_output.append(jheader); 
+        }     
     };
 
     auto on_error = [&state](const code & error)
@@ -95,11 +100,10 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
     // Height is ignored if both are specified.
     // Use the null_hash as sentinel to determine whether to use height or hash.
 
-    for(size_t num=option_.height.first(); num<= end; num++)
-    {
-        client.blockchain_fetch_block_header(on_error, on_done, num);
-        client.wait();
-    }
+ 
+    client.blockchain_fetch_block_headers(on_error, on_done, start, end, option_.height.second() > option_.height.first());
+    client.wait();
+ 
 
     return state.get_result();
 }

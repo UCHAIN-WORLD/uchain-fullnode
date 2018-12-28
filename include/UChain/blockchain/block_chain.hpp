@@ -75,6 +75,8 @@ public:
 
     virtual void fetch_block_header(uint64_t height,
         block_header_fetch_handler handler) = 0;
+    virtual void fetch_block_headers(uint64_t start, 
+        uint64_t end, bool order, locator_block_headers_fetch_handler handler) = 0;
     virtual void fetch_block_header(const hash_digest& hash,
         block_header_fetch_handler handler) = 0;
 

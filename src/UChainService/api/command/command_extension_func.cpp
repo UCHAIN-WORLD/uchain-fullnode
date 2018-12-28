@@ -413,11 +413,13 @@ bool check_read_only(const string& symbol)
                                     signmultisigtx::symbol(), deposit::symbol(), sendto::symbol(), "uidsendto", sendtomulti::symbol(), "uidsendtomulti", \
                                     sendfrom::symbol(), "uidsendfrom", createtoken::symbol(), deletetoken::symbol(), "deletetoken", registertoken::symbol(), \
                                     sendtokento::symbol(), "uidsendtokento", sendtokenfrom::symbol(), "uidsendtokenfrom", destroy::symbol(), vote::symbol(), \
-                                    registercandidate::symbol(), transfercandidate::symbol(), registeruid::symbol(), transferuid::symbol()};
+                                    registercandidate::symbol(), transfercandidate::symbol(), registeruid::symbol(), transferuid::symbol(), checkwalletinfo::symbol(), \
+                                    showaddresses::symbol(), showbalances::symbol(), showbalance::symbol(), showwallettoken::symbol(), decoderawtx::symbol(), \
+                                    checkpublickey::symbol()};
     auto it = std::find(limit_command.begin(), limit_command.end(), symbol);                                    
     if(it != limit_command.end())
     {
-        throw invalid_command_exception{ "This commadn is not permmited!" };
+        throw invalid_command_exception{ "This command is not permitted!" };
     }
 }
 
