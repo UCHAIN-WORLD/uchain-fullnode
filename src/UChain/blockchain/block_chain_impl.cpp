@@ -732,6 +732,37 @@ void block_chain_impl::fetch_block_header(uint64_t height,
     fetch_serial(do_fetch);
 }
 
+void block_chain_impl::fetch_block_headers(uint64_t start,
+    uint64_t end, bool order, locator_block_headers_fetch_handler handler)
+{
+    if (stopped())
+    {
+        handler(error::service_stopped, {});
+        return;
+    }
+
+    const auto do_fetch = [this, &start, &end, order, handler](size_t slock)
+    {
+        chain::header header;
+        std::vector<chain::header> headers;
+        while(start<=end)
+        {
+            const auto result = database_.blocks.get((order ? start++ : end--));
+            if(result)
+            {
+                chain::header header = result.header();
+                header.transaction_count = result.transaction_count();
+                headers.push_back(header);
+            }         
+        }
+
+        return headers.size() ?
+                finish_fetch(slock, handler, error::success, headers) :
+            finish_fetch(slock, handler, error::not_found, vector<chain::header>{});
+    };
+    fetch_serial(do_fetch);
+}
+
 void block_chain_impl::fetch_block_header(const hash_digest& hash,
     block_header_fetch_handler handler)
 {

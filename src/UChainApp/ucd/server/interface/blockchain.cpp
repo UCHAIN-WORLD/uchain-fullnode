@@ -120,6 +120,8 @@ void blockchain::fetch_block_header(server_node& node, const message& request,
         blockchain::fetch_block_header_by_hash(node, request, handler);
     else if (data.size() == sizeof(uint32_t))
         blockchain::fetch_block_header_by_height(node, request, handler);
+    else if (data.size() == sizeof(uint64_t) + sizeof(bool))
+        blockchain::fetch_block_header_by_height_range(node, request, handler);
     else
         handler(message(request, error::bad_stream));
 }
@@ -152,6 +154,22 @@ void blockchain::fetch_block_header_by_height(server_node& node,
             _1, _2, request, handler));
 }
 
+void blockchain::fetch_block_header_by_height_range(server_node& node,
+    const message& request, send_handler handler)
+{
+    const auto& data = request.data();
+    BITCOIN_ASSERT(data.size() == sizeof(uint64_t) + sizeof(bool));
+
+    auto deserial = make_deserializer(data.begin(), data.end());
+    const uint64_t start = deserial.read_4_bytes_little_endian();
+    const uint64_t end = deserial.read_4_bytes_little_endian();
+    const bool order = deserial.read_byte();
+
+    node.chain().fetch_block_headers(start, end, order,
+        std::bind(&blockchain::block_headers_fetched,
+            _1, _2, request, handler));
+}
+
 void blockchain::block_header_fetched(const code& ec,
     const chain::header& block, const message& request, send_handler handler)
 {
@@ -161,6 +179,24 @@ void blockchain::block_header_fetched(const code& ec,
     {
         message::to_bytes(ec),
         block.to_data()
+    });
+
+    handler(message(request, result));
+}
+
+void blockchain::block_headers_fetched(const code& ec,
+    const std::vector<chain::header>& blocks, const message& request, send_handler handler)
+{
+    data_chunk data;
+    for(auto& block:blocks)
+    {
+        auto chunk = block.to_data();
+        data.insert(data.end(), std::make_move_iterator(chunk.begin()), std::make_move_iterator(chunk.end()));
+    }
+    const auto result = build_chunk(
+    {
+        message::to_bytes(ec),
+        data
     });
 
     handler(message(request, result));

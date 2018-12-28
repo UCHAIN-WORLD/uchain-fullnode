@@ -86,8 +86,15 @@ private:
     static void fetch_block_header_by_height(server_node& node,
         const message& request, send_handler handler);
 
+    static void fetch_block_header_by_height_range(server_node& node,
+        const message& request, send_handler handler);
+
     static void block_header_fetched(const code& ec,
         const chain::header& block, const message& request,
+        send_handler handler);
+
+    static void block_headers_fetched(const code& ec,
+        const std::vector<chain::header>& blocks, const message& request,
         send_handler handler);
 
     static void fetch_block_transaction_hashes_by_hash(server_node& node,
