@@ -140,10 +140,7 @@ console_result registercandidate::invoke (Json::Value& jv_output,
 
     // check to uid
     auto to_uid = argument_.to;
-    if (blockchain.exist_in_candidates(to_uid))
-    {
-        throw address_invalid_exception{ to_uid + " has been registered!"};
-    }
+
     auto to_address = get_address_from_uid(to_uid, blockchain);
     if (!blockchain.is_valid_address(to_address)) {
         throw address_invalid_exception{"invalid uid parameter! " + to_uid};

@@ -1330,6 +1330,14 @@ void data_base::push_candidate(const candidate& candidate, const short_hash& key
         candidates.sync();
     }
 
+    if(candidate.is_transfer_status()){
+        const auto& key_str = candidate_info.candidate.get_symbol();
+        const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
+        const auto key = sha256_hash(data);
+        candidates.remove(key);
+        candidates.store(candidate_info);
+        candidates.sync();
+    }
     address_candidates.store_output(key, outpoint, output_height, value,
         static_cast<typename std::underlying_type<business_kind>::type>(business_kind::candidate),
         timestamp_, candidate);

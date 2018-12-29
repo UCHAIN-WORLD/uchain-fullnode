@@ -1043,8 +1043,6 @@ bool validate_transaction::check_address_registered_uid(const std::string& addre
 {
     uint64_t fork_index = validate_block_ ? validate_block_->get_fork_index() : max_uint64;
     auto uid_symbol = blockchain_.get_uid_from_address(address, fork_index);
-    if(blockchain_.exist_in_candidates(uid_symbol))
-        return error::uid_in_candidate;
     if (!validate_block_) {
         if (uid_symbol.empty()) {
             return false;

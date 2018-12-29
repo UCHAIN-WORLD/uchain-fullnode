@@ -47,10 +47,6 @@ console_result transferuid::invoke(Json::Value& jv_output,
         throw uid_symbol_notfound_exception{"Uid '" + uid + "' does not exist on the blockchain"};
     }
 
-    if(blockchain.exist_in_candidates(uid))
-    {
-        throw uid_symbol_existed_exception{"Target uid is already binded with candidate! "};
-    }
     auto from_address = uid_detail->get_address();
 
     // check uid is owned by the wallet
