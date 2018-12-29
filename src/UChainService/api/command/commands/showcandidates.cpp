@@ -46,8 +46,14 @@ console_result showcandidates::invoke(Json::Value& jv_output,
         if (nullptr != sh_vec) {
             std::sort(sh_vec->begin(), sh_vec->end());
             for (auto& elem : *sh_vec) {
-                Json::Value token_data = json_helper.prop_list(elem);
-                json_value.append(token_data);
+                if(elem.candidate.get_status() == CANDIDATE_STATUS_TRANSFER \
+                   || elem.candidate.get_status() == CANDIDATE_STATUS_REGISTER)
+                {
+                    //elem.candidate.set_status(CANDIDATE_STATUS_REGISTER);
+                    Json::Value token_data = json_helper.prop_list(elem);
+                    json_value.append(token_data);
+                }
+                
             }
         }
     }

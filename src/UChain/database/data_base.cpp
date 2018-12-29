@@ -557,7 +557,6 @@ data_base::data_base(const store& paths, size_t history_height,
     wallet_addresses(paths.wallet_addresses_lookup, paths.wallet_addresses_rows, mutex_),
     /* end database for wallet, token, address_token, uid relationship */
     candidates(paths.candidates_lookup, mutex_),
-    address_candidates(paths.address_candidates_lookup, paths.address_candidates_rows, mutex_),
     candidate_history(paths.candidate_history_lookup, paths.candidate_history_rows, mutex_)
 {
 }
@@ -617,9 +616,7 @@ bool data_base::create()
         wallet_addresses.create() &&
         /* end database for wallet, token, address_token relationship */
         candidates.create() &&
-        address_candidates.create() &&
-        candidate_history.create()
-        ;
+        candidate_history.create();
 }
 
 bool data_base::create_uids()
@@ -646,7 +643,6 @@ bool data_base::create_candidates()
 {
     return
         candidates.create() &&
-        address_candidates.create() &&
         candidate_history.create();
 }
 
@@ -686,7 +682,6 @@ bool data_base::start()
         wallet_addresses.start() &&
         /* end database for wallet, token, address_token relationship */
         candidates.start() &&
-        address_candidates.start() &&
         candidate_history.start()
         ;
     const auto end_exclusive = end_write();
@@ -715,7 +710,6 @@ bool data_base::stop()
     const auto wallet_addresses_stop = wallet_addresses.stop();
     /* end database for wallet, token, address_token relationship */
     const auto candidates_stop = candidates.stop();
-    const auto address_candidates_stop = address_candidates.stop();
     const auto candidate_history_stop = candidate_history.stop();
     const auto end_exclusive = end_write();
 
@@ -743,7 +737,6 @@ bool data_base::stop()
         wallet_addresses_stop &&
         /* end database for wallet, token, address_token relationship */
         candidates_stop &&
-        address_candidates_stop &&
         candidate_history_stop &&
         end_exclusive;
 }
@@ -767,7 +760,6 @@ bool data_base::close()
     const auto wallet_addresses_close = wallet_addresses.close();
     /* end database for wallet, token, address_token relationship */
     const auto candidates_close = candidates.close();
-    const auto address_candidates_close = address_candidates.close();
     const auto candidate_history_close = candidate_history.close();
 
     // Return the cumulative result of the database closes.
@@ -788,7 +780,6 @@ bool data_base::close()
         wallet_addresses_close &&
         /* end database for wallet, token, address_token relationship */
         candidates_close &&
-        address_candidates_close &&
         candidate_history_close
         ;
 }
@@ -861,7 +852,6 @@ void data_base::synchronize()
     wallet_addresses.sync();
     /* end database for wallet, token, address_token relationship */
     candidates.sync();
-    address_candidates.sync();
     candidate_history.sync();
     blocks.sync();
 }
@@ -880,7 +870,6 @@ void data_base::synchronize_certs()
 void data_base::synchronize_candidates()
 {
     candidates.sync();
-    address_candidates.sync();
     candidate_history.sync();
 }
 
@@ -1188,7 +1177,6 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
                 }
             }
             else if (op.is_candidate()) {
-                address_candidates.delete_last_row(hash);
 
                 const auto candidate = op.get_candidate();
                 auto symbol = candidate.get_symbol();
@@ -1323,25 +1311,12 @@ void data_base::push_candidate(const candidate& candidate, const short_hash& key
     const output_point& outpoint, uint32_t output_height, uint64_t value,
     const std::string from_uid, std::string to_uid)
 {
-    candidate_info candidate_info{output_height, timestamp_, to_uid, 0, candidate};
+    candidate_info candidate_info{output_height, timestamp_, 0, to_uid, candidate};
 
-    if (candidate.is_register_status()) {
+    if (candidate.is_register_status() || candidate.is_transfer_status()) {
         candidates.store(candidate_info);
         candidates.sync();
     }
-
-    if(candidate.is_transfer_status()){
-        const auto& key_str = candidate_info.candidate.get_symbol();
-        const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
-        const auto key = sha256_hash(data);
-        candidates.remove(key);
-        candidates.store(candidate_info);
-        candidates.sync();
-    }
-    address_candidates.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::candidate),
-        timestamp_, candidate);
-    address_candidates.sync();
 
     candidate_history.store(candidate_info);
     candidate_history.sync();

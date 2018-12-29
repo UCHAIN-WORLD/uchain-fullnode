@@ -172,12 +172,12 @@ uint64_t blockchain_candidate_database::get_register_height(const std::string & 
     return max_uint64;
 }
 
-void blockchain_candidate_database::store(const candidate_info& candidate_info)
+void blockchain_candidate_database::store(candidate_info& candidate_info)
 {
     const auto& key_str = candidate_info.candidate.get_symbol();
     const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
     const auto key = sha256_hash(data);
-
+    update_address_status(key, CANDIDATE_STATUS_HISTORY);
 #ifdef UC_DEBUG
     log::debug("blockchain_candidate_database::store") << candidate_info.candidate.to_string();
 #endif
@@ -195,6 +195,27 @@ void blockchain_candidate_database::store(const candidate_info& candidate_info)
     lookup_map_.store(key, write, value_size);
 }
 
+std::shared_ptr<candidate_info> blockchain_candidate_database::update_address_status(const hash_digest &hash, uint8_t status )
+{
+    std::shared_ptr<candidate_info>  detail = nullptr;
+    const auto raw_memory = lookup_map_.find(hash);
+    if (raw_memory)
+    {
+        remove(hash);
+        const auto memory = REMAP_ADDRESS(raw_memory);
+        auto deserial = make_deserializer_unsafe(memory);
+        candidate_info candi_info = candidate_info::factory_from_data(deserial);
+        if (candi_info.candidate.get_status() != status)
+        {
+            //update status and serializer
+            candi_info.candidate.set_status(status);
+            auto serial = make_serializer(memory);
+            serial.write_data(candi_info.to_data());
+        }
+    }
+
+    return detail;
+}
 
 } // namespace database
 } // namespace libbitcoin
