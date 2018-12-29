@@ -48,24 +48,24 @@ console_result showcandidate::invoke(Json::Value& jv_output,
         }
     }
 
-    if (option_.show_history) {
-        if (argument_.symbol.empty()) {
-            throw argument_legality_exception("candidate symbol not privided while tracing history!");
-        }
 
-        // page limit & page index paramenter check
-        if (option_.index < 1) {
-            throw argument_legality_exception{"page index parameter cannot be zero"};
-        }
-
-        if (option_.limit < 1) {
-            throw argument_legality_exception{"page record limit parameter cannot be zero"};
-        }
-
-        if (option_.limit > 100) {
-            throw argument_legality_exception{"page record limit cannot be bigger than 100."};
-        }
+    if (argument_.symbol.empty()) {
+        throw argument_legality_exception("candidate symbol not privided while tracing history!");
     }
+
+    // page limit & page index paramenter check
+    if (option_.index < 1) {
+        throw argument_legality_exception{"page index parameter cannot be zero"};
+    }
+
+    if (option_.limit < 1) {
+        throw argument_legality_exception{"page record limit parameter cannot be zero"};
+    }
+
+    if (option_.limit > 100) {
+        throw argument_legality_exception{"page record limit cannot be bigger than 100."};
+    }
+  
 
     Json::Value json_value;
     auto json_helper = config::json_helper(get_api_version());
@@ -86,7 +86,20 @@ console_result showcandidate::invoke(Json::Value& jv_output,
         }
     }
     else {
-        if (option_.show_history) {
+        if (option_.show_current) {
+            auto sh_vec = blockchain.get_candidate_history(argument_.symbol, 1, 1);
+            if (nullptr != sh_vec && sh_vec->size() > 0) {
+                auto last_iter = --(sh_vec->end());
+                auto& candidate_info = *last_iter;
+                auto reg_candidate = blockchain.get_registered_candidate(argument_.symbol);
+                if (nullptr != reg_candidate) {
+                    candidate_info.candidate.set_content(reg_candidate->candidate.get_content());
+                }
+
+                json_value = json_helper.prop_list(candidate_info, true);
+            }
+        }
+        else {
             auto sh_vec = blockchain.get_candidate_history(argument_.symbol, option_.limit, option_.index);
             for (auto& elem : *sh_vec) {
                 Json::Value token_data = json_helper.prop_list(elem);
@@ -103,29 +116,9 @@ console_result showcandidate::invoke(Json::Value& jv_output,
                 jv_output = json_value;
             }
         }
-        else {
-            if (option_.show_current) {
-                auto sh_vec = blockchain.get_candidate_history(argument_.symbol, 1, 1);
-                if (nullptr != sh_vec && sh_vec->size() > 0) {
-                    auto last_iter = --(sh_vec->end());
-                    auto& candidate_info = *last_iter;
-                    auto reg_candidate = blockchain.get_registered_candidate(argument_.symbol);
-                    if (nullptr != reg_candidate) {
-                        candidate_info.candidate.set_content(reg_candidate->candidate.get_content());
-                    }
 
-                    json_value = json_helper.prop_list(candidate_info, true);
-                }
-            }
-            else {
-                auto candidate_info = blockchain.get_registered_candidate(argument_.symbol);
-                if (nullptr != candidate_info) {
-                    json_value = json_helper.prop_list(*candidate_info);
-                }
-            }
-
-            jv_output = json_value;
-        }
+        jv_output = json_value;
+     
     }
 
     return console_result::okay;
