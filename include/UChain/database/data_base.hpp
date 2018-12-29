@@ -55,7 +55,6 @@
 #include <UChainService/data/databases/blockchain_uid_database.hpp>
 #include <UChainService/data/databases/address_uid_database.hpp>
 #include <UChainService/data/databases/blockchain_candidate_database.hpp>
-#include <UChainService/data/databases/address_candidate_database.hpp>
 #include <UChainService/data/databases/candidate_history_database.hpp>
 
 using namespace libbitcoin::wallet;
@@ -376,7 +375,6 @@ public:
     wallet_address_database wallet_addresses;
     /* end database for wallet, token, address_token relationship */
     blockchain_candidate_database candidates;
-    address_candidate_database address_candidates;
     candidate_history_database candidate_history;
 };
 
