@@ -224,6 +224,8 @@ std::string error_category_impl::message(int ev) const BC_NOEXCEPT
             return "uid does not exist";
         case error::uid_input_error:
             return "uid input error";
+        case error::uid_in_candidate:
+            return "cannot transfer uid in candidates";
         case error::uid_multi_type_exist:
             return "uid attchment type can not be with some others";
         case error::attenuation_model_param_error:

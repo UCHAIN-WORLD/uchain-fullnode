@@ -69,11 +69,6 @@ public:
             "Candidate symbol. If not specified then show whole network candidate symbols."
         )
         (
-            "trace,t",
-            value<bool>(&option_.show_history)->default_value(false)->zero_tokens(),
-            "If specified then trace the history. Default is not specified."
-        )
-        (
             "limit,l",
             value<uint32_t>(&option_.limit)->default_value(100),
             "candidate count per page."
@@ -112,7 +107,6 @@ public:
 
     struct option
     {
-        bool show_history;
         bool show_current;
         uint32_t index;
         uint32_t limit;

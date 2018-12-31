@@ -62,7 +62,7 @@ console_result showblockheaders::invoke(Json::Value& jv_output,
         if(height < end)
             end = height;
     }
-    if(end - start > 100)
+    if(end - start > 99)
     {
         throw block_height_exception{"Cannot get block headers much than 100!"};
     }

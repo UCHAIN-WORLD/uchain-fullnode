@@ -1311,9 +1311,9 @@ void data_base::push_candidate(const candidate& candidate, const short_hash& key
     const output_point& outpoint, uint32_t output_height, uint64_t value,
     const std::string from_uid, std::string to_uid)
 {
-    candidate_info candidate_info{output_height, timestamp_, to_uid, 0, candidate};
+    candidate_info candidate_info{output_height, timestamp_, 0, to_uid, candidate};
 
-    if (candidate.is_register_status()) {
+    if (candidate.is_register_status() || candidate.is_transfer_status()) {
         candidates.store(candidate_info);
         candidates.sync();
     }

@@ -239,6 +239,12 @@ std::string candidate::status_to_string(uint8_t status)
     else if (status == CANDIDATE_STATUS_TRANSFER) {
         return "transfered";
     }
+    else if (status == CANDIDATE_STATUS_HISTORY) {
+        return "history";
+    }
+    else if (status == CANDIDATE_STATUS_CURRENT) {
+        return "current";
+    }
     else {
         return "none";
     }
@@ -271,10 +277,12 @@ void candidate_info::reset()
 {
     output_height = 0;
     timestamp = 0;
-    to_uid = "";
     vote = 0;
+    //status = 0;
+    to_uid = "";
     candidate.reset();
 }
+
 
 bool candidate_info::operator< (const candidate_info& other) const
 {
@@ -294,6 +302,7 @@ candidate_info candidate_info::factory_from_data(reader& source)
 
     instance.output_height = source.read_4_bytes_little_endian();
     instance.timestamp = source.read_4_bytes_little_endian();
+    //instance.status = source.read_byte();
     instance.to_uid = source.read_string();
     instance.candidate = candidate::factory_from_data(source);
 
@@ -334,6 +343,15 @@ data_chunk candidate_info::to_short_data() const
     ostream.flush();
     return data;
 }
+
+// const uint8_t& candidate_info::get_status()
+// {
+//     return this->status;
+// }
+// void candidate_info::set_status(const uint8_t &status)
+// {
+//     this->status = status;
+// }
 
 } // namspace chain
 } // namspace libbitcoin
