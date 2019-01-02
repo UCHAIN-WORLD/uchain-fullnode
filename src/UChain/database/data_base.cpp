@@ -780,8 +780,7 @@ bool data_base::close()
         wallet_addresses_close &&
         /* end database for wallet, token, address_token relationship */
         candidates_close &&
-        candidate_history_close
-        ;
+        candidate_history_close;
 }
 
 // Locking.

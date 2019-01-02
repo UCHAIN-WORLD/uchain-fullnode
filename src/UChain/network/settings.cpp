@@ -65,7 +65,7 @@ settings::settings(bc::settings context)
         {
             //identifier = 0x4d53564d;
             //identifier = 1234567891;//for UIP0.2
-            identifier = 1234567898;//for UIP0.5
+            identifier = 1234567899;//for UIP0.5
             inbound_port = 5682;
 
             // Seeds based on uc.live/network/dns-servers
