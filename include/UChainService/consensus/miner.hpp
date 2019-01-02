@@ -112,7 +112,8 @@ public:
     bool is_address_inturn(const string& pay_address) const;
     bool get_block_header(chain::header& block_header, const string& para);
 
-    bool is_address_in_turn_with_now_height(uint64_t height, const string& pay_address);
+    bool is_address_in_turn_with_now_height(uint64_t height, const string& pay_address) const;
+    bool is_index_in_turn_with_now_height(uint64_t height, const int index) const;
     static int get_lock_heights_index(uint64_t height);
     static uint64_t calculate_block_subsidy(uint64_t height, bool is_testnet);
     static uint64_t calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num);
