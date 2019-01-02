@@ -71,6 +71,8 @@ BC_CONSTEXPR uint64_t min_fee_to_register_uid      = 100 * 100000000LL;
 BC_CONSTEXPR uint32_t min_fee_percentage_to_miner  = 20;
 BC_CONSTEXPR uint64_t min_tx_fee                   = 200000;
 
+BC_CONSTEXPR uint64_t mine_block_produce_minsecons = 500;
+
 // Threshold for nLockTime: below this value it is interpreted as block number,
 // otherwise as UNIX timestamp. [Tue Nov 5 00:53:20 1985 UTC]
 BC_CONSTEXPR uint32_t locktime_threshold = 500000000;

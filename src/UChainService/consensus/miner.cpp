@@ -475,7 +475,7 @@ bool miner::get_spendable_output(chain::output& output, const chain::history& ro
     return true;
 }
 
-//int bucket_size = 500000;
+//int bucket_size = mine_block_produce_minsecons000;
 vector<uint64_t> lock_heights = {1728000, 7776000, 20736000, 41472000, 93312000};
 vector<uint64_t> coinage_rewards = {300000, 1990000, 5200000, 10000000, 24000000};
 
@@ -870,7 +870,7 @@ void miner::generate_miner_list()
     }
 
     std::sort(sh_vec->begin(), sh_vec->end(), [](const candidate_info& a,const candidate_info& b) {
-        return a.vote < b.vote;
+        return a.vote < b.vote?true:a.output_height < b.output_height;
     });
 
     for (auto &elem : *sh_vec)
@@ -920,6 +920,7 @@ void miner::work(const bc::wallet::payment_address pay_address)
         state_ = state::init_;
         auto millissecond = unix_millisecond();
         uint64_t current_block_height;
+        
         if (node_.chain_impl().get_last_height(current_block_height))
         {
             generate_miner_list();
@@ -927,14 +928,19 @@ void miner::work(const bc::wallet::payment_address pay_address)
             if (index == -1)
             {
                 auto sleeptime = unix_millisecond() - millissecond;
-                auto sleepmin = sleeptime<500?500-sleeptime:0;
+                auto sleepmin = sleeptime<mine_block_produce_minsecons?mine_block_produce_minsecons-sleeptime:0;
                 sleep_for(asio::milliseconds(sleepmin));
                 continue;
             }
 
-            if (current_block_height%(num_block_per_cycle*(index+1)) == 0 && millissecond-cycle_starttime >= num_block_per_cycle*mine_address_list.size()*500)
+            /*if (current_block_height%(num_block_per_cycle*mine_address_list.size()) == 0 || millissecond-cycle_starttime >= num_block_per_cycle*mine_address_list.size()*mine_block_produce_minsecons)
             {
                 cycle_starttime =  millissecond;
+            }*/
+
+            if (cycle_starttime == 0)
+            {
+                cycle_starttime = millissecond;
             }
             
             if (is_index_in_turn_with_now_height(current_block_height, index))
@@ -962,9 +968,10 @@ void miner::work(const bc::wallet::payment_address pay_address)
                             break;
                         }
                     //}
+                    cycle_starttime = unix_millisecond();
                 }
             }
-            else if (is_time_inturn_with_this_cycle(cycle_starttime,index))
+            else if (is_time_inturn_with_this_cycle(cycle_starttime))
             {
                 uint16_t lost_block = get_lost_block(current_block_height, index);
 
@@ -1003,7 +1010,7 @@ void miner::work(const bc::wallet::payment_address pay_address)
         }
         
         auto sleeptime = unix_millisecond() - millissecond;
-        auto sleepmin = sleeptime<500?500-sleeptime:0;
+        auto sleepmin = sleeptime<mine_block_produce_minsecons?mine_block_produce_minsecons-sleeptime:0;
         sleep_for(asio::milliseconds(sleepmin));
     }
 }
@@ -1049,14 +1056,14 @@ bool miner::is_index_in_turn_with_now_height(uint64_t current_block_height,const
     return current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle;
 }
 
-bool miner::is_time_inturn_with_this_cycle(int64_t cycle_starttime,const int index) const
+bool miner::is_time_inturn_with_this_cycle(int64_t cycle_starttime) const
 {
     if (cycle_starttime == 0)
     {
         return false;
     }
 
-    if (unix_millisecond()-cycle_starttime > 500*6*(index+1))
+    if (unix_millisecond()-cycle_starttime > mine_block_produce_minsecons*num_block_per_cycle*(mine_address_list.size()-1))
     {
         return true;
     }
@@ -1067,8 +1074,8 @@ bool miner::is_time_inturn_with_this_cycle(int64_t cycle_starttime,const int ind
 uint16_t miner::get_lost_block(uint64_t height, const int index)
 {
     auto cycle_block = height%(num_block_per_cycle*mine_address_list.size());
-    auto expect_cycle_block = (index+1+1)*num_block_per_cycle;
-    return expect_cycle_block>cycle_block?expect_cycle_block-cycle_block:0;
+    auto expect_cycle_block = index*num_block_per_cycle;
+    return expect_cycle_block>cycle_block?expect_cycle_block-cycle_block:cycle_block-expect_cycle_block;
 }
 
 bool miner::is_stop_miner(uint64_t block_height) const
