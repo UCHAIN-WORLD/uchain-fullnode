@@ -114,6 +114,9 @@ public:
 
     bool is_address_in_turn_with_now_height(uint64_t height, const string& pay_address) const;
     bool is_index_in_turn_with_now_height(uint64_t height, const int index) const;
+    bool is_time_inturn_with_this_cycle(int64_t cycle_starttime,const int index) const;
+    uint16_t get_lost_block(uint64_t height, const int index);
+
     static int get_lock_heights_index(uint64_t height);
     static uint64_t calculate_block_subsidy(uint64_t height, bool is_testnet);
     static uint64_t calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num);

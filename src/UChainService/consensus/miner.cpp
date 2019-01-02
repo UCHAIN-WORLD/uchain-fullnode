@@ -798,8 +798,8 @@ std::string to_string(_T const& _t)
     return o.str();
 }
 
-static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
-static BC_CONSTEXPR unsigned int num_miner_node = 21;
+const static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
+const static BC_CONSTEXPR unsigned int num_miner_node = 21;
 
 void miner::generate_miner_list()
 {
@@ -888,8 +888,6 @@ void miner::generate_miner_list()
 
 void miner::work(const bc::wallet::payment_address pay_address)
 {
-    
-
     log::info(LOG_HEADER) << "solo miner start with address: " << pay_address.encoded();
 
     auto sh_vec = node_.chain_impl().get_registered_candidates();
@@ -916,6 +914,7 @@ void miner::work(const bc::wallet::payment_address pay_address)
         return;
     }
 
+    int64_t cycle_starttime = 0;
     while (state_ != state::exit_)
     {
         state_ = state::init_;
@@ -932,6 +931,12 @@ void miner::work(const bc::wallet::payment_address pay_address)
                 sleep_for(asio::milliseconds(sleepmin));
                 continue;
             }
+
+            if (current_block_height%(num_block_per_cycle*(index+1)) == 0 && millissecond-cycle_starttime >= num_block_per_cycle*mine_address_list.size()*500)
+            {
+                cycle_starttime =  millissecond;
+            }
+            
             if (is_index_in_turn_with_now_height(current_block_height, index))
             {
                 state_ = state::creating_block_;
@@ -957,6 +962,42 @@ void miner::work(const bc::wallet::payment_address pay_address)
                             break;
                         }
                     //}
+                }
+            }
+            else if (is_time_inturn_with_this_cycle(cycle_starttime,index))
+            {
+                uint16_t lost_block = get_lost_block(current_block_height, index);
+
+                for (uint16_t i = lost_block; i > 0; i--)
+                {
+                    state_ = state::creating_block_;
+                    block_ptr block = create_new_block(pay_address, current_block_height);
+
+                    if (block)
+                    {
+                        /*if (MinerAux::search(block->header, std::bind(&miner::is_stop_miner, this, block->header.number)))
+                    {*/
+                        boost::uint64_t height = store_block(block);
+                        if (height == 0)
+                        {
+                            continue;
+                        }
+
+                        log::debug(LOG_HEADER) << "solo miner create new block at heigth:" << height;
+
+                        ++new_block_number_;
+                        if ((new_block_limit_ != 0) && (new_block_number_ >= new_block_limit_))
+                        {
+                            thread_.reset();
+                            stop();
+                            break;
+                        }
+                        //}
+                    }
+                    if (!node_.chain_impl().get_last_height(current_block_height))
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -1006,6 +1047,28 @@ bool miner::is_address_in_turn_with_now_height(uint64_t height,const string& pay
 bool miner::is_index_in_turn_with_now_height(uint64_t current_block_height,const int index) const
 {
     return current_block_height % (mine_address_list.size() * num_block_per_cycle) >= index * num_block_per_cycle && current_block_height % (mine_address_list.size() * num_block_per_cycle) < (index + 1) * num_block_per_cycle;
+}
+
+bool miner::is_time_inturn_with_this_cycle(int64_t cycle_starttime,const int index) const
+{
+    if (cycle_starttime == 0)
+    {
+        return false;
+    }
+
+    if (unix_millisecond()-cycle_starttime > 500*6*(index+1))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+uint16_t miner::get_lost_block(uint64_t height, const int index)
+{
+    auto cycle_block = height%(num_block_per_cycle*mine_address_list.size());
+    auto expect_cycle_block = (index+1+1)*num_block_per_cycle;
+    return expect_cycle_block>cycle_block?expect_cycle_block-cycle_block:0;
 }
 
 bool miner::is_stop_miner(uint64_t block_height) const
