@@ -1313,11 +1313,16 @@ void data_base::push_candidate(const candidate& candidate, const short_hash& key
 {
     candidate_info candidate_info{output_height, timestamp_, 0, to_uid, candidate};
 
-    if (candidate.is_register_status() || candidate.is_transfer_status()) {
+    if (candidate.is_register_status()) {
         candidates.store(candidate_info);
         candidates.sync();
     }
-
+    if(candidate.is_transfer_status()){
+        candidates.store(candidate_info);
+        candidates.sync();
+        candidate_history.update_address_status(candidate_info, CANDIDATE_STATUS_HISTORY);
+    }
+    candidate_info.candidate.set_status(CANDIDATE_STATUS_CURRENT);
     candidate_history.store(candidate_info);
     candidate_history.sync();
 }

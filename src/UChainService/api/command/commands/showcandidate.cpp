@@ -81,16 +81,12 @@ console_result showcandidate::invoke(Json::Value& jv_output,
     }
     else {
 
-        auto sh_vec = blockchain.get_candidate_history(argument_.symbol, option_.limit, option_.index);
-        (*sh_vec)[0].candidate.set_status(CANDIDATE_STATUS_CURRENT);
-        Json::Value token_data = json_helper.prop_list((*sh_vec)[0]);
-        json_value.append(token_data);
-        for(size_t i=1;i<sh_vec->size();i++)
-        {
-            (*sh_vec)[i].candidate.set_status(CANDIDATE_STATUS_HISTORY);
-            Json::Value token_data = json_helper.prop_list((*sh_vec)[i]);
-            json_value.append(token_data);
-        }
+         auto sh_vec = blockchain.get_candidate_history(argument_.symbol, option_.limit, option_.index);
+             for (auto& elem : *sh_vec) {
+                 Json::Value token_data = json_helper.prop_list(elem);
+                 json_value.append(token_data);
+            }
+
 
         if (get_api_version() <=2 ) {
             jv_output["candidates"] = json_value;

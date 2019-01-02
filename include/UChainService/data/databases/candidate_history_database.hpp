@@ -92,6 +92,7 @@ public:
         uint32_t time_begin, uint32_t time_end,
         uint64_t limit = 0, uint64_t page_number = 0) const;
 
+   bool update_address_status(const candidate_info& candidate_info, uint8_t status );
 private:
     typedef record_hash_table<short_hash> record_map;
     typedef record_multimap<short_hash> record_multiple_map;

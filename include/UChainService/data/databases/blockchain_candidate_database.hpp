@@ -63,7 +63,6 @@ public:
     uint64_t get_register_height(const std::string & candidate_symbol) const;
 
     void store(candidate_info& candidate_info);
-    std::shared_ptr<candidate_info> update_address_status(const hash_digest &hash, uint8_t status);
 
     /// Delete a transaction from database.
     void remove(const hash_digest& hash);
