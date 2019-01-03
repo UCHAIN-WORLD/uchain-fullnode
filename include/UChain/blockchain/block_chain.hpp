@@ -52,6 +52,7 @@ public:
     typedef handle1<uint64_t> block_height_fetch_handler;
     typedef handle1<uint64_t> last_height_fetch_handler;
     typedef handle1<chain::transaction> transaction_fetch_handler;
+    typedef handle1<std::shared_ptr<chain::transaction::list>> transactions_fetch_handler;
     typedef handle1<chain::input_point> spend_fetch_handler;
     typedef handle1<chain::history_compact::list> history_fetch_handler;
     typedef handle1<chain::stealth_compact::list> stealth_fetch_handler;
@@ -76,7 +77,7 @@ public:
     virtual void fetch_block_header(uint64_t height,
         block_header_fetch_handler handler) = 0;
     virtual void fetch_block_headers(uint64_t start, 
-        uint64_t end, bool order, locator_block_headers_fetch_handler handler) = 0;
+        uint64_t end, bool order, locator_block_headers_fetch_handler handler, uint32_t count = 0) = 0;
     virtual void fetch_block_header(const hash_digest& hash,
         block_header_fetch_handler handler) = 0;
 

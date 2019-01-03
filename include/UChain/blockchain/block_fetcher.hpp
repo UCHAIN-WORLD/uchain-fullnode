@@ -43,6 +43,8 @@ namespace blockchain {
 BCB_API void fetch_block(block_chain& chain, uint64_t height,
     block_chain::block_fetch_handler handle_fetch);
 
+BCB_API void fetch_latest_transactions(block_chain& chain, uint64_t height,
+    uint32_t index, uint32_t count, block_chain::transactions_fetch_handler handle_fetch);
 /**
  * Fetch a block by hash.
  *
