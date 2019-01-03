@@ -57,10 +57,7 @@ console_result showuid::invoke (Json::Value& jv_output,
     else {
         auto uidSymbol = option_.symbol;
         if (blockchain.is_valid_address(uidSymbol)) {
-            uidSymbol = blockchain.get_uid_from_address(uidSymbol);
-            if (uidSymbol.empty()) {
-                throw address_not_bound_uid_exception{"address is not binded with some uid on the blockchain"};
-            }
+            throw token_symbol_name_exception{"Address is not supported."};    
         }
 
         // check uid symbol

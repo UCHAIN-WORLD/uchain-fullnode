@@ -172,12 +172,13 @@ uint64_t blockchain_candidate_database::get_register_height(const std::string & 
     return max_uint64;
 }
 
-void blockchain_candidate_database::store(const candidate_info& candidate_info)
+void blockchain_candidate_database::store(candidate_info& candidate_info)
 {
     const auto& key_str = candidate_info.candidate.get_symbol();
     const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
     const auto key = sha256_hash(data);
-
+    if(lookup_map_.find(key))
+        remove(key);
 #ifdef UC_DEBUG
     log::debug("blockchain_candidate_database::store") << candidate_info.candidate.to_string();
 #endif

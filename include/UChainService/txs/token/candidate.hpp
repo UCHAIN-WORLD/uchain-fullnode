@@ -34,6 +34,8 @@
 #define CANDIDATE_STATUS_REGISTER    CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_register)
 #define CANDIDATE_STATUS_TRANSFER    CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_transfer)
 #define CANDIDATE_STATUS_MAX         CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_max)
+#define CANDIDATE_STATUS_HISTORY     CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_history)
+#define CANDIDATE_STATUS_CURRENT     CANDIDATE_STATUS2UINT32(candidate::candidate_status::candidate_status_current)
 
 namespace libbitcoin {
 namespace chain {
@@ -63,7 +65,10 @@ public:
         candidate_status_none     = 0,
         candidate_status_register = 1,
         candidate_status_transfer = 2,
-        candidate_status_max      = 3,
+        candidate_status_history  = 3,
+        candidate_status_current  = 4,
+        candidate_status_max      = 5
+
     };
 
     candidate();
@@ -124,17 +129,23 @@ struct BC_API candidate_info
     typedef std::vector<candidate_info> list;
     uint32_t output_height;
     uint32_t timestamp;
-    std::string to_uid;
     uint32_t vote;
+    //uint8_t status;
+    std::string to_uid;
     libbitcoin::chain::candidate candidate;
+    
+
 
     uint64_t serialized_size() const;
     void reset();
     bool operator< (const candidate_info& other) const;
 
     static candidate_info factory_from_data(reader& source);
+    bool from_data(reader& source);
     data_chunk to_data() const;
     data_chunk to_short_data() const;
+    // const uint8_t& get_status();
+    // void set_status(const uint8_t&  st);
 };
 
 } // namespace chain

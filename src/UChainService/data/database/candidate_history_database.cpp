@@ -294,6 +294,33 @@ std::shared_ptr<candidate_info::list> candidate_history_database::get_history_ca
     return result;
 }
 
+bool candidate_history_database::update_address_status(const candidate_info& candidate_info, uint8_t status )
+{
+    const auto& key_str = candidate_info.candidate.get_symbol();
+    const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
+    const auto key = ripemd160_hash(data);
+    
+    const auto start = rows_multimap_.lookup(key);
+    const auto records = record_multimap_iterable(rows_list_, start);
+    const auto record = rows_list_.get(start);
+    
+    if (record)
+    {
+        const auto address = REMAP_ADDRESS(record);
+        auto row = read_row(address);
+        if (row.candidate.get_status() != status)
+        {
+            //update status and serializer
+            row.candidate.set_status(status);
+            auto serial = make_serializer(address);
+            serial.write_data(row.to_data());
+        }
+        return true;
+    }
+
+    return false;
+}
+
 } // namespace database
 } // namespace libbitcoin
 

@@ -62,7 +62,7 @@ public:
     ///
     uint64_t get_register_height(const std::string & candidate_symbol) const;
 
-    void store(const candidate_info& candidate_info);
+    void store(candidate_info& candidate_info);
 
     /// Delete a transaction from database.
     void remove(const hash_digest& hash);

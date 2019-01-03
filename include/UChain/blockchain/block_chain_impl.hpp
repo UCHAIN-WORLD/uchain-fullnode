@@ -292,10 +292,10 @@ public:
     std::shared_ptr<candidate_info> get_registered_candidate(const std::string& symbol);
     std::shared_ptr<candidate_info::list> get_registered_candidates();
     std::shared_ptr<candidate_info::list> get_candidate_history(const std::string& symbol,
-
         uint64_t limit = 0, uint64_t page_number = 0);
     std::shared_ptr<candidate::list> get_wallet_candidates(
         const std::string& wallet, const std::string& symbol="");
+    bool exist_in_candidates(std::string uid);
 
     // wallet uid api
     bool is_uid_exist(const std::string& symbol);

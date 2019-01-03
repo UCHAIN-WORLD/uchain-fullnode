@@ -1043,7 +1043,6 @@ bool validate_transaction::check_address_registered_uid(const std::string& addre
 {
     uint64_t fork_index = validate_block_ ? validate_block_->get_fork_index() : max_uint64;
     auto uid_symbol = blockchain_.get_uid_from_address(address, fork_index);
-
     if (!validate_block_) {
         if (uid_symbol.empty()) {
             return false;
@@ -1116,6 +1115,8 @@ code validate_transaction::check_uid_transaction() const
                     << output.get_uid_address() << " already exists uid, cannot transfer uid.";
                 return error::address_registered_uid;
             }
+            if(chain.exist_in_candidates(output.get_uid_symbol()))
+                return error::uid_in_candidate;
 
             if (type != 255) {
                 return error::uid_multi_type_exist;
@@ -1124,7 +1125,7 @@ code validate_transaction::check_uid_transaction() const
 
             if (!connect_uid_input(boost::get<uid>(output.get_uid()))) {
                 return error::uid_input_error;
-            }
+            }           
         }
         else if (output.is_token_issue() || output.is_token_secondaryissue()) {
             if (output.attach_data.get_version() == UID_ASSET_VERIFY_VERSION
@@ -1164,6 +1165,8 @@ code validate_transaction::check_uid_transaction() const
                             << "fromuid is needed , attach_data: " << output.attach_data.to_string();
                 return error::token_uid_registerr_not_match;
             }
+            if(chain.exist_in_candidates(output.attach_data.get_from_uid()))
+                return error::uid_in_candidate;
         }
     }
 

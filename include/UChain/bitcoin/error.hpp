@@ -157,6 +157,7 @@ enum error_code_t
     uid_not_exist,
     uid_multi_type_exist,
     uid_input_error,                // 75
+    uid_in_candidate,
     attenuation_model_param_error,
 
     // cert check
