@@ -697,6 +697,14 @@ void block_chain_impl::fetch_block(uint64_t height,
     blockchain::fetch_block(*this, height, handler);
 }
 
+void block_chain_impl::fetch_latest_transactions(uint32_t index, uint32_t count,
+    transactions_fetch_handler handler)
+{
+    uint64_t height;
+    get_last_height(height);
+    blockchain::fetch_latest_transactions(*this, height, index, count, handler);
+}
+
 void block_chain_impl::fetch_block(const hash_digest& hash,
     block_fetch_handler handler)
 {
@@ -733,7 +741,7 @@ void block_chain_impl::fetch_block_header(uint64_t height,
 }
 
 void block_chain_impl::fetch_block_headers(uint64_t start,
-    uint64_t end, bool order, locator_block_headers_fetch_handler handler)
+    uint64_t end, bool order, locator_block_headers_fetch_handler handler, uint32_t count)
 {
     if (stopped())
     {
@@ -741,17 +749,21 @@ void block_chain_impl::fetch_block_headers(uint64_t start,
         return;
     }
 
-    const auto do_fetch = [this, &start, &end, order, handler](size_t slock)
+    const auto do_fetch = [this, &start, &end, order, count, handler](size_t slock)
     {
         chain::header header;
         std::vector<chain::header> headers;
+        uint32_t tx_count = 0;
         while(start<=end)
         {
+            if((count && tx_count >= count) || !(start+1) || !end)
+                break;
             const auto result = database_.blocks.get((order ? start++ : end--));
             if(result)
             {
                 chain::header header = result.header();
                 header.transaction_count = result.transaction_count();
+                tx_count += result.transaction_count();
                 headers.push_back(header);
             }         
         }
