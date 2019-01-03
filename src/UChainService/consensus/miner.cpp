@@ -799,7 +799,7 @@ std::string to_string(_T const& _t)
 }
 
 const static BC_CONSTEXPR unsigned int num_block_per_cycle = 6;
-const static BC_CONSTEXPR unsigned int num_miner_node = 21;
+const static BC_CONSTEXPR unsigned int num_miner_node = 3;
 
 void miner::generate_miner_list()
 {
