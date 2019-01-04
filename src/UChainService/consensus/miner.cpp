@@ -1087,6 +1087,10 @@ uint16_t miner::get_lost_block(uint64_t height, const int index)
     auto cycle_block_start = height%(num_block_per_cycle*num_miner_node);
     auto cycle_block = cycle_block_start%(num_block_per_cycle*mine_address_list.size());
     auto expect_cycle_block = index*num_block_per_cycle;
+    if (expect_cycle_block == 0 && cycle_block>0)
+    {
+        expect_cycle_block = num_block_per_cycle*mine_address_list.size();
+    }
     return expect_cycle_block>cycle_block?expect_cycle_block-cycle_block:0;
 }
 
