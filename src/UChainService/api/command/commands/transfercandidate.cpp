@@ -46,6 +46,8 @@ console_result transfercandidate::invoke (Json::Value& jv_output,
         throw toaddress_invalid_exception("Invalid uid parameter! " + to_uid);
     }
 
+    if (blockchain.get_wallet_address(auth_.name, to_address))
+        throw toaddress_invalid_exception("Cannot transfer candidate to self. ");
     // get identifiable token
     auto candidates = blockchain.get_wallet_candidates(auth_.name, argument_.symbol);
     if (candidates->size() == 0) {
