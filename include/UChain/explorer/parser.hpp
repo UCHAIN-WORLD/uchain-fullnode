@@ -67,6 +67,7 @@ protected:
 private:
     static std::string system_config_directory();
     static boost::filesystem::path default_config_path();
+    bool is_negative(const char* c);
 
     bool help_;
     command& instance_;
