@@ -78,7 +78,7 @@ public:
         (
             "END_HEIGHT",
             value<uint64_t>(&argument_.endheight)->required(),
-            "The end height of blockchain(not include)."
+            "The end height of blockchain."
         )
         ;
 
