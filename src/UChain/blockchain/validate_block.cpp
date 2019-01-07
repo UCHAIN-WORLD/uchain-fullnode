@@ -89,9 +89,9 @@ static constexpr uint64_t retargeting_interval = target_timespan_seconds /
         target_spacing_seconds;
 
 // The window by which a time stamp may exceed our current time (2 hours).
-static const auto time_stamp_window = asio::seconds(2 * 60 * 60);
-
-static const auto time_stamp_window_future_blocktime_fix = asio::seconds(24);
+//static const auto time_stamp_window = asio::seconds(2 * 60 * 60);
+static const auto time_stamp_window = asio::seconds(time_stamp_window_senconds);
+//static const auto time_stamp_window_future_blocktime_fix = asio::seconds(24);
 
 // The nullptr option is for backward compatibility only.
 validate_block::validate_block(size_t height, const block& block, bool testnet,
@@ -228,7 +228,7 @@ code validate_block::check_block(blockchain::block_chain_impl& chain) const
     //future time check selfish mining
     if (height_ > 1)
     {
-        if (!is_valid_time_stamp_new(header.timestamp))
+        if (!is_valid_time_stamp(header.timestamp))
             return error::futuristic_timestamp;
         // last block time check
         chain::header prev_header = fetch_block(height_ - 1);
@@ -386,11 +386,6 @@ bool validate_block::is_distinct_tx_set(const transaction::list& txs)
 bool validate_block::is_valid_time_stamp(uint32_t timestamp) const
 {
     return check_time_stamp(timestamp, time_stamp_window);
-}
-
-bool validate_block::is_valid_time_stamp_new(uint32_t timestamp) const
-{
-    return check_time_stamp(timestamp, time_stamp_window_future_blocktime_fix);
 }
 
 bool validate_block::check_time_stamp(uint32_t timestamp, const asio::seconds& window) const

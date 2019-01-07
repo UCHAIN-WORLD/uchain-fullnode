@@ -44,7 +44,10 @@ console_result showcandidates::invoke(Json::Value& jv_output,
         // no wallet -- list whole tokens in blockchain
         auto sh_vec = blockchain.get_registered_candidates();
         if (nullptr != sh_vec) {
-            std::sort(sh_vec->begin(), sh_vec->end());
+            //vote first and height next.
+            std::sort(sh_vec->begin(), sh_vec->end(), [](const candidate_info& a,const candidate_info& b) {
+                return a.vote > b.vote?true:a.output_height > b.output_height;
+            });
             for (auto& elem : *sh_vec) {
                 if(elem.candidate.get_status() == CANDIDATE_STATUS_TRANSFER \
                    || elem.candidate.get_status() == CANDIDATE_STATUS_REGISTER)
