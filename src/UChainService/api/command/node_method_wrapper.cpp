@@ -34,7 +34,7 @@ bool administrator_required_checker(bc::server::server_node& node,
     // administrator_required option is true
     if (node.server_settings().administrator_required) {
         if(!blockchain.is_admin_wallet(name))
-            throw wallet_authority_exception{"Incorrect administrator name."};
+            throw wallet_authority_exception{"Administrator name is incorrect or missing. "};
         blockchain.is_wallet_passwd_valid(name, auth);
         return true;
     }else{

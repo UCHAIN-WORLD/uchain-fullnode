@@ -40,7 +40,7 @@ console_result addpeer::invoke(Json::Value& jv_output,
 {
     auto& blockchain = node.chain_impl();
 
-    if(!auth_.name.empty() && !administrator_required_checker(node, auth_.name, auth_.auth))
+    if(!administrator_required_checker(node, auth_.name, auth_.auth) && !auth_.name.empty())
     {
         throw address_invalid_exception{"You can only add one address at a time."};
     }

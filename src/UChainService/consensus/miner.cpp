@@ -826,13 +826,17 @@ void miner::generate_miner_list()
 
     for (auto &elem : *sh_vec)
     {
-        auto &&rows = node_.chain_impl().get_address_history(bc::wallet::payment_address(elem.candidate.get_address()), start_height);
+        auto &&rows = node_.chain_impl().get_address_history(bc::wallet::payment_address(elem.candidate.get_address()), false, start_height);
 
         chain::transaction tx_temp;
         uint64_t tx_height;
 
         for (auto &row : rows)
         {
+            if (row.output_height > end_height)
+            {
+                continue;
+            }
             // spend unconfirmed (or no spend attempted)
             if ((row.spend.hash == null_hash) && node_.chain_impl().get_transaction(row.output.hash, tx_temp, tx_height))
             {
@@ -862,10 +866,6 @@ void miner::generate_miner_list()
                 }
             }
 
-            if (row.output_height >= end_height)
-            {
-                break;
-            }
         }
     }
 
