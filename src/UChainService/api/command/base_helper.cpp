@@ -304,6 +304,11 @@ void sync_fetch_token_balance(const std::string& address, bool sum_all,
         if ((row.spend.hash == null_hash)
                 && blockchain.get_transaction(row.output.hash, tx_temp, tx_height))
         {
+            if (row.output_height > end_height)
+            {
+                continue;
+            }
+
             BITCOIN_ASSERT(row.output.index < tx_temp.outputs.size());
             const auto& output = tx_temp.outputs.at(row.output.index);
             if (output.get_script_address() != address) {
@@ -341,10 +346,6 @@ void sync_fetch_token_balance(const std::string& address, bool sum_all,
                 }
             }
 
-            if (row.output_height >= end_height)
-            {
-                break;
-            }
         }
     }
 }
