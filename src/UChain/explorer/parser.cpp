@@ -79,23 +79,35 @@ void parser::load_command_variables(variables_map& variables,
         instance_.load_fallbacks(input, variables);
 }
 
+bool parser::is_negative(const char* c)
+{
+    return (c[0] == '-') && c[1] != '\0' && std::isdigit(c[1]);
+}
+
 bool parser::parse(std::string& out_error, std::istream& input,
     int argc, const char* argv[])
 {
     try
     {
         variables_map variables;
+        size_t pos;
         //no negative parameters
         for(size_t i = 2; i<argc; i++)
         {
-            for(size_t j = 0; argv[i][j] != '\0'; j++)
-            {
-                if((argv[i][j] == '-') && argv[i][j+1] != '\0' && std::isdigit(argv[i][j+1]))
+            std::string parameter(argv[i]);
+            if((pos=parameter.find(':')) != std::string::npos){
+                if(is_negative(parameter.substr(0, pos).c_str()) || is_negative(parameter.erase(0, pos+1).c_str()))
                 {
                     out_error = "Parameter cannot be negative.";
                     return false;
                 }
-            }
+            }else{
+                if(is_negative(argv[i]))
+                {
+                    out_error = "Parameter cannot be negative.";
+                    return false;
+                }
+            }          
         }
         // Must store before environment in order for commands to supercede.
         load_command_variables(variables, input, argc, argv);

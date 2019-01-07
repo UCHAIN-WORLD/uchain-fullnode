@@ -68,12 +68,12 @@ public:
         (
             "WALLET_NAME",
             value<std::string>(&auth_.name),
-            BX_WALLET_NAME
+            BX_ADMIN_NAME
         )
         (
             "WALLET_AUTH",
             value<std::string>(&auth_.auth),
-            BX_WALLET_AUTH
+            BX_ADMIN_AUTH
         )
         (
             "address,a",

@@ -368,9 +368,9 @@ std::string output::get_to_uid() const
 {
     if(attach_data.get_version() == UID_ASSET_VERIFY_VERSION)
     {
-        attach_data.get_to_uid();
-    }
-    return "";
+        return attach_data.get_to_uid();
+    }else
+        return "";
 }
 
 std::string output::get_candidate_symbol() const
