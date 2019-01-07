@@ -288,9 +288,9 @@ miner::transaction_ptr miner::create_coinbase_tx(
 {
     transaction_ptr ptransaction = make_shared<message::transaction_message>();
     
-    auto start =unix_millisecond();
+    //auto start =unix_millisecond();
     const uint64_t unspent_token = fetch_utxo(ptransaction,pay_address);
-    log::info(LOG_HEADER) << "solo miner fetch_utxo for " << unix_millisecond() - start << " ms";
+    //log::info(LOG_HEADER) << "solo miner fetch_utxo for " << unix_millisecond() - start << " ms";
     if (!unspent_token)
     {
         ptransaction->version = version;
@@ -1019,7 +1019,7 @@ void miner::work(const bc::wallet::payment_address pay_address)
         createblockms_ = unix_millisecond() - millissecond;
         auto sleepmin = createblockms_<mine_block_produce_minsecons?mine_block_produce_minsecons-createblockms_:0;
         //log::info(LOG_HEADER) << "solo miner create new block for " << createblockms_<<" ms";
-       //sleep_for(asio::milliseconds(sleepmin));
+        sleep_for(asio::milliseconds(sleepmin));
     }
 }
 
