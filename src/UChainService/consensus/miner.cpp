@@ -869,8 +869,9 @@ void miner::generate_miner_list()
         }
     }
 
+    //vote first and height next.
     std::sort(sh_vec->begin(), sh_vec->end(), [](const candidate_info& a,const candidate_info& b) {
-        return a.vote < b.vote?true:a.output_height < b.output_height;
+        return a.vote > b.vote?true:a.output_height > b.output_height;
     });
 
     for (auto &elem : *sh_vec)
