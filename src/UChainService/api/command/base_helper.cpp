@@ -288,7 +288,7 @@ void sync_fetch_token_balance(const std::string& address, bool sum_all,
     bc::blockchain::block_chain_impl& blockchain,
     std::shared_ptr<token_balances::list> sh_token_vec, uint64_t start_height, uint64_t end_height)
 {
-    auto&& rows = blockchain.get_address_history(bc::wallet::payment_address(address),start_height);
+    auto&& rows = blockchain.get_address_history(bc::wallet::payment_address(address), false, start_height);
 
     chain::transaction tx_temp;
     uint64_t tx_height;
