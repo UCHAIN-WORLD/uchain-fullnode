@@ -71,7 +71,8 @@ miner::miner(p2p_node& node)
     , state_(state::init_)
     , new_block_number_(0)
     , new_block_limit_(0)
-    , setting_(node_.chain_impl().chain_settings())
+    , createblockms_(0)
+    ,setting_(node_.chain_impl().chain_settings())
 {
     /*if (setting_.use_testnet_rules) {
         bc::HeaderAux::set_as_testnet();
@@ -287,8 +288,10 @@ miner::transaction_ptr miner::create_coinbase_tx(
 {
     transaction_ptr ptransaction = make_shared<message::transaction_message>();
     
+    //auto start =unix_millisecond();
     const uint64_t unspent_token = fetch_utxo(ptransaction,pay_address);
-    if(!unspent_token)
+    //log::info(LOG_HEADER) << "solo miner fetch_utxo for " << unix_millisecond() - start << " ms";
+    if (!unspent_token)
     {
         ptransaction->version = version;
         ptransaction->inputs.resize(1);
@@ -348,13 +351,16 @@ miner::transaction_ptr miner::create_lock_coinbase_tx(
 uint64_t miner::fetch_utxo( const transaction_ptr &ptx, const bc::wallet::payment_address &address)
 {
     block_chain_impl &block_chain = node_.chain_impl();
-    auto &&rows = block_chain.get_address_history(address,true);
+    uint64_t height = 0, index = 0, unspent_ucn{0}, unspent_token{0};
+    block_chain.get_last_height(height);
+
+    auto fromheight = height > mine_fetch_utxo_height_windows ? height - mine_fetch_utxo_height_windows : 0;
+    auto &&rows = block_chain.get_address_history(address,true,fromheight);
     if (!rows.size())
     {
         return false;
     }
-    uint64_t height = 0, index = 0, unspent_ucn{0}, unspent_token{0};
-    block_chain.get_last_height(height);
+    
 
     for (auto &row : rows)
     {
@@ -939,10 +945,10 @@ void miner::work(const bc::wallet::payment_address pay_address)
                 cycle_starttime =  millissecond;
             }*/
 
-            if (cycle_starttime == 0)
+            /*if (cycle_starttime == 0)
             {
                 cycle_starttime = millissecond;
-            }
+            }*/
             
             if (is_index_in_turn_with_now_height(current_block_height, index))
             {
@@ -1010,8 +1016,9 @@ void miner::work(const bc::wallet::payment_address pay_address)
             }
         }
         
-        auto sleeptime = unix_millisecond() - millissecond;
-        auto sleepmin = sleeptime<mine_block_produce_minsecons?mine_block_produce_minsecons-sleeptime:0;
+        createblockms_ = unix_millisecond() - millissecond;
+        auto sleepmin = createblockms_<mine_block_produce_minsecons?mine_block_produce_minsecons-createblockms_:0;
+        //log::info(LOG_HEADER) << "solo miner create new block for " << createblockms_<<" ms";
         sleep_for(asio::milliseconds(sleepmin));
     }
 }
