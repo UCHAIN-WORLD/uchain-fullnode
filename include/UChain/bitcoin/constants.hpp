@@ -72,6 +72,7 @@ BC_CONSTEXPR uint32_t min_fee_percentage_to_miner  = 20;
 BC_CONSTEXPR uint64_t min_tx_fee                   = 200000;
 
 BC_CONSTEXPR uint64_t mine_block_produce_minsecons = 500;
+BC_CONSTEXPR uint64_t mine_fetch_utxo_height_windows = 10000;
 // The window by which a time stamp may exceed our current time (2 hours).
 BC_CONSTEXPR uint64_t time_stamp_window_senconds = 2;
 

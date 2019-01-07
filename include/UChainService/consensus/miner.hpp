@@ -149,6 +149,7 @@ private:
     std::string passwd_;
     vector<candidate_info> mine_candidate_list;
     vector<std::string> mine_address_list;
+    uint16_t createblockms_;
 };
 
 }

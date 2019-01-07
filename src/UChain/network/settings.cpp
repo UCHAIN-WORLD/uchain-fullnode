@@ -65,13 +65,13 @@ settings::settings(bc::settings context)
         {
             //identifier = 0x4d53564d;
             //identifier = 1234567891;//for UIP0.2
-            identifier = 1234567903;//for UIP0.5
+            identifier = 1234567904;//for UIP0.5
             inbound_port = 5682;
 
             // Seeds based on uc.live/network/dns-servers
-            seeds.reserve(6);
-            seeds.push_back({ "main-uchain-a.live", 5682 });
-            seeds.push_back({ "main-uchain-b.live", 5682 });
+            seeds.reserve(5);
+            //seeds.push_back({ "main-uchain-a.live", 5682 });
+            //seeds.push_back({ "main-uchain-b.live", 5682 });
             //seeds.push_back({ "main-uchain-c.live", 5682 });
             //seeds.push_back({ "main-uchain-d.live", 5682 });
             //seeds.push_back({ "main-uchain-e.live", 5682 });
