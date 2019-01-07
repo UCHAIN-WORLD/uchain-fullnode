@@ -939,10 +939,10 @@ void miner::work(const bc::wallet::payment_address pay_address)
                 cycle_starttime =  millissecond;
             }*/
 
-            if (cycle_starttime == 0)
+            /*if (cycle_starttime == 0)
             {
                 cycle_starttime = millissecond;
-            }
+            }*/
             
             if (is_index_in_turn_with_now_height(current_block_height, index))
             {
