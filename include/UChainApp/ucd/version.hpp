@@ -12,9 +12,9 @@
  * For interpretation of the versioning scheme see: http://semver.org
  */
 
-#define UC_SERVER_VERSION "0.0.5"
+#define UC_SERVER_VERSION "0.0.6"
 #define UC_SERVER_MAJOR_VERSION 0
 #define UC_SERVER_MINOR_VERSION 0
-#define UC_SERVER_PATCH_VERSION 5
+#define UC_SERVER_PATCH_VERSION 6
 
 #endif
