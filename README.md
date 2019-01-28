@@ -1,7 +1,7 @@
 [![AGPL v3](https://img.shields.io/badge/license-AGPL%20v3-brightgreen.svg)](./LICENSE)
 # UC Project
 UChain is the first public infrastructure blockchain specifically designed for the global sharing economy. Along with other sharing economy enterprises, UChain aims to build its underlying blockchain network to solve the current problems of trust and data abuse. Exercising API's and SDK's provided by UChain , all sharing economy enterprises are able to issue their own token and build their application on top of the UChain network, together making UChain a better global autonomous sharing economy ecosystem.
-<br>UC is implemented based on [libbitcoin project](https://github.com/libbitcoin).
+<br>UC is implemented based on [libbitcoin project](https://github.com/libbitcoin) and [ICE project](https://github.com/zeroc-ice/ice).Also ZeroMQ,secp256k1,miniupnpc and boost are necessary.
 # UC Achitect
 ![image](https://raw.githubusercontent.com/wiki/yangguanglu/pics/uchainachitect.jpeg)
 
