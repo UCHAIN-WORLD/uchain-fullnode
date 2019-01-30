@@ -31,23 +31,27 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 /**
  * Shorthand for property declarations in printer class.
  */
-#define BC_PROPERTY_GET_REF(type, name) \
-    public: virtual type& get_##name() { return name##_; } \
-    private: type name##_
+#define BC_PROPERTY_GET_REF(type, name)            \
+  public:                                          \
+    virtual type &get_##name() { return name##_; } \
+                                                   \
+  private:                                         \
+    type name##_
 
 /**
  * Class for managing the serialization of command line options and arguments.
  */
 class BC_API printer
 {
-public:
-
+  public:
     /**
      * Number of arguments above which the argument is considered unlimited.
      */
@@ -59,8 +63,8 @@ public:
      * @param[in]  application  This application (e.g. 'bitcoin_server').
      * @param[in]  description  This application description (e.g. 'Server').
      */
-    printer(const boost::program_options::options_description& settings,
-        const std::string& application, const std::string& description="");
+    printer(const boost::program_options::options_description &settings,
+            const std::string &application, const std::string &description = "");
 
     /**
      * Construct an instance of the printer class.
@@ -70,10 +74,10 @@ public:
      * @param[in]  description  This command description (e.g. 'Convert BTC').
      * @param[in]  command      This command (e.g. 'btc').
      */
-    printer(const boost::program_options::options_description& options,
-        const boost::program_options::positional_options_description& arguments,
-        const std::string& application, const std::string& description="",
-        const std::string& command="");
+    printer(const boost::program_options::options_description &options,
+            const boost::program_options::positional_options_description &arguments,
+            const std::string &application, const std::string &description = "",
+            const std::string &command = "");
 
     /**
      * Convert a paragraph of text into a column.
@@ -83,8 +87,8 @@ public:
      * @param[in]  paragraph  The paragraph to columnize.
      * @return                The column, as a list of fragments.
      */
-    virtual std::vector<std::string> columnize(const std::string& paragraph,
-        size_t width);
+    virtual std::vector<std::string> columnize(const std::string &paragraph,
+                                               size_t width);
 
     /**
      * Format the command description.
@@ -110,7 +114,7 @@ public:
      * @param[in]  paragraph  The text to format.
      * @return                The formatted paragraph.
      */
-    virtual std::string format_paragraph(const std::string& paragraph);
+    virtual std::string format_paragraph(const std::string &paragraph);
 
     /**
      * Format the command line usage.
@@ -143,13 +147,13 @@ public:
      * Serialize command line help (full details).
      * @param[out] output  Stream that is sink for output.
      */
-    virtual void commandline(std::ostream& output);
+    virtual void commandline(std::ostream &output);
 
     /**
      * Serialize as config settings (full details).
      * @param[out] output  Stream that is sink for output.
      */
-    virtual void settings(std::ostream& output);
+    virtual void settings(std::ostream &output);
 
     /**
      * Virtual property declarations, passed on construct.
