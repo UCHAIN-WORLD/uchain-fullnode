@@ -33,21 +33,22 @@
 #include <UChain/bitcoin/utility/threadpool.hpp>
 ////#include <UChain/bitcoin/utility/track.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename Key, typename... Args>
-notifier<Key, Args...>::notifier(threadpool& pool,
-    const std::string& class_name)
-  : limit_(0), stopped_(true), dispatch_(pool, class_name)
-    /*, track<notifier<Key, Args...>>(class_name)*/
+notifier<Key, Args...>::notifier(threadpool &pool,
+                                 const std::string &class_name)
+    : limit_(0), stopped_(true), dispatch_(pool, class_name)
+/*, track<notifier<Key, Args...>>(class_name)*/
 {
 }
 
 template <typename Key, typename... Args>
-notifier<Key, Args...>::notifier(threadpool& pool, size_t limit,
-    const std::string& class_name)
-  : limit_(limit), stopped_(true), dispatch_(pool, class_name)
-    /*, track<notifier<Key, Args...>>(class_name)*/
+notifier<Key, Args...>::notifier(threadpool &pool, size_t limit,
+                                 const std::string &class_name)
+    : limit_(limit), stopped_(true), dispatch_(pool, class_name)
+/*, track<notifier<Key, Args...>>(class_name)*/
 {
 }
 
@@ -100,8 +101,8 @@ void notifier<Key, Args...>::stop()
 }
 
 template <typename Key, typename... Args>
-void notifier<Key, Args...>::subscribe(handler handler, const Key& key,
-    const asio::duration& duration, Args... stopped_args)
+void notifier<Key, Args...>::subscribe(handler handler, const Key &key,
+                                       const asio::duration &duration, Args... stopped_args)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
@@ -127,7 +128,7 @@ void notifier<Key, Args...>::subscribe(handler handler, const Key& key,
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             subscribe_mutex_.unlock_upgrade_and_lock();
             subscriptions_.emplace(
-                std::make_pair(key, value{ handler, expires }));
+                std::make_pair(key, value{handler, expires}));
             subscribe_mutex_.unlock();
             //---------------------------------------------------------------------
             return;
@@ -142,8 +143,8 @@ void notifier<Key, Args...>::subscribe(handler handler, const Key& key,
 }
 
 template <typename Key, typename... Args>
-void notifier<Key, Args...>::unsubscribe(const Key& key,
-    Args... unsubscribed_args)
+void notifier<Key, Args...>::unsubscribe(const Key &key,
+                                         Args... unsubscribed_args)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
@@ -189,7 +190,7 @@ void notifier<Key, Args...>::purge(Args... expired_args)
 
     // Subscriptions may be created while this loop is executing.
     // Invoke and discard expired subscribers from temporary map.
-    for (const auto& entry: subscriptions)
+    for (const auto &entry : subscriptions)
     {
         if (now > entry.second.expires)
         {
@@ -216,7 +217,7 @@ void notifier<Key, Args...>::relay(Args... args)
 {
     // This enqueues work while maintaining order.
     dispatch_.ordered(&notifier<Key, Args...>::do_invoke,
-        this->shared_from_this(), args...);
+                      this->shared_from_this(), args...);
 }
 
 // private
@@ -240,7 +241,7 @@ void notifier<Key, Args...>::do_invoke(Args... args)
 
     // Subscriptions may be created while this loop is executing.
     // Invoke subscribers from temporary map and resubscribe as indicated.
-    for (const auto& entry: subscriptions)
+    for (const auto &entry : subscriptions)
     {
         if (entry.second.notify(args...))
         {

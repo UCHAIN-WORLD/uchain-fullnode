@@ -27,7 +27,8 @@
 #include <UChain/bitcoin/utility/endian.hpp>
 #include <UChain/bitcoin/utility/exceptions.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename T>
 T istream_reader::read_big_endian()
@@ -63,6 +64,6 @@ byte_array<Size> istream_reader::read_bytes_reverse()
     return out;
 }
 
-} // libbitcoin
+} // namespace libbitcoin
 
 #endif

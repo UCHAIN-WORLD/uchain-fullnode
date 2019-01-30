@@ -25,14 +25,15 @@
 #include <cstddef>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-template<size_t Size>
+template <size_t Size>
 byte_array<Size> scrypt(data_slice data, data_slice salt, uint64_t N,
-    uint32_t p, uint32_t r)
+                        uint32_t p, uint32_t r)
 {
     const auto out = scrypt(data, salt, N, r, p, Size);
-    return to_array<Size>({ out });
+    return to_array<Size>({out});
 }
 
 } // namespace libbitcoin

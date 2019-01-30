@@ -29,11 +29,12 @@
 #include <UChain/bitcoin/utility/assert.hpp>
 #include <UChain/bitcoin/utility/endian.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename Iterator>
 serializer<Iterator>::serializer(const Iterator begin)
-  : iterator_(begin)
+    : iterator_(begin)
 {
 }
 
@@ -57,19 +58,19 @@ void serializer<Iterator>::write_byte(uint8_t value)
 }
 
 template <typename Iterator>
-void serializer<Iterator>::write_data(const data_chunk& data)
+void serializer<Iterator>::write_data(const data_chunk &data)
 {
     write_data<const data_chunk>(data);
 }
 
 template <typename Iterator>
-void serializer<Iterator>::write_data(const uint8_t* data, size_t size)
+void serializer<Iterator>::write_data(const uint8_t *data, size_t size)
 {
     iterator_ = std::copy(data, (data + size), iterator_);
 }
 
 template <typename Iterator>
-void serializer<Iterator>::write_error_code(const code& ec)
+void serializer<Iterator>::write_error_code(const code &ec)
 {
     const auto value = ec.value();
     BITCOIN_ASSERT(value >= 0 && static_cast<uint32_t>(value) <= max_uint32);
@@ -176,33 +177,33 @@ void serializer<Iterator>::write_variable_uint_big_endian(uint64_t value)
 
 template <typename Iterator>
 template <typename T>
-void serializer<Iterator>::write_data(const T& data)
+void serializer<Iterator>::write_data(const T &data)
 {
     iterator_ = std::copy(data.begin(), data.end(), iterator_);
 }
 
 template <typename Iterator>
-void serializer<Iterator>::write_hash(const hash_digest& hash)
+void serializer<Iterator>::write_hash(const hash_digest &hash)
 {
     write_data(hash);
 }
 
 template <typename Iterator>
-void serializer<Iterator>::write_short_hash(const short_hash& hash)
+void serializer<Iterator>::write_short_hash(const short_hash &hash)
 {
     write_data(hash);
 }
 
 template <typename Iterator>
 void serializer<Iterator>::write_mini_hash(
-    const mini_hash& hash)
+    const mini_hash &hash)
 {
     write_data(hash);
 }
 
 template <typename Iterator>
-void serializer<Iterator>::write_fixed_string(const std::string& value,
-    size_t size)
+void serializer<Iterator>::write_fixed_string(const std::string &value,
+                                              size_t size)
 {
     const auto min_size = std::min(size, value.size());
     data_chunk raw_string(size, 0);
@@ -212,7 +213,7 @@ void serializer<Iterator>::write_fixed_string(const std::string& value,
 }
 
 template <typename Iterator>
-void serializer<Iterator>::write_string(const std::string& value)
+void serializer<Iterator>::write_string(const std::string &value)
 {
     write_variable_uint_little_endian(value.size());
     write_data(value);
@@ -239,7 +240,7 @@ void serializer<Iterator>::set_iterator(Iterator iterator)
 
 template <typename Iterator>
 template <typename T>
-void serializer<Iterator>::write_data_reverse(const T& data)
+void serializer<Iterator>::write_data_reverse(const T &data)
 {
     iterator_ = std::reverse_copy(data.begin(), data.end(), iterator_);
 }

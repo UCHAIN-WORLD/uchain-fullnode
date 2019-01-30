@@ -27,7 +27,8 @@
 #include <UChain/bitcoin/utility/endian.hpp>
 #include <UChain/bitcoin/utility/exceptions.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename T>
 void ostream_writer::write_big_endian(T value)
@@ -39,35 +40,35 @@ void ostream_writer::write_big_endian(T value)
 template <typename T>
 void ostream_writer::write_little_endian(T value)
 {
-    stream_.write(reinterpret_cast<const char*>(&value), sizeof(T));
+    stream_.write(reinterpret_cast<const char *>(&value), sizeof(T));
 }
 
 template <typename T>
-void ostream_writer::write_data(T& value)
+void ostream_writer::write_data(T &value)
 {
     const auto size = value.size();
     if (size > 0)
-        stream_.write(reinterpret_cast<const char*>(value.data()), size);
+        stream_.write(reinterpret_cast<const char *>(value.data()), size);
 }
 
 template <unsigned Size>
-void ostream_writer::write_bytes(const byte_array<Size>& value)
+void ostream_writer::write_bytes(const byte_array<Size> &value)
 {
     //for (unsigned i = 0; i < Size; i++)
     //    write_byte(value[i]);
 
     const auto size = value.size();
     if (size > 0)
-        stream_.write(reinterpret_cast<const char*>(value.data()), size);
+        stream_.write(reinterpret_cast<const char *>(value.data()), size);
 }
 
 template <unsigned Size>
-void ostream_writer::write_bytes_reverse(const byte_array<Size>& value)
+void ostream_writer::write_bytes_reverse(const byte_array<Size> &value)
 {
     for (unsigned i = 0; i < Size; i++)
         write_byte(value[Size - (i + 1)]);
 }
 
-} // libbitcoin
+} // namespace libbitcoin
 
 #endif
