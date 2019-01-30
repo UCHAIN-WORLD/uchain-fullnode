@@ -25,7 +25,8 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/math/hash.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Returns true if a character is a hexadecimal digit.
@@ -43,14 +44,14 @@ BC_API std::string encode_base16(data_slice data);
  * Convert a hex string into bytes.
  * @return false if the input is malformed.
  */
-BC_API bool decode_base16(data_chunk& out, const std::string &in);
+BC_API bool decode_base16(data_chunk &out, const std::string &in);
 
 /**
  * Converts a hex string to a number of bytes.
  * @return false if the input is malformed, or the wrong length.
  */
 template <size_t Size>
-bool decode_base16(byte_array<Size>& out, const std::string &in);
+bool decode_base16(byte_array<Size> &out, const std::string &in);
 
 /**
  * Converts a hex string literal to a data array.
@@ -71,13 +72,13 @@ BC_API std::string encode_hash(hash_digest hash);
  * The bitcoin_hash format is like base16, but with the bytes reversed.
  * @return false if the input is malformed.
  */
-BC_API bool decode_hash(hash_digest& out, const std::string& in);
+BC_API bool decode_hash(hash_digest &out, const std::string &in);
 
 /**
  * Convert a hex string literal into a bitcoin_hash.
  * The bitcoin_hash format is like base16, but with the bytes reversed.
  */
-BC_API hash_digest hash_literal(const char (&string)[2*hash_size + 1]);
+BC_API hash_digest hash_literal(const char (&string)[2 * hash_size + 1]);
 
 } // namespace libbitcoin
 

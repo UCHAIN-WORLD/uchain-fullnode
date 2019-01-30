@@ -26,7 +26,8 @@
 #include <UChain/bitcoin/compat.hpp>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 BC_CONSTEXPR uint8_t btc_decimal_places = 8;
 BC_CONSTEXPR uint8_t mbtc_decimal_places = 5;
@@ -40,8 +41,8 @@ BC_CONSTEXPR uint8_t ubtc_decimal_places = 2;
  * or false to round them upwards.
  * @return false for failure.
  */
-BC_API bool decode_base10(uint64_t& out, const std::string& amount,
-    uint8_t decimal_places=0, bool strict=true);
+BC_API bool decode_base10(uint64_t &out, const std::string &amount,
+                          uint8_t decimal_places = 0, bool strict = true);
 
 /**
  * Writes a Bitcoin amount to a string, following the BIP 21 grammar.
@@ -50,13 +51,12 @@ BC_API bool decode_base10(uint64_t& out, const std::string& amount,
  * The default is 0, which treats the input as a normal integer.
  */
 BC_API std::string encode_base10(uint64_t amount,
-    uint8_t decimal_places=0);
+                                 uint8_t decimal_places = 0);
 
 // Old names:
-BC_API bool btc_to_satoshi(uint64_t& satoshi, const std::string& btc);
+BC_API bool btc_to_satoshi(uint64_t &satoshi, const std::string &btc);
 BC_API std::string satoshi_to_btc(uint64_t satoshi);
 
 } // namespace libbitcoin
 
 #endif
-
