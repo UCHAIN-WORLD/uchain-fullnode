@@ -23,10 +23,11 @@
 
 #include <type_traits>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 #define VERIFY_UNSIGNED(T) static_assert(std::is_unsigned<T>::value, \
-    "The endian functions only work on unsigned types")
+                                         "The endian functions only work on unsigned types")
 
 template <typename T, typename Iterator>
 T from_big_endian(Iterator start, const Iterator end)
@@ -76,14 +77,14 @@ T from_little_endian_unsafe(Iterator in)
 }
 
 template <typename T>
-T from_big_endian_stream_unsafe(std::istream& stream)
+T from_big_endian_stream_unsafe(std::istream &stream)
 {
     VERIFY_UNSIGNED(T);
     T out = 0;
     for (size_t i = sizeof(T); (i > 0) && stream; i--)
     {
         uint8_t value = 0;
-        stream.read(reinterpret_cast<char*>(&value), sizeof value);
+        stream.read(reinterpret_cast<char *>(&value), sizeof value);
         out |= static_cast<T>(value) << (8 * (i - 1));
     }
 
@@ -91,14 +92,14 @@ T from_big_endian_stream_unsafe(std::istream& stream)
 }
 
 template <typename T>
-T from_little_endian_stream_unsafe(std::istream& stream)
+T from_little_endian_stream_unsafe(std::istream &stream)
 {
     VERIFY_UNSIGNED(T);
     T out = 0;
     for (size_t i = 0; (i < sizeof(T)) && stream; i++)
     {
         uint8_t value = 0;
-        stream.read(reinterpret_cast<char*>(&value), sizeof value);
+        stream.read(reinterpret_cast<char *>(&value), sizeof value);
         out |= static_cast<T>(value) << (8 * i);
     }
 
@@ -138,4 +139,3 @@ byte_array<sizeof(T)> to_little_endian(T n)
 } // namespace libbitcoin
 
 #endif
-

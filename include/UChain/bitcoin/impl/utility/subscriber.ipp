@@ -30,13 +30,14 @@
 #include <UChain/bitcoin/utility/threadpool.hpp>
 ////#include <UChain/bitcoin/utility/track.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename... Args>
-subscriber<Args...>::subscriber(threadpool& pool,
-    const std::string& class_name)
-  : stopped_(true), dispatch_(pool, class_name)
-    /*, track<subscriber<Args...>>(class_name)*/
+subscriber<Args...>::subscriber(threadpool &pool,
+                                const std::string &class_name)
+    : stopped_(true), dispatch_(pool, class_name)
+/*, track<subscriber<Args...>>(class_name)*/
 {
 }
 
@@ -122,7 +123,7 @@ void subscriber<Args...>::relay(Args... args)
 {
     // This enqueues work while maintaining order.
     dispatch_.ordered(&subscriber<Args...>::do_invoke,
-        this->shared_from_this(), args...);
+                      this->shared_from_this(), args...);
 }
 
 // private
@@ -146,7 +147,7 @@ void subscriber<Args...>::do_invoke(Args... args)
 
     // Subscriptions may be created while this loop is executing.
     // Invoke subscribers from temporary list, without subscription renewal.
-    for (const auto& handler: subscriptions)
+    for (const auto &handler : subscriptions)
         handler(args...);
 
     ///////////////////////////////////////////////////////////////////////////

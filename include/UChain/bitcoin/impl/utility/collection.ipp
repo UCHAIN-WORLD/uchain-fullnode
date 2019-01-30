@@ -28,10 +28,11 @@
 #include <iostream>
 #include <vector>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename Source, typename Target>
-std::vector<Target> cast(const std::vector<Source>& source)
+std::vector<Target> cast(const std::vector<Source> &source)
 {
     std::vector<Target> target(source.size());
     target.assign(source.begin(), source.end());
@@ -39,10 +40,9 @@ std::vector<Target> cast(const std::vector<Source>& source)
 }
 
 template <typename Pair, typename Key>
-int find_pair_position(const std::vector<Pair>& list, const Key& key)
+int find_pair_position(const std::vector<Pair> &list, const Key &key)
 {
-    const auto predicate = [&](const Pair& pair)
-    {
+    const auto predicate = [&](const Pair &pair) {
         return pair.first == key;
     };
 
@@ -55,7 +55,7 @@ int find_pair_position(const std::vector<Pair>& list, const Key& key)
 }
 
 template <typename Element, typename Container>
-int find_position(const Container& list, const Element& value)
+int find_position(const Container &list, const Element &value)
 {
     const auto it = std::find(std::begin(list), std::end(list), value);
 
@@ -66,15 +66,16 @@ int find_position(const Container& list, const Element& value)
 }
 
 template <typename Type, typename Predicate>
-typename std::vector<Type>::iterator insert_sorted(std::vector<Type>& list,
-    Type& element, Predicate predicate)
+typename std::vector<Type>::iterator insert_sorted(std::vector<Type> &list,
+                                                   Type &element, Predicate predicate)
 {
     return list.insert(std::upper_bound(list.begin(), list.end(), element,
-        predicate), element);
+                                        predicate),
+                       element);
 }
 
 template <typename Type>
-void move_append(std::vector<Type>& target, std::vector<Type>& source)
+void move_append(std::vector<Type> &target, std::vector<Type> &source)
 {
     target.reserve(target.size() + source.size());
     std::move(source.begin(), source.end(), std::back_inserter(target));
@@ -91,15 +92,16 @@ void move_append(std::vector<Type>& target, std::vector<Type>& source)
 
 } // namespace libbitcoin
 
-namespace std {
+namespace std
+{
 
 template <class Type>
-std::ostream& operator<<(std::ostream& output, const std::vector<Type>& list)
+std::ostream &operator<<(std::ostream &output, const std::vector<Type> &list)
 {
     size_t current = 0;
     const auto end = list.size();
 
-    for (const auto& element: list)
+    for (const auto &element : list)
     {
         output << element;
 

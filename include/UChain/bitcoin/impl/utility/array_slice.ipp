@@ -21,35 +21,36 @@
 #ifndef UC_ARRAY_SLICE_IPP
 #define UC_ARRAY_SLICE_IPP
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename T>
 template <typename Container>
-array_slice<T>::array_slice(const Container& container)
-  : begin_(container.data()), end_(container.data() + container.size())
+array_slice<T>::array_slice(const Container &container)
+    : begin_(container.data()), end_(container.data() + container.size())
 {
 }
 
 template <typename T>
-array_slice<T>::array_slice(const T* begin, const T* end)
-  : begin_(begin), end_(end)
+array_slice<T>::array_slice(const T *begin, const T *end)
+    : begin_(begin), end_(end)
 {
 }
 
 template <typename T>
-const T* array_slice<T>::begin() const
+const T *array_slice<T>::begin() const
 {
     return begin_;
 }
 
 template <typename T>
-const T* array_slice<T>::end() const
+const T *array_slice<T>::end() const
 {
     return end_;
 }
 
 template <typename T>
-const T* array_slice<T>::data() const
+const T *array_slice<T>::data() const
 {
     return begin_;
 }
@@ -69,4 +70,3 @@ bool array_slice<T>::empty() const
 } // namespace libbitcoin
 
 #endif
-

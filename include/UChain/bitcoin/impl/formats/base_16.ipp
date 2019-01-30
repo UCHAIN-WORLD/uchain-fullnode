@@ -23,14 +23,15 @@
 
 #include <UChain/bitcoin/utility/assert.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // For template implementation only, do not call directly.
-BC_API bool decode_base16_private(uint8_t* out, size_t out_size,
-    const char* in);
+BC_API bool decode_base16_private(uint8_t *out, size_t out_size,
+                                  const char *in);
 
 template <size_t Size>
-bool decode_base16(byte_array<Size>& out, const std::string &in)
+bool decode_base16(byte_array<Size> &out, const std::string &in)
 {
     if (in.size() != 2 * Size)
         return false;
@@ -47,12 +48,13 @@ template <size_t Size>
 byte_array<(Size - 1) / 2> base16_literal(const char (&string)[Size])
 {
     byte_array<(Size - 1) / 2> out;
-    DEBUG_ONLY(const auto success =) decode_base16_private(out.data(),
-        out.size(), string);
+    DEBUG_ONLY(const auto success =)
+    decode_base16_private(out.data(),
+                          out.size(), string);
     BITCOIN_ASSERT(success);
     return out;
 }
 
-} // libbitcoin
+} // namespace libbitcoin
 
 #endif

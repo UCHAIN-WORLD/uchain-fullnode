@@ -32,20 +32,20 @@ template <class Shared>
 std::atomic<size_t> track<Shared>::instances(0);
 
 template <class Shared>
-track<Shared>::track(const std::string& DEBUG_ONLY(class_name))
+track<Shared>::track(const std::string &DEBUG_ONLY(class_name))
 #ifndef NDEBUG
-  : class_(class_name)
+    : class_(class_name)
 #endif
 {
 #ifndef NDEBUG
-    #ifndef RESOURCE_INSCREASE
+#ifndef RESOURCE_INSCREASE
     count_ = ++instances;
     bc::log::trace(LOG_SYSTEM)
         << class_ << "(" << count_ << ")";
-    #else
+#else
     bc::log::trace(LOG_SYSTEM)
         << class_ << "(" << ++instances << ")";
-    #endif
+#endif
 #endif
 }
 
@@ -54,11 +54,11 @@ track<Shared>::~track()
 {
 #ifndef NDEBUG
     bc::log::trace(LOG_SYSTEM)
-    #ifndef RESOURCE_INSCREASE
+#ifndef RESOURCE_INSCREASE
         << "~" << class_ << "(" << count_ << ")";
-    #else
+#else
         << "~" << class_ << "(" << --instances << ")";
-    #endif
+#endif
 #endif
 }
 

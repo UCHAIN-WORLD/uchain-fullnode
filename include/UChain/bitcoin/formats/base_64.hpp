@@ -25,7 +25,8 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Encode data as base64.
@@ -37,9 +38,8 @@ BC_API std::string encode_base64(data_slice unencoded);
  * Attempt to decode base64 data.
  * @return false if the input contains non-base64 characters.
  */
-BC_API bool decode_base64(data_chunk& out, const std::string& in);
+BC_API bool decode_base64(data_chunk &out, const std::string &in);
 
 } // namespace libbitcoin
 
 #endif
-

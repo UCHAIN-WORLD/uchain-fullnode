@@ -30,18 +30,19 @@
 #include <UChain/bitcoin/utility/endian.hpp>
 #include <UChain/bitcoin/utility/exceptions.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // Macro used so that compiler will optimise out function calls to
 // check_distance() if SafeCheckLast is false.
 #define SAFE_CHECK_DISTANCE(N) \
-    if (SafeCheckLast) \
+    if (SafeCheckLast)         \
         check_distance(iterator_, end_, N);
 
 template <typename Iterator, bool SafeCheckLast>
 deserializer<Iterator, SafeCheckLast>::deserializer(const Iterator begin,
-    const Iterator end)
-  : iterator_(begin), end_(end)
+                                                    const Iterator end)
+    : iterator_(begin), end_(end)
 {
 }
 
@@ -127,7 +128,7 @@ T deserializer<Iterator, SafeCheckLast>::read_little_endian()
 
 template <typename Iterator, bool SafeCheckLast>
 uint64_t deserializer<Iterator,
-    SafeCheckLast>::read_variable_uint_little_endian()
+                      SafeCheckLast>::read_variable_uint_little_endian()
 {
     const auto length = read_byte();
     if (length < 0xfd)
@@ -168,8 +169,8 @@ data_chunk deserializer<Iterator, SafeCheckLast>::read_data(size_t size)
 }
 
 template <typename Iterator, bool SafeCheckLast>
-size_t deserializer<Iterator, SafeCheckLast>::read_data(uint8_t* data,
-    size_t size)
+size_t deserializer<Iterator, SafeCheckLast>::read_data(uint8_t *data,
+                                                        size_t size)
 {
     SAFE_CHECK_DISTANCE(size);
     for (size_t i = 0; i < size; ++i)
@@ -309,7 +310,6 @@ deserializer<Iterator, false> make_deserializer_unsafe(
     return deserializer<Iterator, false>(begin, begin);
 }
 
-} // libbitcoin
+} // namespace libbitcoin
 
 #endif
-

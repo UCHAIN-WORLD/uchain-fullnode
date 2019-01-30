@@ -25,19 +25,20 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Encode data as base85 (Z85).
  * @return false if the input is not of base85 size (% 4).
  */
-BC_API bool encode_base85(std::string& out, data_slice in);
+BC_API bool encode_base85(std::string &out, data_slice in);
 
 /**
  * Attempt to decode base85 (Z85) data.
  * @return false if the input contains non-base85 characters or length (% 5).
  */
-BC_API bool decode_base85(data_chunk& out, const std::string& in);
+BC_API bool decode_base85(data_chunk &out, const std::string &in);
 
 } // namespace libbitcoin
 
