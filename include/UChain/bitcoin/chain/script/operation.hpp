@@ -31,8 +31,10 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 // forward declaration
 class point;
@@ -100,61 +102,61 @@ enum class script_pattern
 
 class BC_API operation
 {
-public:
+  public:
     typedef std::vector<operation> stack;
 
     static const size_t max_null_data_size;
 
-    static operation factory_from_data(const data_chunk& data);
-    static operation factory_from_data(std::istream& stream);
-    static operation factory_from_data(reader& source);
+    static operation factory_from_data(const data_chunk &data);
+    static operation factory_from_data(std::istream &stream);
+    static operation factory_from_data(reader &source);
 
-    static bool is_push_only(const operation::stack& operations);
+    static bool is_push_only(const operation::stack &operations);
 
     /// unspendable pattern (standard)
-    static bool is_null_data_pattern(const operation::stack& ops);
+    static bool is_null_data_pattern(const operation::stack &ops);
 
     /// payment script patterns (standard)
-    static bool is_pay_multisig_pattern(const operation::stack& ops);
-    static bool is_pay_public_key_pattern(const operation::stack& ops);
-    static bool is_pay_key_hash_pattern(const operation::stack& ops);
-    static bool is_pay_key_hash_with_lock_height_pattern(const operation::stack& ops);
-    static bool is_pay_script_hash_pattern(const operation::stack& ops);
-    static bool is_pay_blackhole_pattern(const operation::stack& ops);
-    static bool is_pay_key_hash_with_attenuation_model_pattern(const operation::stack& ops);
+    static bool is_pay_multisig_pattern(const operation::stack &ops);
+    static bool is_pay_public_key_pattern(const operation::stack &ops);
+    static bool is_pay_key_hash_pattern(const operation::stack &ops);
+    static bool is_pay_key_hash_with_lock_height_pattern(const operation::stack &ops);
+    static bool is_pay_script_hash_pattern(const operation::stack &ops);
+    static bool is_pay_blackhole_pattern(const operation::stack &ops);
+    static bool is_pay_key_hash_with_attenuation_model_pattern(const operation::stack &ops);
 
     /// signature script patterns (standard)
-    static bool is_sign_multisig_pattern(const operation::stack& ops);
-    static bool is_sign_public_key_pattern(const operation::stack& ops);
-    static bool is_sign_key_hash_pattern(const operation::stack& ops);
-    static bool is_sign_key_hash_with_lock_height_pattern(const operation::stack& ops);
-    static bool is_sign_script_hash_pattern(const operation::stack& ops);
+    static bool is_sign_multisig_pattern(const operation::stack &ops);
+    static bool is_sign_public_key_pattern(const operation::stack &ops);
+    static bool is_sign_key_hash_pattern(const operation::stack &ops);
+    static bool is_sign_key_hash_with_lock_height_pattern(const operation::stack &ops);
+    static bool is_sign_script_hash_pattern(const operation::stack &ops);
 
-    static uint64_t get_lock_height_from_sign_key_hash_with_lock_height(const operation::stack& ops);
-    static uint64_t get_lock_height_from_pay_key_hash_with_lock_height(const operation::stack& ops);
-    static const data_chunk& get_model_param_from_pay_key_hash_with_attenuation_model(const operation::stack& ops);
-    static const data_chunk& get_input_point_from_pay_key_hash_with_attenuation_model(const operation::stack& ops);
+    static uint64_t get_lock_height_from_sign_key_hash_with_lock_height(const operation::stack &ops);
+    static uint64_t get_lock_height_from_pay_key_hash_with_lock_height(const operation::stack &ops);
+    static const data_chunk &get_model_param_from_pay_key_hash_with_attenuation_model(const operation::stack &ops);
+    static const data_chunk &get_input_point_from_pay_key_hash_with_attenuation_model(const operation::stack &ops);
 
     /// stack factories
     static stack to_null_data_pattern(data_slice data);
     static stack to_pay_multisig_pattern(uint8_t signatures,
-        const point_list& points);
+                                         const point_list &points);
     static stack to_pay_multisig_pattern(uint8_t signatures,
-        const data_stack& points);
+                                         const data_stack &points);
     static stack to_pay_public_key_pattern(data_slice point);
-    static stack to_pay_key_hash_pattern(const short_hash& hash);
-    static stack to_pay_key_hash_with_lock_height_pattern(const short_hash& hash, uint32_t block_height);
-    static stack to_pay_script_hash_pattern(const short_hash& hash);
-    static stack to_pay_blackhole_pattern(const short_hash& hash);
+    static stack to_pay_key_hash_pattern(const short_hash &hash);
+    static stack to_pay_key_hash_with_lock_height_pattern(const short_hash &hash, uint32_t block_height);
+    static stack to_pay_script_hash_pattern(const short_hash &hash);
+    static stack to_pay_blackhole_pattern(const short_hash &hash);
     static stack to_pay_key_hash_with_attenuation_model_pattern(
-            const short_hash& hash, const std::string& model_param, const point& input_point);
+        const short_hash &hash, const std::string &model_param, const point &input_point);
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
     std::string to_string(uint32_t flags) const;
     bool is_valid() const;
     void reset();
@@ -163,15 +165,15 @@ public:
     opcode code;
     data_chunk data;
 
-private:
+  private:
     static bool is_push(const opcode code);
-    static uint64_t count_non_push(const operation::stack& operations);
+    static uint64_t count_non_push(const operation::stack &operations);
     static bool must_read_data(opcode code);
-    static bool read_opcode_data_size(uint32_t& count, opcode code,
-        uint8_t byte, reader& source);
+    static bool read_opcode_data_size(uint32_t &count, opcode code,
+                                      uint8_t byte, reader &source);
 };
 
-} // end chain
-} // end libbitcoin
+} // namespace chain
+} // namespace libbitcoin
 
 #endif

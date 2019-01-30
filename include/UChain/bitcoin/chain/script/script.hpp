@@ -32,8 +32,10 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class BC_API transaction;
 
@@ -88,7 +90,7 @@ enum signature_hash_algorithm : uint32_t
 
 class BC_API script
 {
-public:
+  public:
     enum class parse_mode
     {
         strict,
@@ -96,41 +98,41 @@ public:
         raw_data_fallback
     };
 
-    static script factory_from_data(const data_chunk& data, bool prefix,
-        parse_mode mode);
-    static script factory_from_data(std::istream& stream, bool prefix,
-        parse_mode mode);
-    static script factory_from_data(reader& source, bool prefix,
-        parse_mode mode);
+    static script factory_from_data(const data_chunk &data, bool prefix,
+                                    parse_mode mode);
+    static script factory_from_data(std::istream &stream, bool prefix,
+                                    parse_mode mode);
+    static script factory_from_data(reader &source, bool prefix,
+                                    parse_mode mode);
 
-    static bool verify(const script& input_script,
-        const script& output_script, const transaction& parent_tx,
-        uint32_t input_index, uint32_t flags);
+    static bool verify(const script &input_script,
+                       const script &output_script, const transaction &parent_tx,
+                       uint32_t input_index, uint32_t flags);
 
-    static hash_digest generate_signature_hash(const transaction& parent_tx,
-        uint32_t input_index, const script& script_code, uint8_t sighash_type);
+    static hash_digest generate_signature_hash(const transaction &parent_tx,
+                                               uint32_t input_index, const script &script_code, uint8_t sighash_type);
 
-    static bool create_endorsement(endorsement& out, const ec_secret& secret,
-        const script& prevout_script, const transaction& new_tx,
-        uint32_t input_index, uint8_t sighash_type);
+    static bool create_endorsement(endorsement &out, const ec_secret &secret,
+                                   const script &prevout_script, const transaction &new_tx,
+                                   uint32_t input_index, uint8_t sighash_type);
 
     static bool is_active(uint32_t flags, script_context flag);
 
-    static bool check_signature(const ec_signature& signature,
-        uint8_t sighash_type, const data_chunk& public_key,
-        const script& script_code, const transaction& parent_tx,
-        uint32_t input_index);
+    static bool check_signature(const ec_signature &signature,
+                                uint8_t sighash_type, const data_chunk &public_key,
+                                const script &script_code, const transaction &parent_tx,
+                                uint32_t input_index);
 
     script_pattern pattern() const;
     bool is_raw_data() const;
-    bool from_data(const data_chunk& data, bool prefix, parse_mode mode);
-    bool from_data(std::istream& stream, bool prefix, parse_mode mode);
-    bool from_data(reader& source, bool prefix, parse_mode mode);
+    bool from_data(const data_chunk &data, bool prefix, parse_mode mode);
+    bool from_data(std::istream &stream, bool prefix, parse_mode mode);
+    bool from_data(reader &source, bool prefix, parse_mode mode);
     data_chunk to_data(bool prefix) const;
-    void to_data(std::ostream& stream, bool prefix) const;
-    void to_data(writer& sink, bool prefix) const;
+    void to_data(std::ostream &stream, bool prefix) const;
+    void to_data(writer &sink, bool prefix) const;
 
-    bool from_string(const std::string& human_readable);
+    bool from_string(const std::string &human_readable);
     std::string to_string(uint32_t flags) const;
     bool is_valid() const;
     void reset();
@@ -139,9 +141,9 @@ public:
 
     operation::stack operations;
 
-private:
-    bool deserialize(const data_chunk& raw_script, parse_mode mode);
-    bool parse(const data_chunk& raw_script);
+  private:
+    bool deserialize(const data_chunk &raw_script, parse_mode mode);
+    bool parse(const data_chunk &raw_script);
 };
 
 } // namespace chain

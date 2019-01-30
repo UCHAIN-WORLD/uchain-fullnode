@@ -26,8 +26,10 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/chain/point.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 /// Use "kind" for union differentiation.
 enum class point_kind : uint32_t
@@ -51,8 +53,7 @@ struct BC_API history_compact
     /// The height of the point.
     uint64_t height;
 
-    union
-    {
+    union {
         /// If output, then satoshi value of output.
         uint64_t value;
 
@@ -80,8 +81,7 @@ struct BC_API history
     /// If there is no spend this is null_hash:max.
     input_point spend;
 
-    union
-    {
+    union {
         /// The height of the spend or max if no spend.
         uint64_t spend_height;
 

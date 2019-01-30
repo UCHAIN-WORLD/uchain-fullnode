@@ -26,14 +26,16 @@
 #include <iterator>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class point;
 
 class BC_API point_iterator
 {
-public:
+  public:
     typedef uint8_t pointer;
     typedef uint8_t reference;
     typedef uint8_t value_type;
@@ -44,9 +46,9 @@ public:
     typedef point_iterator const_iterator;
 
     // constructors
-    point_iterator(const point& value);
-    point_iterator(const point& value, bool end);
-    point_iterator(const point& value, uint8_t offset);
+    point_iterator(const point &value);
+    point_iterator(const point &value, bool end);
+    point_iterator(const point &value, uint8_t offset);
 
     operator bool() const;
 
@@ -54,20 +56,20 @@ public:
     reference operator*() const;
     pointer operator->() const;
 
-    bool operator==(const iterator& other) const;
-    bool operator!=(const iterator& other) const;
+    bool operator==(const iterator &other) const;
+    bool operator!=(const iterator &other) const;
 
-    iterator& operator++();
+    iterator &operator++();
     iterator operator++(int);
-    iterator& operator--();
+    iterator &operator--();
     iterator operator--(int);
 
-protected:
+  protected:
     void increment();
     void decrement();
 
-private:
-    const point& point_;
+  private:
+    const point &point_;
     uint8_t offset_;
 };
 

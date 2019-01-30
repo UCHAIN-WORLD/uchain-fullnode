@@ -33,29 +33,31 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class BC_API point
 {
-public:
+  public:
     typedef std::vector<point> list;
     typedef std::vector<uint32_t> indexes;
 
-    static point factory_from_data(const data_chunk& data);
-    static point factory_from_data(std::istream& stream);
-    static point factory_from_data(reader& source);
+    static point factory_from_data(const data_chunk &data);
+    static point factory_from_data(std::istream &stream);
+    static point factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
 
     uint64_t checksum() const;
 
     bool is_null() const;
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
     std::string to_string() const;
     bool is_valid() const;
     void reset();
@@ -68,10 +70,10 @@ public:
     uint32_t index;
 };
 
-BC_API bool operator==(const point& left, const point& right);
-BC_API bool operator!=(const point& left, const point& right);
+BC_API bool operator==(const point &left, const point &right);
+BC_API bool operator!=(const point &left, const point &right);
 
-BC_API bool operator<(const point& left, const point& right);
+BC_API bool operator<(const point &left, const point &right);
 
 typedef point input_point;
 typedef point output_point;
@@ -93,7 +95,7 @@ template <>
 struct hash<bc::chain::point>
 {
     // Changes to this function invalidate existing database files.
-    size_t operator()(const bc::chain::point& point) const
+    size_t operator()(const bc::chain::point &point) const
     {
         size_t seed = 0;
         boost::hash_combine(seed, point.hash);
@@ -107,7 +109,7 @@ template <>
 struct tuple_size<bc::chain::point>
 {
     static const size_t value = std::tuple_size<bc::hash_digest>::value +
-        sizeof(uint32_t);
+                                sizeof(uint32_t);
 
     operator std::size_t() const
     {
