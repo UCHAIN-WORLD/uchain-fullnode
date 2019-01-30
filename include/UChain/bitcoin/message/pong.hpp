@@ -30,26 +30,28 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 class BC_API pong
 {
-public:
+  public:
     typedef std::shared_ptr<pong> ptr;
 
-    static pong factory_from_data(uint32_t version, const data_chunk& data);
-    static pong factory_from_data(uint32_t version, std::istream& stream);
-    static pong factory_from_data(uint32_t version, reader& source);
+    static pong factory_from_data(uint32_t version, const data_chunk &data);
+    static pong factory_from_data(uint32_t version, std::istream &stream);
+    static pong factory_from_data(uint32_t version, reader &source);
     static uint64_t satoshi_fixed_size(uint32_t version);
 
-    bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, const data_chunk &data);
+    bool from_data(uint32_t version, std::istream &stream);
+    bool from_data(uint32_t version, reader &source);
 
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, std::ostream &stream) const;
+    void to_data(uint32_t version, writer &sink) const;
     bool is_valid() const;
     void reset();
     uint64_t serialized_size(uint32_t version) const;
@@ -61,8 +63,8 @@ public:
     uint64_t nonce;
 };
 
-BC_API bool operator==(const pong& left, const pong& right);
-BC_API bool operator!=(const pong& left, const pong& right);
+BC_API bool operator==(const pong &left, const pong &right);
+BC_API bool operator!=(const pong &left, const pong &right);
 
 } // namespace message
 } // namespace libbitcoin

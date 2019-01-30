@@ -30,27 +30,29 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 class BC_API merkle_block
 {
-public:
+  public:
     typedef std::shared_ptr<merkle_block> ptr;
     typedef std::vector<merkle_block> list;
 
     static merkle_block factory_from_data(uint32_t version,
-        const data_chunk& data);
+                                          const data_chunk &data);
     static merkle_block factory_from_data(uint32_t version,
-        std::istream& stream);
-    static merkle_block factory_from_data(uint32_t version, reader& source);
+                                          std::istream &stream);
+    static merkle_block factory_from_data(uint32_t version, reader &source);
 
-    bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, const data_chunk &data);
+    bool from_data(uint32_t version, std::istream &stream);
+    bool from_data(uint32_t version, reader &source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, std::ostream &stream) const;
+    void to_data(uint32_t version, writer &sink) const;
     bool is_valid() const;
     void reset();
     uint64_t serialized_size(uint32_t version) const;
@@ -64,10 +66,10 @@ public:
     data_chunk flags;
 };
 
-BC_API bool operator==(const merkle_block& left, const merkle_block& right);
-BC_API bool operator!=(const merkle_block& left, const merkle_block& right);
+BC_API bool operator==(const merkle_block &left, const merkle_block &right);
+BC_API bool operator!=(const merkle_block &left, const merkle_block &right);
 
-} // end message
-} // end libbitcoin
+} // namespace message
+} // namespace libbitcoin
 
 #endif

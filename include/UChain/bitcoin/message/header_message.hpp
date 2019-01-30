@@ -30,61 +30,65 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include <UChain/bitcoin/utility/reader.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 class BC_API header_message
-  : public chain::header
+    : public chain::header
 {
-public:
+  public:
     typedef std::vector<header_message> list;
     typedef std::shared_ptr<header_message> ptr;
     typedef std::vector<ptr> ptr_list;
 
     static header_message factory_from_data(const uint32_t version,
-        const data_chunk& data, bool with_transaction_count=true);
+                                            const data_chunk &data, bool with_transaction_count = true);
     static header_message factory_from_data(const uint32_t version,
-        std::istream& stream, bool with_transaction_count=true);
+                                            std::istream &stream, bool with_transaction_count = true);
     static header_message factory_from_data(const uint32_t version,
-        reader& source, bool with_transaction_count=true);
+                                            reader &source, bool with_transaction_count = true);
 
     header_message();
-    header_message(const chain::header& other);
-    header_message(const header_message& other);
-    header_message(uint32_t version, const hash_digest& previous_block_hash,
-        const hash_digest& merkle, uint32_t timestamp, /*const u256& bits,
-        u64 nonce, const u256& mixhash, */uint32_t number, uint64_t transaction_count=0);
+    header_message(const chain::header &other);
+    header_message(const header_message &other);
+    header_message(uint32_t version, const hash_digest &previous_block_hash,
+                   const hash_digest &merkle, uint32_t timestamp, /*const u256& bits,
+        u64 nonce, const u256& mixhash, */
+                   uint32_t number, uint64_t transaction_count = 0);
 
-    header_message(chain::header&& other);
-    header_message(header_message&& other);
-    header_message(uint32_t version, hash_digest&& previous_block_hash,
-        hash_digest&& merkle, uint32_t timestamp,/* const u256& bits,
-        u64 nonce, const u256& mixhash,*/ uint32_t number, uint64_t transaction_count = 0);
+    header_message(chain::header &&other);
+    header_message(header_message &&other);
+    header_message(uint32_t version, hash_digest &&previous_block_hash,
+                   hash_digest &&merkle, uint32_t timestamp, /* const u256& bits,
+        u64 nonce, const u256& mixhash,*/
+                   uint32_t number, uint64_t transaction_count = 0);
 
     /// This class is move assignable but not copy assignable.
-    header_message& operator=(header_message&& other);
-    void operator=(const header_message&) = delete;
+    header_message &operator=(header_message &&other);
+    void operator=(const header_message &) = delete;
 
-    bool from_data(const uint32_t version, const data_chunk& data,
-        bool with_transaction_count = true);
-    bool from_data(const uint32_t version, std::istream& stream,
-        bool with_transaction_count = true);
-    bool from_data(const uint32_t version, reader& source,
-        bool with_transaction_count = true);
+    bool from_data(const uint32_t version, const data_chunk &data,
+                   bool with_transaction_count = true);
+    bool from_data(const uint32_t version, std::istream &stream,
+                   bool with_transaction_count = true);
+    bool from_data(const uint32_t version, reader &source,
+                   bool with_transaction_count = true);
     data_chunk to_data(const uint32_t version,
-        bool with_transaction_count = true) const;
-    void to_data(const uint32_t version, std::ostream& stream,
-        bool with_transaction_count = true) const;
-    void to_data(const uint32_t version, writer& sink,
-        bool with_transaction_count = true) const;
+                       bool with_transaction_count = true) const;
+    void to_data(const uint32_t version, std::ostream &stream,
+                 bool with_transaction_count = true) const;
+    void to_data(const uint32_t version, writer &sink,
+                 bool with_transaction_count = true) const;
     uint64_t serialized_size(const uint32_t version,
-        bool with_transaction_count = true) const;
+                             bool with_transaction_count = true) const;
 
     static const std::string command;
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 
-private:
+  private:
     uint64_t originator_;
 };
 

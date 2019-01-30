@@ -36,31 +36,33 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 class BC_API headers
 {
-public:
+  public:
     typedef std::shared_ptr<headers> ptr;
 
-    static headers factory_from_data(uint32_t version, const data_chunk& data);
-    static headers factory_from_data(uint32_t version, std::istream& stream);
-    static headers factory_from_data(uint32_t version, reader& source);
+    static headers factory_from_data(uint32_t version, const data_chunk &data);
+    static headers factory_from_data(uint32_t version, std::istream &stream);
+    static headers factory_from_data(uint32_t version, reader &source);
 
     headers();
-    headers(const chain::header::list& values);
-    headers(const std::initializer_list<chain::header>& values);
+    headers(const chain::header::list &values);
+    headers(const std::initializer_list<chain::header> &values);
 
-    bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, const data_chunk &data);
+    bool from_data(uint32_t version, std::istream &stream);
+    bool from_data(uint32_t version, reader &source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
-    void to_hashes(hash_list& out) const;
-    void to_inventory(inventory_vector::list& out,
-        inventory::type_id type) const;
+    void to_data(uint32_t version, std::ostream &stream) const;
+    void to_data(uint32_t version, writer &sink) const;
+    void to_hashes(hash_list &out) const;
+    void to_inventory(inventory_vector::list &out,
+                      inventory::type_id type) const;
     bool is_valid() const;
     void reset();
     uint64_t serialized_size(uint32_t version) const;
@@ -72,8 +74,8 @@ public:
     chain::header::list elements;
 };
 
-BC_API bool operator==(const headers& left, const headers& right);
-BC_API bool operator!=(const headers& left, const headers& right);
+BC_API bool operator==(const headers &left, const headers &right);
+BC_API bool operator!=(const headers &left, const headers &right);
 
 } // namespace message
 } // namespace libbitcoin

@@ -27,35 +27,37 @@
 #include <UChain/bitcoin/math/hash.hpp>
 #include <UChain/bitcoin/message/get_blocks.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 class BC_API get_headers
-  : public get_blocks
+    : public get_blocks
 {
-public:
+  public:
     typedef std::shared_ptr<get_headers> ptr;
 
     static get_headers factory_from_data(uint32_t version,
-        const data_chunk& data);
+                                         const data_chunk &data);
     static get_headers factory_from_data(uint32_t version,
-        std::istream& stream);
-    static get_headers factory_from_data(uint32_t version, reader& source);
+                                         std::istream &stream);
+    static get_headers factory_from_data(uint32_t version, reader &source);
 
     get_headers();
-    get_headers(const hash_list& start, const hash_digest& stop);
-    get_headers(hash_list&& start, hash_digest&& stop);
+    get_headers(const hash_list &start, const hash_digest &stop);
+    get_headers(hash_list &&start, hash_digest &&stop);
 
-    bool from_data(uint32_t version, const data_chunk& data) override;
-    bool from_data(uint32_t version, std::istream& stream) override;
-    bool from_data(uint32_t version, reader& source) override;
+    bool from_data(uint32_t version, const data_chunk &data) override;
+    bool from_data(uint32_t version, std::istream &stream) override;
+    bool from_data(uint32_t version, reader &source) override;
 
     static const std::string command;
     static const uint32_t version_minimum;
     static const uint32_t version_maximum;
 };
 
-} // end message
-} // end libbitcoin
+} // namespace message
+} // namespace libbitcoin
 
 #endif
