@@ -34,33 +34,35 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 class BC_API inventory
 {
-public:
+  public:
     typedef std::shared_ptr<inventory> ptr;
     typedef inventory_vector::type_id type_id;
 
     static inventory factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static inventory factory_from_data(uint32_t version, std::istream& stream);
-    static inventory factory_from_data(uint32_t version, reader& source);
+                                       const data_chunk &data);
+    static inventory factory_from_data(uint32_t version, std::istream &stream);
+    static inventory factory_from_data(uint32_t version, reader &source);
 
     inventory();
-    inventory(const inventory_vector::list& values);
-    inventory(const hash_list& hashes, type_id type);
-    inventory(const std::initializer_list<inventory_vector>& values);
+    inventory(const inventory_vector::list &values);
+    inventory(const hash_list &hashes, type_id type);
+    inventory(const std::initializer_list<inventory_vector> &values);
 
-    virtual bool from_data(uint32_t version, const data_chunk& data);
-    virtual bool from_data(uint32_t version, std::istream& stream);
-    virtual bool from_data(uint32_t version, reader& source);
+    virtual bool from_data(uint32_t version, const data_chunk &data);
+    virtual bool from_data(uint32_t version, std::istream &stream);
+    virtual bool from_data(uint32_t version, reader &source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
-    void to_hashes(hash_list& out, type_id type) const;
-    void reduce(inventory_vector::list& out, type_id type) const;
+    void to_data(uint32_t version, std::ostream &stream) const;
+    void to_data(uint32_t version, writer &sink) const;
+    void to_hashes(hash_list &out, type_id type) const;
+    void reduce(inventory_vector::list &out, type_id type) const;
     bool is_valid() const;
     void reset();
     uint64_t serialized_size(uint32_t version) const;
@@ -73,8 +75,8 @@ public:
     inventory_vector::list inventories;
 };
 
-BC_API bool operator==(const inventory& left, const inventory& right);
-BC_API bool operator!=(const inventory& left, const inventory& right);
+BC_API bool operator==(const inventory &left, const inventory &right);
+BC_API bool operator!=(const inventory &left, const inventory &right);
 
 } // namespace message
 } // namespace libbitcoin

@@ -32,28 +32,30 @@
 #include <UChain/bitcoin/message/inventory_vector.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 class BC_API not_found
-  : public inventory
+    : public inventory
 {
-public:
+  public:
     typedef std::shared_ptr<not_found> ptr;
 
     static not_found factory_from_data(uint32_t version,
-        const data_chunk& data);
-    static not_found factory_from_data(uint32_t version, std::istream& stream);
-    static not_found factory_from_data(uint32_t version, reader& source);
+                                       const data_chunk &data);
+    static not_found factory_from_data(uint32_t version, std::istream &stream);
+    static not_found factory_from_data(uint32_t version, reader &source);
 
     not_found();
-    not_found(const inventory_vector::list& values);
-    not_found(const hash_list& hashes, inventory::type_id type);
-    not_found(const std::initializer_list<inventory_vector>& values);
+    not_found(const inventory_vector::list &values);
+    not_found(const hash_list &hashes, inventory::type_id type);
+    not_found(const std::initializer_list<inventory_vector> &values);
 
-    bool from_data(uint32_t version, const data_chunk& data) override;
-    bool from_data(uint32_t version, std::istream& stream) override;
-    bool from_data(uint32_t version, reader& source) override;
+    bool from_data(uint32_t version, const data_chunk &data) override;
+    bool from_data(uint32_t version, std::istream &stream) override;
+    bool from_data(uint32_t version, reader &source) override;
 
     static const std::string command;
     static const uint32_t version_minimum;

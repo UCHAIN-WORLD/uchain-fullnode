@@ -33,8 +33,10 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 enum class message_type
 {
@@ -70,20 +72,20 @@ enum class message_type
 
 class BC_API heading
 {
-public:
-    static size_t maximum_size() ;
-    static size_t maximum_payload_size(uint32_t version) ;
-    static size_t serialized_size() ;
-    static heading factory_from_data(const data_chunk& data);
-    static heading factory_from_data(std::istream& stream);
-    static heading factory_from_data(reader& source);
+  public:
+    static size_t maximum_size();
+    static size_t maximum_payload_size(uint32_t version);
+    static size_t serialized_size();
+    static heading factory_from_data(const data_chunk &data);
+    static heading factory_from_data(std::istream &stream);
+    static heading factory_from_data(reader &source);
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
     bool is_valid() const;
     void reset();
     message_type type() const;
@@ -94,8 +96,8 @@ public:
     uint32_t checksum;
 };
 
-BC_API bool operator==(const heading& left, const heading& right);
-BC_API bool operator!=(const heading& left, const heading& right);
+BC_API bool operator==(const heading &left, const heading &right);
+BC_API bool operator!=(const heading &left, const heading &right);
 
 } // namespace message
 } // namespace libbitcoin

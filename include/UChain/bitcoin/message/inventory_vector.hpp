@@ -28,12 +28,14 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 class BC_API inventory_vector
 {
-public:
+  public:
     typedef std::vector<inventory_vector> list;
 
     enum class type_id
@@ -50,19 +52,19 @@ public:
     static uint32_t to_number(type_id type);
 
     static inventory_vector factory_from_data(uint32_t version,
-        const data_chunk& data);
+                                              const data_chunk &data);
     static inventory_vector factory_from_data(uint32_t version,
-        std::istream& stream);
+                                              std::istream &stream);
     static inventory_vector factory_from_data(uint32_t version,
-        reader& source);
+                                              reader &source);
     static uint64_t satoshi_fixed_size(uint32_t version);
 
-    bool from_data(uint32_t version, const data_chunk& data);
-    bool from_data(uint32_t version, std::istream& stream);
-    bool from_data(uint32_t version, reader& source);
+    bool from_data(uint32_t version, const data_chunk &data);
+    bool from_data(uint32_t version, std::istream &stream);
+    bool from_data(uint32_t version, reader &source);
     data_chunk to_data(uint32_t version) const;
-    void to_data(uint32_t version, std::ostream& stream) const;
-    void to_data(uint32_t version, writer& sink) const;
+    void to_data(uint32_t version, std::ostream &stream) const;
+    void to_data(uint32_t version, writer &sink) const;
     bool is_valid() const;
     void reset();
     uint64_t serialized_size(uint32_t version) const;
@@ -73,10 +75,10 @@ public:
     hash_digest hash;
 };
 
-BC_API bool operator==(const inventory_vector& left,
-    const inventory_vector& right);
-BC_API bool operator!=(const inventory_vector& left,
-    const inventory_vector& right);
+BC_API bool operator==(const inventory_vector &left,
+                       const inventory_vector &right);
+BC_API bool operator!=(const inventory_vector &left,
+                       const inventory_vector &right);
 
 } // namespace message
 } // namespace libbitcoin
