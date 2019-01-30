@@ -27,7 +27,7 @@
 #include <UChainApp/ucd/config.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 #include <UChainApp/ucd/workers/query_worker.hpp>
-#include <UChainService/rest.hpp>
+#include <UChainService/api/rest.hpp>
 
 #include <thread>
 
