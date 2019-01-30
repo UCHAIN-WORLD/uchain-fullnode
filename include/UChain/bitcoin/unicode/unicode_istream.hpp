@@ -25,7 +25,8 @@
 #include <iostream>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Class to expose a narrowing input stream.
@@ -34,15 +35,15 @@ namespace libbitcoin {
 class BC_API unicode_istream
     : public std::istream
 {
-public:
+  public:
     /**
      * Construct instance of a conditionally-narrowing input stream.
      * @param[in]  narrow_stream  A narrow input stream such as std::cin.
      * @param[in]  wide_stream    A wide input stream such as std::wcin.
      * @param[in]  size           The wide buffer size.
      */
-    unicode_istream(std::istream& narrow_stream, std::wistream& wide_stream,
-        size_t size);
+    unicode_istream(std::istream &narrow_stream, std::wistream &wide_stream,
+                    size_t size);
 
     /**
      * Delete the unicode_streambuf that wraps wide_stream.

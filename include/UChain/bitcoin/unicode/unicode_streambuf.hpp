@@ -26,7 +26,8 @@
 #include <UChain/bitcoin/compat.hpp>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Class to translate internal utf8 iostreams to external utf16 iostreams.
@@ -37,20 +38,20 @@ namespace libbitcoin {
 class BC_API unicode_streambuf
     : public std::streambuf
 {
-public:
+  public:
     /**
      * Construct unicode stream buffer from a weak reference to a wide buffer.
      * @param[in]  wide_buffer  A wide stream buffer for i/o relay.
      * @param[in]  size         The wide buffer size.
      */
-    unicode_streambuf(std::wstreambuf* wide_buffer, size_t size);
+    unicode_streambuf(std::wstreambuf *wide_buffer, size_t size);
 
     /**
      * Synchronize stream buffer.
      */
     virtual ~unicode_streambuf();
 
-protected:
+  protected:
     /**
      * Implement underflow for support of input streams.
      */
@@ -68,7 +69,7 @@ protected:
      */
     virtual int sync();
 
-private:
+  private:
     // The constructed wide buffer size in number of characters.
     size_t wide_size_;
 
@@ -76,11 +77,11 @@ private:
     size_t narrow_size_;
 
     // The dynamically-allocated buffers.
-    wchar_t* wide_;
-    char* narrow_;
+    wchar_t *wide_;
+    char *narrow_;
 
     // The excapsulated wide streambuf.
-    std::wstreambuf* wide_buffer_;
+    std::wstreambuf *wide_buffer_;
 };
 
 } // namespace libbitcoin

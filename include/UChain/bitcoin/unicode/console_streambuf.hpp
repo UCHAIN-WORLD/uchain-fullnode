@@ -25,29 +25,30 @@
 #include <streambuf>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Class to patch Windows stdin keyboard input, file input is not a problem.
  * This class and members are no-ops when called in non-MSVC++ builds.
  */
 class BC_API console_streambuf
-  : public std::wstreambuf
+    : public std::wstreambuf
 {
-public:
+  public:
     /**
      * Initialize stdio to use utf8 translation on Windows.
      * @param[in]  size  The stream buffer size.
      */
     static void initialize(size_t size);
 
-protected:
+  protected:
     /**
      * Protected construction, use static initialize method.
      * @param[in]  stream_buffer  The stream buffer to patch.
      * @param[in]  size           The stream buffer size.
      */
-    console_streambuf(std::wstreambuf const& stream_buffer, size_t size);
+    console_streambuf(std::wstreambuf const &stream_buffer, size_t size);
 
     /**
      * Delete stream buffer.
@@ -59,19 +60,19 @@ protected:
      * @param[in]  buffer  Pointer to the buffer to fill with console reads.
      * @param[in]  size    The size of the buffer that may be populated.
      */
-    virtual std::streamsize xsgetn(wchar_t* buffer, std::streamsize size);
+    virtual std::streamsize xsgetn(wchar_t *buffer, std::streamsize size);
 
     /**
      * Implement alternate console read.
      */
     virtual std::wstreambuf::int_type underflow();
 
-private:
+  private:
     // The constructed buffer size.
     size_t buffer_size_;
 
     // The dynamically-allocated buffers.
-    wchar_t* buffer_;
+    wchar_t *buffer_;
 };
 
 } // namespace libbitcoin

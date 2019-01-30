@@ -79,58 +79,61 @@
 #define BC_LOCALE_UTF8 "en_US.UTF8"
 
 #ifdef _MSC_VER
-    #include <locale>
-    #include <boost/filesystem.hpp>
-    #include <boost/locale.hpp>
-    #include <windows.h>
-    #define BC_USE_UC_MAIN \
-        namespace libbitcoin { \
-        int main(int argc, char* argv[]); \
-        } \
-        \
-        int wmain(int argc, wchar_t* argv[]) \
-        { \
-            using namespace libbitcoin; \
-            boost::locale::generator locale; \
-            std::locale::global(locale(BC_LOCALE_UTF8)); \
-            boost::filesystem::path::imbue(std::locale()); \
-            \
-            auto variables = to_utf8(_wenviron); \
-            environ = reinterpret_cast<char**>(variables.data()); \
-            \
-            auto arguments = to_utf8(argc, argv); \
-            auto args = reinterpret_cast<char**>(arguments.data()); \
-            \
-            return libbitcoin::main(argc, args); \
-        }
+#include <locale>
+#include <boost/filesystem.hpp>
+#include <boost/locale.hpp>
+#include <windows.h>
+#define BC_USE_UC_MAIN                                           \
+    namespace libbitcoin                                         \
+    {                                                            \
+    int main(int argc, char *argv[]);                            \
+    }                                                            \
+                                                                 \
+    int wmain(int argc, wchar_t *argv[])                         \
+    {                                                            \
+        using namespace libbitcoin;                              \
+        boost::locale::generator locale;                         \
+        std::locale::global(locale(BC_LOCALE_UTF8));             \
+        boost::filesystem::path::imbue(std::locale());           \
+                                                                 \
+        auto variables = to_utf8(_wenviron);                     \
+        environ = reinterpret_cast<char **>(variables.data());   \
+                                                                 \
+        auto arguments = to_utf8(argc, argv);                    \
+        auto args = reinterpret_cast<char **>(arguments.data()); \
+                                                                 \
+        return libbitcoin::main(argc, args);                     \
+    }
 #else
-    #define BC_USE_UC_MAIN \
-        namespace libbitcoin { \
-        int main(int argc, char* argv[]); \
-        } \
-        \
-        int main(int argc, char* argv[]) \
-        { \
-            return libbitcoin::main(argc, argv); \
-        }
+#define BC_USE_UC_MAIN                       \
+    namespace libbitcoin                     \
+    {                                        \
+    int main(int argc, char *argv[]);        \
+    }                                        \
+                                             \
+    int main(int argc, char *argv[])         \
+    {                                        \
+        return libbitcoin::main(argc, argv); \
+    }
 #endif
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Use bc::cin in place of std::cin.
  */
-extern std::istream& cin;
+extern std::istream &cin;
 
 /**
  * Use bc::cout in place of std::cout.
  */
-extern std::ostream& cout;
+extern std::ostream &cout;
 
 /**
  * Use bc::cerr in place of std::cerr.
  */
-extern std::ostream& cerr;
+extern std::ostream &cerr;
 
 #ifdef WITH_ICU
 
@@ -140,7 +143,7 @@ extern std::ostream& cerr;
  * @param[in]  value  The value to normalize.
  * @return            The normalized value.
  */
-BC_API std::string to_normal_nfc_form(const std::string& value);
+BC_API std::string to_normal_nfc_form(const std::string &value);
 
 /**
  * Normalize a string value using nfkd normalization.
@@ -148,7 +151,7 @@ BC_API std::string to_normal_nfc_form(const std::string& value);
  * @param[in]  value  The value to normalize.
  * @return            The normalized value.
  */
-BC_API std::string to_normal_nfkd_form(const std::string& value);
+BC_API std::string to_normal_nfkd_form(const std::string &value);
 
 #endif
 
@@ -159,7 +162,7 @@ BC_API std::string to_normal_nfkd_form(const std::string& value);
  * @param[in]  environment  The wide environment variables vector.
  * @return                  A buffer holding the narrow version of environment.
  */
-BC_API data_chunk to_utf8(wchar_t* environment[]);
+BC_API data_chunk to_utf8(wchar_t *environment[]);
 
 /**
  * Convert wide argument vector to utf8 argument vector.
@@ -169,7 +172,7 @@ BC_API data_chunk to_utf8(wchar_t* environment[]);
  * @param[in]  argv  The wide command line arguments.
  * @return           A buffer holding the narrow version of argv.
  */
-BC_API data_chunk to_utf8(int argc, wchar_t* argv[]);
+BC_API data_chunk to_utf8(int argc, wchar_t *argv[]);
 
 /**
  * Convert a wide (presumed UTF16) array to wide (UTF8/char).
@@ -180,14 +183,14 @@ BC_API data_chunk to_utf8(int argc, wchar_t* argv[]);
  * @return                The number of bytes converted.
  */
 BC_API size_t to_utf8(char out[], size_t out_bytes, const wchar_t in[],
-    size_t in_chars);
+                      size_t in_chars);
 
 /**
  * Convert a wide (presumed UTF16) string to narrow (UTF8/char).
  * @param[in]  wide  The utf16 string to convert.
  * @return           The resulting utf8 string.
  */
-BC_API std::string to_utf8(const std::wstring& wide);
+BC_API std::string to_utf8(const std::wstring &wide);
 
 /**
  * Convert a narrow (presumed UTF8) array to wide (UTF16/wchar_t).
@@ -202,14 +205,14 @@ BC_API std::string to_utf8(const std::wstring& wide);
  * @return                The number of characters converted.
  */
 BC_API size_t to_utf16(wchar_t out[], size_t out_chars, const char in[],
-    size_t in_bytes, uint8_t& truncated);
+                       size_t in_bytes, uint8_t &truncated);
 
 /**
  * Convert a narrow (presumed UTF8) string to wide (UTF16/wchar_t).
  * @param[in]  narrow  The utf8 string to convert.
  * @return             The resulting utf16 string.
  */
-BC_API std::wstring to_utf16(const std::string& narrow);
+BC_API std::wstring to_utf16(const std::string &narrow);
 
 /**
  * Initialize windows to use UTF8 for stdio. This cannot be uninitialized and

@@ -25,23 +25,24 @@
 #include <string>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Use bc::ifstream in place of std::ifstream.
  * This provides utf8 to utf16 path translation for Windows.
  */
 class BC_API ifstream
-  : public std::ifstream
+    : public std::ifstream
 {
 public:
-    /**
+  /**
      * Construct bc::ifstream.
      * @param[in]  path  The utf8 path to the file.
      * @param[in]  mode  The file opening mode.
      */
-    ifstream(const std::string& path,
-        std::ifstream::openmode mode=std::ifstream::in);
+  ifstream(const std::string &path,
+           std::ifstream::openmode mode = std::ifstream::in);
 };
 
 } // namespace libbitcoin

@@ -25,7 +25,8 @@
 #include <iostream>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Class to expose a widening output stream.
@@ -33,15 +34,15 @@ namespace libbitcoin {
 class BC_API unicode_ostream
     : public std::ostream
 {
-public:
+  public:
     /**
      * Construct instance of a conditionally-widening output stream.
      * @param[in]  narrow_stream  A narrow output stream such as std::cout.
      * @param[in]  wide_stream    A wide output stream such as std::wcout.
      * @param[in]  size           The wide buffer size.
      */
-    unicode_ostream(std::ostream& narrow_stream, std::wostream& wide_stream,
-        size_t size);
+    unicode_ostream(std::ostream &narrow_stream, std::wostream &wide_stream,
+                    size_t size);
 
     /**
      * Delete the unicode_streambuf that wraps wide_stream.
