@@ -26,7 +26,8 @@
 #include <boost/program_options.hpp>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // These are just annoyingly long.
 typedef boost::program_options::variables_map variables_map;
@@ -35,17 +36,18 @@ typedef boost::program_options::options_description options_metadata;
 typedef boost::program_options::positional_options_description
     arguments_metadata;
 
-namespace config {
+namespace config
+{
 
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
 class BC_API parser
 {
-public:
-    static std::string format_invalid_parameter(const std::string& message);
-    static bool get_option(variables_map& variables, const std::string& name);
-    static boost::filesystem::path get_config_option(variables_map& variables,
-        const std::string& name);
+  public:
+    static std::string format_invalid_parameter(const std::string &message);
+    static bool get_option(variables_map &variables, const std::string &name);
+    static boost::filesystem::path get_config_option(variables_map &variables,
+                                                     const std::string &name);
 
     /// Load command line options (named).
     virtual options_metadata load_options() = 0;
@@ -59,15 +61,15 @@ public:
     /// Load configuration file settings.
     virtual options_metadata load_settings() = 0;
 
-protected:
-    virtual void load_command_variables(variables_map& variables,
-        int argc, const char* argv[]);
+  protected:
+    virtual void load_command_variables(variables_map &variables,
+                                        int argc, const char *argv[]);
 
-    virtual bool load_configuration_variables(variables_map& variables,
-        const std::string& option_name);
+    virtual bool load_configuration_variables(variables_map &variables,
+                                              const std::string &option_name);
 
-    virtual void load_environment_variables(variables_map& variables,
-        const std::string& prefix);
+    virtual void load_environment_variables(variables_map &variables,
+                                            const std::string &prefix);
 };
 
 } // namespace config

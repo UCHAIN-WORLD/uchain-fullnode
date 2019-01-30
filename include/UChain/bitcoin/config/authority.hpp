@@ -29,8 +29,10 @@
 #include <UChain/bitcoin/message/network_address.hpp>
 #include <UChain/bitcoin/utility/asio.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 /**
  * Serialization helper for a network authority.
@@ -38,7 +40,7 @@ namespace config {
  */
 class BC_API authority
 {
-public:
+  public:
     /**
      * A list of authorities.
      * This must provide operator<< for ostream in order to be used as a
@@ -56,7 +58,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    authority(const authority& other);
+    authority(const authority &other);
 
     /**
      * Initialization constructor.
@@ -65,20 +67,20 @@ public:
      * @param[in]  authority  The initial value in one of two forms:
      *                        [2001:db8::2]:port or 1.2.240.1:port
      */
-    authority(const std::string& authority);
+    authority(const std::string &authority);
 
     /**
      * Initialization constructor.
      * @param[in]  net  The network address (ip and port) to initialize with.
      */
-    authority(const message::network_address& address);
+    authority(const message::network_address &address);
 
     /**
      * Initialization constructor.
      * @param[in]  ip    The ip addresss to initialize with.
      * @param[in]  port  The port to initialize with.
      */
-    authority(const message::ip_address& ip, uint16_t port);
+    authority(const message::ip_address &ip, uint16_t port);
 
     /**
      * Initialization constructor.
@@ -86,20 +88,20 @@ public:
      *                   [2001:db8::2] or 2001:db8::2 or 1.2.240.1
      * @param[in]  port  The port to initialize with.
      */
-    authority(const std::string& host, uint16_t port);
+    authority(const std::string &host, uint16_t port);
 
     /**
      * Initialization constructor.
      * @param[in]  ip    The boost ip addresss to initialize with.
      * @param[in]  port  The port to initialize with.
      */
-    authority(const asio::address& ip, uint16_t port);
+    authority(const asio::address &ip, uint16_t port);
 
     /**
      * Initialization constructor.
      * @param[in]  endpoint  The boost endpoint addresss to initialize with.
      */
-    authority(const asio::endpoint& endpoint);
+    authority(const asio::endpoint &endpoint);
 
     /**
      * Getter.
@@ -139,15 +141,15 @@ public:
      * Override the equality operator.
      * @param[in]  other  The other object with which to compare.
      */
-    bool operator==(const authority& other) const;
+    bool operator==(const authority &other) const;
 
     /**
      * Override the inequality operator.
      * @param[in]  other  The other object with which to compare.
      */
-    bool operator!=(const authority& other) const;
+    bool operator!=(const authority &other) const;
 
-    bool operator<(const authority& other) const;
+    bool operator<(const authority &other) const;
 
     /**
      * Define stream in. Throws if input is invalid.
@@ -155,8 +157,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        authority& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    authority &argument);
 
     /**
      * Define stream out.
@@ -164,10 +166,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const authority& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const authority &argument);
 
-private:
+  private:
     asio::ipv6 ip_;
     uint16_t port_;
 };

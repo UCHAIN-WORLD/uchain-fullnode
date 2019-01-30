@@ -29,16 +29,23 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 /**
  * Shorthand for property declarations in parameter class.
  */
-#define BC_PROPERTY(type, name) \
-    public: virtual type get_##name() const { return name##_; } \
-    public: virtual void set_##name(type value) { name##_ = value; } \
-    private: type name##_
+#define BC_PROPERTY(type, name)                              \
+  public:                                                    \
+    virtual type get_##name() const { return name##_; }      \
+                                                             \
+  public:                                                    \
+    virtual void set_##name(type value) { name##_ = value; } \
+                                                             \
+  private:                                                   \
+    type name##_
 
 /**
  * A tuple to represent a positional argument name count.
@@ -62,8 +69,7 @@ typedef std::vector<parameter> parameter_list;
  */
 class BC_API parameter
 {
-private:
-
+  private:
     /**
      * Enumerated options for selecting the canonical name.
      */
@@ -79,8 +85,7 @@ private:
         dashed_short_prefer_short = 4
     };
 
-public:
-
+  public:
     /**
      * Sentinel - the option is not a positional argument.
      */
@@ -102,8 +107,8 @@ public:
      * @param[in]  arguments  The list of supported positional arguments.
      */
     virtual void initialize(
-        const boost::program_options::option_description& option,
-        const argument_list& arguments);
+        const boost::program_options::option_description &option,
+        const argument_list &arguments);
 
     /**
      * Determine if the option is an argument by testing for it by name in the
@@ -113,8 +118,8 @@ public:
      * @return                Relative position or -1 if not positional.
      */
     virtual int position(
-        const boost::program_options::option_description& option,
-        const argument_list& arguments) const;
+        const boost::program_options::option_description &option,
+        const argument_list &arguments) const;
 
     /**
      * Get the value for the args_limit property.
@@ -124,8 +129,8 @@ public:
      * @return                The arguments limit value for the option.
      */
     unsigned arguments_limit(int position,
-        const boost::program_options::option_description& option,
-        const argument_list& arguments) const;
+                             const boost::program_options::option_description &option,
+                             const argument_list &arguments) const;
 
     /**
      * Get the option's short name character or zero.
@@ -133,7 +138,7 @@ public:
      * @return             The short name character or null character.
      */
     virtual char short_name(
-        const boost::program_options::option_description& option) const;
+        const boost::program_options::option_description &option) const;
 
     /**
      * Virtual property declarations.

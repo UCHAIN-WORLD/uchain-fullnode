@@ -28,15 +28,17 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include <UChain/bitcoin/math/hash.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 /**
  * Serialization helper for base58 sodium keys.
  */
 class BC_API sodium
 {
-public:
+  public:
     /**
      * A list of base85 values.
      * This must provide operator<< for ostream in order to be used as a
@@ -53,19 +55,19 @@ public:
      * Initialization constructor.
      * @param[in]  base85  The value to initialize with.
      */
-    sodium(const std::string& base85);
+    sodium(const std::string &base85);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    sodium(const hash_digest& value);
+    sodium(const hash_digest &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    sodium(const sodium& other);
+    sodium(const sodium &other);
 
     /**
      * Getter.
@@ -98,8 +100,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        sodium& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    sodium &argument);
 
     /**
      * Overload stream out.
@@ -107,11 +109,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const sodium& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const sodium &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */

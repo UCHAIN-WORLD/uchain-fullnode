@@ -26,16 +26,17 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 /**
  * Serialization helper for base58 encoded text.
  */
 class BC_API base58
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -45,25 +46,25 @@ public:
      * Initialization constructor.
      * @param[in]  base58  The value to initialize with.
      */
-    base58(const std::string& base58);
+    base58(const std::string &base58);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    base58(const data_chunk& value);
+    base58(const data_chunk &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    base58(const base58& other);
+    base58(const base58 &other);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type reference.
      */
-    operator const data_chunk&() const;
+    operator const data_chunk &() const;
 
     /**
      * Overload cast to generic data reference.
@@ -77,8 +78,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        base58& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    base58 &argument);
 
     /**
      * Overload stream out.
@@ -86,11 +87,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const base58& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const base58 &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */
