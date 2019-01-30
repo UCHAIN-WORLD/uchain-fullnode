@@ -29,7 +29,8 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // Common bitcoin hash container sizes.
 static BC_CONSTEXPR size_t hash_size = 32;
@@ -57,52 +58,28 @@ typedef std::vector<mini_hash> mini_hash_list;
 
 // Null-valued common bitcoin hashes.
 
-BC_CONSTEXPR hash_digest null_hash
-{
-    {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    }
-};
+BC_CONSTEXPR hash_digest null_hash{
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-BC_CONSTEXPR half_hash null_half_hash
-{
-    {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    }
-};
+BC_CONSTEXPR half_hash null_half_hash{
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-BC_CONSTEXPR quarter_hash null_quarter_hash
-{
-    {
-        0, 0, 0, 0, 0, 0, 0, 0
-    }
-};
+BC_CONSTEXPR quarter_hash null_quarter_hash{
+    {0, 0, 0, 0, 0, 0, 0, 0}};
 
-BC_CONSTEXPR long_hash null_long_hash
-{
-    {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    }
-};
+BC_CONSTEXPR long_hash null_long_hash{
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-BC_CONSTEXPR short_hash null_short_hash
-{
-    {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0
-    }
-};
+BC_CONSTEXPR short_hash null_short_hash{
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0}};
 
-BC_CONSTEXPR mini_hash null_mini_hash
-{
-    {
-        0, 0, 0, 0, 0, 0
-    }
-};
+BC_CONSTEXPR mini_hash null_mini_hash{
+    {0, 0, 0, 0, 0, 0}};
 
 /**
  * Generate a scrypt hash to fill a byte array.
@@ -111,7 +88,7 @@ BC_CONSTEXPR mini_hash null_mini_hash
  */
 template <size_t Size>
 byte_array<Size> scrypt(data_slice data, data_slice salt, uint64_t N,
-    uint32_t p, uint32_t r);
+                        uint32_t p, uint32_t r);
 
 /**
  * Generate a ripemd160 hash. This hash function is used in script for
@@ -172,7 +149,7 @@ BC_API long_hash hmac_sha512_hash(data_slice data, data_slice key);
  * pkcs5_pbkdf2_hmac_sha512(passphrase, salt, iterations)
  */
 BC_API long_hash pkcs5_pbkdf2_hmac_sha512(data_slice passphrase,
-    data_slice salt, size_t iterations);
+                                          data_slice salt, size_t iterations);
 
 /**
  * Generate a typical bitcoin hash. This is the most widely used
@@ -196,7 +173,7 @@ BC_API short_hash bitcoin_short_hash(data_slice data);
  * scrypt(data, salt, params)
  */
 BC_API data_chunk scrypt(data_slice data, data_slice salt, uint64_t N,
-    uint32_t p, uint32_t r, size_t length);
+                         uint32_t p, uint32_t r, size_t length);
 
 } // namespace libbitcoin
 
@@ -204,22 +181,22 @@ BC_API data_chunk scrypt(data_slice data, data_slice salt, uint64_t N,
 
 namespace libbitcoin
 {
-    // by boost 1.58 on ubuntu
-    //TODO hash_range cross platform
-    template <class It>
-    std::size_t hash_range(It first, It last)
-    {
+// by boost 1.58 on ubuntu
+//TODO hash_range cross platform
+template <class It>
+std::size_t hash_range(It first, It last)
+{
 #ifdef _WIN32
-        return boost::hash_range(first, last);
+    return boost::hash_range(first, last);
 #else
-        std::size_t seed = 0;
-        for (; first != last; ++first)
-        {
-            seed ^= *first + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        }
-        return seed;
-#endif
+    std::size_t seed = 0;
+    for (; first != last; ++first)
+    {
+        seed ^= *first + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
+    return seed;
+#endif
+}
 } // namespace libbitcoin
 
 namespace std
@@ -227,7 +204,7 @@ namespace std
 template <size_t Size>
 struct hash<bc::byte_array<Size>>
 {
-    size_t operator()(const bc::byte_array<Size>& hash) const
+    size_t operator()(const bc::byte_array<Size> &hash) const
     {
         return libbitcoin::hash_range(hash.begin(), hash.end());
     }
@@ -239,7 +216,7 @@ namespace boost
 template <size_t Size>
 struct hash<bc::byte_array<Size>>
 {
-    size_t operator()(const bc::byte_array<Size>& hash) const
+    size_t operator()(const bc::byte_array<Size> &hash) const
     {
         return libbitcoin::hash_range(hash.begin(), hash.end());
     }

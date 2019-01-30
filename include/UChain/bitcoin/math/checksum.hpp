@@ -29,7 +29,8 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 static BC_CONSTEXPR size_t checksum_size = sizeof(uint32_t);
 
@@ -41,15 +42,15 @@ static BC_CONSTEXPR size_t checksum_size = sizeof(uint32_t);
  * checksum.
  */
 template <size_t Size>
-bool build_checked_array(byte_array<Size>& out,
-    const std::initializer_list<data_slice>& slices);
+bool build_checked_array(byte_array<Size> &out,
+                         const std::initializer_list<data_slice> &slices);
 
 /**
  * Appends a four-byte checksum into the end of an array.
  * Returns false if the array is too small to contain the checksum.
  */
-template<size_t Size>
-bool insert_checksum(byte_array<Size>& out);
+template <size_t Size>
+bool insert_checksum(byte_array<Size> &out);
 
 /**
  * Unwrap a wrapped payload.
@@ -59,8 +60,8 @@ bool insert_checksum(byte_array<Size>& out);
  * @return                   True if input checksum validates.
  */
 template <size_t Size>
-bool unwrap(uint8_t& out_version, byte_array<UNWRAP_SIZE(Size)>& out_payload,
-    const std::array<uint8_t, Size>& wrapped);
+bool unwrap(uint8_t &out_version, byte_array<UNWRAP_SIZE(Size)> &out_payload,
+            const std::array<uint8_t, Size> &wrapped);
 
 /**
  * Unwrap a wrapped payload and return the checksum.
@@ -71,9 +72,9 @@ bool unwrap(uint8_t& out_version, byte_array<UNWRAP_SIZE(Size)>& out_payload,
  * @return                   True if input checksum validates.
  */
 template <size_t Size>
-bool unwrap(uint8_t& out_version,
-    byte_array<UNWRAP_SIZE(Size)>& out_payload, uint32_t& out_checksum,
-    const std::array<uint8_t, Size>& wrapped);
+bool unwrap(uint8_t &out_version,
+            byte_array<UNWRAP_SIZE(Size)> &out_payload, uint32_t &out_checksum,
+            const std::array<uint8_t, Size> &wrapped);
 
 /**
  * Wrap arbitrary data.
@@ -83,12 +84,12 @@ bool unwrap(uint8_t& out_version,
  */
 template <size_t Size>
 std::array<uint8_t, WRAP_SIZE(Size)> wrap(uint8_t version,
-    const std::array<uint8_t, Size>& payload);
+                                          const std::array<uint8_t, Size> &payload);
 
 /**
  * Appends a four-byte checksum of a data chunk to itself.
  */
-BC_API void append_checksum(data_chunk& data);
+BC_API void append_checksum(data_chunk &data);
 
 /**
  * Generate a bitcoin hash checksum. Last 4 bytes of sha256(sha256(data))
@@ -108,4 +109,3 @@ BC_API bool verify_checksum(data_slice data);
 #include <UChain/bitcoin/impl/math/checksum.ipp>
 
 #endif
-
