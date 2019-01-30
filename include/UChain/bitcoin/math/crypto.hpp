@@ -25,7 +25,8 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * The secret for aes256 block cypher.
@@ -42,14 +43,13 @@ typedef byte_array<aes256_block_size> aes_block;
 /**
  * Perform aes256 encryption on the specified data block.
  */
-BC_API void aes256_encrypt(const aes_secret& key, aes_block& block);
+BC_API void aes256_encrypt(const aes_secret &key, aes_block &block);
 
 /**
  * Perform aes256 decryption on the specified data block.
  */
-BC_API void aes256_decrypt(const aes_secret& key, aes_block& block);
+BC_API void aes256_decrypt(const aes_secret &key, aes_block &block);
 
 } // namespace libbitcoin
 
 #endif
-
