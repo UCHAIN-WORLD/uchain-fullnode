@@ -26,8 +26,10 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 enum class opcode : uint8_t
 {
@@ -84,34 +86,34 @@ enum class opcode : uint8_t
     rot = 123,
     swap = 124,
     tuck = 125,
-    cat = 126,          // disabled
-    substr = 127,       // disabled
-    left = 128,         // disabled
-    right = 129,        // disabled
+    cat = 126,    // disabled
+    substr = 127, // disabled
+    left = 128,   // disabled
+    right = 129,  // disabled
     size = 130,
-    invert = 131,       // disabled
-    and_ = 132,         // disabled
-    or_ = 133,          // disabled
-    xor_ = 134,         // disabled
+    invert = 131, // disabled
+    and_ = 132,   // disabled
+    or_ = 133,    // disabled
+    xor_ = 134,   // disabled
     equal = 135,
     equalverify = 136,
     reserved1 = 137,
     reserved2 = 138,
     op_1add = 139,
     op_1sub = 140,
-    op_2mul = 141,      // disabled
-    op_2div = 142,      // disabled
+    op_2mul = 141, // disabled
+    op_2div = 142, // disabled
     negate = 143,
     abs = 144,
     not_ = 145,
     op_0notequal = 146,
     add = 147,
     sub = 148,
-    mul = 149,          // disabled
-    div = 150,          // disabled
-    mod = 151,          // disabled
-    lshift = 152,       // disabled
-    rshift = 153,       // disabled
+    mul = 149,    // disabled
+    div = 150,    // disabled
+    mod = 151,    // disabled
+    lshift = 152, // disabled
+    rshift = 153, // disabled
     booland = 154,
     boolor = 155,
     numequal = 156,
@@ -135,8 +137,8 @@ enum class opcode : uint8_t
     checkmultisig = 174,
     checkmultisigverify = 175,
     op_nop1 = 176,
-    checklocktimeverify = 177,      // op_nop2
-    checkattenuationverify = 178,   // op_nop3
+    checklocktimeverify = 177,    // op_nop2
+    checkattenuationverify = 178, // op_nop3
     op_nop4 = 179,
     op_nop5 = 180,
     op_nop6 = 181,
@@ -174,8 +176,8 @@ enum script_context : uint32_t
 };
 
 BC_API std::string opcode_to_string(opcode value, uint32_t flags);
-BC_API opcode string_to_opcode(const std::string& value);
-BC_API opcode data_to_opcode(const data_chunk& value);
+BC_API opcode string_to_opcode(const std::string &value);
+BC_API opcode data_to_opcode(const data_chunk &value);
 
 } // namespace chain
 } // namespace libbitcoin

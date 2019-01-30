@@ -24,8 +24,10 @@
 #include <UChain/bitcoin/chain/point.hpp>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 struct BC_API spend
 {

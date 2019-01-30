@@ -34,36 +34,40 @@
 #include <UChainService/txs/uid/uid.hpp>
 
 // forward declaration
-namespace libbitcoin {
-namespace blockchain {
-    class block_chain_impl;
+namespace libbitcoin
+{
+namespace blockchain
+{
+class block_chain_impl;
 }
-}
+} // namespace libbitcoin
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class BC_API output
 {
-public:
+  public:
     typedef std::vector<output> list;
 
-    static output factory_from_data(const data_chunk& data);
-    static output factory_from_data(std::istream& stream);
-    static output factory_from_data(reader& source);
+    static output factory_from_data(const data_chunk &data);
+    static output factory_from_data(std::istream &stream);
+    static output factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
-    static bool is_valid_symbol(const std::string& symbol, uint32_t tx_version);
-    static bool is_valid_uid_symbol(const std::string& symbol,  bool check_sensitive = false);
-    static bool is_valid_candidate_symbol(const std::string& symbol,  bool check_sensitive = false);
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    static bool is_valid_symbol(const std::string &symbol, uint32_t tx_version);
+    static bool is_valid_uid_symbol(const std::string &symbol, bool check_sensitive = false);
+    static bool is_valid_candidate_symbol(const std::string &symbol, bool check_sensitive = false);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
     std::string to_string(uint32_t flags) const;
     bool is_valid() const;
-    code check_asset_address(bc::blockchain::block_chain_impl& chain) const;
+    code check_asset_address(bc::blockchain::block_chain_impl &chain) const;
     std::string get_script_address() const;
     void reset();
     uint64_t serialized_size() const;
@@ -78,7 +82,7 @@ public:
     std::string get_token_cert_owner() const;
     std::string get_token_cert_address() const;
     token_cert_type get_token_cert_type() const;
-    const data_chunk& get_attenuation_model_param() const;
+    const data_chunk &get_attenuation_model_param() const;
     bool is_token() const;
     bool is_vote() const;
     bool is_token_transfer() const;

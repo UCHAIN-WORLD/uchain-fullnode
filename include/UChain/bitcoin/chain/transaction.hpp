@@ -34,12 +34,15 @@
 #include <UChain/bitcoin/utility/thread.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
-enum transaction_version {
-    first = 1,   //the frist version
-    check_output_script = 2,   //add check output script
+enum transaction_version
+{
+    first = 1,               //the frist version
+    check_output_script = 2, //add check output script
     check_uid_testnet = 3,
     check_uid_feature = 4,
     max_version = 5
@@ -47,38 +50,38 @@ enum transaction_version {
 
 class BC_API transaction
 {
-public:
+  public:
     typedef std::vector<transaction> list;
     typedef std::shared_ptr<transaction> ptr;
     typedef std::vector<ptr> ptr_list;
     typedef std::vector<size_t> indexes;
 
-    static transaction factory_from_data(const data_chunk& data);
-    static transaction factory_from_data(std::istream& stream);
-    static transaction factory_from_data(reader& source);
+    static transaction factory_from_data(const data_chunk &data);
+    static transaction factory_from_data(std::istream &stream);
+    static transaction factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
 
     transaction();
-    transaction(const transaction& other);
-    transaction(uint32_t version, uint32_t locktime, const input::list& inputs,
-        const output::list& outputs);
+    transaction(const transaction &other);
+    transaction(uint32_t version, uint32_t locktime, const input::list &inputs,
+                const output::list &outputs);
 
-    transaction(transaction&& other);
-    transaction(uint32_t version, uint32_t locktime, input::list&& inputs,
-        output::list&& outputs);
+    transaction(transaction &&other);
+    transaction(uint32_t version, uint32_t locktime, input::list &&inputs,
+                output::list &&outputs);
 
     /// This class is move assignable [but not copy assignable].
-    transaction& operator=(transaction&& other);
+    transaction &operator=(transaction &&other);
 
     // TODO: eliminate blockchain transaction copies and then delete this.
-    transaction& operator=(const transaction& other) /*= delete*/;
+    transaction &operator=(const transaction &other) /*= delete*/;
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
     std::string to_string(uint32_t flags) const;
     bool is_valid() const;
     void reset();
@@ -112,7 +115,7 @@ public:
     input::list inputs;
     output::list outputs;
 
-private:
+  private:
     mutable upgrade_mutex mutex_;
     mutable std::shared_ptr<hash_digest> hash_;
 };

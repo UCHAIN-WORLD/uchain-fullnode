@@ -27,8 +27,10 @@
 #include <UChain/bitcoin/math/elliptic_curve.hpp>
 #include <UChain/bitcoin/math/hash.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 /// Differentiate subscription to payment address or stealth address.
 /// v2 (deprecated) requires an explicit subscription type.

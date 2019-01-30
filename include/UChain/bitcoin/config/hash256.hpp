@@ -26,15 +26,17 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/math/hash.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 /**
  * Serialization helper for a bitcoin 256 bit hash.
  */
 class BC_API hash256
 {
-public:
+  public:
     /**
      * A list of bitcoin 256 bit hashes.
      * This must provide operator<< for ostream in order to be used as a
@@ -51,19 +53,19 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    hash256(const hash256& other);
+    hash256(const hash256 &other);
 
     /**
      * Initialization constructor.
      * @param[in]  hexcode  The hash value in string hexidecimal form.
      */
-    hash256(const std::string& hexcode);
+    hash256(const std::string &hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The hash value to initialize with.
      */
-    hash256(const hash_digest& value);
+    hash256(const hash_digest &value);
 
     /**
      * Get the hash as a string.
@@ -75,13 +77,13 @@ public:
      * Override the equality operator.
      * @param[in]  other  The other object with which to compare.
      */
-    bool operator==(const hash256& other) const;
+    bool operator==(const hash256 &other) const;
 
     /**
      * Cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const hash_digest&() const;
+    operator const hash_digest &() const;
 
     /**
      * Define stream in. Throws if input is invalid.
@@ -89,8 +91,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        hash256& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    hash256 &argument);
 
     /**
      * Define stream out.
@@ -98,10 +100,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const hash256& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const hash256 &argument);
 
-private:
+  private:
     hash_digest value_;
 };
 

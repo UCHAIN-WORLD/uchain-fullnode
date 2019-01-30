@@ -27,16 +27,17 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/binary.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 /**
  * Serialization helper for base2 encoded data.
  */
 class BC_API base2
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -46,18 +47,18 @@ public:
      * Initialization constructor.
      * @param[in]  bin  The value to initialize with.
      */
-    base2(const std::string& binary);
+    base2(const std::string &binary);
 
     /**
      * @param[in]  value  The value to initialize with.
      */
-    base2(const binary& value);
+    base2(const binary &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    base2(const base2& other);
+    base2(const base2 &other);
 
     /**
      * Get number of bits in value.
@@ -68,7 +69,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type reference.
      */
-    operator const binary&() const;
+    operator const binary &() const;
 
     /**
      * Overload stream in. If input is invalid sets no bytes in argument.
@@ -76,8 +77,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        base2& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    base2 &argument);
 
     /**
      * Overload stream out.
@@ -85,11 +86,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const base2& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const base2 &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */
