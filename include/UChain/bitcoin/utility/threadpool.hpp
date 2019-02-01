@@ -28,35 +28,35 @@
 #include <UChain/bitcoin/utility/asio.hpp>
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * A collection of threads which can be passed operations through io_service.
  */
 class BC_API threadpool
 {
-public:
-
+  public:
     /**
      * Threadpool constructor. spawn()s number_threads threads.
      * @param[in]   number_threads  Number of threads to spawn.
      * @param[in]   priority        Priority of threads to spawn.
      */
-     threadpool(size_t number_threads=0,
-        thread_priority priority=thread_priority::normal);
+    threadpool(size_t number_threads = 0,
+               thread_priority priority = thread_priority::normal);
 
     ~threadpool();
 
-    threadpool(const threadpool&) = delete;
-    void operator=(const threadpool&) = delete;
+    threadpool(const threadpool &) = delete;
+    void operator=(const threadpool &) = delete;
 
     /**
      * Add n threads to this threadpool.
      * @param[in]   number_threads  Number of threads to add.
      * @param[in]   priority        Priority of threads to add.
      */
-    void spawn(size_t number_threads=1,
-        thread_priority priority=thread_priority::normal);
+    void spawn(size_t number_threads = 1,
+               thread_priority priority = thread_priority::normal);
 
     /**
      * Abandon outstanding operations without dispatching handlers.
@@ -89,15 +89,15 @@ public:
     /**
      * Underlying boost::io_service object.
      */
-    asio::service& service();
+    asio::service &service();
 
     /**
      * Underlying boost::io_service object.
      */
-    const asio::service& service() const;
+    const asio::service &service() const;
 
-private:
-    void spawn_once(thread_priority priority=thread_priority::normal);
+  private:
+    void spawn_once(thread_priority priority = thread_priority::normal);
 
     asio::service service_;
     std::vector<asio::thread> threads_;
@@ -107,4 +107,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

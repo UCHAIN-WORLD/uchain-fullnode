@@ -27,28 +27,29 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/assert.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // modified from boost.iostreams example
 // boost.org/doc/libs/1_55_0/libs/iostreams/doc/tutorial/container_source.html
 template <typename Container, typename SourceType, typename CharType>
 class BC_API container_source
 {
-public:
+  public:
     typedef CharType char_type;
     typedef boost::iostreams::source_tag category;
 
-    container_source(const Container& container)
-      : container_(container), position_(0)
+    container_source(const Container &container)
+        : container_(container), position_(0)
     {
         static_assert(sizeof(SourceType) == sizeof(CharType), "invalid size");
     }
 
-    std::streamsize read(char_type* buffer, std::streamsize size)
+    std::streamsize read(char_type *buffer, std::streamsize size)
     {
         const auto amount = container_.size() - position_;
         const auto result = std::min(size,
-            static_cast<std::streamsize>(amount));
+                                     static_cast<std::streamsize>(amount));
 
         // TODO: use ios eof symbol (template-based).
         if (result <= 0)
@@ -56,7 +57,7 @@ public:
 
         const auto value = static_cast<typename Container::size_type>(result);
         DEBUG_ONLY(const auto maximum =
-            std::numeric_limits<typename Container::size_type>::max());
+                       std::numeric_limits<typename Container::size_type>::max());
         BITCOIN_ASSERT(value < maximum);
         BITCOIN_ASSERT(position_ + value < maximum);
 
@@ -68,8 +69,8 @@ public:
         return result;
     }
 
-private:
-    const Container& container_;
+  private:
+    const Container &container_;
     typename Container::size_type position_;
 };
 
@@ -81,4 +82,3 @@ using data_source = boost::iostreams::stream<byte_source<data_chunk>>;
 } // namespace libbitcoin
 
 #endif
-

@@ -25,7 +25,8 @@
 #include <vector>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Join a list of strings into a single string, in order.
@@ -33,8 +34,8 @@ namespace libbitcoin {
  * @param[in]  delimiter  The delimiter, defaults to " ".
  * @return                The resulting string.
  */
-BC_API std::string join(const std::vector<std::string>& words,
-    const std::string& delimiter=" ");
+BC_API std::string join(const std::vector<std::string> &words,
+                        const std::string &delimiter = " ");
 
 /**
  * Split a list of strings into a string vector string, in order, white space
@@ -44,8 +45,8 @@ BC_API std::string join(const std::vector<std::string>& words,
  * @param[in]  trim       Trim the sentence for whitespace, defaults to true.
  * @return                The list of resulting strings.
  */
-BC_API std::vector<std::string> split(const std::string& sentence,
-    const std::string& delimiter=" ", bool trim=true);
+BC_API std::vector<std::string> split(const std::string &sentence,
+                                      const std::string &delimiter = " ", bool trim = true);
 
 } // namespace libbitcoin
 

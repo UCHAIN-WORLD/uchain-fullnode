@@ -24,18 +24,19 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 class BC_API conditional_lock
 {
-public:
+  public:
     /// Conditional lock using specified mutex pointer.
     conditional_lock(std::shared_ptr<shared_mutex> mutex_ptr);
 
     /// Unlock.
     ~conditional_lock();
 
-private:
+  private:
     const std::shared_ptr<shared_mutex> mutex_ptr_;
 };
 

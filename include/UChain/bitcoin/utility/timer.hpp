@@ -26,17 +26,18 @@
 
 // boost::timer::auto_cpu_timer requires the boost timer lib dependency.
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // From: github.com/picanumber/bureaucrat/blob/master/time_lapse.h
 
 /// Class to measure the execution time of a callable.
-template <typename Time = asio::milliseconds, class Clock=asio::steady_clock>
+template <typename Time = asio::milliseconds, class Clock = asio::steady_clock>
 struct timer
 {
     /// Returns the quantity (count) of the elapsed time as TimeT units.
-    template <typename Function, typename ...Args>
-    static typename Time::rep execution(Function func, Args&&... args)
+    template <typename Function, typename... Args>
+    static typename Time::rep execution(Function func, Args &&... args)
     {
         const auto start = Clock::now();
         func(std::forward<Args>(args)...);
@@ -47,7 +48,7 @@ struct timer
 
     /// Returns the duration (in chrono's type system) of the elapsed time.
     template <typename Function, typename... Args>
-    static Time duration(Function func, Args&&... args)
+    static Time duration(Function func, Args &&... args)
     {
         auto start = Clock::now();
         func(std::forward<Args>(args)...);

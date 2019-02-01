@@ -27,16 +27,17 @@
 #include <string>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /// A reference counting wrapper for closures placed on the asio work heap.
 class BC_API monitor
 {
-public:
+  public:
     typedef std::atomic<size_t> count;
     typedef std::shared_ptr<count> count_ptr;
 
-    monitor(count_ptr counter, const std::string& name);
+    monitor(count_ptr counter, const std::string &name);
     ~monitor();
 
     template <typename Handler>
@@ -46,9 +47,9 @@ public:
         handler();
     }
 
-    void trace(size_t count, const std::string& action) const;
+    void trace(size_t count, const std::string &action) const;
 
-private:
+  private:
     count_ptr counter_;
     const std::string name_;
 };

@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef  UC_SUBSCRIBER_HPP
-#define  UC_SUBSCRIBER_HPP
+#ifndef UC_SUBSCRIBER_HPP
+#define UC_SUBSCRIBER_HPP
 
 #include <functional>
 #include <memory>
@@ -32,18 +32,19 @@
 #include <UChain/bitcoin/utility/threadpool.hpp>
 ////#include <UChain/bitcoin/utility/track.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename... Args>
 class subscriber
-  : public enable_shared_from_base<subscriber<Args...>>
-    /*, track<subscriber<Args...>>*/
+    : public enable_shared_from_base<subscriber<Args...>>
+/*, track<subscriber<Args...>>*/
 {
-public:
-    typedef std::function<void (Args...)> handler;
+  public:
+    typedef std::function<void(Args...)> handler;
     typedef std::shared_ptr<subscriber<Args...>> ptr;
 
-    subscriber(threadpool& pool, const std::string& class_name);
+    subscriber(threadpool &pool, const std::string &class_name);
     ~subscriber();
 
     /// Enable new subscriptions.
@@ -61,7 +62,7 @@ public:
     /// Invoke and clear all handlers sequentially (non-blocking).
     void relay(Args... args);
 
-private:
+  private:
     typedef std::vector<handler> list;
 
     void do_invoke(Args... args);

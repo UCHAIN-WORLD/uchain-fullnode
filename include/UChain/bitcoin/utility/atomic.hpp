@@ -24,27 +24,27 @@
 #include <utility>
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename Type>
 class atomic
 {
-public:
-
+  public:
     /// Create an atomically-accessible default instance of the type.
     atomic()
     {
     }
 
     /// Create an atomically-accessible copied instance of the type.
-    atomic(const Type& instance)
-      : instance_(instance)
+    atomic(const Type &instance)
+        : instance_(instance)
     {
     }
 
     /// Create an atomically-accessible moved instance of the type.
-    atomic(Type&& instance)
-      : instance_(std::forward<Type>(instance))
+    atomic(Type &&instance)
+        : instance_(std::forward<Type>(instance))
     {
     }
 
@@ -58,7 +58,7 @@ public:
         ///////////////////////////////////////////////////////////////////////
     }
 
-    void store(const Type& instance)
+    void store(const Type &instance)
     {
         // Critical Section
         ///////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ public:
         ///////////////////////////////////////////////////////////////////////
     }
 
-private:
+  private:
     Type instance_;
     mutable shared_mutex mutex_;
 };

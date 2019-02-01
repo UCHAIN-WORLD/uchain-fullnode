@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef  UC_RESUBSCRIBER_HPP
-#define  UC_RESUBSCRIBER_HPP
+#ifndef UC_RESUBSCRIBER_HPP
+#define UC_RESUBSCRIBER_HPP
 
 #include <functional>
 #include <memory>
@@ -32,19 +32,20 @@
 #include <UChain/bitcoin/utility/threadpool.hpp>
 ////#include <UChain/bitcoin/utility/track.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename... Args>
 class resubscriber
-  : public enable_shared_from_base<resubscriber<Args...>>
-    /*, track<resubscriber<Args...>>*/
+    : public enable_shared_from_base<resubscriber<Args...>>
+/*, track<resubscriber<Args...>>*/
 {
-public:
-    typedef std::function<bool (Args...)> handler;
+  public:
+    typedef std::function<bool(Args...)> handler;
     typedef std::shared_ptr<resubscriber<Args...>> ptr;
 
     /// Construct an instance. The class_name is for debugging.
-    resubscriber(threadpool& pool, const std::string& class_name);
+    resubscriber(threadpool &pool, const std::string &class_name);
     ~resubscriber();
 
     /// Enable new subscriptions.
@@ -63,7 +64,7 @@ public:
     /// Invoke all handlers sequentially (non-blocking).
     void relay(Args... args);
 
-private:
+  private:
     typedef std::vector<handler> list;
 
     void do_invoke(Args... args);

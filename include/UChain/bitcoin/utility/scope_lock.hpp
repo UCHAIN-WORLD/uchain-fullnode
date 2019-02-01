@@ -25,22 +25,23 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // This is just unique_lock with a ptr member type, for convenience.
 class BC_API scope_lock
 {
-public:
+  public:
     typedef std::shared_ptr<scope_lock> ptr;
 
     /// Lock using the specified mutex reference.
-    scope_lock(shared_mutex& mutex);
+    scope_lock(shared_mutex &mutex);
 
     /// Unlock.
     ~scope_lock();
 
-private:
-    shared_mutex& mutex_;
+  private:
+    shared_mutex &mutex_;
 };
 
 } // namespace libbitcoin
