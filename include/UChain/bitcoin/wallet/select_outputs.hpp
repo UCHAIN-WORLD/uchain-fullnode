@@ -26,8 +26,10 @@
 #include <UChain/bitcoin/chain/output.hpp>
 #include <UChain/bitcoin/chain/point.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 struct BC_API select_outputs
 {
@@ -38,9 +40,9 @@ struct BC_API select_outputs
 
     /// Select optimal outpoints for a spend from unspent outputs list.
     /// Return includes the amount of change remaining from the spend.
-    static void select(chain::points_info& out,
-        chain::output_info::list unspent, uint64_t minimum_value,
-        algorithm option=algorithm::greedy);
+    static void select(chain::points_info &out,
+                       chain::output_info::list unspent, uint64_t minimum_value,
+                       algorithm option = algorithm::greedy);
 };
 
 } // namespace wallet

@@ -28,8 +28,10 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include <UChain/bitcoin/wallet/ec_public.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /// A constant used in key derivation.
 static BC_CONSTEXPR uint32_t hd_first_hardened_key = 1 << 31;
@@ -50,8 +52,8 @@ struct BC_API hd_lineage
     uint32_t parent_fingerprint;
     uint32_t child_number;
 
-    bool operator==(const hd_lineage& other) const;
-    bool operator!=(const hd_lineage& other) const;
+    bool operator==(const hd_lineage &other) const;
+    bool operator!=(const hd_lineage &other) const;
 };
 
 class hd_private;
@@ -59,7 +61,7 @@ class hd_private;
 /// An extended public key, as defined by BIP 32.
 class BC_API hd_public
 {
-public:
+  public:
     static const uint32_t mainnet;
 
     static inline uint32_t to_prefix(uint64_t prefixes)
@@ -69,41 +71,41 @@ public:
 
     /// Constructors.
     hd_public();
-    hd_public(const hd_public& other);
-    hd_public(const hd_key& public_key);
-    hd_public(const hd_key& public_key, uint32_t prefix);
-    hd_public(const std::string& encoded);
-    hd_public(const std::string& encoded, uint32_t prefix);
+    hd_public(const hd_public &other);
+    hd_public(const hd_key &public_key);
+    hd_public(const hd_key &public_key, uint32_t prefix);
+    hd_public(const std::string &encoded);
+    hd_public(const std::string &encoded, uint32_t prefix);
 
     /// Operators.
-    bool operator<(const hd_public& other) const;
-    bool operator==(const hd_public& other) const;
-    bool operator!=(const hd_public& other) const;
-    hd_public& operator=(const hd_public& other);
-    friend std::istream& operator>>(std::istream& in, hd_public& to);
-    friend std::ostream& operator<<(std::ostream& out,
-        const hd_public& of);
+    bool operator<(const hd_public &other) const;
+    bool operator==(const hd_public &other) const;
+    bool operator!=(const hd_public &other) const;
+    hd_public &operator=(const hd_public &other);
+    friend std::istream &operator>>(std::istream &in, hd_public &to);
+    friend std::ostream &operator<<(std::ostream &out,
+                                    const hd_public &of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const ec_compressed&() const;
+    operator const ec_compressed &() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const hd_chain_code& chain_code() const;
-    const hd_lineage& lineage() const;
-    const ec_compressed& point() const;
+    const hd_chain_code &chain_code() const;
+    const hd_lineage &lineage() const;
+    const ec_compressed &point() const;
 
     /// Methods.
     hd_key to_hd_key() const;
     hd_public derive_public(uint32_t index) const;
 
-protected:
+  protected:
     /// Factories.
-    static hd_public from_secret(const ec_secret& secret,
-        const hd_chain_code& chain_code, const hd_lineage& lineage);
+    static hd_public from_secret(const ec_secret &secret,
+                                 const hd_chain_code &chain_code, const hd_lineage &lineage);
 
     /// Helpers.
     uint32_t fingerprint() const;
@@ -115,14 +117,14 @@ protected:
     hd_lineage lineage_;
     ec_compressed point_;
 
-private:
-    static hd_public from_key(const hd_key& public_key);
-    static hd_public from_string(const std::string& encoded);
-    static hd_public from_key(const hd_key& public_key, uint32_t prefix);
-    static hd_public from_string(const std::string& encoded, uint32_t prefix);
+  private:
+    static hd_public from_key(const hd_key &public_key);
+    static hd_public from_string(const std::string &encoded);
+    static hd_public from_key(const hd_key &public_key, uint32_t prefix);
+    static hd_public from_string(const std::string &encoded, uint32_t prefix);
 
-    hd_public(const ec_compressed& point,
-        const hd_chain_code& chain_code, const hd_lineage& lineage);
+    hd_public(const ec_compressed &point,
+              const hd_chain_code &chain_code, const hd_lineage &lineage);
 };
 
 } // namespace wallet

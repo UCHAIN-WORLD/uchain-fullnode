@@ -31,28 +31,30 @@
 #include <UChain/bitcoin/wallet/stealth_address.hpp>
 #include <UChain/bitcoin/wallet/uri_reader.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /// A bitcoin URI corresponding to BIP 21 and BIP 72.
 /// The object is not constant, setters can change state after construction.
 class BC_API bitcoin_uri
-  : public uri_reader
+    : public uri_reader
 {
-public:
+  public:
     /// Constructors.
     bitcoin_uri();
-    bitcoin_uri(const bitcoin_uri& other);
-    bitcoin_uri(const std::string& uri, bool strict=true);
+    bitcoin_uri(const bitcoin_uri &other);
+    bitcoin_uri(const std::string &uri, bool strict = true);
 
     /// Operators.
-    bool operator<(const bitcoin_uri& other) const;
-    bool operator==(const bitcoin_uri& other) const;
-    bool operator!=(const bitcoin_uri& other) const;
-    bitcoin_uri& operator=(const bitcoin_uri& other);
-    friend std::istream& operator>>(std::istream& in, bitcoin_uri& to);
-    friend std::ostream& operator<<(std::ostream& out,
-        const bitcoin_uri& from);
+    bool operator<(const bitcoin_uri &other) const;
+    bool operator==(const bitcoin_uri &other) const;
+    bool operator!=(const bitcoin_uri &other) const;
+    bitcoin_uri &operator=(const bitcoin_uri &other);
+    friend std::istream &operator>>(std::istream &in, bitcoin_uri &to);
+    friend std::ostream &operator<<(std::ostream &out,
+                                    const bitcoin_uri &from);
 
     /// Test whether the URI has been initialized.
     operator const bool() const;
@@ -68,28 +70,28 @@ public:
     std::string address() const;
     payment_address payment() const;
     stealth_address stealth() const;
-    std::string parameter(const std::string& key) const;
+    std::string parameter(const std::string &key) const;
 
     /// Property setters.
     void set_amount(uint64_t satoshis);
-    void set_label(const std::string& label);
-    void set_message(const std::string& message);
-    void set_r(const std::string& r);
-    bool set_address(const std::string& address);
-    void set_address(const payment_address& payment);
-    void set_address(const stealth_address& stealth);
+    void set_label(const std::string &label);
+    void set_message(const std::string &message);
+    void set_r(const std::string &r);
+    bool set_address(const std::string &address);
+    void set_address(const payment_address &payment);
+    void set_address(const stealth_address &stealth);
 
     /// uri_reader implementation.
     void set_strict(bool strict);
-    bool set_scheme(const std::string& scheme);
-    bool set_authority(const std::string& authority);
-    bool set_path(const std::string& path);
-    bool set_fragment(const std::string& fragment);
-    bool set_parameter(const std::string& key, const std::string& value);
+    bool set_scheme(const std::string &scheme);
+    bool set_authority(const std::string &authority);
+    bool set_path(const std::string &path);
+    bool set_fragment(const std::string &fragment);
+    bool set_parameter(const std::string &key, const std::string &value);
 
-private:
+  private:
     /// Private helpers.
-    bool set_amount(const std::string& satoshis);
+    bool set_amount(const std::string &satoshis);
 
     /// Member state.
     bool strict_;
@@ -102,4 +104,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

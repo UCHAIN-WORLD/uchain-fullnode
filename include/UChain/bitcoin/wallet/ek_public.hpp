@@ -26,40 +26,42 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/wallet/encrypted_keys.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /// Use to pass an encrypted public key.
 class BC_API ek_public
 {
-public:
+  public:
     /// Constructors.
     ek_public();
-    ek_public(const std::string& encoded);
-    ek_public(const encrypted_public& key);
-    ek_public(const ek_public& other);
+    ek_public(const std::string &encoded);
+    ek_public(const encrypted_public &key);
+    ek_public(const ek_public &other);
 
     /// Operators.
-    bool operator<(const ek_public& other) const;
-    bool operator==(const ek_public& other) const;
-    bool operator!=(const ek_public& other) const;
-    ek_public& operator=(const ek_public& other);
-    friend std::istream& operator>>(std::istream& in, ek_public& to);
-    friend std::ostream& operator<<(std::ostream& out, const ek_public& of);
+    bool operator<(const ek_public &other) const;
+    bool operator==(const ek_public &other) const;
+    bool operator!=(const ek_public &other) const;
+    ek_public &operator=(const ek_public &other);
+    friend std::istream &operator>>(std::istream &in, ek_public &to);
+    friend std::ostream &operator<<(std::ostream &out, const ek_public &of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const encrypted_public&() const;
+    operator const encrypted_public &() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const encrypted_public& public_key() const;
+    const encrypted_public &public_key() const;
 
-private:
+  private:
     /// Factories.
-    static ek_public from_string(const std::string& encoded);
+    static ek_public from_string(const std::string &encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

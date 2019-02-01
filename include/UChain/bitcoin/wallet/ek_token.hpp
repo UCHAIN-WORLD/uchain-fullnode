@@ -26,42 +26,44 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/wallet/encrypted_keys.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /**
  * Serialization helper to convert between base58 string and bip38 token.
  */
 class BC_API ek_token
 {
-public:
+  public:
     /// Constructors.
     ek_token();
-    ek_token(const std::string& encoded);
-    ek_token(const encrypted_token& key);
-    ek_token(const ek_token& other);
+    ek_token(const std::string &encoded);
+    ek_token(const encrypted_token &key);
+    ek_token(const ek_token &other);
 
     /// Operators.
-    bool operator<(const ek_token& other) const;
-    bool operator==(const ek_token& other) const;
-    bool operator!=(const ek_token& other) const;
-    ek_token& operator=(const ek_token& other);
-    friend std::istream& operator>>(std::istream& in, ek_token& to);
-    friend std::ostream& operator<<(std::ostream& out, const ek_token& of);
+    bool operator<(const ek_token &other) const;
+    bool operator==(const ek_token &other) const;
+    bool operator!=(const ek_token &other) const;
+    ek_token &operator=(const ek_token &other);
+    friend std::istream &operator>>(std::istream &in, ek_token &to);
+    friend std::ostream &operator<<(std::ostream &out, const ek_token &of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const encrypted_token&() const;
+    operator const encrypted_token &() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const encrypted_token& token() const;
+    const encrypted_token &token() const;
 
-private:
+  private:
     /// Factories.
-    static ek_token from_string(const std::string& encoded);
+    static ek_token from_string(const std::string &encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

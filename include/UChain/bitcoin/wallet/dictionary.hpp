@@ -25,8 +25,10 @@
 #include <vector>
 #include <UChain/bitcoin/compat.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /**
  * A valid mnemonic dictionary has exactly this many words.
@@ -39,36 +41,36 @@ static BC_CONSTEXPR size_t dictionary_size = 2048;
  * This is a POD type, which means the compiler can write it directly
  * to static memory with no run-time overhead.
  */
-typedef std::array<const char*, dictionary_size> dictionary;
+typedef std::array<const char *, dictionary_size> dictionary;
 
 /**
  * A collection of candidate dictionaries for mnemonic validation.
  */
-typedef std::vector<const dictionary*> dictionary_list;
+typedef std::vector<const dictionary *> dictionary_list;
 
 namespace language
 {
-    // Individual built-in languages:
-    extern const dictionary en;
-    extern const dictionary es;
-    extern const dictionary ja;
-    extern const dictionary zh_Hans;
-    extern const dictionary zh_Hant;
+// Individual built-in languages:
+extern const dictionary en;
+extern const dictionary es;
+extern const dictionary ja;
+extern const dictionary zh_Hans;
+extern const dictionary zh_Hant;
 
-    // All built-in languages:
-    extern const dictionary_list all;
-}
+// All built-in languages:
+extern const dictionary_list all;
+} // namespace language
 
 namespace symbol
 {
-    // built in ban dict (upper case):
-    bool is_sensitive(const std::string& symbol);
+// built in ban dict (upper case):
+bool is_sensitive(const std::string &symbol);
 
-    // built in forbidden dict (upper case):
-    bool is_forbidden(const std::string& symbol);
+// built in forbidden dict (upper case):
+bool is_forbidden(const std::string &symbol);
 
-    // All built-in ban list:
-}
+// All built-in ban list:
+} // namespace symbol
 
 } // namespace wallet
 } // namespace libbitcoin
