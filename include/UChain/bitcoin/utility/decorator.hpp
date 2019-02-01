@@ -23,7 +23,8 @@
 
 #include <functional>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Defines a function decorator ala Python
@@ -42,7 +43,7 @@ struct decorator_dispatch
     Handler handler;
 
     template <typename... Args>
-    auto operator()(Args&&... args)
+    auto operator()(Args &&... args)
         -> decltype(wrapper(handler)(std::forward<Args>(args)...))
     {
         return wrapper(handler)(std::forward<Args>(args)...);
@@ -51,12 +52,11 @@ struct decorator_dispatch
 
 template <typename Wrapper, typename Handler>
 decorator_dispatch<Wrapper, typename std::decay<Handler>::type>
-decorator(Wrapper&& wrapper, Handler&& handler)
+decorator(Wrapper &&wrapper, Handler &&handler)
 {
-    return { wrapper, handler };
+    return {wrapper, handler};
 }
 
 } // namespace libbitcoin
 
 #endif
-

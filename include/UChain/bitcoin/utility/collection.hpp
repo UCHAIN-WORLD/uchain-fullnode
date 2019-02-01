@@ -28,7 +28,8 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 #define BC_SENTENCE_DELIMITER " "
 
@@ -40,7 +41,7 @@ namespace libbitcoin {
  * @returns              A new enumeration with elements cast to Target.
  */
 template <typename Source, typename Target>
-std::vector<Target> cast(const std::vector<Source>& source);
+std::vector<Target> cast(const std::vector<Source> &source);
 
 /**
  * Find the position of a pair in an ordered list.
@@ -50,7 +51,7 @@ std::vector<Target> cast(const std::vector<Source>& source);
  * @return             The position or -1 if not found.
  */
 template <typename Pair, typename Key>
-int find_pair_position(const std::vector<const Pair>& list, Key& key);
+int find_pair_position(const std::vector<const Pair> &list, Key &key);
 
 /**
  * Find the position of an element in an ordered list.
@@ -60,7 +61,7 @@ int find_pair_position(const std::vector<const Pair>& list, Key& key);
  * @return                The position or -1 if not found.
  */
 template <typename Element, typename Container>
-int find_position(const Container& list, const Element& value);
+int find_position(const Container &list, const Element &value);
 
 /**
  * Facilitate a list insertion sort by inserting into a sorted position.
@@ -72,8 +73,8 @@ int find_position(const Container& list, const Element& value);
  * @return                  The vector iterator.
  */
 template <typename Type, typename Predicate>
-typename std::vector<Type>::iterator insert_sorted(std::vector<Type>& list,
-    const Type& element, Predicate predicate);
+typename std::vector<Type>::iterator insert_sorted(std::vector<Type> &list,
+                                                   const Type &element, Predicate predicate);
 
 /**
  * Move members of a source list to end of a target list. Source is cleared.
@@ -82,7 +83,7 @@ typename std::vector<Type>::iterator insert_sorted(std::vector<Type>& list,
  * @param[in]  source     The source list
  */
 template <typename Type>
-void move_append(std::vector<Type>& target, std::vector<Type>& source);
+void move_append(std::vector<Type> &target, std::vector<Type> &source);
 
 /////**
 //// * Reverse a list, returning the new list.
@@ -95,7 +96,8 @@ void move_append(std::vector<Type>& target, std::vector<Type>& source);
 
 } // namespace libbitcoin
 
-namespace std {
+namespace std
+{
 
 /**
  * Make vectors of serializable elements serializable to std::ostream.
@@ -105,7 +107,7 @@ namespace std {
  * @return             The output stream.
  */
 template <class Type>
-std::ostream& operator<<(std::ostream& output, const std::vector<Type>& list);
+std::ostream &operator<<(std::ostream &output, const std::vector<Type> &list);
 
 } // namespace std
 

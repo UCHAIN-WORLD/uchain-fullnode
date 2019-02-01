@@ -31,7 +31,8 @@
 #include <UChain/bitcoin/utility/threadpool.hpp>
 #include <UChain/bitcoin/utility/work.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 #define FORWARD_ARGS(args) \
     std::forward<Args>(args)...
@@ -52,8 +53,8 @@ namespace libbitcoin {
 /// If the ios service is stopped jobs will not be dispatched.
 class BC_API dispatcher
 {
-public:
-    dispatcher(threadpool& pool, const std::string& name);
+  public:
+    dispatcher(threadpool &pool, const std::string &name);
 
     size_t ordered_backlog();
     size_t unordered_backlog();
@@ -62,21 +63,22 @@ public:
 
     /// Invokes a job on the current thread.
     template <typename... Args>
-    static void bound(Args&&... args)
+    static void bound(Args &&... args)
     {
-        BIND_ARGS(args)();
+        BIND_ARGS(args)
+        ();
     }
 
     /// Posts a job to the service. Concurrent and not ordered.
     template <typename... Args>
-    void concurrent(Args&&... args)
+    void concurrent(Args &&... args)
     {
         heap_.concurrent(BIND_ARGS(args));
     }
 
     /// Post a job to the strand. Ordered and not concurrent.
     template <typename... Args>
-    void ordered(Args&&... args)
+    void ordered(Args &&... args)
     {
         heap_.ordered(BIND_ARGS(args));
     }
@@ -84,67 +86,55 @@ public:
     /// Posts a strand-wrapped job to the service. Not ordered or concurrent.
     /// The wrap provides non-concurrency, order is prevented by service post.
     template <typename... Args>
-    void unordered(Args&&... args)
+    void unordered(Args &&... args)
     {
         heap_.unordered(BIND_ARGS(args));
     }
 
     /// Returns a delegate that will execute the job on the current thread.
     template <typename... Args>
-    static auto bound_delegate(Args&&... args) ->
-        delegates::bound<decltype(BIND_ARGS(args))>
+    static auto bound_delegate(Args &&... args) -> delegates::bound<decltype(BIND_ARGS(args))>
     {
-        return
-        {
-            BIND_ARGS(args)
-        };
+        return {
+            BIND_ARGS(args)};
     }
 
     /// Returns a delegate that will post the job via the service.
     template <typename... Args>
-    auto concurrent_delegate(Args&&... args) ->
-        delegates::concurrent<decltype(BIND_ARGS(args))>
+    auto concurrent_delegate(Args &&... args) -> delegates::concurrent<decltype(BIND_ARGS(args))>
     {
-        return
-        {
+        return {
             BIND_ARGS(args),
-            heap_
-        };
+            heap_};
     }
 
     /// Returns a delegate that will post the job via the strand.
     template <typename... Args>
-    auto ordered_delegate(Args&&... args) ->
-        delegates::ordered<decltype(BIND_ARGS(args))>
+    auto ordered_delegate(Args &&... args) -> delegates::ordered<decltype(BIND_ARGS(args))>
     {
-        return
-        {
+        return {
             BIND_ARGS(args),
-            heap_
-        };
+            heap_};
     }
 
     /// Returns a delegate that will post a wrapped job via the service.
     template <typename... Args>
-    auto unordered_delegate(Args&&... args) ->
-        delegates::unordered<decltype(BIND_ARGS(args))>
+    auto unordered_delegate(Args &&... args) -> delegates::unordered<decltype(BIND_ARGS(args))>
     {
-        return
-        {
+        return {
             BIND_ARGS(args),
-            heap_
-        };
+            heap_};
     }
 
     /// Executes multiple identical jobs concurrently until one completes.
     template <typename Count, typename Handler, typename... Args>
-    void race(Count count, const std::string& name, Handler&& handler,
-        Args... args)
+    void race(Count count, const std::string &name, Handler &&handler,
+              Args... args)
     {
         // The first fail will also terminate race and return the code.
         static const size_t clearance_count = 1;
         const auto call = synchronize(FORWARD_HANDLER(handler),
-            clearance_count, name, false);
+                                      clearance_count, name, false);
 
         for (Count iteration = 0; iteration < count; ++iteration)
             concurrent(BIND_RACE(args, call));
@@ -152,45 +142,44 @@ public:
 
     /// Executes the job against each member of a collection concurrently.
     template <typename Element, typename Handler, typename... Args>
-    void parallel(const std::vector<Element>& collection,
-        const std::string& name, Handler&& handler, Args... args)
+    void parallel(const std::vector<Element> &collection,
+                  const std::string &name, Handler &&handler, Args... args)
     {
         // Failures are suppressed, success always returned to handler.
         const auto call = synchronize(FORWARD_HANDLER(handler),
-            collection.size(), name, true);
+                                      collection.size(), name, true);
 
-        for (const auto& element: collection)
+        for (const auto &element : collection)
             concurrent(BIND_ELEMENT(args, element, call));
     }
 
     /// Disperses the job against each member of a collection without order.
     template <typename Element, typename Handler, typename... Args>
-    void disperse(const std::vector<Element>& collection,
-        const std::string& name, Handler&& handler, Args... args)
+    void disperse(const std::vector<Element> &collection,
+                  const std::string &name, Handler &&handler, Args... args)
     {
         // Failures are suppressed, success always returned to handler.
         const auto call = synchronize(FORWARD_HANDLER(handler),
-            collection.size(), name, true);
+                                      collection.size(), name, true);
 
-        for (const auto& element: collection)
+        for (const auto &element : collection)
             unordered(BIND_ELEMENT(args, element, call));
     }
 
     /// Disperses the job against each member of a collection with order.
     template <typename Element, typename Handler, typename... Args>
-    void serialize(const std::vector<Element>& collection,
-        const std::string& name, Handler&& handler, Args... args)
+    void serialize(const std::vector<Element> &collection,
+                   const std::string &name, Handler &&handler, Args... args)
     {
         // Failures are suppressed, success always returned to handler.
         const auto call = synchronize(FORWARD_HANDLER(handler),
-            collection.size(), name, true);
+                                      collection.size(), name, true);
 
-        for (const auto& element: collection)
+        for (const auto &element : collection)
             ordered(BIND_ELEMENT(args, element, call));
     }
 
-private:
-
+  private:
     // This is thread safe.
     work heap_;
 };

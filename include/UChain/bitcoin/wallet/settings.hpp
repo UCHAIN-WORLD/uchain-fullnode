@@ -24,8 +24,10 @@
 #include <cstdint>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 struct BC_API settings
 {
@@ -37,7 +39,7 @@ struct BC_API settings
     uint64_t public_key_hd;
 };
 
-} // namespace network
+} // namespace wallet
 } // namespace libbitcoin
 
 #endif

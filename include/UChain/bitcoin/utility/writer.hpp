@@ -29,20 +29,21 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include <UChain/bitcoin/utility/variable_uint_size.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 class BC_API writer
 {
-public:
+  public:
     virtual operator bool() const = 0;
     virtual bool operator!() const = 0;
 
     virtual void write_byte(uint8_t value) = 0;
-    virtual void write_data(const data_chunk& data) = 0;
-    virtual void write_data(const uint8_t* data, size_t size) = 0;
-    virtual void write_hash(const hash_digest& value) = 0;
-    virtual void write_short_hash(const short_hash& value) = 0;
-    virtual void write_mini_hash(const mini_hash& value) = 0;
+    virtual void write_data(const data_chunk &data) = 0;
+    virtual void write_data(const uint8_t *data, size_t size) = 0;
+    virtual void write_hash(const hash_digest &value) = 0;
+    virtual void write_short_hash(const short_hash &value) = 0;
+    virtual void write_mini_hash(const mini_hash &value) = 0;
 
     // These write data in little endian format:
     virtual void write_2_bytes_little_endian(uint16_t value) = 0;
@@ -59,12 +60,12 @@ public:
     /**
      * Write a fixed size string padded with zeroes.
      */
-    virtual void write_fixed_string(const std::string& value, size_t size) = 0;
+    virtual void write_fixed_string(const std::string &value, size_t size) = 0;
 
     /**
      * Write a variable length string.
      */
-    virtual void write_string(const std::string& value) = 0;
+    virtual void write_string(const std::string &value) = 0;
 };
 
 } // namespace libbitcoin

@@ -25,8 +25,10 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/wallet/uri.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /**
  * Interface for URI deserialization.
@@ -35,8 +37,7 @@ namespace wallet {
  */
 class BC_API uri_reader
 {
-public:
-
+  public:
     /**
      * Parses any URI string into its individual components.
      * @param[in]  uri     The URI to parse.
@@ -45,7 +46,7 @@ public:
      * according to the  `UriReader`.
      */
     template <class UriReader>
-    static UriReader parse(const std::string& uri, bool strict=true)
+    static UriReader parse(const std::string &uri, bool strict = true)
     {
         bc::wallet::uri parsed;
         if (!parsed.decode(uri, strict))
@@ -64,10 +65,10 @@ public:
             return UriReader();
 
         const auto query = parsed.decode_query();
-        for (const auto& term: query)
+        for (const auto &term : query)
         {
-            const auto& key = term.first;
-            const auto& value = term.second;
+            const auto &key = term.first;
+            const auto &value = term.second;
             if (!key.empty() && !out.set_parameter(key, value))
                 return UriReader();
         }
@@ -77,12 +78,12 @@ public:
 
     /// uri_reader interface.
     virtual void set_strict(bool strict) = 0;
-    virtual bool set_scheme(const std::string& scheme) = 0;
-    virtual bool set_authority(const std::string& authority) = 0;
-    virtual bool set_path(const std::string& path) = 0;
-    virtual bool set_fragment(const std::string& fragment) = 0;
-    virtual bool set_parameter(const std::string& key,
-        const std::string& value) = 0;
+    virtual bool set_scheme(const std::string &scheme) = 0;
+    virtual bool set_authority(const std::string &authority) = 0;
+    virtual bool set_path(const std::string &path) = 0;
+    virtual bool set_fragment(const std::string &fragment) = 0;
+    virtual bool set_parameter(const std::string &key,
+                               const std::string &value) = 0;
 };
 
 } // namespace wallet

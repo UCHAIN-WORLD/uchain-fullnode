@@ -25,7 +25,8 @@
 #include <boost/thread.hpp>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 enum class thread_priority
 {

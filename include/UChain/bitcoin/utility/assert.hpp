@@ -22,14 +22,14 @@
 #define UC_ASSERT_HPP
 
 #ifdef NDEBUG
-    #define BITCOIN_ASSERT(expression)
-    #define BITCOIN_ASSERT_MSG(expression, text)
-    #define DEBUG_ONLY(expression)
+#define BITCOIN_ASSERT(expression)
+#define BITCOIN_ASSERT_MSG(expression, text)
+#define DEBUG_ONLY(expression)
 #else
-    #include <cassert>
-    #define BITCOIN_ASSERT(expression) assert(expression)
-    #define BITCOIN_ASSERT_MSG(expression, text) assert((expression)&&(text))
-    #define DEBUG_ONLY(expression) expression
+#include <cassert>
+#define BITCOIN_ASSERT(expression) assert(expression)
+#define BITCOIN_ASSERT_MSG(expression, text) assert((expression) && (text))
+#define DEBUG_ONLY(expression) expression
 #endif
 
 // This is used to prevent bogus compiler warnings about unused variables.

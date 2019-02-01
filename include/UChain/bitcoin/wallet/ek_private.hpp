@@ -26,40 +26,42 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/wallet/encrypted_keys.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /// Use to pass an encrypted private key.
 class BC_API ek_private
 {
-public:
+  public:
     /// Constructors.
     ek_private();
-    ek_private(const std::string& encoded);
-    ek_private(const encrypted_private& key);
-    ek_private(const ek_private& other);
+    ek_private(const std::string &encoded);
+    ek_private(const encrypted_private &key);
+    ek_private(const ek_private &other);
 
     /// Operators.
-    bool operator<(const ek_private& other) const;
-    bool operator==(const ek_private& other) const;
-    bool operator!=(const ek_private& other) const;
-    ek_private& operator=(const ek_private& other);
-    friend std::istream& operator>>(std::istream& in, ek_private& to);
-    friend std::ostream& operator<<(std::ostream& out, const ek_private& of);
+    bool operator<(const ek_private &other) const;
+    bool operator==(const ek_private &other) const;
+    bool operator!=(const ek_private &other) const;
+    ek_private &operator=(const ek_private &other);
+    friend std::istream &operator>>(std::istream &in, ek_private &to);
+    friend std::ostream &operator<<(std::ostream &out, const ek_private &of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const encrypted_private&() const;
+    operator const encrypted_private &() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const encrypted_private& private_key() const;
+    const encrypted_private &private_key() const;
 
-private:
+  private:
     /// Factories.
-    static ek_private from_string(const std::string& encoded);
+    static ek_private from_string(const std::string &encoded);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

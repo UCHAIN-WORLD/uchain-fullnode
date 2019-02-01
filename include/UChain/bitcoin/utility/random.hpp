@@ -26,7 +26,8 @@
 #include <UChain/bitcoin/utility/asio.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Generate a pseudo random number within the domain.
@@ -44,7 +45,7 @@ BC_API uint64_t nonzero_pseudo_random();
  * Fill a buffer with randomness using the default random engine.
  * @param[in]  chunk  The buffer to fill with randomness.
  */
-BC_API void pseudo_random_fill(data_chunk& chunk);
+BC_API void pseudo_random_fill(data_chunk &chunk);
 
 /**
  * Convert a time duration to a value in the range [max/ratio, max].
@@ -53,8 +54,8 @@ BC_API void pseudo_random_fill(data_chunk& chunk);
  *                      portion of the maximum duration.
  * @return              The randomized duration.
  */
-BC_API asio::duration pseudo_randomize(const asio::duration& maximum,
-    uint8_t ratio=2);
+BC_API asio::duration pseudo_randomize(const asio::duration &maximum,
+                                       uint8_t ratio = 2);
 
 } // namespace libbitcoin
 

@@ -27,27 +27,28 @@
 #include <UChain/bitcoin/utility/assert.hpp>
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // It is not possible for this class to produce a deadlock.
 
 template <typename Handler>
 class synchronizer
 {
-public:
+  public:
     synchronizer(Handler handler, size_t clearance_count,
-        const std::string& name, bool suppress_errors)
-      : handler_(handler),
-        name_(name),
-        clearance_count_(clearance_count),
-        counter_(std::make_shared<size_t>(0)),
-        mutex_(std::make_shared<upgrade_mutex>()),
-        suppress_errors_(suppress_errors)
+                 const std::string &name, bool suppress_errors)
+        : handler_(handler),
+          name_(name),
+          clearance_count_(clearance_count),
+          counter_(std::make_shared<size_t>(0)),
+          mutex_(std::make_shared<upgrade_mutex>()),
+          suppress_errors_(suppress_errors)
     {
     }
 
     template <typename... Args>
-    void operator()(const code& ec, Args&&... args)
+    void operator()(const code &ec, Args &&... args)
     {
         // Critical Section
         ///////////////////////////////////////////////////////////////////////
@@ -82,7 +83,7 @@ public:
         }
     }
 
-private:
+  private:
     Handler handler_;
     const std::string name_;
     const size_t clearance_count_;
@@ -95,12 +96,12 @@ private:
 
 template <typename Handler>
 synchronizer<Handler> synchronize(Handler handler, size_t clearance_count,
-    const std::string& name, bool suppress_errors=false)
+                                  const std::string &name, bool suppress_errors = false)
 {
     return synchronizer<Handler>(handler, clearance_count, name,
-        suppress_errors);
+                                 suppress_errors);
 }
 
-} // libbitcoin
+} // namespace libbitcoin
 
 #endif

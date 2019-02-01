@@ -30,13 +30,15 @@
 #include <UChain/bitcoin/utility/binary.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /// A class for working with stealth payment addresses.
 class BC_API stealth_address
 {
-public:
+  public:
     /// DEPRECATED: we intend to make p2kh same as payment address versions.
     static const uint8_t mainnet_p2kh;
     static const uint8_t reuse_key_flag;
@@ -44,21 +46,21 @@ public:
 
     /// Constructors.
     stealth_address();
-    stealth_address(const data_chunk& decoded);
-    stealth_address(const std::string& encoded);
-    stealth_address(const stealth_address& other);
-    stealth_address(const binary& filter, const ec_compressed& scan_key,
-        const point_list& spend_keys, uint8_t signatures=0,
-        uint8_t version=mainnet_p2kh);
+    stealth_address(const data_chunk &decoded);
+    stealth_address(const std::string &encoded);
+    stealth_address(const stealth_address &other);
+    stealth_address(const binary &filter, const ec_compressed &scan_key,
+                    const point_list &spend_keys, uint8_t signatures = 0,
+                    uint8_t version = mainnet_p2kh);
 
     /// Operators.
-    bool operator<(const stealth_address& other) const;
-    bool operator==(const stealth_address& other) const;
-    bool operator!=(const stealth_address& other) const;
-    stealth_address& operator=(const stealth_address& other);
-    friend std::istream& operator>>(std::istream& in, stealth_address& to);
-    friend std::ostream& operator<<(std::ostream& out,
-        const stealth_address& of);
+    bool operator<(const stealth_address &other) const;
+    bool operator==(const stealth_address &other) const;
+    bool operator!=(const stealth_address &other) const;
+    stealth_address &operator=(const stealth_address &other);
+    friend std::istream &operator>>(std::istream &in, stealth_address &to);
+    friend std::ostream &operator<<(std::ostream &out,
+                                    const stealth_address &of);
 
     /// Cast operators.
     operator bool() const;
@@ -69,31 +71,30 @@ public:
 
     /// Accessors.
     uint8_t version() const;
-    const ec_compressed& scan_key() const;
-    const point_list& spend_keys() const;
+    const ec_compressed &scan_key() const;
+    const point_list &spend_keys() const;
     uint8_t signatures() const;
-    const binary& filter() const;
+    const binary &filter() const;
 
     /// Methods.
     data_chunk to_chunk() const;
 
-private:
+  private:
     /// Factories.
-    static stealth_address from_string(const std::string& encoded);
-    static stealth_address from_stealth(const data_chunk& decoded);
-    static stealth_address from_stealth(const binary& filter,
-        const ec_compressed& scan_key, const point_list& spend_keys,
-        uint8_t signatures, uint8_t version);
+    static stealth_address from_string(const std::string &encoded);
+    static stealth_address from_stealth(const data_chunk &decoded);
+    static stealth_address from_stealth(const binary &filter,
+                                        const ec_compressed &scan_key, const point_list &spend_keys,
+                                        uint8_t signatures, uint8_t version);
 
     /// Parameter order is used to change the constructor signature.
-    stealth_address(uint8_t version, const binary& filter,
-        const ec_compressed& scan_key, const point_list& spend_keys,
-        uint8_t signatures);
+    stealth_address(uint8_t version, const binary &filter,
+                    const ec_compressed &scan_key, const point_list &spend_keys,
+                    uint8_t signatures);
 
     /// Helpers.
     bool reuse_key() const;
     uint8_t options() const;
-
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

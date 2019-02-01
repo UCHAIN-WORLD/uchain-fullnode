@@ -24,13 +24,14 @@
 #include <exception>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 class BC_API end_of_stream
-  : std::exception
+    : std::exception
 {
 };
 
-}
+} // namespace libbitcoin
 
 #endif

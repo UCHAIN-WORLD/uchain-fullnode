@@ -29,7 +29,8 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Serializer that uses iterators and is oblivious to the underlying
@@ -49,20 +50,20 @@ namespace libbitcoin {
  */
 template <typename Iterator>
 class serializer
-  : public writer
+    : public writer
 {
-public:
+  public:
     serializer(const Iterator begin);
 
     operator bool() const;
     bool operator!() const;
     void write_byte(uint8_t value);
-    void write_data(const data_chunk& data);
-    void write_data(const uint8_t* data, size_t size);
-    void write_error_code(const code& ec);
-    void write_hash(const hash_digest& hash);
-    void write_short_hash(const short_hash& hash);
-    void write_mini_hash(const mini_hash& hash);
+    void write_data(const data_chunk &data);
+    void write_data(const uint8_t *data, size_t size);
+    void write_error_code(const code &ec);
+    void write_hash(const hash_digest &hash);
+    void write_short_hash(const short_hash &hash);
+    void write_mini_hash(const mini_hash &hash);
 
     // These write data in little endian format:
     void write_2_bytes_little_endian(uint16_t value);
@@ -102,17 +103,17 @@ public:
      * Encodes a list of bytes.
      */
     template <typename T>
-    void write_data(const T& data);
+    void write_data(const T &data);
 
     /**
      * Write a fixed size string padded with zeroes.
      */
-    void write_fixed_string(const std::string& value, size_t size);
+    void write_fixed_string(const std::string &value, size_t size);
 
     /**
      * Write a variable length string.
      */
-    void write_string(const std::string& value);
+    void write_string(const std::string &value);
 
     /**
      * Returns underlying iterator.
@@ -125,9 +126,9 @@ public:
      */
     void set_iterator(Iterator iterator);
 
-private:
+  private:
     template <typename T>
-    void write_data_reverse(const T& data);
+    void write_data_reverse(const T &data);
 
     Iterator iterator_;
 };

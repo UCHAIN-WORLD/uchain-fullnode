@@ -31,14 +31,14 @@
 template <class Shared>
 class track
 {
-public:
+  public:
     static std::atomic<size_t> instances;
 
-protected:
-    track(const std::string& class_name);
+  protected:
+    track(const std::string &class_name);
     ~track();
 
-private:
+  private:
     const std::string class_;
 #ifndef NDEBUG
     std::size_t count_;

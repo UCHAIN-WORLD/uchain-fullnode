@@ -30,8 +30,10 @@
 #include <UChain/bitcoin/math/hash.hpp>
 #include <UChain/bitcoin/wallet/ec_public.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 class payment_address;
 
@@ -45,7 +47,7 @@ typedef byte_array<wif_compressed_size> wif_compressed;
 /// Use to pass an ec secret with compresson and version information.
 class BC_API ec_private
 {
-public:
+  public:
     // WIF carries a compression flag for payment address generation but
     // assumes a mapping to payment address version. This is insufficient
     // as a parameterized mapping is required, so we use the same technique as
@@ -74,33 +76,33 @@ public:
 
     /// Constructors.
     ec_private();
-    ec_private(const ec_private& other);
-    ec_private(const std::string& wif, uint8_t version=mainnet_p2kh);
-    ec_private(const wif_compressed& wif, uint8_t version=mainnet_p2kh);
-    ec_private(const wif_uncompressed& wif, uint8_t version=mainnet_p2kh);
+    ec_private(const ec_private &other);
+    ec_private(const std::string &wif, uint8_t version = mainnet_p2kh);
+    ec_private(const wif_compressed &wif, uint8_t version = mainnet_p2kh);
+    ec_private(const wif_uncompressed &wif, uint8_t version = mainnet_p2kh);
 
     /// The version is 16 bits. The most significant byte is the WIF prefix and
     /// the least significant byte is the address perfix. 0x8000 by default.
-    ec_private(const ec_secret& secret, uint16_t version=mainnet,
-        bool compress=true);
+    ec_private(const ec_secret &secret, uint16_t version = mainnet,
+               bool compress = true);
 
     /// Operators.
-    bool operator<(const ec_private& other) const;
-    bool operator==(const ec_private& other) const;
-    bool operator!=(const ec_private& other) const;
-    ec_private& operator=(const ec_private& other);
-    friend std::istream& operator>>(std::istream& in, ec_private& to);
-    friend std::ostream& operator<<(std::ostream& out, const ec_private& of);
+    bool operator<(const ec_private &other) const;
+    bool operator==(const ec_private &other) const;
+    bool operator!=(const ec_private &other) const;
+    ec_private &operator=(const ec_private &other);
+    friend std::istream &operator>>(std::istream &in, ec_private &to);
+    friend std::ostream &operator<<(std::ostream &out, const ec_private &of);
 
     /// Cast operators.
     operator const bool() const;
-    operator const ec_secret&() const;
+    operator const ec_secret &() const;
 
     /// Serializer.
     std::string encoded() const;
 
     /// Accessors.
-    const ec_secret& secret() const;
+    const ec_secret &secret() const;
     const uint16_t version() const;
     const uint8_t payment_version() const;
     const uint8_t wif_version() const;
@@ -110,14 +112,14 @@ public:
     ec_public to_public() const;
     payment_address to_payment_address() const;
 
-private:
+  private:
     /// Validators.
     static bool is_wif(data_slice decoded);
 
     /// Factories.
-    static ec_private from_string(const std::string& wif, uint8_t version);
-    static ec_private from_compressed(const wif_compressed& wif, uint8_t version);
-    static ec_private from_uncompressed(const wif_uncompressed& wif, uint8_t version);
+    static ec_private from_string(const std::string &wif, uint8_t version);
+    static ec_private from_compressed(const wif_compressed &wif, uint8_t version);
+    static ec_private from_uncompressed(const wif_uncompressed &wif, uint8_t version);
 
     /// Members.
     /// These should be const, apart from the need to implement assignment.

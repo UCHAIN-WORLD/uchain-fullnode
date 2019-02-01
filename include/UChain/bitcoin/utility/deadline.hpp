@@ -30,7 +30,8 @@
 #include <UChain/bitcoin/utility/thread.hpp>
 #include <UChain/bitcoin/utility/threadpool.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Class wrapper for boost::asio::deadline_timer, thread safe.
@@ -38,22 +39,23 @@ namespace libbitcoin {
  * makes timer firing and cancellation conditions safer.
  */
 class BC_API deadline
-  : public enable_shared_from_base<deadline>, track<deadline>
+    : public enable_shared_from_base<deadline>,
+      track<deadline>
 {
-public:
+  public:
     typedef std::shared_ptr<deadline> ptr;
-    typedef std::function<void(const code&)> handler;
+    typedef std::function<void(const code &)> handler;
 
     /**
      * Construct a deadline timer.
      * @param[in]  pool      The thread pool used by the timer.
      * @param[in]  duration  The default time period from start to expiration.
      */
-    deadline(threadpool& pool, const asio::duration duration);
+    deadline(threadpool &pool, const asio::duration duration);
 
     /// This class is not copyable.
-    deadline(const deadline&) = delete;
-    void operator=(const deadline&) = delete;
+    deadline(const deadline &) = delete;
+    void operator=(const deadline &) = delete;
 
     /**
      * Start or restart the timer.
@@ -77,8 +79,8 @@ public:
      */
     void stop();
 
-private:
-    void handle_timer(const boost_code& ec, handler handle) const;
+  private:
+    void handle_timer(const boost_code &ec, handler handle) const;
 
     asio::timer timer_;
     asio::duration duration_;

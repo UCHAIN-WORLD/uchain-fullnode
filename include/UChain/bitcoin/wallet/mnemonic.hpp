@@ -31,8 +31,10 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include <UChain/bitcoin/wallet/dictionary.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 /**
  * A valid mnemonic word count is evenly divisible by this number.
@@ -55,26 +57,26 @@ typedef std::vector<std::string> word_list;
  * creation. Entropy byte count must be evenly divisible by 4.
  */
 BC_API word_list create_mnemonic(data_slice entropy,
-    const dictionary &lexicon=language::en);
+                                 const dictionary &lexicon = language::en);
 
 /**
  * Checks a mnemonic against a dictionary to determine if the
  * words are spelled correctly and the checksum matches.
  * The words must have been created using mnemonic encoding.
  */
-BC_API bool validate_mnemonic(const word_list& mnemonic,
-    const dictionary &lexicon);
+BC_API bool validate_mnemonic(const word_list &mnemonic,
+                              const dictionary &lexicon);
 
 /**
  * Checks that a mnemonic is valid in at least one of the provided languages.
  */
-BC_API bool validate_mnemonic(const word_list& mnemonic,
-    const dictionary_list& lexicons=language::all);
+BC_API bool validate_mnemonic(const word_list &mnemonic,
+                              const dictionary_list &lexicons = language::all);
 
 /**
  * Convert a mnemonic with no passphrase to a wallet-generation seed.
  */
-BC_API long_hash decode_mnemonic(const word_list& mnemonic);
+BC_API long_hash decode_mnemonic(const word_list &mnemonic);
 
 #ifdef WITH_ICU
 
@@ -82,8 +84,8 @@ BC_API long_hash decode_mnemonic(const word_list& mnemonic);
  * Convert a mnemonic and passphrase to a wallet-generation seed.
  * Any passphrase can be used and will change the resulting seed.
  */
-BC_API long_hash decode_mnemonic(const word_list& mnemonic,
-    const std::string& passphrase);
+BC_API long_hash decode_mnemonic(const word_list &mnemonic,
+                                 const std::string &passphrase);
 
 #endif
 

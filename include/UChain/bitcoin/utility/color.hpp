@@ -25,7 +25,8 @@
 #include <UChain/bitcoin/compat.hpp>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 struct BC_API color
 {
