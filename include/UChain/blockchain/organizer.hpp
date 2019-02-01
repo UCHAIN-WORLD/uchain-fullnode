@@ -34,8 +34,10 @@
 #include <UChain/bitcoin/math/hash.hpp>
 #include <boost/thread.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 // TODO: This is not an interface, collapse with organizer_impl.
 
@@ -43,17 +45,17 @@ namespace blockchain {
 /// Structure which organises the blocks from the orphan pool to the blockchain.
 class BCB_API organizer
 {
-public:
+  public:
     typedef handle0 result_handler;
     typedef std::shared_ptr<organizer> ptr;
     typedef message::block_message::ptr_list list;
-    typedef resubscriber<const code&, uint64_t, const list&, const list&>
+    typedef resubscriber<const code &, uint64_t, const list &, const list &>
         reorganize_subscriber;
-    typedef std::function<bool(const code&, uint64_t, const list&, const list&)>
+    typedef std::function<bool(const code &, uint64_t, const list &, const list &)>
         reorganize_handler;
 
     /// Construct an instance.
-    organizer(threadpool& pool, simple_chain& chain, const settings& settings);
+    organizer(threadpool &pool, simple_chain &chain, const settings &settings);
 
     /// This method is NOT thread safe.
     virtual void organize();
@@ -66,38 +68,38 @@ public:
 
     void fired();
     std::unordered_map<hash_digest, uint64_t> get_fork_chain_last_block_hashes();
-    void add_fork_chain_hash(const hash_digest&);
-    void delete_fork_chain_hash(const hash_digest&);
+    void add_fork_chain_hash(const hash_digest &);
+    void delete_fork_chain_hash(const hash_digest &);
 
-protected:
+  protected:
     virtual bool stopped();
 
-private:
+  private:
     typedef block_detail::list detail_list;
 
-    static uint64_t count_inputs(const chain::block& block);
+    static uint64_t count_inputs(const chain::block &block);
 
     bool strict(uint64_t fork_point) const;
 
     /// These methods are NOT thread safe.
     virtual code verify(uint64_t fork_index,
-        const block_detail::list& orphan_chain, uint64_t orphan_index);
+                        const block_detail::list &orphan_chain, uint64_t orphan_index);
     void process(block_detail::ptr process_block);
-    void replace_chain(uint64_t fork_index, detail_list& orphan_chain);
+    void replace_chain(uint64_t fork_index, detail_list &orphan_chain);
     void remove_processed(block_detail::ptr remove_block);
-    void clip_orphans(detail_list& orphan_chain, uint64_t orphan_index,
-        const code& invalid_reason);
+    void clip_orphans(detail_list &orphan_chain, uint64_t orphan_index,
+                      const code &invalid_reason);
 
     /// This method is thread safe.
     void notify_reorganize(uint64_t fork_point,
-        const detail_list& orphan_chain, const detail_list& replaced_chain);
+                           const detail_list &orphan_chain, const detail_list &replaced_chain);
 
     std::atomic<bool> stopped_;
     const bool use_testnet_rules_;
     const config::checkpoint::list checkpoints_;
 
     // These are protected by the caller protecting organize().
-    simple_chain& chain_;
+    simple_chain &chain_;
     block_detail::list process_queue_;
 
     // These are thread safe.

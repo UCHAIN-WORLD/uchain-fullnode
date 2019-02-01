@@ -27,21 +27,23 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/blockchain/define.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 /// A block with metadata.
 /// This class is thread safe though property consistency is not guaranteed.
 class BCB_API block_detail
 {
-public:
+  public:
     typedef std::shared_ptr<block_detail> ptr;
     typedef std::vector<block_detail::ptr> list;
     typedef message::block_message::ptr block_ptr;
 
     /// Construct a block detail instance.
     block_detail(block_ptr actual_block);
-    block_detail(chain::block&& actual_block);
+    block_detail(chain::block &&actual_block);
 
     block_ptr actual() const;
 
@@ -54,7 +56,7 @@ public:
     uint64_t height() const;
 
     /// Set the validation failure code.
-    void set_error(const code& code);
+    void set_error(const code &code);
     code error() const;
 
     /// This method is thread safe.
@@ -65,7 +67,7 @@ public:
     void set_is_checked_work_proof(bool is_checked);
     bool get_is_checked_work_proof() const;
 
-private:
+  private:
     bc::atomic<code> code_;
     std::atomic<bool> processed_;
     std::atomic<uint64_t> height_;

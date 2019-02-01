@@ -27,49 +27,54 @@
 
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
-    namespace blockchain {
-        enum class auth_type: uint8_t  {
-            AUTH_PASSWD = 0,
-            AUTH_LASTWD = 1,
+namespace libbitcoin
+{
+namespace blockchain
+{
+enum class auth_type : uint8_t
+{
+    AUTH_PASSWD = 0,
+    AUTH_LASTWD = 1,
 
-            AUTH_TYPE_CNT,
-        };
+    AUTH_TYPE_CNT,
+};
 
-        struct WalletInfo {
-            uint8_t counter;
-            uint32_t lock_start;
+struct WalletInfo
+{
+    uint8_t counter;
+    uint32_t lock_start;
 
-            void lock();
-        };
+    void lock();
+};
 
-        class wallet_security_strategy {
-        public:
-            static wallet_security_strategy* get_instance();
+class wallet_security_strategy
+{
+  public:
+    static wallet_security_strategy *get_instance();
 
-            void check_locked(const std::string &wallet_name);
-            void on_auth_passwd(const std::string &wallet_name, const bool &result);
-            void on_auth_lastwd(const std::string &wallet_name, const bool &result);
+    void check_locked(const std::string &wallet_name);
+    void on_auth_passwd(const std::string &wallet_name, const bool &result);
+    void on_auth_lastwd(const std::string &wallet_name, const bool &result);
 
-        private:
-            wallet_security_strategy(const uint8_t &passwd_max_try, const uint8_t &lastwd_max_try, const uint32_t &max_lock_time);
-            virtual ~wallet_security_strategy();
+  private:
+    wallet_security_strategy(const uint8_t &passwd_max_try, const uint8_t &lastwd_max_try, const uint32_t &max_lock_time);
+    virtual ~wallet_security_strategy();
 
-            wallet_security_strategy(const wallet_security_strategy&) = delete;
-            void operator=(const wallet_security_strategy&) = delete;
+    wallet_security_strategy(const wallet_security_strategy &) = delete;
+    void operator=(const wallet_security_strategy &) = delete;
 
-            void on_auth(const std::string &wallet_name, const bool &result, const auth_type &type);
+    void on_auth(const std::string &wallet_name, const bool &result, const auth_type &type);
 
-            const uint8_t MAX_TRY[static_cast<uint8_t>(auth_type::AUTH_TYPE_CNT)];
-            const uint32_t MAX_LOCK_TIME; //seconds
+    const uint8_t MAX_TRY[static_cast<uint8_t>(auth_type::AUTH_TYPE_CNT)];
+    const uint32_t MAX_LOCK_TIME; //seconds
 
-            std::map<const std::string, WalletInfo> acc_info_[static_cast<uint8_t>(auth_type::AUTH_TYPE_CNT)];
+    std::map<const std::string, WalletInfo> acc_info_[static_cast<uint8_t>(auth_type::AUTH_TYPE_CNT)];
 
-            mutable shared_mutex mutex_;
+    mutable shared_mutex mutex_;
 
-            static wallet_security_strategy* instance;
-        };
+    static wallet_security_strategy *instance;
+};
 
-    }
-}
+} // namespace blockchain
+} // namespace libbitcoin
 #endif //UChain_WALLET_SECURITY_STRATEGY_HPP

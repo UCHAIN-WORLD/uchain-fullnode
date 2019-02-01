@@ -26,7 +26,8 @@
 #include <boost/system/error_code.hpp>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /// Console result codes, positive values are domain-specific.
 enum console_result : int
@@ -43,7 +44,8 @@ typedef std::error_code code;
 /// Alias for boost error code declarations.
 typedef boost::system::error_code boost_code;
 
-namespace error {
+namespace error
+{
 
 // The numeric values of these codes may change without notice.
 enum error_code_t
@@ -51,27 +53,27 @@ enum error_code_t
     success = 0,
 
     // network errors
-    service_stopped,                // 1
+    service_stopped, // 1
     operation_failed,
 
     // blockchain errors
     not_found,
     duplicate,
-    unspent_output,                 // 5
+    unspent_output, // 5
     unsupported_script_pattern,
 
     // network errors (more)
     resolve_failed,
     network_unreachable,
     address_in_use,
-    listen_failed,                  // 10
+    listen_failed, // 10
     accept_failed,
     bad_stream,
     channel_timeout,
 
     // transaction pool
     blockchain_reorganized,
-    pool_filled,                    // 15
+    pool_filled, // 15
 
     // validate tx
     coinbase_transaction,
@@ -85,7 +87,7 @@ enum error_code_t
     empty_transaction,
     output_value_overflow,
     invalid_coinbase_script_size,
-    previous_output_null,           // 25
+    previous_output_null, // 25
     script_not_standard,
     transaction_version_error,
 
@@ -94,26 +96,26 @@ enum error_code_t
 
     // check_block()
     size_limits,
-    proof_of_work,                  // 30
+    proof_of_work, // 30
     futuristic_timestamp,
     first_not_coinbase,
     extra_coinbases,
     too_many_sigs,
-    merkle_mismatch,                // 35
+    merkle_mismatch, // 35
 
     // accept_block()
     incorrect_proof_of_work,
     timestamp_too_early,
     non_final_transaction,
     checkpoints_failed,
-    old_version_block,              // 40
+    old_version_block, // 40
     coinbase_height_mismatch,
 
     // connect_block()
     duplicate_or_spent,
     validate_inputs_failed,
     fees_out_of_range,
-    coinbase_too_large,             // 45
+    coinbase_too_large, // 45
     invalid_coinage_reward_coinbase,
     invalid_quantity_or_value,
 
@@ -125,38 +127,38 @@ enum error_code_t
 
     // network errors (more)
     address_blocked,
-    channel_stopped,                // 50
+    channel_stopped, // 50
     not_satisfied,
     mock,
 
     // token check
     token_amount_overflow,
     token_amount_not_equal,
-    token_symbol_not_match,         // 55
+    token_symbol_not_match, // 55
     token_symbol_invalid,
     token_address_not_match,
     token_exist,
     token_not_exist,
-    token_issue_error,              // 60
+    token_issue_error, // 60
     token_secondaryissue_error,
     token_secondaryissue_share_not_enough,
     token_secondaryissue_threshold_invalid,
 
     //syn block
     fetch_more_block,
-    bad_magic,                      // 65
+    bad_magic, // 65
 
     // uid check
     uid_symbol_not_match,
     uid_symbol_invalid,
     uid_exist,
-    address_registered_uid,         // 70
-    uid_func_not_actived,           
+    address_registered_uid, // 70
+    uid_func_not_actived,
     uid_address_not_match,
     uid_address_needed,
     uid_not_exist,
     uid_multi_type_exist,
-    uid_input_error,                // 75
+    uid_input_error, // 75
     uid_in_candidate,
     attenuation_model_param_error,
 
@@ -164,13 +166,13 @@ enum error_code_t
     token_cert_error,
     token_cert_exist,
     token_cert_not_exist,
-    token_cert_not_owned,           // 80
+    token_cert_not_owned, // 80
     token_cert_not_provided,
     token_cert_issue_error,
     token_uid_registerr_not_match,
 
     asset_invalid,
-    uid_feature_not_activated,     // 85
+    uid_feature_not_activated, // 85
 
     // identifier token
     candidate_error,
@@ -192,22 +194,23 @@ enum error_condition_t
 
 BC_API code make_error_code(error_code_t e);
 BC_API std::error_condition make_error_condition(error_condition_t e);
-BC_API error_code_t boost_to_error_code(const boost_code& ec);
+BC_API error_code_t boost_to_error_code(const boost_code &ec);
 
 } // namespace error
 } // namespace libbitcoin
 
-namespace std {
+namespace std
+{
 
 template <>
 struct is_error_code_enum<bc::error::error_code_t>
-  : public true_type
+    : public true_type
 {
 };
 
 template <>
 struct is_error_condition_enum<bc::error::error_condition_t>
-  : public true_type
+    : public true_type
 {
 };
 

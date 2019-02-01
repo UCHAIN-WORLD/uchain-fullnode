@@ -32,14 +32,14 @@
 // BCB_INTERNAL is used for non-api symbols.
 
 #if defined BCB_STATIC
-    #define BCB_API
-    #define BCB_INTERNAL
+#define BCB_API
+#define BCB_INTERNAL
 #elif defined BCB_DLL
-    #define BCB_API      BC_HELPER_DLL_EXPORT
-    #define BCB_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCB_API BC_HELPER_DLL_EXPORT
+#define BCB_INTERNAL BC_HELPER_DLL_LOCAL
 #else
-    #define BCB_API      BC_HELPER_DLL_IMPORT
-    #define BCB_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCB_API BC_HELPER_DLL_IMPORT
+#define BCB_INTERNAL BC_HELPER_DLL_LOCAL
 #endif
 
 // Now we use the generic helper definitions in libbitcoin to

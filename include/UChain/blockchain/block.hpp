@@ -26,8 +26,10 @@
 #include <UChain/blockchain/define.hpp>
 #include <UChain/bitcoin/chain/header.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 BCB_API u256 block_work(u256 bits);
 

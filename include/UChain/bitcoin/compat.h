@@ -22,17 +22,17 @@
 #define UC_COMPAT_H
 
 #ifdef _MSC_VER
-    /* There is no <endian.h> for MSVC but it is always little endian. */
-    #ifndef __LITTLE_ENDIAN__
-        # undef __BIG_ENDIAN__
-        # define __LITTLE_ENDIAN__
-    #endif
+/* There is no <endian.h> for MSVC but it is always little endian. */
+#ifndef __LITTLE_ENDIAN__
+#undef __BIG_ENDIAN__
+#define __LITTLE_ENDIAN__
+#endif
 #endif
 
 #ifdef _MSC_VER
-    #define BC_C_INLINE __inline
+#define BC_C_INLINE __inline
 #else
-    #define BC_C_INLINE inline
+#define BC_C_INLINE inline
 #endif
 
 #endif
