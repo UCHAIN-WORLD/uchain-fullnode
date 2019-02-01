@@ -26,13 +26,15 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/blockchain/define.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 /// Common database configuration settings, properties not thread safe.
 class BCB_API settings
 {
-public:
+  public:
     settings();
     settings(bc::settings context);
 

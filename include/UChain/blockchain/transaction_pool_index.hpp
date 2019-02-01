@@ -29,23 +29,25 @@
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/block_chain.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 /// This class is thread safe.
 class BCB_API transaction_pool_index
 {
-public:
+  public:
     typedef handle0 completion_handler;
     typedef handle2<chain::spend_info::list, chain::output_info::list>
         query_handler;
     typedef block_chain::history_fetch_handler fetch_handler;
 
-    transaction_pool_index(threadpool& pool, block_chain& blockchain);
+    transaction_pool_index(threadpool &pool, block_chain &blockchain);
 
     /// This class is not copyable.
-    transaction_pool_index(const transaction_pool_index&) = delete;
-    void operator=(const transaction_pool_index&) = delete;
+    transaction_pool_index(const transaction_pool_index &) = delete;
+    void operator=(const transaction_pool_index &) = delete;
 
     /// Start the transaction pool.
     void start();
@@ -53,16 +55,16 @@ public:
     /// Signal stop of current work, speeds shutdown.
     void stop();
 
-    void fetch_all_history(const bc::wallet::payment_address& address,
-        size_t limit, size_t from_height, fetch_handler handler);
+    void fetch_all_history(const bc::wallet::payment_address &address,
+                           size_t limit, size_t from_height, fetch_handler handler);
 
-    void fetch_index_history(const bc::wallet::payment_address& address,
-        query_handler handler);
+    void fetch_index_history(const bc::wallet::payment_address &address,
+                             query_handler handler);
 
-    void add(const chain::transaction& tx, completion_handler handler);
-    void remove(const chain::transaction& tx, completion_handler handler);
+    void add(const chain::transaction &tx, completion_handler handler);
+    void remove(const chain::transaction &tx, completion_handler handler);
 
-private:
+  private:
     typedef chain::spend_info spend_info;
     typedef chain::output_info output_info;
     typedef chain::history_compact::list history_list;
@@ -70,24 +72,24 @@ private:
     typedef std::unordered_multimap<payment_address, spend_info> spends_map;
     typedef std::unordered_multimap<payment_address, output_info> outputs_map;
 
-    static bool exists(history_list& history, const spend_info& spend);
-    static bool exists(history_list& history, const output_info& output);
-    static void add(history_list& history, const spend_info& spend);
-    static void add(history_list& history, const output_info& output);
-    static void add(history_list& history, const spend_info::list& spends);
-    static void add(history_list& history, const output_info::list& outputs);
-    static void index_history_fetched(const code& ec,
-        const spend_info::list& spends, const output_info::list& outputs,
-        const history_list& history, fetch_handler handler);
+    static bool exists(history_list &history, const spend_info &spend);
+    static bool exists(history_list &history, const output_info &output);
+    static void add(history_list &history, const spend_info &spend);
+    static void add(history_list &history, const output_info &output);
+    static void add(history_list &history, const spend_info::list &spends);
+    static void add(history_list &history, const output_info::list &outputs);
+    static void index_history_fetched(const code &ec,
+                                      const spend_info::list &spends, const output_info::list &outputs,
+                                      const history_list &history, fetch_handler handler);
 
-    void blockchain_history_fetched(const code& ec,
-        const history_list& history, const bc::wallet::payment_address& address,
-        fetch_handler handler);
+    void blockchain_history_fetched(const code &ec,
+                                    const history_list &history, const bc::wallet::payment_address &address,
+                                    fetch_handler handler);
 
-    void do_add(const chain::transaction& tx, completion_handler handler);
-    void do_remove(const chain::transaction& tx, completion_handler handler);
-    void do_fetch(const bc::wallet::payment_address& payaddr,
-        query_handler handler);
+    void do_add(const chain::transaction &tx, completion_handler handler);
+    void do_remove(const chain::transaction &tx, completion_handler handler);
+    void do_fetch(const bc::wallet::payment_address &payaddr,
+                  query_handler handler);
 
     // This is protected by mutex.
     spends_map spends_map_;
@@ -99,7 +101,7 @@ private:
 
     // These are thread safe.
     dispatcher dispatch_;
-    block_chain& blockchain_;
+    block_chain &blockchain_;
     std::atomic<bool> stopped_;
 };
 

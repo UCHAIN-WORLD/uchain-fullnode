@@ -28,14 +28,16 @@
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/block_detail.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 /// This class is thread safe.
 /// An unordered memory pool for orphan blocks.
 class BCB_API orphan_pool
 {
-public:
+  public:
     typedef std::shared_ptr<orphan_pool> ptr;
 
     orphan_pool(size_t capacity);
@@ -55,19 +57,19 @@ public:
     /// Get the set of unprocessed orphans.
     block_detail::list unprocessed() const;
 
-    bool add_pending_block(const hash_digest& needed_block, const block_detail::ptr& pending_block);
-    block_detail::ptr delete_pending_block(const hash_digest& needed_block);
+    bool add_pending_block(const hash_digest &needed_block, const block_detail::ptr &pending_block);
+    block_detail::ptr delete_pending_block(const hash_digest &needed_block);
 
-private:
-//    typedef boost::circular_buffer<block_detail::ptr> buffer;
+  private:
+    //    typedef boost::circular_buffer<block_detail::ptr> buffer;
     typedef std::vector<block_detail::ptr> buffer;
     typedef buffer::const_iterator const_iterator;
     typedef buffer::const_reverse_iterator const_reverse_iterator;
 
-    bool exists(const hash_digest& hash) const;
-    bool exists(const chain::header& header) const;
-    const_iterator find(buffer::const_iterator begin, const hash_digest& hash) const;
-    const_reverse_iterator rfind(buffer::const_reverse_iterator begin, const hash_digest& hash) const;
+    bool exists(const hash_digest &hash) const;
+    bool exists(const chain::header &header) const;
+    const_iterator find(buffer::const_iterator begin, const hash_digest &hash) const;
+    const_reverse_iterator rfind(buffer::const_reverse_iterator begin, const hash_digest &hash) const;
 
     // The buffer is protected by mutex.
     buffer buffer_;
