@@ -29,7 +29,8 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include <UChain/bitcoin/utility/reader.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Deserializer that uses iterators and is oblivious to the underlying
@@ -52,9 +53,9 @@ namespace libbitcoin {
  */
 template <typename Iterator, bool SafeCheckLast>
 class deserializer
-  : public reader
+    : public reader
 {
-public:
+  public:
     deserializer(const Iterator begin, const Iterator end);
 
     operator bool() const;
@@ -63,7 +64,7 @@ public:
     bool is_exhausted() const;
     uint8_t read_byte();
     data_chunk read_data(size_t size);
-    size_t read_data(uint8_t* data, size_t size);
+    size_t read_data(uint8_t *data, size_t size);
     code read_error_code();
     data_chunk read_data_to_eof();
     hash_digest read_hash();
@@ -142,10 +143,10 @@ public:
         return end_;
     }
 
-private:
+  private:
     // The compiler will optimise out calls to this function if !SafeCheckLast.
     static void check_distance(Iterator it, const Iterator end,
-        size_t distance);
+                               size_t distance);
 
     Iterator iterator_;
     const Iterator end_;
@@ -157,7 +158,7 @@ private:
  */
 template <typename Iterator>
 deserializer<Iterator, true> make_deserializer(const Iterator begin,
-    const Iterator end);
+                                               const Iterator end);
 
 /**
  * Faster deserializer with no bounds checking.
@@ -170,4 +171,3 @@ deserializer<Iterator, false> make_deserializer_unsafe(const Iterator begin);
 #include <UChain/bitcoin/impl/utility/deserializer.ipp>
 
 #endif
-

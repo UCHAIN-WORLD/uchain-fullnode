@@ -28,8 +28,10 @@
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/block_chain.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 /**
  * Fetch a block by height.
@@ -40,11 +42,11 @@ namespace blockchain {
  * @param[in]   height          Height of block to fetch.
  * @param[in]   handle_fetch    Completion handler for fetch operation.
  */
-BCB_API void fetch_block(block_chain& chain, uint64_t height,
-    block_chain::block_fetch_handler handle_fetch);
+BCB_API void fetch_block(block_chain &chain, uint64_t height,
+                         block_chain::block_fetch_handler handle_fetch);
 
-BCB_API void fetch_latest_transactions(block_chain& chain, uint64_t height,
-    uint32_t index, uint32_t count, block_chain::transactions_fetch_handler handle_fetch);
+BCB_API void fetch_latest_transactions(block_chain &chain, uint64_t height,
+                                       uint32_t index, uint32_t count, block_chain::transactions_fetch_handler handle_fetch);
 /**
  * Fetch a block by hash.
  *
@@ -54,11 +56,10 @@ BCB_API void fetch_latest_transactions(block_chain& chain, uint64_t height,
  * @param[in]   hash            Block hash
  * @param[in]   handle_fetch    Completion handler for fetch operation.
  */
-BCB_API void fetch_block(block_chain& chain, const hash_digest& hash,
-    block_chain::block_fetch_handler handle_fetch);
+BCB_API void fetch_block(block_chain &chain, const hash_digest &hash,
+                         block_chain::block_fetch_handler handle_fetch);
 
 } // namespace blockchain
 } // namespace libbitcoin
 
 #endif
-

@@ -25,7 +25,8 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <typename T, typename Iterator>
 T from_big_endian(Iterator start, Iterator end);
@@ -40,10 +41,10 @@ template <typename T, typename Iterator>
 T from_little_endian_unsafe(Iterator in);
 
 template <typename T>
-T from_big_endian_stream_unsafe(std::istream& stream);
+T from_big_endian_stream_unsafe(std::istream &stream);
 
 template <typename T>
-T from_little_endian_stream_unsafe(std::istream& stream);
+T from_little_endian_stream_unsafe(std::istream &stream);
 
 template <typename T>
 byte_array<sizeof(T)> to_big_endian(T n);

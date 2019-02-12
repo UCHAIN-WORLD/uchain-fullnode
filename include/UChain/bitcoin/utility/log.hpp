@@ -27,11 +27,12 @@
 #include <string>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 class BC_API log
 {
-public:
+  public:
     enum class level
     {
         trace,
@@ -43,11 +44,11 @@ public:
         null
     };
 
-    typedef std::function<void(level, const std::string&, const std::string&)>
+    typedef std::function<void(level, const std::string &, const std::string &)>
         functor;
 
-    log(level value, const std::string& domain);
-    log(log&& other);
+    log(level value, const std::string &domain);
+    log(log &&other);
     ~log();
 
     /// Clear all log configuration.
@@ -57,15 +58,15 @@ public:
     static std::string to_text(level value);
 
     // Stream to these functions.
-    static log trace(const std::string& domain);
-    static log debug(const std::string& domain);
-    static log info(const std::string& domain);
-    static log warning(const std::string& domain);
-    static log error(const std::string& domain);
-    static log fatal(const std::string& domain);
+    static log trace(const std::string &domain);
+    static log debug(const std::string &domain);
+    static log info(const std::string &domain);
+    static log warning(const std::string &domain);
+    static log error(const std::string &domain);
+    static log fatal(const std::string &domain);
 
     template <typename Type>
-    log& operator<<(Type const& value)
+    log &operator<<(Type const &value)
     {
         stream_ << value;
         return *this;
@@ -74,18 +75,18 @@ public:
     /// Set the output functor for this log instance.
     void set_output_function(functor value);
 
-private:
+  private:
     typedef std::map<level, functor> destinations;
 
-    static void output_ignore(level value, const std::string& domain,
-        const std::string& body);
-    static void output_cout(level value, const std::string& domain,
-        const std::string& body);
-    static void output_cerr(level value, const std::string& domain,
-        const std::string& body);
+    static void output_ignore(level value, const std::string &domain,
+                              const std::string &body);
+    static void output_cout(level value, const std::string &domain,
+                            const std::string &body);
+    static void output_cerr(level value, const std::string &domain,
+                            const std::string &body);
 
-    static void to_stream(std::ostream& out, level value,
-        const std::string& domain, const std::string& body);
+    static void to_stream(std::ostream &out, level value,
+                          const std::string &domain, const std::string &body);
 
     static destinations destinations_;
 

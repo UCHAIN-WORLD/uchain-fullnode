@@ -29,8 +29,10 @@
 
 // Convenience namespace for commonly used boost asio aliases.
 
-namespace libbitcoin {
-namespace asio {
+namespace libbitcoin
+{
+namespace asio
+{
 
 namespace error = boost::asio::error;
 

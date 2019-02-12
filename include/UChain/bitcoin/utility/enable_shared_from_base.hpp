@@ -23,14 +23,15 @@
 
 #include <memory>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /// Because enable_shared_from_this doesn't support inheritance.
 template <class Base>
 class enable_shared_from_base
     : public std::enable_shared_from_this<Base>
 {
-protected:
+  protected:
     template <class Derived>
     std::shared_ptr<Derived> shared_from_base()
     {

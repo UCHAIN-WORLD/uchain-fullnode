@@ -28,8 +28,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/blockchain/define.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 class organizer;
 
@@ -38,7 +40,7 @@ class organizer;
 /// Implementations are expected to be thread safe.
 class BCB_API block_chain
 {
-public:
+  public:
     typedef handle0 result_handler;
     typedef handle0 block_import_handler;
     typedef handle1<uint64_t> block_store_handler;
@@ -58,83 +60,84 @@ public:
     typedef handle1<chain::stealth_compact::list> stealth_fetch_handler;
     typedef handle2<uint64_t, uint64_t> transaction_index_fetch_handler;
 
-    typedef std::function<bool(const code&, uint64_t,
-        const message::block_message::ptr_list&,
-        const message::block_message::ptr_list&)> reorganize_handler;
+    typedef std::function<bool(const code &, uint64_t,
+                               const message::block_message::ptr_list &,
+                               const message::block_message::ptr_list &)>
+        reorganize_handler;
 
     virtual bool start() = 0;
     virtual bool stop() = 0;
     virtual bool close() = 0;
 
     virtual void store(message::block_message::ptr block,
-        block_store_handler handler) = 0;
+                       block_store_handler handler) = 0;
 
     virtual void fetch_block(uint64_t height,
-        block_fetch_handler handler) = 0;
-    virtual void fetch_block(const hash_digest& hash,
-        block_fetch_handler handler) = 0;
+                             block_fetch_handler handler) = 0;
+    virtual void fetch_block(const hash_digest &hash,
+                             block_fetch_handler handler) = 0;
 
     virtual void fetch_block_header(uint64_t height,
-        block_header_fetch_handler handler) = 0;
-    virtual void fetch_block_headers(uint64_t start, 
-        uint64_t end, bool order, locator_block_headers_fetch_handler handler, uint32_t count = 0) = 0;
-    virtual void fetch_block_header(const hash_digest& hash,
-        block_header_fetch_handler handler) = 0;
+                                    block_header_fetch_handler handler) = 0;
+    virtual void fetch_block_headers(uint64_t start,
+                                     uint64_t end, bool order, locator_block_headers_fetch_handler handler, uint32_t count = 0) = 0;
+    virtual void fetch_block_header(const hash_digest &hash,
+                                    block_header_fetch_handler handler) = 0;
 
     virtual void fetch_merkle_block(uint64_t height,
-        merkle_block_fetch_handler handler) = 0;
-    virtual void fetch_merkle_block(const hash_digest& hash,
-        merkle_block_fetch_handler handler) = 0;
+                                    merkle_block_fetch_handler handler) = 0;
+    virtual void fetch_merkle_block(const hash_digest &hash,
+                                    merkle_block_fetch_handler handler) = 0;
 
     virtual void fetch_block_transaction_hashes(uint64_t height,
-        transaction_hashes_fetch_handler handler) = 0;
-    virtual void fetch_block_transaction_hashes(const hash_digest& hash,
-        transaction_hashes_fetch_handler handler) = 0;
+                                                transaction_hashes_fetch_handler handler) = 0;
+    virtual void fetch_block_transaction_hashes(const hash_digest &hash,
+                                                transaction_hashes_fetch_handler handler) = 0;
 
     virtual void fetch_block_locator(block_locator_fetch_handler handler) = 0;
 
-    virtual void fetch_locator_block_hashes(const message::get_blocks& locator,
-        const hash_digest& threshold, size_t limit,
-        locator_block_hashes_fetch_handler handler) = 0;
+    virtual void fetch_locator_block_hashes(const message::get_blocks &locator,
+                                            const hash_digest &threshold, size_t limit,
+                                            locator_block_hashes_fetch_handler handler) = 0;
 
     virtual void fetch_locator_block_headers(
-        const message::get_headers& locator, const hash_digest& threshold,
+        const message::get_headers &locator, const hash_digest &threshold,
         size_t limit, locator_block_headers_fetch_handler handler) = 0;
 
-    virtual void fetch_block_height(const hash_digest& hash,
-        block_height_fetch_handler handler) = 0;
+    virtual void fetch_block_height(const hash_digest &hash,
+                                    block_height_fetch_handler handler) = 0;
 
     virtual void fetch_last_height(last_height_fetch_handler handler) = 0;
 
-    virtual void fetch_transaction(const hash_digest& hash,
-        transaction_fetch_handler handler) = 0;
+    virtual void fetch_transaction(const hash_digest &hash,
+                                   transaction_fetch_handler handler) = 0;
 
-    virtual void fetch_transaction_index(const hash_digest& hash,
-        transaction_index_fetch_handler handler) = 0;
+    virtual void fetch_transaction_index(const hash_digest &hash,
+                                         transaction_index_fetch_handler handler) = 0;
 
-    virtual void fetch_spend(const chain::output_point& outpoint,
-        spend_fetch_handler handler) = 0;
+    virtual void fetch_spend(const chain::output_point &outpoint,
+                             spend_fetch_handler handler) = 0;
 
-    virtual void fetch_history(const bc::wallet::payment_address& address,
-        uint64_t limit, uint64_t from_height,
-        history_fetch_handler handler) = 0;
+    virtual void fetch_history(const bc::wallet::payment_address &address,
+                               uint64_t limit, uint64_t from_height,
+                               history_fetch_handler handler) = 0;
 
-    virtual void fetch_stealth(const binary& filter, uint64_t from_height,
-        stealth_fetch_handler handler) = 0;
+    virtual void fetch_stealth(const binary &filter, uint64_t from_height,
+                               stealth_fetch_handler handler) = 0;
 
     virtual void filter_blocks(message::get_data::ptr message,
-        result_handler handler) = 0;
+                               result_handler handler) = 0;
 
     virtual void filter_orphans(message::get_data::ptr message,
-        result_handler handler) = 0;
+                                result_handler handler) = 0;
 
     virtual void filter_transactions(message::get_data::ptr message,
-        result_handler handler) = 0;
+                                     result_handler handler) = 0;
 
     virtual void subscribe_reorganize(reorganize_handler handler) = 0;
 
     virtual void fired() = 0; // used for removing out of date action
-    virtual organizer& get_organizer() = 0;
+    virtual organizer &get_organizer() = 0;
 };
 
 } // namespace blockchain

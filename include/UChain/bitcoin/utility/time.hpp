@@ -23,12 +23,11 @@
 #define INCLUDE_BITCOIN_BITCOIN_UTILITY_TIME_HPP_
 #include <stdint.h>
 
-namespace libbitcoin { //namespace libbitcoin
+namespace libbitcoin
+{ //namespace libbitcoin
 
 int64_t unix_millisecond();
 
-}//namespace libbitcoin
-
-
+} //namespace libbitcoin
 
 #endif /* INCLUDE_BITCOIN_BITCOIN_UTILITY_TIME_HPP_ */

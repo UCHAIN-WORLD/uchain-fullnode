@@ -98,15 +98,17 @@
 // filterclear  --      70001   BIP037  no intent to support
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 /**
 * Serialize a message object to the Bitcoin wire protocol encoding.
 */
 template <typename Message>
-data_chunk serialize(uint32_t version, const Message& packet,
-    uint32_t magic)
+data_chunk serialize(uint32_t version, const Message &packet,
+                     uint32_t magic)
 {
     // Serialize the payload (required for header size).
     const auto payload = packet.to_data(version);

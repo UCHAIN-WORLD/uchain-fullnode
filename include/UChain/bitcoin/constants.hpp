@@ -28,19 +28,20 @@
 #include <UChain/bitcoin/message/network_address.hpp>
 #include <UChain/bitcoin/math/hash_number.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 #define BC_USER_AGENT "/UChain:" UC_VERSION "/"
 
 #define UC_BLOCK_TOKEN_SYMBOL "BLOCK"
-#define UC_VOTE_TOKEN_SYMBOL  "VOTE"
+#define UC_VOTE_TOKEN_SYMBOL "VOTE"
 
-#define UC_REWARD_POOL_UID_SYMBOL  "reward_pool"
-#define UC_BLACKHOLE_UID_SYMBOL  "BLACKHOLE"
-#define UC_REWARD_POOL_CANDIDATE_SYMBOL  "reward_pool_miner"
+#define UC_REWARD_POOL_UID_SYMBOL "reward_pool"
+#define UC_BLACKHOLE_UID_SYMBOL "BLACKHOLE"
+#define UC_REWARD_POOL_CANDIDATE_SYMBOL "reward_pool_miner"
 
-#define VOTE_LOCKED_TIME                 345600
-#define TIMES_QUANTITY_TO_VALUE    5E6
+#define VOTE_LOCKED_TIME 345600
+#define TIMES_QUANTITY_TO_VALUE 5E6
 // Generic constants.
 
 BC_CONSTEXPR size_t command_size = 12;
@@ -65,17 +66,16 @@ BC_CONSTEXPR uint32_t max_input_sequence = max_uint32;
 
 BC_CONSTEXPR uint32_t total_reward = 820000000;
 
-BC_CONSTEXPR uint64_t min_fee_to_issue_token       = 10000 * 100000000LL;
-BC_CONSTEXPR uint64_t min_lock_to_issue_candidate  = 500000 * 100000000LL;
-BC_CONSTEXPR uint64_t min_fee_to_register_uid      = 100 * 100000000LL;
-BC_CONSTEXPR uint32_t min_fee_percentage_to_miner  = 20;
-BC_CONSTEXPR uint64_t min_tx_fee                   = 200000;
+BC_CONSTEXPR uint64_t min_fee_to_issue_token = 10000 * 100000000LL;
+BC_CONSTEXPR uint64_t min_lock_to_issue_candidate = 500000 * 100000000LL;
+BC_CONSTEXPR uint64_t min_fee_to_register_uid = 100 * 100000000LL;
+BC_CONSTEXPR uint32_t min_fee_percentage_to_miner = 20;
+BC_CONSTEXPR uint64_t min_tx_fee = 200000;
 
 BC_CONSTEXPR uint64_t mine_block_produce_minsecons = 500;
 BC_CONSTEXPR uint64_t mine_fetch_utxo_height_windows = 10000;
 // The window by which a time stamp may exceed our current time (2 hours).
 BC_CONSTEXPR uint64_t time_stamp_window_senconds = 2;
-
 
 // Threshold for nLockTime: below this value it is interpreted as block number,
 // otherwise as UNIX timestamp. [Tue Nov 5 00:53:20 1985 UTC]
@@ -86,7 +86,7 @@ BC_CONSTFUNC uint64_t max_money_recursive(uint64_t current)
     return (current > 0) ? current + max_money_recursive(current >> 1) : 0;
 }
 
-BC_CONSTFUNC uint64_t coin_price(uint64_t value=1)
+BC_CONSTFUNC uint64_t coin_price(uint64_t value = 1)
 {
     return value * 100000000;
 }
@@ -104,7 +104,7 @@ enum class settings
     testnet
 };
 
-enum services: uint64_t
+enum services : uint64_t
 {
     // The node is capable of serving the block chain.
     node_network = (1 << 0),
@@ -120,20 +120,14 @@ enum services: uint64_t
 
 BC_CONSTEXPR uint32_t no_timestamp = 0;
 BC_CONSTEXPR uint16_t unspecified_ip_port = 0;
-BC_CONSTEXPR message::ip_address unspecified_ip_address
-{
-    {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00
-    }
-};
-BC_CONSTEXPR message::network_address unspecified_network_address
-{
+BC_CONSTEXPR message::ip_address unspecified_ip_address{
+    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+     0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00}};
+BC_CONSTEXPR message::network_address unspecified_network_address{
     no_timestamp,
     services::node_network,
     unspecified_ip_address,
-    unspecified_ip_port
-};
+    unspecified_ip_port};
 
 // TODO: make static.
 BC_API hash_number max_target();

@@ -25,13 +25,14 @@
 #include <istream>
 #include <UChain/bitcoin/utility/reader.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 class BC_API istream_reader
-  : public reader
+    : public reader
 {
-public:
-    istream_reader(std::istream& stream);
+  public:
+    istream_reader(std::istream &stream);
 
     operator bool() const;
     bool operator!() const;
@@ -39,7 +40,7 @@ public:
     bool is_exhausted() const;
     uint8_t read_byte();
     data_chunk read_data(size_t size);
-    size_t read_data(uint8_t* data, size_t size);
+    size_t read_data(uint8_t *data, size_t size);
     data_chunk read_data_to_eof();
     hash_digest read_hash();
     short_hash read_short_hash();
@@ -88,8 +89,8 @@ public:
     template <unsigned Size>
     byte_array<Size> read_bytes_reverse();
 
-private:
-    std::istream& stream_;
+  private:
+    std::istream &stream_;
 };
 
 } // namespace libbitcoin

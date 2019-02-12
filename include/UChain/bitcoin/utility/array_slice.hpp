@@ -23,7 +23,8 @@
 
 #include <cstddef>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * An read-only STL-style wrapper for array-style collections.
@@ -34,26 +35,26 @@ namespace libbitcoin {
 template <typename T>
 class array_slice
 {
-public:
+  public:
     template <typename Container>
-    array_slice(const Container& container);
+    array_slice(const Container &container);
 
     // TODO: reliance this class causes unnecessary copying in cases where move
     // arguments are not defined. This cannot itself be converted to move.
     ////template <typename Container>
     ////array_slice(Container&& container);
 
-    array_slice(const T* begin, const T* end);
+    array_slice(const T *begin, const T *end);
 
-    const T* begin() const;
-    const T* end() const;
-    const T* data() const;
+    const T *begin() const;
+    const T *end() const;
+    const T *data() const;
     std::size_t size() const;
     bool empty() const;
 
-private:
-    const T* begin_;
-    const T* end_;
+  private:
+    const T *begin_;
+    const T *end_;
 };
 
 } // namespace libbitcoin
@@ -61,4 +62,3 @@ private:
 #include <UChain/bitcoin/impl/utility/array_slice.ipp>
 
 #endif
-

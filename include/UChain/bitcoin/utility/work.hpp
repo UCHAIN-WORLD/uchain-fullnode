@@ -29,7 +29,8 @@
 #include <UChain/bitcoin/utility/monitor.hpp>
 #include <UChain/bitcoin/utility/threadpool.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 #define ORDERED "ordered"
 #define UNORDERED "unordered"
@@ -46,33 +47,34 @@ namespace libbitcoin {
 /// boost asio class wrapper to enable work heap management.
 class BC_API work
 {
-public:
+  public:
     /// Create an instance.
-    work(threadpool& pool, const std::string& name);
+    work(threadpool &pool, const std::string &name);
 
     /// This class is not copyable.
-    work(const work&) = delete;
-    void operator=(const work&) = delete;
+    work(const work &) = delete;
+    void operator=(const work &) = delete;
 
     /// Execute the job on the current thread.
     template <typename Handler, typename... Args>
-    static void bound(Handler&& handler, Args&&... args)
+    static void bound(Handler &&handler, Args &&... args)
     {
-        BIND_HANDLER(handler, args)();
+        BIND_HANDLER(handler, args)
+        ();
     }
 
     /// Service post ensures the job does not execute in the current thread.
     template <typename Handler, typename... Args>
-    void concurrent(Handler&& handler, Args&&... args)
+    void concurrent(Handler &&handler, Args &&... args)
     {
         service_.post(inject(BIND_HANDLER(handler, args), CONCURRENT,
-            concurrent_));
+                             concurrent_));
     }
 
     /// Use a strand to prevent concurrency and post vs. dispatch to
     /// ensure that the job is not executed in the current thread.
     template <typename Handler, typename... Args>
-    void ordered(Handler&& handler, Args&&... args)
+    void ordered(Handler &&handler, Args &&... args)
     {
         strand_.post(inject(BIND_HANDLER(handler, args), ORDERED, ordered_));
     }
@@ -80,10 +82,10 @@ public:
     /// Use a strand wrapper to prevent concurrency and a service post
     /// to deny ordering while ensuring execution on another thread.
     template <typename Handler, typename... Args>
-    void unordered(Handler&& handler, Args&&... args)
+    void unordered(Handler &&handler, Args &&... args)
     {
         service_.post(strand_.wrap(inject(BIND_HANDLER(handler, args),
-            UNORDERED, unordered_)));
+                                          UNORDERED, unordered_)));
     }
 
     size_t ordered_backlog();
@@ -91,10 +93,10 @@ public:
     size_t concurrent_backlog();
     size_t combined_backlog();
 
-private:
+  private:
     template <typename Handler>
-    auto inject(Handler handler, const std::string& context,
-        monitor::count_ptr counter) -> std::function<void()>
+    auto inject(Handler handler, const std::string &context,
+                monitor::count_ptr counter) -> std::function<void()>
     {
         const auto label = name_ + "_" + context;
         const auto capture = std::make_shared<monitor>(counter, label);
@@ -108,7 +110,7 @@ private:
     monitor::count_ptr ordered_;
     monitor::count_ptr unordered_;
     monitor::count_ptr concurrent_;
-    asio::service& service_;
+    asio::service &service_;
     asio::service::strand strand_;
     const std::string name_;
 };

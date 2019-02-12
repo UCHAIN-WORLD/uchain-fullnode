@@ -31,24 +31,25 @@
 #ifdef WITH_PNG
 #include <png.h>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 class BC_API png
 {
-public:
+  public:
     static BC_CONSTEXPR uint32_t margin = 2;
     static BC_CONSTEXPR uint32_t dots_per_inch = 72;
     static BC_CONSTEXPR uint32_t inches_per_meter = (100.0 / 2.54);
 
     static const color get_default_foreground()
     {
-        static BC_CONSTEXPR color default_foreground{ 0, 0, 0, 255 };
+        static BC_CONSTEXPR color default_foreground{0, 0, 0, 255};
         return default_foreground;
     }
 
     static const color get_default_background()
     {
-        static BC_CONSTEXPR color default_background{ 255, 255, 255, 255 };
+        static BC_CONSTEXPR color default_background{255, 255, 255, 255};
         return default_background;
     }
 
@@ -58,16 +59,16 @@ public:
      * size parameter specifies the number of dots (pixels) per qr code
      * modules.
      */
-    static bool write_png(const data_chunk& data, uint32_t size,
-        std::ostream& out);
+    static bool write_png(const data_chunk &data, uint32_t size,
+                          std::ostream &out);
 
     /**
      * A method that takes encoded qrcode data as a data chunk and writes
      * it to an output stream in png format with the specified parameters.
      */
-    static bool write_png(const data_chunk& data, uint32_t size,
-        uint32_t dots_per_inch, uint32_t margin, uint32_t inches_per_meter,
-        const color& foreground, const color& background, std::ostream& out);
+    static bool write_png(const data_chunk &data, uint32_t size,
+                          uint32_t dots_per_inch, uint32_t margin, uint32_t inches_per_meter,
+                          const color &foreground, const color &background, std::ostream &out);
 
     /**
      * A method that reads encoded qrcode data via an input stream and
@@ -75,17 +76,17 @@ public:
      * parameters.  The size parameter specifies the number of dots
      * (pixels) per qr code modules.
      */
-    static bool write_png(std::istream& in, uint32_t size, std::ostream& out);
+    static bool write_png(std::istream &in, uint32_t size, std::ostream &out);
 
     /**
      * A method that reads encoded qrcode data via an input stream and
      * writes it to an output stream in png format with the specified
      * parameters.
      */
-    static bool write_png(std::istream& in, uint32_t size,
-        uint32_t dots_per_inch, const uint32_t margin,
-        uint32_t inches_per_meter, const color& foreground,
-        const color& background, std::ostream& out);
+    static bool write_png(std::istream &in, uint32_t size,
+                          uint32_t dots_per_inch, const uint32_t margin,
+                          uint32_t inches_per_meter, const color &foreground,
+                          const color &background, std::ostream &out);
 };
 
 } // namespace libbitcoin

@@ -26,24 +26,26 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/network/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /// Set up global logging.
-BCT_API void initialize_logging(bc::ofstream& debug, bc::ofstream& error,
-    std::ostream& output_stream, std::ostream& error_stream, std::string level = "DEBUG");
+BCT_API void initialize_logging(bc::ofstream &debug, bc::ofstream &error,
+                                std::ostream &output_stream, std::ostream &error_stream, std::string level = "DEBUG");
 
 /// Class Logger
-class Logger{
+class Logger
+{
 #define self Logger
 
-public:
+  public:
     self() noexcept
     {
         initialize_logging(debug_log_, error_log_, std::cout, std::cerr);
     }
 
-    self(const self&) = delete;
-    self(const self&&) = delete;
+    self(const self &) = delete;
+    self(const self &&) = delete;
 
     ~self() noexcept
     {
@@ -52,17 +54,17 @@ public:
         error_log_.close();
     }
 
-public:
-/// Constant for logging file open mode (append output).
-static BC_CONSTEXPR std::ofstream::openmode log_open_mode =
-    std::ofstream::out | std::ofstream::app;
+  public:
+    /// Constant for logging file open mode (append output).
+    static BC_CONSTEXPR std::ofstream::openmode log_open_mode =
+        std::ofstream::out | std::ofstream::app;
 
-private:
+  private:
     bc::ofstream debug_log_{"debug.log", log_open_mode};
     bc::ofstream error_log_{"error.log", log_open_mode};
 
 #undef self
-};// class Logger
+}; // class Logger
 
 } // namespace libbitcoin
 
