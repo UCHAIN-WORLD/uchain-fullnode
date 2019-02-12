@@ -29,17 +29,19 @@
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/primitives/record_manager.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 class BCD_API stealth_database
 {
-public:
+  public:
     typedef std::function<void(memory_ptr)> write_function;
 
     /// Construct the database.
-    stealth_database(const boost::filesystem::path& rows_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    stealth_database(const boost::filesystem::path &rows_filename,
+                     std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~stealth_database();
@@ -57,12 +59,12 @@ public:
     bool close();
 
     /// Linearly scan all entries, discarding those after from_height.
-    chain::stealth_compact::list scan(const binary& filter,
-        size_t from_height) const;
+    chain::stealth_compact::list scan(const binary &filter,
+                                      size_t from_height) const;
 
     /// Add a stealth row to the database.
     void store(uint32_t prefix, uint32_t height,
-        const chain::stealth_compact& row);
+               const chain::stealth_compact &row);
 
     /// Delete all rows after and including from_height (no implemented).
     void unlink(size_t from_height);
@@ -71,7 +73,7 @@ public:
     /// Should be done at the end of every block write.
     void sync();
 
-private:
+  private:
     void write_index();
     array_index read_index(size_t from_height) const;
 

@@ -28,8 +28,10 @@
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/primitives/record_multimap.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 struct BCD_API history_statinfo
 {
@@ -48,11 +50,11 @@ struct BCD_API history_statinfo
 /// which returns several rows giving the history for that address.
 class BCD_API history_database
 {
-public:
+  public:
     /// Construct the database.
-    history_database(const boost::filesystem::path& lookup_filename,
-        const boost::filesystem::path& rows_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    history_database(const boost::filesystem::path &lookup_filename,
+                     const boost::filesystem::path &rows_filename,
+                     std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~history_database();
@@ -70,19 +72,19 @@ public:
     bool close();
 
     /// Add an output row to the key. If key doesn't exist it will be created.
-    void add_output(const short_hash& key, const chain::output_point& outpoint,
-        uint32_t output_height, uint64_t value);
+    void add_output(const short_hash &key, const chain::output_point &outpoint,
+                    uint32_t output_height, uint64_t value);
 
     /// Add an input to the key. If key doesn't exist it will be created.
-    void add_input(const short_hash& key, const chain::output_point& inpoint,
-        uint32_t input_height, const chain::input_point& previous);
+    void add_input(const short_hash &key, const chain::output_point &inpoint,
+                   uint32_t input_height, const chain::input_point &previous);
 
     /// Delete the last row that was added to key.
-    void delete_last_row(const short_hash& key);
+    void delete_last_row(const short_hash &key);
 
     /// Get the output and input points associated with the address hash.
-    chain::history_compact::list get(const short_hash& key, size_t limit,
-        size_t from_height) const;
+    chain::history_compact::list get(const short_hash &key, size_t limit,
+                                     size_t from_height) const;
 
     /// Synchonise with disk.
     void sync();
@@ -90,7 +92,7 @@ public:
     /// Return statistical info about the database.
     history_statinfo statinfo() const;
 
-private:
+  private:
     typedef record_hash_table<short_hash> record_map;
     typedef record_multimap<short_hash> record_multiple_map;
 

@@ -30,8 +30,10 @@
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// This enables lookups of bases by hash.
 /// An alternative and faster method is lookup from a unique index
@@ -40,12 +42,11 @@ namespace database {
 /// belonging to that block. These are stored with the block.
 class BCD_API base_database
 {
-public:
-
+  public:
     typedef slab_hash_table<hash_digest> slab_map;
     /// Construct the database.
-    base_database(const boost::filesystem::path& map_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    base_database(const boost::filesystem::path &map_filename,
+                  std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~base_database();
@@ -63,12 +64,12 @@ public:
     bool close();
 
     /// Fetch base from its hash.
-    memory_ptr get(const hash_digest& hash) const;
+    memory_ptr get(const hash_digest &hash) const;
 
     /// every subclass should have its own store method, so store method is not define in this class
 
     /// Delete a base from database.
-    void remove(const hash_digest& hash);
+    void remove(const hash_digest &hash);
 
     /// Synchronise storage with disk so things are consistent.
     /// Should be done at the end of every block write.
@@ -77,14 +78,13 @@ public:
     /// The hash table size (bucket count).
     size_t get_bucket_count() const;
 
-private:
-
+  private:
     // Hash table used for looking up txs by hash.
     memory_map lookup_file_;
     slab_hash_table_header lookup_header_;
     slab_manager lookup_manager_;
 
-protected:
+  protected:
     slab_map lookup_map_;
 };
 
