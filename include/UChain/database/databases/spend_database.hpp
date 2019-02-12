@@ -29,8 +29,10 @@
 #include <UChain/database/primitives/record_hash_table.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 struct BCD_API spend_statinfo
 {
@@ -46,10 +48,10 @@ struct BCD_API spend_statinfo
 /// the input point. It is a simple map.
 class BCD_API spend_database
 {
-public:
+  public:
     /// Construct the database.
-    spend_database(const boost::filesystem::path& filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    spend_database(const boost::filesystem::path &filename,
+                   std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~spend_database();
@@ -67,14 +69,14 @@ public:
     bool close();
 
     /// Get input spend of an output point.
-    chain::spend get(const chain::output_point& outpoint) const;
+    chain::spend get(const chain::output_point &outpoint) const;
 
     /// Store a spend in the database.
-    void store(const chain::output_point& outpoint,
-        const chain::input_point& spend);
+    void store(const chain::output_point &outpoint,
+               const chain::input_point &spend);
 
     /// Delete outpoint spend item from database.
-    void remove(const chain::output_point& outpoint);
+    void remove(const chain::output_point &outpoint);
 
     /// Synchronise storage with disk so things are consistent.
     /// Should be done at the end of every block write.
@@ -83,7 +85,7 @@ public:
     /// Return statistical info about the database.
     spend_statinfo statinfo() const;
 
-private:
+  private:
     typedef record_hash_table<chain::point> record_map;
 
     // Hash table used for looking up inpoint spends by outpoint.

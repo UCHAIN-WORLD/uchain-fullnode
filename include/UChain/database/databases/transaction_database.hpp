@@ -30,8 +30,10 @@
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// This enables lookups of transactions by hash.
 /// An alternative and faster method is lookup from a unique index
@@ -40,10 +42,10 @@ namespace database {
 /// belonging to that block. These are stored with the block.
 class BCD_API transaction_database
 {
-public:
+  public:
     /// Construct the database.
-    transaction_database(const boost::filesystem::path& map_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    transaction_database(const boost::filesystem::path &map_filename,
+                         std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~transaction_database();
@@ -61,20 +63,20 @@ public:
     bool close();
 
     /// Fetch transaction from its hash.
-    transaction_result get(const hash_digest& hash) const;
+    transaction_result get(const hash_digest &hash) const;
 
     /// Store a transaction in the database. Returns a unique index
     /// which can be used to reference the transaction.
-    void store(size_t height, size_t index, const chain::transaction& tx);
+    void store(size_t height, size_t index, const chain::transaction &tx);
 
     /// Delete a transaction from database.
-    void remove(const hash_digest& hash);
+    void remove(const hash_digest &hash);
 
     /// Synchronise storage with disk so things are consistent.
     /// Should be done at the end of every block write.
     void sync();
 
-private:
+  private:
     typedef slab_hash_table<hash_digest> slab_map;
 
     // Hash table used for looking up txs by hash.

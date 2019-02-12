@@ -25,23 +25,24 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/client/define.hpp>
 
-namespace libbitcoin {
-namespace client {
+namespace libbitcoin
+{
+namespace client
+{
 
 /// A stream of multi-part messages.
 /// This interface breaks the link between zeromq networking and messaging.
 class BCC_API stream
 {
-public:
-
+  public:
     /// Resend any timed out work and return the smallest time remaining.
     virtual int32_t refresh() = 0;
 
     /// Read from this stream onto the specified stream.
-    virtual bool read(stream& stream) = 0;
+    virtual bool read(stream &stream) = 0;
 
     /// Write the specified data to this stream.
-    virtual bool write(const data_stack& data) = 0;
+    virtual bool write(const data_stack &data) = 0;
 };
 
 } // namespace client

@@ -27,38 +27,40 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 #ifdef REMAP_SAFETY
 
 /// This class provides downgradable remap safe access to file-mapped memory.
 /// The memory size is unprotected and unmanaged.
 class BCD_API allocator
-  : public memory
+    : public memory
 {
-public:
-    allocator(shared_mutex& mutex);
+  public:
+    allocator(shared_mutex &mutex);
     ~allocator();
 
     /// This class is not copyable.
-    allocator(const allocator& other) = delete;
+    allocator(const allocator &other) = delete;
 
     /// Get the address indicated by the pointer.
-    uint8_t* buffer();
+    uint8_t *buffer();
 
     /// Increment the pointer the specified number of bytes.
     void increment(size_t value);
 
-protected:
+  protected:
     friend class memory_map;
 
     /// Set the data member and downgrade the lock.
-    void downgrade(uint8_t* data);
+    void downgrade(uint8_t *data);
 
-private:
-    shared_mutex& mutex_;
-    uint8_t* data_;
+  private:
+    shared_mutex &mutex_;
+    uint8_t *data_;
 };
 
 #endif // REMAP_SAFETY

@@ -32,20 +32,22 @@
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/result/block_result.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// Stores block_headers each with a list of transaction indexes.
 /// Lookup possible by hash or height.
 class BCD_API block_database
 {
-public:
+  public:
     static const file_offset empty;
 
     /// Construct the database.
-    block_database(const boost::filesystem::path& map_filename,
-        const boost::filesystem::path& index_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    block_database(const boost::filesystem::path &map_filename,
+                   const boost::filesystem::path &index_filename,
+                   std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~block_database();
@@ -66,34 +68,34 @@ public:
     block_result get(size_t height) const;
 
     /// Fetch block by hash using the hashtable.
-    block_result get(const hash_digest& hash) const;
+    block_result get(const hash_digest &hash) const;
 
     /// Store a block in the database.
-    void store(const chain::block& block);
+    void store(const chain::block &block);
 
     /// Store a block in the database.
-    void store(const chain::block& block, size_t height);
+    void store(const chain::block &block, size_t height);
 
     /// Unlink all blocks upwards from (and including) from_height.
     void unlink(size_t from_height);
 
     /// Remove block from block hash table
-    void remove(const hash_digest& hash);
+    void remove(const hash_digest &hash);
 
     /// Synchronise storage with disk so things are consistent.
     /// Should be done at the end of every block write.
     void sync();
 
     /// The index of the highest existing block, independent of gaps.
-    bool top(size_t& out_height) const;
+    bool top(size_t &out_height) const;
 
     /// Return the first and last gaps in the blockchain, or false if none.
-    bool gap_range(size_t& out_first, size_t& out_last) const;
+    bool gap_range(size_t &out_first, size_t &out_last) const;
 
     /// The index of the first missing block starting from given height.
-    bool next_gap(size_t& out_height, size_t start_height) const;
+    bool next_gap(size_t &out_height, size_t start_height) const;
 
-private:
+  private:
     typedef slab_hash_table<hash_digest> slab_map;
 
     /// Zeroize the specfied index positions.

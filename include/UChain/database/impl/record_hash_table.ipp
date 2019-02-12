@@ -27,13 +27,15 @@
 #include "record_row.ipp"
 #include "remainder.ipp"
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 template <typename KeyType>
 record_hash_table<KeyType>::record_hash_table(
-    record_hash_table_header& header, record_manager& manager)
-  : header_(header), manager_(manager)
+    record_hash_table_header &header, record_manager &manager)
+    : header_(header), manager_(manager)
 {
 }
 
@@ -41,8 +43,8 @@ record_hash_table<KeyType>::record_hash_table(
 // are store then retrieval and unlinking will fail as these multiples cannot
 // be differentiated.
 template <typename KeyType>
-void record_hash_table<KeyType>::store(const KeyType& key,
-    const write_function write)
+void record_hash_table<KeyType>::store(const KeyType &key,
+                                       const write_function write)
 {
     mutex_.lock();
     // Store current bucket value.
@@ -58,7 +60,7 @@ void record_hash_table<KeyType>::store(const KeyType& key,
 
 // This is limited to returning the first of multiple matching key values.
 template <typename KeyType>
-const memory_ptr record_hash_table<KeyType>::find(const KeyType& key) const
+const memory_ptr record_hash_table<KeyType>::find(const KeyType &key) const
 {
     // Find start item...
     auto current = read_bucket_value(key);
@@ -84,7 +86,6 @@ const memory_ptr record_hash_table<KeyType>::find(const KeyType& key) const
 
     return nullptr;
 }
-
 
 // This is limited to returning all the item in the special index.
 template <typename KeyType>
@@ -118,7 +119,7 @@ std::shared_ptr<std::vector<memory_ptr>> record_hash_table<KeyType>::find(array_
 
 // This is limited to unlinking the first of multiple matching key values.
 template <typename KeyType>
-bool record_hash_table<KeyType>::unlink(const KeyType& key)
+bool record_hash_table<KeyType>::unlink(const KeyType &key)
 {
     // Find start item...
     const auto begin = read_bucket_value(key);
@@ -162,7 +163,7 @@ bool record_hash_table<KeyType>::unlink(const KeyType& key)
 
 template <typename KeyType>
 array_index record_hash_table<KeyType>::bucket_index(
-    const KeyType& key) const
+    const KeyType &key) const
 {
     const auto bucket = remainder(key, header_.size());
     BITCOIN_ASSERT(bucket < header_.size());
@@ -171,7 +172,7 @@ array_index record_hash_table<KeyType>::bucket_index(
 
 template <typename KeyType>
 array_index record_hash_table<KeyType>::read_bucket_value(
-    const KeyType& key) const
+    const KeyType &key) const
 {
     auto value = header_.read(bucket_index(key));
     static_assert(sizeof(value) == sizeof(array_index), "Invalid size");
@@ -179,16 +180,16 @@ array_index record_hash_table<KeyType>::read_bucket_value(
 }
 
 template <typename KeyType>
-void record_hash_table<KeyType>::link(const KeyType& key,
-    const array_index begin)
+void record_hash_table<KeyType>::link(const KeyType &key,
+                                      const array_index begin)
 {
     header_.write(bucket_index(key), begin);
 }
 
 template <typename KeyType>
 template <typename ListItem>
-void record_hash_table<KeyType>::release(const ListItem& item,
-    const file_offset previous)
+void record_hash_table<KeyType>::release(const ListItem &item,
+                                         const file_offset previous)
 {
     ListItem previous_item(manager_, previous);
     previous_item.write_next_index(item.next_index());

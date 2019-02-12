@@ -25,12 +25,14 @@
 #include <functional>
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// Return a hash of the key reduced to the domain of the divisor.
 template <typename KeyType, typename Divisor>
-Divisor remainder(const KeyType& key, const Divisor divisor)
+Divisor remainder(const KeyType &key, const Divisor divisor)
 {
     return divisor == 0 ? 0 : std::hash<KeyType>()(key) % divisor;
 }

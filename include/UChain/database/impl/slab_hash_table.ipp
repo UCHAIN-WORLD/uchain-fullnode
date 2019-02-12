@@ -26,13 +26,15 @@
 #include "remainder.ipp"
 #include "slab_row.ipp"
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 template <typename KeyType>
-slab_hash_table<KeyType>::slab_hash_table(slab_hash_table_header& header,
-    slab_manager& manager)
-  : header_(header), manager_(manager)
+slab_hash_table<KeyType>::slab_hash_table(slab_hash_table_header &header,
+                                          slab_manager &manager)
+    : header_(header), manager_(manager)
 {
 }
 
@@ -41,8 +43,8 @@ slab_hash_table<KeyType>::slab_hash_table(slab_hash_table_header& header,
 // be differentiated. Therefore the database is not currently able to support
 // multiple transactions with the same hash, as required by BIP30.
 template <typename KeyType>
-file_offset slab_hash_table<KeyType>::store(const KeyType& key,
-    write_function write, const size_t value_size)
+file_offset slab_hash_table<KeyType>::store(const KeyType &key,
+                                            write_function write, const size_t value_size)
 {
     mutex_.lock();
     // Store current bucket value.
@@ -65,8 +67,8 @@ file_offset slab_hash_table<KeyType>::store(const KeyType& key,
 // be differentiated. Therefore the database is not currently able to support
 // multiple transactions with the same hash, as required by BIP30.
 template <typename KeyType>
-file_offset slab_hash_table<KeyType>::restore(const KeyType& key,
-    write_function write, const size_t value_size)
+file_offset slab_hash_table<KeyType>::restore(const KeyType &key,
+                                              write_function write, const size_t value_size)
 {
     mutex_.lock();
     // Store current bucket value.
@@ -86,7 +88,7 @@ file_offset slab_hash_table<KeyType>::restore(const KeyType& key,
 
 // This is limited to returning the first of multiple matching key values.
 template <typename KeyType>
-const memory_ptr slab_hash_table<KeyType>::find(const KeyType& key) const
+const memory_ptr slab_hash_table<KeyType>::find(const KeyType &key) const
 {
     // Find start item...
     auto current = read_bucket_value(key);
@@ -96,7 +98,7 @@ const memory_ptr slab_hash_table<KeyType>::find(const KeyType& key) const
     {
         const slab_row<KeyType> item(manager_, current);
 
-        if(item.out_of_memory())
+        if (item.out_of_memory())
             break;
 
         // Found.
@@ -118,7 +120,7 @@ const memory_ptr slab_hash_table<KeyType>::find(const KeyType& key) const
 
 // This is limited to returning the last of multiple matching key values.
 template <typename KeyType>
-const memory_ptr slab_hash_table<KeyType>::rfind(const KeyType& key) const
+const memory_ptr slab_hash_table<KeyType>::rfind(const KeyType &key) const
 {
     memory_ptr ret;
     // Find start item...
@@ -129,7 +131,7 @@ const memory_ptr slab_hash_table<KeyType>::rfind(const KeyType& key) const
     {
         const slab_row<KeyType> item(manager_, current);
 
-        if(item.out_of_memory())
+        if (item.out_of_memory())
             return nullptr;
 
         // Found.
@@ -151,7 +153,7 @@ const memory_ptr slab_hash_table<KeyType>::rfind(const KeyType& key) const
 
 // This is returning all of multiple matching key values.
 template <typename KeyType>
-std::vector<memory_ptr> slab_hash_table<KeyType>::finds(const KeyType& key) const
+std::vector<memory_ptr> slab_hash_table<KeyType>::finds(const KeyType &key) const
 {
     std::vector<memory_ptr> ret;
     // Find start item...
@@ -162,7 +164,7 @@ std::vector<memory_ptr> slab_hash_table<KeyType>::finds(const KeyType& key) cons
     {
         const slab_row<KeyType> item(manager_, current);
 
-        if(item.out_of_memory())
+        if (item.out_of_memory())
             break;
 
         // Found.
@@ -182,7 +184,6 @@ std::vector<memory_ptr> slab_hash_table<KeyType>::finds(const KeyType& key) cons
     return ret;
 }
 
-
 // This is limited to returning all the item in the special index.
 template <typename KeyType>
 std::shared_ptr<std::vector<memory_ptr>> slab_hash_table<KeyType>::find(uint64_t index) const
@@ -197,7 +198,7 @@ std::shared_ptr<std::vector<memory_ptr>> slab_hash_table<KeyType>::find(uint64_t
     {
         const slab_row<KeyType> item(manager_, current);
 
-        if(item.out_of_memory())
+        if (item.out_of_memory())
             break;
 
         // Found.
@@ -218,7 +219,7 @@ std::shared_ptr<std::vector<memory_ptr>> slab_hash_table<KeyType>::find(uint64_t
 
 // This is limited to unlinking the first of multiple matching key values.
 template <typename KeyType>
-bool slab_hash_table<KeyType>::unlink(const KeyType& key)
+bool slab_hash_table<KeyType>::unlink(const KeyType &key)
 {
     // Find start item...
     const auto begin = read_bucket_value(key);
@@ -267,7 +268,7 @@ bool slab_hash_table<KeyType>::unlink(const KeyType& key)
 }
 
 template <typename KeyType>
-array_index slab_hash_table<KeyType>::bucket_index(const KeyType& key) const
+array_index slab_hash_table<KeyType>::bucket_index(const KeyType &key) const
 {
     const auto bucket = remainder(key, header_.size());
     BITCOIN_ASSERT(bucket < header_.size());
@@ -276,7 +277,7 @@ array_index slab_hash_table<KeyType>::bucket_index(const KeyType& key) const
 
 template <typename KeyType>
 file_offset slab_hash_table<KeyType>::read_bucket_value(
-    const KeyType& key) const
+    const KeyType &key) const
 {
     const auto value = header_.read(bucket_index(key));
     static_assert(sizeof(value) == sizeof(file_offset), "Invalid size");
@@ -284,16 +285,16 @@ file_offset slab_hash_table<KeyType>::read_bucket_value(
 }
 
 template <typename KeyType>
-void slab_hash_table<KeyType>::link(const KeyType& key,
-    const file_offset begin)
+void slab_hash_table<KeyType>::link(const KeyType &key,
+                                    const file_offset begin)
 {
     header_.write(bucket_index(key), begin);
 }
 
 template <typename KeyType>
 template <typename ListItem>
-void slab_hash_table<KeyType>::release(const ListItem& item,
-    const file_offset previous)
+void slab_hash_table<KeyType>::release(const ListItem &item,
+                                       const file_offset previous)
 {
     ListItem previous_item(manager_, previous);
     previous_item.write_next_position(item.next_position());

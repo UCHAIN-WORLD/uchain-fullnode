@@ -26,8 +26,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 // This VC++ workaround is OK because ValueType must be unsigned.
 //static constexpr ValueType empty = std::numeric_limits<ValueType>::max();
@@ -36,15 +38,15 @@ const ValueType hash_table_header<IndexType, ValueType>::empty =
     (ValueType)bc::max_uint64;
 
 template <typename IndexType, typename ValueType>
-hash_table_header<IndexType, ValueType>::hash_table_header(memory_map& file,
-    IndexType buckets)
-  : file_(file), buckets_(buckets)
+hash_table_header<IndexType, ValueType>::hash_table_header(memory_map &file,
+                                                           IndexType buckets)
+    : file_(file), buckets_(buckets)
 {
     BITCOIN_ASSERT_MSG(empty == (ValueType)0xffffffffffffffff,
-        "Unexpected value for empty sentinel.");
+                       "Unexpected value for empty sentinel.");
 
     static_assert(std::is_unsigned<ValueType>::value,
-        "Hash table header requires unsigned type.");
+                  "Hash table header requires unsigned type.");
 }
 
 template <typename IndexType, typename ValueType>
@@ -115,7 +117,7 @@ ValueType hash_table_header<IndexType, ValueType>::read(IndexType index) const
 
 template <typename IndexType, typename ValueType>
 void hash_table_header<IndexType, ValueType>::write(IndexType index,
-    ValueType value)
+                                                    ValueType value)
 {
     // This is not runtime safe but test is avoided as an optimization.
     BITCOIN_ASSERT(index < buckets_);

@@ -34,26 +34,28 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// This class is thread safe, allowing concurent read and write.
 /// A change to the size of the memory map waits on and locks read and write.
 class BCD_API memory_map
 {
-public:
+  public:
     typedef std::shared_ptr<shared_mutex> mutex_ptr;
 
     /// Construct a database (start is currently called, may throw).
-    memory_map(const boost::filesystem::path& filename);
-    memory_map(const boost::filesystem::path& filename, mutex_ptr mutex);
+    memory_map(const boost::filesystem::path &filename);
+    memory_map(const boost::filesystem::path &filename, mutex_ptr mutex);
 
     /// Close the database.
     ~memory_map();
 
     /// This class is not copyable.
-    memory_map(const memory_map&) = delete;
-    void operator=(const memory_map&) = delete;
+    memory_map(const memory_map &) = delete;
+    void operator=(const memory_map &) = delete;
 
     /// Start or restart the database, mapping database files.
     bool start();
@@ -73,11 +75,11 @@ public:
     memory_ptr reserve(size_t size);
     memory_ptr reserve(size_t size, size_t growth_ratio);
 
-private:
+  private:
     static size_t file_size(int file_handle);
-    static int open_file(const boost::filesystem::path& filename);
-    static bool handle_error(const std::string& context,
-        const boost::filesystem::path& filename);
+    static int open_file(const boost::filesystem::path &filename);
+    static bool handle_error(const std::string &context,
+                             const boost::filesystem::path &filename);
 
     size_t page();
     bool unmap();
@@ -99,7 +101,7 @@ private:
     const boost::filesystem::path filename_;
 
     // Protected by internal mutex.
-    uint8_t* data_;
+    uint8_t *data_;
     size_t file_size_;
     size_t logical_size_;
     std::atomic<bool> closed_;

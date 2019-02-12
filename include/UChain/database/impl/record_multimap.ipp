@@ -24,18 +24,20 @@
 #include <string>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 template <typename KeyType>
-record_multimap<KeyType>::record_multimap(record_hash_table_type& map,
-    record_list& records)
-  : map_(map), records_(records)
+record_multimap<KeyType>::record_multimap(record_hash_table_type &map,
+                                          record_list &records)
+    : map_(map), records_(records)
 {
 }
 
 template <typename KeyType>
-array_index record_multimap<KeyType>::lookup(const KeyType& key) const
+array_index record_multimap<KeyType>::lookup(const KeyType &key) const
 {
     const auto start_info = map_.find(key);
 
@@ -60,7 +62,8 @@ std::shared_ptr<std::vector<array_index>> record_multimap<KeyType>::lookup(array
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
     unique_lock lock(mutex_);
-    for(auto each : *sh_vec) {
+    for (auto each : *sh_vec)
+    {
         const auto address = REMAP_ADDRESS(each);
         sh_ret_vec->push_back(from_little_endian_unsafe<array_index>(address));
     }
@@ -69,8 +72,8 @@ std::shared_ptr<std::vector<array_index>> record_multimap<KeyType>::lookup(array
 }
 
 template <typename KeyType>
-void record_multimap<KeyType>::add_row(const KeyType& key,
-    write_function write)
+void record_multimap<KeyType>::add_row(const KeyType &key,
+                                       write_function write)
 {
     const auto start_info = map_.find(key);
 
@@ -86,7 +89,7 @@ void record_multimap<KeyType>::add_row(const KeyType& key,
 
 template <typename KeyType>
 void record_multimap<KeyType>::add_to_list(memory_ptr start_info,
-    write_function write)
+                                           write_function write)
 {
     const auto address = REMAP_ADDRESS(start_info);
 
@@ -112,10 +115,11 @@ void record_multimap<KeyType>::add_to_list(memory_ptr start_info,
 }
 
 template <typename KeyType>
-void record_multimap<KeyType>::delete_last_row(const KeyType& key)
+void record_multimap<KeyType>::delete_last_row(const KeyType &key)
 {
     const auto start_info = map_.find(key);
-    if (!start_info) {
+    if (!start_info)
+    {
         return;
     }
     BITCOIN_ASSERT_MSG(start_info, "The row to delete was not found.");
@@ -137,7 +141,8 @@ void record_multimap<KeyType>::delete_last_row(const KeyType& key)
         // Free existing remap pointer to prevent deadlock in map_.unlink.
         address = nullptr;
 
-        DEBUG_ONLY(bool success =) map_.unlink(key);
+        DEBUG_ONLY(bool success =)
+        map_.unlink(key);
         BITCOIN_ASSERT(success);
         return;
     }
@@ -152,14 +157,13 @@ void record_multimap<KeyType>::delete_last_row(const KeyType& key)
 }
 
 template <typename KeyType>
-void record_multimap<KeyType>::create_new(const KeyType& key,
-    write_function write)
+void record_multimap<KeyType>::create_new(const KeyType &key,
+                                          write_function write)
 {
     const auto first = records_.create();
     write(records_.get(first));
 
-    const auto write_start_info = [this, first](memory_ptr data)
-    {
+    const auto write_start_info = [this, first](memory_ptr data) {
         auto serial = make_serializer(REMAP_ADDRESS(data));
 
         // Critical Section
