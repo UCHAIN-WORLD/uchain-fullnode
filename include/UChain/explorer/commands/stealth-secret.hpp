@@ -53,9 +53,12 @@
 
 /********* GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY **********/
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /**
  * Various localizable strings.
@@ -67,14 +70,13 @@ namespace commands {
  * Class to implement the stealth-secret command.
  */
 class BCX_API stealth_secret
-  : public command
+    : public command
 {
-public:
-
+  public:
     /**
      * The symbolic (not localizable) command name, lower case.
      */
-    static const char* symbol()
+    static const char *symbol()
     {
         return "stealth-secret";
     }
@@ -82,7 +84,7 @@ public:
     /**
      * The symbolic (not localizable) former command name, lower case.
      */
-    static const char* formerly()
+    static const char *formerly()
     {
         return "stealth-uncover-secret";
     }
@@ -90,7 +92,7 @@ public:
     /**
      * The member symbolic (not localizable) command name, lower case.
      */
-    virtual const char* name()
+    virtual const char *name()
     {
         return stealth_secret::symbol();
     }
@@ -98,7 +100,7 @@ public:
     /**
      * The localizable command category name, upper case.
      */
-    virtual const char* category()
+    virtual const char *category()
     {
         return "STEALTH";
     }
@@ -106,7 +108,7 @@ public:
     /**
      * The localizable command description.
      */
-    virtual const char* description()
+    virtual const char *description()
     {
         return "Derive the stealth private key necessary to spend a stealth payment.";
     }
@@ -116,7 +118,7 @@ public:
      * A value of -1 indicates that the number of instances is unlimited.
      * @return  The loaded program argument definitions.
      */
-    virtual arguments_metadata& load_arguments()
+    virtual arguments_metadata &load_arguments()
     {
         return get_argument_metadata()
             .add("SPEND_SECRET", 1)
@@ -128,8 +130,8 @@ public:
      * @param[in]  input  The input stream for loading the parameters.
      * @param[in]         The loaded variables.
      */
-    virtual void load_fallbacks(std::istream& input,
-        po::variables_map& variables)
+    virtual void load_fallbacks(std::istream &input,
+                                po::variables_map &variables)
     {
         const auto raw = requires_raw_input();
         load_input(get_shared_secret_argument(), "SHARED_SECRET", variables, input, raw);
@@ -140,31 +142,23 @@ public:
      * BUGBUG: see boost bug/fix: svn.boost.org/trac/boost/ticket/8009
      * @return  The loaded program option definitions.
      */
-    virtual options_metadata& load_options()
+    virtual options_metadata &load_options()
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             BX_CONFIG_VARIABLE ",c",
             value<boost::filesystem::path>(),
-            "The path to the configuration settings file."
-        )
-        (
+            "The path to the configuration settings file.")(
             "SPEND_SECRET",
             value<explorer::config::ec_private>(&argument_.spend_secret)->required(),
-            "The Base16 EC spend secret for spending a stealth payment."
-        )
-        (
+            "The Base16 EC spend secret for spending a stealth payment.")(
             "SHARED_SECRET",
             value<explorer::config::ec_private>(&argument_.shared_secret),
-            "The Base16 EC shared secret corresponding to the SPEND_PUBKEY. If not specified the key is read from STDIN."
-        );
+            "The Base16 EC shared secret corresponding to the SPEND_PUBKEY. If not specified the key is read from STDIN.");
 
         return options;
     }
@@ -173,7 +167,7 @@ public:
      * Set variable defaults from configuration variable values.
      * @param[in]  variables  The loaded variables.
      */
-    virtual void set_defaults_from_config(po::variables_map& variables)
+    virtual void set_defaults_from_config(po::variables_map &variables)
     {
     }
 
@@ -183,15 +177,15 @@ public:
      * @param[out]  error   The input stream for the command execution.
      * @return              The appropriate console return code { -1, 0, 1 }.
      */
-    virtual console_result invoke(std::ostream& output,
-        std::ostream& cerr);
+    virtual console_result invoke(std::ostream &output,
+                                  std::ostream &cerr);
 
     /* Properties */
 
     /**
      * Get the value of the SPEND_SECRET argument.
      */
-    virtual explorer::config::ec_private& get_spend_secret_argument()
+    virtual explorer::config::ec_private &get_spend_secret_argument()
     {
         return argument_.spend_secret;
     }
@@ -200,7 +194,7 @@ public:
      * Set the value of the SPEND_SECRET argument.
      */
     virtual void set_spend_secret_argument(
-        const explorer::config::ec_private& value)
+        const explorer::config::ec_private &value)
     {
         argument_.spend_secret = value;
     }
@@ -208,7 +202,7 @@ public:
     /**
      * Get the value of the SHARED_SECRET argument.
      */
-    virtual explorer::config::ec_private& get_shared_secret_argument()
+    virtual explorer::config::ec_private &get_shared_secret_argument()
     {
         return argument_.shared_secret;
     }
@@ -217,13 +211,12 @@ public:
      * Set the value of the SHARED_SECRET argument.
      */
     virtual void set_shared_secret_argument(
-        const explorer::config::ec_private& value)
+        const explorer::config::ec_private &value)
     {
         argument_.shared_secret = value;
     }
 
-private:
-
+  private:
     /**
      * Command line argument bound variables.
      * Uses cross-compiler safe constructor-based zeroize.
@@ -232,8 +225,8 @@ private:
     struct argument
     {
         argument()
-          : spend_secret(),
-            shared_secret()
+            : spend_secret(),
+              shared_secret()
         {
         }
 

@@ -53,31 +53,32 @@
 
 /********* GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY **********/
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /**
  * Class to implement the fetch-history command.
  */
 class BCX_API fetch_history
-  : public command
+    : public command
 {
-public:
-
+  public:
     /**
      * The symbolic (not localizable) command name, lower case.
      */
-    static const char* symbol()
+    static const char *symbol()
     {
         return "fetch-history";
     }
 
-
     /**
      * The member symbolic (not localizable) command name, lower case.
      */
-    virtual const char* name()
+    virtual const char *name()
     {
         return fetch_history::symbol();
     }
@@ -85,7 +86,7 @@ public:
     /**
      * The localizable command category name, upper case.
      */
-    virtual const char* category()
+    virtual const char *category()
     {
         return "ONLINE";
     }
@@ -93,7 +94,7 @@ public:
     /**
      * The localizable command description.
      */
-    virtual const char* description()
+    virtual const char *description()
     {
         return "Get list of output points, values, and spends for a payment address. Requires a Libbitcoin/Obelisk server connection.";
     }
@@ -103,7 +104,7 @@ public:
      * A value of -1 indicates that the number of instances is unlimited.
      * @return  The loaded program argument definitions.
      */
-    virtual arguments_metadata& load_arguments()
+    virtual arguments_metadata &load_arguments()
     {
         return get_argument_metadata()
             .add("PAYMENT_ADDRESS", 1);
@@ -114,8 +115,8 @@ public:
      * @param[in]  input  The input stream for loading the parameters.
      * @param[in]         The loaded variables.
      */
-    virtual void load_fallbacks(std::istream& input,
-        po::variables_map& variables)
+    virtual void load_fallbacks(std::istream &input,
+                                po::variables_map &variables)
     {
         const auto raw = requires_raw_input();
         load_input(get_payment_address_argument(), "PAYMENT_ADDRESS", variables, input, raw);
@@ -126,31 +127,23 @@ public:
      * BUGBUG: see boost bug/fix: svn.boost.org/trac/boost/ticket/8009
      * @return  The loaded program option definitions.
      */
-    virtual options_metadata& load_options()
+    virtual options_metadata &load_options()
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             BX_CONFIG_VARIABLE ",c",
             value<boost::filesystem::path>(),
-            "The path to the configuration settings file."
-        )
-        (
+            "The path to the configuration settings file.")(
             "format,f",
             value<explorer::config::encoding>(&option_.format),
-            "The output format. Options are 'info', 'json' and 'xml', defaults to 'info'."
-        )
-        (
+            "The output format. Options are 'info', 'json' and 'xml', defaults to 'info'.")(
             "PAYMENT_ADDRESS",
             value<bc::wallet::payment_address>(&argument_.payment_address),
-            "The payment address. If not specified the address is read from STDIN."
-        );
+            "The payment address. If not specified the address is read from STDIN.");
 
         return options;
     }
@@ -159,7 +152,7 @@ public:
      * Set variable defaults from configuration variable values.
      * @param[in]  variables  The loaded variables.
      */
-    virtual void set_defaults_from_config(po::variables_map& variables)
+    virtual void set_defaults_from_config(po::variables_map &variables)
     {
     }
 
@@ -169,15 +162,15 @@ public:
      * @param[out]  error   The input stream for the command execution.
      * @return              The appropriate console return code { -1, 0, 1 }.
      */
-    virtual console_result invoke(std::ostream& output,
-        std::ostream& cerr);
+    virtual console_result invoke(std::ostream &output,
+                                  std::ostream &cerr);
 
     /* Properties */
 
     /**
      * Get the value of the PAYMENT_ADDRESS argument.
      */
-    virtual bc::wallet::payment_address& get_payment_address_argument()
+    virtual bc::wallet::payment_address &get_payment_address_argument()
     {
         return argument_.payment_address;
     }
@@ -186,7 +179,7 @@ public:
      * Set the value of the PAYMENT_ADDRESS argument.
      */
     virtual void set_payment_address_argument(
-        const bc::wallet::payment_address& value)
+        const bc::wallet::payment_address &value)
     {
         argument_.payment_address = value;
     }
@@ -194,7 +187,7 @@ public:
     /**
      * Get the value of the format option.
      */
-    virtual explorer::config::encoding& get_format_option()
+    virtual explorer::config::encoding &get_format_option()
     {
         return option_.format;
     }
@@ -203,13 +196,12 @@ public:
      * Set the value of the format option.
      */
     virtual void set_format_option(
-        const explorer::config::encoding& value)
+        const explorer::config::encoding &value)
     {
         option_.format = value;
     }
 
-private:
-
+  private:
     /**
      * Command line argument bound variables.
      * Uses cross-compiler safe constructor-based zeroize.
@@ -218,7 +210,7 @@ private:
     struct argument
     {
         argument()
-          : payment_address()
+            : payment_address()
         {
         }
 
@@ -233,7 +225,7 @@ private:
     struct option
     {
         option()
-          : format()
+            : format()
         {
         }
 

@@ -53,9 +53,12 @@
 
 /********* GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY **********/
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /**
  * Various localizable strings.
@@ -67,23 +70,21 @@ namespace commands {
  * Class to implement the fetch-stealth command.
  */
 class BCX_API fetch_stealth
-  : public command
+    : public command
 {
-public:
-
+  public:
     /**
      * The symbolic (not localizable) command name, lower case.
      */
-    static const char* symbol()
+    static const char *symbol()
     {
         return "fetch-stealth";
     }
 
-
     /**
      * The member symbolic (not localizable) command name, lower case.
      */
-    virtual const char* name()
+    virtual const char *name()
     {
         return fetch_stealth::symbol();
     }
@@ -91,7 +92,7 @@ public:
     /**
      * The localizable command category name, upper case.
      */
-    virtual const char* category()
+    virtual const char *category()
     {
         return "ONLINE";
     }
@@ -99,7 +100,7 @@ public:
     /**
      * The localizable command description.
      */
-    virtual const char* description()
+    virtual const char *description()
     {
         return "Get metadata on potential payment transactions by stealth prefix filter. Requires a Libbitcoin server connection.";
     }
@@ -109,7 +110,7 @@ public:
      * A value of -1 indicates that the number of instances is unlimited.
      * @return  The loaded program argument definitions.
      */
-    virtual arguments_metadata& load_arguments()
+    virtual arguments_metadata &load_arguments()
     {
         return get_argument_metadata()
             .add("FILTER", 1);
@@ -120,8 +121,8 @@ public:
      * @param[in]  input  The input stream for loading the parameters.
      * @param[in]         The loaded variables.
      */
-    virtual void load_fallbacks(std::istream& input,
-        po::variables_map& variables)
+    virtual void load_fallbacks(std::istream &input,
+                                po::variables_map &variables)
     {
     }
 
@@ -130,36 +131,26 @@ public:
      * BUGBUG: see boost bug/fix: svn.boost.org/trac/boost/ticket/8009
      * @return  The loaded program option definitions.
      */
-    virtual options_metadata& load_options()
+    virtual options_metadata &load_options()
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             BX_CONFIG_VARIABLE ",c",
             value<boost::filesystem::path>(),
-            "The path to the configuration settings file."
-        )
-        (
+            "The path to the configuration settings file.")(
             "format,f",
             value<explorer::config::encoding>(&option_.format),
-            "The output format. Options are 'info', 'json' and 'xml', defaults to 'info'."
-        )
-        (
+            "The output format. Options are 'info', 'json' and 'xml', defaults to 'info'.")(
             "height,t",
             value<uint32_t>(&option_.height),
-            "The minimum block height of transactions to include."
-        )
-        (
+            "The minimum block height of transactions to include.")(
             "FILTER",
             value<bc::config::base2>(&argument_.filter),
-            "The Base2 stealth prefix filter used to locate transactions. Defaults to all stealth transactions."
-        );
+            "The Base2 stealth prefix filter used to locate transactions. Defaults to all stealth transactions.");
 
         return options;
     }
@@ -168,7 +159,7 @@ public:
      * Set variable defaults from configuration variable values.
      * @param[in]  variables  The loaded variables.
      */
-    virtual void set_defaults_from_config(po::variables_map& variables)
+    virtual void set_defaults_from_config(po::variables_map &variables)
     {
     }
 
@@ -178,15 +169,15 @@ public:
      * @param[out]  error   The input stream for the command execution.
      * @return              The appropriate console return code { -1, 0, 1 }.
      */
-    virtual console_result invoke(std::ostream& output,
-        std::ostream& cerr);
+    virtual console_result invoke(std::ostream &output,
+                                  std::ostream &cerr);
 
     /* Properties */
 
     /**
      * Get the value of the FILTER argument.
      */
-    virtual bc::config::base2& get_filter_argument()
+    virtual bc::config::base2 &get_filter_argument()
     {
         return argument_.filter;
     }
@@ -195,7 +186,7 @@ public:
      * Set the value of the FILTER argument.
      */
     virtual void set_filter_argument(
-        const bc::config::base2& value)
+        const bc::config::base2 &value)
     {
         argument_.filter = value;
     }
@@ -203,7 +194,7 @@ public:
     /**
      * Get the value of the format option.
      */
-    virtual explorer::config::encoding& get_format_option()
+    virtual explorer::config::encoding &get_format_option()
     {
         return option_.format;
     }
@@ -212,7 +203,7 @@ public:
      * Set the value of the format option.
      */
     virtual void set_format_option(
-        const explorer::config::encoding& value)
+        const explorer::config::encoding &value)
     {
         option_.format = value;
     }
@@ -220,7 +211,7 @@ public:
     /**
      * Get the value of the height option.
      */
-    virtual uint32_t& get_height_option()
+    virtual uint32_t &get_height_option()
     {
         return option_.height;
     }
@@ -229,13 +220,12 @@ public:
      * Set the value of the height option.
      */
     virtual void set_height_option(
-        const uint32_t& value)
+        const uint32_t &value)
     {
         option_.height = value;
     }
 
-private:
-
+  private:
     /**
      * Command line argument bound variables.
      * Uses cross-compiler safe constructor-based zeroize.
@@ -244,7 +234,7 @@ private:
     struct argument
     {
         argument()
-          : filter()
+            : filter()
         {
         }
 
@@ -259,8 +249,8 @@ private:
     struct option
     {
         option()
-          : format(),
-            height()
+            : format(),
+              height()
         {
         }
 

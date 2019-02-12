@@ -53,22 +53,24 @@
 
 /********* GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY **********/
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /**
  * Class to implement the stealth-decode command.
  */
 class BCX_API stealth_decode
-  : public command
+    : public command
 {
-public:
-
+  public:
     /**
      * The symbolic (not localizable) command name, lower case.
      */
-    static const char* symbol()
+    static const char *symbol()
     {
         return "stealth-decode";
     }
@@ -76,7 +78,7 @@ public:
     /**
      * The symbolic (not localizable) former command name, lower case.
      */
-    static const char* formerly()
+    static const char *formerly()
     {
         return "stealth-show-addr";
     }
@@ -84,7 +86,7 @@ public:
     /**
      * The member symbolic (not localizable) command name, lower case.
      */
-    virtual const char* name()
+    virtual const char *name()
     {
         return stealth_decode::symbol();
     }
@@ -92,7 +94,7 @@ public:
     /**
      * The localizable command category name, upper case.
      */
-    virtual const char* category()
+    virtual const char *category()
     {
         return "STEALTH";
     }
@@ -100,7 +102,7 @@ public:
     /**
      * The localizable command description.
      */
-    virtual const char* description()
+    virtual const char *description()
     {
         return "Decode a stealth address.";
     }
@@ -110,7 +112,7 @@ public:
      * A value of -1 indicates that the number of instances is unlimited.
      * @return  The loaded program argument definitions.
      */
-    virtual arguments_metadata& load_arguments()
+    virtual arguments_metadata &load_arguments()
     {
         return get_argument_metadata()
             .add("STEALTH_ADDRESS", 1);
@@ -121,8 +123,8 @@ public:
      * @param[in]  input  The input stream for loading the parameters.
      * @param[in]         The loaded variables.
      */
-    virtual void load_fallbacks(std::istream& input,
-        po::variables_map& variables)
+    virtual void load_fallbacks(std::istream &input,
+                                po::variables_map &variables)
     {
         const auto raw = requires_raw_input();
         load_input(get_stealth_address_argument(), "STEALTH_ADDRESS", variables, input, raw);
@@ -133,31 +135,23 @@ public:
      * BUGBUG: see boost bug/fix: svn.boost.org/trac/boost/ticket/8009
      * @return  The loaded program option definitions.
      */
-    virtual options_metadata& load_options()
+    virtual options_metadata &load_options()
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             BX_CONFIG_VARIABLE ",c",
             value<boost::filesystem::path>(),
-            "The path to the configuration settings file."
-        )
-        (
+            "The path to the configuration settings file.")(
             "format,f",
             value<explorer::config::encoding>(&option_.format),
-            "The output format. Options are 'info', 'json' and 'xml', defaults to 'info'."
-        )
-        (
+            "The output format. Options are 'info', 'json' and 'xml', defaults to 'info'.")(
             "STEALTH_ADDRESS",
             value<bc::wallet::stealth_address>(&argument_.stealth_address),
-            "The stealth payment address. If not specified the address is read from STDIN."
-        );
+            "The stealth payment address. If not specified the address is read from STDIN.");
 
         return options;
     }
@@ -166,7 +160,7 @@ public:
      * Set variable defaults from configuration variable values.
      * @param[in]  variables  The loaded variables.
      */
-    virtual void set_defaults_from_config(po::variables_map& variables)
+    virtual void set_defaults_from_config(po::variables_map &variables)
     {
     }
 
@@ -176,15 +170,15 @@ public:
      * @param[out]  error   The input stream for the command execution.
      * @return              The appropriate console return code { -1, 0, 1 }.
      */
-    virtual console_result invoke(std::ostream& output,
-        std::ostream& cerr);
+    virtual console_result invoke(std::ostream &output,
+                                  std::ostream &cerr);
 
     /* Properties */
 
     /**
      * Get the value of the STEALTH_ADDRESS argument.
      */
-    virtual bc::wallet::stealth_address& get_stealth_address_argument()
+    virtual bc::wallet::stealth_address &get_stealth_address_argument()
     {
         return argument_.stealth_address;
     }
@@ -193,7 +187,7 @@ public:
      * Set the value of the STEALTH_ADDRESS argument.
      */
     virtual void set_stealth_address_argument(
-        const bc::wallet::stealth_address& value)
+        const bc::wallet::stealth_address &value)
     {
         argument_.stealth_address = value;
     }
@@ -201,7 +195,7 @@ public:
     /**
      * Get the value of the format option.
      */
-    virtual explorer::config::encoding& get_format_option()
+    virtual explorer::config::encoding &get_format_option()
     {
         return option_.format;
     }
@@ -210,13 +204,12 @@ public:
      * Set the value of the format option.
      */
     virtual void set_format_option(
-        const explorer::config::encoding& value)
+        const explorer::config::encoding &value)
     {
         option_.format = value;
     }
 
-private:
-
+  private:
     /**
      * Command line argument bound variables.
      * Uses cross-compiler safe constructor-based zeroize.
@@ -225,7 +218,7 @@ private:
     struct argument
     {
         argument()
-          : stealth_address()
+            : stealth_address()
         {
         }
 
@@ -240,7 +233,7 @@ private:
     struct option
     {
         option()
-          : format()
+            : format()
         {
         }
 
