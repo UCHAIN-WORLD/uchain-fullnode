@@ -26,25 +26,27 @@
 #include <UChain/client/define.hpp>
 #include <UChain/client/stream.hpp>
 
-namespace libbitcoin {
-namespace client {
+namespace libbitcoin
+{
+namespace client
+{
 
 /// This is the only class in the client with a direct protocol dependency.
 class BCC_API socket_stream
-  : public stream
+    : public stream
 {
-public:
-    socket_stream(protocol::zmq::socket& socket);
+  public:
+    socket_stream(protocol::zmq::socket &socket);
 
-    protocol::zmq::socket& socket();
+    protocol::zmq::socket &socket();
 
     // stream interface.
     virtual int32_t refresh();
-    virtual bool read(stream& stream);
-    virtual bool write(const data_stack& data);
+    virtual bool read(stream &stream);
+    virtual bool write(const data_stack &data);
 
-private:
-    protocol::zmq::socket& socket_;
+  private:
+    protocol::zmq::socket &socket_;
 };
 
 } // namespace client

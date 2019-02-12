@@ -27,19 +27,21 @@
 #include <UChain/client/define.hpp>
 #include <UChain/client/stream.hpp>
 
-namespace libbitcoin {
-namespace client {
+namespace libbitcoin
+{
+namespace client
+{
 
 /// Decodes and encodes messages in the obelisk protocol.
 /// This class is a pure proxy; it does not talk directly to zeromq.
 class BCC_API proxy
-  : public dealer
+    : public dealer
 {
-public:
+  public:
     /// Resend is unrelated to connections.
     /// Timeout is capped at max_int32 (vs. max_uint32).
-    proxy(stream& out, unknown_handler on_unknown_command,
-        uint32_t timeout_milliseconds, uint8_t resends);
+    proxy(stream &out, unknown_handler on_unknown_command,
+          uint32_t timeout_milliseconds, uint8_t resends);
 
     // Fetch handler types.
     //-------------------------------------------------------------------------
@@ -47,99 +49,97 @@ public:
     typedef std::function<void()> empty_handler;
     typedef std::function<void(size_t)> height_handler;
     typedef std::function<void(size_t, size_t)> transaction_index_handler;
-    typedef std::function<void(const chain::header&)> block_header_handler;
-    typedef std::function<void(const std::vector<chain::header>&)> block_headers_handler;
-    typedef std::function<void(const chain::history::list&)> history_handler;
-    typedef std::function<void(const chain::stealth::list&)> stealth_handler;
-    typedef std::function<void(const chain::transaction&)> transaction_handler;
-    typedef std::function<void(const chain::point::indexes&)> validate_handler;
-    typedef std::function<void(const chain::points_info&)> points_info_handler;
-
+    typedef std::function<void(const chain::header &)> block_header_handler;
+    typedef std::function<void(const std::vector<chain::header> &)> block_headers_handler;
+    typedef std::function<void(const chain::history::list &)> history_handler;
+    typedef std::function<void(const chain::stealth::list &)> stealth_handler;
+    typedef std::function<void(const chain::transaction &)> transaction_handler;
+    typedef std::function<void(const chain::point::indexes &)> validate_handler;
+    typedef std::function<void(const chain::points_info &)> points_info_handler;
 
     // Fetchers.
     //-------------------------------------------------------------------------
 
     void protocol_broadcast_transaction(error_handler on_error,
-        empty_handler on_reply, const chain::transaction& tx);
+                                        empty_handler on_reply, const chain::transaction &tx);
 
     void transaction_pool_validate(error_handler on_error,
-        validate_handler on_reply, const chain::transaction& tx);
+                                   validate_handler on_reply, const chain::transaction &tx);
 
     void transaction_pool_fetch_transaction(error_handler on_error,
-        transaction_handler on_reply, const hash_digest& tx_hash);
+                                            transaction_handler on_reply, const hash_digest &tx_hash);
 
     void blockchain_fetch_transaction(error_handler on_error,
-        transaction_handler on_reply, const hash_digest& tx_hash);
+                                      transaction_handler on_reply, const hash_digest &tx_hash);
 
     void blockchain_fetch_last_height(error_handler on_error,
-        height_handler on_reply);
+                                      height_handler on_reply);
 
     void blockchain_fetch_block_header(error_handler on_error,
-        block_header_handler on_reply, uint32_t height);
+                                       block_header_handler on_reply, uint32_t height);
     void blockchain_fetch_block_headers(error_handler on_error,
-        block_headers_handler on_reply, uint32_t start, uint32_t end, bool order);
+                                        block_headers_handler on_reply, uint32_t start, uint32_t end, bool order);
     void blockchain_fetch_block_header(error_handler on_error,
-        block_header_handler on_reply, const hash_digest& block_hash);
+                                       block_header_handler on_reply, const hash_digest &block_hash);
 
     void blockchain_fetch_transaction_index(error_handler on_error,
-        transaction_index_handler on_reply, const hash_digest& tx_hash);
+                                            transaction_index_handler on_reply, const hash_digest &tx_hash);
 
     void blockchain_fetch_stealth(error_handler on_error,
-        stealth_handler on_reply, const binary& prefix,
-        uint32_t from_height=0);
+                                  stealth_handler on_reply, const binary &prefix,
+                                  uint32_t from_height = 0);
 
     void blockchain_fetch_history(error_handler on_error,
-        history_handler on_reply, const bc::wallet::payment_address& address,
-        uint32_t from_height = 0);
+                                  history_handler on_reply, const bc::wallet::payment_address &address,
+                                  uint32_t from_height = 0);
 
     /// sx and bs 2.0 only (obsolete in bs 3.0).
     void address_fetch_history(error_handler on_error,
-        history_handler on_reply, const bc::wallet::payment_address& address,
-        uint32_t from_height=0);
+                               history_handler on_reply, const bc::wallet::payment_address &address,
+                               uint32_t from_height = 0);
 
     /// bs 2.0 and later.
     void address_fetch_history2(error_handler on_error,
-        history_handler on_reply, const bc::wallet::payment_address& address,
-        uint32_t from_height=0);
+                                history_handler on_reply, const bc::wallet::payment_address &address,
+                                uint32_t from_height = 0);
 
     void address_fetch_unspent_outputs(error_handler on_error,
-        points_info_handler on_reply, const bc::wallet::payment_address& address,
-        const uint64_t satoshi,
-        const bc::wallet::select_outputs::algorithm algorithm);
+                                       points_info_handler on_reply, const bc::wallet::payment_address &address,
+                                       const uint64_t satoshi,
+                                       const bc::wallet::select_outputs::algorithm algorithm);
 
     // Subscribers.
     //-------------------------------------------------------------------------
 
     void address_subscribe(error_handler on_error, empty_handler on_reply,
-        const bc::wallet::payment_address& address);
+                           const bc::wallet::payment_address &address);
 
     void address_subscribe(error_handler on_error, empty_handler on_reply,
-        chain::subscribe_type type, const binary& prefix);
+                           chain::subscribe_type type, const binary &prefix);
 
-private:
-
+  private:
     // Response handlers.
     //-------------------------------------------------------------------------
-    static bool decode_empty(reader& payload, empty_handler& handler);
-    static bool decode_transaction(reader& payload,
-        transaction_handler& handler);
-    static bool decode_height(reader& payload, height_handler& handler);
-    static bool decode_block_header(reader& payload,
-        block_header_handler& handler);
-    static bool decode_block_headers(reader& payload,
-        block_headers_handler& handler);
-    static bool decode_transaction_index(reader& payload,
-        transaction_index_handler& handler);
-    static bool decode_validate(reader& payload, validate_handler& handler);
-    static bool decode_stealth(reader& payload, stealth_handler& handler);
-    static bool decode_history(reader& payload, history_handler& handler);
-    static bool decode_expanded_history(reader& payload,
-        history_handler& handler);
+    static bool decode_empty(reader &payload, empty_handler &handler);
+    static bool decode_transaction(reader &payload,
+                                   transaction_handler &handler);
+    static bool decode_height(reader &payload, height_handler &handler);
+    static bool decode_block_header(reader &payload,
+                                    block_header_handler &handler);
+    static bool decode_block_headers(reader &payload,
+                                     block_headers_handler &handler);
+    static bool decode_transaction_index(reader &payload,
+                                         transaction_index_handler &handler);
+    static bool decode_validate(reader &payload, validate_handler &handler);
+    static bool decode_stealth(reader &payload, stealth_handler &handler);
+    static bool decode_history(reader &payload, history_handler &handler);
+    static bool decode_expanded_history(reader &payload,
+                                        history_handler &handler);
 
     // Utilities.
     //-------------------------------------------------------------------------
-    static chain::stealth::list expand(chain::stealth_compact::list& compact);
-    static chain::history::list expand(chain::history_compact::list& compact);
+    static chain::stealth::list expand(chain::stealth_compact::list &compact);
+    static chain::history::list expand(chain::history_compact::list &compact);
 };
 
 } // namespace client

@@ -29,27 +29,31 @@
 #include <UChain/client/define.hpp>
 #include <UChain/client/stream.hpp>
 
-namespace libbitcoin {
-namespace client {
+namespace libbitcoin
+{
+namespace client
+{
 
 // This class is not thread safe.
 /// Matches replies and outgoing messages, walleting for timeouts and retries.
 // This class is a pure proxy; it does not talk directly to zeromq.
 class BCC_API dealer
-  : public stream
+    : public stream
 {
-public:
-    typedef std::function<void(const code&)> error_handler;
-    typedef std::function<void(const std::string&)> unknown_handler;
-    typedef std::function<void(const binary&, size_t, const hash_digest&,
-        const chain::transaction&)> stealth_update_handler;
-    typedef std::function<void(const bc::wallet::payment_address&, size_t,
-        const hash_digest&, const chain::transaction&)> update_handler;
+  public:
+    typedef std::function<void(const code &)> error_handler;
+    typedef std::function<void(const std::string &)> unknown_handler;
+    typedef std::function<void(const binary &, size_t, const hash_digest &,
+                               const chain::transaction &)>
+        stealth_update_handler;
+    typedef std::function<void(const bc::wallet::payment_address &, size_t,
+                               const hash_digest &, const chain::transaction &)>
+        update_handler;
 
     /// Resend is unrelated to connections.
     /// Timeout is capped at max_int32 (vs. max_uint32).
-    dealer(stream& out, unknown_handler on_unknown_command,
-        uint32_t timeout_milliseconds, uint8_t resends);
+    dealer(stream &out, unknown_handler on_unknown_command,
+           uint32_t timeout_milliseconds, uint8_t resends);
 
     virtual ~dealer();
 
@@ -57,7 +61,7 @@ public:
     bool empty() const;
 
     /// Clear all handlers with the specified error code.
-    void clear(const code& code);
+    void clear(const code &code);
 
     /// Accessors.
     virtual void set_on_update(update_handler on_update);
@@ -70,14 +74,14 @@ public:
     virtual int32_t refresh();
 
     /// Read from this stream onto the specified stream.
-    virtual bool read(stream& stream) override;
+    virtual bool read(stream &stream) override;
 
     /// Write the specified data to this stream.
-    virtual bool write(const data_stack& data) override;
+    virtual bool write(const data_stack &data) override;
 
-protected:
+  protected:
     // Decodes a message and calls the appropriate callback.
-    typedef std::function<bool(reader& payload)> decoder;
+    typedef std::function<bool(reader &payload)> decoder;
 
     struct obelisk_message
     {
@@ -96,28 +100,28 @@ protected:
     };
 
     // Calculate the number of milliseconds remaining in the deadline.
-    static int32_t remaining(const asio::time_point& deadline);
+    static int32_t remaining(const asio::time_point &deadline);
 
     // send_request->send
-    bool send(const obelisk_message& message);
+    bool send(const obelisk_message &message);
 
     // write->receive->decode_reply
-    bool receive(const obelisk_message& message);
+    bool receive(const obelisk_message &message);
 
     // Sends an outgoing request, and adds handlers to pending request table.
-    bool send_request(const std::string& command, const data_chunk& payload,
-        error_handler on_error, decoder on_reply);
+    bool send_request(const std::string &command, const data_chunk &payload,
+                      error_handler on_error, decoder on_reply);
 
     // Decodes an incoming message, invoking the error and/or reply handler.
     // The reply handler must not invoke its handler if there is an error.
-    void decode_reply(const obelisk_message& message, error_handler& on_error,
-        decoder& on_reply);
+    void decode_reply(const obelisk_message &message, error_handler &on_error,
+                      decoder &on_reply);
 
     // Payment address notification update.
-    void decode_payment_update(const obelisk_message& message);
+    void decode_payment_update(const obelisk_message &message);
 
     // Stealth address notification update.
-    void decode_stealth_update(const obelisk_message& message);
+    void decode_stealth_update(const obelisk_message &message);
 
     uint32_t last_request_index_;
     const uint8_t resends_;
@@ -126,11 +130,10 @@ protected:
     update_handler on_update_;
     stealth_update_handler on_stealth_update_;
     std::map<uint32_t, pending_request> pending_;
-    stream& out_;
+    stream &out_;
 };
 
 } // namespace client
 } // namespace libbitcoin
 
 #endif
-
