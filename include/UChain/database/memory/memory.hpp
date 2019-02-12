@@ -28,19 +28,21 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/define.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 #ifdef REMAP_SAFETY
 
 /// This interface defines remap safe unrestricted access to a memory map.
 class BCD_API memory
 {
-public:
+  public:
     typedef std::shared_ptr<memory> ptr;
 
     /// Get the address indicated by the pointer.
-    virtual uint8_t* buffer() = 0;
+    virtual uint8_t *buffer() = 0;
 
     /// Increment the pointer the specified number of bytes within the record.
     virtual void increment(size_t value) = 0;
@@ -49,31 +51,31 @@ public:
 #endif // REMAP_SAFETY
 
 #ifdef REMAP_SAFETY
-    typedef memory::ptr memory_ptr;
-    #define REMAP_ADDRESS(ptr) (ptr)->buffer()
-    #define REMAP_DOWNGRADE(ptr, data) (ptr)->downgrade(data)
-    #define REMAP_INCREMENT(ptr, offset) (ptr)->increment(offset)
-    #define REMAP_ACCESSOR(ptr, mutex) std::make_shared<accessor>(mutex, ptr)
-    #define REMAP_ALLOCATOR(mutex) std::make_shared<allocator>(mutex)
-    #define REMAP_READ(mutex) shared_lock lock(mutex)
-    #define REMAP_WRITE(mutex) unique_lock lock(mutex)
+typedef memory::ptr memory_ptr;
+#define REMAP_ADDRESS(ptr) (ptr)->buffer()
+#define REMAP_DOWNGRADE(ptr, data) (ptr)->downgrade(data)
+#define REMAP_INCREMENT(ptr, offset) (ptr)->increment(offset)
+#define REMAP_ACCESSOR(ptr, mutex) std::make_shared<accessor>(mutex, ptr)
+#define REMAP_ALLOCATOR(mutex) std::make_shared<allocator>(mutex)
+#define REMAP_READ(mutex) shared_lock lock(mutex)
+#define REMAP_WRITE(mutex) unique_lock lock(mutex)
 #else
-    typedef uint8_t* memory_ptr;
-    #define REMAP_ADDRESS(ptr) ptr
-    #define REMAP_DOWNGRADE(ptr, data)
-    #define REMAP_INCREMENT(ptr, offset) ptr += (offset)
-    #define REMAP_ACCESSOR(ptr, mutex)
-    #define REMAP_ALLOCATOR(mutex)
-    #define REMAP_READ(mutex)
-    #define REMAP_WRITE(mutex)
+typedef uint8_t *memory_ptr;
+#define REMAP_ADDRESS(ptr) ptr
+#define REMAP_DOWNGRADE(ptr, data)
+#define REMAP_INCREMENT(ptr, offset) ptr += (offset)
+#define REMAP_ACCESSOR(ptr, mutex)
+#define REMAP_ALLOCATOR(mutex)
+#define REMAP_READ(mutex)
+#define REMAP_WRITE(mutex)
 #endif // REMAP_SAFETY
 
 #ifdef ALLOCATE_SAFETY
-    #define ALLOCATE_READ(mutex) shared_lock lock(mutex)
-    #define ALLOCATE_WRITE(mutex) unique_lock lock(mutex)
+#define ALLOCATE_READ(mutex) shared_lock lock(mutex)
+#define ALLOCATE_WRITE(mutex) unique_lock lock(mutex)
 #else
-    #define ALLOCATE_READ(mutex)
-    #define ALLOCATE_WRITE(mutex)
+#define ALLOCATE_READ(mutex)
+#define ALLOCATE_WRITE(mutex)
 #endif // ALLOCATE_SAFETY
 
 } // namespace database
