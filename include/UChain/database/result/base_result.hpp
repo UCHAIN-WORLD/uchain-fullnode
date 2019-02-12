@@ -27,14 +27,16 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// Deferred read base result.
 class BCD_API base_result
 {
-public:
-    base_result(const memory_ptr slab): slab_(slab)
+  public:
+    base_result(const memory_ptr slab) : slab_(slab)
     {
     }
 
@@ -47,7 +49,8 @@ public:
     {
         return slab_;
     }
-private:
+
+  private:
     const memory_ptr slab_;
 };
 #if 0

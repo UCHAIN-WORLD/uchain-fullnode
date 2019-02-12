@@ -27,13 +27,15 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// Deferred read transaction result.
 class BCD_API transaction_result
 {
-public:
+  public:
     transaction_result(const memory_ptr slab);
 
     /// True if this transaction result is valid (found).
@@ -48,7 +50,7 @@ public:
     /// The transaction.
     chain::transaction transaction() const;
 
-private:
+  private:
     const memory_ptr slab_;
 };
 

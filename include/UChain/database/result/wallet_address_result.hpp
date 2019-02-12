@@ -31,13 +31,15 @@
 
 using namespace libbitcoin::chain;
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// read wallet_address detail information from wallet_address database.
 class BCD_API wallet_address_result : public base_result
 {
-public:
+  public:
     wallet_address_result(const memory_ptr slab);
 
     /// The wallet_address.
