@@ -28,9 +28,12 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between serialized and deserialized satoshi
@@ -38,8 +41,7 @@ namespace config {
  */
 class BCX_API header
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -49,25 +51,25 @@ public:
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    header(const std::string& hexcode);
+    header(const std::string &hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    header(const chain::header& value);
+    header(const chain::header &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    header(const header& other);
+    header(const header &other);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::header&() const;
+    operator const chain::header &() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -75,8 +77,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        header& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    header &argument);
 
     /**
      * Overload stream out.
@@ -84,11 +86,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const header& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const header &argument);
 
-private:
-
+  private:
     /**
      * The state of this object's header data.
      */

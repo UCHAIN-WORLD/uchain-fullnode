@@ -29,9 +29,12 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between serialized and deserialized satoshi
@@ -39,8 +42,7 @@ namespace config {
  */
 class BCX_API transaction
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -50,31 +52,31 @@ public:
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    transaction(const std::string& hexcode);
+    transaction(const std::string &hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    transaction(const tx_type& value);
+    transaction(const tx_type &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    transaction(const transaction& other);
+    transaction(const transaction &other);
 
     /**
      * Return a reference to the data member.
      * @return  A reference to the object's internal data.
      */
-    tx_type& data();
+    tx_type &data();
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const tx_type&() const;
+    operator const tx_type &() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -82,8 +84,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        transaction& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    transaction &argument);
 
     /**
      * Overload stream out.
@@ -91,19 +93,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const transaction& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const transaction &argument);
 
-private:
-
+  private:
     /**
      * The state of this object's transaction data.
      */
     tx_type value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

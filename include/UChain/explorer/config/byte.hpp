@@ -28,17 +28,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between decimal string and uint8_t.
  */
 class BCX_API byte
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -54,13 +56,13 @@ public:
      * Initialization constructor.
      * @param[in]  decimal  The value to initialize with.
      */
-    byte(const std::string& decimal);
+    byte(const std::string &decimal);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    byte(const byte& other);
+    byte(const byte &other);
 
     /**
      * Overload cast to internal type.
@@ -74,8 +76,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        byte& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    byte &argument);
 
     /**
      * Overload stream out.
@@ -83,19 +85,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const byte& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const byte &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */
     uint8_t value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

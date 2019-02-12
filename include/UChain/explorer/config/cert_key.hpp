@@ -28,17 +28,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between data_chunk and Z85 cert key.
  */
 class BCX_API cert_key
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -48,13 +50,13 @@ public:
      * Initialization constructor.
      * @param[in]  base85  The value to initialize with.
      */
-    cert_key(const std::string& base85);
+    cert_key(const std::string &base85);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    cert_key(const cert_key& other);
+    cert_key(const cert_key &other);
 
     /**
      * Convert internal type to text string.
@@ -67,7 +69,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const data_chunk&() const;
+    operator const data_chunk &() const;
 
     /**
      * Overload cast to generic data reference.
@@ -81,8 +83,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        cert_key& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    cert_key &argument);
 
     /**
      * Overload stream out.
@@ -90,19 +92,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const cert_key& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const cert_key &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */
     data_chunk value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

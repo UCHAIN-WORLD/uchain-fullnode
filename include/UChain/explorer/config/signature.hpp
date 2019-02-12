@@ -30,17 +30,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between string and message_signature.
  */
 class BCX_API signature
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -50,25 +52,25 @@ public:
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    signature(const std::string& hexcode);
+    signature(const std::string &hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    signature(const bc::wallet::message_signature& value);
+    signature(const bc::wallet::message_signature &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    signature(const signature& other);
+    signature(const signature &other);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const bc::wallet::message_signature&() const;
+    operator const bc::wallet::message_signature &() const;
 
     /**
      * Overload stream in. If input is invalid sets no bytes in argument.
@@ -76,8 +78,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        signature& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    signature &argument);
 
     /**
      * Overload stream out.
@@ -85,11 +87,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const signature& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const signature &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */

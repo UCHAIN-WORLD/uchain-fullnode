@@ -28,9 +28,12 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between a base58-string:number and
@@ -38,8 +41,7 @@ namespace config {
  */
 class BCX_API output
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -49,14 +51,14 @@ public:
      * Initialization constructor.
      * @param[in]  tuple  The value to initialize with.
      */
-    output(const std::string& tuple);
+    output(const std::string &tuple);
 
     /// Parsed properties
     uint64_t amount() const;
     uint8_t version() const;
-    const chain::script& script() const;
-    const short_hash& pay_to_hash() const;
-    const data_chunk& ephemeral_data() const;
+    const chain::script &script() const;
+    const short_hash &pay_to_hash() const;
+    const data_chunk &ephemeral_data() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -64,11 +66,10 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        output& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    output &argument);
 
-private:
-
+  private:
     /**
      * The transaction output state of this object.
      * This data is translated to an output given expected version information.
@@ -80,8 +81,8 @@ private:
     data_chunk ephemeral_data_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

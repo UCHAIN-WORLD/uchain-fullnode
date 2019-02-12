@@ -28,9 +28,12 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between base58 string and bitcoin payment
@@ -38,8 +41,7 @@ namespace config {
  */
 class BCX_API address
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -51,13 +53,13 @@ public:
      * Initialization constructor.
      * @param[in]  base58  The value to initialize with.
      */
-    address(const std::string& base58);
+    address(const std::string &base58);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type reference.
      */
-    operator const std::string&() const;
+    operator const std::string &() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -65,19 +67,18 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        address& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    address &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */
     std::string value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif
