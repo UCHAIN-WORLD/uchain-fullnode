@@ -49,11 +49,13 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 template <typename Value>
-void deserialize(Value& value, const std::string& text, bool trim)
+void deserialize(Value &value, const std::string &text, bool trim)
 {
     if (trim)
         value = boost::lexical_cast<Value>(boost::trim_copy(text));
@@ -62,19 +64,19 @@ void deserialize(Value& value, const std::string& text, bool trim)
 }
 
 template <typename Value>
-void deserialize(Value& value, std::istream& input, bool trim)
+void deserialize(Value &value, std::istream &input, bool trim)
 {
     deserialize(value, read_stream(input), trim);
 }
 
 template <typename Value>
-void deserialize(std::vector<Value>& collection, const std::string& text,
-    bool trim)
+void deserialize(std::vector<Value> &collection, const std::string &text,
+                 bool trim)
 {
     // This had problems with the inclusion of the ideographic (CJK) space
     // (0xe3,0x80, 0x80). Need to infuse the local in bc::split().
     const auto tokens = split(text, " \n\r\t");
-    for (const auto& token: tokens)
+    for (const auto &token : tokens)
     {
         Value value;
         deserialize(value, token, true);
@@ -83,22 +85,22 @@ void deserialize(std::vector<Value>& collection, const std::string& text,
 }
 
 template <typename Item>
-bool deserialize_satoshi_item(Item& item, const data_chunk& data)
+bool deserialize_satoshi_item(Item &item, const data_chunk &data)
 {
     return item.from_data(data);
 }
 
 template <typename Value>
-void load_input(Value& parameter, const std::string& name,
-    po::variables_map& variables, std::istream& input, bool raw)
+void load_input(Value &parameter, const std::string &name,
+                po::variables_map &variables, std::istream &input, bool raw)
 {
     if (variables.find(name) == variables.end())
         deserialize(parameter, input, !raw);
 }
 
 template <typename Value>
-void load_path(Value& parameter, const std::string& name,
-    po::variables_map& variables, bool raw)
+void load_path(Value &parameter, const std::string &name,
+               po::variables_map &variables, bool raw)
 {
     // The path is not set as an argument so we can't load from file.
     auto variable = variables.find(name);
@@ -125,23 +127,23 @@ void load_path(Value& parameter, const std::string& name,
 }
 
 template <typename Value>
-std::string serialize(const Value& value, const std::string& fallback)
+std::string serialize(const Value &value, const std::string &fallback)
 {
     std::stringstream stream;
     stream << value;
-    const auto& text = stream.str();
+    const auto &text = stream.str();
     return text.empty() ? fallback : text;
 }
 
 template <typename Item>
-data_chunk serialize_satoshi_item(const Item& item)
+data_chunk serialize_satoshi_item(const Item &item)
 {
     return item.to_data();
 }
 
 template <typename Instance>
-void write_file(std::ostream& output, const std::string& path,
-    const Instance& instance, bool terminate)
+void write_file(std::ostream &output, const std::string &path,
+                const Instance &instance, bool terminate)
 {
     if (path.empty() || path == BX_STDIO_PATH_SENTINEL)
     {
