@@ -23,8 +23,10 @@
 
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /**
  * Item for record_hash_table. A chained list with the key included.
@@ -36,17 +38,17 @@ namespace database {
 template <typename KeyType>
 class record_row
 {
-public:
+  public:
     static BC_CONSTEXPR size_t index_size = sizeof(array_index);
     static BC_CONSTEXPR size_t key_size = std::tuple_size<KeyType>::value;
     static BC_CONSTEXPR file_offset value_begin = key_size + index_size;
 
-    record_row(record_manager& manager, array_index index);
+    record_row(record_manager &manager, array_index index);
 
-    array_index create(const KeyType& key, const array_index next);
+    array_index create(const KeyType &key, const array_index next);
 
     /// Does this match?
-    bool compare(const KeyType& key) const;
+    bool compare(const KeyType &key) const;
 
     /// The actual user data.
     const memory_ptr data() const;
@@ -57,26 +59,26 @@ public:
     /// Write a new next index.
     void write_next_index(array_index next);
 
-private:
+  private:
     const memory_ptr raw_next_data() const;
     const memory_ptr raw_data(file_offset offset) const;
 
     array_index index_;
-    record_manager& manager_;
+    record_manager &manager_;
     mutable shared_mutex mutex_;
 };
 
 template <typename KeyType>
-record_row<KeyType>::record_row(record_manager& manager,
-    const array_index index)
-  : manager_(manager), index_(index)
+record_row<KeyType>::record_row(record_manager &manager,
+                                const array_index index)
+    : manager_(manager), index_(index)
 {
     static_assert(index_size == 4, "Invalid array_index size.");
 }
 
 template <typename KeyType>
-array_index record_row<KeyType>::create(const KeyType& key,
-    const array_index next)
+array_index record_row<KeyType>::create(const KeyType &key,
+                                        const array_index next)
 {
     // Create new record.
     //   [ KeyType  ]
@@ -100,7 +102,7 @@ array_index record_row<KeyType>::create(const KeyType& key,
 }
 
 template <typename KeyType>
-bool record_row<KeyType>::compare(const KeyType& key) const
+bool record_row<KeyType>::compare(const KeyType &key) const
 {
     // Key data is at the start.
     const auto memory = raw_data(0);

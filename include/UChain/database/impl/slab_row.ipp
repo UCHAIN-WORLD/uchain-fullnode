@@ -23,8 +23,10 @@
 
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /**
  * Item for slab_hash_table. A chained list with the key included.
@@ -36,18 +38,18 @@ namespace database {
 template <typename KeyType>
 class slab_row
 {
-public:
+  public:
     static BC_CONSTEXPR size_t position_size = sizeof(file_offset);
     static BC_CONSTEXPR size_t key_size = std::tuple_size<KeyType>::value;
     static BC_CONSTEXPR file_offset value_begin = key_size + position_size;
 
-    slab_row(slab_manager& manager, file_offset position);
+    slab_row(slab_manager &manager, file_offset position);
 
-    file_offset create(const KeyType& key, const size_t value_size,
-        const file_offset next);
+    file_offset create(const KeyType &key, const size_t value_size,
+                       const file_offset next);
 
     /// Does this match?
-    bool compare(const KeyType& key) const;
+    bool compare(const KeyType &key) const;
 
     /// The actual user data.
     const memory_ptr data() const;
@@ -61,26 +63,26 @@ public:
     //whether cross the memory
     bool out_of_memory() const;
 
-private:
+  private:
     const memory_ptr raw_next_data() const;
     const memory_ptr raw_data(file_offset offset) const;
 
     file_offset position_;
-    slab_manager& manager_;
+    slab_manager &manager_;
     mutable shared_mutex mutex_;
 };
 
 template <typename KeyType>
-slab_row<KeyType>::slab_row(slab_manager& manager,
-    const file_offset position)
-  : manager_(manager), position_(position)
+slab_row<KeyType>::slab_row(slab_manager &manager,
+                            const file_offset position)
+    : manager_(manager), position_(position)
 {
     static_assert(position_size == 8, "Invalid file_offset size.");
 }
 
 template <typename KeyType>
-file_offset slab_row<KeyType>::create(const KeyType& key,
-    const size_t value_size, const file_offset next)
+file_offset slab_row<KeyType>::create(const KeyType &key,
+                                      const size_t value_size, const file_offset next)
 {
     const file_offset info_size = key.size() + position_size;
 
@@ -107,7 +109,7 @@ file_offset slab_row<KeyType>::create(const KeyType& key,
 }
 
 template <typename KeyType>
-bool slab_row<KeyType>::compare(const KeyType& key) const
+bool slab_row<KeyType>::compare(const KeyType &key) const
 {
     // Key data is at the start.
     const auto memory = raw_data(0);
@@ -165,7 +167,7 @@ const memory_ptr slab_row<KeyType>::raw_next_data() const
 template <typename KeyType>
 bool slab_row<KeyType>::out_of_memory() const
 {
-  return position_ > manager_.payload_size();
+    return position_ > manager_.payload_size();
 }
 
 } // namespace database
