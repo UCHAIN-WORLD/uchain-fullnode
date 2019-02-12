@@ -32,14 +32,14 @@
 // BCD_INTERNAL is used for non-api symbols.
 
 #if defined BCD_STATIC
-    #define BCD_API
-    #define BCD_INTERNAL
+#define BCD_API
+#define BCD_INTERNAL
 #elif defined BCD_DLL
-    #define BCD_API      BC_HELPER_DLL_EXPORT
-    #define BCD_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCD_API BC_HELPER_DLL_EXPORT
+#define BCD_INTERNAL BC_HELPER_DLL_LOCAL
 #else
-    #define BCD_API      BC_HELPER_DLL_IMPORT
-    #define BCD_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCD_API BC_HELPER_DLL_IMPORT
+#define BCD_INTERNAL BC_HELPER_DLL_LOCAL
 #endif
 
 // Log name.

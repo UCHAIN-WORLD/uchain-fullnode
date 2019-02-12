@@ -60,20 +60,22 @@
 using namespace libbitcoin::wallet;
 using namespace libbitcoin::chain;
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 typedef uint64_t handle;
 
 class BCD_API data_base
 {
-public:
+  public:
     typedef boost::filesystem::path path;
 
     class store
     {
-    public:
-        store(const path& prefix);
+      public:
+        store(const path &prefix);
         bool touch_all() const;
         bool touch_uids() const;
         bool uids_exist() const;
@@ -115,23 +117,23 @@ public:
 
     class db_metadata
     {
-    public:
+      public:
         db_metadata();
         db_metadata(std::string version);
         void reset();
-        bool from_data(const data_chunk& data);
-        bool from_data(std::istream& stream);
-        bool from_data(reader& source);
+        bool from_data(const data_chunk &data);
+        bool from_data(std::istream &stream);
+        bool from_data(reader &source);
         data_chunk to_data() const;
-        void to_data(std::ostream& stream) const;
-        void to_data(writer& sink) const;
+        void to_data(std::ostream &stream) const;
+        void to_data(writer &sink) const;
         uint64_t serialized_size() const;
 
 #ifdef UC_DEBUG
         std::string to_string() const;
 #endif
-        friend std::istream& operator>>(std::istream& input, db_metadata& metadata);
-        friend std::ostream& operator<<(std::ostream& output, const db_metadata& metadata);
+        friend std::istream &operator>>(std::istream &input, db_metadata &metadata);
+        friend std::ostream &operator<<(std::ostream &output, const db_metadata &metadata);
         static const std::string current_version;
         static const std::string file_name;
 
@@ -139,15 +141,15 @@ public:
     };
 
     /// Create a new database file with a given path prefix and default paths.
-    static bool initialize(const path& prefix, const chain::block& genesis);
+    static bool initialize(const path &prefix, const chain::block &genesis);
     /// If database exists then upgrades to version 63.
-    static bool upgrade_version_63(const path& prefix);
+    static bool upgrade_version_63(const path &prefix);
 
-    static bool touch_file(const path& file_path);
-    static void write_metadata(const path& metadata_path, data_base::db_metadata& metadata);
-    static void read_metadata(const path& metadata_path, data_base::db_metadata& metadata);
+    static bool touch_file(const path &file_path);
+    static void write_metadata(const path &metadata_path, data_base::db_metadata &metadata);
+    static void read_metadata(const path &metadata_path, data_base::db_metadata &metadata);
     /// Construct all databases.
-    data_base(const settings& settings);
+    data_base(const settings &settings);
 
     /// Stop all databases (threads must be joined).
     ~data_base();
@@ -183,60 +185,58 @@ public:
     // ------------------------------------------------------------------------
 
     /// Commit block at next height with indexing and no duplicate protection.
-    void push(const chain::block& block);
+    void push(const chain::block &block);
 
     /// Commit block at given height with indexing and no duplicate protection.
     /// If height is not count + 1 then the count will not equal top height.
-    void push(const chain::block& block, uint64_t height);
+    void push(const chain::block &block, uint64_t height);
 
     /// Throws if the chain is empty.
     chain::block pop();
 
     /* begin store token info into  database */
 
-    void push_asset(const asset& attach, const payment_address& address,
-            const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_asset(const asset &attach, const payment_address &address,
+                    const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_ucn(const ucn& ucn, const short_hash& key,
-            const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_ucn(const ucn &ucn, const short_hash &key,
+                  const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_ucn_award(const ucn_award& ucn, const short_hash& key,
-            const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_ucn_award(const ucn_award &ucn, const short_hash &key,
+                        const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_message(const chain::blockchain_message& msg, const short_hash& key,
-            const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_message(const chain::blockchain_message &msg, const short_hash &key,
+                      const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_token(const token& sp, const short_hash& key,
-                const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_token(const token &sp, const short_hash &key,
+                    const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_token_cert(const token_cert& sp_cert, const short_hash& key,
-                const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_token_cert(const token_cert &sp_cert, const short_hash &key,
+                         const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_token_detail(const token_detail& sp_detail, const short_hash& key,
-                const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_token_detail(const token_detail &sp_detail, const short_hash &key,
+                           const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_token_transfer(const token_transfer& sp_transfer, const short_hash& key,
-                const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_token_transfer(const token_transfer &sp_transfer, const short_hash &key,
+                             const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_uid(const uid& sp, const short_hash& key,
-                const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_uid(const uid &sp, const short_hash &key,
+                  const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_uid_detail(const uid_detail& sp_detail, const short_hash& key,
-                const output_point& outpoint, uint32_t output_height, uint64_t value);
+    void push_uid_detail(const uid_detail &sp_detail, const short_hash &key,
+                         const output_point &outpoint, uint32_t output_height, uint64_t value);
 
-    void push_candidate(const candidate& candidate, const short_hash& key,
-                const output_point& outpoint, uint32_t output_height, uint64_t value,
-                const std::string from_uid, std::string to_uid);
+    void push_candidate(const candidate &candidate, const short_hash &key,
+                        const output_point &outpoint, uint32_t output_height, uint64_t value,
+                        const std::string from_uid, std::string to_uid);
 
-   class asset_visitor : public boost::static_visitor<void>
+    class asset_visitor : public boost::static_visitor<void>
     {
-    public:
-        asset_visitor(data_base* db, const short_hash& sh_hash,  const output_point& outpoint,
-            uint32_t output_height, uint64_t value, const std::string from_uid, std::string to_uid):
-            db_(db), sh_hash_(sh_hash), outpoint_(outpoint), output_height_(output_height), value_(value),
-            from_uid_(from_uid), to_uid_(to_uid)
+      public:
+        asset_visitor(data_base *db, const short_hash &sh_hash, const output_point &outpoint,
+                      uint32_t output_height, uint64_t value, const std::string from_uid, std::string to_uid) : db_(db), sh_hash_(sh_hash), outpoint_(outpoint), output_height_(output_height), value_(value),
+                                                                                                                from_uid_(from_uid), to_uid_(to_uid)
         {
-
         }
         void operator()(const token &t) const
         {
@@ -266,8 +266,9 @@ public:
         {
             return db_->push_candidate(t, sh_hash_, outpoint_, output_height_, value_, from_uid_, to_uid_);
         }
-    private:
-        data_base* db_;
+
+      private:
+        data_base *db_;
         short_hash sh_hash_;
         output_point outpoint_;
         uint32_t output_height_;
@@ -278,12 +279,10 @@ public:
 
     class token_visitor : public boost::static_visitor<void>
     {
-    public:
-        token_visitor(data_base* db, const short_hash& key,
-            const output_point& outpoint, uint32_t output_height, uint64_t value):
-            db_(db), key_(key), outpoint_(outpoint), output_height_(output_height), value_(value)
+      public:
+        token_visitor(data_base *db, const short_hash &key,
+                      const output_point &outpoint, uint32_t output_height, uint64_t value) : db_(db), key_(key), outpoint_(outpoint), output_height_(output_height), value_(value)
         {
-
         }
         void operator()(const token_detail &t) const
         {
@@ -291,39 +290,40 @@ public:
         }
         void operator()(const token_transfer &t) const
         {
-             return db_->push_token_transfer(t, key_, outpoint_, output_height_, value_);
+            return db_->push_token_transfer(t, key_, outpoint_, output_height_, value_);
         }
-    private:
-        data_base* db_;
+
+      private:
+        data_base *db_;
         short_hash key_;
         output_point outpoint_;
         uint32_t output_height_;
         uint64_t value_;
     };
 
-    void set_admin(const std::string& name, const std::string& passwd);
+    void set_admin(const std::string &name, const std::string &passwd);
     void set_blackhole_uid();
     void set_block_vote_token();
     void set_reward_pool_candidate();
-   /* begin store token info into  database */
+    /* begin store token info into  database */
 
-protected:
-    data_base(const store& paths, size_t history_height, size_t stealth_height);
-    data_base(const path& prefix, size_t history_height, size_t stealth_height);
+  protected:
+    data_base(const store &paths, size_t history_height, size_t stealth_height);
+    data_base(const path &prefix, size_t history_height, size_t stealth_height);
 
-private:
+  private:
     typedef chain::input::list inputs;
     typedef chain::output::list outputs;
     typedef std::atomic<size_t> sequential_lock;
     typedef boost::interprocess::file_lock file_lock;
 
-    static bool initialize_uids(const path& prefix);
-    static bool initialize_tokens(const path& prefix);
-    static bool initialize_certs(const path& prefix);
-    static bool initialize_candidates(const path& prefix);
+    static bool initialize_uids(const path &prefix);
+    static bool initialize_tokens(const path &prefix);
+    static bool initialize_certs(const path &prefix);
+    static bool initialize_candidates(const path &prefix);
 
-    static void uninitialize_lock(const path& lock);
-    static file_lock initialize_lock(const path& lock);
+    static void uninitialize_lock(const path &lock);
+    static file_lock initialize_lock(const path &lock);
 
     void synchronize();
     void synchronize_uids();
@@ -331,14 +331,14 @@ private:
     void synchronize_certs();
     void synchronize_candidates();
 
-    void push_inputs(const hash_digest& tx_hash, size_t height,
-        const inputs& inputs);
-    void push_outputs(const hash_digest& tx_hash, size_t height,
-        const outputs& outputs);
-    void push_stealth(const hash_digest& tx_hash, size_t height,
-        const outputs& outputs);
-    void pop_inputs(const inputs& inputs, size_t height);
-    void pop_outputs(const outputs& outputs, size_t height);
+    void push_inputs(const hash_digest &tx_hash, size_t height,
+                     const inputs &inputs);
+    void push_outputs(const hash_digest &tx_hash, size_t height,
+                      const outputs &outputs);
+    void push_stealth(const hash_digest &tx_hash, size_t height,
+                      const outputs &outputs);
+    void pop_inputs(const inputs &inputs, size_t height);
+    void pop_outputs(const outputs &outputs, size_t height);
 
     const path lock_file_path_;
     const size_t history_height_;
@@ -356,8 +356,7 @@ private:
     // temp block timestamp
     uint32_t timestamp_;
 
-public:
-
+  public:
     /// Individual database query engines.
     block_database blocks;
     history_database history;
@@ -382,4 +381,3 @@ public:
 } // namespace libbitcoin
 
 #endif
-
