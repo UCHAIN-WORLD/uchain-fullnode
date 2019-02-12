@@ -28,8 +28,10 @@
 #include <UChain/database/primitives/record_list.hpp>
 #include <UChain/database/primitives/record_hash_table.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 template <typename KeyType>
 BC_CONSTEXPR size_t hash_table_multimap_record_size()
@@ -49,32 +51,32 @@ BC_CONSTEXPR size_t hash_table_multimap_record_size()
 template <typename KeyType>
 class record_multimap
 {
-public:
+  public:
     typedef record_hash_table<KeyType> record_hash_table_type;
     typedef std::function<void(memory_ptr)> write_function;
 
-    record_multimap(record_hash_table_type& map, record_list& records);
+    record_multimap(record_hash_table_type &map, record_list &records);
 
     /// Lookup a key, returning an iterable result with multiple values.
-    array_index lookup(const KeyType& key) const;
+    array_index lookup(const KeyType &key) const;
     std::shared_ptr<std::vector<array_index>> lookup(array_index index) const;
     /// Add a new row for a key. If the key doesn't exist, it will be created.
     /// If it does exist, the value will be added at the start of the chain.
-    void add_row(const KeyType& key, write_function write);
+    void add_row(const KeyType &key, write_function write);
 
     /// Delete the last row entry that was added. This means when deleting
     /// blocks we must walk backwards and delete in reverse order.
-    void delete_last_row(const KeyType& key);
+    void delete_last_row(const KeyType &key);
 
-private:
+  private:
     // Add new value to existing key.
     void add_to_list(memory_ptr start_info, write_function write);
 
     // Create new key with a single value.
-    void create_new(const KeyType& key, write_function write);
+    void create_new(const KeyType &key, write_function write);
 
-    record_hash_table_type& map_;
-    record_list& records_;
+    record_hash_table_type &map_;
+    record_list &records_;
     mutable shared_mutex mutex_;
 };
 

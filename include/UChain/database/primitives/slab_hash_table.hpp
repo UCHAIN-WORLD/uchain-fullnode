@@ -27,8 +27,10 @@
 #include <UChain/database/primitives/hash_table_header.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 typedef hash_table_header<array_index, file_offset> slab_hash_table_header;
 
@@ -55,44 +57,43 @@ typedef hash_table_header<array_index, file_offset> slab_hash_table_header;
 template <typename KeyType>
 class slab_hash_table
 {
-public:
+  public:
     typedef std::function<void(memory_ptr)> write_function;
 
-    slab_hash_table(slab_hash_table_header& header, slab_manager& manager);
+    slab_hash_table(slab_hash_table_header &header, slab_manager &manager);
 
     /// Store a value. value_size is the requested size for the value.
     /// The provided write() function must write exactly value_size bytes.
     /// Returns the position of the inserted value in the slab_manager.
-    file_offset store(const KeyType& key, write_function write,
-        const size_t value_size);
-    file_offset restore(const KeyType& key,
-        write_function write, const size_t value_size);
+    file_offset store(const KeyType &key, write_function write,
+                      const size_t value_size);
+    file_offset restore(const KeyType &key,
+                        write_function write, const size_t value_size);
     /// Find the slab for a given hash. Returns a null pointer if not found.
-    const memory_ptr find(const KeyType& key) const;
+    const memory_ptr find(const KeyType &key) const;
     std::shared_ptr<std::vector<memory_ptr>> find(uint64_t index) const;
-    const memory_ptr rfind(const KeyType& key) const;
-    std::vector<memory_ptr> finds(const KeyType& key) const;
+    const memory_ptr rfind(const KeyType &key) const;
+    std::vector<memory_ptr> finds(const KeyType &key) const;
 
     /// Delete a key-value pair from the hashtable by unlinking the node.
-    bool unlink(const KeyType& key);
+    bool unlink(const KeyType &key);
 
-private:
-
+  private:
     // What is the bucket given a hash.
-    array_index bucket_index(const KeyType& key) const;
+    array_index bucket_index(const KeyType &key) const;
 
     // What is the slab start position for a chain.
-    file_offset read_bucket_value(const KeyType& key) const;
+    file_offset read_bucket_value(const KeyType &key) const;
 
     // Link a new chain into the bucket header.
-    void link(const KeyType& key, const file_offset begin);
+    void link(const KeyType &key, const file_offset begin);
 
     // Release node from linked chain.
     template <typename ListItem>
-    void release(const ListItem& item, const file_offset previous);
+    void release(const ListItem &item, const file_offset previous);
 
-    slab_hash_table_header& header_;
-    slab_manager& manager_;
+    slab_hash_table_header &header_;
+    slab_manager &manager_;
     shared_mutex mutex_;
 };
 

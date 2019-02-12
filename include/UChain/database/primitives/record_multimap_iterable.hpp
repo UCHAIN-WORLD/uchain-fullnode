@@ -25,22 +25,24 @@
 #include <UChain/database/primitives/record_list.hpp>
 #include <UChain/database/primitives/record_multimap_iterator.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// Result of a multimap database query. This is a container wrapper allowing
 /// the values to be iterated.
 class BCD_API record_multimap_iterable
 {
-public:
-    record_multimap_iterable(const record_list& records, array_index begin);
+  public:
+    record_multimap_iterable(const record_list &records, array_index begin);
 
     record_multimap_iterator begin() const;
     record_multimap_iterator end() const;
 
-private:
+  private:
     array_index begin_;
-    const record_list& records_;
+    const record_list &records_;
 };
 
 } // namespace database

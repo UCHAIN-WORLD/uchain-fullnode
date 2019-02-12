@@ -24,8 +24,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /**
  * Implements contigious memory array with a fixed size elements.
@@ -42,18 +44,18 @@ namespace database {
 template <typename IndexType, typename ValueType>
 class hash_table_header
 {
-public:
+  public:
     static const ValueType empty;
 
-    hash_table_header(memory_map& file, IndexType buckets);
+    hash_table_header(memory_map &file, IndexType buckets);
 
     // Copy.
-    hash_table_header(const hash_table_header&) = delete;
-    hash_table_header& operator=(const hash_table_header&) = delete;
+    hash_table_header(const hash_table_header &) = delete;
+    hash_table_header &operator=(const hash_table_header &) = delete;
 
     // Move.
-    hash_table_header(hash_table_header&&) = delete;
-    hash_table_header& operator=(hash_table_header&&) = delete;
+    hash_table_header(hash_table_header &&) = delete;
+    hash_table_header &operator=(hash_table_header &&) = delete;
 
     /// Allocate the hash table and populate with empty values.
     bool create();
@@ -70,12 +72,11 @@ public:
     /// The hash table size (bucket count).
     IndexType size() const;
 
-private:
-
+  private:
     // Locate the item in the memory map.
     file_offset item_position(IndexType index) const;
 
-    memory_map& file_;
+    memory_map &file_;
     IndexType buckets_;
     mutable shared_mutex mutex_;
 };

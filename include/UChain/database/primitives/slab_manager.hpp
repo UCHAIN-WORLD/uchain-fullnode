@@ -27,8 +27,10 @@
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 BC_CONSTEXPR size_t minimum_slabs_size = sizeof(file_offset);
 BC_CONSTFUNC size_t slab_hash_table_header_size(size_t buckets)
@@ -41,8 +43,8 @@ BC_CONSTFUNC size_t slab_hash_table_header_size(size_t buckets)
 /// track of the current end pointer so new slabs can be allocated.
 class BCD_API slab_manager
 {
-public:
-    slab_manager(memory_map& file, file_offset header_size);
+  public:
+    slab_manager(memory_map &file, file_offset header_size);
 
     /// Create slab manager.
     bool create();
@@ -59,13 +61,12 @@ public:
     /// Return memory object for the slab at the specified position.
     const memory_ptr get(file_offset position) const;
 
-//protected:
+    //protected:
 
     /// Get the size of all slabs and size prefix (excludes header).
     file_offset payload_size() const;
 
-private:
-
+  private:
     // Read the size of the data from the file.
     void read_size();
 
@@ -73,7 +74,7 @@ private:
     void write_size() const;
 
     // This class is thread and remap safe.
-    memory_map& file_;
+    memory_map &file_;
     const file_offset header_size_;
 
     // Payload size is protected by mutex.

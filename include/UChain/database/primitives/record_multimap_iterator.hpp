@@ -24,15 +24,17 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/primitives/record_list.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// Forward iterator for multimap record values.
 /// After performing key lookup iterate the multiple values in a for loop.
 class BCD_API record_multimap_iterator
 {
-public:
-    record_multimap_iterator(const record_list& records, array_index index);
+  public:
+    record_multimap_iterator(const record_list &records, array_index index);
 
     /// Next value in the chain.
     void operator++();
@@ -44,9 +46,9 @@ public:
     bool operator==(record_multimap_iterator other) const;
     bool operator!=(record_multimap_iterator other) const;
 
-private:
+  private:
     array_index index_;
-    const record_list& records_;
+    const record_list &records_;
 };
 
 } // namespace database
