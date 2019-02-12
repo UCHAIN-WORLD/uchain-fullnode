@@ -42,8 +42,10 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 /**
  * Types for defining name-value pair list.
@@ -64,7 +66,7 @@ class command;
  * @param[in]  trim     True if value should be trimmed before conversion.
  */
 template <typename Value>
-void deserialize(Value& value, const std::string& text, bool trim);
+void deserialize(Value &value, const std::string &text, bool trim);
 
 /**
  * Read an input stream to the specified type.
@@ -74,7 +76,7 @@ void deserialize(Value& value, const std::string& text, bool trim);
  * @param[in]  trim     True if value should be trimmed before conversion.
  */
 template <typename Value>
-void deserialize(Value& value, std::istream& input, bool trim);
+void deserialize(Value &value, std::istream &input, bool trim);
 
 /**
  * Deserialize the tokens of a text string to a vector of the inner type.
@@ -84,8 +86,8 @@ void deserialize(Value& value, std::istream& input, bool trim);
  * @param[in]  trim        True if value should be trimmed before conversion.
  */
 template <typename Value>
-void deserialize(std::vector<Value>& collection, const std::string& text,
-    bool trim);
+void deserialize(std::vector<Value> &collection, const std::string &text,
+                 bool trim);
 
 /**
  * Deserialize a satoshi item from the specified binary data.
@@ -95,7 +97,7 @@ void deserialize(std::vector<Value>& collection, const std::string& text,
  * @return             True if a item was parsed.
  */
 template <typename Item>
-bool deserialize_satoshi_item(Item& item, const data_chunk& data);
+bool deserialize_satoshi_item(Item &item, const data_chunk &data);
 
 /**
  * If the variable is not yet loaded, load from stdin as fallback.
@@ -106,8 +108,8 @@ bool deserialize_satoshi_item(Item& item, const data_chunk& data);
  * @param[in]  raw        True if the input is raw (should not be trimmed).
  */
 template <typename Value>
-void load_input(Value& parameter, const std::string& name,
-    po::variables_map& variables, std::istream& input, bool raw);
+void load_input(Value &parameter, const std::string &name,
+                po::variables_map &variables, std::istream &input, bool raw);
 
 /**
  * Load file contents as parameter fallback. Obtain the path from the parameter
@@ -118,8 +120,8 @@ void load_input(Value& parameter, const std::string& name,
  * @param[in]  raw        True if the file is raw (should not be trimmed).
  */
 template <typename Value>
-void load_path(Value& parameter, const std::string& name,
-    po::variables_map& variables, bool raw);
+void load_path(Value &parameter, const std::string &name,
+               po::variables_map &variables, bool raw);
 
 /**
  * Conveniently convert an instance of the specified type to string.
@@ -129,7 +131,7 @@ void load_path(Value& parameter, const std::string& name,
  * @return               The serialized value.
  */
 template <typename Value>
-std::string serialize(const Value& value, const std::string& fallback="");
+std::string serialize(const Value &value, const std::string &fallback = "");
 
 /**
  * Serialize the specified satoshi item to binary data.
@@ -139,7 +141,7 @@ std::string serialize(const Value& value, const std::string& fallback="");
  * @param[in]  item     The satoshi item.
  */
 template <typename Item>
-data_chunk serialize_satoshi_item(const Item& item);
+data_chunk serialize_satoshi_item(const Item &item);
 
 /**
  * Write a value to a file in the specified path and otherwise to the
@@ -151,29 +153,29 @@ data_chunk serialize_satoshi_item(const Item& item);
  * @param[in]  instance   The instance to serialize.
  */
 template <typename Instance>
-void write_file(std::ostream& output, const std::string& path,
-    const Instance& instance, bool terminate=true);
+void write_file(std::ostream &output, const std::string &path,
+                const Instance &instance, bool terminate = true);
 
 /**
  * Get the connection settings for the configured network.
  * @param    cmd  The command.
  * @returns       A structure containing the connection settings.
  */
-BCX_API client::connection_type get_connection(const command& cmd);
+BCX_API client::connection_type get_connection(const command &cmd);
 
 /**
  * Generate a new ec key from a seed.
  * @param[in]  seed  The seed for key randomness.
  * @return           The new key.
  */
-BCX_API ec_secret new_key(const data_chunk& seed);
+BCX_API ec_secret new_key(const data_chunk &seed);
 
 /**
  * Generate a new pseudorandom seed.
  * @param[in]  seed  The seed length in bits. Will be aligned to nearest byte.
  * @return           The new key.
  */
-BCX_API data_chunk new_seed(size_t bitlength=minimum_seed_bits);
+BCX_API data_chunk new_seed(size_t bitlength = minimum_seed_bits);
 
 /**
  * Convert a list of indexes to a list of strings. This could be generalized.
@@ -181,28 +183,28 @@ BCX_API data_chunk new_seed(size_t bitlength=minimum_seed_bits);
  * @return              The list of strings.
  */
 BCX_API std::vector<std::string> numbers_to_strings(
-    const chain::point::indexes& indexes);
+    const chain::point::indexes &indexes);
 
 /**
  * DEPRECATED in favor of libbitcoin::pseudo_random_fill.
  * Fill a buffer with randomness using the default random engine.
  * @param[in]  chunk  The buffer to fill with randomness.
  */
-BCX_API void random_fill(data_chunk& chunk);
+BCX_API void random_fill(data_chunk &chunk);
 
 /**
  * Get a message from the specified input stream.
  * @param[in]  stream The input stream to read.
  * @return            The message read from the input stream.
  */
-BCX_API std::string read_stream(std::istream& stream);
+BCX_API std::string read_stream(std::istream &stream);
 
 /**
  * Convert any script to an opcode::raw_data script (e.g. for input signing).
  * @param[in]  script  The script to convert.
  * @return             The data script.
  */
-BCX_API chain::script script_to_raw_data_script(const chain::script& script);
+BCX_API chain::script script_to_raw_data_script(const chain::script &script);
 
 /**
  * Split a list of tokens with delimiters into a name-value pair list.
@@ -211,7 +213,7 @@ BCX_API chain::script script_to_raw_data_script(const chain::script& script);
  * @return                The name-value pair list.
  */
 name_value_pairs split_pairs(const std::vector<std::string> tokens,
-    const std::string delimiter=":");
+                             const std::string delimiter = ":");
 
 /**
  * Determine if a string starts with another (case insensitive).
@@ -219,7 +221,7 @@ name_value_pairs split_pairs(const std::vector<std::string> tokens,
  * @param[in]  prefix  The prefix to test against.
  * @return             True if the value is prefixed by the prefix.
  */
-BCX_API bool starts_with(const std::string& value, const std::string& prefix);
+BCX_API bool starts_with(const std::string &value, const std::string &prefix);
 
 /**
  * Unwrap a wrapped payload.
@@ -227,14 +229,14 @@ BCX_API bool starts_with(const std::string& value, const std::string& prefix);
  * @param[in]  wrapped  The wrapped data to unwrap.
  * @return              True if input checksum validates.
  */
-BCX_API bool unwrap(bc::wallet::wrapped_data& data, data_slice wrapped);
+BCX_API bool unwrap(bc::wallet::wrapped_data &data, data_slice wrapped);
 
 /**
  * Wrap arbitrary data.
  * @param[in]  data  The data structure to wrap.
  * @return           The wrapped data.
  */
-BCX_API data_chunk wrap(const bc::wallet::wrapped_data& data);
+BCX_API data_chunk wrap(const bc::wallet::wrapped_data &data);
 
 /**
  * Serialize a property tree using a specified encoding.
@@ -243,8 +245,8 @@ BCX_API data_chunk wrap(const bc::wallet::wrapped_data& data);
  * @param[in]  engine  The stream writing engine type to use, defaults to info.
  * @return             The output stream (for convenience).
  */
-BCX_API std::ostream& write_stream(std::ostream& output, const Json::Value& tree,
-    encoding_engine engine=encoding_engine::info);
+BCX_API std::ostream &write_stream(std::ostream &output, const Json::Value &tree,
+                                   encoding_engine engine = encoding_engine::info);
 
 } // namespace explorer
 } // namespace libbitcoin

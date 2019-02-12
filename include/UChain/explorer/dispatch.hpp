@@ -28,8 +28,10 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 /**
  * Dispatch the command with the raw arguments as provided on the command line.
@@ -40,8 +42,8 @@ namespace explorer {
  * @param[in]  error   The error stream (e.g. STDERR).
  * @return             The appropriate console return code { -1, 0, 1 }.
  */
-BCX_API console_result dispatch(int argc, const char* argv[],
-    std::istream& input, std::ostream& output, std::ostream& error);
+BCX_API console_result dispatch(int argc, const char *argv[],
+                                std::istream &input, std::ostream &output, std::ostream &error);
 
 /**
  * Invoke the command identified by the specified arguments.
@@ -53,8 +55,8 @@ BCX_API console_result dispatch(int argc, const char* argv[],
  * @param[in]  error   The error stream (e.g. STDERR).
  * @return            The appropriate console return code { -1, 0, 1 }.
  */
-BCX_API console_result dispatch_command(int argc, const char* argv[],
-    std::istream& input, std::ostream& output, std::ostream& error);
+BCX_API console_result dispatch_command(int argc, const char *argv[],
+                                        std::istream &input, std::ostream &output, std::ostream &error);
 
 /**
  * Invoke the command identified by the specified arguments.
@@ -65,9 +67,9 @@ BCX_API console_result dispatch_command(int argc, const char* argv[],
  * @param[in]  command version, defaults to v1.
  * @return            The appropriate console return code { -1, 0, 1 }.
  */
-BCX_API console_result dispatch_command(int argc, const char* argv[],
-    Json::Value& jv_output,
-    bc::server::server_node& node, uint8_t api_version = 1);
+BCX_API console_result dispatch_command(int argc, const char *argv[],
+                                        Json::Value &jv_output,
+                                        bc::server::server_node &node, uint8_t api_version = 1);
 
 } // namespace explorer
 } // namespace libbitcoin

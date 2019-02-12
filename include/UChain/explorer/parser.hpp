@@ -30,21 +30,23 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
 class BCX_API parser
-  : public bc::config::parser
+    : public bc::config::parser
 {
-public:
+  public:
     /// Construct the parser for the given command.
-    parser(command& instance);
+    parser(command &instance);
 
     /// Parse all configuration into member settings.
-    virtual bool parse(std::string& out_error, std::istream& input,
-        int argc, const char* argv[]);
+    virtual bool parse(std::string &out_error, std::istream &input,
+                       int argc, const char *argv[]);
 
     virtual bool help() const;
 
@@ -60,17 +62,17 @@ public:
     /// Load environment variable settings.
     virtual options_metadata load_environment();
 
-protected:
-    virtual void load_command_variables(variables_map& variables,
-        std::istream& input, int argc, const char* argv[]);
+  protected:
+    virtual void load_command_variables(variables_map &variables,
+                                        std::istream &input, int argc, const char *argv[]);
 
-private:
+  private:
     static std::string system_config_directory();
     static boost::filesystem::path default_config_path();
-    bool is_negative(const char* c);
+    bool is_negative(const char *c);
 
     bool help_;
-    command& instance_;
+    command &instance_;
 };
 
 } // namespace explorer
