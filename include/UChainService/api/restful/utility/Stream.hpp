@@ -16,57 +16,60 @@
 #pragma once
 
 #include <ostream>
-#include <UChainService/api/restful//compat/define.hpp>
-#include <UChainService/api/restful//compat/string_view.h>
-
+#include <UChainService/api/restful //compat/define.hpp>
+#include <UChainService/api/restful //compat/string_view.h>
 
 /**
  * @addtogroup Util
  * @{
  */
 
-namespace mgbubble {
+namespace mgbubble
+{
 
-UC_API void reset(std::ostream& os) noexcept;
+UC_API void reset(std::ostream &os) noexcept;
 
 template <std::size_t MaxN>
-class StringBuf : public std::streambuf {
- public:
+class StringBuf : public std::streambuf
+{
+public:
   StringBuf() noexcept { reset(); }
   ~StringBuf() noexcept override = default;
 
   // Copy.
-  StringBuf(const StringBuf& rhs) = delete;
-  StringBuf& operator=(const StringBuf& rhs) = delete;
+  StringBuf(const StringBuf &rhs) = delete;
+  StringBuf &operator=(const StringBuf &rhs) = delete;
 
   // Move.
-  StringBuf(StringBuf&&) = delete;
-  StringBuf& operator=(StringBuf&&) = delete;
+  StringBuf(StringBuf &&) = delete;
+  StringBuf &operator=(StringBuf &&) = delete;
 
-  const char* data() const noexcept { return pbase(); }
+  const char *data() const noexcept { return pbase(); }
   bool empty() const noexcept { return pbase() == pptr(); }
   std::size_t size() const noexcept { return pptr() - pbase(); }
   string_view str() const noexcept { return {data(), size()}; }
   void reset() noexcept { setp(buf_, buf_ + MaxN); };
- private:
+
+private:
   char buf_[MaxN];
 };
 
 template <std::size_t MaxN>
-class StringBuilder : public std::ostream {
- public:
+class StringBuilder : public std::ostream
+{
+public:
   StringBuilder() : std::ostream{nullptr} { rdbuf(&buf_); }
   ~StringBuilder() noexcept override = default;
 
   // Copy.
-  StringBuilder(const StringBuilder& rhs) = delete;
-  StringBuilder& operator=(const StringBuilder& rhs) = delete;
+  StringBuilder(const StringBuilder &rhs) = delete;
+  StringBuilder &operator=(const StringBuilder &rhs) = delete;
 
   // Move.
-  StringBuilder(StringBuilder&&) = delete;
-  StringBuilder& operator=(StringBuilder&&) = delete;
+  StringBuilder(StringBuilder &&) = delete;
+  StringBuilder &operator=(StringBuilder &&) = delete;
 
-  const char* data() const noexcept { return buf_.data(); }
+  const char *data() const noexcept { return buf_.data(); }
   bool empty() const noexcept { return buf_.empty(); }
   std::size_t size() const noexcept { return buf_.size(); }
   string_view str() const noexcept { return buf_.str(); }
@@ -77,14 +80,14 @@ class StringBuilder : public std::ostream {
     mgbubble::reset(*this);
   };
 
- private:
+private:
   StringBuf<MaxN> buf_;
 };
 
 template <std::size_t MaxN, typename ValueT>
-auto& operator<<(StringBuilder<MaxN>& sb, ValueT&& val)
+auto &operator<<(StringBuilder<MaxN> &sb, ValueT &&val)
 {
-  static_cast<std::ostream&>(sb) << std::forward<ValueT>(val);
+  static_cast<std::ostream &>(sb) << std::forward<ValueT>(val);
   return sb;
 }
 
@@ -92,8 +95,9 @@ auto& operator<<(StringBuilder<MaxN>& sb, ValueT&& val)
  * Stream joiner. This is a simplified version of std::experimental::ostream_joiner, intended as a
  * placeholder until TS v2 is more widely available.
  */
-class UC_API OStreamJoiner {
- public:
+class UC_API OStreamJoiner
+{
+public:
   using char_type = char;
   using traits_type = std::char_traits<char_type>;
   using ostream_type = std::ostream;
@@ -103,38 +107,38 @@ class UC_API OStreamJoiner {
   using reference = void;
   using iterator_category = std::output_iterator_tag;
 
-  OStreamJoiner(std::ostream& os, const char delim) noexcept : os_{&os}, delim_{delim} {}
+  OStreamJoiner(std::ostream &os, const char delim) noexcept : os_{&os}, delim_{delim} {}
   ~OStreamJoiner() noexcept;
 
   // Copy.
-  OStreamJoiner(const OStreamJoiner&) = default;
-  OStreamJoiner& operator=(const OStreamJoiner&) = default;
+  OStreamJoiner(const OStreamJoiner &) = default;
+  OStreamJoiner &operator=(const OStreamJoiner &) = default;
 
   // Move.
-  OStreamJoiner(OStreamJoiner&&) = default;
-  OStreamJoiner& operator=(OStreamJoiner&&) = default;
+  OStreamJoiner(OStreamJoiner &&) = default;
+  OStreamJoiner &operator=(OStreamJoiner &&) = default;
 
   template <typename ValueT>
-  OStreamJoiner& operator=(const ValueT& value)
+  OStreamJoiner &operator=(const ValueT &value)
   {
-    if (!first_) {
+    if (!first_)
+    {
       *os_ << delim_;
     }
     first_ = false;
     *os_ << value;
     return *this;
   }
-  OStreamJoiner& operator*() noexcept { return *this; }
-  OStreamJoiner& operator++() noexcept { return *this; }
-  OStreamJoiner& operator++(int)noexcept { return *this; }
+  OStreamJoiner &operator*() noexcept { return *this; }
+  OStreamJoiner &operator++() noexcept { return *this; }
+  OStreamJoiner &operator++(int) noexcept { return *this; }
 
- private:
-  std::ostream* os_;
+private:
+  std::ostream *os_;
   char delim_;
   bool first_{true};
 };
 
-} // http
+} // namespace mgbubble
 
 /** @} */
-
