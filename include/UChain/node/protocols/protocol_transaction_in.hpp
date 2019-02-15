@@ -26,26 +26,29 @@
 #include <UChain/network.hpp>
 #include <UChain/node/define.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 class BCN_API protocol_transaction_in
-  : public network::protocol_events, track<protocol_transaction_in>
+    : public network::protocol_events,
+      track<protocol_transaction_in>
 {
-public:
+  public:
     typedef std::shared_ptr<protocol_transaction_in> ptr;
 
     /// Construct a transaction protocol instance.
-    protocol_transaction_in(network::p2p& network,
-        network::channel::ptr channel, blockchain::block_chain& blockchain,
-        blockchain::transaction_pool& pool);
+    protocol_transaction_in(network::p2p &network,
+                            network::channel::ptr channel, blockchain::block_chain &blockchain,
+                            blockchain::transaction_pool &pool);
 
     ptr do_subscribe();
 
     /// Start the protocol.
     virtual void start();
 
-private:
+  private:
     typedef chain::point::indexes index_list;
     typedef message::get_data::ptr get_data_ptr;
     typedef message::inventory::ptr inventory_ptr;
@@ -53,20 +56,20 @@ private:
     typedef message::block_message::ptr_list block_ptr_list;
     typedef message::block_message::ptr block_ptr;
 
-    void send_get_data(const code& ec, get_data_ptr message);
-    void handle_filter_floaters(const code& ec, get_data_ptr message);
-    bool handle_receive_inventory(const code& ec, inventory_ptr message);
-    bool handle_receive_transaction(const code& ec, transaction_ptr message);
-    void handle_store_confirmed(const code& ec, transaction_ptr message);
-    void handle_store_validated(const code& ec, transaction_ptr message,
-        const index_list& unconfirmed);
-    bool handle_reorganized(const code& ec, size_t fork_point,
-        const block_ptr_list& incoming, const block_ptr_list& outgoing);
+    void send_get_data(const code &ec, get_data_ptr message);
+    void handle_filter_floaters(const code &ec, get_data_ptr message);
+    bool handle_receive_inventory(const code &ec, inventory_ptr message);
+    bool handle_receive_transaction(const code &ec, transaction_ptr message);
+    void handle_store_confirmed(const code &ec, transaction_ptr message);
+    void handle_store_validated(const code &ec, transaction_ptr message,
+                                const index_list &unconfirmed);
+    bool handle_reorganized(const code &ec, size_t fork_point,
+                            const block_ptr_list &incoming, const block_ptr_list &outgoing);
 
-    void handle_stop(const code&);
+    void handle_stop(const code &);
 
-    blockchain::block_chain& blockchain_;
-    blockchain::transaction_pool& pool_;
+    blockchain::block_chain &blockchain_;
+    blockchain::transaction_pool &pool_;
     const bool relay_from_peer_;
     const bool peer_suports_memory_pool_;
     const bool refresh_pool_;

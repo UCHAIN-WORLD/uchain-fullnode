@@ -27,15 +27,16 @@
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands{
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 // to genarate address/public key
-std::string ec_to_xxx_impl(const std::string& cmd, const std::string& fromkey);
+std::string ec_to_xxx_impl(const std::string &cmd, const std::string &fromkey);
 
-} // commands
-} // explorer
-} // libbitcoin
-
+} // namespace commands
+} // namespace explorer
+} // namespace libbitcoin

@@ -32,15 +32,18 @@
 #include <UChain/protocol/zmq/socket.hpp>
 #include <UChain/protocol/zmq/worker.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 /// This class is thread safe.
 class BCP_API authenticator
-  : public worker
+    : public worker
 {
-public:
+  public:
     /// A shared authenticator pointer.
     typedef std::shared_ptr<authenticator> ptr;
 
@@ -48,13 +51,13 @@ public:
     static const config::endpoint endpoint;
 
     /// There may be only one authenticator per process.
-    authenticator(threadpool& threadpool);
+    authenticator(threadpool &threadpool);
 
     /// Stop the router.
     virtual ~authenticator();
 
     /// Expose the authenticated context.
-    operator context&();
+    operator context &();
 
     /// Start the ZAP router for the context.
     virtual bool start() override;
@@ -66,27 +69,27 @@ public:
     /// Set secure false to enable NULL mechanism, otherwise curve is required.
     /// By not applying this method authentication is bypassed altogether.
     /// Apply authentication to the socket for the given arbitrary domain.
-    virtual bool apply(socket& socket, const std::string& domain, bool secure);
+    virtual bool apply(socket &socket, const std::string &domain, bool secure);
 
     /// Set the server private key (required for curve security).
-    virtual void set_private_key(const config::sodium& private_key);
+    virtual void set_private_key(const config::sodium &private_key);
 
     /// Allow clients with the following public keys (whitelist).
-    virtual void allow(const hash_digest& public_key);
+    virtual void allow(const hash_digest &public_key);
 
     /// Allow clients with the following ip addresses (whitelist).
-    virtual void allow(const config::authority& address);
+    virtual void allow(const config::authority &address);
 
     /// Allow clients with the following ip addresses (blacklist).
-    virtual void deny(const config::authority& address);
+    virtual void deny(const config::authority &address);
 
-protected:
+  protected:
     void work() override;
 
-private:
-    bool allowed_address(const std::string& address) const;
-    bool allowed_key(const hash_digest& public_key) const;
-    bool allowed_weak(const std::string& domain) const;
+  private:
+    bool allowed_address(const std::string &address) const;
+    bool allowed_key(const hash_digest &public_key) const;
+    bool allowed_weak(const std::string &domain) const;
 
     // This is thread safe.
     context context_;
@@ -105,4 +108,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

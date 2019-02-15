@@ -18,38 +18,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ showblock *************************/
 
-class showblock: public command_extension
+class showblock : public command_extension
 {
-public:
-    static const char* symbol(){ return "showblock";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "Get sepcified block header from wallet."; }
+  public:
+    static const char *symbol() { return "showblock"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ctgy_extension & bs) == bs; }
+    const char *description() override { return "Get sepcified block header from wallet."; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
-                .add("HASH_OR_HEIGH", 1)
-                .add("json", 1)
-                .add("tx_json", 1);
+            .add("HASH_OR_HEIGH", 1)
+            .add("json", 1)
+            .add("tx_json", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(argument_.hash_or_height, "HASH_OR_HEIGH", variables, input, raw);
@@ -57,42 +58,33 @@ public:
         load_input(argument_.hash_or_height, "tx_json", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "HASH_OR_HEIGH",
             value<std::string>(&argument_.hash_or_height)->required(),
-            "block hash or block height"
-        )
-        (
+            "block hash or block height")(
             "json",
             value<bool>(&option_.json)->default_value(true),
-            "Json/Raw format, default is '--json=true'."
-        )
-        (
+            "Json/Raw format, default is '--json=true'.")(
             "tx_json",
             value<bool>(&option_.tx_json)->default_value(true),
-            "Json/Raw format for txs, default is '--tx_json=true'."
-        )
-        ;
+            "Json/Raw format for txs, default is '--tx_json=true'.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
@@ -104,11 +96,8 @@ public:
         bool json;
         bool tx_json;
     } option_;
-
 };
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

@@ -28,17 +28,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between base16 string and ec_secret.
  */
 class BCX_API ec_private
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -50,19 +52,19 @@ public:
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    ec_private(const std::string& hexcode);
+    ec_private(const std::string &hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  secret  The value to initialize with.
      */
-    ec_private(const ec_secret& secret);
+    ec_private(const ec_secret &secret);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const ec_secret&() const;
+    operator const ec_secret &() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -70,8 +72,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        ec_private& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    ec_private &argument);
 
     /**
      * Overload stream out.
@@ -79,19 +81,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const ec_private& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const ec_private &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */
     ec_secret value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

@@ -18,74 +18,73 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/node_method_wrapper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ showblockheight *************************/
 
-class showblockheight: public command_extension
+class showblockheight : public command_extension
 {
-public:
+  public:
     showblockheight() noexcept {};
-    showblockheight(const std::string& other){ if (other == "fetch-height") option_.is_fetch_height = true; }
+    showblockheight(const std::string &other)
+    {
+        if (other == "fetch-height")
+            option_.is_fetch_height = true;
+    }
 
-    static const char* symbol(){ return "showblockheight";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "Get last height. Alias as fetch-height."; }
+    static const char *symbol() { return "showblockheight"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ctgy_extension & bs) == bs; }
+    const char *description() override { return "Get last height. Alias as fetch-height."; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
             .add("ADMINNAME", 1)
             .add("ADMINAUTH", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "ADMINNAME", variables, input, raw);
         load_input(auth_.auth, "ADMINAUTH", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "ADMINNAME",
             value<std::string>(&auth_.name),
-            BX_ADMIN_NAME
-        )
-        (
+            BX_ADMIN_NAME)(
             "ADMINAUTH",
             value<std::string>(&auth_.auth),
-            BX_ADMIN_AUTH
-        );
+            BX_ADMIN_AUTH);
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
@@ -95,11 +94,8 @@ public:
     {
         bool is_fetch_height{false};
     } option_;
-
 };
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

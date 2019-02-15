@@ -28,17 +28,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between dictionary and string.
  */
 class BCX_API language
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -48,19 +50,19 @@ public:
      * Initialization constructor.
      * @param[in]  token  The value to initialize with.
      */
-    language(const std::string& token);
+    language(const std::string &token);
 
     /**
      * Initialization constructor.
      * @param[in]  languages  The value to initialize with.
      */
-    language(bc::wallet::dictionary_list& languages);
+    language(bc::wallet::dictionary_list &languages);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    language(const language& other);
+    language(const language &other);
 
     /**
      * Overload cast to internal type.
@@ -74,8 +76,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        language& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    language &argument);
 
     /**
      * Overload stream out.
@@ -83,11 +85,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const language& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const language &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */

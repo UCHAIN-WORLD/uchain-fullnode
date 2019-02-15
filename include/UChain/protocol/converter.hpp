@@ -28,81 +28,82 @@
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/interface.pb.h>
 
-namespace libbitcoin {
-namespace protocol {
+namespace libbitcoin
+{
+namespace protocol
+{
 
 class BCP_API converter
 {
-public:
-
-    virtual bool from_protocol(const point* point,
-        chain::output_point& result);
+  public:
+    virtual bool from_protocol(const point *point,
+                               chain::output_point &result);
 
     virtual bool from_protocol(const std::shared_ptr<point> point,
-        chain::output_point& result);
+                               chain::output_point &result);
 
-    virtual bool from_protocol(const tx_input* input,
-        chain::input& result);
+    virtual bool from_protocol(const tx_input *input,
+                               chain::input &result);
 
     virtual bool from_protocol(const std::shared_ptr<tx_input> input,
-        chain::input& result);
+                               chain::input &result);
 
-    virtual bool from_protocol(const tx_output* output,
-        chain::output& result);
+    virtual bool from_protocol(const tx_output *output,
+                               chain::output &result);
 
     virtual bool from_protocol(const std::shared_ptr<tx_output> output,
-        chain::output& result);
+                               chain::output &result);
 
-    virtual bool from_protocol(const tx* transaction,
-        chain::transaction& result);
+    virtual bool from_protocol(const tx *transaction,
+                               chain::transaction &result);
 
     virtual bool from_protocol(const std::shared_ptr<tx> transaction,
-        chain::transaction& result);
+                               chain::transaction &result);
 
-    virtual bool from_protocol(const block_header* header,
-        chain::header& result);
+    virtual bool from_protocol(const block_header *header,
+                               chain::header &result);
 
     virtual bool from_protocol(const std::shared_ptr<block_header> header,
-        chain::header& result);
+                               chain::header &result);
 
-    virtual bool from_protocol(const block* block, chain::block& result);
+    virtual bool from_protocol(const block *block, chain::block &result);
 
     virtual bool from_protocol(const std::shared_ptr<block> block,
-        chain::block& result);
+                               chain::block &result);
 
-    virtual bool to_protocol(const chain::output_point& point,
-        protocol::point& result);
+    virtual bool to_protocol(const chain::output_point &point,
+                             protocol::point &result);
 
-    virtual protocol::point* to_protocol(const chain::output_point& point);
+    virtual protocol::point *to_protocol(const chain::output_point &point);
 
-    virtual bool to_protocol(const chain::input& input,
-        tx_input& result);
+    virtual bool to_protocol(const chain::input &input,
+                             tx_input &result);
 
-    virtual tx_input* to_protocol(const chain::input& input);
+    virtual tx_input *to_protocol(const chain::input &input);
 
-    virtual bool to_protocol(const chain::output& output,
-        tx_output& result);
+    virtual bool to_protocol(const chain::output &output,
+                             tx_output &result);
 
-    virtual tx_output* to_protocol(const chain::output& output);
+    virtual tx_output *to_protocol(const chain::output &output);
 
-    virtual bool to_protocol(const chain::transaction& transaction,
-        tx& result);
+    virtual bool to_protocol(const chain::transaction &transaction,
+                             tx &result);
 
-    virtual tx* to_protocol(const chain::transaction& transaction);
+    virtual tx *to_protocol(const chain::transaction &transaction);
 
-    virtual bool to_protocol(const chain::header& header,
-        block_header& result);
+    virtual bool to_protocol(const chain::header &header,
+                             block_header &result);
 
-    virtual block_header* to_protocol(const chain::header& header);
+    virtual block_header *to_protocol(const chain::header &header);
 
-    virtual bool to_protocol(const chain::block& block,
-        protocol::block& result);
+    virtual bool to_protocol(const chain::block &block,
+                             protocol::block &result);
 
-    virtual block* to_protocol(const chain::block& block);
+    virtual block *to_protocol(const chain::block &block);
 };
 
-}
-}
+} // namespace protocol
+} // namespace libbitcoin
 
 #endif
 

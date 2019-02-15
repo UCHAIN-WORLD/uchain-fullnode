@@ -32,17 +32,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between text and an output_point.
  */
 class BCX_API point
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -52,25 +54,25 @@ public:
      * Initialization constructor.
      * @param[in]  tuple  The value to initialize with.
      */
-    point(const std::string& tuple);
+    point(const std::string &tuple);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    point(const chain::output_point& value);
+    point(const chain::output_point &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    point(const point& other);
+    point(const point &other);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::output_point&() const;
+    operator const chain::output_point &() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -78,8 +80,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        point& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    point &argument);
 
     /**
      * Overload stream out.
@@ -87,19 +89,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const point& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const point &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */
     chain::output_point value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

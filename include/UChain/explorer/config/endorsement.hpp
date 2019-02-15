@@ -30,17 +30,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between endorsement string and data_chunk.
  */
 class BCX_API endorsement
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -50,21 +52,21 @@ public:
      * Initialization constructor.
      * @param[in]  hexcode  The value to initialize with.
      */
-    endorsement(const std::string& hexcode);
+    endorsement(const std::string &hexcode);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    endorsement(const data_chunk& value);
+    endorsement(const data_chunk &value);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    template<size_t Size>
-    endorsement(const byte_array<Size>& value)
-      : value_(value.begin(), value.end())
+    template <size_t Size>
+    endorsement(const byte_array<Size> &value)
+        : value_(value.begin(), value.end())
     {
     }
 
@@ -72,13 +74,13 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    endorsement(const endorsement& other);
+    endorsement(const endorsement &other);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const data_chunk&() const;
+    operator const data_chunk &() const;
 
     /**
      * Overload cast to generic data reference.
@@ -92,8 +94,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        endorsement& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    endorsement &argument);
 
     /**
      * Overload stream out.
@@ -101,19 +103,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const endorsement& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const endorsement &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */
     data_chunk value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

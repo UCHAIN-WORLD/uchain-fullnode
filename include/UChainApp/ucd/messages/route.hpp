@@ -27,14 +27,16 @@
 #include <UChain/bitcoin.hpp>
 #include <UChainApp/ucd/define.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 /// This class is not thread safe.
 /// The route is fixed in compliance with v2/v3 limitations.
 class BCS_API route
 {
-public:
+  public:
     /// Construct a route.
     route();
 
@@ -42,7 +44,7 @@ public:
     std::string display() const;
 
     /// Equality operator.
-    bool operator==(const route& other) const;
+    bool operator==(const route &other) const;
 
     /// The message requires a secure port.
     bool secure;
@@ -62,19 +64,19 @@ public:
 
 namespace std
 {
-    template<>
-    struct hash<bc::server::route>
+template <>
+struct hash<bc::server::route>
+{
+    size_t operator()(const bc::server::route &value) const
     {
-        size_t operator()(const bc::server::route& value) const
-        {
-            size_t seed = 0;
-            boost::hash_combine(seed, value.secure);
-            ////boost::hash_combine(seed, value.delimited);
-            boost::hash_combine(seed, value.address1);
-            ////boost::hash_combine(seed, value.address2);
-            return seed;
-        }
-    };
+        size_t seed = 0;
+        boost::hash_combine(seed, value.secure);
+        ////boost::hash_combine(seed, value.delimited);
+        boost::hash_combine(seed, value.address1);
+        ////boost::hash_combine(seed, value.address2);
+        return seed;
+    }
+};
 } // namespace std
 
 #endif

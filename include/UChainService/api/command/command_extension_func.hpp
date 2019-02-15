@@ -27,18 +27,17 @@
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/command.hpp>
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
+std::string formerly_extension(const std::string &former);
 
-std::string formerly_extension(const std::string& former);
+std::shared_ptr<command> find_extension(const std::string &symbol);
 
-std::shared_ptr<command> find_extension(const std::string& symbol);
-
-void broadcast_extension(const std::function<void(std::shared_ptr<command>)> func, std::ostream& os);
-bool check_read_only(const string& symbol);
-
+void broadcast_extension(const std::function<void(std::shared_ptr<command>)> func, std::ostream &os);
+bool check_read_only(const string &symbol);
 
 } // namespace explorer
 } // namespace libbitcoin
-

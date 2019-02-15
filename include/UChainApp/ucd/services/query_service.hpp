@@ -26,17 +26,19 @@
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class server_node;
 
 // This class is thread safe.
 // Submit queries and address subscriptions and receive address notifications.
 class BCS_API query_service
-  : public bc::protocol::zmq::worker
+    : public bc::protocol::zmq::worker
 {
-public:
+  public:
     typedef std::shared_ptr<query_service> ptr;
 
     /// The fixed inprocess query and notify worker endpoints.
@@ -46,26 +48,26 @@ public:
     static const config::endpoint secure_notify;
 
     /// Construct a query service.
-    query_service(bc::protocol::zmq::authenticator& authenticator,
-        server_node& node, bool secure);
+    query_service(bc::protocol::zmq::authenticator &authenticator,
+                  server_node &node, bool secure);
 
-protected:
+  protected:
     typedef bc::protocol::zmq::socket socket;
 
-    virtual bool bind(socket& router, socket& query_dealer,
-        socket& notify_dealer);
-    virtual bool unbind(socket& router, socket& query_dealer,
-        socket& notify_dealer);
+    virtual bool bind(socket &router, socket &query_dealer,
+                      socket &notify_dealer);
+    virtual bool unbind(socket &router, socket &query_dealer,
+                        socket &notify_dealer);
 
     // Implement the service.
     virtual void work();
 
-private:
+  private:
     const bool secure_;
-    const server::settings& settings_;
+    const server::settings &settings_;
 
     // This is thread safe.
-    bc::protocol::zmq::authenticator& authenticator_;
+    bc::protocol::zmq::authenticator &authenticator_;
 };
 
 } // namespace server

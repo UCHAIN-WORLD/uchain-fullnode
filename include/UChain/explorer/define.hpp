@@ -35,14 +35,14 @@
 // used for non-api symbols.
 
 #if defined BCX_STATIC
-    #define BCX_API
-    #define BCX_INTERNAL
+#define BCX_API
+#define BCX_INTERNAL
 #elif defined BCX_DLL
-    #define BCX_API      BC_HELPER_DLL_EXPORT
-    #define BCX_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCX_API BC_HELPER_DLL_EXPORT
+#define BCX_INTERNAL BC_HELPER_DLL_LOCAL
 #else
-    #define BCX_API      BC_HELPER_DLL_IMPORT
-    #define BCX_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCX_API BC_HELPER_DLL_IMPORT
+#define BCX_INTERNAL BC_HELPER_DLL_LOCAL
 #endif
 
 /**
@@ -88,7 +88,7 @@
 #define BX_ADMIN_NAME "Administrator .(required when administrator_required is true)"
 #define BX_ADMIN_AUTH "Administrator password."
 
-#define BX_TOKEN_OFFERING_CURVE  "The token offering model by block height. \
+#define BX_TOKEN_OFFERING_CURVE "The token offering model by block height. \
     TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; \
     LQ - Locked Quantity each period; \
     LP - Locked Period, numeber of how many blocks; \
@@ -97,7 +97,6 @@
         TYPE=1;LQ=9000;LP=60000;UN=3  \
         TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 \
     defaults to disable. "
-
 
 /**
  * Space-saving namespaces.

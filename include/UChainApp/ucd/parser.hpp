@@ -26,35 +26,37 @@
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/config.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 /// Parse configurable values from environment variables, settings file, and
 /// command line positional and non-positional options.
 class BCS_API parser
-  : public config::parser
+    : public config::parser
 {
 public:
-    parser(bc::settings context);
-    parser(const configuration defaults);
+  parser(bc::settings context);
+  parser(const configuration defaults);
 
-    /// Parse all configuration into member settings.
-    virtual bool parse(int argc, const char* argv[], std::ostream& error);
+  /// Parse all configuration into member settings.
+  virtual bool parse(int argc, const char *argv[], std::ostream &error);
 
-    /// Load command line options (named).
-    virtual options_metadata load_options();
+  /// Load command line options (named).
+  virtual options_metadata load_options();
 
-    /// Load command line arguments (positional).
-    virtual arguments_metadata load_arguments();
+  /// Load command line arguments (positional).
+  virtual arguments_metadata load_arguments();
 
-    /// Load configuration file settings.
-    virtual options_metadata load_settings();
+  /// Load configuration file settings.
+  virtual options_metadata load_settings();
 
-    /// Load environment variable settings.
-    virtual options_metadata load_environment();
+  /// Load environment variable settings.
+  virtual options_metadata load_environment();
 
-    /// The populated configuration settings values.
-    configuration configured;
+  /// The populated configuration settings values.
+  configuration configured;
 };
 
 } // namespace server

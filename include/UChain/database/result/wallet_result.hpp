@@ -32,13 +32,15 @@
 using namespace libbitcoin::chain;
 using namespace std;
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// read wallet detail information from wallet database.
 class BCD_API wallet_result : public base_result
 {
-public:
+  public:
     wallet_result(const memory_ptr slab);
 
     /// The wallet.

@@ -31,13 +31,15 @@
 #include <UChain/node/utility/header_queue.hpp>
 #include <UChain/node/utility/reservation.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 // Class to manage a set of reservation objects during sync, thread safe.
 class BCN_API reservations
 {
-public:
+  public:
     typedef struct
     {
         size_t active_count;
@@ -49,8 +51,8 @@ public:
 
     /// Construct a reservation table of reservations, allocating hashes evenly
     /// among the rows up to the limit of a single get headers p2p request.
-    reservations(header_queue& hashes, blockchain::simple_chain& chain,
-        const settings& settings);
+    reservations(header_queue &hashes, blockchain::simple_chain &chain,
+                 const settings &settings);
 
     /// The average and standard deviation of block import rates.
     rate_statistics rates() const;
@@ -73,13 +75,13 @@ public:
     /// Set the max size of a block request (defaults to 50000).
     void set_max_request(size_t value);
 
-    std::size_t size() {
+    std::size_t size()
+    {
         shared_lock lock(mutex_);
         return table_.size();
     }
 
-private:
-
+  private:
     // Create the specified number of reservations and distribute hashes.
     void initialize(size_t size);
 
@@ -96,8 +98,8 @@ private:
     bool reserve(reservation::ptr minimal);
 
     // Thread safe.
-    header_queue& hashes_;
-    blockchain::simple_chain& blockchain_;
+    header_queue &hashes_;
+    blockchain::simple_chain &blockchain_;
 
     // Protected by mutex.
     reservation::list table_;
@@ -111,4 +113,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

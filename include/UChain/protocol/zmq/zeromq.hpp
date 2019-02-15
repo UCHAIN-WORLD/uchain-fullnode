@@ -23,9 +23,12 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/protocol/define.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 code BCP_API get_last_error();
 

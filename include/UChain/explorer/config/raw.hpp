@@ -28,17 +28,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between a byte stream and data_chunk.
  */
 class BCX_API raw
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -48,25 +50,25 @@ public:
      * Initialization constructor.
      * @param[in]  text  The value to initialize with.
      */
-    raw(const std::string& text);
+    raw(const std::string &text);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    raw(const data_chunk& value);
+    raw(const data_chunk &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    raw(const raw& other);
+    raw(const raw &other);
 
     /**
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const data_chunk&() const;
+    operator const data_chunk &() const;
 
     /**
      * Overload cast to generic data reference.
@@ -80,8 +82,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        raw& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    raw &argument);
 
     /**
      * Overload stream out.
@@ -89,19 +91,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const raw& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const raw &argument);
 
-private:
-
+  private:
     /**
      * The state of this object's raw data.
      */
     data_chunk value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

@@ -27,33 +27,35 @@
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/zmq/message.hpp>
 
-namespace libbitcoin {
-namespace protocol {
+namespace libbitcoin
+{
+namespace protocol
+{
 
 class BCP_API packet
 {
-public:
+  public:
     packet();
 
     const data_chunk origin() const;
     const data_chunk destination() const;
-    void set_destination(const data_chunk& destination);
+    void set_destination(const data_chunk &destination);
 
-    bool receive(zmq::socket& socket);
+    bool receive(zmq::socket &socket);
     ////bool receive(const std::shared_ptr<zmq::socket>& socket);
-    bool send(zmq::socket& socket);
+    bool send(zmq::socket &socket);
     ////bool send(const std::shared_ptr<zmq::socket>& socket);
 
-protected:
-    virtual bool encode_payload(zmq::message& message) const = 0;
-    virtual bool decode_payload(const data_chunk& payload) = 0;
+  protected:
+    virtual bool encode_payload(zmq::message &message) const = 0;
+    virtual bool decode_payload(const data_chunk &payload) = 0;
 
-private:
+  private:
     data_chunk origin_;
     data_chunk destination_;
 };
 
-}
-}
+} // namespace protocol
+} // namespace libbitcoin
 
 #endif

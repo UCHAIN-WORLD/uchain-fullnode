@@ -25,8 +25,10 @@
 
 #include <UChain/protocol/interface.pb.h>
 
-namespace libbitcoin {
-namespace protocol {
+namespace libbitcoin
+{
+namespace protocol
+{
 
 // typedef std::vector<bc::protocol::filter> filter_list;
 typedef google::protobuf::RepeatedPtrField<filter> filter_list;
@@ -43,8 +45,8 @@ typedef google::protobuf::RepeatedPtrField<tx_hash_result> transaction_hash_resu
 // typedef std::vector<bc::protocol::utxo_result> utxo_result_list;
 typedef google::protobuf::RepeatedPtrField<utxo_result> utxo_result_list;
 
-}
-}
+} // namespace protocol
+} // namespace libbitcoin
 
 #endif
 

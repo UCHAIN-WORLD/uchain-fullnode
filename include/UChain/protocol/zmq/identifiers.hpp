@@ -24,9 +24,12 @@
 #include <vector>
 #include <UChain/protocol/define.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 /// A locally unique idenfitier for this socket.
 typedef intptr_t identifier;
@@ -37,16 +40,15 @@ class BCP_API identifiers
     // Allow poller to push identifiers.
     friend class poller;
 
-public:
-
+  public:
     /// True if the result set contains no identifiers.
     bool empty() const;
 
     /// True if the result set contains the identifier.
     bool contains(identifier value) const;
 
-protected:
-    virtual void push(const void* socket);
+  protected:
+    virtual void push(const void *socket);
 
     std::vector<identifier> ids_;
 };

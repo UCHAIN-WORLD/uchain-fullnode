@@ -18,29 +18,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ startmining *************************/
 
-class startmining: public command_extension
+class startmining : public command_extension
 {
-public:
-    static const char* symbol(){ return "startmining";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "start CPU solo mining. You have to setminingwallet firstly."; }
+  public:
+    static const char *symbol() { return "startmining"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ex_online & bs) == bs; }
+    const char *description() override { return "start CPU solo mining. You have to setminingwallet firstly."; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
             .add("WALLET_NAME", 1)
@@ -48,8 +49,8 @@ public:
             .add("ADDRESS", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "WALLET_NAME", variables, input, raw);
@@ -57,46 +58,36 @@ public:
         load_input(argument_.address, "ADDRESS", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "WALLET_NAME",
             value<std::string>(&auth_.name)->required(),
-            BX_WALLET_NAME
-        )
-        (
+            BX_WALLET_NAME)(
             "WALLET_AUTH",
             value<std::string>(&auth_.auth)->required(),
-            BX_WALLET_AUTH
-        )
-        (
+            BX_WALLET_AUTH)(
             "ADDRESS",
             value<std::string>(&argument_.address)->required(),
-            "The mining target address. Defaults to empty, means a new address will be generated."
-        )
-        (
+            "The mining target address. Defaults to empty, means a new address will be generated.")(
             "number,n",
             value<uint16_t>(&option_.number)->default_value(0),
-            "The number of mining blocks, useful for testing. Defaults to 0, means no limit."
-        );
+            "The number of mining blocks, useful for testing. Defaults to 0, means no limit.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
@@ -107,11 +98,8 @@ public:
     {
         uint16_t number;
     } option_;
-
 };
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

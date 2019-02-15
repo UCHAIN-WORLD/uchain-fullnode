@@ -26,15 +26,18 @@
 #include <UChain/protocol/zmq/socket.hpp>
 #include <UChain/protocol/zmq/zeromq.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 /// This class is not thread safe.
 class BCP_API frame
-  : public enable_shared_from_base<frame>
+    : public enable_shared_from_base<frame>
 {
-public:
+  public:
     /// A shared frame pointer.
     typedef std::shared_ptr<frame> ptr;
 
@@ -42,11 +45,11 @@ public:
     frame();
 
     /// Construct a frame with the specified payload (for sending).
-    frame(const data_chunk& data);
+    frame(const data_chunk &data);
 
     /// This class is not copyable.
-    frame(const frame&) = delete;
-    void operator=(const frame&) = delete;
+    frame(const frame &) = delete;
+    void operator=(const frame &) = delete;
 
     /// Free the frame's allocated memory.
     virtual ~frame();
@@ -62,23 +65,22 @@ public:
 
     /// Must be called on the socket thread.
     /// Receive a frame on the socket.
-    code receive(socket& socket);
+    code receive(socket &socket);
 
     /// Must be called on the socket thread.
     /// Send a frame on the socket.
-    code send(socket& socket, bool more);
+    code send(socket &socket, bool more);
 
-private:
+  private:
     // zmq_msg_t alias, keeps zmq.h out of our headers.
-    typedef union
-    {
+    typedef union {
         unsigned char alignment[64];
-        void* pointer;
+        void *pointer;
     } zmq_msg;
 
-    static bool initialize(zmq_msg& message, const data_chunk& data);
+    static bool initialize(zmq_msg &message, const data_chunk &data);
 
-    bool set_more(socket& socket);
+    bool set_more(socket &socket);
     bool destroy();
 
     bool more_;
@@ -91,4 +93,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

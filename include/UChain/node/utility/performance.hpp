@@ -26,13 +26,14 @@
 #include <UChain/blockchain.hpp>
 #include <UChain/node/define.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 class BCN_API performance
 {
-public:
-
+  public:
     /// The normalized rate derived from the performance values.
     double normal() const;
 
@@ -49,7 +50,7 @@ public:
 };
 
 // Coerce division into double and error into zero.
-template<typename Quotient, typename Dividend, typename Divisor>
+template <typename Quotient, typename Dividend, typename Divisor>
 static Quotient divide(Dividend dividend, Divisor divisor)
 {
     const auto quotient = static_cast<Quotient>(dividend) / divisor;
@@ -60,4 +61,3 @@ static Quotient divide(Dividend dividend, Divisor divisor)
 } // namespace libbitcoin
 
 #endif
-

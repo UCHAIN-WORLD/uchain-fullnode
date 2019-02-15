@@ -29,17 +29,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to serialize both public and private hd keys.
  */
 class BCX_API hd_key
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -51,7 +53,7 @@ public:
      * Initialization constructor.
      * @param[in]  base58  The value to initialize with.
      */
-    hd_key(const std::string& base58);
+    hd_key(const std::string &base58);
 
     /**
      * Get the version/prefix of the key value.
@@ -63,7 +65,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const bc::wallet::hd_key&() const;
+    operator const bc::wallet::hd_key &() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -71,10 +73,9 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input, hd_key& argument);
+    friend std::istream &operator>>(std::istream &input, hd_key &argument);
 
-private:
-
+  private:
     /**
      * The private key state of this object.
      */

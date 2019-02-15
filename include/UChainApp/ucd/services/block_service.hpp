@@ -26,17 +26,19 @@
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class server_node;
 
 // This class is thread safe.
 // Subscribe to block acceptances into the long chain.
 class BCS_API block_service
-  : public bc::protocol::zmq::worker
+    : public bc::protocol::zmq::worker
 {
-public:
+  public:
     typedef std::shared_ptr<block_service> ptr;
 
     /// The fixed inprocess worker endpoints.
@@ -44,8 +46,8 @@ public:
     static const config::endpoint secure_worker;
 
     /// Construct a block service.
-    block_service(bc::protocol::zmq::authenticator& authenticator,
-        server_node& node, bool secure);
+    block_service(bc::protocol::zmq::authenticator &authenticator,
+                  server_node &node, bool secure);
 
     /// Start the service.
     bool start() override;
@@ -53,31 +55,31 @@ public:
     /// Stop the service.
     bool stop() override;
 
-protected:
+  protected:
     typedef bc::protocol::zmq::socket socket;
 
-    virtual bool bind(socket& xpub, socket& xsub);
-    virtual bool unbind(socket& xpub, socket& xsub);
+    virtual bool bind(socket &xpub, socket &xsub);
+    virtual bool unbind(socket &xpub, socket &xsub);
 
     // Implement the service.
     virtual void work();
 
-private:
+  private:
     typedef bc::message::block_message::ptr block_ptr;
     typedef bc::message::block_message::ptr_list block_list;
 
-    bool handle_reorganization(const code& ec, uint64_t fork_point,
-        const block_list& new_blocks, const block_list&);
-    void publish_blocks(uint32_t fork_point, const block_list& blocks);
-    void publish_block(socket& publisher, uint32_t height,
-        const block_ptr block);
+    bool handle_reorganization(const code &ec, uint64_t fork_point,
+                               const block_list &new_blocks, const block_list &);
+    void publish_blocks(uint32_t fork_point, const block_list &blocks);
+    void publish_block(socket &publisher, uint32_t height,
+                       const block_ptr block);
 
     const bool secure_;
-    const server::settings& settings_;
+    const server::settings &settings_;
 
     // These are thread safe.
-    bc::protocol::zmq::authenticator& authenticator_;
-    server_node& node_;
+    bc::protocol::zmq::authenticator &authenticator_;
+    server_node &node_;
 };
 
 } // namespace server

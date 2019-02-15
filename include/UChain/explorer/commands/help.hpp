@@ -53,31 +53,32 @@
 
 /********* GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY **********/
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /**
  * Class to implement the help command.
  */
 class BCX_API help
-  : public command
+    : public command
 {
-public:
-
+  public:
     /**
      * The symbolic (not localizable) command name, lower case.
      */
-    static const char* symbol()
+    static const char *symbol()
     {
         return "help";
     }
 
-
     /**
      * The member symbolic (not localizable) command name, lower case.
      */
-    virtual const char* name()
+    virtual const char *name()
     {
         return help::symbol();
     }
@@ -85,7 +86,7 @@ public:
     /**
      * The localizable command category name, upper case.
      */
-    virtual const char* category()
+    virtual const char *category()
     {
         return "META";
     }
@@ -93,7 +94,7 @@ public:
     /**
      * The localizable command description.
      */
-    virtual const char* description()
+    virtual const char *description()
     {
         return "Get the list of commands.";
     }
@@ -103,7 +104,7 @@ public:
      * A value of -1 indicates that the number of instances is unlimited.
      * @return  The loaded program argument definitions.
      */
-    virtual arguments_metadata& load_arguments()
+    virtual arguments_metadata &load_arguments()
     {
         return get_argument_metadata()
             .add("COMMAND", 1);
@@ -114,8 +115,8 @@ public:
      * @param[in]  input  The input stream for loading the parameters.
      * @param[in]         The loaded variables.
      */
-    virtual void load_fallbacks(std::istream& input,
-        po::variables_map& variables)
+    virtual void load_fallbacks(std::istream &input,
+                                po::variables_map &variables)
     {
     }
 
@@ -124,21 +125,17 @@ public:
      * BUGBUG: see boost bug/fix: svn.boost.org/trac/boost/ticket/8009
      * @return  The loaded program option definitions.
      */
-    virtual options_metadata& load_options()
+    virtual options_metadata &load_options()
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "COMMAND",
             value<std::string>(&argument_.command),
-            "The command for which help is requested."
-        );
+            "The command for which help is requested.");
 
         return options;
     }
@@ -147,7 +144,7 @@ public:
      * Set variable defaults from configuration variable values.
      * @param[in]  variables  The loaded variables.
      */
-    virtual void set_defaults_from_config(po::variables_map& variables)
+    virtual void set_defaults_from_config(po::variables_map &variables)
     {
     }
 
@@ -157,15 +154,15 @@ public:
      * @param[out]  error   The input stream for the command execution.
      * @return              The appropriate console return code { -1, 0, 1 }.
      */
-    virtual console_result invoke(std::ostream& output,
-        std::ostream& cerr);
+    virtual console_result invoke(std::ostream &output,
+                                  std::ostream &cerr);
 
     /* Properties */
 
     /**
      * Get the value of the COMMAND argument.
      */
-    virtual std::string& get_command_argument()
+    virtual std::string &get_command_argument()
     {
         return argument_.command;
     }
@@ -174,13 +171,12 @@ public:
      * Set the value of the COMMAND argument.
      */
     virtual void set_command_argument(
-        const std::string& value)
+        const std::string &value)
     {
         argument_.command = value;
     }
 
-private:
-
+  private:
     /**
      * Command line argument bound variables.
      * Uses cross-compiler safe constructor-based zeroize.
@@ -189,7 +185,7 @@ private:
     struct argument
     {
         argument()
-          : command()
+            : command()
         {
         }
 

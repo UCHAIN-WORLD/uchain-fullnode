@@ -26,18 +26,20 @@
 #include <UChain/explorer/define.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
-bool administrator_required_checker(bc::server::server_node& node,
-        const std::string& name, const std::string& auth);
+bool administrator_required_checker(bc::server::server_node &node,
+                                    const std::string &name, const std::string &auth);
 
-uint64_t get_last_height(bc::server::server_node& node);
+uint64_t get_last_height(bc::server::server_node &node);
 
-uint32_t get_connections_count(bc::server::server_node& node);
+uint32_t get_connections_count(bc::server::server_node &node);
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

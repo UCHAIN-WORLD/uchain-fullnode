@@ -28,26 +28,29 @@
 #include <UChain/network.hpp>
 #include <UChain/node/define.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 class BCN_API protocol_transaction_out
-  : public network::protocol_events, track<protocol_transaction_out>
+    : public network::protocol_events,
+      track<protocol_transaction_out>
 {
-public:
+  public:
     typedef std::shared_ptr<protocol_transaction_out> ptr;
 
     /// Construct a transaction protocol instance.
-    protocol_transaction_out(network::p2p& network,
-        network::channel::ptr channel, blockchain::block_chain& blockchain,
-        blockchain::transaction_pool& pool);
+    protocol_transaction_out(network::p2p &network,
+                             network::channel::ptr channel, blockchain::block_chain &blockchain,
+                             blockchain::transaction_pool &pool);
 
     ptr do_subscribe();
 
     /// Start the protocol.
     virtual void start();
 
-private:
+  private:
     // Local type aliases.
     typedef message::transaction_message::ptr transaction_ptr;
     typedef message::fee_filter::ptr fee_filter_ptr;
@@ -55,19 +58,19 @@ private:
     typedef message::get_data::ptr get_data_ptr;
     typedef chain::point::indexes index_list;
 
-    void send_transaction(const code& ec,
-        const chain::transaction& transaction, const hash_digest& hash);
+    void send_transaction(const code &ec,
+                          const chain::transaction &transaction, const hash_digest &hash);
 
-    bool handle_receive_get_data(const code& ec, get_data_ptr message);
-    bool handle_receive_fee_filter(const code& ec, fee_filter_ptr message);
-    bool handle_receive_memory_pool(const code& ec, memory_pool_ptr message);
+    bool handle_receive_get_data(const code &ec, get_data_ptr message);
+    bool handle_receive_fee_filter(const code &ec, fee_filter_ptr message);
+    bool handle_receive_memory_pool(const code &ec, memory_pool_ptr message);
 
-    void handle_stop(const code&);
-    bool handle_floated(const code& ec, const index_list& unconfirmed,
-        transaction_ptr message);
+    void handle_stop(const code &);
+    bool handle_floated(const code &ec, const index_list &unconfirmed,
+                        transaction_ptr message);
 
-    blockchain::block_chain& blockchain_;
-    blockchain::transaction_pool& pool_;
+    blockchain::block_chain &blockchain_;
+    blockchain::transaction_pool &pool_;
     std::atomic<uint64_t> minimum_fee_;
     const bool relay_to_peer_;
 };

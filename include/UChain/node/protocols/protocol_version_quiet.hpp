@@ -25,22 +25,24 @@
 #include <UChain/network.hpp>
 #include <UChain/node/define.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 class BCN_API protocol_version_quiet
-  : public network::protocol_version
+    : public network::protocol_version
 {
-public:
+  public:
     typedef std::shared_ptr<protocol_version_quiet> ptr;
 
     /// Construct a quiet version protocol instance.
-    protocol_version_quiet(network::p2p& network,
-        network::channel::ptr channel);
+    protocol_version_quiet(network::p2p &network,
+                           network::channel::ptr channel);
 
-protected:
+  protected:
     /// Overridden to set relay to false.
-    void send_version(const message::version& self) override;
+    void send_version(const message::version &self) override;
 };
 
 } // namespace node

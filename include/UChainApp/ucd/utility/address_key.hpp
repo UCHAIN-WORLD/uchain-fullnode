@@ -27,20 +27,22 @@
 #include <UChainApp/ucd/messages/route.hpp>
 #include <UChainApp/ucd/define.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class BCS_API address_key
 {
-public:
-    address_key(const route& reply_to, const binary& prefix_filter);
-    bool operator==(const address_key& other) const;
-    const route& reply_to() const;
-    const binary& prefix_filter() const;
+  public:
+    address_key(const route &reply_to, const binary &prefix_filter);
+    bool operator==(const address_key &other) const;
+    const route &reply_to() const;
+    const binary &prefix_filter() const;
 
-private:
-    const route& reply_to_;
-    const binary& prefix_filter_;
+  private:
+    const route &reply_to_;
+    const binary &prefix_filter_;
 };
 
 } // namespace server
@@ -48,23 +50,23 @@ private:
 
 namespace std
 {
-    template<>
-    struct hash<bc::server::address_key>
+template <>
+struct hash<bc::server::address_key>
+{
+    size_t operator()(const bc::server::address_key &value) const
     {
-        size_t operator()(const bc::server::address_key& value) const
-        {
-            // boost::hash_combine uses boost::hash declarations., but these
-            // are defined as std::hash (for use with std::map). So we must
-            // explicity perform the hash operation before combining.
-            const auto to = std::hash<bc::server::route>()(value.reply_to());
-            const auto filter = std::hash<bc::binary>()(value.prefix_filter());
+        // boost::hash_combine uses boost::hash declarations., but these
+        // are defined as std::hash (for use with std::map). So we must
+        // explicity perform the hash operation before combining.
+        const auto to = std::hash<bc::server::route>()(value.reply_to());
+        const auto filter = std::hash<bc::binary>()(value.prefix_filter());
 
-            size_t seed = 0;
-            boost::hash_combine(seed, to);
-            boost::hash_combine(seed, filter);
-            return seed;
-        }
-    };
+        size_t seed = 0;
+        boost::hash_combine(seed, to);
+        boost::hash_combine(seed, filter);
+        return seed;
+    }
+};
 } // namespace std
 
 #endif

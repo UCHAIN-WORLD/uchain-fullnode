@@ -28,8 +28,10 @@
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 static BC_CONSTEXPR size_t code_size = sizeof(uint32_t);
 static BC_CONSTEXPR size_t index_size = sizeof(uint32_t);
@@ -37,28 +39,27 @@ static BC_CONSTEXPR size_t point_size = hash_size + sizeof(uint32_t);
 
 // fetch_history stuff
 
-bool BCS_API unwrap_fetch_history_args(bc::wallet::payment_address& address,
-    uint32_t& from_height, const message& request);
+bool BCS_API unwrap_fetch_history_args(bc::wallet::payment_address &address,
+                                       uint32_t &from_height, const message &request);
 
-void BCS_API send_history_result(const code& ec,
-    const chain::history_compact::list& history, const message& request,
-    send_handler handler);
+void BCS_API send_history_result(const code &ec,
+                                 const chain::history_compact::list &history, const message &request,
+                                 send_handler handler);
 
 // fetch_transaction stuff
 
-bool BCS_API unwrap_fetch_transaction_args(hash_digest& hash,
-    const message& request);
+bool BCS_API unwrap_fetch_transaction_args(hash_digest &hash,
+                                           const message &request);
 
-void BCS_API chain_transaction_fetched(const code& ec,
-    const chain::transaction& tx, const message& request,
-    send_handler handler);
+void BCS_API chain_transaction_fetched(const code &ec,
+                                       const chain::transaction &tx, const message &request,
+                                       send_handler handler);
 
-void BCS_API pool_transaction_fetched(const code& ec,
-    bc::message::transaction_message::ptr tx, const message& request,
-    send_handler handler);
+void BCS_API pool_transaction_fetched(const code &ec,
+                                      bc::message::transaction_message::ptr tx, const message &request,
+                                      send_handler handler);
 
 } // namespace server
 } // namespace libbitcoin
 
 #endif
-

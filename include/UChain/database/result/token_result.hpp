@@ -30,13 +30,15 @@
 
 using namespace libbitcoin::chain;
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// read token detail information from token database.
 class BCD_API token_result : public base_result
 {
-public:
+  public:
     token_result(const memory_ptr slab);
 
     /// The token.

@@ -51,8 +51,10 @@
 
 /********* GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY **********/
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 #define BX_HELP_VARIABLE "help"
 #define BX_CONFIG_VARIABLE "config"
@@ -62,7 +64,8 @@ BC_DECLARE_CONFIG_DEFAULT_PATH(".UChain" / "uc.conf")
 /**
  * Suppported command category.
  */
-enum : int {
+enum : int
+{
     ctgy_extension = 1 << 0,
     ctgy_online = 1 << 1,
     ctgy_admin_required = 1 << 2,
@@ -80,12 +83,11 @@ enum : int {
  */
 class BCX_API command
 {
-public:
-
+  public:
     /**
      * The symbolic (not localizable) command name, lower case.
      */
-    static const char* symbol()
+    static const char *symbol()
     {
         return "not-implemented";
     }
@@ -94,7 +96,7 @@ public:
      * The symbolic (not localizable) command name, lower case.
      * @return  Example: "fetch-transaction"
      */
-    virtual const char* name()
+    virtual const char *name()
     {
         return symbol();
     }
@@ -103,7 +105,7 @@ public:
      * The localizable command category name, upper case.
      * @return  Example: "ONLINE"
      */
-    virtual const char* category()
+    virtual const char *category()
     {
         return "not-implemented";
     }
@@ -123,7 +125,7 @@ public:
      * The localizable command description.
      * @return  Example: "Get transactions by hash."
      */
-    virtual const char* description()
+    virtual const char *description()
     {
         return "not-implemented";
     }
@@ -171,8 +173,8 @@ public:
      * @param[out]  error   The input stream for the command execution.
      * @return              The appropriate console return code { -1, 0, 1 }.
      */
-    virtual console_result invoke(std::ostream& output,
-        std::ostream& error)
+    virtual console_result invoke(std::ostream &output,
+                                  std::ostream &error)
     {
         return console_result::failure;
     }
@@ -182,7 +184,7 @@ public:
      * A value of -1 indicates that the number of instances is unlimited.
      * @return  The loaded argument definitions.
      */
-    virtual arguments_metadata& load_arguments()
+    virtual arguments_metadata &load_arguments()
     {
         return argument_metadata_;
     }
@@ -191,17 +193,16 @@ public:
      * Load environment variable definitions.
      * @param[out] definitions  The defined program argument definitions.
      */
-    virtual void load_environment(options_metadata& definitions)
+    virtual void load_environment(options_metadata &definitions)
     {
         using namespace po;
-        definitions.add_options()
-        (
+        definitions.add_options()(
             /* This composes with the command line options. */
             BX_CONFIG_VARIABLE,
             value<boost::filesystem::path>()
-                ->composing()->default_value(config_default_path()),
-            "The path to the configuration settings file."
-        );
+                ->composing()
+                ->default_value(config_default_path()),
+            "The path to the configuration settings file.");
     }
 
     /**
@@ -209,8 +210,8 @@ public:
      * @param[in]  input      The input stream for loading the parameters.
      * @param[in]  variables  The loaded variables.
      */
-    BCX_API virtual void load_fallbacks(std::istream& input,
-        po::variables_map& variables)
+    BCX_API virtual void load_fallbacks(std::istream &input,
+                                        po::variables_map &variables)
     {
     }
 
@@ -219,7 +220,7 @@ public:
      * BUGBUG: see boost bug/fix: svn.boost.org/trac/boost/ticket/8009
      * @return  The loaded option definitions.
      */
-    virtual options_metadata& load_options()
+    virtual options_metadata &load_options()
     {
         return option_metadata_;
     }
@@ -228,105 +229,67 @@ public:
      * Load configuration setting definitions.
      * @param[out] definitions  The defined program argument definitions.
      */
-    virtual void load_settings(options_metadata& definitions)
+    virtual void load_settings(options_metadata &definitions)
     {
         using namespace po;
-        definitions.add_options()
-        (
+        definitions.add_options()(
             "wallet.wif_version",
             value<explorer::config::byte>(&setting_.wallet.wif_version)->default_value(128),
-            "The wallet import format (WIF) key version, defaults to 128."
-        )
-        (
+            "The wallet import format (WIF) key version, defaults to 128.")(
             "wallet.hd_public_version",
             value<uint32_t>(&setting_.wallet.hd_public_version)->default_value(76067358),
-            "The hierarchical deterministic (HD) public key version, defaults to 76067358."
-        )
-        (
+            "The hierarchical deterministic (HD) public key version, defaults to 76067358.")(
             "wallet.hd_secret_version",
             value<uint32_t>(&setting_.wallet.hd_secret_version)->default_value(76066276),
-            "The hierarchical deterministic (HD) private key version, defaults to 76066276."
-        )
-        (
+            "The hierarchical deterministic (HD) private key version, defaults to 76066276.")(
             "wallet.pay_to_public_key_hash_version",
             value<explorer::config::byte>(&setting_.wallet.pay_to_public_key_hash_version)->default_value(0),
-            "The pay-to-public-key-hash address version, defaults to 0."
-        )
-        (
+            "The pay-to-public-key-hash address version, defaults to 0.")(
             "wallet.pay_to_script_hash_version",
             value<explorer::config::byte>(&setting_.wallet.pay_to_script_hash_version)->default_value(5),
-            "The pay-to-script-hash address version, defaults to 5."
-        )
-        (
+            "The pay-to-script-hash address version, defaults to 5.")(
             "wallet.transaction_version",
             value<uint32_t>(&setting_.wallet.transaction_version)->default_value(1),
-            "The transaction version, defaults to 1."
-        )
-        (
+            "The transaction version, defaults to 1.")(
             "network.identifier",
             value<uint32_t>(&setting_.network.identifier)->default_value(3652501241),
-            "The magic number for message headers, defaults to 3652501241."
-        )
-        (
+            "The magic number for message headers, defaults to 3652501241.")(
             "network.connect_retries",
             value<explorer::config::byte>(&setting_.network.connect_retries)->default_value(0),
-            "The number of times to retry contacting a node, defaults to 0."
-        )
-        (
+            "The number of times to retry contacting a node, defaults to 0.")(
             "network.connect_timeout_seconds",
             value<uint32_t>(&setting_.network.connect_timeout_seconds)->default_value(5),
-            "The time limit for connection establishment, defaults to 5."
-        )
-        (
+            "The time limit for connection establishment, defaults to 5.")(
             "network.channel_handshake_seconds",
             value<uint32_t>(&setting_.network.channel_handshake_seconds)->default_value(30),
-            "The time limit to complete the connection handshake, defaults to 30."
-        )
-        (
+            "The time limit to complete the connection handshake, defaults to 30.")(
             "network.hosts_file",
             value<boost::filesystem::path>(&setting_.network.hosts_file)->default_value("hosts.cache"),
-            "The peer hosts cache file path, defaults to 'hosts.cache'."
-        )
-        (
+            "The peer hosts cache file path, defaults to 'hosts.cache'.")(
             "network.debug_file",
             value<boost::filesystem::path>(&setting_.network.debug_file)->default_value("debug.log"),
-            "The debug log file path, defaults to 'debug.log'."
-        )
-        (
+            "The debug log file path, defaults to 'debug.log'.")(
             "network.error_file",
             value<boost::filesystem::path>(&setting_.network.error_file)->default_value("error.log"),
-            "The error log file path, defaults to 'error.log'."
-        )
-        (
+            "The error log file path, defaults to 'error.log'.")(
             "network.seed",
             value<std::vector<bc::config::endpoint>>(&setting_.network.seeds),
-            "A seed node for initializing the host pool, multiple entries allowed."
-        )
-        (
+            "A seed node for initializing the host pool, multiple entries allowed.")(
             "server.url",
-            value<bc::config::endpoint>(&setting_.server.url)->default_value({ "tcp://127.0.0.1:18707" }),
-            "The URL of the Libbitcoin/Obelisk server."
-        )
-        (
+            value<bc::config::endpoint>(&setting_.server.url)->default_value({"tcp://127.0.0.1:18707"}),
+            "The URL of the Libbitcoin/Obelisk server.")(
             "server.connect_retries",
             value<explorer::config::byte>(&setting_.server.connect_retries)->default_value(0),
-            "The number of times to retry contacting a server, defaults to 0."
-        )
-        (
+            "The number of times to retry contacting a server, defaults to 0.")(
             "server.connect_timeout_seconds",
             value<uint16_t>(&setting_.server.connect_timeout_seconds)->default_value(5),
-            "The time limit for connection establishment, defaults to 5."
-        )
-        (
+            "The time limit for connection establishment, defaults to 5.")(
             "server.server_public_key",
             value<bc::config::sodium>(&setting_.server.server_public_key),
-            "The Z85-encoded public key of the server."
-        )
-        (
+            "The Z85-encoded public key of the server.")(
             "server.client_private_key",
             value<bc::config::sodium>(&setting_.server.client_private_key),
-            "The Z85-encoded private key of the client."
-        );
+            "The Z85-encoded private key of the client.");
     }
 
     /**
@@ -334,7 +297,7 @@ public:
      * @param[in]  input      The input stream for loading the parameter.
      * @param[in]  variables  The loaded variables.
      */
-    virtual void load_stream(std::istream& input, po::variables_map& variables)
+    virtual void load_stream(std::istream &input, po::variables_map &variables)
     {
     }
 
@@ -342,7 +305,7 @@ public:
      * Set variable defaults from configuration variable values.
      * @param[in]  variables  The loaded variables.
      */
-    virtual void set_defaults_from_config(po::variables_map& variables)
+    virtual void set_defaults_from_config(po::variables_map &variables)
     {
     }
 
@@ -350,12 +313,12 @@ public:
      * Write the help for this command to the specified stream.
      * @param[out] output  The output stream.
      */
-    virtual void write_help(std::ostream& output)
+    virtual void write_help(std::ostream &output)
     {
-        const auto& options = get_option_metadata();
-        const auto& arguments = get_argument_metadata();
+        const auto &options = get_option_metadata();
+        const auto &arguments = get_argument_metadata();
         bc::config::printer help(options, arguments, BX_PROGRAM_NAME,
-            description(), name());
+                                 description(), name());
         help.initialize();
         help.commandline(output);
     }
@@ -365,7 +328,7 @@ public:
     /**
      * Get command line argument metadata.
      */
-    virtual arguments_metadata& get_argument_metadata()
+    virtual arguments_metadata &get_argument_metadata()
     {
         return argument_metadata_;
     }
@@ -373,7 +336,7 @@ public:
     /**
      * Get command line option metadata.
      */
-    virtual options_metadata& get_option_metadata()
+    virtual options_metadata &get_option_metadata()
     {
         return option_metadata_;
     }
@@ -692,8 +655,7 @@ public:
         return setting_.server.api_version;
     }
 
-protected:
-
+  protected:
     /**
      * This base class is abstract but not pure virtual, so prevent direct
      * construction here.
@@ -702,8 +664,7 @@ protected:
     {
     }
 
-private:
-
+  private:
     /**
      * Command line argument metadata.
      */
@@ -737,12 +698,12 @@ private:
         struct wallet
         {
             wallet()
-              : wif_version(),
-                hd_public_version(),
-                hd_secret_version(),
-                pay_to_public_key_hash_version(),
-                pay_to_script_hash_version(),
-                transaction_version()
+                : wif_version(),
+                  hd_public_version(),
+                  hd_secret_version(),
+                  pay_to_public_key_hash_version(),
+                  pay_to_script_hash_version(),
+                  transaction_version()
             {
             }
 
@@ -757,14 +718,14 @@ private:
         struct network
         {
             network()
-              : identifier(),
-                connect_retries(),
-                connect_timeout_seconds(),
-                channel_handshake_seconds(),
-                hosts_file(),
-                debug_file(),
-                error_file(),
-                seeds()
+                : identifier(),
+                  connect_retries(),
+                  connect_timeout_seconds(),
+                  channel_handshake_seconds(),
+                  hosts_file(),
+                  debug_file(),
+                  error_file(),
+                  seeds()
             {
             }
 
@@ -781,12 +742,12 @@ private:
         struct server
         {
             server()
-              : url(),
-                connect_retries(),
-                connect_timeout_seconds(),
-                server_public_key(),
-                client_private_key(),
-                api_version(0)// defaults to v1, else v2. init as 0.
+                : url(),
+                  connect_retries(),
+                  connect_timeout_seconds(),
+                  server_public_key(),
+                  client_private_key(),
+                  api_version(0) // defaults to v1, else v2. init as 0.
             {
             }
 
@@ -799,9 +760,9 @@ private:
         } server;
 
         setting()
-          : wallet(),
-            network(),
-            server()
+            : wallet(),
+              network(),
+              server()
         {
         }
     } setting_;

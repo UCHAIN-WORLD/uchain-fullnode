@@ -18,93 +18,80 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ showbalances *************************/
 
-class showbalances: public command_extension
+class showbalances : public command_extension
 {
-public:
-    static const char* symbol(){ return "showbalances";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "List balance details of each address of this wallet. defaults show non-zero unspent address."; }
+  public:
+    static const char *symbol() { return "showbalances"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ex_online & bs) == bs; }
+    const char *description() override { return "List balance details of each address of this wallet. defaults show non-zero unspent address."; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
             .add("WALLET_NAME", 1)
             .add("WALLET_AUTH", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "WALLET_NAME", variables, input, raw);
         load_input(auth_.auth, "WALLET_AUTH", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "deposited,d",
             value<bool>(&option_.deposited)->zero_tokens()->default_value(false),
-            "list deposited UCNs, default is false."
-        )
-        (
+            "list deposited UCNs, default is false.")(
             "nozero,n",
             value<bool>(&option_.non_zero)->zero_tokens()->default_value(false),
-            "Default is false."
-        )
-        (
+            "Default is false.")(
             "greater_equal,g",
             value<uint64_t>(&option_.greater)->default_value(0),
-            "Greater than UCN bits."
-        )
-        (
+            "Greater than UCN bits.")(
             "lesser_equal,l",
             value<uint64_t>(&option_.lesser)->default_value(0),
-            "Lesser than UCN bits."
-        )
-        (
+            "Lesser than UCN bits.")(
             "WALLET_NAME",
             value<std::string>(&auth_.name)->required(),
-            BX_WALLET_NAME
-        )
-        (
+            BX_WALLET_NAME)(
             "WALLET_AUTH",
             value<std::string>(&auth_.auth)->required(),
-            BX_WALLET_AUTH
-        );
+            BX_WALLET_AUTH);
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
@@ -117,13 +104,8 @@ public:
         uint64_t greater;
         uint64_t lesser;
     } option_;
-
 };
-
-
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

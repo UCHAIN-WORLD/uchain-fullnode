@@ -25,17 +25,19 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between text and signature hash type.
  */
 class BCX_API hashtype
 {
-public:
-
+  public:
     /**
      * Default constructor, sets sighash::single.
      */
@@ -45,19 +47,19 @@ public:
      * Initialization constructor.
      * @param[in]  token  The value to initialize with.
      */
-    hashtype(const std::string& token);
+    hashtype(const std::string &token);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    hashtype(const chain::signature_hash_algorithm& value);
+    hashtype(const chain::signature_hash_algorithm &value);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    hashtype(const hashtype& other);
+    hashtype(const hashtype &other);
 
     /**
      * Return a reference to the data member.
@@ -71,8 +73,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        hashtype& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    hashtype &argument);
 
     /**
      * Overload stream out.
@@ -80,11 +82,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const hashtype& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const hashtype &argument);
 
-private:
-
+  private:
     /**
      * The state of this object's sighash engine data.
      */

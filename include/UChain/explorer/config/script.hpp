@@ -29,17 +29,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between base16/raw script and script_type.
  */
 class BCX_API script
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -49,31 +51,31 @@ public:
      * Initialization constructor.
      * @param[in]  mnemonic  The value to initialize with.
      */
-    script(const std::string& mnemonic);
+    script(const std::string &mnemonic);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    script(const chain::script& value);
+    script(const chain::script &value);
 
     /**
      * Initialization constructor.
      * @param[in]  value  The value to initialize with.
      */
-    script(const data_chunk& value);
+    script(const data_chunk &value);
 
     /**
      * Initialization constructor.
      * @param[in]  tokens  The mnemonic tokens to initialize with.
      */
-    script(const std::vector<std::string>& tokens);
+    script(const std::vector<std::string> &tokens);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    script(const script& other);
+    script(const script &other);
 
     /**
      * Serialize the script to bytes according to the wire protocol.
@@ -91,7 +93,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const chain::script&() const;
+    operator const chain::script &() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -99,8 +101,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        script& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    script &argument);
 
     /**
      * Overload stream out.
@@ -108,11 +110,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const script& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const script &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */

@@ -25,40 +25,42 @@
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 /// Address interface.
 /// Class and method names are published and mapped to the zeromq interface.
 class BCS_API address
 {
-public:
+  public:
     /// Fetch the blockchain and transaction pool history of a payment address.
-    static void fetch_history2(server_node& node,
-        const message& request, send_handler handler);
+    static void fetch_history2(server_node &node,
+                               const message &request, send_handler handler);
 
     /// Alias for subscribe, preserved for backward compatability.
-    static void renew(server_node& node, const message& request,
-        send_handler handler);
+    static void renew(server_node &node, const message &request,
+                      send_handler handler);
 
     /// Subscribe to payment or stealth address notifications by prefix.
-    static void subscribe(server_node& node, const message& request,
-        send_handler handler);
+    static void subscribe(server_node &node, const message &request,
+                          send_handler handler);
 
     /// Subscribe to payment and stealth address notifications by prefix.
-    static void subscribe2(server_node& node, const message& request,
-        send_handler handler);
+    static void subscribe2(server_node &node, const message &request,
+                           send_handler handler);
 
     /// Unsubscribe to payment and stealth address notifications by prefix.
-    static void unsubscribe2(server_node& node, const message& request,
-        send_handler handler);
+    static void unsubscribe2(server_node &node, const message &request,
+                             send_handler handler);
 
-private:
-    static bool unwrap_subscribe_args(binary& prefix_filter,
-        chain::subscribe_type& type, const message& request);
+  private:
+    static bool unwrap_subscribe_args(binary &prefix_filter,
+                                      chain::subscribe_type &type, const message &request);
 
-    static bool unwrap_subscribe2_args(binary& prefix_filter,
-        const message& request);
+    static bool unwrap_subscribe2_args(binary &prefix_filter,
+                                       const message &request);
 };
 
 } // namespace server

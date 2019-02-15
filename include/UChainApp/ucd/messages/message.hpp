@@ -27,57 +27,59 @@
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class BCS_API message
 {
-public:
-    static data_chunk to_bytes(const code& ec);
+  public:
+    static data_chunk to_bytes(const code &ec);
 
     //// Construct an empty message with security routing context.
     message(bool secure);
 
     //// Construct a response for the request (code only).
-    message(const message& request, const code& ec);
+    message(const message &request, const code &ec);
 
     //// Construct a response for the request (data with code).
-    message(const message& request, const data_chunk& data);
+    message(const message &request, const data_chunk &data);
 
     //// Construct a response for the route (subscription code only).
-    message(const server::route& route, const std::string& command,
-        uint32_t id, const code& ec);
+    message(const server::route &route, const std::string &command,
+            uint32_t id, const code &ec);
 
     //// Construct a response for the route (subscription data with code).
-    message(const server::route& route, const std::string& command,
-        uint32_t id, const data_chunk& data);
+    message(const server::route &route, const std::string &command,
+            uint32_t id, const data_chunk &data);
 
     /// Arbitrary caller data (returned to caller for correlation).
     uint32_t id() const;
 
     /// Serialized query or response (defined in relation to command).
-    const data_chunk& data() const;
+    const data_chunk &data() const;
 
     /// Query command (used for subscription, always returned to caller).
-    const std::string& command() const;
+    const std::string &command() const;
 
     /// The message route.
-    const server::route& route() const;
+    const server::route &route() const;
 
     /// Receive a message via the socket.
-    code receive(bc::protocol::zmq::socket& socket);
+    code receive(bc::protocol::zmq::socket &socket);
 
     /// Send the message via the socket.
-    code send(bc::protocol::zmq::socket& socket);
+    code send(bc::protocol::zmq::socket &socket);
 
-private:
+  private:
     uint32_t id_;
     data_chunk data_;
     server::route route_;
     std::string command_;
 };
 
-typedef std::function<void(message&&)> send_handler;
+typedef std::function<void(message &&)> send_handler;
 
 } // namespace server
 } // namespace libbitcoin

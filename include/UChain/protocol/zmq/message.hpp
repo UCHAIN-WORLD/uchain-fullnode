@@ -24,20 +24,23 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 /// This class is not thread safe.
 class BCP_API message
 {
-public:
+  public:
     /// Add an empty message part to the outgoing message.
     void enqueue();
 
     /// Add an iterable message part to the outgoing message.
     template <typename Iterable>
-    void enqueue(const Iterable& value)
+    void enqueue(const Iterable &value)
     {
         queue_.emplace(to_chunk(value));
     }
@@ -55,10 +58,10 @@ public:
 
     /// Remove a message part from the top of the queue, false if empty queue.
     bool dequeue();
-    bool dequeue(uint32_t& value);
-    bool dequeue(data_chunk& value);
-    bool dequeue(std::string& value);
-    bool dequeue(hash_digest& value);
+    bool dequeue(uint32_t &value);
+    bool dequeue(data_chunk &value);
+    bool dequeue(std::string &value);
+    bool dequeue(hash_digest &value);
 
     /// Clear the queue of message parts.
     void clear();
@@ -71,13 +74,13 @@ public:
 
     /// Must be called on the socket thread.
     /// Send the message in parts. If a send fails the unsent parts remain.
-    code send(socket& socket);
+    code send(socket &socket);
 
     /// Must be called on the socket thread.
     /// Receve a message (clears the queue first).
-    code receive(socket& socket);
+    code receive(socket &socket);
 
-private:
+  private:
     data_queue queue_;
 };
 
@@ -86,4 +89,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

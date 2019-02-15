@@ -25,17 +25,19 @@
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class server_node;
 
 // This class is thread safe.
 // Subscribe to transaction acceptances into the transaction memory pool.
 class BCS_API transaction_service
-  : public bc::protocol::zmq::worker
+    : public bc::protocol::zmq::worker
 {
-public:
+  public:
     typedef std::shared_ptr<transaction_service> ptr;
 
     /// The fixed inprocess worker endpoints.
@@ -43,8 +45,8 @@ public:
     static const config::endpoint secure_worker;
 
     /// Construct a transaction service.
-    transaction_service(bc::protocol::zmq::authenticator& authenticator,
-        server_node& node, bool secure);
+    transaction_service(bc::protocol::zmq::authenticator &authenticator,
+                        server_node &node, bool secure);
 
     /// Start the service.
     bool start() override;
@@ -52,28 +54,28 @@ public:
     /// Stop the service.
     bool stop() override;
 
-protected:
+  protected:
     typedef bc::protocol::zmq::socket socket;
 
-    virtual bool bind(socket& xpub, socket& xsub);
-    virtual bool unbind(socket& xpub, socket& xsub);
+    virtual bool bind(socket &xpub, socket &xsub);
+    virtual bool unbind(socket &xpub, socket &xsub);
 
     // Implement the service.
     virtual void work();
 
-private:
+  private:
     typedef bc::chain::point::indexes index_list;
 
-    bool handle_transaction(const code& ec, const index_list&,
-        bc::message::transaction_message::ptr tx);
-    void publish_transaction(const chain::transaction& tx);
+    bool handle_transaction(const code &ec, const index_list &,
+                            bc::message::transaction_message::ptr tx);
+    void publish_transaction(const chain::transaction &tx);
 
     const bool secure_;
-    const server::settings& settings_;
+    const server::settings &settings_;
 
     // These are thread safe.
-    bc::protocol::zmq::authenticator& authenticator_;
-    server_node& node_;
+    bc::protocol::zmq::authenticator &authenticator_;
+    server_node &node_;
 };
 
 } // namespace server

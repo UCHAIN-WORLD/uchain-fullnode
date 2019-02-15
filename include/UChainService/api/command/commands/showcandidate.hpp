@@ -18,87 +18,76 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ showcandidate *************************/
 
-class showcandidate: public command_extension
+class showcandidate : public command_extension
 {
-public:
-    static const char* symbol(){ return "showcandidate";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Get information of candidate."; }
+  public:
+    static const char *symbol() { return "showcandidate"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ex_online & bs) == bs; }
+    const char *description() override { return "Get information of candidate."; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
             .add("SYMBOL", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "SYMBOL",
             value<std::string>(&argument_.symbol),
-            "Candidate symbol. If not specified then show whole network candidate symbols."
-        )
-        (
+            "Candidate symbol. If not specified then show whole network candidate symbols.")(
             "limit,l",
             value<uint32_t>(&option_.limit)->default_value(100),
-            "candidate count per page."
-        )
-        (
+            "candidate count per page.")(
             "index,i",
             value<uint32_t>(&option_.index)->default_value(1),
-            "Page index."
-        )
-        (
+            "Page index.")(
             "current,c",
             value<bool>(&option_.show_current)->default_value(false)->zero_tokens(),
-            "If specified then show the lastest information of specified candidate. Default is not specified."
-        )
-        ;
+            "If specified then show the lastest information of specified candidate. Default is not specified.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
-        argument():
-            symbol()
+        argument() : symbol()
         {
         }
 
@@ -111,13 +100,8 @@ public:
         uint32_t index;
         uint32_t limit;
     } option_;
-
 };
-
-
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

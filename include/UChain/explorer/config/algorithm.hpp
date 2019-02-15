@@ -27,17 +27,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between algorithm and string.
  */
 class BCX_API algorithm
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -47,19 +49,19 @@ public:
      * Initialization constructor.
      * @param[in]  token  The value to initialize with.
      */
-    algorithm(const std::string& token);
+    algorithm(const std::string &token);
 
     /**
      * Initialization constructor.
      * @param[in]  algorithms  The value to initialize with.
      */
-    algorithm(bc::wallet::select_outputs::algorithm& algorithm);
+    algorithm(bc::wallet::select_outputs::algorithm &algorithm);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    algorithm(const algorithm& other);
+    algorithm(const algorithm &other);
 
     /**
      * Overload cast to internal type.
@@ -73,8 +75,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        algorithm& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    algorithm &argument);
 
     /**
      * Overload stream out.
@@ -82,11 +84,10 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const algorithm& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const algorithm &argument);
 
-private:
-
+  private:
     /**
      * The state of this object.
      */

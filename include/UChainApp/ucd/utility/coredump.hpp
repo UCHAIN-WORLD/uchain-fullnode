@@ -2,14 +2,16 @@
 #define CORE_DUMP_HPP
 #include <boost/format.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 #ifdef _MSC_VER
 
 #include <Windows.h>
 #include <Dbghelp.h>
-#pragma comment( lib, "Dbghelp.lib" )
+#pragma comment(lib, "Dbghelp.lib")
 
 LONG WINAPI exp_filter(struct _EXCEPTION_POINTERS *pExp)
 {

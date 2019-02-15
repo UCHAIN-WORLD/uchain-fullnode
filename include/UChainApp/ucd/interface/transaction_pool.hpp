@@ -26,31 +26,33 @@
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 /// Transaction pool interface.
 /// Class and method names are published and mapped to the zeromq interface.
 class BCS_API transaction_pool
 {
-public:
+  public:
     /// Fetch a transaction from the transaction pool (only), by its hash.
-    static void fetch_transaction(server_node& node, const message& request,
-        send_handler handler);
+    static void fetch_transaction(server_node &node, const message &request,
+                                  send_handler handler);
 
     /// Broadcast a transaction with penetration subscription.
-    static void broadcast(server_node& node, const message& request,
-        send_handler handler);
+    static void broadcast(server_node &node, const message &request,
+                          send_handler handler);
 
     /// Validate a transaction against the transaction pool and blockchain.
-    static void validate(server_node& node, const message& request,
-        send_handler handler);
+    static void validate(server_node &node, const message &request,
+                         send_handler handler);
 
-private:
-    static void handle_validated(const code& ec,
-        bc::message::transaction_message::ptr tx,
-        const chain::point::indexes& unconfirmed, const message& request,
-        send_handler handler);
+  private:
+    static void handle_validated(const code &ec,
+                                 bc::message::transaction_message::ptr tx,
+                                 const chain::point::indexes &unconfirmed, const message &request,
+                                 send_handler handler);
 };
 
 } // namespace server

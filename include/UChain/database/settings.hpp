@@ -25,13 +25,15 @@
 #include <boost/filesystem.hpp>
 #include <UChain/database/define.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// Common database configuration settings, properties not thread safe.
 class BCD_API settings
 {
-public:
+  public:
     settings();
     settings(bc::settings context);
 

@@ -30,16 +30,17 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 /**
  * Shared state wrapper to manage non-global shared call state.
  */
 class callback_state
 {
-public:
-
+  public:
     /**
      * Construct an instance of the callback_state class. The class is
      * initialized with a reference count of zero (0). If the streams
@@ -49,57 +50,57 @@ public:
      * @param[in]  output  The output stream for the callback handler.
      * @param[in]  engine  The desired output format.
      */
-    BCX_API callback_state(std::ostream& error, std::ostream& output,
-        const encoding_engine engine);
+    BCX_API callback_state(std::ostream &error, std::ostream &output,
+                           const encoding_engine engine);
 
     /**
      * Construct an instance of the callback_state class with native encoding.
      * @param[in]  error   The error stream for the callback handler.
      * @param[in]  output  The output stream for the callback handler.
      */
-    BCX_API  callback_state(std::ostream& error, std::ostream& output);
+    BCX_API callback_state(std::ostream &error, std::ostream &output);
 
     /**
      * Serialize a property tree to output. The stream must be flushed before
      * returning in order to prevent interleaving on the shared stream.
      * @param[in]  tree  The property tree to write to output.
      */
-    BCX_API virtual void error(const Json::Value& tree);
+    BCX_API virtual void error(const Json::Value &tree);
 
     /**
      * Write a line to the error stream. The stream must be flushed before
      * returning in order to prevent interleaving on the shared stream.
      * @param[in]  message  The unterminated error message to write.
      */
-    BCX_API virtual void error(const format& message);
+    BCX_API virtual void error(const format &message);
 
     /**
      * Write a line to the error stream. The stream must be flushed before
      * returning in order to prevent interleaving on the shared stream.
      * @param[in]  message  The unterminated error message to write.
      */
-    BCX_API virtual void error(const std::string& message);
+    BCX_API virtual void error(const std::string &message);
 
     /**
      * Serialize a property tree to output. The stream must be flushed before
      * returning in order to prevent interleaving on the shared stream.
      * @param[in]  tree  The property tree to write to output.
      */
-    BCX_API virtual void output(const Json::Value& tree);
+    BCX_API virtual void output(const Json::Value &tree);
 
     /**
      * Write a line to the output stream. The stream must be flushed before
      * returning in order to prevent interleaving on the shared stream.
      * @param[in]  message  The unterminated output message to write.
      */
-    BCX_API virtual void output(const format& message);
+    BCX_API virtual void output(const format &message);
 
     /**
      * Write a line to the output stream. The stream must be flushed before
      * returning in order to prevent interleaving on the shared stream.
      * @param[in]  message  The unterminated output message to write.
      */
-    BCX_API virtual void output(const std::string& message);
+    BCX_API virtual void output(const std::string &message);
 
     /**
      * Write a number to the output stream. The stream must be flushed before
@@ -118,13 +119,13 @@ public:
      * This overrides any outstanding callback references.
      * @param[in]  result  The desired callback result code, defaults to okay.
      */
-    BCX_API virtual void stop(console_result result=console_result::okay);
+    BCX_API virtual void stop(console_result result = console_result::okay);
 
     /**
      * Get a value indicating whether the callback reference count is zero.
      * @return  True if the reference count is zero.
      */
-    BCX_API virtual bool& stopped();
+    BCX_API virtual bool &stopped();
 
     /**
      * Handle the callback error with standard behavior.
@@ -132,8 +133,8 @@ public:
      * @param[in]  format  A single parameter format string or empty/default.
      * @return             True if no error.
      */
-    BCX_API  virtual bool succeeded(const std::error_code& ec,
-        const std::string& format="%1%");
+    BCX_API virtual bool succeeded(const std::error_code &ec,
+                                   const std::string &format = "%1%");
 
     /**
      * Get the engine enumeration value.
@@ -170,20 +171,20 @@ public:
     /**
      * Overload ++ operator to increment the reference count.
      */
-    BCX_API virtual callback_state& operator++();
+    BCX_API virtual callback_state &operator++();
 
     /**
      * Overload ++ operator to decrement the reference count.
      */
-    BCX_API virtual callback_state& operator--();
+    BCX_API virtual callback_state &operator--();
 
-private:
+  private:
     bool stopped_;
     size_t refcount_;
     console_result result_;
     encoding_engine engine_;
-    std::ostream& error_;
-    std::ostream& output_;
+    std::ostream &error_;
+    std::ostream &output_;
 };
 
 } // namespace explorer

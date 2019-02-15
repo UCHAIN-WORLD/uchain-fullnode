@@ -18,76 +18,75 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ showtx *************************/
 
-class showtx: public command_extension
+class showtx : public command_extension
 {
-public:
+  public:
     showtx() noexcept {};
-    showtx(const std::string& other){ if (other == "fetch-tx") option_.is_fetch_tx= true; }
+    showtx(const std::string &other)
+    {
+        if (other == "fetch-tx")
+            option_.is_fetch_tx = true;
+    }
 
-    static const char* symbol(){ return "showtx";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "showtx alias as fetch-tx/gettransaction"; }
+    static const char *symbol() { return "showtx"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ex_online & bs) == bs; }
+    const char *description() override { return "showtx alias as fetch-tx/gettransaction"; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
             .add("HASH", 1)
             .add("json", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(argument_.hash, "HASH", variables, input, raw);
         load_input(argument_.hash, "json", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "json",
             value<bool>(&option_.json)->default_value(true),
-            "Json/Raw format, default is '--json=true'."
-        )
-        (
+            "Json/Raw format, default is '--json=true'.")(
             "HASH",
             value<bc::config::hash256>(&argument_.hash)->required(),
-            "The Base16 transaction hash of the transaction to get. If not specified the transaction hash is read from STDIN."
-        );
+            "The Base16 transaction hash of the transaction to get. If not specified the transaction hash is read from STDIN.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-             libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
@@ -99,11 +98,8 @@ public:
         bool json;
         bool is_fetch_tx{false};
     } option_;
-
 };
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

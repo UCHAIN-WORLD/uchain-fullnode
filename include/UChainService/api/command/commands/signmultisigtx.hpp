@@ -18,36 +18,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-
-class signmultisigtx: public command_extension
+namespace libbitcoin
 {
-public:
-    static const char* symbol() { return "signmultisigtx";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "signmultisigtx "; }
+namespace explorer
+{
+namespace commands
+{
 
-    arguments_metadata& load_arguments() override
+class signmultisigtx : public command_extension
+{
+  public:
+    static const char *symbol() { return "signmultisigtx"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ctgy_extension & bs) == bs; }
+    const char *description() override { return "signmultisigtx "; }
+
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
-               .add("WALLET_NAME", 1)
-               .add("WALLET_AUTH", 1)
-               .add("TRANSACTION", 1);
+            .add("WALLET_NAME", 1)
+            .add("WALLET_AUTH", 1)
+            .add("TRANSACTION", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-                         po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "WALLET_NAME", variables, input, raw);
@@ -55,51 +56,39 @@ public:
         load_input(argument_.transaction, "TRANSACTION", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "WALLET_NAME",
             value<std::string>(&auth_.name)->required(),
-            BX_WALLET_NAME
-        )
-        (
+            BX_WALLET_NAME)(
             "WALLET_AUTH",
             value<std::string>(&auth_.auth)->required(),
-            BX_WALLET_AUTH
-        )
-        (
+            BX_WALLET_AUTH)(
             "TRANSACTION",
             value<explorer::config::transaction>(&argument_.transaction)->required(),
-            "The input Base16 transaction to sign."
-        )
-        (
+            "The input Base16 transaction to sign.")(
             "selfpublickey,s",
             value<std::string>(&option_.self_publickey)->default_value(""),
-            "The private key of this public key will be used to sign."
-        )
-        (
+            "The private key of this public key will be used to sign.")(
             "broadcast,b",
             value<bool>(&option_.broadcast_flag)->default_value(false)->zero_tokens(),
-            "Broadcast the tx if it is fullly signed, disabled by default."
-        );
+            "Broadcast the tx if it is fullly signed, disabled by default.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-                           libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
@@ -109,17 +98,15 @@ public:
     struct option
     {
         option()
-            : broadcast_flag(false)
-            , self_publickey("")
-        {}
+            : broadcast_flag(false), self_publickey("")
+        {
+        }
 
         bool broadcast_flag;
         std::string self_publickey;
     } option_;
-
 };
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

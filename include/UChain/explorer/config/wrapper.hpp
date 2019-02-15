@@ -27,17 +27,19 @@
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between a checksum'd wrapper and data_chunk.
  */
 class BCX_API wrapper
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -48,38 +50,38 @@ public:
      *
      * @param[in]  wrapped  The value to initialize with.
      */
-    wrapper(const std::string& wrapped);
+    wrapper(const std::string &wrapped);
 
     /**
      * Initialization constructor.
      * @param[in]  wrapped  The wrapped value to initialize with.
      */
-    wrapper(const data_chunk& wrapped);
+    wrapper(const data_chunk &wrapped);
 
     /**
      * Initialization constructor.
      * @param[in]  wrapped  The wrapped value to initialize with.
      */
-    wrapper(const bc::wallet::wrapped_data& wrapped);
+    wrapper(const bc::wallet::wrapped_data &wrapped);
 
     /**
      * Initialization constructor.
      * @param[in]  address  The payment address to initialize with.
      */
-    wrapper(const bc::wallet::payment_address& address);
+    wrapper(const bc::wallet::payment_address &address);
 
     /**
      * Initialization constructor.
      * @param[in]  version  The version for the new wrapped value.
      * @param[in]  payload  The payload for the new wrapped value.
      */
-    wrapper(uint8_t version, const data_chunk& payload);
+    wrapper(uint8_t version, const data_chunk &payload);
 
     /**
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    wrapper(const wrapper& other);
+    wrapper(const wrapper &other);
 
     /**
      * Serialize the wrapper to bytes according to the wire protocol.
@@ -91,7 +93,7 @@ public:
      * Overload cast to internal type.
      * @return  This object's value cast to internal type.
      */
-    operator const bc::wallet::wrapped_data&() const;
+    operator const bc::wallet::wrapped_data &() const;
 
     /**
      * Overload stream in. Throws if input is invalid.
@@ -99,8 +101,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        wrapper& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    wrapper &argument);
 
     /**
      * Overload stream out.
@@ -108,19 +110,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const wrapper& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const wrapper &argument);
 
-private:
-
+  private:
     /**
      * The state of this object's data.
      */
     bc::wallet::wrapped_data value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

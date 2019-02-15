@@ -31,21 +31,23 @@
 #include <UChain/node/sessions/session_header_sync.hpp>
 #include <UChain/node/utility/header_queue.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 /// A full node on the Bitcoin P2P network.
 class BCN_API p2p_node
-  : public network::p2p
+    : public network::p2p
 {
-public:
+  public:
     typedef std::shared_ptr<p2p_node> ptr;
     typedef blockchain::organizer::reorganize_handler reorganize_handler;
     typedef blockchain::transaction_pool::transaction_handler
         transaction_handler;
 
     /// Construct the full node.
-    p2p_node(const configuration& configuration);
+    p2p_node(const configuration &configuration);
 
     /// Ensure all threads are coalesced.
     virtual ~p2p_node();
@@ -76,16 +78,16 @@ public:
     // ------------------------------------------------------------------------
 
     /// Node configuration settings.
-    virtual const settings& node_settings() const;
+    virtual const settings &node_settings() const;
 
     /// Blockchain query interface.
-    virtual blockchain::block_chain& chain();
+    virtual blockchain::block_chain &chain();
 
     /// BlockchainImpl query interface.
-    virtual blockchain::block_chain_impl& chain_impl();
+    virtual blockchain::block_chain_impl &chain_impl();
 
     /// Transaction pool interface.
-    virtual blockchain::transaction_pool& pool();
+    virtual blockchain::transaction_pool &pool();
 
     // Subscriptions.
     // ------------------------------------------------------------------------
@@ -96,7 +98,7 @@ public:
     /// Subscribe to transaction pool acceptance and stop events.
     virtual void subscribe_transaction_pool(transaction_handler handler);
 
-protected:
+  protected:
     /// Override to attach specialized p2p sessions.
     ////network::session_seed::ptr attach_seed_session() override;
     network::session_manual::ptr attach_manual_session() override;
@@ -107,27 +109,28 @@ protected:
     virtual session_header_sync::ptr attach_header_sync_session();
     virtual session_block_sync::ptr attach_block_sync_session();
 
-private:
+  private:
     typedef message::block_message::ptr_list block_ptr_list;
 
-    bool handle_reorganized(const code& ec, size_t fork_point,
-        const block_ptr_list& incoming, const block_ptr_list& outgoing);
+    bool handle_reorganized(const code &ec, size_t fork_point,
+                            const block_ptr_list &incoming, const block_ptr_list &outgoing);
 
-    void handle_headers_synchronized(const code& ec, result_handler handler);
-    void handle_network_stopped(const code& ec, result_handler handler);
+    void handle_headers_synchronized(const code &ec, result_handler handler);
+    void handle_network_stopped(const code &ec, result_handler handler);
 
-    void handle_started(const code& ec, result_handler handler);
-    void handle_running(const code& ec, result_handler handler);
+    void handle_started(const code &ec, result_handler handler);
+    void handle_running(const code &ec, result_handler handler);
 
     // These are thread safe.
     header_queue hashes_;
-    const settings& settings_;
-protected:
+    const settings &settings_;
+
+  protected:
     // fix me, for explorer only.
     blockchain::block_chain_impl blockchain_;
 };
 
-} // namspace node
+} // namespace node
 } //namespace libbitcoin
 
 #endif

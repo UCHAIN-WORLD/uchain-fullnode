@@ -24,22 +24,24 @@
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ addpeer *************************/
 
-class addpeer: public command_extension
+class addpeer : public command_extension
 {
-public:
-    static const char* symbol(){ return "addpeer";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "This command is used to add/remove p2p node."; }
+  public:
+    static const char *symbol() { return "addpeer"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ctgy_extension & bs) == bs; }
+    const char *description() override { return "This command is used to add/remove p2p node."; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
             .add("NODEADDRESS", 1)
@@ -47,8 +49,8 @@ public:
             .add("ADMINAUTH", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(argument_.address, "NODEADDRESS", variables, input, raw);
@@ -56,46 +58,36 @@ public:
         load_input(auth_.auth, "ADMINAUTH", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "NODEADDRESS",
             value<std::string>(&argument_.address)->required(),
-            "The target node address[x.x.x.x:port]."
-        )
-        (
+            "The target node address[x.x.x.x:port].")(
             "ADMINNAME",
             value<std::string>(&auth_.name),
-            "admin name."
-        )
-        (
+            "admin name.")(
             "ADMINAUTH",
             value<std::string>(&auth_.auth),
-            "admin password/authorization."
-        )
-        (
+            "admin password/authorization.")(
             "operation,o",
             value<std::string>(&option_.operation),
-            "The operation[ add|ban ] to the target node address. default: add."
-        );
+            "The operation[ add|ban ] to the target node address. default: add.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
@@ -106,13 +98,8 @@ public:
     {
         std::string operation;
     } option_;
-
 };
-
-
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

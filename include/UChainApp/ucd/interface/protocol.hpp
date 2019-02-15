@@ -26,25 +26,27 @@
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 /// Protocol interface.
 /// Class and method names are published and mapped to the zeromq interface.
 class BCS_API protocol
 {
-public:
+  public:
     /// Broadcast a transaction to all connected peers.
-    static void broadcast_transaction(server_node& node,
-        const message& request, send_handler handler);
+    static void broadcast_transaction(server_node &node,
+                                      const message &request, send_handler handler);
 
     /// Determine the count of all connected peers.
-    static void total_connections(server_node& node,
-        const message& request, send_handler handler);
+    static void total_connections(server_node &node,
+                                  const message &request, send_handler handler);
 
-private:
+  private:
     static void handle_total_connections(size_t count,
-        const message& request, send_handler handler);
+                                         const message &request, send_handler handler);
 };
 
 } // namespace server

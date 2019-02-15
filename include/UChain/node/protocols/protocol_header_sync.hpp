@@ -30,42 +30,45 @@
 #include <UChain/node/define.hpp>
 #include <UChain/node/utility/header_queue.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 /// Headers sync protocol, thread safe.
 class BCN_API protocol_header_sync
-  : public network::protocol_timer, public track<protocol_header_sync>
+    : public network::protocol_timer,
+      public track<protocol_header_sync>
 {
-public:
+  public:
     typedef std::shared_ptr<protocol_header_sync> ptr;
 
     /// Construct a header sync protocol instance.
-    protocol_header_sync(network::p2p& network, network::channel::ptr channel,
-        header_queue& hashes, uint32_t minimum_rate,
-        const config::checkpoint& last);
+    protocol_header_sync(network::p2p &network, network::channel::ptr channel,
+                         header_queue &hashes, uint32_t minimum_rate,
+                         const config::checkpoint &last);
 
     /// Start the protocol.
     virtual void start(event_handler handler);
 
-private:
+  private:
     typedef message::headers::ptr headers_ptr;
 
-    static size_t final_height(header_queue& headers,
-        const config::checkpoint::list& checkpoints);
+    static size_t final_height(header_queue &headers,
+                               const config::checkpoint::list &checkpoints);
 
     size_t sync_rate() const;
     size_t next_height() const;
 
     void send_get_headers(event_handler complete);
-    void handle_send(const code& ec, event_handler complete);
-    void handle_event(const code& ec, event_handler complete);
-    void headers_complete(const code& ec, event_handler handler);
-    bool handle_receive(const code& ec, headers_ptr message,
-        event_handler complete);
+    void handle_send(const code &ec, event_handler complete);
+    void handle_event(const code &ec, event_handler complete);
+    void headers_complete(const code &ec, event_handler handler);
+    bool handle_receive(const code &ec, headers_ptr message,
+                        event_handler complete);
 
     // Thread safe and guarded by sequential header sync.
-    header_queue& hashes_;
+    header_queue &hashes_;
 
     // This is guarded by protocol_timer/deadline contract (exactly one call).
     size_t current_second_;

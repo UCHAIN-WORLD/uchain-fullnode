@@ -25,17 +25,19 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between text and encoding engine.
  */
 class BCX_API encoding
 {
-public:
-
+  public:
     /**
      * Default constructor, sets encoding_engine::info.
      */
@@ -45,7 +47,7 @@ public:
      * Initialization constructor.
      * @param[in]  token  The value to initialize with.
      */
-    encoding(const std::string& token);
+    encoding(const std::string &token);
 
     /**
      * Initialization constructor.
@@ -57,7 +59,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    encoding(const encoding& other);
+    encoding(const encoding &other);
 
     /**
      * Return a reference to the data member.
@@ -71,8 +73,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        encoding& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    encoding &argument);
 
     /**
      * Overload stream out.
@@ -80,19 +82,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const encoding& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const encoding &argument);
 
-private:
-
+  private:
     /**
      * The state of this object's encoding engine data.
      */
     encoding_engine value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

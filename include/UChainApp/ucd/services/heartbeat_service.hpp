@@ -27,42 +27,44 @@
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class server_node;
 
 // This class is thread safe.
 // Subscribe to a pulse from a dedicated service endpoint.
 class BCS_API heartbeat_service
-  : public bc::protocol::zmq::worker
+    : public bc::protocol::zmq::worker
 {
-public:
+  public:
     typedef std::shared_ptr<heartbeat_service> ptr;
 
     /// Construct a heartbeat endpoint.
-    heartbeat_service(bc::protocol::zmq::authenticator& authenticator,
-        server_node& node, bool secure);
+    heartbeat_service(bc::protocol::zmq::authenticator &authenticator,
+                      server_node &node, bool secure);
 
-protected:
+  protected:
     typedef bc::protocol::zmq::socket socket;
 
-    virtual bool bind(socket& publisher);
-    virtual bool unbind(socket& publisher);
+    virtual bool bind(socket &publisher);
+    virtual bool unbind(socket &publisher);
 
     // Implement the service.
     virtual void work();
 
     // Publish the heartbeat (integrated worker).
-    void publish(uint32_t count, socket& socket);
+    void publish(uint32_t count, socket &socket);
 
-private:
-    const server::settings& settings_;
+  private:
+    const server::settings &settings_;
     const int32_t period_;
     const bool secure_;
 
     // This is thread safe.
-    bc::protocol::zmq::authenticator& authenticator_;
+    bc::protocol::zmq::authenticator &authenticator_;
 };
 
 } // namespace server

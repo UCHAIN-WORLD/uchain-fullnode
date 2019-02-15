@@ -25,19 +25,20 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/node/define.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 // A smart queue for chaining blockchain headers, thread safe.
 class BCN_API header_queue
 {
-public:
-
+  public:
     /// True if the specified hash is marked as removed.
-    static bool valid(const hash_digest& hash);
+    static bool valid(const hash_digest &hash);
 
     /// Construct a block hash list with specified height offset.
-    header_queue(const config::checkpoint::list& checkpoints);
+    header_queue(const config::checkpoint::list &checkpoints);
 
     /// True if the list is empty.
     bool empty() const;
@@ -55,24 +56,24 @@ public:
     hash_digest last_hash() const;
 
     /// Remove the first count of hashes, return true if satisfied.
-    bool dequeue(size_t count=1);
+    bool dequeue(size_t count = 1);
 
     /// Obtain and remove the first hash.
-    bool dequeue(hash_digest& out_hash, size_t& out_height);
+    bool dequeue(hash_digest &out_hash, size_t &out_height);
 
     /// Merge the hashes in the message with those in the queue.
     bool enqueue(message::headers::ptr message);
 
     /// Clear the queue and populate the hash at the given height.
-    void initialize(const config::checkpoint& check);
+    void initialize(const config::checkpoint &check);
 
     /// Clear the queue and populate the hash at the given height.
-    void initialize(const hash_digest& hash, size_t height);
+    void initialize(const hash_digest &hash, size_t height);
 
     /// Mark the heights if they exist.
     void invalidate(size_t first_height, size_t count);
 
-private:
+  private:
     // True if the queue is empty (not locked).
     bool is_empty() const;
 
@@ -86,16 +87,16 @@ private:
     void rollback();
 
     // Merge a list of block hashes to the list, validating linkage.
-    bool merge(const chain::header::list& headers);
+    bool merge(const chain::header::list &headers);
 
     // Determine if the hash violates a checkpoint.
-    bool check(const hash_digest& hash, size_t height) const;
+    bool check(const hash_digest &hash, size_t height) const;
 
     // Determine if the hash is linked to the give (preceding) header.
-    bool linked(const chain::header& header, const hash_digest& hash) const;
+    bool linked(const chain::header &header, const hash_digest &hash) const;
 
     // The list of checkpoints that determines the sync range.
-    const config::checkpoint::list& checkpoints_;
+    const config::checkpoint::list &checkpoints_;
 
     // protected by mutex.
     size_t height_;
@@ -108,4 +109,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

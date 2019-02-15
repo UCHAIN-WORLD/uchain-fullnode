@@ -26,8 +26,10 @@
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/primitives/record_manager.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 // used by test and tools only.
 BC_CONSTEXPR size_t record_list_offset = sizeof(array_index);
@@ -38,24 +40,24 @@ BC_CONSTEXPR size_t record_list_offset = sizeof(array_index);
 class BCD_API record_list
 {
 public:
-    static const array_index empty;
+  static const array_index empty;
 
-    record_list(record_manager& manager);
+  record_list(record_manager &manager);
 
-    /// Create new list with a single record.
-    array_index create();
+  /// Create new list with a single record.
+  array_index create();
 
-    /// Insert new record before index. Returns index of new record.
-    array_index insert(array_index index);
+  /// Insert new record before index. Returns index of new record.
+  array_index insert(array_index index);
 
-    /// Read next index for record in list.
-    array_index next(array_index index) const;
+  /// Read next index for record in list.
+  array_index next(array_index index) const;
 
-    /// Get underlying record data.
-    const memory_ptr get(array_index index) const;
+  /// Get underlying record data.
+  const memory_ptr get(array_index index) const;
 
 private:
-    record_manager& manager_;
+  record_manager &manager_;
 };
 
 } // namespace database

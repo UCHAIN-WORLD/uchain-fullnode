@@ -25,17 +25,19 @@
 #include <iostream>
 #include <UChain/explorer/define.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 /**
  * Serialization helper to convert between btc and satoshi.
  */
 class BCX_API btc
 {
-public:
-
+  public:
     /**
      * Default constructor.
      */
@@ -45,7 +47,7 @@ public:
      * Initialization constructor.
      * @param[in]  btc  The number of btc to initialize with.
      */
-    btc(const std::string& btc);
+    btc(const std::string &btc);
 
     /**
      * Initialization constructor.
@@ -57,7 +59,7 @@ public:
      * Copy constructor.
      * @param[in]  other  The object to copy into self on construct.
      */
-    btc(const btc& other);
+    btc(const btc &other);
 
     /**
      * Return a reference to the data member cast as satoshi.
@@ -71,8 +73,8 @@ public:
      * @param[out]  argument  The object to receive the read value.
      * @return                The input stream reference.
      */
-    friend std::istream& operator>>(std::istream& input,
-        btc& argument);
+    friend std::istream &operator>>(std::istream &input,
+                                    btc &argument);
 
     /**
      * Overload stream out.
@@ -80,19 +82,18 @@ public:
      * @param[out]  argument  The object from which to obtain the value.
      * @return                The output stream reference.
      */
-    friend std::ostream& operator<<(std::ostream& output,
-        const btc& argument);
+    friend std::ostream &operator<<(std::ostream &output,
+                                    const btc &argument);
 
-private:
-
+  private:
     /**
      * The state of this object's number of satoshis.
      */
     uint64_t value_;
 };
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
 
 #endif

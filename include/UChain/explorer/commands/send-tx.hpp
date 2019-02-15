@@ -53,9 +53,12 @@
 
 /********* GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY **********/
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /**
  * Various localizable strings.
@@ -67,14 +70,13 @@ namespace commands {
  * Class to implement the send-tx command.
  */
 class BCX_API send_tx
-  : public command
+    : public command
 {
-public:
-
+  public:
     /**
      * The symbolic (not localizable) command name, lower case.
      */
-    static const char* symbol()
+    static const char *symbol()
     {
         return "send-tx";
     }
@@ -82,7 +84,7 @@ public:
     /**
      * The symbolic (not localizable) former command name, lower case.
      */
-    static const char* formerly()
+    static const char *formerly()
     {
         return "sendtx-obelisk";
     }
@@ -90,7 +92,7 @@ public:
     /**
      * The member symbolic (not localizable) command name, lower case.
      */
-    virtual const char* name()
+    virtual const char *name()
     {
         return send_tx::symbol();
     }
@@ -98,7 +100,7 @@ public:
     /**
      * The localizable command category name, upper case.
      */
-    virtual const char* category()
+    virtual const char *category()
     {
         return "ONLINE";
     }
@@ -106,7 +108,7 @@ public:
     /**
      * The localizable command description.
      */
-    virtual const char* description()
+    virtual const char *description()
     {
         return "Broadcast a transaction to the Bitcoin network via an UChain/Obelisk server.";
     }
@@ -116,7 +118,7 @@ public:
      * A value of -1 indicates that the number of instances is unlimited.
      * @return  The loaded program argument definitions.
      */
-    virtual arguments_metadata& load_arguments()
+    virtual arguments_metadata &load_arguments()
     {
         return get_argument_metadata()
             .add("TRANSACTION", 1);
@@ -127,8 +129,8 @@ public:
      * @param[in]  input  The input stream for loading the parameters.
      * @param[in]         The loaded variables.
      */
-    virtual void load_fallbacks(std::istream& input,
-        po::variables_map& variables)
+    virtual void load_fallbacks(std::istream &input,
+                                po::variables_map &variables)
     {
         const auto raw = requires_raw_input();
         load_input(get_transaction_argument(), "TRANSACTION", variables, input, raw);
@@ -139,26 +141,20 @@ public:
      * BUGBUG: see boost bug/fix: svn.boost.org/trac/boost/ticket/8009
      * @return  The loaded program option definitions.
      */
-    virtual options_metadata& load_options()
+    virtual options_metadata &load_options()
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             BX_CONFIG_VARIABLE ",c",
             value<boost::filesystem::path>(),
-            "The path to the configuration settings file."
-        )
-        (
+            "The path to the configuration settings file.")(
             "TRANSACTION",
             value<explorer::config::transaction>(&argument_.transaction),
-            "The Base16 transaction to send. If not specified the transaction is read from STDIN."
-        );
+            "The Base16 transaction to send. If not specified the transaction is read from STDIN.");
 
         return options;
     }
@@ -167,7 +163,7 @@ public:
      * Set variable defaults from configuration variable values.
      * @param[in]  variables  The loaded variables.
      */
-    virtual void set_defaults_from_config(po::variables_map& variables)
+    virtual void set_defaults_from_config(po::variables_map &variables)
     {
     }
 
@@ -177,15 +173,15 @@ public:
      * @param[out]  error   The input stream for the command execution.
      * @return              The appropriate console return code { -1, 0, 1 }.
      */
-    virtual console_result invoke(std::ostream& output,
-        std::ostream& cerr);
+    virtual console_result invoke(std::ostream &output,
+                                  std::ostream &cerr);
 
     /* Properties */
 
     /**
      * Get the value of the TRANSACTION argument.
      */
-    virtual explorer::config::transaction& get_transaction_argument()
+    virtual explorer::config::transaction &get_transaction_argument()
     {
         return argument_.transaction;
     }
@@ -194,13 +190,12 @@ public:
      * Set the value of the TRANSACTION argument.
      */
     virtual void set_transaction_argument(
-        const explorer::config::transaction& value)
+        const explorer::config::transaction &value)
     {
         argument_.transaction = value;
     }
 
-private:
-
+  private:
     /**
      * Command line argument bound variables.
      * Uses cross-compiler safe constructor-based zeroize.
@@ -209,7 +204,7 @@ private:
     struct argument
     {
         argument()
-          : transaction()
+            : transaction()
         {
         }
 
