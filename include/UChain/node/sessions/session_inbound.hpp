@@ -26,29 +26,31 @@
 #include <UChain/network.hpp>
 #include <UChain/node/define.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 /// Inbound connections session, thread safe.
 class BCN_API session_inbound
-  : public network::session_inbound
+    : public network::session_inbound
 {
-public:
+  public:
     typedef std::shared_ptr<session_inbound> ptr;
 
     /// Construct an instance.
-    session_inbound(network::p2p& network, blockchain::block_chain& blockchain,
-        blockchain::transaction_pool& pool);
+    session_inbound(network::p2p &network, blockchain::block_chain &blockchain,
+                    blockchain::transaction_pool &pool);
 
     virtual void attach_handshake_protocols(network::channel::ptr channel,
-                result_handler handle_started) override;
+                                            result_handler handle_started) override;
 
-protected:
+  protected:
     /// Overridden to attach blockchain protocols.
     void attach_protocols(network::channel::ptr channel) override;
 
-    blockchain::block_chain& blockchain_;
-    blockchain::transaction_pool& pool_;
+    blockchain::block_chain &blockchain_;
+    blockchain::transaction_pool &pool_;
 };
 
 } // namespace node
