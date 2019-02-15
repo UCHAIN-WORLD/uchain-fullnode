@@ -10,57 +10,56 @@
 
 #include <boost/format.hpp>
 
-#define DEFINE_EXPLORER_EXCEPTION(class_name, exception_code)     \
-class class_name : public explorer_exception                      \
-{                                                                 \
-public:                                                           \
-    class_name(const std::string& message) :                      \
-        explorer_exception(exception_code, message)               \
-    {                                                             \
-    }                                                             \
-}
+#define DEFINE_EXPLORER_EXCEPTION(class_name, exception_code)                                \
+    class class_name : public explorer_exception                                             \
+    {                                                                                        \
+      public:                                                                                \
+        class_name(const std::string &message) : explorer_exception(exception_code, message) \
+        {                                                                                    \
+        }                                                                                    \
+    }
 
-#define DEFINE_EXPLORER_EXCEPTION2(class_name)                    \
-class class_name : public explorer_exception                      \
-{                                                                 \
-public:                                                           \
-    class_name(uint32_t code, const std::string& message) :       \
-        explorer_exception(code, message)                         \
-    {                                                             \
-    }                                                             \
-}
+#define DEFINE_EXPLORER_EXCEPTION2(class_name)                                                    \
+    class class_name : public explorer_exception                                                  \
+    {                                                                                             \
+      public:                                                                                     \
+        class_name(uint32_t code, const std::string &message) : explorer_exception(code, message) \
+        {                                                                                         \
+        }                                                                                         \
+    }
 
-#define DEFINE_STD_JSONRPC_EXCEPTION(class_name, code, message)   \
-class class_name : public explorer_exception                      \
-{                                                                 \
-public:                                                           \
-    class_name() :                                                \
-    explorer_exception(code, message)                             \
-    {                                                             \
-    }                                                             \
-}
+#define DEFINE_STD_JSONRPC_EXCEPTION(class_name, code, message) \
+    class class_name : public explorer_exception                \
+    {                                                           \
+      public:                                                   \
+        class_name() : explorer_exception(code, message)        \
+        {                                                       \
+        }                                                       \
+    }
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 class explorer_exception : public std::exception
 {
-public:
-    explorer_exception(uint32_t code, const std::string& message);
+  public:
+    explorer_exception(uint32_t code, const std::string &message);
 
     virtual ~explorer_exception() = default;
     uint32_t code() const { return code_; }
-    const std::string& message() const { return message_; }
-    virtual const char* what() const noexcept override { return message_.data(); }
-private:
+    const std::string &message() const { return message_; }
+    virtual const char *what() const noexcept override { return message_.data(); }
+
+  private:
     uint32_t code_;
     std::string message_;
 };
 
-std::ostream& operator<<(std::ostream& out, const explorer_exception& ex);
+std::ostream &operator<<(std::ostream &out, const explorer_exception &ex);
 
-void relay_exception(std::stringstream&);
-
+void relay_exception(std::stringstream &);
 
 DEFINE_EXPLORER_EXCEPTION(unknown_error_exception, 500);
 DEFINE_EXPLORER_EXCEPTION(fatal_exception, 1001);
@@ -74,8 +73,6 @@ DEFINE_EXPLORER_EXCEPTION(ui_invoke_explorer_exception, 1023);
 DEFINE_EXPLORER_EXCEPTION(setting_required_exception, 1024);
 DEFINE_EXPLORER_EXCEPTION(block_sync_required_exception, 1025);
 
-
-
 DEFINE_EXPLORER_EXCEPTION(argument_exceed_limit_exception, 2001);
 DEFINE_EXPLORER_EXCEPTION(argument_size_invalid_exception, 2002);
 DEFINE_EXPLORER_EXCEPTION(argument_legality_exception, 2003);
@@ -85,7 +82,6 @@ DEFINE_EXPLORER_EXCEPTION(wallet_existed_exception, 3001);
 DEFINE_EXPLORER_EXCEPTION(wallet_authority_exception, 3002);
 DEFINE_EXPLORER_EXCEPTION(wallet_notfound_exception, 3003);
 
-
 DEFINE_EXPLORER_EXCEPTION(wallet_name_exception, 3201);
 DEFINE_EXPLORER_EXCEPTION(wallet_length_exception, 3202);
 DEFINE_EXPLORER_EXCEPTION(wallet_address_get_exception, 3203);
@@ -93,14 +89,12 @@ DEFINE_EXPLORER_EXCEPTION(wallet_address_get_exception, 3203);
 DEFINE_EXPLORER_EXCEPTION(wallet_deposit_period_exception, 3301);
 DEFINE_EXPLORER_EXCEPTION(wallet_balance_lack_exception, 3302);
 
-
 DEFINE_EXPLORER_EXCEPTION(address_list_empty_exception, 4001);
 DEFINE_EXPLORER_EXCEPTION(address_list_nullptr_exception, 4002);
 DEFINE_EXPLORER_EXCEPTION(address_dismatch_wallet_exception, 4003);
 DEFINE_EXPLORER_EXCEPTION(address_amount_exception, 4004);
 DEFINE_EXPLORER_EXCEPTION(address_notfound_exception, 4005);
 DEFINE_EXPLORER_EXCEPTION(address_generate_exception, 4005);
-
 
 DEFINE_EXPLORER_EXCEPTION(address_invalid_exception, 4010);
 DEFINE_EXPLORER_EXCEPTION(toaddress_empty_exception, 4011);
@@ -171,7 +165,6 @@ DEFINE_EXPLORER_EXCEPTION(utxo_fetch_exception, 5401);
 DEFINE_EXPLORER_EXCEPTION(redeem_script_empty_exception, 5501);
 DEFINE_EXPLORER_EXCEPTION(redeem_script_data_exception, 5502);
 DEFINE_EXPLORER_EXCEPTION(redeem_script_pattern_exception, 5503);
-
 
 DEFINE_EXPLORER_EXCEPTION(encode_exception, 6001);
 DEFINE_EXPLORER_EXCEPTION(ec_to_address_exception, 6002);

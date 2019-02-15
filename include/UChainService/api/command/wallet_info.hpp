@@ -32,34 +32,36 @@
 #include <UChainService/txs/wallet/wallet_address.hpp>
 #include <UChainService/txs/token/token_detail.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 // used for store all wallet related information
 class BC_API wallet_info
 {
-public:
-    wallet_info(libbitcoin::blockchain::block_chain_impl& blockchain, std::string& passphrase);
-    wallet_info(libbitcoin::blockchain::block_chain_impl& blockchain, std::string& passphrase,
-        libbitcoin::chain::wallet& meta, std::vector<wallet_address>& addr_vec, std::vector<token_detail>& token_vec);
+  public:
+    wallet_info(libbitcoin::blockchain::block_chain_impl &blockchain, std::string &passphrase);
+    wallet_info(libbitcoin::blockchain::block_chain_impl &blockchain, std::string &passphrase,
+                libbitcoin::chain::wallet &meta, std::vector<wallet_address> &addr_vec, std::vector<token_detail> &token_vec);
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
-    void store(std::string& name, std::string& passwd);
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
+    void store(std::string &name, std::string &passwd);
     wallet get_wallet() const;
-    std::vector<wallet_address>& get_wallet_address(); 
-    std::vector<token_detail>& get_wallet_token();
+    std::vector<wallet_address> &get_wallet_address();
+    std::vector<token_detail> &get_wallet_token();
     void encrypt();
-    void decrypt(std::string& hexcode);
-    friend std::istream& operator>>(std::istream& input, wallet_info& self_ref);
-    friend std::ostream& operator<<(std::ostream& output, const wallet_info& self_ref);
+    void decrypt(std::string &hexcode);
+    friend std::istream &operator>>(std::istream &input, wallet_info &self_ref);
+    friend std::ostream &operator<<(std::ostream &output, const wallet_info &self_ref);
 
-private:
-    libbitcoin::blockchain::block_chain_impl& blockchain_;
+  private:
+    libbitcoin::blockchain::block_chain_impl &blockchain_;
     wallet meta_;
     std::vector<wallet_address> addr_vec_;
     std::vector<token_detail> token_vec_;
@@ -70,6 +72,3 @@ private:
 
 } // namespace chain
 } // namespace libbitcoin
-
-
-
