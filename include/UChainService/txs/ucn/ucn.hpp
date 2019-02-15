@@ -28,27 +28,29 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 BC_CONSTEXPR size_t UCN_FIX_SIZE = 8;
 
 class BC_API ucn
 {
-public:
+  public:
     ucn();
     ucn(uint64_t value);
-    static ucn factory_from_data(const data_chunk& data);
-    static ucn factory_from_data(std::istream& stream);
-    static ucn factory_from_data(reader& source);
+    static ucn factory_from_data(const data_chunk &data);
+    static ucn factory_from_data(std::istream &stream);
+    static ucn factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
     std::string to_string() const;
     bool is_valid() const;
     void reset();
@@ -56,7 +58,7 @@ public:
     uint64_t get_value() const;
     void set_value(uint64_t value);
 
-private:
+  private:
     uint64_t value;
 };
 
@@ -64,4 +66,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-
