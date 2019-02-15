@@ -30,8 +30,10 @@
 #include <UChain/node/define.hpp>
 #include <UChain/node/settings.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 // Not localizable.
 #define BN_HELP_VARIABLE "help"
@@ -49,9 +51,9 @@ namespace node {
 /// Full node configuration, thread safe.
 class BCN_API configuration
 {
-public:
+  public:
     configuration(bc::settings context);
-    configuration(const configuration& other);
+    configuration(const configuration &other);
 
     /// Options.
     bool help;

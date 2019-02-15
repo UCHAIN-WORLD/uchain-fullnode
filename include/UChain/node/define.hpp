@@ -29,14 +29,14 @@
 // used for non-api symbols.
 
 #if defined BCN_STATIC
-    #define BCN_API
-    #define BCN_INTERNAL
+#define BCN_API
+#define BCN_INTERNAL
 #elif defined BCN_DLL
-    #define BCN_API      BC_HELPER_DLL_EXPORT
-    #define BCN_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCN_API BC_HELPER_DLL_EXPORT
+#define BCN_INTERNAL BC_HELPER_DLL_LOCAL
 #else
-    #define BCN_API      BC_HELPER_DLL_IMPORT
-    #define BCN_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCN_API BC_HELPER_DLL_IMPORT
+#define BCN_INTERNAL BC_HELPER_DLL_LOCAL
 #endif
 
 // Log name.
