@@ -19,7 +19,7 @@
 
 #include <cstring> // strcpy()
 #include <exception>
-#include <UChainService/api/restful //utility/Stream.hpp>
+#include <UChainService/api/restful/utility/Stream.hpp>
 
 namespace mgbubble
 {

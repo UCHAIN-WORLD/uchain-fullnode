@@ -16,7 +16,7 @@
 #ifndef UCD_EXCEPTION_HPP
 #define UCD_EXCEPTION_HPP
 
-#include <UChainService/api/restful //exception/Exception.hpp>
+#include <UChainService/api/restful/exception/Exception.hpp>
 
 /**
  * @addtogroup App

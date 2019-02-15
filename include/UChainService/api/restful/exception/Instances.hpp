@@ -17,7 +17,7 @@
 #pragma once
 
 #include <iosfwd>
-#include <UChainService/api/restful //exception/Exception.hpp>
+#include <UChainService/api/restful/exception/Exception.hpp>
 
 /**
  * @addtogroup Exception

@@ -24,7 +24,7 @@
 #include <memory>
 #include <unordered_map>
 #include <UChain/bitcoin.hpp>
-#include <UChainService/api/restful //MgServer.hpp>
+#include <UChainService/api/restful/MgServer.hpp>
 
 namespace libbitcoin
 {

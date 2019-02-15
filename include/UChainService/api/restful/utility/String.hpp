@@ -18,9 +18,9 @@
 #include <cstring>
 #include <sstream>
 
-#include <UChainService/api/restful //compat/define.hpp>
-#include <UChainService/api/restful //compat/string_view.h>
-#include <UChainService/api/restful //utility/Compare.hpp>
+#include <UChainService/api/restful/compat/define.hpp>
+#include <UChainService/api/restful/compat/string_view.h>
+#include <UChainService/api/restful/utility/Compare.hpp>
 
 /**
  * @addtogroup Util

@@ -18,11 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <UChainService/api/restful //Mongoose.hpp>
-#include <UChainService/api/restful //MgServer.hpp>
-#include <UChainService/api/restful //utility/Stream_buf.hpp>
-#include <UChainService/api/restful //utility/Tokeniser.hpp>
-#include <UChainService/api/restful //exception/Instances.hpp>
+#include <UChainService/api/restful/Mongoose.hpp>
+#include <UChainService/api/restful/MgServer.hpp>
+#include <UChainService/api/restful/utility/Stream_buf.hpp>
+#include <UChainService/api/restful/utility/Tokeniser.hpp>
+#include <UChainService/api/restful/exception/Instances.hpp>
 
 #include <UChain/client.hpp>
 #include <UChain/blockchain.hpp>

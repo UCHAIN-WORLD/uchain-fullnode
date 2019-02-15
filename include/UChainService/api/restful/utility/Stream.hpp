@@ -16,8 +16,8 @@
 #pragma once
 
 #include <ostream>
-#include <UChainService/api/restful //compat/define.hpp>
-#include <UChainService/api/restful //compat/string_view.h>
+#include <UChainService/api/restful/compat/define.hpp>
+#include <UChainService/api/restful/compat/string_view.h>
 
 /**
  * @addtogroup Util

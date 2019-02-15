@@ -18,9 +18,9 @@
 #define UCD_MONGOOSE_HPP
 
 #include <vector>
-#include <UChainService/api/restful //utility/Queue.hpp>
-#include <UChainService/api/restful //utility/String.hpp>
-#include <UChainService/api/restful //exception/Error.hpp>
+#include <UChainService/api/restful/utility/Queue.hpp>
+#include <UChainService/api/restful/utility/String.hpp>
+#include <UChainService/api/restful/exception/Error.hpp>
 #include <UChain/explorer/dispatch.hpp>
 #include "mongoose/mongoose.h"
 /**

@@ -29,18 +29,19 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 BC_CONSTEXPR size_t UID_DETAIL_SYMBOL_FIX_SIZE = 64;
 BC_CONSTEXPR size_t UID_DETAIL_ADDRESS_FIX_SIZE = 64;
 
-BC_CONSTEXPR size_t UID_DETAIL_FIX_SIZE = UID_DETAIL_SYMBOL_FIX_SIZE
-            + UID_DETAIL_ADDRESS_FIX_SIZE;
+BC_CONSTEXPR size_t UID_DETAIL_FIX_SIZE = UID_DETAIL_SYMBOL_FIX_SIZE + UID_DETAIL_ADDRESS_FIX_SIZE;
 
 class BC_API uid_detail
 {
-public:
+  public:
     typedef std::vector<uid_detail> list;
 
     enum uid_detail_type : uint32_t
@@ -51,33 +52,33 @@ public:
     };
 
     uid_detail();
-    uid_detail(const std::string& symbol, const std::string& address);
+    uid_detail(const std::string &symbol, const std::string &address);
 
-    static uid_detail factory_from_data(const data_chunk& data);
-    static uid_detail factory_from_data(std::istream& stream);
-    static uid_detail factory_from_data(reader& source);
+    static uid_detail factory_from_data(const data_chunk &data);
+    static uid_detail factory_from_data(std::istream &stream);
+    static uid_detail factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
 
-    bool operator< (const uid_detail& other) const;
+    bool operator<(const uid_detail &other) const;
     std::string to_string() const;
-    void to_json(std::ostream& out);
+    void to_json(std::ostream &out);
 
     bool is_valid() const;
     void reset();
     uint32_t count_size() const;
     uint64_t serialized_size() const;
-    const std::string& get_symbol() const;
-    void set_symbol(const std::string& symbol);
-    const std::string& get_address() const;
-    void set_address(const std::string& address);
+    const std::string &get_symbol() const;
+    void set_symbol(const std::string &symbol);
+    const std::string &get_address() const;
+    void set_address(const std::string &address);
 
-private:
+  private:
     std::string symbol;
     std::string address;
 };
@@ -86,4 +87,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-
