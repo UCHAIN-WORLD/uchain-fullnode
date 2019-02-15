@@ -27,15 +27,17 @@
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 class BCD_API blockchain_candidate_database
 {
-public:
+  public:
     /// Construct the database.
-    blockchain_candidate_database(const boost::filesystem::path& map_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    blockchain_candidate_database(const boost::filesystem::path &map_filename,
+                                  std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~blockchain_candidate_database();
@@ -52,26 +54,26 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    std::shared_ptr<candidate_info> get(const hash_digest& hash) const;
+    std::shared_ptr<candidate_info> get(const hash_digest &hash) const;
 
     /// Get all token certs
     std::shared_ptr<candidate_info::list> get_blockchain_candidates() const;
 
-    /// 
-    std::shared_ptr<candidate_info> get_register_history(const std::string & candidate_symbol) const;
     ///
-    uint64_t get_register_height(const std::string & candidate_symbol) const;
+    std::shared_ptr<candidate_info> get_register_history(const std::string &candidate_symbol) const;
+    ///
+    uint64_t get_register_height(const std::string &candidate_symbol) const;
 
-    void store(candidate_info& candidate_info);
+    void store(candidate_info &candidate_info);
 
     /// Delete a transaction from database.
-    void remove(const hash_digest& hash);
+    void remove(const hash_digest &hash);
 
     /// Synchronise storage with disk so things are consistent.
     /// Should be done at the end of every block write.
     void sync();
 
-private:
+  private:
     typedef slab_hash_table<hash_digest> slab_map;
 
     // Hash table used for looking up txs by hash.
@@ -83,5 +85,3 @@ private:
 
 } // namespace database
 } // namespace libbitcoin
-
-

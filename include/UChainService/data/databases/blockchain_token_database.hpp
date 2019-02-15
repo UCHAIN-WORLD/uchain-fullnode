@@ -29,8 +29,10 @@
 #include <UChain/database/primitives/slab_manager.hpp>
 #include <UChainService/txs/token/blockchain_token.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// This enables lookups of transactions by hash.
 /// An alternative and faster method is lookup from a unique index
@@ -39,10 +41,10 @@ namespace database {
 /// belonging to that block. These are stored with the block.
 class BCD_API blockchain_token_database
 {
-public:
+  public:
     /// Construct the database.
-    blockchain_token_database(const boost::filesystem::path& map_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    blockchain_token_database(const boost::filesystem::path &map_filename,
+                              std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~blockchain_token_database();
@@ -59,29 +61,29 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    std::shared_ptr<blockchain_token> get(const hash_digest& hash) const;
+    std::shared_ptr<blockchain_token> get(const hash_digest &hash) const;
 
     ///
-    std::shared_ptr<std::vector<blockchain_token>> get_blockchain_tokens(const std::string& token_symbol="") const;
+    std::shared_ptr<std::vector<blockchain_token>> get_blockchain_tokens(const std::string &token_symbol = "") const;
 
-    uint64_t get_token_volume(const std::string& name) const;
+    uint64_t get_token_volume(const std::string &name) const;
 
-    /// 
-    std::shared_ptr<blockchain_token> get_register_history(const std::string & token_symbol) const;
     ///
-    uint64_t get_register_height(const std::string & token_symbol) const;
-    std::shared_ptr<blockchain_token::list> get_token_history(const std::string & token_symbol) const;
+    std::shared_ptr<blockchain_token> get_register_history(const std::string &token_symbol) const;
+    ///
+    uint64_t get_register_height(const std::string &token_symbol) const;
+    std::shared_ptr<blockchain_token::list> get_token_history(const std::string &token_symbol) const;
 
-    void store(const hash_digest& hash, const blockchain_token& sp_detail);
+    void store(const hash_digest &hash, const blockchain_token &sp_detail);
 
     /// Delete a transaction from database.
-    void remove(const hash_digest& hash);
+    void remove(const hash_digest &hash);
 
     /// Synchronise storage with disk so things are consistent.
     /// Should be done at the end of every block write.
     void sync();
 
-private:
+  private:
     typedef slab_hash_table<hash_digest> slab_map;
 
     // Hash table used for looking up txs by hash.
@@ -93,5 +95,3 @@ private:
 
 } // namespace database
 } // namespace libbitcoin
-
-

@@ -31,8 +31,10 @@
 
 using namespace libbitcoin::chain;
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 struct BCD_API wallet_token_statinfo
 {
@@ -51,11 +53,11 @@ struct BCD_API wallet_token_statinfo
 /// which returns several rows giving the wallet_token for that address.
 class BCD_API wallet_token_database
 {
-public:
+  public:
     /// Construct the database.
-    wallet_token_database(const boost::filesystem::path& lookup_filename,
-        const boost::filesystem::path& rows_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    wallet_token_database(const boost::filesystem::path &lookup_filename,
+                          const boost::filesystem::path &rows_filename,
+                          std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~wallet_token_database();
@@ -72,16 +74,16 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    void store(const short_hash& key, const token_detail& wallet_token);
+    void store(const short_hash &key, const token_detail &wallet_token);
 
-    void delete_last_row(const short_hash& key);
+    void delete_last_row(const short_hash &key);
 
-    token_detail::list get(const short_hash& key) const;
+    token_detail::list get(const short_hash &key) const;
 
-    std::shared_ptr<token_detail> get(const short_hash& key, const std::string& address) const;
+    std::shared_ptr<token_detail> get(const short_hash &key, const std::string &address) const;
 
     /// get tokens whose status is not issued and stored in local database (not in blockchain)
-    std::shared_ptr<business_address_token::list> get_unissued_tokens(const short_hash& key) const;
+    std::shared_ptr<business_address_token::list> get_unissued_tokens(const short_hash &key) const;
 
     /// Synchonise with disk.
     void sync();
@@ -89,7 +91,7 @@ public:
     /// Return statistical info about the database.
     wallet_token_statinfo statinfo() const;
 
-private:
+  private:
     typedef record_hash_table<short_hash> record_map;
     typedef record_multimap<short_hash> record_multiple_map;
 
@@ -110,5 +112,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-
-
