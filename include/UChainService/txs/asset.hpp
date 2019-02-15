@@ -36,26 +36,26 @@
 #include <UChainService/txs/message/message.hpp>
 
 using namespace libbitcoin::chain;
-#define TYPE2UINT32(kd)  (static_cast<typename std::underlying_type<asset::asset_type>::type>(kd))
+#define TYPE2UINT32(kd) (static_cast<typename std::underlying_type<asset::asset_type>::type>(kd))
 
-#define UCN_TYPE        TYPE2UINT32(asset::asset_type::asset_ucn)
-#define UCN_AWARD_TYPE  TYPE2UINT32(asset::asset_type::asset_ucn_award)
-#define UC_TOKEN_TYPE      TYPE2UINT32(asset::asset_type::asset_token)
-#define MESSAGE_TYPE    TYPE2UINT32(asset::asset_type::asset_message)
-#define UID_TYPE        TYPE2UINT32(asset::asset_type::asset_uid)
+#define UCN_TYPE TYPE2UINT32(asset::asset_type::asset_ucn)
+#define UCN_AWARD_TYPE TYPE2UINT32(asset::asset_type::asset_ucn_award)
+#define UC_TOKEN_TYPE TYPE2UINT32(asset::asset_type::asset_token)
+#define MESSAGE_TYPE TYPE2UINT32(asset::asset_type::asset_message)
+#define UID_TYPE TYPE2UINT32(asset::asset_type::asset_uid)
 #define TOKEN_CERT_TYPE TYPE2UINT32(asset::asset_type::asset_token_cert)
-#define TOKEN_CANDIDATE_TYPE  TYPE2UINT32(asset::asset_type::asset_candidate)
+#define TOKEN_CANDIDATE_TYPE TYPE2UINT32(asset::asset_type::asset_candidate)
 
-#define UID_ASSET_VERIFY_VERSION       TYPE2UINT32(7)
+#define UID_ASSET_VERIFY_VERSION TYPE2UINT32(7)
 
-
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class BC_API asset
 {
-public:
-
+  public:
     enum class asset_type : uint32_t
     {
         asset_ucn, // ucn
@@ -74,29 +74,30 @@ public:
         blockchain_message,
         uid,
         token_cert,
-        candidate
-        > asset_data_type;
+        candidate>
+        asset_data_type;
 
     asset();
 
-    asset(const std::string& from_uid, const std::string& to_uid);
+    asset(const std::string &from_uid, const std::string &to_uid);
 
-    template<class Type>
-    asset(uint32_t type, uint32_t version, const Type& attach_data)
+    template <class Type>
+    asset(uint32_t type, uint32_t version, const Type &attach_data)
         : type(type), version(version), attach(attach_data)
-    {}
+    {
+    }
 
-    static asset factory_from_data(const data_chunk& data);
-    static asset factory_from_data(std::istream& stream);
-    static asset factory_from_data(reader& source);
+    static asset factory_from_data(const data_chunk &data);
+    static asset factory_from_data(std::istream &stream);
+    static asset factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
     std::string to_string() const;
     bool is_valid() const;
     bool is_valid_type() const;
@@ -109,20 +110,20 @@ public:
     void set_type(uint32_t type);
 
     std::string get_to_uid() const;
-    void set_to_uid(const std::string& uid);
+    void set_to_uid(const std::string &uid);
 
     std::string get_from_uid() const;
-    void set_from_uid(const std::string& uid);
+    void set_from_uid(const std::string &uid);
 
-    template<class Type>
-    void set_attach(const Type& attach)
+    template <class Type>
+    void set_attach(const Type &attach)
     {
-         this->attach = attach;
+        this->attach = attach;
     };
-    asset_data_type& get_attach();
-    const asset_data_type& get_attach() const;
+    asset_data_type &get_attach();
+    const asset_data_type &get_attach() const;
 
-private:
+  private:
     uint32_t version;
     uint32_t type;
     std::string touid;
@@ -134,4 +135,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-
