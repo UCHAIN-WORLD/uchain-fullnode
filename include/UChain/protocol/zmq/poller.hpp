@@ -28,15 +28,18 @@
 #include <UChain/protocol/zmq/identifiers.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 /// This class is thread safe except as noted.
 class BCP_API poller
-  : public enable_shared_from_base<poller>
+    : public enable_shared_from_base<poller>
 {
-public:
+  public:
     /// A shared poller pointer.
     typedef std::shared_ptr<poller> ptr;
 
@@ -44,8 +47,8 @@ public:
     poller();
 
     /// This class is not copyable.
-    poller(const poller&) = delete;
-    void operator=(const poller&) = delete;
+    poller(const poller &) = delete;
+    void operator=(const poller &) = delete;
 
     /// True if the timeout occurred.
     bool expired() const;
@@ -54,7 +57,7 @@ public:
     bool terminated() const;
 
     /// Add a socket to be polled.
-    void add(socket& sock);
+    void add(socket &sock);
 
     /// Remove all sockets from the poller.
     void clear();
@@ -67,11 +70,11 @@ public:
     /// Wait specified time for any socket to receive, -1 is forever.
     identifiers wait(int32_t timeout_milliseconds);
 
-private:
+  private:
     // zmq_pollitem_t alias, keeps zmq.h out of our headers.
     typedef struct
     {
-        void* socket;
+        void *socket;
         file_descriptor fd;
         short events;
         short revents;

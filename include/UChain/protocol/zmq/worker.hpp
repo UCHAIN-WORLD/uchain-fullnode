@@ -27,23 +27,26 @@
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 /// This class is thread safe.
 class BCP_API worker
 {
-public:
+  public:
     /// A shared worker pointer.
     typedef std::shared_ptr<worker> ptr;
 
     /// Construct a worker.
-    worker(threadpool& pool);
+    worker(threadpool &pool);
 
     /// This class is not copyable.
-    worker(const worker&) = delete;
-    void operator=(const worker&) = delete;
+    worker(const worker &) = delete;
+    void operator=(const worker &) = delete;
 
     /// Stop the worker.
     virtual ~worker();
@@ -54,17 +57,16 @@ public:
     /// Stop the worker (optional).
     virtual bool stop();
 
-protected:
+  protected:
     bool stopped();
     bool started(bool result);
     bool finished(bool result);
-    bool forward(socket& from, socket& to);
-    void relay(socket& left, socket& right);
+    bool forward(socket &from, socket &to);
+    void relay(socket &left, socket &right);
 
     virtual void work() = 0;
 
-private:
-
+  private:
     // These are protected by mutex.
     dispatcher dispatch_;
     std::atomic<bool> stopped_;

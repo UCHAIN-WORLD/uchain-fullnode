@@ -25,24 +25,27 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/protocol/define.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 /// This class is thread safe.
 class BCP_API context
-  : public enable_shared_from_base<context>
+    : public enable_shared_from_base<context>
 {
-public:
+  public:
     /// A shared context pointer.
     typedef std::shared_ptr<context> ptr;
 
     /// Construct a context.
-    context(bool started=true);
+    context(bool started = true);
 
     /// This class is not copyable.
-    context(const context&) = delete;
-    void operator=(const context&) = delete;
+    context(const context &) = delete;
+    void operator=(const context &) = delete;
 
     /// Blocks until all child sockets are closed.
     /// Stops all child socket activity by closing the zeromq context.
@@ -52,7 +55,7 @@ public:
     operator const bool() const;
 
     /// The underlying zeromq context.
-    void* self();
+    void *self();
 
     /// Create the zeromq context.
     virtual bool start();
@@ -61,10 +64,9 @@ public:
     /// Stops all child socket activity by closing the zeromq context.
     virtual bool stop();
 
-private:
-
+  private:
     // The context pointer is protected by mutex.
-    void* self_;
+    void *self_;
     mutable shared_mutex mutex_;
 };
 
@@ -73,4 +75,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

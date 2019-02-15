@@ -24,16 +24,19 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/protocol/define.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 /// This class is not thread safe.
 /// A simplified "certificate" class to manage a curve key pair.
 /// If valid the class always retains a consistent key pair.
 class BCP_API certificate
 {
-public:
+  public:
     /// Construct an arbitary keypair as a new certificate.
     /// This always reduces keyspace, disallowing '#' in text encoding.
     /// Use certificate({ null_hash }) to allow full key space.
@@ -41,24 +44,24 @@ public:
 
     /// Construct a certificate from private key (generates public key).
     /// This generates an arbitary key pair if the parameter is uninitialized.
-    certificate(const config::sodium& private_key);
+    certificate(const config::sodium &private_key);
 
     /// True if the certificate is valid.
     operator const bool() const;
 
     /// The public key base85 text.
-    const config::sodium& public_key() const;
+    const config::sodium &public_key() const;
 
     /// The private key base85 text.
-    const config::sodium& private_key() const;
+    const config::sodium &private_key() const;
 
-protected:
-    static bool derive(config::sodium& out_public,
-        const config::sodium& private_key);
-    static bool create(config::sodium& out_public,
-        config::sodium& out_private, bool setting);
+  protected:
+    static bool derive(config::sodium &out_public,
+                       const config::sodium &private_key);
+    static bool create(config::sodium &out_public,
+                       config::sodium &out_private, bool setting);
 
-private:
+  private:
     config::sodium public_;
     config::sodium private_;
 };
