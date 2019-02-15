@@ -45,40 +45,40 @@ namespace chain
 
 class BC_API uid
 {
-  public:
-    enum class uid_status : uint32_t
-    {
-        uid_none,
-        uid_locked,
-        uid_transferable,
-    };
+public:
+  enum class uid_status : uint32_t
+  {
+    uid_none,
+    uid_locked,
+    uid_transferable,
+  };
 
-    uid();
-    uid(uint32_t status, const uid_detail &detail);
-    static uid factory_from_data(const data_chunk &data);
-    static uid factory_from_data(std::istream &stream);
-    static uid factory_from_data(reader &source);
-    static uint64_t satoshi_fixed_size();
+  uid();
+  uid(uint32_t status, const uid_detail &detail);
+  static uid factory_from_data(const data_chunk &data);
+  static uid factory_from_data(std::istream &stream);
+  static uid factory_from_data(reader &source);
+  static uint64_t satoshi_fixed_size();
 
-    bool from_data(const data_chunk &data);
-    bool from_data(std::istream &stream);
-    bool from_data(reader &source);
-    data_chunk to_data() const;
-    void to_data(std::ostream &stream) const;
-    void to_data(writer &sink) const;
-    std::string to_string() const;
-    bool is_valid_type() const;
-    bool is_valid() const;
-    void reset();
-    uint64_t serialized_size() const;
-    uint32_t get_status() const;
-    void set_status(uint32_t status);
-    void set_data(const uid_detail &detail);
-    const uid_detail &get_data() const;
+  bool from_data(const data_chunk &data);
+  bool from_data(std::istream &stream);
+  bool from_data(reader &source);
+  data_chunk to_data() const;
+  void to_data(std::ostream &stream) const;
+  void to_data(writer &sink) const;
+  std::string to_string() const;
+  bool is_valid_type() const;
+  bool is_valid() const;
+  void reset();
+  uint64_t serialized_size() const;
+  uint32_t get_status() const;
+  void set_status(uint32_t status);
+  void set_data(const uid_detail &detail);
+  const uid_detail &get_data() const;
 
-  private:
-    uint32_t status;
-    uid_detail data;
+private:
+  uint32_t status;
+  uid_detail data;
 };
 
 } // namespace chain

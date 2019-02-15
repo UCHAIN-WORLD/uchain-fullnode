@@ -30,8 +30,10 @@
 #include <UChain/bitcoin/utility/writer.hpp>
 #include <UChain/bitcoin/formats/base_16.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 enum wallet_status : uint8_t
 {
@@ -61,16 +63,16 @@ enum wallet_type : uint8_t
 /// used for store wallet related information
 class BC_API wallet_multisig
 {
-public:
+  public:
     typedef std::vector<wallet_multisig> list;
 
     wallet_multisig();
     wallet_multisig(uint32_t hd_index, uint8_t m, uint8_t n,
-        std::vector<std::string>&& cosigner_pubkeys, std::string& pubkey);
+                    std::vector<std::string> &&cosigner_pubkeys, std::string &pubkey);
 
     void set_hd_index(uint32_t index);
     uint32_t get_hd_index() const;
-    inline void increase_hd_index(){ hd_index_++; };
+    inline void increase_hd_index() { hd_index_++; };
 
     void set_index(uint32_t index);
     uint32_t get_index() const;
@@ -81,33 +83,33 @@ public:
     void set_n(uint8_t n);
     uint8_t get_n() const;
 
-    const std::vector<std::string>& get_cosigner_pubkeys() const;
-    void set_cosigner_pubkeys(std::vector<std::string>&& cosigner_pubkeys);
+    const std::vector<std::string> &get_cosigner_pubkeys() const;
+    void set_cosigner_pubkeys(std::vector<std::string> &&cosigner_pubkeys);
 
     std::string get_pub_key() const;
-    void set_pub_key(std::string& pubkey);
+    void set_pub_key(std::string &pubkey);
 
     std::string get_description() const;
-    void set_description(std::string& description);
+    void set_description(std::string &description);
 
     std::string get_address() const;
-    void set_address(std::string& address);
+    void set_address(std::string &address);
 
     std::string get_multisig_script() const;
 
-    bool from_data(reader& source);
-    void to_data(writer& sink) const;
+    bool from_data(reader &source);
+    void to_data(writer &sink) const;
 
     uint64_t serialized_size() const;
 
-    bool operator==(const wallet_multisig& other) const;
+    bool operator==(const wallet_multisig &other) const;
     void reset();
 
 #ifdef UC_DEBUG
     std::string to_string();
 #endif
 
-private:
+  private:
     uint32_t hd_index_;
     uint32_t index_;
     uint8_t m_;
@@ -120,22 +122,22 @@ private:
 
 class BC_API wallet
 {
-public:
+  public:
     wallet();
-    wallet(const std::string& name, const std::string& mnemonic, const hash_digest& passwd,
-        uint32_t hd_index, uint8_t priority, uint8_t status, uint8_t type);
+    wallet(const std::string &name, const std::string &mnemonic, const hash_digest &passwd,
+           uint32_t hd_index, uint8_t priority, uint8_t status, uint8_t type);
 
-    static wallet factory_from_data(const data_chunk& data);
-    static wallet factory_from_data(std::istream& stream);
-    static wallet factory_from_data(reader& source);
+    static wallet factory_from_data(const data_chunk &data);
+    static wallet factory_from_data(std::istream &stream);
+    static wallet factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
 
     bool is_valid() const;
     void reset();
@@ -144,36 +146,38 @@ public:
 
     operator bool() const;
 
-    bool operator==(const libbitcoin::chain::wallet& other) const;
+    bool operator==(const libbitcoin::chain::wallet &other) const;
 
 #ifdef UC_DEBUG
-    std::string to_string() ;
+    std::string to_string();
 #endif
 
-    const std::string& get_name() const;
-    void set_name(const std::string& name);
+    const std::string &get_name() const;
+    void set_name(const std::string &name);
 
-    const std::string& get_mnemonic(std::string& passphrase, std::string& decry_output) const;
-    const std::string& get_mnemonic() const;
-    void set_mnemonic(const std::string& mnemonic, std::string& passphrase);
-    void set_mnemonic(const std::string& mnemonic);
+    const std::string &get_mnemonic(std::string &passphrase, std::string &decry_output) const;
+    const std::string &get_mnemonic() const;
+    void set_mnemonic(const std::string &mnemonic, std::string &passphrase);
+    void set_mnemonic(const std::string &mnemonic);
 
-    const hash_digest& get_passwd() const;
+    const hash_digest &get_passwd() const;
 
-    void set_passwd(const std::string& outside_passwd) {
+    void set_passwd(const std::string &outside_passwd)
+    {
         //bc::decode_hash(passwd, outside_passwd);
         data_chunk data(outside_passwd.begin(), outside_passwd.end());
         set_passwd(sha256_hash(data));
     }
 
-    void set_passwd(const hash_digest& passwd_hash){
+    void set_passwd(const hash_digest &passwd_hash)
+    {
         passwd = passwd_hash;
     }
 
     uint32_t get_hd_index() const;
     void set_hd_index(const uint32_t hd_index);
 
-    void increase_hd_index(){hd_index++;};
+    void increase_hd_index() { hd_index++; };
 
     uint8_t get_status() const;
     void set_status(const uint8_t status);
@@ -184,16 +188,16 @@ public:
     void set_type(uint8_t type);
     uint8_t get_type() const;
 
-    const wallet_multisig::list& get_multisig_vec() const;
-    void set_multisig_vec(wallet_multisig::list&& multisig);
+    const wallet_multisig::list &get_multisig_vec() const;
+    void set_multisig_vec(wallet_multisig::list &&multisig);
 
-    bool is_multisig_exist(const wallet_multisig& multisig);
-    void set_multisig(const wallet_multisig& multisig);
-    void modify_multisig(const wallet_multisig& multisig);
-    void remove_multisig(const wallet_multisig& multisig);
-    std::shared_ptr<wallet_multisig::list> get_multisig(const std::string& addr);
+    bool is_multisig_exist(const wallet_multisig &multisig);
+    void set_multisig(const wallet_multisig &multisig);
+    void modify_multisig(const wallet_multisig &multisig);
+    void remove_multisig(const wallet_multisig &multisig);
+    std::shared_ptr<wallet_multisig::list> get_multisig(const std::string &addr);
 
-private:
+  private:
     std::string name;
     std::string mnemonic;
     hash_digest passwd;
@@ -209,9 +213,7 @@ private:
     //wallet_multisig multisig;
 };
 
-
 } // namespace chain
 } // namespace libbitcoin
 
 #endif
-

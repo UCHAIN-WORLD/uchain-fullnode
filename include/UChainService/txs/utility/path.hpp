@@ -25,10 +25,9 @@
 
 namespace libbitcoin
 {
-    const boost::filesystem::path& default_data_path();
+const boost::filesystem::path &default_data_path();
 
-    boost::filesystem::path webpage_path();
-}//namespace libbitcoin
-
+boost::filesystem::path webpage_path();
+} //namespace libbitcoin
 
 #endif /* INCLUDE_BITCOIN_BITCOIN_UTILITY_PATH_HPP_ */

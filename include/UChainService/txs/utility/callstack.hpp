@@ -26,8 +26,8 @@
 
 namespace libbitcoin
 {
-void call_stack(std::ostream& os);
-void do_callstack(const std::string& name);
-}//namespace libbitcoin
+void call_stack(std::ostream &os);
+void do_callstack(const std::string &name);
+} //namespace libbitcoin
 
 #endif /* INCLUDE_BITCOIN_BITCOIN_UTILITY_CALLSTACK_HPP_ */
