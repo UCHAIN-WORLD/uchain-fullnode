@@ -27,19 +27,21 @@
 #include "pubkey.h"
 #include "script/script_error.h"
 
-namespace libbitcoin {
-namespace consensus {
+namespace libbitcoin
+{
+namespace consensus
+{
 
 // Helper class, not published. This is tested internal to verify_script.
 class BCK_API TxInputStream
 {
-public:
-    TxInputStream(const unsigned char* transaction, size_t transaction_size);
-    TxInputStream& read(char* destination, size_t size);
+  public:
+    TxInputStream(const unsigned char *transaction, size_t transaction_size);
+    TxInputStream &read(char *destination, size_t size);
 
-private:
+  private:
     static ECCVerifyHandle secp256k1_context_;
-    const unsigned char* source_;
+    const unsigned char *source_;
     size_t remaining_;
 };
 
