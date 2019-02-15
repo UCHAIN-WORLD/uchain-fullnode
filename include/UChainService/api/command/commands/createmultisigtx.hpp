@@ -24,31 +24,33 @@
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-
-class createmultisigtx: public command_extension
+namespace libbitcoin
 {
-public:
-    static const char* symbol() { return "createmultisigtx";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ctgy_extension & bs ) == bs; }
-    const char* description() override { return "createmultisigtx "; }
+namespace explorer
+{
+namespace commands
+{
 
-    arguments_metadata& load_arguments() override
+class createmultisigtx : public command_extension
+{
+  public:
+    static const char *symbol() { return "createmultisigtx"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ctgy_extension & bs) == bs; }
+    const char *description() override { return "createmultisigtx "; }
+
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
-               .add("WALLET_NAME", 1)
-               .add("WALLET_AUTH", 1)
-               .add("FROMADDRESS", 1)
-               .add("TOADDRESS", 1)
-               .add("AMOUNT", 1);
+            .add("WALLET_NAME", 1)
+            .add("WALLET_AUTH", 1)
+            .add("FROMADDRESS", 1)
+            .add("TOADDRESS", 1)
+            .add("AMOUNT", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-                         po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "WALLET_NAME", variables, input, raw);
@@ -58,74 +60,55 @@ public:
         load_input(argument_.amount, "AMOUNT", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "WALLET_NAME",
             value<std::string>(&auth_.name)->required(),
-            BX_WALLET_NAME
-        )
-        (
+            BX_WALLET_NAME)(
             "WALLET_AUTH",
             value<std::string>(&auth_.auth)->required(),
-            BX_WALLET_AUTH
-        )
-        (
+            BX_WALLET_AUTH)(
             "FROMADDRESS",
             value<std::string>(&argument_.from)->required(),
-            "Send from this address, must be a multi-signature script address."
-        )
-        (
+            "Send from this address, must be a multi-signature script address.")(
             "TOADDRESS",
             value<std::string>(&argument_.to)->required(),
-            "Send to this address"
-        )
-        (
+            "Send to this address")(
             "AMOUNT",
             value<uint64_t>(&argument_.amount)->required(),
-            "UCN integer bits."
-        )
-        (
+            "UCN integer bits.")(
             "symbol,s",
             value<std::string>(&option_.symbol),
-            "token name, not specify this option for UCN tx"
-        )
-        (
+            "token name, not specify this option for UCN tx")(
             "type,t",
             value<uint16_t>(&option_.type)->default_value(0),
-            "Transaction type, defaults to 0. 0 -- transfer UCN, 3 -- transfer token"
-        )
-        (
+            "Transaction type, defaults to 0. 0 -- transfer UCN, 3 -- transfer token")(
             "fee,f",
             value<uint64_t>(&argument_.fee)->default_value(bc::min_tx_fee),
-            "Transaction fee. defaults to 200000 UCN bits."
-        )
-        ;
+            "Transaction fee. defaults to 200000 UCN bits.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-                           libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
         argument()
-            : amount(0)
-            , fee(0)
-        {}
+            : amount(0), fee(0)
+        {
+        }
 
         std::string from;
         std::string to;
@@ -138,11 +121,8 @@ public:
         std::string symbol;
         uint16_t type;
     } option_;
-
 };
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

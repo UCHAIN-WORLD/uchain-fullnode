@@ -18,27 +18,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 class vote : public command_extension
 {
-public:
-    static const char* symbol(){ return "vote";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "vote to a miner's addresss/uid, then lock some UCN for about 48h.1 UCN can get 20 votes"; }
+  public:
+    static const char *symbol() { return "vote"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ex_online & bs) == bs; }
+    const char *description() override { return "vote to a miner's addresss/uid, then lock some UCN for about 48h.1 UCN can get 20 votes"; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
             .add("WALLET_NAME", 1)
@@ -47,8 +48,8 @@ public:
             .add("TO_", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "WALLET_NAME", variables, input, raw);
@@ -57,67 +58,52 @@ public:
         load_input(argument_.to, "TO_", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "WALLET_NAME",
             value<std::string>(&auth_.name)->required(),
-            BX_WALLET_NAME
-        )
-        (
+            BX_WALLET_NAME)(
             "WALLET_AUTH",
             value<std::string>(&auth_.auth)->required(),
-            BX_WALLET_AUTH
-        )
-        (
+            BX_WALLET_AUTH)(
             "FROM_",
             value<std::string>(&argument_.from)->required(),
-            "The uid to deposit some UCN for 48h."
-        )
-        (
+            "The uid to deposit some UCN for 48h.")(
             "receivers,r",
             value<std::vector<std::string>>(&argument_.to)->required(),
-            "vote to [uid:ucn_bits]."
-        )     
-        (
+            "vote to [uid:ucn_bits].")(
             "fee,f",
             value<uint64_t>(&option_.fee)->default_value(bc::min_tx_fee),
-            "Transaction fee. defaults to 200000 UCN bits."
-        );
+            "Transaction fee. defaults to 200000 UCN bits.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
         std::string from;
-        std::vector<std::string> to;        
+        std::vector<std::string> to;
     } argument_;
 
     struct option
     {
         uint64_t fee;
     } option_;
-
 };
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

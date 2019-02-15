@@ -18,28 +18,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ registertoken *************************/
-class registertoken: public command_extension
+class registertoken : public command_extension
 {
-public:
-    static const char* symbol(){ return "registertoken";}
-    const char* name() override { return symbol();}
-    bool category(int bs) override { return (ex_online & bs ) == bs; }
-    const char* description() override { return "Broadcast the token whole network."; }
+  public:
+    static const char *symbol() { return "registertoken"; }
+    const char *name() override { return symbol(); }
+    bool category(int bs) override { return (ex_online & bs) == bs; }
+    const char *description() override { return "Broadcast the token whole network."; }
 
-    arguments_metadata& load_arguments() override
+    arguments_metadata &load_arguments() override
     {
         return get_argument_metadata()
             .add("WALLET_NAME", 1)
@@ -47,8 +48,8 @@ public:
             .add("SYMBOL", 1);
     }
 
-    void load_fallbacks (std::istream& input,
-        po::variables_map& variables) override
+    void load_fallbacks(std::istream &input,
+                        po::variables_map &variables) override
     {
         const auto raw = requires_raw_input();
         load_input(auth_.name, "WALLET_NAME", variables, input, raw);
@@ -56,56 +57,42 @@ public:
         load_input(argument_.symbol, "SYMBOL", variables, input, raw);
     }
 
-    options_metadata& load_options() override
+    options_metadata &load_options() override
     {
         using namespace po;
-        options_description& options = get_option_metadata();
-        options.add_options()
-        (
+        options_description &options = get_option_metadata();
+        options.add_options()(
             BX_HELP_VARIABLE ",h",
             value<bool>()->zero_tokens(),
-            "Get a description and instructions for this command."
-        )
-        (
+            "Get a description and instructions for this command.")(
             "WALLET_NAME",
             value<std::string>(&auth_.name)->required(),
-            BX_WALLET_NAME
-        )
-        (
+            BX_WALLET_NAME)(
             "WALLET_AUTH",
             value<std::string>(&auth_.auth)->required(),
-            BX_WALLET_AUTH
-        )
-        (
+            BX_WALLET_AUTH)(
             "SYMBOL",
             value<std::string>(&argument_.symbol)->required(),
-            "The token symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.)"
-        )
-        (
+            "The token symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.)")(
             "model,m",
             value<std::string>(&option_.attenuation_model_param),
-            BX_TOKEN_OFFERING_CURVE
-        )
-        (
+            BX_TOKEN_OFFERING_CURVE)(
             "fee,f",
             value<uint64_t>(&argument_.fee)->default_value(bc::min_fee_to_issue_token),
-            "The fee of tx. minimum is 10000 UCN."
-        )
-        (
+            "The fee of tx. minimum is 10000 UCN.")(
             "percentage,p",
             value<uint32_t>(&argument_.percentage)->default_value(20),
-            "Percentage of fee send to miner. minimum is 20."
-        );
+            "Percentage of fee send to miner. minimum is 20.");
 
         return options;
     }
 
-    void set_defaults_from_config (po::variables_map& variables) override
+    void set_defaults_from_config(po::variables_map &variables) override
     {
     }
 
-    console_result invoke (Json::Value& jv_output,
-         libbitcoin::server::server_node& node) override;
+    console_result invoke(Json::Value &jv_output,
+                          libbitcoin::server::server_node &node) override;
 
     struct argument
     {
@@ -118,11 +105,8 @@ public:
     {
         std::string attenuation_model_param;
     } option_;
-
 };
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
