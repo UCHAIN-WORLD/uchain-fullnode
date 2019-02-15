@@ -29,22 +29,21 @@
 // used for non-api symbols.
 
 #if defined BCP_STATIC
-    #define BCP_API
-    #define BCP_INTERNAL
+#define BCP_API
+#define BCP_INTERNAL
 #elif defined BCP_DLL
-    #define BCP_API      BC_HELPER_DLL_EXPORT
-    #define BCP_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCP_API BC_HELPER_DLL_EXPORT
+#define BCP_INTERNAL BC_HELPER_DLL_LOCAL
 #else
-    #define BCP_API      BC_HELPER_DLL_IMPORT
-    #define BCP_INTERNAL BC_HELPER_DLL_LOCAL
+#define BCP_API BC_HELPER_DLL_IMPORT
+#define BCP_INTERNAL BC_HELPER_DLL_LOCAL
 #endif
 
 #if defined _WIN32
-    #include <winsock.h>
-    typedef SOCKET file_descriptor;
+#include <winsock.h>
+typedef SOCKET file_descriptor;
 #else
-    typedef int file_descriptor;
+typedef int file_descriptor;
 #endif
 
 #endif
-

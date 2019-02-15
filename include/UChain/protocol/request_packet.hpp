@@ -30,28 +30,30 @@
 #include <UChain/protocol/packet.hpp>
 #include <UChain/protocol/zmq/message.hpp>
 
-namespace libbitcoin {
-namespace protocol {
+namespace libbitcoin
+{
+namespace protocol
+{
 
 class BCP_API request_packet
-  : public packet
+    : public packet
 {
-public:
+  public:
     request_packet();
 
     std::shared_ptr<request> get_request() const;
     void set_request(std::shared_ptr<request> request);
 
-protected:
-    virtual bool encode_payload(zmq::message& message) const;
-    virtual bool decode_payload(const data_chunk& payload);
+  protected:
+    virtual bool encode_payload(zmq::message &message) const;
+    virtual bool decode_payload(const data_chunk &payload);
 
-private:
+  private:
     std::shared_ptr<request> request_;
 };
 
-}
-}
+} // namespace protocol
+} // namespace libbitcoin
 
 #endif
 
