@@ -29,46 +29,48 @@
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class server_node;
 
 // This class is thread safe.
 // Provide asynchronous query responses to the query service.
 class BCS_API query_worker
-  : public bc::protocol::zmq::worker
+    : public bc::protocol::zmq::worker
 {
-public:
+  public:
     typedef std::shared_ptr<query_worker> ptr;
 
     /// Construct a query worker.
-    query_worker(bc::protocol::zmq::authenticator& authenticator,
-        server_node& node, bool secure);
+    query_worker(bc::protocol::zmq::authenticator &authenticator,
+                 server_node &node, bool secure);
 
-protected:
+  protected:
     typedef bc::protocol::zmq::socket socket;
 
-    typedef std::function<void(const message&, send_handler)> command_handler;
+    typedef std::function<void(const message &, send_handler)> command_handler;
     typedef std::unordered_map<std::string, command_handler> command_map;
 
     virtual void attach_interface();
-    virtual void attach(const std::string& command, command_handler handler);
+    virtual void attach(const std::string &command, command_handler handler);
 
-    virtual bool connect(socket& router);
-    virtual bool disconnect(socket& router);
-    virtual void query(socket& router);
+    virtual bool connect(socket &router);
+    virtual bool disconnect(socket &router);
+    virtual void query(socket &router);
 
     // Implement the worker.
     virtual void work();
 
-private:
+  private:
     const bool secure_;
-    const server::settings& settings_;
+    const server::settings &settings_;
 
     // These are thread safe.
-    server_node& node_;
-    bc::protocol::zmq::authenticator& authenticator_;
+    server_node &node_;
+    bc::protocol::zmq::authenticator &authenticator_;
 
     // This is protected by base class mutex.
     command_map command_handlers_;

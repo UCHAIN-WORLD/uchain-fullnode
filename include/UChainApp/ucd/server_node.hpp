@@ -41,26 +41,29 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace mgbubble{
-    class RestServ;
-    class WsPushServ;
-}
-namespace libbitcoin {
-namespace server {
+namespace mgbubble
+{
+class RestServ;
+class WsPushServ;
+} // namespace mgbubble
+namespace libbitcoin
+{
+namespace server
+{
 
 class notification_worker;
 
 class BCS_API server_node
-  : public node::p2p_node
+    : public node::p2p_node
 {
-public:
+  public:
     typedef std::shared_ptr<server_node> ptr;
 
     /// Compute the minimum threadpool size required to run the server.
-    static uint32_t threads_required(const configuration& configuration);
+    static uint32_t threads_required(const configuration &configuration);
 
     /// Construct a server node.
-    server_node(const configuration& configuration);
+    server_node(const configuration &configuration);
 
     /// Ensure all threads are coalesced.
     virtual ~server_node();
@@ -69,7 +72,7 @@ public:
     // ----------------------------------------------------------------------------
 
     /// Server configuration settings.
-    virtual const settings& server_settings() const;
+    virtual const settings &server_settings() const;
 
     // Run sequence.
     // ------------------------------------------------------------------------
@@ -95,20 +98,20 @@ public:
 
     /// Subscribe to address (including stealth) prefix notifications.
     /// Stealth prefix is limited to 32 bits, address prefix to 256 bits.
-    virtual void subscribe_address(const route& reply_to, uint32_t id,
-        const binary& prefix_filter, chain::subscribe_type type);
+    virtual void subscribe_address(const route &reply_to, uint32_t id,
+                                   const binary &prefix_filter, chain::subscribe_type type);
 
     /// Subscribe to transaction penetration notifications.
-    virtual void subscribe_penetration(const route& reply_to, uint32_t id,
-        const hash_digest& tx_hash);
+    virtual void subscribe_penetration(const route &reply_to, uint32_t id,
+                                       const hash_digest &tx_hash);
 
     /// Get miner.
-    virtual consensus::miner& miner();
+    virtual consensus::miner &miner();
 
     bool is_blockchain_sync() const { return under_blockchain_sync_.load(std::memory_order_relaxed); }
 
-private:
-    void handle_running(const code& ec, result_handler handler);
+  private:
+    void handle_running(const code &ec, result_handler handler);
 
     bool start_services();
     bool start_authenticator();
@@ -122,7 +125,7 @@ private:
 
     std::atomic<bool> under_blockchain_sync_;
 
-    const configuration& configuration_;
+    const configuration &configuration_;
     static boost::filesystem::path webpage_path_;
 
     consensus::miner miner_;

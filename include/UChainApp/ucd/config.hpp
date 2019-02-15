@@ -25,8 +25,10 @@
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 // Not localizable.
 #define BS_HELP_VARIABLE "help"
@@ -37,7 +39,6 @@ namespace server {
 #define BS_DATADIR_VARIABLE "datadir"
 #define BS_UI_VARIABLE "ui"
 
-
 // This must be lower case but the env var part can be any case.
 #define BS_CONFIG_VARIABLE "config"
 
@@ -46,14 +47,14 @@ namespace server {
 
 /// Full server node configuration, thread safe.
 class BCS_API configuration
-  : public node::configuration
+    : public node::configuration
 {
 public:
-    configuration(bc::settings context);
-    configuration(const configuration& other);
+  configuration(bc::settings context);
+  configuration(const configuration &other);
 
-    /// Settings.
-    server::settings server;
+  /// Settings.
+  server::settings server;
 };
 
 } // namespace server

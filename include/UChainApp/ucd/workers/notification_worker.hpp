@@ -30,22 +30,24 @@
 #include <UChainApp/ucd/settings.hpp>
 #include <UChainApp/ucd/utility/address_key.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class server_node;
 
 // This class is thread safe.
 // Provide address and stealth notifications to the query service.
 class BCS_API notification_worker
-  : public bc::protocol::zmq::worker
+    : public bc::protocol::zmq::worker
 {
-public:
+  public:
     typedef std::shared_ptr<notification_worker> ptr;
 
     /// Construct an address worker.
-    notification_worker(bc::protocol::zmq::authenticator& authenticator,
-        server_node& node, bool secure);
+    notification_worker(bc::protocol::zmq::authenticator &authenticator,
+                        server_node &node, bool secure);
 
     /// Start the worker.
     bool start() override;
@@ -54,98 +56,102 @@ public:
     bool stop() override;
 
     /// Subscribe to address and stealth prefix notifications.
-    virtual void subscribe_address(const route& reply_to, uint32_t id,
-        const binary& prefix_filter, chain::subscribe_type type);
+    virtual void subscribe_address(const route &reply_to, uint32_t id,
+                                   const binary &prefix_filter, chain::subscribe_type type);
 
     /// Subscribe to transaction penetration notifications.
-    virtual void subscribe_penetration(const route& reply_to, uint32_t id,
-        const hash_digest& tx_hash);
+    virtual void subscribe_penetration(const route &reply_to, uint32_t id,
+                                       const hash_digest &tx_hash);
 
-protected:
+  protected:
     typedef bc::protocol::zmq::socket socket;
 
-    virtual bool connect(socket& router);
-    virtual bool disconnect(socket& router);
+    virtual bool connect(socket &router);
+    virtual bool disconnect(socket &router);
 
     // Implement the service.
     virtual void work();
 
-private:
+  private:
     typedef chain::point::indexes index_list;
     typedef std::shared_ptr<uint8_t> sequence_ptr;
     typedef bc::message::block_message::ptr_list block_list;
 
-    typedef notifier<address_key, const code&,
-        const bc::wallet::payment_address&, int32_t, const hash_digest&,
-        const chain::transaction&> payment_subscriber;
-    typedef notifier<address_key, const code&, uint32_t, uint32_t,
-        const hash_digest&, const chain::transaction&> stealth_subscriber;
-    typedef notifier<address_key, const code&, const binary&, uint32_t,
-        const hash_digest&, const chain::transaction&> address_subscriber;
-    typedef notifier<address_key, const code&, uint32_t,
-        const hash_digest&, const hash_digest&> penetration_subscriber;
+    typedef notifier<address_key, const code &,
+                     const bc::wallet::payment_address &, int32_t, const hash_digest &,
+                     const chain::transaction &>
+        payment_subscriber;
+    typedef notifier<address_key, const code &, uint32_t, uint32_t,
+                     const hash_digest &, const chain::transaction &>
+        stealth_subscriber;
+    typedef notifier<address_key, const code &, const binary &, uint32_t,
+                     const hash_digest &, const chain::transaction &>
+        address_subscriber;
+    typedef notifier<address_key, const code &, uint32_t,
+                     const hash_digest &, const hash_digest &>
+        penetration_subscriber;
 
     // Remove expired subscriptions.
     void purge();
     int32_t purge_interval_milliseconds() const;
 
-    bool handle_blockchain_reorganization(const code& ec, uint64_t fork_point,
-        const block_list& new_blocks, const block_list&);
-    bool handle_transaction_pool(const code& ec, const index_list&,
-        bc::message::transaction_message::ptr tx);
-    bool handle_inventory(const code& ec,
-        const bc::message::inventory::ptr packet);
+    bool handle_blockchain_reorganization(const code &ec, uint64_t fork_point,
+                                          const block_list &new_blocks, const block_list &);
+    bool handle_transaction_pool(const code &ec, const index_list &,
+                                 bc::message::transaction_message::ptr tx);
+    bool handle_inventory(const code &ec,
+                          const bc::message::inventory::ptr packet);
 
-    void notify_blocks(uint32_t fork_point, const block_list& blocks);
-    void notify_block(socket& peer, uint32_t height,
-        const chain::block::ptr block);
-    void notify_transaction(uint32_t height, const hash_digest& block_hash,
-        const chain::transaction& tx);
+    void notify_blocks(uint32_t fork_point, const block_list &blocks);
+    void notify_block(socket &peer, uint32_t height,
+                      const chain::block::ptr block);
+    void notify_transaction(uint32_t height, const hash_digest &block_hash,
+                            const chain::transaction &tx);
 
     // v2/v3 (deprecated)
-    void notify_payment(const bc::wallet::payment_address& address,
-        uint32_t height, const hash_digest& block_hash,
-        const chain::transaction& tx);
+    void notify_payment(const bc::wallet::payment_address &address,
+                        uint32_t height, const hash_digest &block_hash,
+                        const chain::transaction &tx);
     void notify_stealth(uint32_t prefix, uint32_t height,
-        const hash_digest& block_hash, const chain::transaction& tx);
+                        const hash_digest &block_hash, const chain::transaction &tx);
 
     // v3
-    void notify_address(const binary& field, uint32_t height,
-        const hash_digest& block_hash, const chain::transaction& tx);
-    void notify_penetration(uint32_t height, const hash_digest& block_hash,
-        const hash_digest& tx_hash);
+    void notify_address(const binary &field, uint32_t height,
+                        const hash_digest &block_hash, const chain::transaction &tx);
+    void notify_penetration(uint32_t height, const hash_digest &block_hash,
+                            const hash_digest &tx_hash);
 
     // Send a notification to the subscriber.
-    void send(const route& reply_to, const std::string& command,
-        uint32_t id, const data_chunk& payload);
-    void send_payment(const route& reply_to, uint32_t id,
-        const bc::wallet::payment_address& address, uint32_t height,
-        const hash_digest& block_hash, const chain::transaction& tx);
-    void send_stealth(const route& reply_to, uint32_t id, uint32_t prefix,
-        uint32_t height, const hash_digest& block_hash,
-        const chain::transaction& tx);
-    void send_address(const route& reply_to, uint32_t id, uint8_t sequence,
-        uint32_t height, const hash_digest& block_hash,
-        const chain::transaction& tx);
+    void send(const route &reply_to, const std::string &command,
+              uint32_t id, const data_chunk &payload);
+    void send_payment(const route &reply_to, uint32_t id,
+                      const bc::wallet::payment_address &address, uint32_t height,
+                      const hash_digest &block_hash, const chain::transaction &tx);
+    void send_stealth(const route &reply_to, uint32_t id, uint32_t prefix,
+                      uint32_t height, const hash_digest &block_hash,
+                      const chain::transaction &tx);
+    void send_address(const route &reply_to, uint32_t id, uint8_t sequence,
+                      uint32_t height, const hash_digest &block_hash,
+                      const chain::transaction &tx);
 
-    bool handle_payment(const code& ec, const bc::wallet::payment_address& address,
-        uint32_t height, const hash_digest& block_hash,
-        const chain::transaction& tx, const route& reply_to, uint32_t id,
-        const binary& prefix_filter);
-    bool handle_stealth(const code& ec, uint32_t prefix, uint32_t height,
-        const hash_digest& block_hash, const chain::transaction& tx,
-        const route& reply_to, uint32_t id, const binary& prefix_filter);
-    bool handle_address(const code& ec, const binary& field, uint32_t height,
-        const hash_digest& block_hash, const chain::transaction& tx,
-        const route& reply_to, uint32_t id, const binary& prefix_filter,
-        sequence_ptr sequence);
+    bool handle_payment(const code &ec, const bc::wallet::payment_address &address,
+                        uint32_t height, const hash_digest &block_hash,
+                        const chain::transaction &tx, const route &reply_to, uint32_t id,
+                        const binary &prefix_filter);
+    bool handle_stealth(const code &ec, uint32_t prefix, uint32_t height,
+                        const hash_digest &block_hash, const chain::transaction &tx,
+                        const route &reply_to, uint32_t id, const binary &prefix_filter);
+    bool handle_address(const code &ec, const binary &field, uint32_t height,
+                        const hash_digest &block_hash, const chain::transaction &tx,
+                        const route &reply_to, uint32_t id, const binary &prefix_filter,
+                        sequence_ptr sequence);
 
     const bool secure_;
-    const server::settings& settings_;
+    const server::settings &settings_;
 
     // These are thread safe.
-    server_node& node_;
-    bc::protocol::zmq::authenticator& authenticator_;
+    server_node &node_;
+    bc::protocol::zmq::authenticator &authenticator_;
     address_subscriber::ptr address_subscriber_;
     payment_subscriber::ptr payment_subscriber_;
     stealth_subscriber::ptr stealth_subscriber_;
