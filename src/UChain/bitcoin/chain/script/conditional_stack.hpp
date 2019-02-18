@@ -23,12 +23,14 @@
 
 #include <vector>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class conditional_stack
 {
-public:
+  public:
     bool closed() const;
     bool succeeded() const;
     void clear();
@@ -36,11 +38,11 @@ public:
     void else_();
     void close();
 
-private:
+  private:
     std::vector<bool> stack_;
 };
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
 
 #endif

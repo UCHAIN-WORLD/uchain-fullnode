@@ -32,26 +32,28 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 const size_t operation::max_null_data_size = 80;
 
-operation operation::factory_from_data(const data_chunk& data)
+operation operation::factory_from_data(const data_chunk &data)
 {
     operation instance;
     instance.from_data(data);
     return instance;
 }
 
-operation operation::factory_from_data(std::istream& stream)
+operation operation::factory_from_data(std::istream &stream)
 {
     operation instance;
     instance.from_data(stream);
     return instance;
 }
 
-operation operation::factory_from_data(reader& source)
+operation operation::factory_from_data(reader &source)
 {
     operation instance;
     instance.from_data(source);
@@ -69,19 +71,19 @@ void operation::reset()
     data.clear();
 }
 
-bool operation::from_data(const data_chunk& data)
+bool operation::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool operation::from_data(std::istream& stream)
+bool operation::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool operation::from_data(reader& source)
+bool operation::from_data(reader &source)
 {
     reset();
 
@@ -118,13 +120,13 @@ data_chunk operation::to_data() const
     return data;
 }
 
-void operation::to_data(std::ostream& stream) const
+void operation::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void operation::to_data(writer& sink) const
+void operation::to_data(writer &sink) const
 {
     if (code != opcode::raw_data)
     {
@@ -136,22 +138,22 @@ void operation::to_data(writer& sink) const
 
         switch (code)
         {
-            case opcode::pushdata1:
-                sink.write_byte(static_cast<uint8_t>(data.size()));
-                break;
+        case opcode::pushdata1:
+            sink.write_byte(static_cast<uint8_t>(data.size()));
+            break;
 
-            case opcode::pushdata2:
-                sink.write_2_bytes_little_endian(
-                    static_cast<uint16_t>(data.size()));
-                break;
+        case opcode::pushdata2:
+            sink.write_2_bytes_little_endian(
+                static_cast<uint16_t>(data.size()));
+            break;
 
-            case opcode::pushdata4:
-                sink.write_4_bytes_little_endian(
-                    static_cast<uint32_t>(data.size()));
-                break;
+        case opcode::pushdata4:
+            sink.write_4_bytes_little_endian(
+                static_cast<uint32_t>(data.size()));
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
     }
 
@@ -164,25 +166,25 @@ uint64_t operation::serialized_size() const
 
     switch (code)
     {
-        case opcode::pushdata1:
-            size += sizeof(uint8_t);
-            break;
+    case opcode::pushdata1:
+        size += sizeof(uint8_t);
+        break;
 
-        case opcode::pushdata2:
-            size += sizeof(uint16_t);
-            break;
+    case opcode::pushdata2:
+        size += sizeof(uint16_t);
+        break;
 
-        case opcode::pushdata4:
-            size += sizeof(uint32_t);
-            break;
+    case opcode::pushdata4:
+        size += sizeof(uint32_t);
+        break;
 
-        case opcode::raw_data:
-            // remove padding for raw_data
-            size -= 1;
-            break;
+    case opcode::raw_data:
+        // remove padding for raw_data
+        size -= 1;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     return size;
@@ -200,32 +202,31 @@ std::string operation::to_string(uint32_t flags) const
     return ss.str();
 }
 
-bool operation::read_opcode_data_size(uint32_t& count, opcode code,
-    uint8_t raw_byte, reader& source)
+bool operation::read_opcode_data_size(uint32_t &count, opcode code,
+                                      uint8_t raw_byte, reader &source)
 {
     switch (code)
     {
-        case opcode::special:
-            count = raw_byte;
-            return true;
-        case opcode::pushdata1:
-            count = source.read_byte();
-            return true;
-        case opcode::pushdata2:
-            count = source.read_2_bytes_little_endian();
-            return true;
-        case opcode::pushdata4:
-            count = source.read_4_bytes_little_endian();
-            return true;
-        default:
-            return false;
+    case opcode::special:
+        count = raw_byte;
+        return true;
+    case opcode::pushdata1:
+        count = source.read_byte();
+        return true;
+    case opcode::pushdata2:
+        count = source.read_2_bytes_little_endian();
+        return true;
+    case opcode::pushdata4:
+        count = source.read_4_bytes_little_endian();
+        return true;
+    default:
+        return false;
     }
 }
 
-uint64_t operation::count_non_push(const operation::stack& ops)
+uint64_t operation::count_non_push(const operation::stack &ops)
 {
-    const auto found = [](const operation& op)
-    {
+    const auto found = [](const operation &op) {
         return !is_push(op.code);
     };
 
@@ -234,39 +235,15 @@ uint64_t operation::count_non_push(const operation::stack& ops)
 
 bool operation::must_read_data(opcode code)
 {
-    return code == opcode::special
-        || code == opcode::pushdata1
-        || code == opcode::pushdata2
-        || code == opcode::pushdata4;
+    return code == opcode::special || code == opcode::pushdata1 || code == opcode::pushdata2 || code == opcode::pushdata4;
 }
 
 bool operation::is_push(const opcode code)
 {
-    return code == opcode::zero
-        || code == opcode::special
-        || code == opcode::pushdata1
-        || code == opcode::pushdata2
-        || code == opcode::pushdata4
-        || code == opcode::negative_1
-        || code == opcode::op_1
-        || code == opcode::op_2
-        || code == opcode::op_3
-        || code == opcode::op_4
-        || code == opcode::op_5
-        || code == opcode::op_6
-        || code == opcode::op_7
-        || code == opcode::op_8
-        || code == opcode::op_9
-        || code == opcode::op_10
-        || code == opcode::op_11
-        || code == opcode::op_12
-        || code == opcode::op_13
-        || code == opcode::op_14
-        || code == opcode::op_15
-        || code == opcode::op_16;
+    return code == opcode::zero || code == opcode::special || code == opcode::pushdata1 || code == opcode::pushdata2 || code == opcode::pushdata4 || code == opcode::negative_1 || code == opcode::op_1 || code == opcode::op_2 || code == opcode::op_3 || code == opcode::op_4 || code == opcode::op_5 || code == opcode::op_6 || code == opcode::op_7 || code == opcode::op_8 || code == opcode::op_9 || code == opcode::op_10 || code == opcode::op_11 || code == opcode::op_12 || code == opcode::op_13 || code == opcode::op_14 || code == opcode::op_15 || code == opcode::op_16;
 }
 
-bool operation::is_push_only(const operation::stack& ops)
+bool operation::is_push_only(const operation::stack &ops)
 {
     return count_non_push(ops) == 0;
 }
@@ -274,15 +251,12 @@ bool operation::is_push_only(const operation::stack& ops)
 // pattern comparisons
 // ----------------------------------------------------------------------------
 
-bool operation::is_null_data_pattern(const operation::stack& ops)
+bool operation::is_null_data_pattern(const operation::stack &ops)
 {
-    return ops.size() == 2
-        && ops[0].code == opcode::return_
-        && ops[1].code == opcode::special
-        && ops[1].data.size() <= max_null_data_size;
+    return ops.size() == 2 && ops[0].code == opcode::return_ && ops[1].code == opcode::special && ops[1].data.size() <= max_null_data_size;
 }
 
-bool operation::is_pay_multisig_pattern(const operation::stack& ops)
+bool operation::is_pay_multisig_pattern(const operation::stack &ops)
 {
     static constexpr size_t op_1 = static_cast<uint8_t>(opcode::op_1);
     static constexpr size_t op_16 = static_cast<uint8_t>(opcode::op_16);
@@ -312,68 +286,39 @@ bool operation::is_pay_multisig_pattern(const operation::stack& ops)
     return true;
 }
 
-bool operation::is_pay_public_key_pattern(const operation::stack& ops)
+bool operation::is_pay_public_key_pattern(const operation::stack &ops)
 {
-    return ops.size() == 2
-        && ops[0].code == opcode::special
-        && is_public_key(ops[0].data)
-        && ops[1].code == opcode::checksig;
+    return ops.size() == 2 && ops[0].code == opcode::special && is_public_key(ops[0].data) && ops[1].code == opcode::checksig;
 }
 
-bool operation::is_pay_key_hash_pattern(const operation::stack& ops)
+bool operation::is_pay_key_hash_pattern(const operation::stack &ops)
 {
-    return ops.size() == 5
-        && ops[0].code == opcode::dup
-        && ops[1].code == opcode::hash160
-        && ops[2].code == opcode::special
-        && ops[2].data.size() == short_hash_size
-        && ops[3].code == opcode::equalverify
-        && ops[4].code == opcode::checksig;
+    return ops.size() == 5 && ops[0].code == opcode::dup && ops[1].code == opcode::hash160 && ops[2].code == opcode::special && ops[2].data.size() == short_hash_size && ops[3].code == opcode::equalverify && ops[4].code == opcode::checksig;
 }
 
-bool operation::is_pay_key_hash_with_lock_height_pattern(const operation::stack& ops)
+bool operation::is_pay_key_hash_with_lock_height_pattern(const operation::stack &ops)
 {
-    return ops.size() == 7
-        && ops[0].code == opcode::special
-        && ops[1].code == opcode::numequalverify
-        && ops[2].code == opcode::dup
-        && ops[3].code == opcode::hash160
-        && ops[4].code == opcode::special
-        && ops[4].data.size() == short_hash_size
-        && ops[5].code == opcode::equalverify
-        && ops[6].code == opcode::checksig;
+    return ops.size() == 7 && ops[0].code == opcode::special && ops[1].code == opcode::numequalverify && ops[2].code == opcode::dup && ops[3].code == opcode::hash160 && ops[4].code == opcode::special && ops[4].data.size() == short_hash_size && ops[5].code == opcode::equalverify && ops[6].code == opcode::checksig;
 }
 
-bool operation::is_pay_script_hash_pattern(const operation::stack& ops)
+bool operation::is_pay_script_hash_pattern(const operation::stack &ops)
 {
-    return ops.size() == 3
-        && ops[0].code == opcode::hash160
-        && ops[1].code == opcode::special
-        && ops[1].data.size() == short_hash_size
-        && ops[2].code == opcode::equal;
+    return ops.size() == 3 && ops[0].code == opcode::hash160 && ops[1].code == opcode::special && ops[1].data.size() == short_hash_size && ops[2].code == opcode::equal;
 }
 
-bool operation::is_pay_blackhole_pattern(const operation::stack& ops)
+bool operation::is_pay_blackhole_pattern(const operation::stack &ops)
 {
-    return ops.size() == 1
-        && ops[0].code == opcode::return_;
+    return ops.size() == 1 && ops[0].code == opcode::return_;
 }
 
-bool operation::is_pay_key_hash_with_attenuation_model_pattern(const operation::stack& ops)
+bool operation::is_pay_key_hash_with_attenuation_model_pattern(const operation::stack &ops)
 {
-    return ops.size() == 8
-        && ops[0].code == opcode::pushdata2 // model param
-        && ops[1].code == opcode::special // input point
-        && ops[2].code == opcode::checkattenuationverify
-        && ops[3].code == opcode::dup
-        && ops[4].code == opcode::hash160
-        && ops[5].code == opcode::special
-        && ops[5].data.size() == short_hash_size
-        && ops[6].code == opcode::equalverify
-        && ops[7].code == opcode::checksig;
+    return ops.size() == 8 && ops[0].code == opcode::pushdata2 // model param
+           && ops[1].code == opcode::special                   // input point
+           && ops[2].code == opcode::checkattenuationverify && ops[3].code == opcode::dup && ops[4].code == opcode::hash160 && ops[5].code == opcode::special && ops[5].data.size() == short_hash_size && ops[6].code == opcode::equalverify && ops[7].code == opcode::checksig;
 }
 
-bool operation::is_sign_multisig_pattern(const operation::stack& ops)
+bool operation::is_sign_multisig_pattern(const operation::stack &ops)
 {
     if (ops.size() < 2 || !is_push_only(ops))
         return false;
@@ -384,41 +329,41 @@ bool operation::is_sign_multisig_pattern(const operation::stack& ops)
     return true;
 }
 
-bool operation::is_sign_public_key_pattern(const operation::stack& ops)
+bool operation::is_sign_public_key_pattern(const operation::stack &ops)
 {
     return ops.size() == 1 && is_push_only(ops);
 }
 
-bool operation::is_sign_key_hash_pattern(const operation::stack& ops)
+bool operation::is_sign_key_hash_pattern(const operation::stack &ops)
 {
     return ops.size() == 2 && is_push_only(ops) &&
-        is_public_key(ops.back().data);
+           is_public_key(ops.back().data);
 }
 
-uint64_t operation::get_lock_height_from_sign_key_hash_with_lock_height(const operation::stack& ops)
+uint64_t operation::get_lock_height_from_sign_key_hash_with_lock_height(const operation::stack &ops)
 {
     CScriptNum num(ops[2].data, 1);
     return num.getint();
 }
 
-uint64_t operation::get_lock_height_from_pay_key_hash_with_lock_height(const operation::stack& ops)
+uint64_t operation::get_lock_height_from_pay_key_hash_with_lock_height(const operation::stack &ops)
 {
     CScriptNum num(ops[0].data, 1);
     return num.getint();
 }
 
-bool operation::is_sign_key_hash_with_lock_height_pattern(const operation::stack& ops)
+bool operation::is_sign_key_hash_with_lock_height_pattern(const operation::stack &ops)
 {
     return ops.size() == 3 && is_push_only(ops) &&
-        is_public_key((ops.begin()+1)->data);
+           is_public_key((ops.begin() + 1)->data);
 }
 
-bool operation::is_sign_script_hash_pattern(const operation::stack& ops)
+bool operation::is_sign_script_hash_pattern(const operation::stack &ops)
 {
     if (ops.size() < 2 || !is_push_only(ops))
         return false;
 
-    const auto& redeem_data = ops.back().data;
+    const auto &redeem_data = ops.back().data;
 
     if (redeem_data.empty())
         return false;
@@ -430,19 +375,15 @@ bool operation::is_sign_script_hash_pattern(const operation::stack& ops)
 
     // Is the redeem script a standard pay (output) script?
     const auto redeem_script_pattern = redeem_script.pattern();
-    return redeem_script_pattern == script_pattern::pay_multisig
-        || redeem_script_pattern == script_pattern::pay_public_key
-        || redeem_script_pattern == script_pattern::pay_key_hash
-        || redeem_script_pattern == script_pattern::pay_script_hash
-        || redeem_script_pattern == script_pattern::null_data;
+    return redeem_script_pattern == script_pattern::pay_multisig || redeem_script_pattern == script_pattern::pay_public_key || redeem_script_pattern == script_pattern::pay_key_hash || redeem_script_pattern == script_pattern::pay_script_hash || redeem_script_pattern == script_pattern::null_data;
 }
 
-const data_chunk& operation::get_model_param_from_pay_key_hash_with_attenuation_model(const operation::stack& ops)
+const data_chunk &operation::get_model_param_from_pay_key_hash_with_attenuation_model(const operation::stack &ops)
 {
     return ops[0].data;
 }
 
-const data_chunk& operation::get_input_point_from_pay_key_hash_with_attenuation_model(const operation::stack& ops)
+const data_chunk &operation::get_input_point_from_pay_key_hash_with_attenuation_model(const operation::stack &ops)
 {
     return ops[1].data;
 }
@@ -453,32 +394,27 @@ const data_chunk& operation::get_input_point_from_pay_key_hash_with_attenuation_
 operation::stack operation::to_null_data_pattern(data_slice data)
 {
     if (data.size() > max_null_data_size)
-        return{};
+        return {};
 
-    return operation::stack
-    {
-        { opcode::return_, {} },
-        { opcode::special, to_chunk(data) }
-    };
+    return operation::stack{
+        {opcode::return_, {}},
+        {opcode::special, to_chunk(data)}};
 }
 
 operation::stack operation::to_pay_public_key_pattern(data_slice point)
 {
     if (!is_public_key(point))
-        return{};
+        return {};
 
-    return operation::stack
-    {
-        { opcode::special, to_chunk(point) },
-        { opcode::checksig, {} }
-    };
+    return operation::stack{
+        {opcode::special, to_chunk(point)},
+        {opcode::checksig, {}}};
 }
 
 operation::stack operation::to_pay_multisig_pattern(uint8_t signatures,
-    const point_list& points)
+                                                    const point_list &points)
 {
-    const auto conversion = [](const ec_compressed& point)
-    {
+    const auto conversion = [](const ec_compressed &point) {
         return to_chunk(point);
     };
 
@@ -488,7 +424,7 @@ operation::stack operation::to_pay_multisig_pattern(uint8_t signatures,
 }
 
 operation::stack operation::to_pay_multisig_pattern(uint8_t signatures,
-    const data_stack& points)
+                                                    const data_stack &points)
 {
     static constexpr size_t op_1 = static_cast<uint8_t>(opcode::op_1);
     static constexpr size_t op_16 = static_cast<uint8_t>(opcode::op_16);
@@ -505,80 +441,70 @@ operation::stack operation::to_pay_multisig_pattern(uint8_t signatures,
     const auto op_n = static_cast<opcode>(points.size() + zero);
 
     operation::stack ops(points.size() + 3);
-    ops.push_back({ op_m, {} });
+    ops.push_back({op_m, {}});
 
-    for (const auto point: points)
+    for (const auto point : points)
     {
         if (!is_public_key(point))
-            return{};
+            return {};
 
-        ops.push_back({ opcode::special, point });
+        ops.push_back({opcode::special, point});
     }
 
-    ops.push_back({ op_n, {} });
-    ops.push_back({ opcode::checkmultisig, {} });
+    ops.push_back({op_n, {}});
+    ops.push_back({opcode::checkmultisig, {}});
     return ops;
 }
 
-operation::stack operation::to_pay_key_hash_pattern(const short_hash& hash)
+operation::stack operation::to_pay_key_hash_pattern(const short_hash &hash)
 {
-    return operation::stack
-    {
-        { opcode::dup, {} },
-        { opcode::hash160, {} },
-        { opcode::special, to_chunk(hash) },
-        { opcode::equalverify, {} },
-        { opcode::checksig, {} }
-    };
+    return operation::stack{
+        {opcode::dup, {}},
+        {opcode::hash160, {}},
+        {opcode::special, to_chunk(hash)},
+        {opcode::equalverify, {}},
+        {opcode::checksig, {}}};
 }
 
-operation::stack operation::to_pay_key_hash_with_lock_height_pattern(const short_hash& hash, uint32_t block_height)
+operation::stack operation::to_pay_key_hash_with_lock_height_pattern(const short_hash &hash, uint32_t block_height)
 {
-    return operation::stack
-    {
-        { opcode::special, CScriptNum::serialize(block_height) },
-        { opcode::numequalverify, {} },
-        { opcode::dup, {} },
-        { opcode::hash160, {} },
-        { opcode::special, to_chunk(hash) },
-        { opcode::equalverify, {} },
-        { opcode::checksig, {} }
-    };
+    return operation::stack{
+        {opcode::special, CScriptNum::serialize(block_height)},
+        {opcode::numequalverify, {}},
+        {opcode::dup, {}},
+        {opcode::hash160, {}},
+        {opcode::special, to_chunk(hash)},
+        {opcode::equalverify, {}},
+        {opcode::checksig, {}}};
 }
 
-operation::stack operation::to_pay_script_hash_pattern(const short_hash& hash)
+operation::stack operation::to_pay_script_hash_pattern(const short_hash &hash)
 {
-    return operation::stack
-    {
-        { opcode::hash160, {} },
-        { opcode::special, to_chunk(hash) },
-        { opcode::equal, {} }
-    };
+    return operation::stack{
+        {opcode::hash160, {}},
+        {opcode::special, to_chunk(hash)},
+        {opcode::equal, {}}};
 }
 
-operation::stack operation::to_pay_blackhole_pattern(const short_hash&)
+operation::stack operation::to_pay_blackhole_pattern(const short_hash &)
 {
-    return operation::stack
-    {
-        { opcode::return_, {} }
-    };
+    return operation::stack{
+        {opcode::return_, {}}};
 }
 
 operation::stack operation::to_pay_key_hash_with_attenuation_model_pattern(
-    const short_hash& hash, const std::string& model_param, const point& input_point)
+    const short_hash &hash, const std::string &model_param, const point &input_point)
 {
-    return operation::stack
-    {
-        { opcode::pushdata2, to_chunk(model_param) },
-        { opcode::special, input_point.to_data() },
-        { opcode::checkattenuationverify, {} },
-        { opcode::dup, {} },
-        { opcode::hash160, {} },
-        { opcode::special, to_chunk(hash) },
-        { opcode::equalverify, {} },
-        { opcode::checksig, {} }
-    };
+    return operation::stack{
+        {opcode::pushdata2, to_chunk(model_param)},
+        {opcode::special, input_point.to_data()},
+        {opcode::checkattenuationverify, {}},
+        {opcode::dup, {}},
+        {opcode::hash160, {}},
+        {opcode::special, to_chunk(hash)},
+        {opcode::equalverify, {}},
+        {opcode::checksig, {}}};
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

@@ -22,8 +22,10 @@
 
 #include <algorithm>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 bool conditional_stack::closed() const
 {
@@ -55,5 +57,5 @@ void conditional_stack::close()
     stack_.pop_back();
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
