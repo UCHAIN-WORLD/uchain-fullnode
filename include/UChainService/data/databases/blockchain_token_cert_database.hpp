@@ -28,8 +28,10 @@
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// This enables lookups of transactions by hash.
 /// An alternative and faster method is lookup from a unique index
@@ -38,10 +40,10 @@ namespace database {
 /// belonging to that block. These are stored with the block.
 class BCD_API blockchain_token_cert_database
 {
-public:
+  public:
     /// Construct the database.
-    blockchain_token_cert_database(const boost::filesystem::path& map_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    blockchain_token_cert_database(const boost::filesystem::path &map_filename,
+                                   std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~blockchain_token_cert_database();
@@ -58,21 +60,21 @@ public:
     /// Call to unload the memory map.
     bool close();
 
-    std::shared_ptr<token_cert> get(const hash_digest& hash) const;
+    std::shared_ptr<token_cert> get(const hash_digest &hash) const;
 
     /// Get all token certs
     std::shared_ptr<std::vector<token_cert>> get_blockchain_token_certs() const;
 
-    void store(const token_cert& sp_cert);
+    void store(const token_cert &sp_cert);
 
     /// Delete a transaction from database.
-    void remove(const hash_digest& hash);
+    void remove(const hash_digest &hash);
 
     /// Synchronise storage with disk so things are consistent.
     /// Should be done at the end of every block write.
     void sync();
 
-private:
+  private:
     typedef slab_hash_table<hash_digest> slab_map;
 
     // Hash table used for looking up txs by hash.
@@ -84,5 +86,3 @@ private:
 
 } // namespace database
 } // namespace libbitcoin
-
-

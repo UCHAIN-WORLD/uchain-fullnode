@@ -7,6 +7,6 @@
 #define ETH_BUILD_OS Linux
 #define ETH_BUILD_COMPILER g++
 #define ETH_BUILD_JIT_MODE Interpreter
-#define ETH_BUILD_PLATFORM Linux/g++/Interpreter
+#define ETH_BUILD_PLATFORM Linux / g++ / Interpreter
 #define ETH_BUILD_NUMBER 65535
 #define ETH_VERSION_SUFFIX ""

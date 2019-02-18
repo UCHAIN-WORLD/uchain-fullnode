@@ -22,8 +22,10 @@
 #include <cstdint>
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 using namespace chain;
 

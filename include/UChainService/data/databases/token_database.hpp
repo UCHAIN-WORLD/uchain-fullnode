@@ -32,30 +32,32 @@
 
 using namespace libbitcoin::chain;
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// This enables lookups of tokens by hash.
 /// An alternative and faster method is lookup from a unique index
 /// that is assigned upon storage.
 /// This database is used to store token issued from blockchain(not store local unissued tokens)
-class BCD_API token_database: public base_database
+class BCD_API token_database : public base_database
 {
 public:
-    /// Construct the database.
-    token_database(const boost::filesystem::path& map_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+  /// Construct the database.
+  token_database(const boost::filesystem::path &map_filename,
+                 std::shared_ptr<shared_mutex> mutex = nullptr);
 
-    /// Close the database (all threads must first be stopped).
-    ~token_database();
+  /// Close the database (all threads must first be stopped).
+  ~token_database();
 
-    /// get token info by symbol hash
-    token_result get_token_result(const hash_digest& hash) const;
-    /// get all tokens in the blockchain
-    std::shared_ptr<std::vector<token_detail>> get_token_details() const;
-    /// Store a token in the database. Returns a unique index
-    /// which can be used to reference the token.
-    void store(const hash_digest& hash, const token_detail& sp_detail);
+  /// get token info by symbol hash
+  token_result get_token_result(const hash_digest &hash) const;
+  /// get all tokens in the blockchain
+  std::shared_ptr<std::vector<token_detail>> get_token_details() const;
+  /// Store a token in the database. Returns a unique index
+  /// which can be used to reference the token.
+  void store(const hash_digest &hash, const token_detail &sp_detail);
 };
 
 } // namespace database

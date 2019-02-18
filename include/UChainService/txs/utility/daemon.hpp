@@ -21,11 +21,11 @@
 #ifndef INCLUDE_BITCOIN_BITCOIN_UTILITY_DAEMON_HPP_
 #define INCLUDE_BITCOIN_BITCOIN_UTILITY_DAEMON_HPP_
 
-
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 void daemon();
 
-}  // libbitcoin
+} // namespace libbitcoin
 
 #endif /* INCLUDE_BITCOIN_BITCOIN_UTILITY_DAEMON_HPP_ */

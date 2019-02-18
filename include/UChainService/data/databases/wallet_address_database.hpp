@@ -30,8 +30,10 @@
 //#include <UChain/database/result/wallet_address_result.hpp>  // todo -- remove later
 using namespace libbitcoin::chain;
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 struct BCD_API wallet_address_statinfo
 {
@@ -50,11 +52,11 @@ struct BCD_API wallet_address_statinfo
 /// which returns several rows giving the wallet_address for that address.
 class BCD_API wallet_address_database
 {
-public:
+  public:
     /// Construct the database.
-    wallet_address_database(const boost::filesystem::path& lookup_filename,
-        const boost::filesystem::path& rows_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    wallet_address_database(const boost::filesystem::path &lookup_filename,
+                            const boost::filesystem::path &rows_filename,
+                            std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~wallet_address_database();
@@ -72,18 +74,18 @@ public:
     bool close();
 
     /// store wallet address into database
-    void store(const short_hash& key, const wallet_address& wallet_address);
+    void store(const short_hash &key, const wallet_address &wallet_address);
 
     /// get wallet address vector by key
-    wallet_address::list get(const short_hash& key) const;
+    wallet_address::list get(const short_hash &key) const;
 
     /// get wallet address according by key and address
-    std::shared_ptr<wallet_address> get(const short_hash& key, const std::string& address) const;
+    std::shared_ptr<wallet_address> get(const short_hash &key, const std::string &address) const;
 
     /// Delete the last row that was added to key.
-    void delete_last_row(const short_hash& key);
+    void delete_last_row(const short_hash &key);
 
-    void safe_store(const short_hash& key, const wallet_address& address);
+    void safe_store(const short_hash &key, const wallet_address &address);
 
     /// Synchonise with disk.
     void sync();
@@ -91,7 +93,7 @@ public:
     /// Return statistical info about the database.
     wallet_address_statinfo statinfo() const;
 
-private:
+  private:
     typedef record_hash_table<short_hash> record_map;
     typedef record_multimap<short_hash> record_multiple_map;
 
@@ -112,4 +114,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

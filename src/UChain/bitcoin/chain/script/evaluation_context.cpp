@@ -22,8 +22,10 @@
 
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 data_chunk evaluation_context::pop_stack()
 {
@@ -32,5 +34,5 @@ data_chunk evaluation_context::pop_stack()
     return value;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

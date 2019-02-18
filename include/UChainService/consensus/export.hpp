@@ -25,8 +25,10 @@
 #include <UChainService/consensus/define.hpp>
 #include <UChainService/consensus/version.hpp>
 
-namespace libbitcoin {
-namespace consensus {
+namespace libbitcoin
+{
+namespace consensus
+{
 
 /**
  * Result values from calling verify_script.
@@ -189,10 +191,10 @@ typedef enum verify_flags_type
  * @param[in]  flags               Verification constraint flags.
  * @returns                        A script verification result code.
  */
- BCK_API verify_result_type verify_script(const unsigned char* transaction,
-    size_t transaction_size, const unsigned char* prevout_script,
-    size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags);
+BCK_API verify_result_type verify_script(const unsigned char *transaction,
+                                         size_t transaction_size, const unsigned char *prevout_script,
+                                         size_t prevout_script_size, unsigned int tx_input_index,
+                                         unsigned int flags);
 
 } // namespace consensus
 } // namespace libbitcoin

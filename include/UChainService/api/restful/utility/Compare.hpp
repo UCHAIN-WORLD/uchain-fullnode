@@ -23,75 +23,87 @@
  * @{
  */
 
-namespace mgbubble {
+namespace mgbubble
+{
 
 template <typename ValueT>
-class Comparable {
- public:
-  friend constexpr bool operator==(const ValueT& lhs, const ValueT& rhs) noexcept
+class Comparable
+{
+public:
+  friend constexpr bool operator==(const ValueT &lhs, const ValueT &rhs) noexcept
   {
     return lhs.compare(rhs) == 0;
   }
 
-  friend constexpr bool operator!=(const ValueT& lhs, const ValueT& rhs) noexcept
+  friend constexpr bool operator!=(const ValueT &lhs, const ValueT &rhs) noexcept
   {
     return lhs.compare(rhs) != 0;
   }
 
-  friend constexpr bool operator<(const ValueT& lhs, const ValueT& rhs) noexcept
+  friend constexpr bool operator<(const ValueT &lhs, const ValueT &rhs) noexcept
   {
     return lhs.compare(rhs) < 0;
   }
 
-  friend constexpr bool operator<=(const ValueT& lhs, const ValueT& rhs) noexcept
+  friend constexpr bool operator<=(const ValueT &lhs, const ValueT &rhs) noexcept
   {
     return lhs.compare(rhs) <= 0;
   }
 
-  friend constexpr bool operator>(const ValueT& lhs, const ValueT& rhs) noexcept
+  friend constexpr bool operator>(const ValueT &lhs, const ValueT &rhs) noexcept
   {
     return lhs.compare(rhs) > 0;
   }
 
-  friend constexpr bool operator>=(const ValueT& lhs, const ValueT& rhs) noexcept
+  friend constexpr bool operator>=(const ValueT &lhs, const ValueT &rhs) noexcept
   {
     return lhs.compare(rhs) >= 0;
   }
 
- protected:
+protected:
   ~Comparable() noexcept = default;
 };
 
-template <typename EnumT, typename std::enable_if_t<std::is_enum<EnumT>::value>* = nullptr>
+template <typename EnumT, typename std::enable_if_t<std::is_enum<EnumT>::value> * = nullptr>
 int compare(EnumT lhs, EnumT rhs) noexcept
 {
   int i = 0;
-  if (lhs < rhs) {
+  if (lhs < rhs)
+  {
     i = -1;
-  } else if (lhs > rhs) {
+  }
+  else if (lhs > rhs)
+  {
     i = 1;
-  } else {
+  }
+  else
+  {
     i = 0;
   }
   return i;
 }
 
 template <typename IntegralT,
-          typename std::enable_if_t<std::is_integral<IntegralT>::value>* = nullptr>
+          typename std::enable_if_t<std::is_integral<IntegralT>::value> * = nullptr>
 int compare(IntegralT lhs, IntegralT rhs) noexcept
 {
   int i = 0;
-  if (lhs < rhs) {
+  if (lhs < rhs)
+  {
     i = -1;
-  } else if (lhs > rhs) {
+  }
+  else if (lhs > rhs)
+  {
     i = 1;
-  } else {
+  }
+  else
+  {
     i = 0;
   }
   return i;
 }
 
-} // http
+} // namespace mgbubble
 
 /** @} */
 

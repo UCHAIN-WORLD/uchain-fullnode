@@ -74,17 +74,17 @@ using boost::format;
 
 const int printer::max_arguments = 256;
 
-printer::printer(const po::options_description& options,
-    const po::positional_options_description& arguments,
-    const std::string& application, const std::string& description,
-    const std::string& command)
+printer::printer(const po::options_description &options,
+                 const po::positional_options_description &arguments,
+                 const std::string &application, const std::string &description,
+                 const std::string &command)
     : options_(options), arguments_(arguments), application_(application),
-    description_(description), command_(command)
+      description_(description), command_(command)
 {
 }
 
-printer::printer(const po::options_description& settings,
-    const std::string& application, const std::string& description)
+printer::printer(const po::options_description &settings,
+                 const std::string &application, const std::string &description)
     : options_(settings), application_(application), description_(description)
 {
 }
@@ -92,23 +92,23 @@ printer::printer(const po::options_description& settings,
 /* Formatters */
 
 // 100% component tested.
-static void enqueue_fragment(std::string& fragment,
-    std::vector<std::string>& column)
+static void enqueue_fragment(std::string &fragment,
+                             std::vector<std::string> &column)
 {
     if (!fragment.empty())
         column.push_back(fragment);
 }
 
 // 100% component tested.
-std::vector<std::string> printer::columnize(const std::string& paragraph,
-    size_t width)
+std::vector<std::string> printer::columnize(const std::string &paragraph,
+                                            size_t width)
 {
     const auto words = split(paragraph, " ", false);
 
     std::string fragment;
     std::vector<std::string> column;
 
-    for (const auto& word: words)
+    for (const auto &word : words)
     {
         if (!fragment.empty() && (word.length() + fragment.length() < width))
         {
@@ -125,7 +125,7 @@ std::vector<std::string> printer::columnize(const std::string& paragraph,
 }
 
 // 100% component tested.
-static std::string format_row_name(const parameter& value)
+static std::string format_row_name(const parameter &value)
 {
     // We hack in upper case for all positional args because of a bug in
     // boost that requires environment variable options to be lower case
@@ -135,20 +135,24 @@ static std::string format_row_name(const parameter& value)
 
     if (value.get_position() != parameter::not_positional)
         return (format(BC_PRINTER_TABLE_ARGUMENT_FORMAT) %
-            boost::to_upper_copy(value.get_long_name())).str();
+                boost::to_upper_copy(value.get_long_name()))
+            .str();
     else if (value.get_short_name() == parameter::no_short_name)
         return (format(BC_PRINTER_TABLE_OPTION_LONG_FORMAT) %
-            value.get_long_name()).str();
+                value.get_long_name())
+            .str();
     else if (value.get_long_name().empty())
         return (format(BC_PRINTER_TABLE_OPTION_SHORT_FORMAT) %
-            value.get_short_name()).str();
+                value.get_short_name())
+            .str();
     else
         return (format(BC_PRINTER_TABLE_OPTION_FORMAT) %
-            value.get_short_name() % value.get_long_name()).str();
+                value.get_short_name() % value.get_long_name())
+            .str();
 }
 
 // 100% component tested.
-static bool match_positional(bool positional, const parameter& value)
+static bool match_positional(bool positional, const parameter &value)
 {
     auto positioned = value.get_position() != parameter::not_positional;
     return positioned == positional;
@@ -160,10 +164,10 @@ static bool match_positional(bool positional, const parameter& value)
 std::string printer::format_parameters_table(bool positional)
 {
     std::stringstream output;
-    const auto& parameters = get_parameters();
+    const auto &parameters = get_parameters();
     format table_format("%-20s %-52s\n");
 
-    for (const auto& parameter: parameters)
+    for (const auto &parameter : parameters)
     {
         // Skip positional arguments if not positional.
         if (!match_positional(positional, parameter))
@@ -176,7 +180,7 @@ std::string printer::format_parameters_table(bool positional)
         const auto rows = columnize(parameter.get_description(), 52);
 
         // If there is no description the command is not output!
-        for (const auto& row: rows)
+        for (const auto &row : rows)
         {
             output << table_format % name % row;
 
@@ -190,21 +194,21 @@ std::string printer::format_parameters_table(bool positional)
 
 // This formats to 73 char width: [ 73 | '\n' ]
 // GitHub code examples start horizontal scroll after 73 characters.
-std::string printer::format_paragraph(const std::string& paragraph)
+std::string printer::format_paragraph(const std::string &paragraph)
 {
     std::stringstream output;
     format paragraph_format("%-73s\n");
 
     const auto lines = columnize(paragraph, 73);
 
-    for (const auto& line: lines)
+    for (const auto &line : lines)
         output << paragraph_format % line;
 
     return output.str();
 }
 
-static std::string format_setting(const parameter& value,
-    const std::string& name)
+static std::string format_setting(const parameter &value,
+                                  const std::string &name)
 {
     // A required argument may only be preceeded by required arguments.
     // Requiredness may be in error if the metadata is inconsistent.
@@ -225,8 +229,8 @@ static std::string format_setting(const parameter& value,
 }
 
 // Requires a single period in each setting (i.e. no unnamed sections).
-static void split_setting_name(const parameter& value, std::string& name,
-    std::string& section)
+static void split_setting_name(const parameter &value, std::string &name,
+                               std::string &section)
 {
     const auto tokens = split(value.get_long_name(), ".");
     if (tokens.size() != 2)
@@ -247,8 +251,8 @@ std::string printer::format_settings_table()
     std::stringstream output;
     std::string preceding_section;
 
-    const auto& parameters = get_parameters();
-    for (const auto& parameter: parameters)
+    const auto &parameters = get_parameters();
+    for (const auto &parameter : parameters)
     {
         split_setting_name(parameter, name, section);
         if (section.empty())
@@ -268,7 +272,7 @@ std::string printer::format_settings_table()
         }
 
         output << format(BC_PRINTER_SETTING_COMMENT_FORMAT) %
-            parameter.get_description();
+                      parameter.get_description();
         output << format_setting(parameter, name);
     }
 
@@ -280,7 +284,7 @@ std::string printer::format_usage()
     // USAGE: bx COMMAND [-hvt] -n VALUE [-m VALUE] [-w VALUE]... REQUIRED
     // [OPTIONAL] [MULTIPLE]...
     auto usage = format(BC_PRINTER_USAGE_FORMAT) % get_application() %
-        get_command() % format_usage_parameters();
+                 get_command() % format_usage_parameters();
 
     return format_paragraph(usage.str());
 }
@@ -289,7 +293,7 @@ std::string printer::format_description()
 {
     // Info: %1%
     auto description = format(BC_PRINTER_DESCRIPTION_FORMAT) %
-        get_description();
+                       get_description();
     return format_paragraph(description.str());
 }
 
@@ -305,9 +309,9 @@ std::string printer::format_usage_parameters()
     std::vector<std::string> optional_arguments;
     std::vector<std::string> multiple_arguments;
 
-    const auto& parameters = get_parameters();
+    const auto &parameters = get_parameters();
 
-    for (const auto& parameter: parameters)
+    for (const auto &parameter : parameters)
     {
         // A required argument may only be preceeded by required arguments.
         // Requiredness may be in error if the metadata is inconsistent.
@@ -325,7 +329,7 @@ std::string printer::format_usage_parameters()
         // A toggle with a short name gets mashed up in group.
         auto is_short = parameter.get_short_name() != parameter::no_short_name;
 
-        const auto& long_name = parameter.get_long_name();
+        const auto &long_name = parameter.get_long_name();
 
         if (toggle)
         {
@@ -359,35 +363,35 @@ std::string printer::format_usage_parameters()
 
     if (!toggle_short_options.empty())
         usage << format(BC_PRINTER_USAGE_OPTION_TOGGLE_SHORT_FORMAT) %
-            toggle_short_options;
+                     toggle_short_options;
 
-    for (const auto& required_option: required_options)
+    for (const auto &required_option : required_options)
         usage << format(BC_PRINTER_USAGE_OPTION_REQUIRED_FORMAT) %
-            required_option % BC_PRINTER_VALUE_TEXT;
+                     required_option % BC_PRINTER_VALUE_TEXT;
 
-    for (const auto& toggle_long_option: toggle_long_options)
+    for (const auto &toggle_long_option : toggle_long_options)
         usage << format(BC_PRINTER_USAGE_OPTION_TOGGLE_LONG_FORMAT) %
-            toggle_long_option;
+                     toggle_long_option;
 
-    for (const auto& optional_option: optional_options)
+    for (const auto &optional_option : optional_options)
         usage << format(BC_PRINTER_USAGE_OPTION_OPTIONAL_FORMAT) %
-            optional_option % BC_PRINTER_VALUE_TEXT;
+                     optional_option % BC_PRINTER_VALUE_TEXT;
 
-    for (const auto& multiple_option: multiple_options)
+    for (const auto &multiple_option : multiple_options)
         usage << format(BC_PRINTER_USAGE_OPTION_MULTIPLE_FORMAT) %
-            multiple_option % BC_PRINTER_VALUE_TEXT;
+                     multiple_option % BC_PRINTER_VALUE_TEXT;
 
-    for (const auto& required_argument: required_arguments)
+    for (const auto &required_argument : required_arguments)
         usage << format(BC_PRINTER_USAGE_ARGUMENT_REQUIRED_FORMAT) %
-            required_argument;
+                     required_argument;
 
-    for (const auto& optional_argument: optional_arguments)
+    for (const auto &optional_argument : optional_arguments)
         usage << format(BC_PRINTER_USAGE_ARGUMENT_OPTIONAL_FORMAT) %
-            optional_argument;
+                     optional_argument;
 
-    for (const auto& multiple_argument: multiple_arguments)
+    for (const auto &multiple_argument : multiple_arguments)
         usage << format(BC_PRINTER_USAGE_ARGUMENT_MULTIPLE_FORMAT) %
-            multiple_argument;
+                     multiple_argument;
 
     return boost::trim_copy(usage.str());
 }
@@ -395,7 +399,7 @@ std::string printer::format_usage_parameters()
 /* Initialization */
 
 // 100% component tested.
-static void enqueue_name(int count, std::string& name, argument_list& names)
+static void enqueue_name(int count, std::string &name, argument_list &names)
 {
     if (count <= 0)
         return;
@@ -412,8 +416,8 @@ static void enqueue_name(int count, std::string& name, argument_list& names)
 void printer::generate_argument_names()
 {
     // Member values
-    const auto& arguments = get_arguments();
-    auto& argument_names = get_argument_names();
+    const auto &arguments = get_arguments();
+    auto &argument_names = get_argument_names();
 
     argument_names.clear();
     const auto max_total_arguments = arguments.max_total_count();
@@ -425,7 +429,8 @@ void printer::generate_argument_names()
 
     // We must enumerate all arguments to get the full set of names and counts.
     for (unsigned int position = 0; position < max_total_arguments &&
-        max_previous_argument <= max_arguments; ++position)
+                                    max_previous_argument <= max_arguments;
+         ++position)
     {
         argument_name = arguments.name_for_position(position);
 
@@ -441,14 +446,14 @@ void printer::generate_argument_names()
         }
 
         enqueue_name(max_previous_argument, previous_argument_name,
-            argument_names);
+                     argument_names);
         previous_argument_name = argument_name;
         max_previous_argument = 1;
     }
 
     // Save the previous name (if there is one).
     enqueue_name(max_previous_argument, previous_argument_name,
-        argument_names);
+                 argument_names);
 }
 
 // 100% component tested.
@@ -460,14 +465,14 @@ static bool compare_parameters(const parameter left, const parameter right)
 // 100% component tested.
 void printer::generate_parameters()
 {
-    const auto& argument_names = get_argument_names();
-    const auto& options = get_options();
-    auto& parameters = get_parameters();
+    const auto &argument_names = get_argument_names();
+    const auto &options = get_options();
+    auto &parameters = get_parameters();
 
     parameters.clear();
 
     parameter param;
-    for (auto option_ptr: options.options())
+    for (auto option_ptr : options.options())
     {
         param.initialize(*option_ptr, argument_names);
 
@@ -488,32 +493,38 @@ void printer::initialize()
 
 /* Printers */
 
-void printer::commandline(std::ostream& output)
+void printer::commandline(std::ostream &output)
 {
-    const auto& option_table = format_parameters_table(false);
-    const auto& argument_table = format_parameters_table(true);
+    const auto &option_table = format_parameters_table(false);
+    const auto &argument_table = format_parameters_table(true);
 
     // Don't write a header if a table is empty.
-    std::string option_table_header(option_table.empty() ? "" :
-        BC_PRINTER_OPTION_TABLE_HEADER "\n");
-    std::string argument_table_header(argument_table.empty() ? "" :
-        BC_PRINTER_ARGUMENT_TABLE_HEADER "\n");
+    std::string option_table_header(option_table.empty() ? "" : BC_PRINTER_OPTION_TABLE_HEADER "\n");
+    std::string argument_table_header(argument_table.empty() ? "" : BC_PRINTER_ARGUMENT_TABLE_HEADER "\n");
 
     output
-        << std::endl << format_usage()
-        << std::endl << format_description()
-        << std::endl << option_table_header
-        << std::endl << option_table
-        << std::endl << argument_table_header
-        << std::endl << argument_table;
+        << std::endl
+        << format_usage()
+        << std::endl
+        << format_description()
+        << std::endl
+        << option_table_header
+        << std::endl
+        << option_table
+        << std::endl
+        << argument_table_header
+        << std::endl
+        << argument_table;
 }
 
-void printer::settings(std::ostream& output)
+void printer::settings(std::ostream &output)
 {
-    const auto& setting_table = format_settings_table();
-    const auto& setting_table_header = BC_PRINTER_SETTINGS_TABLE_HEADER;
+    const auto &setting_table = format_settings_table();
+    const auto &setting_table_header = BC_PRINTER_SETTINGS_TABLE_HEADER;
 
     output
-        << std::endl << setting_table_header
-        << std::endl << setting_table;
+        << std::endl
+        << setting_table_header
+        << std::endl
+        << setting_table;
 }

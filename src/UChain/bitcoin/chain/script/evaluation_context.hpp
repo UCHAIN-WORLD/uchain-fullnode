@@ -28,12 +28,14 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include "conditional_stack.hpp"
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class evaluation_context
 {
-public:
+  public:
     data_chunk pop_stack();
 
     operation::stack::const_iterator code_begin;
@@ -44,7 +46,7 @@ public:
     uint32_t flags;
 };
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
 
 #endif

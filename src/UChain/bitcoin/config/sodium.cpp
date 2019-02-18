@@ -28,26 +28,28 @@
 #include <UChain/bitcoin/formats/base_85.hpp>
 #include <UChain/bitcoin/math/hash.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 sodium::sodium()
-  : value_(null_hash)
+    : value_(null_hash)
 {
 }
 
-sodium::sodium(const std::string& base85)
+sodium::sodium(const std::string &base85)
 {
     std::stringstream(base85) >> *this;
 }
 
-sodium::sodium(const hash_digest& value)
-  : value_(value)
+sodium::sodium(const hash_digest &value)
+    : value_(value)
 {
 }
 
-sodium::sodium(const sodium& other)
-  : sodium(other.value_)
+sodium::sodium(const sodium &other)
+    : sodium(other.value_)
 {
 }
 
@@ -73,7 +75,7 @@ std::string sodium::to_string() const
     return value.str();
 }
 
-std::istream& operator>>(std::istream& input, sodium& argument)
+std::istream &operator>>(std::istream &input, sodium &argument)
 {
     std::string base85;
     input >> base85;
@@ -89,7 +91,7 @@ std::istream& operator>>(std::istream& input, sodium& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const sodium& argument)
+std::ostream &operator<<(std::ostream &output, const sodium &argument)
 {
     std::string decoded;
 

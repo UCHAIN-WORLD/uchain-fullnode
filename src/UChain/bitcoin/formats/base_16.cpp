@@ -26,23 +26,23 @@
 #include <boost/algorithm/string.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 std::string encode_base16(data_slice data)
 {
     std::stringstream ss;
     ss << std::hex << std::setfill('0');
-    for (int val: data)
+    for (int val : data)
         ss << std::setw(2) << val;
     return ss.str();
 }
 
 bool is_base16(const char c)
 {
-    return
-        ('0' <= c && c <= '9') ||
-        ('A' <= c && c <= 'F') ||
-        ('a' <= c && c <= 'f');
+    return ('0' <= c && c <= '9') ||
+           ('A' <= c && c <= 'F') ||
+           ('a' <= c && c <= 'f');
 }
 
 static unsigned from_hex(const char c)
@@ -54,7 +54,7 @@ static unsigned from_hex(const char c)
     return c - '0';
 }
 
-bool decode_base16(data_chunk& out, const std::string& in)
+bool decode_base16(data_chunk &out, const std::string &in)
 {
     // This prevents a last odd character from being ignored:
     if (in.size() % 2 != 0)
@@ -75,7 +75,7 @@ std::string encode_hash(hash_digest hash)
     return encode_base16(hash);
 }
 
-bool decode_hash(hash_digest& out, const std::string& in)
+bool decode_hash(hash_digest &out, const std::string &in)
 {
     if (in.size() != 2 * hash_size)
         return false;
@@ -92,15 +92,16 @@ bool decode_hash(hash_digest& out, const std::string& in)
 hash_digest hash_literal(const char (&string)[2 * hash_size + 1])
 {
     hash_digest out;
-    DEBUG_ONLY(const auto success =) decode_base16_private(out.data(),
-        out.size(), string);
+    DEBUG_ONLY(const auto success =)
+    decode_base16_private(out.data(),
+                          out.size(), string);
     BITCOIN_ASSERT(success);
     std::reverse(out.begin(), out.end());
     return out;
 }
 
 // For support of template implementation only, do not call directly.
-bool decode_base16_private(uint8_t* out, size_t out_size, const char* in)
+bool decode_base16_private(uint8_t *out, size_t out_size, const char *in)
 {
     if (!std::all_of(in, in + 2 * out_size, is_base16))
         return false;

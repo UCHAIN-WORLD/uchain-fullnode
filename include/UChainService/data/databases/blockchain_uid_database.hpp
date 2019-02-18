@@ -29,8 +29,10 @@
 #include <UChain/database/primitives/slab_manager.hpp>
 #include <UChainService/txs/uid/blockchain_uid.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// This enables lookups of transactions by hash.
 /// An alternative and faster method is lookup from a unique index
@@ -40,66 +42,65 @@ namespace database {
 class BCD_API blockchain_uid_database
 {
 public:
-    /// Construct the database.
-    blockchain_uid_database(const boost::filesystem::path& map_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+  /// Construct the database.
+  blockchain_uid_database(const boost::filesystem::path &map_filename,
+                          std::shared_ptr<shared_mutex> mutex = nullptr);
 
-    /// Close the database (all threads must first be stopped).
-    ~blockchain_uid_database();
+  /// Close the database (all threads must first be stopped).
+  ~blockchain_uid_database();
 
-    /// Initialize a new transaction database.
-    bool create();
+  /// Initialize a new transaction database.
+  bool create();
 
-    /// Call before using the database.
-    bool start();
+  /// Call before using the database.
+  bool start();
 
-    /// Call to signal a stop of current operations.
-    bool stop();
+  /// Call to signal a stop of current operations.
+  bool stop();
 
-    /// Call to unload the memory map.
-    bool close();
+  /// Call to unload the memory map.
+  bool close();
 
-    std::shared_ptr<blockchain_uid> get(const hash_digest& hash) const;
+  std::shared_ptr<blockchain_uid> get(const hash_digest &hash) const;
 
-    ///
-    std::shared_ptr<std::vector<blockchain_uid> > get_history_uids(const hash_digest& hash) const;
-    ///
-    std::shared_ptr<std::vector<blockchain_uid> > get_blockchain_uids() const;
+  ///
+  std::shared_ptr<std::vector<blockchain_uid>> get_history_uids(const hash_digest &hash) const;
+  ///
+  std::shared_ptr<std::vector<blockchain_uid>> get_blockchain_uids() const;
 
-    /// 
-    std::shared_ptr<blockchain_uid> get_register_history(const std::string & uid_symbol) const;
-    ///
-    uint64_t get_register_height(const std::string & uid_symbol) const;
+  ///
+  std::shared_ptr<blockchain_uid> get_register_history(const std::string &uid_symbol) const;
+  ///
+  uint64_t get_register_height(const std::string &uid_symbol) const;
 
-    std::shared_ptr<std::vector<blockchain_uid> > getuids_from_address_history(
-        const std::string &address, const uint64_t& fromheight = 0
-        ,const uint64_t & toheight = max_uint64 ) const;
+  std::shared_ptr<std::vector<blockchain_uid>> getuids_from_address_history(
+      const std::string &address, const uint64_t &fromheight = 0, const uint64_t &toheight = max_uint64) const;
 
-    void store(const hash_digest& hash, const blockchain_uid& sp_detail);
+  void store(const hash_digest &hash, const blockchain_uid &sp_detail);
 
-    /// Delete a transaction from database.
-    void remove(const hash_digest& hash);
+  /// Delete a transaction from database.
+  void remove(const hash_digest &hash);
 
-    /// Synchronise storage with disk so things are consistent.
-    /// Should be done at the end of every block write.
-    void sync();
+  /// Synchronise storage with disk so things are consistent.
+  /// Should be done at the end of every block write.
+  void sync();
 
-    //pop back uid_detail
-    std::shared_ptr<blockchain_uid> pop_uid_transfer(const hash_digest &hash);
+  //pop back uid_detail
+  std::shared_ptr<blockchain_uid> pop_uid_transfer(const hash_digest &hash);
+
 protected:
-    /// update address status(current or old), default old
-     std::shared_ptr<blockchain_uid> update_address_status(const hash_digest& hash,uint32_t status = blockchain_uid::address_history);
-private:
-    typedef slab_hash_table<hash_digest> slab_map;
+  /// update address status(current or old), default old
+  std::shared_ptr<blockchain_uid> update_address_status(const hash_digest &hash, uint32_t status = blockchain_uid::address_history);
 
-    // Hash table used for looking up txs by hash.
-    memory_map lookup_file_;
-    slab_hash_table_header lookup_header_;
-    slab_manager lookup_manager_;
-    slab_map lookup_map_;
+private:
+  typedef slab_hash_table<hash_digest> slab_map;
+
+  // Hash table used for looking up txs by hash.
+  memory_map lookup_file_;
+  slab_hash_table_header lookup_header_;
+  slab_manager lookup_manager_;
+  slab_map lookup_map_;
 };
 
 } // namespace database
 } // namespace libbitcoin
-
-

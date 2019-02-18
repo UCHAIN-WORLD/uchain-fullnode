@@ -29,19 +29,23 @@
 using namespace libbitcoin::chain;
 
 // forward declaration
-namespace libbitcoin {
-namespace blockchain {
-    class block_chain_impl;
-    class validate_transaction;
-}
-}
+namespace libbitcoin
+{
+namespace blockchain
+{
+class block_chain_impl;
+class validate_transaction;
+} // namespace blockchain
+} // namespace libbitcoin
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class attenuation_model
 {
-public:
+  public:
     enum class model_type : uint8_t
     {
         none = 0,
@@ -55,30 +59,30 @@ public:
         invalid = 8
     };
 
-    attenuation_model(const std::string& param, bool is_init=false);
+    attenuation_model(const std::string &param, bool is_init = false);
 
     static uint8_t get_first_unused_index();
     static uint8_t to_index(model_type model);
     static model_type from_index(uint32_t index);
 
     static bool check_model_index(uint32_t index);
-    static bool validate_model_param(const data_chunk& param, uint64_t total_amount);
-    static code check_model_param(const blockchain::validate_transaction&);
-    static bool check_model_param_format(const data_chunk& param);
-    static bool check_model_param(const data_chunk& param, uint64_t total_amount);
-    static bool check_model_param_initial(std::string& param, uint64_t total_amount, bool is_init=false);
-    static bool check_model_param_un(attenuation_model& parser);
-    static bool check_model_param_common(attenuation_model& parser);
-    static bool check_model_param_uc_uq(attenuation_model& parser);
-    static bool check_model_param_inflation(attenuation_model& parser, uint64_t total_amount);
+    static bool validate_model_param(const data_chunk &param, uint64_t total_amount);
+    static code check_model_param(const blockchain::validate_transaction &);
+    static bool check_model_param_format(const data_chunk &param);
+    static bool check_model_param(const data_chunk &param, uint64_t total_amount);
+    static bool check_model_param_initial(std::string &param, uint64_t total_amount, bool is_init = false);
+    static bool check_model_param_un(attenuation_model &parser);
+    static bool check_model_param_common(attenuation_model &parser);
+    static bool check_model_param_uc_uq(attenuation_model &parser);
+    static bool check_model_param_inflation(attenuation_model &parser, uint64_t total_amount);
     static bool check_model_param_initial_fixed_inflation(
-        std::string& param, uint64_t total_amount, attenuation_model& parser, bool is_init=false);
-    static bool check_model_param_immutable(const data_chunk& previous, const data_chunk& current);
+        std::string &param, uint64_t total_amount, attenuation_model &parser, bool is_init = false);
+    static bool check_model_param_immutable(const data_chunk &previous, const data_chunk &current);
     static uint64_t get_available_token_amount(uint64_t token_amount, uint64_t diff_height,
-            const data_chunk& model_param, std::shared_ptr<data_chunk> new_param_ptr = nullptr);
-    static uint64_t get_diff_height(const data_chunk& prev_param, const data_chunk& param);
+                                               const data_chunk &model_param, std::shared_ptr<data_chunk> new_param_ptr = nullptr);
+    static uint64_t get_diff_height(const data_chunk &prev_param, const data_chunk &param);
 
-    const std::string& get_model_param() const;
+    const std::string &get_model_param() const;
     data_chunk get_new_model_param(uint64_t PN, uint64_t LH) const;
 
     // mutable params of the model
@@ -86,18 +90,19 @@ public:
     uint64_t get_latest_lock_height() const;    // LH  latest lock height
 
     // immutable params of the model
-    model_type get_model_type() const;       // TYPE attenuation model type
-    uint64_t get_locked_quantity() const;    // LQ  total locked quantity
-    uint64_t get_locked_period() const;      // LP  total locked period
-    uint64_t get_unlock_number() const;      // UN  total unlock numbers
-    uint64_t get_inflation_rate() const;     // IR  inflation rate
-    const std::vector<uint64_t>& get_unlock_cycles() const;        // UCt size()==1 means fixed cycle
-    const std::vector<uint64_t>& get_unlocked_quantities() const;  // UQt size()==1 means fixed quantity
+    model_type get_model_type() const;                            // TYPE attenuation model type
+    uint64_t get_locked_quantity() const;                         // LQ  total locked quantity
+    uint64_t get_locked_period() const;                           // LP  total locked period
+    uint64_t get_unlock_number() const;                           // UN  total unlock numbers
+    uint64_t get_inflation_rate() const;                          // IR  inflation rate
+    const std::vector<uint64_t> &get_unlock_cycles() const;       // UCt size()==1 means fixed cycle
+    const std::vector<uint64_t> &get_unlocked_quantities() const; // UQt size()==1 means fixed quantity
 
-    static bool is_multi_value_key(const std::string& key);
-    static std::string get_name_of_key(const std::string& key);
-    static std::string get_key_of_name(const std::string& name);
-private:
+    static bool is_multi_value_key(const std::string &key);
+    static std::string get_name_of_key(const std::string &key);
+    static std::string get_key_of_name(const std::string &name);
+
+  private:
     class impl;
     std::unique_ptr<impl> pimpl;
 };
@@ -106,4 +111,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

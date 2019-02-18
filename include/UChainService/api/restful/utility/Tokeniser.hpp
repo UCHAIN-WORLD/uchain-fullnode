@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <UChainService/api/restful//utility/String.hpp>
+#include <UChainService/api/restful/utility/String.hpp>
 
 #include <algorithm>
 
@@ -25,22 +25,24 @@
  * @{
  */
 
-namespace mgbubble {
+namespace mgbubble
+{
 
 template <char DelimN>
-class Tokeniser {
- public:
+class Tokeniser
+{
+public:
   explicit Tokeniser(string_view buf) noexcept { reset(buf); }
   explicit Tokeniser() noexcept { reset(""); }
   ~Tokeniser() noexcept = default;
 
   // Copy.
-  Tokeniser(const Tokeniser& rhs) noexcept = default;
-  Tokeniser& operator=(const Tokeniser& rhs) noexcept = default;
+  Tokeniser(const Tokeniser &rhs) noexcept = default;
+  Tokeniser &operator=(const Tokeniser &rhs) noexcept = default;
 
   // Move.
-  Tokeniser(Tokeniser&&) noexcept = default;
-  Tokeniser& operator=(Tokeniser&&) noexcept = default;
+  Tokeniser(Tokeniser &&) noexcept = default;
+  Tokeniser &operator=(Tokeniser &&) noexcept = default;
 
   string_view top() const noexcept { return buf_.substr(i_ - buf_.cbegin(), j_ - i_); }
   bool empty() const noexcept { return i_ == buf_.cend(); }
@@ -52,19 +54,22 @@ class Tokeniser {
   }
   void pop() noexcept
   {
-    if (j_ != buf_.cend()) {
+    if (j_ != buf_.cend())
+    {
       i_ = j_ + 1;
       j_ = std::find(i_, buf_.cend(), DelimN);
-    } else {
+    }
+    else
+    {
       i_ = j_;
     }
   }
 
- private:
+private:
   string_view buf_;
   string_view::const_iterator i_, j_;
 };
 
-} // http
+} // namespace mgbubble
 
 /** @} */

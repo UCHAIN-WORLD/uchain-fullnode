@@ -31,15 +31,18 @@
 #include <UChain/bitcoin/utility/writer.hpp>
 #include <UChain/bitcoin/chain/history.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 BC_CONSTEXPR size_t TOKEN_TRANSFER_SYMBOL_FIX_SIZE = 64;
 BC_CONSTEXPR size_t TOKEN_TRANSFER_QUANTITY_FIX_SIZE = 8;
 
 BC_CONSTEXPR size_t TOKEN_TRANSFER_FIX_SIZE = TOKEN_TRANSFER_SYMBOL_FIX_SIZE + TOKEN_TRANSFER_QUANTITY_FIX_SIZE;
 
-struct token_balances {
+struct token_balances
+{
     typedef std::vector<token_balances> list;
     std::string symbol;
     std::string address;
@@ -47,21 +50,18 @@ struct token_balances {
     uint64_t locked_token;
 
     // for sort
-    bool operator< (const token_balances& other) const;
+    bool operator<(const token_balances &other) const;
 };
 
-struct token_deposited_balance {
-    token_deposited_balance(const std::string& symbol_,
-        const std::string& address_,
-        const std::string& tx_hash_,
-        uint64_t tx_height_)
-        : symbol(symbol_)
-        , address(address_)
-        , tx_hash(tx_hash_)
-        , tx_height(tx_height_)
-        , unspent_token(0)
-        , locked_token(0)
-    {}
+struct token_deposited_balance
+{
+    token_deposited_balance(const std::string &symbol_,
+                            const std::string &address_,
+                            const std::string &tx_hash_,
+                            uint64_t tx_height_)
+        : symbol(symbol_), address(address_), tx_hash(tx_hash_), tx_height(tx_height_), unspent_token(0), locked_token(0)
+    {
+    }
 
     std::string symbol;
     std::string address;
@@ -72,7 +72,8 @@ struct token_deposited_balance {
     uint64_t locked_token;
 
     // for sort
-    bool operator< (const token_deposited_balance& other) const {
+    bool operator<(const token_deposited_balance &other) const
+    {
         typedef std::tuple<std::string, uint64_t> cmp_tuple;
         return cmp_tuple(symbol, tx_height) < cmp_tuple(other.symbol, other.tx_height);
     }
@@ -82,33 +83,33 @@ struct token_deposited_balance {
 
 class BC_API token_transfer
 {
-public:
+  public:
     token_transfer();
-    token_transfer(const std::string& symbol, uint64_t quantity);
-    static token_transfer factory_from_data(const data_chunk& data);
-    static token_transfer factory_from_data(std::istream& stream);
-    static token_transfer factory_from_data(reader& source);
+    token_transfer(const std::string &symbol, uint64_t quantity);
+    static token_transfer factory_from_data(const data_chunk &data);
+    static token_transfer factory_from_data(std::istream &stream);
+    static token_transfer factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
 
     std::string to_string() const;
 
     bool is_valid() const;
     void reset();
     uint64_t serialized_size() const;
-    const std::string& get_symbol() const;
-    void set_symbol(const std::string& symbol);
+    const std::string &get_symbol() const;
+    void set_symbol(const std::string &symbol);
     uint64_t get_quantity() const;
     void set_quantity(uint64_t quantity);
 
-private:
-    std::string symbol;  // symbol  -- in block
+  private:
+    std::string symbol; // symbol  -- in block
     uint64_t quantity;  // -- in block
 };
 
@@ -116,4 +117,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

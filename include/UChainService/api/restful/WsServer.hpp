@@ -22,13 +22,15 @@
 #include <memory>
 #include <mongoose/mongoose.h>
 
-namespace mgbubble {
-class MgServer {
-public:
+namespace mgbubble
+{
+class MgServer
+{
+  public:
     static constexpr auto NAME = "wsserver";
 
-public:
-    explicit MgServer(const std::string& svr_addr) : svr_addr_(svr_addr), running_(false)
+  public:
+    explicit MgServer(const std::string &svr_addr) : svr_addr_(svr_addr), running_(false)
     {
         mg_mgr_init(&mgr_, this);
         nc_ = mg_bind(&mgr_, svr_addr_.c_str(), ev_handler);
@@ -47,44 +49,44 @@ public:
     virtual bool start();
     virtual void stop();
     bool stopped() { return running_ == false; }
-    bool is_websocket(const struct mg_connection& nc) const { return !!(nc.flags & MG_F_IS_WEBSOCKET); }
-    bool is_listen_socket(const struct mg_connection& nc) const { return !!(nc.flags & MG_F_USER_1); }
+    bool is_websocket(const struct mg_connection &nc) const { return !!(nc.flags & MG_F_IS_WEBSOCKET); }
+    bool is_listen_socket(const struct mg_connection &nc) const { return !!(nc.flags & MG_F_USER_1); }
 
     // DO NOT CALL IN WsServer Worker Thread
     // on_broadcast called after broadcasted
     // max buffer is 8k (mongoose default)
-    bool broadcast(const std::string& msg);
-    bool broadcast(const char* msg, size_t len);
+    bool broadcast(const std::string &msg);
+    bool broadcast(const char *msg, size_t len);
 
-protected:
+  protected:
     // ONLY CALLED IN WsServer Worker Thread
-    bool send_frame(struct mg_connection& nc, const std::string& msg, bool binary = false);
-    bool send_frame(struct mg_connection& nc, const char* msg, size_t len, bool binary = false);
+    bool send_frame(struct mg_connection &nc, const std::string &msg, bool binary = false);
+    bool send_frame(struct mg_connection &nc, const char *msg, size_t len, bool binary = false);
 
-protected:
-    struct mg_mgr& mg_mgr() { return mgr_; }
-    struct mg_connection& mg_listen() { return *nc_; }
+  protected:
+    struct mg_mgr &mg_mgr() { return mgr_; }
+    struct mg_connection &mg_listen() { return *nc_; }
 
-protected:
+  protected:
     virtual void run();
 
-    virtual void on_ws_handshake_req_handler(struct mg_connection& nc, http_message& msg);
-    virtual void on_ws_handshake_done_handler(struct mg_connection& nc);
-    virtual void on_ws_frame_handler(struct mg_connection& nc, websocket_message& msg);
-    virtual void on_ws_ctrlf_handler(struct mg_connection& nc, websocket_message& msg);
-    virtual void on_timer_handler(struct mg_connection& nc);
-    virtual void on_close_handler(struct mg_connection& nc);
+    virtual void on_ws_handshake_req_handler(struct mg_connection &nc, http_message &msg);
+    virtual void on_ws_handshake_done_handler(struct mg_connection &nc);
+    virtual void on_ws_frame_handler(struct mg_connection &nc, websocket_message &msg);
+    virtual void on_ws_ctrlf_handler(struct mg_connection &nc, websocket_message &msg);
+    virtual void on_timer_handler(struct mg_connection &nc);
+    virtual void on_close_handler(struct mg_connection &nc);
 
     // called for each connection after broadcast
-    virtual void on_broadcast(struct mg_connection& nc, const char* ev_data);
+    virtual void on_broadcast(struct mg_connection &nc, const char *ev_data);
 
     virtual void ev_handler_default(struct mg_connection *nc, int ev, void *ev_data);
 
-protected:
+  protected:
     static void ev_broadcast(struct mg_connection *nc, int ev, void *ev_data);
     static void ev_handler(struct mg_connection *nc, int ev, void *ev_data);
 
-private:
+  private:
     struct mg_mgr mgr_;
     struct mg_connection *nc_;
     struct mg_serve_http_opts s_http_server_opts_;
@@ -93,6 +95,6 @@ private:
     std::atomic<bool> running_;
     std::shared_ptr<std::thread> worker_;
 };
-}
+} // namespace mgbubble
 
 #endif

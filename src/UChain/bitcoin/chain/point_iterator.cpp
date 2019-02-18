@@ -22,23 +22,25 @@
 #include <UChain/bitcoin/chain/point.hpp>
 #include <UChain/bitcoin/utility/endian.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 static BC_CONSTEXPR uint8_t max_offset = hash_size + sizeof(uint32_t);
 
-point_iterator::point_iterator(const point& value)
-  : point_(value), offset_(0)
+point_iterator::point_iterator(const point &value)
+    : point_(value), offset_(0)
 {
 }
 
-point_iterator::point_iterator(const point& value, bool end)
-  : point_(value), offset_(end ? max_offset : 0)
+point_iterator::point_iterator(const point &value, bool end)
+    : point_(value), offset_(end ? max_offset : 0)
 {
 }
 
-point_iterator::point_iterator(const point& value, uint8_t offset)
-  : point_(value), offset_(offset)
+point_iterator::point_iterator(const point &value, uint8_t offset)
+    : point_(value), offset_(offset)
 {
 }
 
@@ -71,17 +73,17 @@ point_iterator::pointer point_iterator::operator->() const
     return 0;
 }
 
-bool point_iterator::operator==(const iterator& other) const
+bool point_iterator::operator==(const iterator &other) const
 {
     return (point_ == other.point_) && (offset_ == other.offset_);
 }
 
-bool point_iterator::operator!=(const iterator& other) const
+bool point_iterator::operator!=(const iterator &other) const
 {
     return !(*this == other);
 }
 
-point_iterator::iterator& point_iterator::operator++()
+point_iterator::iterator &point_iterator::operator++()
 {
     increment();
     return *this;
@@ -94,7 +96,7 @@ point_iterator::iterator point_iterator::operator++(int)
     return it;
 }
 
-point_iterator::iterator& point_iterator::operator--()
+point_iterator::iterator &point_iterator::operator--()
 {
     decrement();
     return *this;
@@ -119,5 +121,5 @@ void point_iterator::decrement()
         offset_--;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

@@ -17,39 +17,40 @@
 #pragma once
 
 #include <iosfwd>
-#include <UChainService/api/restful//exception/Exception.hpp>
-
+#include <UChainService/api/restful/exception/Exception.hpp>
 
 /**
  * @addtogroup Exception
  * @{
  */
 
-namespace mgbubble {
+namespace mgbubble
+{
 
-class UC_API ServException : public Exception {
-public:
+class UC_API ServException : public Exception
+{
+  public:
     explicit ServException(string_view what) noexcept : Exception{what} {}
     ~ServException() noexcept override;
 
     // Copy.
-    ServException(const ServException&) noexcept = default;
-    ServException& operator=(const ServException&) noexcept = default;
+    ServException(const ServException &) noexcept = default;
+    ServException &operator=(const ServException &) noexcept = default;
 
     // Move.
-    ServException(ServException&&) noexcept = default;
-    ServException& operator=(ServException&&) noexcept = default;
+    ServException(ServException &&) noexcept = default;
+    ServException &operator=(ServException &&) noexcept = default;
 
-    static void toJson(int status, const char* reason, const char* detail, std::ostream& os);
+    static void toJson(int status, const char *reason, const char *detail, std::ostream &os);
 
-    void toJson(std::ostream& os) const { toJson(httpStatus(), httpReason(), what(), os); }
+    void toJson(std::ostream &os) const { toJson(httpStatus(), httpReason(), what(), os); }
 
     virtual int httpStatus() const noexcept = 0;
 
-    virtual const char* httpReason() const noexcept = 0;
+    virtual const char *httpReason() const noexcept = 0;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const ServException& e)
+inline std::ostream &operator<<(std::ostream &os, const ServException &e)
 {
     e.toJson(os);
     return os;
@@ -59,40 +60,43 @@ inline std::ostream& operator<<(std::ostream& os, const ServException& e)
  * The request could not be understood by the server due to malformed syntax. The client SHOULD NOT
  * repeat the request without modifications.
  */
-class UC_API BadRequestException : public ServException {
-public:
+class UC_API BadRequestException : public ServException
+{
+  public:
     explicit BadRequestException(string_view what) noexcept : ServException{what} {}
     ~BadRequestException() noexcept override;
 
     // Copy.
-    BadRequestException(const BadRequestException&) noexcept = default;
-    BadRequestException& operator=(const BadRequestException&) noexcept = default;
+    BadRequestException(const BadRequestException &) noexcept = default;
+    BadRequestException &operator=(const BadRequestException &) noexcept = default;
 
     // Move.
-    BadRequestException(BadRequestException&&) noexcept = default;
-    BadRequestException& operator=(BadRequestException&&) noexcept = default;
+    BadRequestException(BadRequestException &&) noexcept = default;
+    BadRequestException &operator=(BadRequestException &&) noexcept = default;
 
     int httpStatus() const noexcept override;
 
-    const char* httpReason() const noexcept override;
+    const char *httpReason() const noexcept override;
 };
 
-class UC_API AlreadyExistsException : public BadRequestException {
-public:
+class UC_API AlreadyExistsException : public BadRequestException
+{
+  public:
     explicit AlreadyExistsException(string_view what) noexcept : BadRequestException{what} {}
     ~AlreadyExistsException() noexcept override;
 
     // Copy.
-    AlreadyExistsException(const AlreadyExistsException&) noexcept = default;
-    AlreadyExistsException& operator=(const AlreadyExistsException&) noexcept = default;
+    AlreadyExistsException(const AlreadyExistsException &) noexcept = default;
+    AlreadyExistsException &operator=(const AlreadyExistsException &) noexcept = default;
 
     // Move.
-    AlreadyExistsException(AlreadyExistsException&&) noexcept = default;
-    AlreadyExistsException& operator=(AlreadyExistsException&&) noexcept = default;
+    AlreadyExistsException(AlreadyExistsException &&) noexcept = default;
+    AlreadyExistsException &operator=(AlreadyExistsException &&) noexcept = default;
 };
 
-class UC_API RefAlreadyExistsException : public AlreadyExistsException {
-public:
+class UC_API RefAlreadyExistsException : public AlreadyExistsException
+{
+  public:
     explicit RefAlreadyExistsException(string_view what) noexcept : AlreadyExistsException{what}
     {
     }
@@ -101,26 +105,27 @@ public:
     ~RefAlreadyExistsException() noexcept override;
 
     // Copy.
-    RefAlreadyExistsException(const RefAlreadyExistsException&) noexcept = default;
-    RefAlreadyExistsException& operator=(const RefAlreadyExistsException&) noexcept = default;
+    RefAlreadyExistsException(const RefAlreadyExistsException &) noexcept = default;
+    RefAlreadyExistsException &operator=(const RefAlreadyExistsException &) noexcept = default;
 
     // Move.
-    RefAlreadyExistsException(RefAlreadyExistsException&&) noexcept = default;
-    RefAlreadyExistsException& operator=(RefAlreadyExistsException&&) noexcept = default;
+    RefAlreadyExistsException(RefAlreadyExistsException &&) noexcept = default;
+    RefAlreadyExistsException &operator=(RefAlreadyExistsException &&) noexcept = default;
 };
 
-class UC_API InvalidException : public BadRequestException {
-public:
+class UC_API InvalidException : public BadRequestException
+{
+  public:
     explicit InvalidException(string_view what) noexcept : BadRequestException{what} {}
     ~InvalidException() noexcept override;
 
     // Copy.
-    InvalidException(const InvalidException&) noexcept = default;
-    InvalidException& operator=(const InvalidException&) noexcept = default;
+    InvalidException(const InvalidException &) noexcept = default;
+    InvalidException &operator=(const InvalidException &) noexcept = default;
 
     // Move.
-    InvalidException(InvalidException&&) noexcept = default;
-    InvalidException& operator=(InvalidException&&) noexcept = default;
+    InvalidException(InvalidException &&) noexcept = default;
+    InvalidException &operator=(InvalidException &&) noexcept = default;
 };
 
 /**
@@ -130,43 +135,45 @@ public:
  * in the entity. If the server does not wish to make this information available to the client, the
  * status code 404 (Not Found) can be used instead.
  */
-class UC_API ForbiddenException : public ServException {
-public:
+class UC_API ForbiddenException : public ServException
+{
+  public:
     explicit ForbiddenException(string_view what) noexcept : ServException{what} {}
     ~ForbiddenException() noexcept override;
 
     // Copy.
-    ForbiddenException(const ForbiddenException&) noexcept = default;
-    ForbiddenException& operator=(const ForbiddenException&) noexcept = default;
+    ForbiddenException(const ForbiddenException &) noexcept = default;
+    ForbiddenException &operator=(const ForbiddenException &) noexcept = default;
 
     // Move.
-    ForbiddenException(ForbiddenException&&) noexcept = default;
-    ForbiddenException& operator=(ForbiddenException&&) noexcept = default;
+    ForbiddenException(ForbiddenException &&) noexcept = default;
+    ForbiddenException &operator=(ForbiddenException &&) noexcept = default;
 
     int httpStatus() const noexcept override;
 
-    const char* httpReason() const noexcept override;
+    const char *httpReason() const noexcept override;
 };
 
 /**
  * The server encountered an unexpected condition which prevented it from fulfilling the request.
  */
-class UC_API InternalException : public ServException {
-public:
+class UC_API InternalException : public ServException
+{
+  public:
     explicit InternalException(string_view what) noexcept : ServException{what} {}
     ~InternalException() noexcept override;
 
     // Copy.
-    InternalException(const InternalException&) noexcept = default;
-    InternalException& operator=(const InternalException&) noexcept = default;
+    InternalException(const InternalException &) noexcept = default;
+    InternalException &operator=(const InternalException &) noexcept = default;
 
     // Move.
-    InternalException(InternalException&&) noexcept = default;
-    InternalException& operator=(InternalException&&) noexcept = default;
+    InternalException(InternalException &&) noexcept = default;
+    InternalException &operator=(InternalException &&) noexcept = default;
 
     int httpStatus() const noexcept override;
 
-    const char* httpReason() const noexcept override;
+    const char *httpReason() const noexcept override;
 };
 
 /**
@@ -174,22 +181,23 @@ public:
  * Request-URI. The response MUST include an Allow header containing a list of valid methods for the
  * requested resource.
  */
-class UC_API MethodNotAllowedException : public ServException {
-public:
+class UC_API MethodNotAllowedException : public ServException
+{
+  public:
     explicit MethodNotAllowedException(string_view what) noexcept : ServException{what} {}
     ~MethodNotAllowedException() noexcept override;
 
     // Copy.
-    MethodNotAllowedException(const MethodNotAllowedException&) noexcept = default;
-    MethodNotAllowedException& operator=(const MethodNotAllowedException&) noexcept = default;
+    MethodNotAllowedException(const MethodNotAllowedException &) noexcept = default;
+    MethodNotAllowedException &operator=(const MethodNotAllowedException &) noexcept = default;
 
     // Move.
-    MethodNotAllowedException(MethodNotAllowedException&&) noexcept = default;
-    MethodNotAllowedException& operator=(MethodNotAllowedException&&) noexcept = default;
+    MethodNotAllowedException(MethodNotAllowedException &&) noexcept = default;
+    MethodNotAllowedException &operator=(MethodNotAllowedException &&) noexcept = default;
 
     int httpStatus() const noexcept override;
 
-    const char* httpReason() const noexcept override;
+    const char *httpReason() const noexcept override;
 };
 
 /**
@@ -200,22 +208,23 @@ public:
  * not wish to reveal exactly why the request has been refused, or when no other response is
  * applicable.
  */
-class UC_API NotFoundException : public ServException {
-public:
+class UC_API NotFoundException : public ServException
+{
+  public:
     explicit NotFoundException(string_view what) noexcept : ServException{what} {}
     ~NotFoundException() noexcept override;
 
     // Copy.
-    NotFoundException(const NotFoundException&) noexcept = default;
-    NotFoundException& operator=(const NotFoundException&) noexcept = default;
+    NotFoundException(const NotFoundException &) noexcept = default;
+    NotFoundException &operator=(const NotFoundException &) noexcept = default;
 
     // Move.
-    NotFoundException(NotFoundException&&) noexcept = default;
-    NotFoundException& operator=(NotFoundException&&) noexcept = default;
+    NotFoundException(NotFoundException &&) noexcept = default;
+    NotFoundException &operator=(NotFoundException &&) noexcept = default;
 
     int httpStatus() const noexcept override;
 
-    const char* httpReason() const noexcept override;
+    const char *httpReason() const noexcept override;
 };
 
 /**
@@ -225,22 +234,23 @@ public:
  * header. If no Retry-After is given, the client SHOULD handle the response as it would for a 500
  * response.
  */
-class UC_API ServiceUnavailableException : public ServException {
-public:
+class UC_API ServiceUnavailableException : public ServException
+{
+  public:
     explicit ServiceUnavailableException(string_view what) noexcept : ServException{what} {}
     ~ServiceUnavailableException() noexcept override;
 
     // Copy.
-    ServiceUnavailableException(const ServiceUnavailableException&) noexcept = default;
-    ServiceUnavailableException& operator=(const ServiceUnavailableException&) noexcept = default;
+    ServiceUnavailableException(const ServiceUnavailableException &) noexcept = default;
+    ServiceUnavailableException &operator=(const ServiceUnavailableException &) noexcept = default;
 
     // Move.
-    ServiceUnavailableException(ServiceUnavailableException&&) noexcept = default;
-    ServiceUnavailableException& operator=(ServiceUnavailableException&&) noexcept = default;
+    ServiceUnavailableException(ServiceUnavailableException &&) noexcept = default;
+    ServiceUnavailableException &operator=(ServiceUnavailableException &&) noexcept = default;
 
     int httpStatus() const noexcept override;
 
-    const char* httpReason() const noexcept override;
+    const char *httpReason() const noexcept override;
 };
 
 /**
@@ -254,25 +264,25 @@ public:
  * include relevant diagnostic information. HTTP access authentication is explained in "HTTP
  * Authentication: Basic and Digest Access Authentication".
  */
-class UC_API UnauthorizedException : public ServException {
-public:
+class UC_API UnauthorizedException : public ServException
+{
+  public:
     explicit UnauthorizedException(string_view what) noexcept : ServException{what} {}
     ~UnauthorizedException() noexcept override;
 
     // Copy.
-    UnauthorizedException(const UnauthorizedException&) noexcept = default;
-    UnauthorizedException& operator=(const UnauthorizedException&) noexcept = default;
+    UnauthorizedException(const UnauthorizedException &) noexcept = default;
+    UnauthorizedException &operator=(const UnauthorizedException &) noexcept = default;
 
     // Move.
-    UnauthorizedException(UnauthorizedException&&) noexcept = default;
-    UnauthorizedException& operator=(UnauthorizedException&&) noexcept = default;
+    UnauthorizedException(UnauthorizedException &&) noexcept = default;
+    UnauthorizedException &operator=(UnauthorizedException &&) noexcept = default;
 
     int httpStatus() const noexcept override;
 
-    const char* httpReason() const noexcept override;
+    const char *httpReason() const noexcept override;
 };
 
-} // mgbubble
+} // namespace mgbubble
 
 /** @} */
-

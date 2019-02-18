@@ -31,32 +31,34 @@
 
 using namespace libbitcoin::chain;
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 /// This enables lookups of wallets by hash.
 /// An alternative and faster method is lookup from a unique index
 /// that is assigned upon storage.
 /// This is so we can quickly reconstruct blocks given a list of tx indexes
 /// belonging to that block. These are stored with the block.
-class BCD_API wallet_database: public base_database
+class BCD_API wallet_database : public base_database
 {
-public:
+  public:
     /// Construct the database.
-    wallet_database(const boost::filesystem::path& map_filename,
-        std::shared_ptr<shared_mutex> mutex=nullptr);
+    wallet_database(const boost::filesystem::path &map_filename,
+                    std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
     ~wallet_database();
 
-    void set_admin(const std::string& name, const std::string& passwd);
+    void set_admin(const std::string &name, const std::string &passwd);
     /// get wallet info by symbol hash
-    wallet_result get_wallet_result(const hash_digest& hash) const;
+    wallet_result get_wallet_result(const hash_digest &hash) const;
     std::shared_ptr<std::vector<libbitcoin::chain::wallet>> get_wallets() const;
 
     /// Store a wallet in the database. Returns a unique index
     /// which can be used to reference the wallet.
-    void store(const libbitcoin::chain::wallet& wallet);
+    void store(const libbitcoin::chain::wallet &wallet);
 };
 
 } // namespace database

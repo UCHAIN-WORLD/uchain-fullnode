@@ -32,24 +32,26 @@
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 #include <UChain/bitcoin/utility/serializer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
-point point::factory_from_data(const data_chunk& data)
+point point::factory_from_data(const data_chunk &data)
 {
     point instance;
     instance.from_data(data);
     return instance;
 }
 
-point point::factory_from_data(std::istream& stream)
+point point::factory_from_data(std::istream &stream)
 {
     point instance;
     instance.from_data(stream);
     return instance;
 }
 
-point point::factory_from_data(reader& source)
+point point::factory_from_data(reader &source)
 {
     point instance;
     instance.from_data(source);
@@ -67,19 +69,19 @@ void point::reset()
     index = 0;
 }
 
-bool point::from_data(const data_chunk& data)
+bool point::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool point::from_data(std::istream& stream)
+bool point::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool point::from_data(reader& source)
+bool point::from_data(reader &source)
 {
     reset();
 
@@ -103,13 +105,13 @@ data_chunk point::to_data() const
     return data;
 }
 
-void point::to_data(std::ostream& stream) const
+void point::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void point::to_data(writer& sink) const
+void point::to_data(writer &sink) const
 {
     sink.write_hash(hash);
     sink.write_4_bytes_little_endian(index);
@@ -188,21 +190,21 @@ uint64_t point::checksum() const
     // return std::hash<point>()(*this);
 }
 #endif
-bool operator==(const point& left, const point& right)
+bool operator==(const point &left, const point &right)
 {
     return left.hash == right.hash && left.index == right.index;
 }
 
-bool operator!=(const point& left, const point& right)
+bool operator!=(const point &left, const point &right)
 {
     return !(left == right);
 }
 
-bool operator<(const point& left, const point& right)
+bool operator<(const point &left, const point &right)
 {
     typedef std::tuple<hash_digest, uint32_t> tupe_cmp;
     return tupe_cmp(left.hash, left.index) < tupe_cmp(right.hash, right.index);
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

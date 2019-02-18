@@ -30,8 +30,10 @@
 #include <UChain/bitcoin/utility/writer.hpp>
 #include "token_cert.hpp"
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 BC_CONSTEXPR size_t TOKEN_DETAIL_SYMBOL_FIX_SIZE = 64;
 BC_CONSTEXPR size_t TOKEN_DETAIL_MAX_SUPPLY_FIX_SIZE = 8;
@@ -40,16 +42,11 @@ BC_CONSTEXPR size_t TOKEN_DETAIL_ISSUER_FIX_SIZE = 64;
 BC_CONSTEXPR size_t TOKEN_DETAIL_ADDRESS_FIX_SIZE = 64;
 BC_CONSTEXPR size_t TOKEN_DETAIL_DESCRIPTION_FIX_SIZE = 64;
 
-BC_CONSTEXPR size_t TOKEN_DETAIL_FIX_SIZE = TOKEN_DETAIL_SYMBOL_FIX_SIZE
-            + TOKEN_DETAIL_MAX_SUPPLY_FIX_SIZE
-            + TOKEN_DETAIL_TOKEN_TYPE_FIX_SIZE
-            + TOKEN_DETAIL_ISSUER_FIX_SIZE
-            + TOKEN_DETAIL_ADDRESS_FIX_SIZE
-            + TOKEN_DETAIL_DESCRIPTION_FIX_SIZE;
+BC_CONSTEXPR size_t TOKEN_DETAIL_FIX_SIZE = TOKEN_DETAIL_SYMBOL_FIX_SIZE + TOKEN_DETAIL_MAX_SUPPLY_FIX_SIZE + TOKEN_DETAIL_TOKEN_TYPE_FIX_SIZE + TOKEN_DETAIL_ISSUER_FIX_SIZE + TOKEN_DETAIL_ADDRESS_FIX_SIZE + TOKEN_DETAIL_DESCRIPTION_FIX_SIZE;
 
 class BC_API token_detail
 {
-public:
+  public:
     typedef std::vector<token_detail> list;
 
     static BC_CONSTEXPR uint8_t forbidden_secondaryissue_threshold = 0;
@@ -57,39 +54,39 @@ public:
 
     token_detail();
     token_detail(
-        const std::string& symbol, uint64_t maximum_supply,
-        uint8_t decimal_number, uint8_t threshold, const std::string& issuer,
-        const std::string& address, const std::string& description);
+        const std::string &symbol, uint64_t maximum_supply,
+        uint8_t decimal_number, uint8_t threshold, const std::string &issuer,
+        const std::string &address, const std::string &description);
 
-    static token_detail factory_from_data(const data_chunk& data);
-    static token_detail factory_from_data(std::istream& stream);
-    static token_detail factory_from_data(reader& source);
+    static token_detail factory_from_data(const data_chunk &data);
+    static token_detail factory_from_data(std::istream &stream);
+    static token_detail factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
 
-    bool operator< (const token_detail& other) const;
+    bool operator<(const token_detail &other) const;
     std::string to_string() const;
 
     bool is_valid() const;
     void reset();
     uint64_t serialized_size() const;
-    const std::string& get_symbol() const;
-    void set_symbol(const std::string& symbol);
+    const std::string &get_symbol() const;
+    void set_symbol(const std::string &symbol);
     uint64_t get_maximum_supply() const;
     void set_maximum_supply(uint64_t maximum_supply);
     uint8_t get_decimal_number() const;
     void set_decimal_number(uint8_t decimal_number);
-    const std::string& get_issuer() const;
-    void set_issuer(const std::string& issuer);
-    const std::string& get_address() const;
-    void set_address(const std::string& address);
-    const std::string& get_description() const;
-    void set_description(const std::string& description);
+    const std::string &get_issuer() const;
+    void set_issuer(const std::string &issuer);
+    const std::string &get_address() const;
+    void set_address(const std::string &address);
+    const std::string &get_description() const;
+    void set_description(const std::string &description);
     std::vector<token_cert_type> get_token_cert_mask() const;
 
     bool is_token_secondaryissue() const;
@@ -106,7 +103,7 @@ public:
     static bool is_secondaryissue_legal(uint8_t threshold);
     static bool is_secondaryissue_owns_enough(uint64_t own, uint64_t total, uint8_t threshold);
 
-private:
+  private:
     // NOTICE: ref CTokenDetail in transaction.h
     // token_detail and CTokenDetail should have the same size and order.
     // uint32_t token_type in CTokenDetail is divided into four uint8_t parts here.
@@ -125,4 +122,3 @@ private:
 } // namespace libbitcoin
 
 #endif
-

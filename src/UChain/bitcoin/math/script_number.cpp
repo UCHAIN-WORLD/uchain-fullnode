@@ -23,7 +23,8 @@
 #include <UChain/bitcoin/constants.hpp>
 #include <UChain/bitcoin/utility/assert.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 data_chunk script_number_serialize(const int64_t value)
 {
@@ -59,7 +60,7 @@ data_chunk script_number_serialize(const int64_t value)
     return result;
 }
 
-int64_t script_number_deserialize(const data_chunk& data)
+int64_t script_number_deserialize(const data_chunk &data)
 {
     if (data.empty())
         return 0;
@@ -77,7 +78,7 @@ int64_t script_number_deserialize(const data_chunk& data)
 }
 
 script_number::script_number(const int64_t value)
-  : value_(value)
+    : value_(value)
 {
 }
 script_number::script_number()
@@ -85,7 +86,7 @@ script_number::script_number()
     // You must call set_data() after.
 }
 
-bool script_number::set_data(const data_chunk& data, uint8_t max_size)
+bool script_number::set_data(const data_chunk &data, uint8_t max_size)
 {
     if (data.size() > max_size)
         return false;
@@ -125,40 +126,40 @@ bool script_number::operator<=(const int64_t value) const
 {
     return value_ <= value;
 }
-bool script_number::operator< (const int64_t value) const
+bool script_number::operator<(const int64_t value) const
 {
-    return value_ <  value;
+    return value_ < value;
 }
 bool script_number::operator>=(const int64_t value) const
 {
     return value_ >= value;
 }
-bool script_number::operator> (const int64_t value) const
+bool script_number::operator>(const int64_t value) const
 {
-    return value_ >  value;
+    return value_ > value;
 }
 
-bool script_number::operator==(const script_number& other) const
+bool script_number::operator==(const script_number &other) const
 {
     return operator==(other.value_);
 }
-bool script_number::operator!=(const script_number& other) const
+bool script_number::operator!=(const script_number &other) const
 {
     return operator!=(other.value_);
 }
-bool script_number::operator<=(const script_number& other) const
+bool script_number::operator<=(const script_number &other) const
 {
     return operator<=(other.value_);
 }
-bool script_number::operator<(const script_number& other) const
+bool script_number::operator<(const script_number &other) const
 {
     return operator<(other.value_);
 }
-bool script_number::operator>=(const script_number& other) const
+bool script_number::operator>=(const script_number &other) const
 {
     return operator>=(other.value_);
 }
-bool script_number::operator>(const script_number& other) const
+bool script_number::operator>(const script_number &other) const
 {
     return operator>(other.value_);
 }
@@ -173,12 +174,12 @@ script_number script_number::operator-(const int64_t value) const
     return script_number(value_ - value);
 }
 
-script_number script_number::operator+(const script_number& other) const
+script_number script_number::operator+(const script_number &other) const
 {
     return operator+(other.value_);
 }
 
-script_number script_number::operator-(const script_number& other) const
+script_number script_number::operator-(const script_number &other) const
 {
     return operator-(other.value_);
 }
@@ -189,30 +190,29 @@ script_number script_number::operator-() const
     return script_number(-value_);
 }
 
-script_number& script_number::operator+=(const int64_t value)
+script_number &script_number::operator+=(const int64_t value)
 {
     BITCOIN_ASSERT(value == 0 ||
-        (value > 0 && value_ <= max_int64 - value) ||
-        (value < 0 && value_ >= min_int64 - value));
+                   (value > 0 && value_ <= max_int64 - value) ||
+                   (value < 0 && value_ >= min_int64 - value));
     value_ += value;
     return *this;
 }
-script_number& script_number::operator-=(const int64_t value)
+script_number &script_number::operator-=(const int64_t value)
 {
     BITCOIN_ASSERT(value == 0 ||
-        (value > 0 && value_ >= min_int64 + value) ||
-        (value < 0 && value_ <= max_int64 + value));
+                   (value > 0 && value_ >= min_int64 + value) ||
+                   (value < 0 && value_ <= max_int64 + value));
     value_ -= value;
     return *this;
 }
-script_number& script_number::operator+=(const script_number& other)
+script_number &script_number::operator+=(const script_number &other)
 {
     return operator+=(other.value_);
 }
-script_number& script_number::operator-=(const script_number& other)
+script_number &script_number::operator-=(const script_number &other)
 {
     return operator-=(other.value_);
 }
 
 } // namespace libbitcoin
-

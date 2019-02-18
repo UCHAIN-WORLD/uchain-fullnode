@@ -34,17 +34,19 @@
 
 using namespace libbitcoin::chain;
 
-#define TOKEN_STATUS2UINT32(kd)  (static_cast<typename std::underlying_type<token::token_status>::type>(kd))
+#define TOKEN_STATUS2UINT32(kd) (static_cast<typename std::underlying_type<token::token_status>::type>(kd))
 
 #define TOKEN_DETAIL_TYPE TOKEN_STATUS2UINT32(token::token_status::token_locked)
 #define TOKEN_TRANSFERABLE_TYPE TOKEN_STATUS2UINT32(token::token_status::token_transferable)
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 class BC_API token
 {
-public:
+  public:
     enum class token_status : uint32_t
     {
         token_none,
@@ -54,19 +56,19 @@ public:
     typedef boost::variant<token_detail, token_transfer> token_data_type;
 
     token();
-    token(uint32_t status, const token_detail& detail);
-    token(uint32_t status, const token_transfer& detail);
-    static token factory_from_data(const data_chunk& data);
-    static token factory_from_data(std::istream& stream);
-    static token factory_from_data(reader& source);
+    token(uint32_t status, const token_detail &detail);
+    token(uint32_t status, const token_transfer &detail);
+    static token factory_from_data(const data_chunk &data);
+    static token factory_from_data(std::istream &stream);
+    static token factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
     std::string to_string() const;
     bool is_valid_type() const;
     bool is_valid() const;
@@ -74,19 +76,17 @@ public:
     uint64_t serialized_size() const;
     uint32_t get_status() const;
     void set_status(uint32_t status);
-    void set_data(const token_detail& detail);
-    void set_data(const token_transfer& detail);
-    token_data_type& get_data();
-    const token_data_type& get_data() const;
+    void set_data(const token_detail &detail);
+    void set_data(const token_transfer &detail);
+    token_data_type &get_data();
+    const token_data_type &get_data() const;
 
-private:
+  private:
     uint32_t status;
     token_data_type data;
-
 };
 
 } // namespace chain
 } // namespace libbitcoin
 
 #endif
-

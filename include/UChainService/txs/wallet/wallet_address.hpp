@@ -29,8 +29,10 @@
 #include <UChain/bitcoin/utility/reader.hpp>
 #include <UChain/bitcoin/utility/writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 BC_CONSTEXPR size_t ADDRESS_NAME_FIX_SIZE = 64;
 BC_CONSTEXPR size_t ADDRESS_PRV_KEY_FIX_SIZE = 70;
@@ -45,69 +47,68 @@ BC_CONSTEXPR size_t ADDRESS_STATUS_FIX_SIZE = 1;
 enum wallet_address_status : uint8_t
 {
     diabale = 0,
-    enable = 1, // common address
+    enable = 1,        // common address
     multisig_addr = 2, // multisig address
-    stealth_addr = 3 // stealth address
+    stealth_addr = 3   // stealth address
 };
 
 class BC_API wallet_address
 {
-public:
+  public:
     typedef std::vector<wallet_address> list;
     wallet_address();
-    wallet_address(const std::string& name, const std::string& prv_key,
-        const std::string& pub_key, uint32_t hd_index, uint64_t balance,
-        const std::string& alias, const std::string& address, uint8_t status);
-    wallet_address(const wallet_address& other);
-    static wallet_address factory_from_data(const data_chunk& data);
-    static wallet_address factory_from_data(std::istream& stream);
-    static wallet_address factory_from_data(reader& source);
+    wallet_address(const std::string &name, const std::string &prv_key,
+                   const std::string &pub_key, uint32_t hd_index, uint64_t balance,
+                   const std::string &alias, const std::string &address, uint8_t status);
+    wallet_address(const wallet_address &other);
+    static wallet_address factory_from_data(const data_chunk &data);
+    static wallet_address factory_from_data(std::istream &stream);
+    static wallet_address factory_from_data(reader &source);
     static uint64_t satoshi_fixed_size();
 
-    bool from_data(const data_chunk& data);
-    bool from_data(std::istream& stream);
-    bool from_data(reader& source);
+    bool from_data(const data_chunk &data);
+    bool from_data(std::istream &stream);
+    bool from_data(reader &source);
     data_chunk to_data() const;
-    void to_data(std::ostream& stream) const;
-    void to_data(writer& sink) const;
+    void to_data(std::ostream &stream) const;
+    void to_data(writer &sink) const;
 #ifdef UC_DEBUG
-    std::string to_string() ;
+    std::string to_string();
 #endif
     bool is_valid() const;
     void reset();
     uint64_t serialized_size() const;
-    const std::string& get_name() const;
-    void set_name(const std::string& name);
-    const std::string get_prv_key(std::string& passphrase) const;
+    const std::string &get_name() const;
+    void set_name(const std::string &name);
+    const std::string get_prv_key(std::string &passphrase) const;
     const std::string get_prv_key() const;
-    void set_prv_key(const std::string& prv_key, std::string& passphrase);
-    void set_prv_key(const std::string& prv_key);
-    const std::string& get_pub_key() const;
-    void set_pub_key(const std::string& pub_key);
+    void set_prv_key(const std::string &prv_key, std::string &passphrase);
+    void set_prv_key(const std::string &prv_key);
+    const std::string &get_pub_key() const;
+    void set_pub_key(const std::string &pub_key);
     uint32_t get_hd_index() const;
     void set_hd_index(uint32_t hd_index);
     uint64_t get_balance() const;
     void set_balance(uint64_t balance);
-    const std::string& get_alias() const;
-    void set_alias(const std::string& alias);
-    const std::string& get_address() const;
-    void set_address(const std::string& address);
+    const std::string &get_alias() const;
+    void set_alias(const std::string &alias);
+    const std::string &get_address() const;
+    void set_address(const std::string &address);
     uint8_t get_status() const;
     void set_status(uint8_t status);
 
-private:
-    std::string name;  // 64 bytes -- wallet name -- todo remove it later
+  private:
+    std::string name;    // 64 bytes -- wallet name -- todo remove it later
     std::string prv_key; // 70 bytes
     std::string pub_key; // 70 bytes
-    uint32_t hd_index; // 4 bytes -- todo remove it later
-    uint64_t balance; // 8 bytes
-    std::string alias; // 64 bytes
+    uint32_t hd_index;   // 4 bytes -- todo remove it later
+    uint64_t balance;    // 8 bytes
+    std::string alias;   // 64 bytes
     std::string address; // 48 bytes
-    uint8_t status_; // 1 bytes -- 0 -- diabale  1 -- enable
+    uint8_t status_;     // 1 bytes -- 0 -- diabale  1 -- enable
 };
 
 } // namespace chain
 } // namespace libbitcoin
 
 #endif
-

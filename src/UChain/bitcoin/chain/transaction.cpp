@@ -32,24 +32,26 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
-transaction transaction::factory_from_data(const data_chunk& data)
+transaction transaction::factory_from_data(const data_chunk &data)
 {
     transaction instance;
     instance.from_data(data);
     return instance;
 }
 
-transaction transaction::factory_from_data(std::istream& stream)
+transaction transaction::factory_from_data(std::istream &stream)
 {
     transaction instance;
     instance.from_data(stream);
     return instance;
 }
 
-transaction transaction::factory_from_data(reader& source)
+transaction transaction::factory_from_data(reader &source)
 {
     transaction instance;
     instance.from_data(source);
@@ -59,43 +61,43 @@ transaction transaction::factory_from_data(reader& source)
 // default constructors
 
 transaction::transaction()
-  : version(0), locktime(0), hash_(nullptr)
+    : version(0), locktime(0), hash_(nullptr)
 {
 }
 
-transaction::transaction(const transaction& other)
-  : transaction(other.version, other.locktime, other.inputs, other.outputs)
-{
-}
-
-transaction::transaction(uint32_t version, uint32_t locktime,
-    const input::list& inputs, const output::list& outputs)
-  : version(version),
-    locktime(locktime),
-    inputs(inputs),
-    outputs(outputs),
-    hash_(nullptr)
-{
-}
-
-transaction::transaction(transaction&& other)
-  : transaction(other.version, other.locktime,
-        std::forward<input::list>(other.inputs),
-        std::forward<output::list>(other.outputs))
+transaction::transaction(const transaction &other)
+    : transaction(other.version, other.locktime, other.inputs, other.outputs)
 {
 }
 
 transaction::transaction(uint32_t version, uint32_t locktime,
-    input::list&& inputs, output::list&& outputs)
-  : version(version),
-    locktime(locktime),
-    inputs(std::forward<input::list>(inputs)),
-    outputs(std::forward<output::list>(outputs)),
-    hash_(nullptr)
+                         const input::list &inputs, const output::list &outputs)
+    : version(version),
+      locktime(locktime),
+      inputs(inputs),
+      outputs(outputs),
+      hash_(nullptr)
 {
 }
 
-transaction& transaction::operator=(transaction&& other)
+transaction::transaction(transaction &&other)
+    : transaction(other.version, other.locktime,
+                  std::forward<input::list>(other.inputs),
+                  std::forward<output::list>(other.outputs))
+{
+}
+
+transaction::transaction(uint32_t version, uint32_t locktime,
+                         input::list &&inputs, output::list &&outputs)
+    : version(version),
+      locktime(locktime),
+      inputs(std::forward<input::list>(inputs)),
+      outputs(std::forward<output::list>(outputs)),
+      hash_(nullptr)
+{
+}
+
+transaction &transaction::operator=(transaction &&other)
 {
     version = other.version;
     locktime = other.locktime;
@@ -105,7 +107,7 @@ transaction& transaction::operator=(transaction&& other)
 }
 
 // TODO: eliminate blockchain transaction copies and then delete this.
-transaction& transaction::operator=(const transaction& other)
+transaction &transaction::operator=(const transaction &other)
 {
     version = other.version;
     locktime = other.locktime;
@@ -117,7 +119,7 @@ transaction& transaction::operator=(const transaction& other)
 bool transaction::is_valid() const
 {
     return (version != 0) || (locktime != 0) || !inputs.empty() ||
-        !outputs.empty();
+           !outputs.empty();
 }
 
 void transaction::reset()
@@ -134,19 +136,19 @@ void transaction::reset()
     mutex_.unlock();
 }
 
-bool transaction::from_data(const data_chunk& data)
+bool transaction::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool transaction::from_data(std::istream& stream)
+bool transaction::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool transaction::from_data(reader& source)
+bool transaction::from_data(reader &source)
 {
     reset();
     version = source.read_4_bytes_little_endian();
@@ -161,7 +163,7 @@ bool transaction::from_data(reader& source)
         {
             inputs.resize(tx_in_count);
 
-            for (auto& input: inputs)
+            for (auto &input : inputs)
             {
                 result = input.from_data(source);
 
@@ -180,7 +182,7 @@ bool transaction::from_data(reader& source)
         {
             outputs.resize(tx_out_count);
 
-            for (auto& output: outputs)
+            for (auto &output : outputs)
             {
                 result = output.from_data(source);
 
@@ -214,23 +216,23 @@ data_chunk transaction::to_data() const
     return data;
 }
 
-void transaction::to_data(std::ostream& stream) const
+void transaction::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void transaction::to_data(writer& sink) const
+void transaction::to_data(writer &sink) const
 {
     sink.write_4_bytes_little_endian(version);
     sink.write_variable_uint_little_endian(inputs.size());
 
-    for (const auto& input: inputs)
+    for (const auto &input : inputs)
         input.to_data(sink);
 
     sink.write_variable_uint_little_endian(outputs.size());
 
-    for (const auto& output: outputs)
+    for (const auto &output : outputs)
         output.to_data(sink);
 
     sink.write_4_bytes_little_endian(locktime);
@@ -240,11 +242,11 @@ uint64_t transaction::serialized_size() const
 {
     uint64_t tx_size = 8;
     tx_size += variable_uint_size(inputs.size());
-    for (const auto& input: inputs)
+    for (const auto &input : inputs)
         tx_size += input.serialized_size();
 
     tx_size += variable_uint_size(outputs.size());
-    for (const auto& output: outputs)
+    for (const auto &output : outputs)
         tx_size += output.serialized_size();
 
     return tx_size;
@@ -254,15 +256,15 @@ std::string transaction::to_string(uint32_t flags) const
 {
     std::ostringstream value;
     value << "Transaction:\n"
-        << "\tversion = " << version << "\n"
-        << "\tlocktime = " << locktime << "\n"
-        << "Inputs:\n";
+          << "\tversion = " << version << "\n"
+          << "\tlocktime = " << locktime << "\n"
+          << "Inputs:\n";
 
-    for (const auto input: inputs)
+    for (const auto input : inputs)
         value << input.to_string(flags);
 
     value << "Outputs:\n";
-    for (const auto output: outputs)
+    for (const auto output : outputs)
         value << output.to_string(flags);
 
     value << "\n";
@@ -300,15 +302,12 @@ hash_digest transaction::hash(uint32_t sighash_type) const
 
 bool transaction::is_coinbase() const
 {
-    return is_strict_coinbase()||is_token_block_coinbase();
+    return is_strict_coinbase() || is_token_block_coinbase();
 }
 
 bool transaction::is_token_block_coinbase() const
 {
-    return  inputs.size() == 1 
-            && outputs.size() <= 2
-            && outputs[0].is_token_transfer() 
-            && outputs[0].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL;
+    return inputs.size() == 1 && outputs.size() <= 2 && outputs[0].is_token_transfer() && outputs[0].get_token_transfer().get_symbol() == UC_BLOCK_TOKEN_SYMBOL;
 }
 
 bool transaction::is_strict_coinbase() const
@@ -329,7 +328,7 @@ bool transaction::is_final(uint64_t block_height, uint32_t block_time) const
     if (locktime < max_locktime)
         return true;
 
-    for (const auto& tx_input: inputs)
+    for (const auto &tx_input : inputs)
         if (!tx_input.is_final())
             return false;
 
@@ -341,7 +340,7 @@ bool transaction::is_locktime_conflict() const
     auto locktime_set = locktime != 0;
 
     if (locktime_set)
-        for (const auto& input: inputs)
+        for (const auto &input : inputs)
             if (input.sequence < max_input_sequence)
                 return false;
 
@@ -350,8 +349,7 @@ bool transaction::is_locktime_conflict() const
 
 uint64_t transaction::total_output_value() const
 {
-    const auto value = [](uint64_t total, const output& output)
-    {
+    const auto value = [](uint64_t total, const output &output) {
         return total + output.value;
     };
 
@@ -360,12 +358,12 @@ uint64_t transaction::total_output_value() const
 
 uint64_t transaction::total_output_transfer_amount() const
 {
-    const auto value = [](uint64_t total, const output& output)
-    {
+    const auto value = [](uint64_t total, const output &output) {
         // token issue and token transfer can not co-exist in one transaction outputs.
         // token secondary issue is from air, so not add its amount to pass amount check.
         // vote specify to count again.
-        if (output.is_token_secondaryissue() || output.is_vote()) {
+        if (output.is_token_secondaryissue() || output.is_vote())
+        {
             return total;
         }
         return total + output.get_token_amount();
@@ -375,9 +373,9 @@ uint64_t transaction::total_output_transfer_amount() const
 
 uint64_t transaction::total_output_vote_amount() const
 {
-    const auto value = [](uint64_t total, const output& output)
-    {
-        if (output.is_vote()) {
+    const auto value = [](uint64_t total, const output &output) {
+        if (output.is_vote())
+        {
             return total + output.get_token_amount();
         }
         return total;
@@ -387,8 +385,9 @@ uint64_t transaction::total_output_vote_amount() const
 
 bool transaction::has_token_issue() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_token_issue())
+    for (auto &elem : outputs)
+    {
+        if (elem.is_token_issue())
             return true;
     }
     return false;
@@ -396,19 +395,19 @@ bool transaction::has_token_issue() const
 
 bool transaction::has_token_secondary_issue() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_token_secondaryissue())
+    for (auto &elem : outputs)
+    {
+        if (elem.is_token_secondaryissue())
             return true;
     }
     return false;
 }
 
-
 bool transaction::has_token_transfer() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_token_transfer()
-            && elem.get_token_amount()) // block #810376 has 0 token transfer without input
+    for (auto &elem : outputs)
+    {
+        if (elem.is_token_transfer() && elem.get_token_amount()) // block #810376 has 0 token transfer without input
             return true;
     }
     return false;
@@ -416,8 +415,9 @@ bool transaction::has_token_transfer() const
 
 bool transaction::has_token_vote() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_vote()) // block #810376 has 0 token transfer without input
+    for (auto &elem : outputs)
+    {
+        if (elem.is_vote()) // block #810376 has 0 token transfer without input
             return true;
     }
     return false;
@@ -425,8 +425,9 @@ bool transaction::has_token_vote() const
 
 bool transaction::has_token_cert() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_token_cert())
+    for (auto &elem : outputs)
+    {
+        if (elem.is_token_cert())
             return true;
     }
     return false;
@@ -434,8 +435,9 @@ bool transaction::has_token_cert() const
 
 bool transaction::has_candidate_transfer() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_candidate_transfer())
+    for (auto &elem : outputs)
+    {
+        if (elem.is_candidate_transfer())
             return true;
     }
     return false;
@@ -443,8 +445,9 @@ bool transaction::has_candidate_transfer() const
 
 bool transaction::has_candidate_register() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_candidate_register())
+    for (auto &elem : outputs)
+    {
+        if (elem.is_candidate_register())
             return true;
     }
     return false;
@@ -452,8 +455,9 @@ bool transaction::has_candidate_register() const
 
 bool transaction::has_uid_register() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_uid_register())
+    for (auto &elem : outputs)
+    {
+        if (elem.is_uid_register())
             return true;
     }
     return false;
@@ -461,8 +465,9 @@ bool transaction::has_uid_register() const
 
 bool transaction::has_uid_transfer() const
 {
-    for (auto& elem: outputs) {
-        if(elem.is_uid_transfer())
+    for (auto &elem : outputs)
+    {
+        if (elem.is_uid_transfer())
             return true;
     }
     return false;
@@ -471,28 +476,30 @@ bool transaction::has_uid_transfer() const
 std::string transaction::get_uid_transfer_old_address() const
 {
     std::string newuidstr = "";
-    for (auto& elem: outputs) {
-        if(elem.is_uid_transfer()) {
+    for (auto &elem : outputs)
+    {
+        if (elem.is_uid_transfer())
+        {
             newuidstr = elem.get_script_address();
         }
-
     }
 
-    if (newuidstr.empty()){
+    if (newuidstr.empty())
+    {
         return newuidstr;
     }
 
-    for (auto& elem: inputs) {
-        if(elem.get_script_address()!=newuidstr) {
+    for (auto &elem : inputs)
+    {
+        if (elem.get_script_address() != newuidstr)
+        {
             newuidstr = elem.get_script_address();
             return newuidstr;
         }
-
     }
-
 
     return newuidstr;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

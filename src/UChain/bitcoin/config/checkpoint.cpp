@@ -31,31 +31,33 @@
 #include <UChain/bitcoin/formats/base_16.hpp>
 #include <UChain/bitcoin/math/hash.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 using namespace boost;
 using namespace boost::program_options;
 
 checkpoint::checkpoint()
-  : height_(0), hash_(bc::null_hash)
+    : height_(0), hash_(bc::null_hash)
 {
 }
 
-checkpoint::checkpoint(const std::string& value)
-  : checkpoint()
+checkpoint::checkpoint(const std::string &value)
+    : checkpoint()
 {
     std::stringstream(value) >> *this;
 }
 
-checkpoint::checkpoint(const checkpoint& other)
-  : hash_(other.hash()), height_(other.height())
+checkpoint::checkpoint(const checkpoint &other)
+    : hash_(other.hash()), height_(other.height())
 {
 }
 
 // This is intended for static initialization (i.e. of the internal defaults).
-checkpoint::checkpoint(const std::string& hash, size_t height)
-  : height_(height)
+checkpoint::checkpoint(const std::string &hash, size_t height)
+    : height_(height)
 {
     if (!decode_hash(hash_, hash))
     {
@@ -63,8 +65,8 @@ checkpoint::checkpoint(const std::string& hash, size_t height)
     }
 }
 
-checkpoint::checkpoint(const hash_digest& hash, size_t height)
-  : hash_(hash), height_(height)
+checkpoint::checkpoint(const hash_digest &hash, size_t height)
+    : hash_(hash), height_(height)
 {
 }
 
@@ -86,10 +88,9 @@ std::string checkpoint::to_string() const
     return value.str();
 }
 
-config::checkpoint::list checkpoint::sort(const list& checks)
+config::checkpoint::list checkpoint::sort(const list &checks)
 {
-    const auto comparitor = [](const checkpoint& left, const checkpoint& right)
-    {
+    const auto comparitor = [](const checkpoint &left, const checkpoint &right) {
         return left.height() < right.height();
     };
 
@@ -98,11 +99,10 @@ config::checkpoint::list checkpoint::sort(const list& checks)
     return copy;
 }
 
-bool checkpoint::validate(const hash_digest& hash, size_t height,
-    const list& checks)
+bool checkpoint::validate(const hash_digest &hash, size_t height,
+                          const list &checks)
 {
-    const auto match_invalid = [&height, &hash](const config::checkpoint& item)
-    {
+    const auto match_invalid = [&height, &hash](const config::checkpoint &item) {
         return height == item.height() && hash != item.hash();
     };
 
@@ -110,12 +110,12 @@ bool checkpoint::validate(const hash_digest& hash, size_t height,
     return it == checks.end();
 }
 
-bool checkpoint::operator==(const checkpoint& other) const
+bool checkpoint::operator==(const checkpoint &other) const
 {
     return height_ == other.height_ && hash_ == other.hash_;
 }
 
-std::istream& operator>>(std::istream& input, checkpoint& argument)
+std::istream &operator>>(std::istream &input, checkpoint &argument)
 {
     std::string value;
     input >> value;
@@ -129,7 +129,7 @@ std::istream& operator>>(std::istream& input, checkpoint& argument)
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }
 
-    const auto& match = *it;
+    const auto &match = *it;
     if (!decode_hash(argument.hash_, match[1]))
     {
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
@@ -139,7 +139,7 @@ std::istream& operator>>(std::istream& input, checkpoint& argument)
     {
         argument.height_ = lexical_cast<size_t>(match[3]);
     }
-    catch (const boost::exception&)
+    catch (const boost::exception &)
     {
         BOOST_THROW_EXCEPTION(invalid_option_value(value));
     }
@@ -147,7 +147,7 @@ std::istream& operator>>(std::istream& input, checkpoint& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const checkpoint& argument)
+std::ostream &operator<<(std::ostream &output, const checkpoint &argument)
 {
     output << encode_hash(argument.hash()) << ":" << argument.height();
     return output;

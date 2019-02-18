@@ -36,14 +36,18 @@
 #include <UChainService/txs/token/candidate.hpp>
 #include <mutex>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 class p2p_node;
 }
-}
+} // namespace libbitcoin
 
-namespace libbitcoin {
-namespace consensus {
+namespace libbitcoin
+{
+namespace consensus
+{
 
 BC_CONSTEXPR unsigned int min_tx_fee_per_kb = 10000;
 BC_CONSTEXPR unsigned int median_time_span = 11;
@@ -54,7 +58,7 @@ extern vector<uint64_t> lock_heights;
 
 class miner
 {
-public:
+  public:
     typedef message::block_message block;
     typedef std::shared_ptr<message::block_message> block_ptr;
     typedef chain::header header;
@@ -70,7 +74,7 @@ public:
     // tx_hash -> tx_fee
     typedef std::unordered_map<hash_digest, uint64_t> tx_fee_map_t;
 
-    miner(p2p_node& node);
+    miner(p2p_node &node);
     ~miner();
 
     enum state
@@ -80,39 +84,39 @@ public:
         creating_block_
     };
 
-    bool start(const bc::wallet::payment_address& pay_address, uint16_t number = 0);
-    bool start(const std::string& pay_public_key, uint16_t number = 0);
+    bool start(const bc::wallet::payment_address &pay_address, uint16_t number = 0);
+    bool start(const std::string &pay_public_key, uint16_t number = 0);
     bool stop();
     static block_ptr create_genesis_block(bool is_mainnet);
-    bool script_hash_signature_operations_count(size_t &count, const chain::input::list& inputs,
-        vector<transaction_ptr>& transactions);
-    bool script_hash_signature_operations_count(size_t &count, const chain::input& input,
-        vector<transaction_ptr>& transactions);
-    transaction_ptr create_coinbase_tx(const bc::wallet::payment_address& pay_addres,
-        uint64_t value,uint64_t block_height);
-    transaction_ptr create_lock_coinbase_tx(const bc::wallet::payment_address& pay_addres,
-        uint64_t value, uint64_t block_height, int lock_height, uint32_t reward_lock_time);
+    bool script_hash_signature_operations_count(size_t &count, const chain::input::list &inputs,
+                                                vector<transaction_ptr> &transactions);
+    bool script_hash_signature_operations_count(size_t &count, const chain::input &input,
+                                                vector<transaction_ptr> &transactions);
+    transaction_ptr create_coinbase_tx(const bc::wallet::payment_address &pay_addres,
+                                       uint64_t value, uint64_t block_height);
+    transaction_ptr create_lock_coinbase_tx(const bc::wallet::payment_address &pay_addres,
+                                            uint64_t value, uint64_t block_height, int lock_height, uint32_t reward_lock_time);
 
     block_ptr get_block(bool is_force_create_block = false);
     //bool get_work(std::string& seed_hash, std::string& header_hash, std::string& boundary);
     /*bool put_result(const std::string& nonce, const std::string& mix_hash,
         const std::string& header_hash, const uint64_t &nounce_mask);*/
     //bool set_miner_public_key(const string& public_key);
-    uint64_t fetch_utxo(const transaction_ptr& ptx,const bc::wallet::payment_address& address);
-    bool get_spendable_output(chain::output& output, const chain::history& row, uint64_t height);
-    bool set_miner_payment_address(const bc::wallet::payment_address& address);
+    uint64_t fetch_utxo(const transaction_ptr &ptx, const bc::wallet::payment_address &address);
+    bool get_spendable_output(chain::output &output, const chain::history &row, uint64_t height);
+    bool set_miner_payment_address(const bc::wallet::payment_address &address);
     const std::string get_miner_address() const;
-    bool set_miner_pri_key(const std::string& pri_key);
+    bool set_miner_pri_key(const std::string &pri_key);
     //void set_user(const std::string& name, const std::string& passwd);
-    void get_state(uint64_t &height,  uint32_t &miners,/*uint64_t &rate, string& difficulty,*/ bool& is_mining);
-    vector<candidate_info>& get_miners();
-    vector<std::string>& get_miner_addresses();
+    void get_state(uint64_t &height, uint32_t &miners, /*uint64_t &rate, string& difficulty,*/ bool &is_mining);
+    vector<candidate_info> &get_miners();
+    vector<std::string> &get_miner_addresses();
     void generate_miner_list();
     bool is_creating_block() const;
-    bool is_address_inturn(const string& pay_address) const;
-    bool get_block_header(chain::header& block_header, const string& para);
+    bool is_address_inturn(const string &pay_address) const;
+    bool get_block_header(chain::header &block_header, const string &para);
 
-    bool is_address_in_turn_with_now_height(uint64_t height, const string& pay_address) const;
+    bool is_address_in_turn_with_now_height(uint64_t height, const string &pay_address) const;
     bool is_index_in_turn_with_now_height(uint64_t height, const int index) const;
     bool is_time_inturn_with_this_cycle(int64_t cycle_starttime) const;
     uint16_t get_lost_block(uint64_t height, const int index);
@@ -120,22 +124,22 @@ public:
     static int get_lock_heights_index(uint64_t height);
     static uint64_t calculate_block_subsidy(uint64_t height, bool is_testnet);
     static uint64_t calculate_lockblock_reward(uint64_t lcok_heights, uint64_t num);
-    int get_mine_index(const string& pay_address) const;
+    int get_mine_index(const string &pay_address) const;
 
-private:
+  private:
     void work(const bc::wallet::payment_address pay_address);
-    
-    block_ptr create_new_block(const bc::wallet::payment_address& pay_addres,uint64_t current_block_height = max_uint64);
+
+    block_ptr create_new_block(const bc::wallet::payment_address &pay_addres, uint64_t current_block_height = max_uint64);
     unsigned int get_adjust_time(uint64_t height) const;
     unsigned int get_median_time_past(uint64_t height) const;
-    bool get_transaction(std::vector<transaction_ptr>&, previous_out_map_t&, tx_fee_map_t&) const;
+    bool get_transaction(std::vector<transaction_ptr> &, previous_out_map_t &, tx_fee_map_t &) const;
     uint64_t store_block(block_ptr block);
     uint64_t get_height() const;
-    bool get_input_ucn(const transaction&, const std::vector<transaction_ptr>&, uint64_t&, previous_out_map_t&) const ;
+    bool get_input_ucn(const transaction &, const std::vector<transaction_ptr> &, uint64_t &, previous_out_map_t &) const;
     bool is_stop_miner(uint64_t block_height) const;
 
-private:
-    p2p_node& node_;
+  private:
+    p2p_node &node_;
     std::shared_ptr<boost::thread> thread_;
     mutable state state_;
     uint16_t new_block_number_;
@@ -143,7 +147,7 @@ private:
 
     block_ptr new_block_;
     bc::wallet::payment_address pay_address_;
-    const blockchain::settings& setting_;
+    const blockchain::settings &setting_;
     std::string pri_key;
     std::string name_;
     std::string passwd_;
@@ -152,7 +156,7 @@ private:
     uint16_t createblockms_;
 };
 
-}
-}
+} // namespace consensus
+} // namespace libbitcoin
 
 #endif

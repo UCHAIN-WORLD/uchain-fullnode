@@ -19,10 +19,10 @@
 
 #include <cstring> // strcpy()
 #include <exception>
-#include <UChainService/api/restful//utility/Stream.hpp>
+#include <UChainService/api/restful/utility/Stream.hpp>
 
-
-namespace mgbubble {
+namespace mgbubble
+{
 
 /**
  * Maximum error message length.
@@ -31,27 +31,28 @@ constexpr std::size_t ErrMsgMax{127};
 
 using ErrMsg = StringBuilder<ErrMsgMax>;
 
-class UC_API Exception : public std::exception {
- public:
+class UC_API Exception : public std::exception
+{
+public:
   explicit Exception(string_view what) noexcept;
 
   ~Exception() noexcept override;
 
   // Copy.
-  Exception(const Exception& rhs) noexcept { *this = rhs; }
-  Exception& operator=(const Exception& rhs) noexcept
+  Exception(const Exception &rhs) noexcept { *this = rhs; }
+  Exception &operator=(const Exception &rhs) noexcept
   {
     std::strcpy(what_, rhs.what_);
     return *this;
   }
 
   // Move.
-  Exception(Exception&&) noexcept = default;
-  Exception& operator=(Exception&&) noexcept = default;
+  Exception(Exception &&) noexcept = default;
+  Exception &operator=(Exception &&) noexcept = default;
 
-  const char* what() const noexcept override;
+  const char *what() const noexcept override;
 
- private:
+private:
   char what_[ErrMsgMax + 1];
 };
 
@@ -60,8 +61,6 @@ class UC_API Exception : public std::exception {
  * error messages before throwing. Note that the StringBuilder is reset each time this function is
  * called.
  */
-UC_API ErrMsg& errMsg() noexcept;
+UC_API ErrMsg &errMsg() noexcept;
 
-} // mgbubble
-
-
+} // namespace mgbubble

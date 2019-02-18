@@ -18,9 +18,9 @@
 #define UCD_MONGOOSE_HPP
 
 #include <vector>
-#include <UChainService/api/restful//utility/Queue.hpp>
-#include <UChainService/api/restful//utility/String.hpp>
-#include <UChainService/api/restful//exception/Error.hpp>
+#include <UChainService/api/restful/utility/Queue.hpp>
+#include <UChainService/api/restful/utility/String.hpp>
+#include <UChainService/api/restful/exception/Error.hpp>
 #include <UChain/explorer/dispatch.hpp>
 #include "mongoose/mongoose.h"
 /**
@@ -28,63 +28,67 @@
  * @{
  */
 
-namespace mgbubble {
+namespace mgbubble
+{
 
-inline string_view operator+(const mg_str& str) noexcept
+inline string_view operator+(const mg_str &str) noexcept
 {
     return {str.p, str.len};
 }
 
-inline string_view operator+(const websocket_message& msg) noexcept
+inline string_view operator+(const websocket_message &msg) noexcept
 {
-    return {reinterpret_cast<char*>(msg.data), msg.size};
+    return {reinterpret_cast<char *>(msg.data), msg.size};
 }
 
-class ToCommandArg{
-public:
+class ToCommandArg
+{
+  public:
     auto argv() const noexcept { return argv_; }
     auto argc() const noexcept { return argc_; }
-    const auto& get_command() const {
-        if(!vargv_.empty())
+    const auto &get_command() const
+    {
+        if (!vargv_.empty())
             return vargv_[0];
         throw std::logic_error{"no command found"};
     }
 
-    void add_arg(std::string&& outside);
+    void add_arg(std::string &&outside);
 
     static const int max_paramters{208};
-protected:
 
+  protected:
     virtual void data_to_arg(uint8_t api_version) = 0;
-    const char* argv_[max_paramters]{nullptr};
+    const char *argv_[max_paramters]{nullptr};
     int argc_{0};
 
     std::vector<std::string> vargv_;
 };
 
-class HttpMessage : public ToCommandArg{
-public:
-    HttpMessage(http_message* impl) noexcept : impl_{impl}, jsonrpc_id_(-1){}
+class HttpMessage : public ToCommandArg
+{
+  public:
+    HttpMessage(http_message *impl) noexcept : impl_{impl}, jsonrpc_id_(-1) {}
     ~HttpMessage() noexcept = default;
 
     // Copy.
     // http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1778
-    HttpMessage(const HttpMessage&) = default;
-    HttpMessage& operator=(const HttpMessage&) = default;
+    HttpMessage(const HttpMessage &) = default;
+    HttpMessage &operator=(const HttpMessage &) = default;
 
     // Move.
-    HttpMessage(HttpMessage&&) = default;
-    HttpMessage& operator=(HttpMessage&&) = default;
+    HttpMessage(HttpMessage &&) = default;
+    HttpMessage &operator=(HttpMessage &&) = default;
 
     auto get() const noexcept { return impl_; }
     auto method() const noexcept { return +impl_->method; }
     auto uri() const noexcept { return +impl_->uri; }
     auto proto() const noexcept { return +impl_->proto; }
     auto queryString() const noexcept { return +impl_->query_string; }
-    auto header(const char* name) const noexcept
+    auto header(const char *name) const noexcept
     {
-      auto* val = mg_get_http_header(impl_, name);
-      return val ? +*val : string_view{};
+        auto *val = mg_get_http_header(impl_, name);
+        return val ? +*val : string_view{};
     }
     auto body() const noexcept { return +impl_->body; }
 
@@ -92,40 +96,44 @@ public:
 
     void data_to_arg(uint8_t rpc_version) override;
 
-private:
+  private:
     int64_t jsonrpc_id_;
-    http_message* impl_;
+    http_message *impl_;
 };
 
-class WebsocketMessage:public ToCommandArg { // connect to bx command-tool
-public:
-    WebsocketMessage(websocket_message* impl) noexcept : impl_{impl} {}
+class WebsocketMessage : public ToCommandArg
+{ // connect to bx command-tool
+  public:
+    WebsocketMessage(websocket_message *impl) noexcept : impl_{impl} {}
     ~WebsocketMessage() noexcept = default;
 
     // Copy.
-    WebsocketMessage(const WebsocketMessage&) = default;
-    WebsocketMessage& operator=(const WebsocketMessage&) = default;
+    WebsocketMessage(const WebsocketMessage &) = default;
+    WebsocketMessage &operator=(const WebsocketMessage &) = default;
 
     // Move.
-    WebsocketMessage(WebsocketMessage&&) = default;
-    WebsocketMessage& operator=(WebsocketMessage&&) = default;
+    WebsocketMessage(WebsocketMessage &&) = default;
+    WebsocketMessage &operator=(WebsocketMessage &&) = default;
 
     auto get() const noexcept { return impl_; }
-    auto data() const noexcept { return reinterpret_cast<char*>(impl_->data); }
+    auto data() const noexcept { return reinterpret_cast<char *>(impl_->data); }
     auto size() const noexcept { return impl_->size; }
 
     void data_to_arg(uint8_t api_version = 1) override;
-private:
-    websocket_message* impl_;
+
+  private:
+    websocket_message *impl_;
 };
 
-class MgEvent : public std::enable_shared_from_this<MgEvent> {
-public:
-    explicit MgEvent(const std::function<void(uint64_t)>&& handler)
-        :callback_(std::move(handler))
-    {}
+class MgEvent : public std::enable_shared_from_this<MgEvent>
+{
+  public:
+    explicit MgEvent(const std::function<void(uint64_t)> &&handler)
+        : callback_(std::move(handler))
+    {
+    }
 
-    MgEvent* hook()
+    MgEvent *hook()
     {
         self_ = this->shared_from_this();
         return this;
@@ -142,14 +150,14 @@ public:
         self_.reset();
     }
 
-private:
+  private:
     std::shared_ptr<MgEvent> self_;
 
     // called on mongoose thread
     std::function<void(uint64_t id)> callback_;
 };
 
-} // http
+} // namespace mgbubble
 
 /** @} */
 
