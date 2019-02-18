@@ -53,11 +53,12 @@
 
 #include <secp256k1.h>
 
-# ifdef __cplusplus
-extern "C" {
-# endif
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-/** Parse a signature in "lax DER" format
+    /** Parse a signature in "lax DER" format
  *
  *  Returns: 1 when the signature could be parsed, 0 otherwise.
  *  Args: ctx:      a secp256k1 context object
@@ -77,12 +78,11 @@ extern "C" {
  *  encoded numbers are out of range, signature validation with it is
  *  guaranteed to fail for every message and public key.
  */
-int ecdsa_signature_parse_der_lax(
-    const secp256k1_context* ctx,
-    secp256k1_ecdsa_signature* sig,
-    const unsigned char *input,
-    size_t inputlen
-) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
+    int ecdsa_signature_parse_der_lax(
+        const secp256k1_context *ctx,
+        secp256k1_ecdsa_signature *sig,
+        const unsigned char *input,
+        size_t inputlen) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
 
 #ifdef __cplusplus
 }

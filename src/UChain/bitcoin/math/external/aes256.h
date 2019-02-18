@@ -27,25 +27,27 @@
 #define AES256_BLOCK_LENGTH 16U
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef struct {
-    uint8_t key[AES256_KEY_LENGTH];
-    uint8_t enckey[AES256_KEY_LENGTH];
-    uint8_t deckey[AES256_KEY_LENGTH];
-} aes256_context;
+    typedef struct
+    {
+        uint8_t key[AES256_KEY_LENGTH];
+        uint8_t enckey[AES256_KEY_LENGTH];
+        uint8_t deckey[AES256_KEY_LENGTH];
+    } aes256_context;
 
-void aes256_init(aes256_context* context,
-    const uint8_t key[AES256_KEY_LENGTH]);
+    void aes256_init(aes256_context *context,
+                     const uint8_t key[AES256_KEY_LENGTH]);
 
-void aes256_done(aes256_context* context);
+    void aes256_done(aes256_context *context);
 
-void aes256_encrypt_ecb(aes256_context* context,
-    uint8_t plain_text[AES256_BLOCK_LENGTH]);
+    void aes256_encrypt_ecb(aes256_context *context,
+                            uint8_t plain_text[AES256_BLOCK_LENGTH]);
 
-void aes256_decrypt_ecb(aes256_context* context,
-    uint8_t cypher_text[AES256_BLOCK_LENGTH]);
+    void aes256_decrypt_ecb(aes256_context *context,
+                            uint8_t cypher_text[AES256_BLOCK_LENGTH]);
 
 #ifdef __cplusplus
 }

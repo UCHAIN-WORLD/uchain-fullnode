@@ -30,8 +30,8 @@
 #include "sha256.h"
 #include "zeroize.h"
 
-void HMACSHA256(const uint8_t* input, size_t length, const uint8_t* key,
-    size_t key_length, uint8_t digest[HMACSHA256_DIGEST_LENGTH])
+void HMACSHA256(const uint8_t *input, size_t length, const uint8_t *key,
+                size_t key_length, uint8_t digest[HMACSHA256_DIGEST_LENGTH])
 {
     HMACSHA256CTX context;
     HMACSHA256Init(&context, key, key_length);
@@ -39,8 +39,8 @@ void HMACSHA256(const uint8_t* input, size_t length, const uint8_t* key,
     HMACSHA256Final(&context, digest);
 }
 
-void HMACSHA256Final(HMACSHA256CTX* context,
-    uint8_t digest[HMACSHA256_DIGEST_LENGTH])
+void HMACSHA256Final(HMACSHA256CTX *context,
+                     uint8_t digest[HMACSHA256_DIGEST_LENGTH])
 {
     uint8_t hash[HMACSHA256_DIGEST_LENGTH];
 
@@ -48,11 +48,11 @@ void HMACSHA256Final(HMACSHA256CTX* context,
     SHA256Update(&context->octx, hash, HMACSHA256_DIGEST_LENGTH);
     SHA256Final(&context->octx, digest);
 
-    zeroize((void*)hash, sizeof hash);
+    zeroize((void *)hash, sizeof hash);
 }
 
-void HMACSHA256Init(HMACSHA256CTX* context, const uint8_t* key,
-    size_t key_length)
+void HMACSHA256Init(HMACSHA256CTX *context, const uint8_t *key,
+                    size_t key_length)
 {
     size_t i;
     uint8_t pad[SHA256_BLOCK_LENGTH];
@@ -81,11 +81,11 @@ void HMACSHA256Init(HMACSHA256CTX* context, const uint8_t* key,
         pad[i] ^= key[i];
 
     SHA256Update(&context->octx, pad, SHA256_BLOCK_LENGTH);
-    zeroize((void*)key_hash, sizeof key_hash);
+    zeroize((void *)key_hash, sizeof key_hash);
 }
 
-void HMACSHA256Update(HMACSHA256CTX* context, const uint8_t* input,
-    size_t length)
+void HMACSHA256Update(HMACSHA256CTX *context, const uint8_t *input,
+                      size_t length)
 {
     SHA256Update(&context->ictx, input, length);
 }

@@ -39,26 +39,26 @@ extern "C"
 {
 #endif
 
-typedef struct SHA512CTX
-{
-    uint64_t state[SHA512_STATE_LENGTH];
-    uint64_t count[SHA512_COUNT_LENGTH];
-    uint8_t buf[SHA512_BLOCK_LENGTH];
-} SHA512CTX;
+    typedef struct SHA512CTX
+    {
+        uint64_t state[SHA512_STATE_LENGTH];
+        uint64_t count[SHA512_COUNT_LENGTH];
+        uint8_t buf[SHA512_BLOCK_LENGTH];
+    } SHA512CTX;
 
-void SHA512_(const uint8_t* input, size_t length,
-    uint8_t digest[SHA512_DIGEST_LENGTH]);
+    void SHA512_(const uint8_t *input, size_t length,
+                 uint8_t digest[SHA512_DIGEST_LENGTH]);
 
-void SHA512Final(SHA512CTX* context, uint8_t digest[SHA512_DIGEST_LENGTH]);
+    void SHA512Final(SHA512CTX *context, uint8_t digest[SHA512_DIGEST_LENGTH]);
 
-void SHA512Init(SHA512CTX* context);
+    void SHA512Init(SHA512CTX *context);
 
-void SHA512Pad(SHA512CTX* context);
+    void SHA512Pad(SHA512CTX *context);
 
-void SHA512Transform(uint64_t state[SHA512_STATE_LENGTH],
-    const uint8_t block[SHA512_BLOCK_LENGTH]);
+    void SHA512Transform(uint64_t state[SHA512_STATE_LENGTH],
+                         const uint8_t block[SHA512_BLOCK_LENGTH]);
 
-void SHA512Update(SHA512CTX* context, const uint8_t* input, size_t length);
+    void SHA512Update(SHA512CTX *context, const uint8_t *input, size_t length);
 
 #ifdef __cplusplus
 }
