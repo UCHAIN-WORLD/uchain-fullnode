@@ -37,8 +37,8 @@ const char parameter::option_prefix_char = '-';
 // 100% component coverage, common scenarios.
 // A required argument may only be preceeded by required arguments.
 // Requiredness may be in error if the metadata is inconsistent.
-void parameter::initialize(const po::option_description& option,
-    const argument_list& arguments)
+void parameter::initialize(const po::option_description &option,
+                           const argument_list &arguments)
 {
     set_position(position(option, arguments));
     set_args_limit(arguments_limit(get_position(), option, arguments));
@@ -51,14 +51,14 @@ void parameter::initialize(const po::option_description& option,
 }
 
 // 100% component coverage, all three scenarios (long, short, both)
-int parameter::position(const po::option_description& option,
-    const argument_list& arguments) const
+int parameter::position(const po::option_description &option,
+                        const argument_list &arguments) const
 {
     return find_pair_position(arguments, option.long_name());
 }
 
 // 100% unit coverage, all three scenarios (long, short, both)
-char parameter::short_name(const po::option_description& option) const
+char parameter::short_name(const po::option_description &option) const
 {
     // This call requires boost 1.50, don't use it.
     //auto name = option.canonical_display_name(
@@ -67,14 +67,14 @@ char parameter::short_name(const po::option_description& option) const
     // This is a substitute that allows us to use boost 1.49 for libbitcoin.
     const auto name = split(option.format_name()).front();
     auto is_short_name = name[0] == option_prefix_char &&
-        name[1] != option_prefix_char;
+                         name[1] != option_prefix_char;
 
     return is_short_name ? name[1] : no_short_name;
 }
 
 // 100% component coverage
 unsigned parameter::arguments_limit(int position,
-    const po::option_description& option, const argument_list& arguments) const
+                                    const po::option_description &option, const argument_list &arguments) const
 {
     if (position == parameter::not_positional)
         return option.semantic()->max_tokens();

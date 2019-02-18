@@ -40,8 +40,10 @@
 #include <UChain/blockchain/transaction_pool.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
 #include <UChain/blockchain/wallet_security_strategy.hpp>
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 ////#define NAME "blockchain"
 
@@ -51,16 +53,16 @@ using namespace boost::interprocess;
 using namespace std::placeholders;
 using boost::filesystem::path;
 
-block_chain_impl::block_chain_impl(threadpool& pool,
-    const blockchain::settings& chain_settings,
-    const database::settings& database_settings)
-  : stopped_(true),
-    settings_(chain_settings),
-    organizer_(pool, *this, chain_settings),
-    ////read_dispatch_(pool, NAME),
-    ////write_dispatch_(pool, NAME),
-    transaction_pool_(pool, *this, chain_settings),
-    database_(database_settings)
+block_chain_impl::block_chain_impl(threadpool &pool,
+                                   const blockchain::settings &chain_settings,
+                                   const database::settings &database_settings)
+    : stopped_(true),
+      settings_(chain_settings),
+      organizer_(pool, *this, chain_settings),
+      ////read_dispatch_(pool, NAME),
+      ////write_dispatch_(pool, NAME),
+      transaction_pool_(pool, *this, chain_settings),
+      database_(database_settings)
 {
 }
 
@@ -73,7 +75,7 @@ block_chain_impl::~block_chain_impl()
 // Utilities.
 // ----------------------------------------------------------------------------
 
-static hash_list to_hashes(const block_result& result)
+static hash_list to_hashes(const block_result &result)
 {
     const auto count = result.transaction_count();
     hash_list hashes;
@@ -88,12 +90,12 @@ static hash_list to_hashes(const block_result& result)
 // Properties.
 // ----------------------------------------------------------------------------
 
-transaction_pool& block_chain_impl::pool()
+transaction_pool &block_chain_impl::pool()
 {
     return transaction_pool_;
 }
 
-const settings& block_chain_impl::chain_settings() const
+const settings &block_chain_impl::chain_settings() const
 {
     return settings_;
 }
@@ -112,7 +114,7 @@ bool block_chain_impl::start()
     transaction_pool_.start();
 
     //init the single instance here, to avoid multi-thread init confilict
-    auto* temp = wallet_security_strategy::get_instance();
+    auto *temp = wallet_security_strategy::get_instance();
 
     return true;
 }
@@ -151,8 +153,8 @@ void block_chain_impl::subscribe_reorganize(reorganize_handler handler)
 // simple_chain (no locks, not thread safe).
 // ----------------------------------------------------------------------------
 
-bool block_chain_impl::get_gap_range(uint64_t& out_first,
-    uint64_t& out_last) const
+bool block_chain_impl::get_gap_range(uint64_t &out_first,
+                                     uint64_t &out_last) const
 {
     size_t first;
     size_t last;
@@ -165,8 +167,8 @@ bool block_chain_impl::get_gap_range(uint64_t& out_first,
     return true;
 }
 
-bool block_chain_impl::get_next_gap(uint64_t& out_height,
-    uint64_t start_height) const
+bool block_chain_impl::get_next_gap(uint64_t &out_height,
+                                    uint64_t start_height) const
 {
     if (stopped())
         return false;
@@ -184,8 +186,8 @@ bool block_chain_impl::get_next_gap(uint64_t& out_height,
     return false;
 }
 
-bool block_chain_impl::get_difficulty(u256& out_difficulty,
-    uint64_t height) const
+bool block_chain_impl::get_difficulty(u256 &out_difficulty,
+                                      uint64_t height) const
 {
     size_t top;
     if (!database_.blocks.top(top))
@@ -201,7 +203,7 @@ bool block_chain_impl::get_difficulty(u256& out_difficulty,
     return true;
 }
 
-bool block_chain_impl::get_header(header& out_header, uint64_t height) const
+bool block_chain_impl::get_header(header &out_header, uint64_t height) const
 {
     auto result = database_.blocks.get(height);
     if (!result)
@@ -211,8 +213,8 @@ bool block_chain_impl::get_header(header& out_header, uint64_t height) const
     return true;
 }
 
-bool block_chain_impl::get_height(uint64_t& out_height,
-    const hash_digest& block_hash) const
+bool block_chain_impl::get_height(uint64_t &out_height,
+                                  const hash_digest &block_hash) const
 {
     auto result = database_.blocks.get(block_hash);
     if (!result)
@@ -222,7 +224,7 @@ bool block_chain_impl::get_height(uint64_t& out_height,
     return true;
 }
 
-bool block_chain_impl::get_last_height(uint64_t& out_height) const
+bool block_chain_impl::get_last_height(uint64_t &out_height) const
 {
     size_t top;
     if (database_.blocks.top(top))
@@ -234,8 +236,8 @@ bool block_chain_impl::get_last_height(uint64_t& out_height) const
     return false;
 }
 
-bool block_chain_impl::get_outpoint_transaction(hash_digest& out_transaction,
-    const output_point& outpoint) const
+bool block_chain_impl::get_outpoint_transaction(hash_digest &out_transaction,
+                                                const output_point &outpoint) const
 {
     const auto spend = database_.spends.get(outpoint);
     if (!spend.valid)
@@ -245,8 +247,8 @@ bool block_chain_impl::get_outpoint_transaction(hash_digest& out_transaction,
     return true;
 }
 
-bool block_chain_impl::get_transaction(transaction& out_transaction,
-    uint64_t& out_block_height, const hash_digest& transaction_hash) const
+bool block_chain_impl::get_transaction(transaction &out_transaction,
+                                       uint64_t &out_block_height, const hash_digest &transaction_hash) const
 {
     const auto result = database_.transactions.get(transaction_hash);
     if (!result)
@@ -274,8 +276,8 @@ bool block_chain_impl::push(block_detail::ptr block)
     return true;
 }
 
-bool block_chain_impl::pop_from(block_detail::list& out_blocks,
-    uint64_t height)
+bool block_chain_impl::pop_from(block_detail::list &out_blocks,
+                                uint64_t height)
 {
     size_t top;
 
@@ -310,19 +312,21 @@ bool block_chain_impl::pop_from(block_detail::list& out_blocks,
 
 void block_chain_impl::start_write()
 {
-    DEBUG_ONLY(const auto result =) database_.begin_write();
+    DEBUG_ONLY(const auto result =)
+    database_.begin_write();
     BITCOIN_ASSERT(result);
 }
 
 void block_chain_impl::stop_write()
 {
-    DEBUG_ONLY(const auto result =) database_.end_write();
+    DEBUG_ONLY(const auto result =)
+    database_.end_write();
     BITCOIN_ASSERT(result);
 }
 
 // This call is sequential, but we are preserving the callback model for now.
 void block_chain_impl::store(message::block_message::ptr block,
-    block_store_handler handler)
+                             block_store_handler handler)
 {
     if (stopped())
     {
@@ -349,7 +353,7 @@ void block_chain_impl::store(message::block_message::ptr block,
 
 // This processes the block through the organizer.
 void block_chain_impl::do_store(message::block_message::ptr block,
-    block_store_handler handler)
+                                block_store_handler handler)
 {
     start_write();
 
@@ -387,14 +391,12 @@ void block_chain_impl::fetch_serial(perform_read_functor perform_read)
 {
     // Post IBD writes are ordered on the strand, so never concurrent.
     // Reads are unordered and concurrent, but effectively blocked by writes.
-    const auto try_read = [this, perform_read]()
-    {
+    const auto try_read = [this, perform_read]() {
         const auto handle = database_.begin_read();
         return (!database_.is_write_locked(handle) && perform_read(handle));
     };
 
-    const auto do_read = [try_read]()
-    {
+    const auto do_read = [try_read]() {
         // Sleep while waiting for write to complete.
         while (!try_read())
             std::this_thread::sleep_for(asio::milliseconds(10));
@@ -460,16 +462,15 @@ void block_chain_impl::fetch_block_locator(block_locator_fetch_handler handler)
         return;
     }
 
-    const auto do_fetch = [this, handler](size_t slock)
-    {
+    const auto do_fetch = [this, handler](size_t slock) {
         hash_list locator;
         size_t top_height;
         if (!database_.blocks.top(top_height))
             return finish_fetch(slock, handler, error::operation_failed,
-                locator);
+                                locator);
 
         const auto indexes = block_locator_indexes(top_height);
-        for (const auto index: indexes)
+        for (const auto index : indexes)
         {
             hash_digest hash;
             auto found = false;
@@ -495,7 +496,7 @@ void block_chain_impl::fetch_block_locator(block_locator_fetch_handler handler)
 // Fetch start-base-stop|top+1(max 500)
 // This may generally execute 502 but as many as 531+ queries.
 void block_chain_impl::fetch_locator_block_hashes(
-    const message::get_blocks& locator, const hash_digest& threshold,
+    const message::get_blocks &locator, const hash_digest &threshold,
     size_t limit, locator_block_hashes_fetch_handler handler)
 {
     if (stopped())
@@ -507,12 +508,11 @@ void block_chain_impl::fetch_locator_block_hashes(
     // This is based on the idea that looking up by block hash to get heights
     // will be much faster than hashing each retrieved block to test for stop.
     const auto do_fetch = [this, locator, threshold, limit, handler](
-        size_t slock)
-    {
+                              size_t slock) {
         // Find the first block height.
         // If no start block is on our chain we start with block 0.
         size_t start = 0;
-        for (const auto& hash: locator.start_hashes)
+        for (const auto &hash : locator.start_hashes)
         {
             const auto result = database_.blocks.get(hash);
             if (result)
@@ -551,7 +551,7 @@ void block_chain_impl::fetch_locator_block_hashes(
             if (result)
             {
                 hashes.push_back(result.header().hash());
-//                break;
+                //                break;
             }
         }
 
@@ -561,7 +561,7 @@ void block_chain_impl::fetch_locator_block_hashes(
 }
 
 void block_chain_impl::fetch_locator_block_headers(
-    const message::get_headers& locator, const hash_digest& threshold,
+    const message::get_headers &locator, const hash_digest &threshold,
     size_t limit, locator_block_headers_fetch_handler handler)
 {
     if (stopped())
@@ -573,14 +573,13 @@ void block_chain_impl::fetch_locator_block_headers(
     // This is based on the idea that looking up by block hash to get heights
     // will be much faster than hashing each retrieved block to test for stop.
     const auto do_fetch = [this, locator, threshold, limit, handler](
-        size_t slock)
-    {
+                              size_t slock) {
         // TODO: consolidate this portion with fetch_locator_block_hashes.
         //---------------------------------------------------------------------
         // Find the first block height.
         // If no start block is on our chain we start with block 0.
         size_t start = 0;
-        for (const auto& hash: locator.start_hashes)
+        for (const auto &hash : locator.start_hashes)
         {
             const auto result = database_.blocks.get(hash);
             if (result)
@@ -620,7 +619,7 @@ void block_chain_impl::fetch_locator_block_headers(
             if (result)
             {
                 headers.push_back(result.header());
-//                break;
+                //                break;
             }
         }
 
@@ -631,7 +630,7 @@ void block_chain_impl::fetch_locator_block_headers(
 
 // This may execute up to 500 queries.
 void block_chain_impl::filter_blocks(message::get_data::ptr message,
-    result_handler handler)
+                                     result_handler handler)
 {
     if (stopped())
     {
@@ -639,9 +638,8 @@ void block_chain_impl::filter_blocks(message::get_data::ptr message,
         return;
     }
 
-    const auto do_fetch = [this, message, handler](size_t slock)
-    {
-        auto& inventories = message->inventories;
+    const auto do_fetch = [this, message, handler](size_t slock) {
+        auto &inventories = message->inventories;
 
         for (auto it = inventories.begin(); it != inventories.end();)
             if (it->is_block_type() && database_.blocks.get(it->hash))
@@ -656,7 +654,7 @@ void block_chain_impl::filter_blocks(message::get_data::ptr message,
 
 // BUGBUG: should only remove unspent transactions, other dups ok (BIP30).
 void block_chain_impl::filter_transactions(message::get_data::ptr message,
-    result_handler handler)
+                                           result_handler handler)
 {
     if (stopped())
     {
@@ -664,9 +662,8 @@ void block_chain_impl::filter_transactions(message::get_data::ptr message,
         return;
     }
 
-    const auto do_fetch = [this, message, handler](size_t slock)
-    {
-        auto& inventories = message->inventories;
+    const auto do_fetch = [this, message, handler](size_t slock) {
+        auto &inventories = message->inventories;
 
         for (auto it = inventories.begin(); it != inventories.end();)
             if (it->is_transaction_type() &&
@@ -682,7 +679,7 @@ void block_chain_impl::filter_transactions(message::get_data::ptr message,
 
 /// filter out block hashes that exist in the orphan pool.
 void block_chain_impl::filter_orphans(message::get_data::ptr message,
-    result_handler handler)
+                                      result_handler handler)
 {
     organizer_.filter_orphans(message);
     handler(error::success);
@@ -692,27 +689,27 @@ void block_chain_impl::filter_orphans(message::get_data::ptr message,
 // ------------------------------------------------------------------------
 
 void block_chain_impl::fetch_block(uint64_t height,
-    block_fetch_handler handler)
+                                   block_fetch_handler handler)
 {
     blockchain::fetch_block(*this, height, handler);
 }
 
 void block_chain_impl::fetch_latest_transactions(uint32_t index, uint32_t count,
-    transactions_fetch_handler handler)
+                                                 transactions_fetch_handler handler)
 {
     uint64_t height;
     get_last_height(height);
     blockchain::fetch_latest_transactions(*this, height, index, count, handler);
 }
 
-void block_chain_impl::fetch_block(const hash_digest& hash,
-    block_fetch_handler handler)
+void block_chain_impl::fetch_block(const hash_digest &hash,
+                                   block_fetch_handler handler)
 {
     blockchain::fetch_block(*this, hash, handler);
 }
 
 void block_chain_impl::fetch_block_header(uint64_t height,
-    block_header_fetch_handler handler)
+                                          block_header_fetch_handler handler)
 {
     if (stopped())
     {
@@ -720,28 +717,25 @@ void block_chain_impl::fetch_block_header(uint64_t height,
         return;
     }
 
-    const auto do_fetch = [this, height, handler](size_t slock)
-    {
+    const auto do_fetch = [this, height, handler](size_t slock) {
         chain::header header;
         auto found = false;
         {
             const auto result = database_.blocks.get(height);
-            if(result)
+            if (result)
             {
                 header = result.header();
                 header.transaction_count = result.transaction_count();
                 found = true;
             }
         }
-        return found ?
-            finish_fetch(slock, handler, error::success, header) :
-            finish_fetch(slock, handler, error::not_found, chain::header());
+        return found ? finish_fetch(slock, handler, error::success, header) : finish_fetch(slock, handler, error::not_found, chain::header());
     };
     fetch_serial(do_fetch);
 }
 
 void block_chain_impl::fetch_block_headers(uint64_t start,
-    uint64_t end, bool order, locator_block_headers_fetch_handler handler, uint32_t count)
+                                           uint64_t end, bool order, locator_block_headers_fetch_handler handler, uint32_t count)
 {
     if (stopped())
     {
@@ -749,34 +743,31 @@ void block_chain_impl::fetch_block_headers(uint64_t start,
         return;
     }
 
-    const auto do_fetch = [this, &start, &end, order, count, handler](size_t slock)
-    {
+    const auto do_fetch = [this, &start, &end, order, count, handler](size_t slock) {
         chain::header header;
         std::vector<chain::header> headers;
         uint32_t tx_count = 0;
-        while(start<=end)
+        while (start <= end)
         {
-            if((count && tx_count >= count) || !(start+1) || !end)
+            if ((count && tx_count >= count) || !(start + 1) || !end)
                 break;
             const auto result = database_.blocks.get((order ? start++ : end--));
-            if(result)
+            if (result)
             {
                 chain::header header = result.header();
                 header.transaction_count = result.transaction_count();
                 tx_count += result.transaction_count();
                 headers.push_back(header);
-            }         
+            }
         }
 
-        return headers.size() ?
-                finish_fetch(slock, handler, error::success, headers) :
-            finish_fetch(slock, handler, error::not_found, vector<chain::header>{});
+        return headers.size() ? finish_fetch(slock, handler, error::success, headers) : finish_fetch(slock, handler, error::not_found, vector<chain::header>{});
     };
     fetch_serial(do_fetch);
 }
 
-void block_chain_impl::fetch_block_header(const hash_digest& hash,
-    block_header_fetch_handler handler)
+void block_chain_impl::fetch_block_header(const hash_digest &hash,
+                                          block_header_fetch_handler handler)
 {
     if (stopped())
     {
@@ -784,36 +775,33 @@ void block_chain_impl::fetch_block_header(const hash_digest& hash,
         return;
     }
 
-    const auto do_fetch = [this, hash, handler](size_t slock)
-    {
+    const auto do_fetch = [this, hash, handler](size_t slock) {
         chain::header header;
         auto found = false;
         {
             const auto result = database_.blocks.get(hash);
-            if(result)
+            if (result)
             {
                 header = result.header();
                 header.transaction_count = result.transaction_count();
                 found = true;
             }
         }
-        return found ?
-            finish_fetch(slock, handler, error::success, header) :
-            finish_fetch(slock, handler, error::not_found, chain::header());
+        return found ? finish_fetch(slock, handler, error::success, header) : finish_fetch(slock, handler, error::not_found, chain::header());
     };
     fetch_serial(do_fetch);
 }
 
 void block_chain_impl::fetch_merkle_block(uint64_t height,
-    merkle_block_fetch_handler handler)
+                                          merkle_block_fetch_handler handler)
 {
     // TODO:
     ////blockchain::fetch_merkle_block(*this, height, handler);
     handler(error::operation_failed, {});
 }
 
-void block_chain_impl::fetch_merkle_block(const hash_digest& hash,
-    merkle_block_fetch_handler handler)
+void block_chain_impl::fetch_merkle_block(const hash_digest &hash,
+                                          merkle_block_fetch_handler handler)
 {
     // TODO:
     ////blockchain::fetch_merkle_block(*this, hash, handler);
@@ -821,7 +809,7 @@ void block_chain_impl::fetch_merkle_block(const hash_digest& hash,
 }
 
 void block_chain_impl::fetch_block_transaction_hashes(uint64_t height,
-    transaction_hashes_fetch_handler handler)
+                                                      transaction_hashes_fetch_handler handler)
 {
     if (stopped())
     {
@@ -829,28 +817,25 @@ void block_chain_impl::fetch_block_transaction_hashes(uint64_t height,
         return;
     }
 
-    const auto do_fetch = [this, height, handler](size_t slock)
-    {
+    const auto do_fetch = [this, height, handler](size_t slock) {
         hash_list hashes;
         auto found = false;
         {
             const auto result = database_.blocks.get(height);
-            if(result)
+            if (result)
             {
                 hashes = to_hashes(result);
                 found = true;
             }
         }
 
-        return found ?
-            finish_fetch(slock, handler, error::success, hashes) :
-            finish_fetch(slock, handler, error::not_found, hash_list());
+        return found ? finish_fetch(slock, handler, error::success, hashes) : finish_fetch(slock, handler, error::not_found, hash_list());
     };
     fetch_serial(do_fetch);
 }
 
-void block_chain_impl::fetch_block_transaction_hashes(const hash_digest& hash,
-    transaction_hashes_fetch_handler handler)
+void block_chain_impl::fetch_block_transaction_hashes(const hash_digest &hash,
+                                                      transaction_hashes_fetch_handler handler)
 {
     if (stopped())
     {
@@ -858,28 +843,25 @@ void block_chain_impl::fetch_block_transaction_hashes(const hash_digest& hash,
         return;
     }
 
-    const auto do_fetch = [this, hash, handler](size_t slock)
-    {
+    const auto do_fetch = [this, hash, handler](size_t slock) {
         hash_list hashes;
         auto found = false;
         {
             const auto result = database_.blocks.get(hash);
-            if(result)
+            if (result)
             {
                 hashes = to_hashes(result);
                 found = true;
             }
         }
 
-        return found ?
-            finish_fetch(slock, handler, error::success, hashes) :
-            finish_fetch(slock, handler, error::not_found, hash_list());
+        return found ? finish_fetch(slock, handler, error::success, hashes) : finish_fetch(slock, handler, error::not_found, hash_list());
     };
     fetch_serial(do_fetch);
 }
 
-void block_chain_impl::fetch_block_height(const hash_digest& hash,
-    block_height_fetch_handler handler)
+void block_chain_impl::fetch_block_height(const hash_digest &hash,
+                                          block_height_fetch_handler handler)
 {
     if (stopped())
     {
@@ -887,22 +869,19 @@ void block_chain_impl::fetch_block_height(const hash_digest& hash,
         return;
     }
 
-    const auto do_fetch = [this, hash, handler](size_t slock)
-    {
+    const auto do_fetch = [this, hash, handler](size_t slock) {
         std::size_t h{0};
         auto found = false;
         {
             const auto result = database_.blocks.get(hash);
-            if(result)
+            if (result)
             {
                 h = result.height();
                 found = true;
             }
         }
 
-        return found ?
-            finish_fetch(slock, handler, error::success, h) :
-            finish_fetch(slock, handler, error::not_found, 0);
+        return found ? finish_fetch(slock, handler, error::success, h) : finish_fetch(slock, handler, error::not_found, 0);
     };
     fetch_serial(do_fetch);
 }
@@ -915,18 +894,15 @@ void block_chain_impl::fetch_last_height(last_height_fetch_handler handler)
         return;
     }
 
-    const auto do_fetch = [this, handler](size_t slock)
-    {
+    const auto do_fetch = [this, handler](size_t slock) {
         size_t last_height;
-        return database_.blocks.top(last_height) ?
-            finish_fetch(slock, handler, error::success, last_height) :
-            finish_fetch(slock, handler, error::not_found, 0);
+        return database_.blocks.top(last_height) ? finish_fetch(slock, handler, error::success, last_height) : finish_fetch(slock, handler, error::not_found, 0);
     };
     fetch_serial(do_fetch);
 }
 
-void block_chain_impl::fetch_transaction(const hash_digest& hash,
-    transaction_fetch_handler handler)
+void block_chain_impl::fetch_transaction(const hash_digest &hash,
+                                         transaction_fetch_handler handler)
 {
     if (stopped())
     {
@@ -934,19 +910,16 @@ void block_chain_impl::fetch_transaction(const hash_digest& hash,
         return;
     }
 
-    const auto do_fetch = [this, hash, handler](size_t slock)
-    {
+    const auto do_fetch = [this, hash, handler](size_t slock) {
         const auto result = database_.transactions.get(hash);
         const auto tx = result ? result.transaction() : chain::transaction();
-        return result ?
-            finish_fetch(slock, handler, error::success, tx) :
-            finish_fetch(slock, handler, error::not_found, tx);
+        return result ? finish_fetch(slock, handler, error::success, tx) : finish_fetch(slock, handler, error::not_found, tx);
     };
     fetch_serial(do_fetch);
 }
 
-void block_chain_impl::fetch_transaction_index(const hash_digest& hash,
-    transaction_index_fetch_handler handler)
+void block_chain_impl::fetch_transaction_index(const hash_digest &hash,
+                                               transaction_index_fetch_handler handler)
 {
     if (stopped())
     {
@@ -954,19 +927,17 @@ void block_chain_impl::fetch_transaction_index(const hash_digest& hash,
         return;
     }
 
-    const auto do_fetch = [this, hash, handler](size_t slock)
-    {
+    const auto do_fetch = [this, hash, handler](size_t slock) {
         const auto result = database_.transactions.get(hash);
-        return result ?
-            finish_fetch(slock, handler, error::success, result.height(),
-                result.index()) :
-            finish_fetch(slock, handler, error::not_found, 0, 0);
+        return result ? finish_fetch(slock, handler, error::success, result.height(),
+                                     result.index())
+                      : finish_fetch(slock, handler, error::not_found, 0, 0);
     };
     fetch_serial(do_fetch);
 }
 
-void block_chain_impl::fetch_spend(const chain::output_point& outpoint,
-    spend_fetch_handler handler)
+void block_chain_impl::fetch_spend(const chain::output_point &outpoint,
+                                   spend_fetch_handler handler)
 {
     if (stopped())
     {
@@ -974,21 +945,16 @@ void block_chain_impl::fetch_spend(const chain::output_point& outpoint,
         return;
     }
 
-    const auto do_fetch = [this, outpoint, handler](size_t slock)
-    {
+    const auto do_fetch = [this, outpoint, handler](size_t slock) {
         const auto spend = database_.spends.get(outpoint);
-        const auto point = spend.valid ?
-            chain::input_point{ spend.hash, spend.index } :
-            chain::input_point();
-        return spend.valid ?
-            finish_fetch(slock, handler, error::success, point) :
-            finish_fetch(slock, handler, error::unspent_output, point);
+        const auto point = spend.valid ? chain::input_point{spend.hash, spend.index} : chain::input_point();
+        return spend.valid ? finish_fetch(slock, handler, error::success, point) : finish_fetch(slock, handler, error::unspent_output, point);
     };
     fetch_serial(do_fetch);
 }
 
-void block_chain_impl::fetch_history(const bc::wallet::payment_address& address,
-    uint64_t limit, uint64_t from_height, history_fetch_handler handler)
+void block_chain_impl::fetch_history(const bc::wallet::payment_address &address,
+                                     uint64_t limit, uint64_t from_height, history_fetch_handler handler)
 {
     if (stopped())
     {
@@ -997,17 +963,16 @@ void block_chain_impl::fetch_history(const bc::wallet::payment_address& address,
     }
 
     const auto do_fetch = [this, address, handler, limit, from_height](
-        size_t slock)
-    {
+                              size_t slock) {
         const auto history = database_.history.get(address.hash(), limit,
-            from_height);
+                                                   from_height);
         return finish_fetch(slock, handler, error::success, history);
     };
     fetch_serial(do_fetch);
 }
 
-bool block_chain_impl::fetch_history(const bc::wallet::payment_address& address,
-    uint64_t limit, uint64_t from_height, history_compact::list& history)
+bool block_chain_impl::fetch_history(const bc::wallet::payment_address &address,
+                                     uint64_t limit, uint64_t from_height, history_compact::list &history)
 {
     if (stopped())
     {
@@ -1017,9 +982,8 @@ bool block_chain_impl::fetch_history(const bc::wallet::payment_address& address,
     boost::mutex mutex;
 
     mutex.lock();
-    auto f = [&history, &mutex](const code& ec, const history_compact::list& history_) -> void
-    {
-        if((code)error::success == ec)
+    auto f = [&history, &mutex](const code &ec, const history_compact::list &history_) -> void {
+        if ((code)error::success == ec)
             history = history_;
         mutex.unlock();
     };
@@ -1031,8 +995,8 @@ bool block_chain_impl::fetch_history(const bc::wallet::payment_address& address,
     return true;
 }
 
-void block_chain_impl::fetch_stealth(const binary& filter, uint64_t from_height,
-    stealth_fetch_handler handler)
+void block_chain_impl::fetch_stealth(const binary &filter, uint64_t from_height,
+                                     stealth_fetch_handler handler)
 {
     if (stopped())
     {
@@ -1041,49 +1005,50 @@ void block_chain_impl::fetch_stealth(const binary& filter, uint64_t from_height,
     }
 
     const auto do_fetch = [this, filter, handler, from_height](
-        size_t slock)
-    {
+                              size_t slock) {
         const auto stealth = database_.stealth.scan(filter, from_height);
         return finish_fetch(slock, handler, error::success, stealth);
     };
     fetch_serial(do_fetch);
 }
 
-inline hash_digest block_chain_impl::get_hash(const std::string& str)
+inline hash_digest block_chain_impl::get_hash(const std::string &str)
 {
     data_chunk data(str.begin(), str.end());
     return sha256_hash(data);
 }
 
-inline short_hash block_chain_impl::get_short_hash(const std::string& str)
+inline short_hash block_chain_impl::get_short_hash(const std::string &str)
 {
     data_chunk data(str.begin(), str.end());
     return ripemd160_hash(data);
 }
 
-std::shared_ptr<chain::transaction> block_chain_impl::get_spends_output(const input_point& input)
+std::shared_ptr<chain::transaction> block_chain_impl::get_spends_output(const input_point &input)
 {
     const auto spend = database_.spends.get(input);
-    if (spend.valid){
-        
+    if (spend.valid)
+    {
+
         const auto result = database_.transactions.get(spend.hash);
-        if(result) {
+        if (result)
+        {
             return std::make_shared<chain::transaction>(result.transaction());
-        } 
+        }
     }
 
     return nullptr;
 }
 
-std::shared_ptr<libbitcoin::chain::wallet> block_chain_impl::is_wallet_passwd_valid
-    (const std::string& name, const std::string& passwd)
+std::shared_ptr<libbitcoin::chain::wallet> block_chain_impl::is_wallet_passwd_valid(const std::string &name, const std::string &passwd)
 {
     //added by chengzhiping to protect wallets from brute force password attacks.
     auto *ass = wallet_security_strategy::get_instance();
     ass->check_locked(name);
 
     auto wallet = get_wallet(name);
-    if (wallet && wallet->get_passwd() == get_hash(passwd)) { // wallet exist
+    if (wallet && wallet->get_passwd() == get_hash(passwd))
+    { // wallet exist
         ass->on_auth_passwd(name, true);
         return wallet;
     }
@@ -1093,15 +1058,16 @@ std::shared_ptr<libbitcoin::chain::wallet> block_chain_impl::is_wallet_passwd_va
     return nullptr;
 }
 
-std::string block_chain_impl::is_wallet_lastwd_valid(const libbitcoin::chain::wallet& acc, std::string& auth, const std::string& lastwd)
+std::string block_chain_impl::is_wallet_lastwd_valid(const libbitcoin::chain::wallet &acc, std::string &auth, const std::string &lastwd)
 {
     //added by chengzhiping to protect wallets from brute force password attacks.
     auto *ass = wallet_security_strategy::get_instance();
 
     std::string mnemonic;
     acc.get_mnemonic(auth, mnemonic);
-    auto&& results = bc::split(mnemonic, " ", true); // with trim
-    if (*results.rbegin() != lastwd){
+    auto &&results = bc::split(mnemonic, " ", true); // with trim
+    if (*results.rbegin() != lastwd)
+    {
         ass->on_auth_lastwd(acc.get_name(), false);
         throw std::logic_error{"last word not matching."};
     }
@@ -1111,39 +1077,44 @@ std::string block_chain_impl::is_wallet_lastwd_valid(const libbitcoin::chain::wa
     return mnemonic;
 }
 
-void block_chain_impl::set_wallet_passwd(const std::string& name, const std::string& passwd)
+void block_chain_impl::set_wallet_passwd(const std::string &name, const std::string &passwd)
 {
     auto wallet = get_wallet(name);
-    if (wallet) {
+    if (wallet)
+    {
         wallet->set_passwd(passwd);
         store_wallet(wallet);
     }
-    else{
+    else
+    {
         throw std::logic_error{"wallet not found"};
     }
 }
 
-bool block_chain_impl::is_admin_wallet(const std::string& name)
+bool block_chain_impl::is_admin_wallet(const std::string &name)
 {
     auto wallet = get_wallet(name);
-    if (wallet) {
+    if (wallet)
+    {
         return wallet_priority::administrator == wallet->get_priority();
     }
     return false;
 }
 
-bool block_chain_impl::is_wallet_exist(const std::string& name)
+bool block_chain_impl::is_wallet_exist(const std::string &name)
 {
     return nullptr != get_wallet(name);
 }
 
 operation_result block_chain_impl::store_wallet(std::shared_ptr<libbitcoin::chain::wallet> acc)
 {
-    if (stopped()) {
+    if (stopped())
+    {
         return operation_result::failure;
     }
 
-    if (!(acc)) {
+    if (!(acc))
+    {
         throw std::runtime_error{"nullptr for wallet"};
     }
 
@@ -1157,7 +1128,7 @@ operation_result block_chain_impl::store_wallet(std::shared_ptr<libbitcoin::chai
     return operation_result::okay;
 }
 
-std::shared_ptr<libbitcoin::chain::wallet> block_chain_impl::get_wallet(const std::string& name)
+std::shared_ptr<libbitcoin::chain::wallet> block_chain_impl::get_wallet(const std::string &name)
 {
     return database_.wallets.get_wallet_result(get_hash(name)).get_wallet_detail();
 }
@@ -1169,9 +1140,10 @@ std::shared_ptr<std::vector<libbitcoin::chain::wallet>> block_chain_impl::get_wa
 }
 
 /// delete wallet according wallet name
-operation_result block_chain_impl::delete_wallet(const std::string& name)
+operation_result block_chain_impl::delete_wallet(const std::string &name)
 {
-    if (stopped()) {
+    if (stopped())
+    {
         return operation_result::failure;
     }
 
@@ -1188,11 +1160,13 @@ operation_result block_chain_impl::delete_wallet(const std::string& name)
 /// just store data into database "not do same address check"  -- todo
 operation_result block_chain_impl::store_wallet_address(std::shared_ptr<wallet_address> address)
 {
-    if (stopped()) {
+    if (stopped())
+    {
         return operation_result::failure;
     }
 
-    if (!address) {
+    if (!address)
+    {
         throw std::runtime_error{"nullptr for address"};
     }
     ///////////////////////////////////////////////////////////////////////////
@@ -1207,9 +1181,10 @@ operation_result block_chain_impl::store_wallet_address(std::shared_ptr<wallet_a
 }
 
 /// only delete the last address of wallet
-operation_result block_chain_impl::delete_wallet_address(const std::string& name)
+operation_result block_chain_impl::delete_wallet_address(const std::string &name)
 {
-    if (stopped()) {
+    if (stopped())
+    {
         return operation_result::failure;
     }
 
@@ -1219,7 +1194,7 @@ operation_result block_chain_impl::delete_wallet_address(const std::string& name
 
     auto hash = get_short_hash(name);
     auto addr_vec = database_.wallet_addresses.get(hash);
-    for( auto each : addr_vec )
+    for (auto each : addr_vec)
         database_.wallet_addresses.delete_last_row(hash);
     database_.wallet_addresses.sync();
     ///////////////////////////////////////////////////////////////////////////
@@ -1227,9 +1202,10 @@ operation_result block_chain_impl::delete_wallet_address(const std::string& name
 }
 
 /// delete some of the address from the last
-operation_result block_chain_impl::delete_n_wallet_address(const std::string& name, uint64_t count)
+operation_result block_chain_impl::delete_n_wallet_address(const std::string &name, uint64_t count)
 {
-    if (stopped()) {
+    if (stopped())
+    {
         return operation_result::failure;
     }
 
@@ -1239,9 +1215,9 @@ operation_result block_chain_impl::delete_n_wallet_address(const std::string& na
 
     auto hash = get_short_hash(name);
     auto addr_vec = database_.wallet_addresses.get(hash);
-    if(count >= addr_vec.size())
+    if (count >= addr_vec.size())
         throw std::logic_error{"Parameter count should less than the count of your address!"};
-    for( size_t i = 0;i < count; i++)
+    for (size_t i = 0; i < count; i++)
         database_.wallet_addresses.delete_last_row(hash);
     database_.wallet_addresses.sync();
     ///////////////////////////////////////////////////////////////////////////
@@ -1249,20 +1225,20 @@ operation_result block_chain_impl::delete_n_wallet_address(const std::string& na
 }
 
 std::shared_ptr<wallet_address> block_chain_impl::get_wallet_address(
-    const std::string& name, const std::string& address)
+    const std::string &name, const std::string &address)
 {
     return database_.wallet_addresses.get(get_short_hash(name), address);
 }
 
 std::shared_ptr<wallet_address::list> block_chain_impl::get_wallet_addresses(
-    const std::string& name)
+    const std::string &name)
 {
     auto sp_addr = std::make_shared<wallet_address::list>();
     auto result = database_.wallet_addresses.get(get_short_hash(name));
-    if (result.size()) {
+    if (result.size())
+    {
         //sp_addr = std::make_shared<wallet_address::list>();
-        const auto action = [&sp_addr](const wallet_address& elem)
-        {
+        const auto action = [&sp_addr](const wallet_address &elem) {
             sp_addr->emplace_back(std::move(elem));
         };
         std::for_each(result.begin(), result.end(), action);
@@ -1271,10 +1247,11 @@ std::shared_ptr<wallet_address::list> block_chain_impl::get_wallet_addresses(
 }
 
 operation_result block_chain_impl::store_wallet_token(
-    const token_detail& detail,
-    const string& name)
+    const token_detail &detail,
+    const string &name)
 {
-    if (stopped()) {
+    if (stopped())
+    {
         return operation_result::failure;
     }
 
@@ -1291,18 +1268,20 @@ operation_result block_chain_impl::store_wallet_token(
 
 operation_result block_chain_impl::store_wallet_token(
     std::shared_ptr<token_detail> detail,
-    const string& name)
+    const string &name)
 {
-    if (!(detail)) {
+    if (!(detail))
+    {
         throw std::runtime_error{"nullptr for token"};
     }
     return store_wallet_token(*detail, name);
 }
 
 /// delete wallet token by wallet name
-operation_result block_chain_impl::delete_wallet_token(const std::string& name)
+operation_result block_chain_impl::delete_wallet_token(const std::string &name)
 {
-    if (stopped()) {
+    if (stopped())
+    {
         return operation_result::failure;
     }
 
@@ -1312,7 +1291,7 @@ operation_result block_chain_impl::delete_wallet_token(const std::string& name)
 
     auto hash = get_short_hash(name);
     auto token_vec = database_.wallet_tokens.get(hash);
-    for( auto each : token_vec ) // just use token count
+    for (auto each : token_vec) // just use token count
         database_.wallet_tokens.delete_last_row(hash);
     database_.wallet_tokens.sync();
     ///////////////////////////////////////////////////////////////////////////
@@ -1320,13 +1299,12 @@ operation_result block_chain_impl::delete_wallet_token(const std::string& name)
 }
 
 std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_token(
-    const std::string& name, const std::string& token_name, business_kind kind)
+    const std::string &name, const std::string &token_name, business_kind kind)
 {
     auto sp_token_vec = get_wallet_tokens(name, kind);
     auto ret_vector = std::make_shared<business_address_token::list>();
 
-    const auto action = [&](const business_address_token& addr_token)
-    {
+    const auto action = [&](const business_address_token &addr_token) {
         if (addr_token.detail.get_symbol() == token_name)
             ret_vector->emplace_back(std::move(addr_token));
     };
@@ -1337,13 +1315,12 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_token
 }
 
 std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_token(
-    const std::string& name, const std::string& token_name)
+    const std::string &name, const std::string &token_name)
 {
     auto sp_token_vec = get_wallet_tokens(name);
     auto ret_vector = std::make_shared<business_address_token::list>();
 
-    const auto action = [&](const business_address_token& addr_token)
-    {
+    const auto action = [&](const business_address_token &addr_token) {
         if (addr_token.detail.get_symbol() == token_name)
             ret_vector->emplace_back(std::move(addr_token));
     };
@@ -1353,12 +1330,12 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_token
     return ret_vector;
 }
 
-static history::list expand_history(history_compact::list& compact)
+static history::list expand_history(history_compact::list &compact)
 {
     history::list result;
     result.reserve(compact.size());
 
-    std::unordered_map<uint64_t, history*> map_output;
+    std::unordered_map<uint64_t, history *> map_output;
     // Process all outputs.
     for (auto output = compact.begin(); output != compact.end(); ++output)
     {
@@ -1368,7 +1345,7 @@ static history::list expand_history(history_compact::list& compact)
             row.output = output->point;
             row.output_height = output->height;
             row.value = output->value;
-            row.spend = { null_hash, max_uint32 };
+            row.spend = {null_hash, max_uint32};
             row.temporary_checksum = output->point.checksum();
             result.emplace_back(row);
             map_output[row.temporary_checksum] = &result.back();
@@ -1376,7 +1353,7 @@ static history::list expand_history(history_compact::list& compact)
     }
 
     //process the spends.
-    for (const auto& spend: compact)
+    for (const auto &spend : compact)
     {
         if (spend.kind != point_kind::spend)
             continue;
@@ -1384,16 +1361,16 @@ static history::list expand_history(history_compact::list& compact)
         auto r = map_output.find(spend.previous_checksum);
         if (r != map_output.end() && r->second->spend.hash == null_hash)
         {
-             r->second->spend = spend.point;
-             r->second->spend_height = spend.height;
-             continue;
+            r->second->spend = spend.point;
+            r->second->spend_height = spend.height;
+            continue;
         }
 
         // This will only happen if the history height cutoff comes between
         // an output and its spend. In this case we return just the spend.
         {
             history row;
-            row.output = { null_hash, max_uint32 };
+            row.output = {null_hash, max_uint32};
             row.output_height = max_uint64;
             row.value = max_uint64;
             row.spend = spend.point;
@@ -1405,8 +1382,10 @@ static history::list expand_history(history_compact::list& compact)
     compact.clear();
 
     // Clear all remaining checksums from unspent rows.
-    for (auto& row: result) {
-        if (row.spend.hash == null_hash) {
+    for (auto &row : result)
+    {
+        if (row.spend.hash == null_hash)
+        {
             row.spend_height = max_uint64;
         }
     }
@@ -1422,32 +1401,36 @@ static history::list expand_history(history_compact::list& compact)
     // output height first, decreasely
     // output index second, decreasely
     std::sort(result.begin(), result.end(),
-        [](const history& elem1, const history& elem2) {
-            typedef std::tuple<uint64_t, uint64_t, uint64_t, uint64_t> cmp_tuple_t;
-            cmp_tuple_t tuple1(elem1.spend_height, elem1.spend.index, elem1.output_height, elem1.output.index);
-            cmp_tuple_t tuple2(elem2.spend_height, elem2.spend.index, elem2.output_height, elem2.output.index);
-            return tuple1 > tuple2;
-        });
+              [](const history &elem1, const history &elem2) {
+                  typedef std::tuple<uint64_t, uint64_t, uint64_t, uint64_t> cmp_tuple_t;
+                  cmp_tuple_t tuple1(elem1.spend_height, elem1.spend.index, elem1.output_height, elem1.output.index);
+                  cmp_tuple_t tuple2(elem2.spend_height, elem2.spend.index, elem2.output_height, elem2.output.index);
+                  return tuple1 > tuple2;
+              });
     return result;
 }
 
-history::list block_chain_impl::get_address_history(const bc::wallet::payment_address& addr, bool add_memory_pool, uint64_t from_height)
+history::list block_chain_impl::get_address_history(const bc::wallet::payment_address &addr, bool add_memory_pool, uint64_t from_height)
 {
     history_compact::list cmp_history;
     bool result = true;
-    if (add_memory_pool) {
+    if (add_memory_pool)
+    {
         result = get_history(addr, 0, from_height, cmp_history);
-    } else {
+    }
+    else
+    {
         result = fetch_history(addr, 0, from_height, cmp_history);
     }
-    if (result) {
+    if (result)
+    {
         return expand_history(cmp_history);
     }
     return history::list();
 }
 
 std::shared_ptr<token_cert> block_chain_impl::get_wallet_token_cert(
-    const std::string& wallet, const std::string& symbol, token_cert_type cert_type)
+    const std::string &wallet, const std::string &symbol, token_cert_type cert_type)
 {
     BITCOIN_ASSERT(!symbol.empty());
     BITCOIN_ASSERT(cert_type != token_cert_ns::none);
@@ -1459,20 +1442,23 @@ std::shared_ptr<token_cert> block_chain_impl::get_wallet_token_cert(
     chain::transaction tx_temp;
     uint64_t tx_height;
 
-    for (auto& each : *pvaddr){
+    for (auto &each : *pvaddr)
+    {
         bc::wallet::payment_address payment_address(each.get_address());
-        auto&& rows = get_address_history(payment_address);
+        auto &&rows = get_address_history(payment_address);
 
-        for (auto& row: rows) {
+        for (auto &row : rows)
+        {
             // spend unconfirmed (or no spend attempted)
-            if ((row.spend.hash == null_hash)
-                    && get_transaction(row.output.hash, tx_temp, tx_height))
+            if ((row.spend.hash == null_hash) && get_transaction(row.output.hash, tx_temp, tx_height))
             {
                 BITCOIN_ASSERT(row.output.index < tx_temp.outputs.size());
-                const auto& output = tx_temp.outputs.at(row.output.index);
-                if (output.is_token_cert()) {
+                const auto &output = tx_temp.outputs.at(row.output.index);
+                if (output.is_token_cert())
+                {
                     auto cert = output.get_token_cert();
-                    if (symbol != cert.get_symbol() || cert_type != cert.get_type()) {
+                    if (symbol != cert.get_symbol() || cert_type != cert.get_type())
+                    {
                         continue;
                     }
 
@@ -1486,26 +1472,29 @@ std::shared_ptr<token_cert> block_chain_impl::get_wallet_token_cert(
 }
 
 std::shared_ptr<business_address_token_cert::list>
-block_chain_impl::get_address_token_certs(const std::string& address, const std::string& symbol, token_cert_type cert_type)
+block_chain_impl::get_address_token_certs(const std::string &address, const std::string &symbol, token_cert_type cert_type)
 {
     auto ret_vector = std::make_shared<business_address_token_cert::list>();
-    auto&& business_certs = database_.address_tokens.get_token_certs(address, symbol, cert_type, 0);
-    for (auto& business_cert : business_certs) {
+    auto &&business_certs = database_.address_tokens.get_token_certs(address, symbol, cert_type, 0);
+    for (auto &business_cert : business_certs)
+    {
         ret_vector->emplace_back(std::move(business_cert));
     }
     return ret_vector;
 }
 
 std::shared_ptr<business_address_token_cert::list>
-block_chain_impl::get_wallet_token_certs(const std::string& wallet, const std::string& symbol, token_cert_type cert_type)
+block_chain_impl::get_wallet_token_certs(const std::string &wallet, const std::string &symbol, token_cert_type cert_type)
 {
     auto ret_vector = std::make_shared<business_address_token_cert::list>();
     auto pvaddr = get_wallet_addresses(wallet);
-    if (pvaddr) {
-        for (const auto& wallet_address : *pvaddr) {
-            auto&& business_certs = database_.address_tokens.
-                get_token_certs(wallet_address.get_address(), symbol, cert_type, 0);
-            for (auto& business_cert : business_certs) {
+    if (pvaddr)
+    {
+        for (const auto &wallet_address : *pvaddr)
+        {
+            auto &&business_certs = database_.address_tokens.get_token_certs(wallet_address.get_address(), symbol, cert_type, 0);
+            for (auto &business_cert : business_certs)
+            {
                 ret_vector->emplace_back(std::move(business_cert));
             }
         }
@@ -1517,26 +1506,26 @@ std::shared_ptr<token_cert::list> block_chain_impl::get_issued_token_certs()
 {
     auto sp_vec = std::make_shared<token_cert::list>();
     auto sp_token_certs_vec = database_.certs.get_blockchain_token_certs();
-    for (const auto& each : *sp_token_certs_vec)
+    for (const auto &each : *sp_token_certs_vec)
         sp_vec->emplace_back(std::move(each));
     return sp_vec;
 }
 
-bool block_chain_impl::is_token_cert_exist(const std::string& symbol, token_cert_type cert_type)
+bool block_chain_impl::is_token_cert_exist(const std::string &symbol, token_cert_type cert_type)
 {
     BITCOIN_ASSERT(!symbol.empty());
 
-    auto&& key_str = token_cert::get_key(symbol, cert_type);
+    auto &&key_str = token_cert::get_key(symbol, cert_type);
     const auto key = get_hash(key_str);
     return database_.certs.get(key) != nullptr;
 }
 
-bool block_chain_impl::is_candidate_exist(const std::string& symbol)
+bool block_chain_impl::is_candidate_exist(const std::string &symbol)
 {
     return get_registered_candidate(symbol) != nullptr;
 }
 
-std::shared_ptr<candidate_info> block_chain_impl::get_registered_candidate(const std::string& symbol)
+std::shared_ptr<candidate_info> block_chain_impl::get_registered_candidate(const std::string &symbol)
 {
     BITCOIN_ASSERT(!symbol.empty());
     // return the registered identifiable token, its status must be CANDIDATE_STATUS_REGISTER
@@ -1554,8 +1543,8 @@ bool block_chain_impl::exist_in_candidates(std::string uid)
     auto sh_vec = get_registered_candidates();
     if (nullptr != sh_vec)
     {
-        auto pred = [uid](libbitcoin::chain::candidate_info& info){
-                return info.to_uid == uid;
+        auto pred = [uid](libbitcoin::chain::candidate_info &info) {
+            return info.to_uid == uid;
         };
         return std::find_if(sh_vec->begin(), sh_vec->end(), pred) != sh_vec->end();
     }
@@ -1563,7 +1552,7 @@ bool block_chain_impl::exist_in_candidates(std::string uid)
 }
 
 std::shared_ptr<candidate_info::list> block_chain_impl::get_candidate_history(
-    const std::string& symbol, uint64_t limit, uint64_t page_number)
+    const std::string &symbol, uint64_t limit, uint64_t page_number)
 {
     BITCOIN_ASSERT(!symbol.empty());
     // return the identifiable tokens of specified symbol, the last item's status must be CANDIDATE_STATUS_REGISTER
@@ -1571,7 +1560,7 @@ std::shared_ptr<candidate_info::list> block_chain_impl::get_candidate_history(
 }
 
 std::shared_ptr<candidate::list> block_chain_impl::get_wallet_candidates(
-    const std::string& wallet, const std::string& symbol)
+    const std::string &wallet, const std::string &symbol)
 {
     auto sp_vec = std::make_shared<candidate::list>();
 
@@ -1582,23 +1571,27 @@ std::shared_ptr<candidate::list> block_chain_impl::get_wallet_candidates(
     chain::transaction tx_temp;
     uint64_t tx_height;
 
-    for (auto& each : *pvaddr){
+    for (auto &each : *pvaddr)
+    {
         bc::wallet::payment_address payment_address(each.get_address());
-        auto&& rows = get_address_history(payment_address);
+        auto &&rows = get_address_history(payment_address);
 
-        for (auto& row: rows) {
+        for (auto &row : rows)
+        {
             // spend unconfirmed (or no spend attempted)
-            if ((row.spend.hash == null_hash)
-                    && get_transaction(row.output.hash, tx_temp, tx_height))
+            if ((row.spend.hash == null_hash) && get_transaction(row.output.hash, tx_temp, tx_height))
             {
                 BITCOIN_ASSERT(row.output.index < tx_temp.outputs.size());
-                const auto& output = tx_temp.outputs.at(row.output.index);
-                if (output.is_candidate()) {
-                    auto&& token = output.get_candidate();
-                    if (symbol.empty()) {
+                const auto &output = tx_temp.outputs.at(row.output.index);
+                if (output.is_candidate())
+                {
+                    auto &&token = output.get_candidate();
+                    if (symbol.empty())
+                    {
                         sp_vec->emplace_back(std::move(token));
                     }
-                    else if (symbol == token.get_symbol()) {
+                    else if (symbol == token.get_symbol())
+                    {
                         sp_vec->emplace_back(std::move(token));
                         return sp_vec;
                     }
@@ -1610,24 +1603,25 @@ std::shared_ptr<candidate::list> block_chain_impl::get_wallet_candidates(
     return sp_vec;
 }
 
-uint64_t block_chain_impl::get_address_token_volume(const std::string& addr, const std::string& token)
+uint64_t block_chain_impl::get_address_token_volume(const std::string &addr, const std::string &token)
 {
     uint64_t token_volume = 0;
     auto address = payment_address(addr);
-    auto&& rows = get_address_history(address);
+    auto &&rows = get_address_history(address);
 
     chain::transaction tx_temp;
     uint64_t tx_height;
 
-    for (auto& row: rows)
+    for (auto &row : rows)
     {
         // spend unconfirmed (or no spend attempted)
-        if ((row.spend.hash == null_hash)
-            && get_transaction(tx_temp, tx_height, row.output.hash))
+        if ((row.spend.hash == null_hash) && get_transaction(tx_temp, tx_height, row.output.hash))
         {
             auto output = tx_temp.outputs.at(row.output.index);
-            if ((output.is_token_transfer() || output.is_token_issue() || output.is_token_secondaryissue())) {
-                if (output.get_token_symbol() == token) {
+            if ((output.is_token_transfer() || output.is_token_issue() || output.is_token_secondaryissue()))
+            {
+                if (output.get_token_symbol() == token)
+                {
                     token_volume += output.get_token_amount();
                 }
             }
@@ -1637,12 +1631,14 @@ uint64_t block_chain_impl::get_address_token_volume(const std::string& addr, con
     return token_volume;
 }
 
-uint64_t block_chain_impl::get_wallet_token_volume(const std::string& wallet, const std::string& token)
+uint64_t block_chain_impl::get_wallet_token_volume(const std::string &wallet, const std::string &token)
 {
     uint64_t volume = 0;
     auto pvaddr = get_wallet_addresses(wallet);
-    if (pvaddr) {
-        for (auto& each : *pvaddr) {
+    if (pvaddr)
+    {
+        for (auto &each : *pvaddr)
+        {
             volume += get_address_token_volume(each.get_address(), token);
         }
     }
@@ -1650,23 +1646,26 @@ uint64_t block_chain_impl::get_wallet_token_volume(const std::string& wallet, co
     return volume;
 }
 
-uint64_t block_chain_impl::get_token_volume(const std::string& token)
+uint64_t block_chain_impl::get_token_volume(const std::string &token)
 {
     return database_.tokens.get_token_volume(token);
 }
 
-std::string block_chain_impl::get_token_symbol_from_asset_data(const asset_data& data)
+std::string block_chain_impl::get_token_symbol_from_asset_data(const asset_data &data)
 {
     std::string token_symbol("");
-    if (data.get_kind_value() == business_kind::token_issue) {
+    if (data.get_kind_value() == business_kind::token_issue)
+    {
         auto detail = boost::get<token_detail>(data.get_data());
         token_symbol = detail.get_symbol();
     }
-    else if (data.get_kind_value() == business_kind::token_transfer) {
+    else if (data.get_kind_value() == business_kind::token_transfer)
+    {
         auto transfer = boost::get<token_transfer>(data.get_data());
         token_symbol = transfer.get_symbol();
     }
-    else if (data.get_kind_value() == business_kind::token_cert) {
+    else if (data.get_kind_value() == business_kind::token_cert)
+    {
         auto cert = boost::get<token_cert>(data.get_data());
         token_symbol = cert.get_symbol();
     }
@@ -1674,32 +1673,35 @@ std::string block_chain_impl::get_token_symbol_from_asset_data(const asset_data&
 }
 
 // get special tokens of the wallet/name, just used for token_detail/token_transfer
-std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string& addr,
-    const std::string& symbol, business_kind kind, uint8_t confirmed)
+std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string &addr,
+                                                                                       const std::string &symbol, business_kind kind, uint8_t confirmed)
 {
     auto ret_vector = std::make_shared<business_history::list>();
     auto sh_vec = database_.address_tokens.get_address_business_history(addr, 0);
 
-    for (auto iter = sh_vec->begin(); iter != sh_vec->end(); ++iter){
-        if ((iter->data.get_kind_value() != kind)
-            || (iter->status != confirmed))
+    for (auto iter = sh_vec->begin(); iter != sh_vec->end(); ++iter)
+    {
+        if ((iter->data.get_kind_value() != kind) || (iter->status != confirmed))
             continue;
 
         // ucn business process
-        if (kind == business_kind::ucn) {
+        if (kind == business_kind::ucn)
+        {
             ret_vector->emplace_back(std::move(*iter));
             continue;
         }
 
         // ucn award business process
-        if (kind == business_kind::ucn_award) {
+        if (kind == business_kind::ucn_award)
+        {
             ret_vector->emplace_back(std::move(*iter));
             continue;
         }
 
         // token business process
-        std::string&& token_symbol = get_token_symbol_from_asset_data(iter->data);
-        if (symbol == token_symbol) {
+        std::string &&token_symbol = get_token_symbol_from_asset_data(iter->data);
+        if (symbol == token_symbol)
+        {
             ret_vector->emplace_back(std::move(*iter));
         }
     }
@@ -1708,22 +1710,27 @@ std::shared_ptr<business_history::list> block_chain_impl::get_address_business_h
 }
 
 // get special tokens of the wallet/name, just used for token_detail/token_transfer
-std::shared_ptr<business_record::list> block_chain_impl::get_address_business_record(const std::string& addr,
-    uint64_t start, uint64_t end, const std::string& symbol)
+std::shared_ptr<business_record::list> block_chain_impl::get_address_business_record(const std::string &addr,
+                                                                                     uint64_t start, uint64_t end, const std::string &symbol)
 {
     auto ret_vector = std::make_shared<business_record::list>();
     auto sh_vec = database_.address_tokens.get(addr, start, end);
 
-    if (symbol.empty()) { // all utxo
-        for (auto iter = sh_vec->begin(); iter != sh_vec->end(); ++iter){
+    if (symbol.empty())
+    { // all utxo
+        for (auto iter = sh_vec->begin(); iter != sh_vec->end(); ++iter)
+        {
             ret_vector->emplace_back(std::move(*iter));
         }
     }
-    else { // token symbol utxo
-        for (auto iter = sh_vec->begin(); iter != sh_vec->end(); ++iter){
+    else
+    { // token symbol utxo
+        for (auto iter = sh_vec->begin(); iter != sh_vec->end(); ++iter)
+        {
             // token business process
-            std::string&& token_symbol = get_token_symbol_from_asset_data(iter->data);
-            if (symbol == token_symbol) {
+            std::string &&token_symbol = get_token_symbol_from_asset_data(iter->data);
+            if (symbol == token_symbol)
+            {
                 ret_vector->emplace_back(std::move(*iter));
             }
         }
@@ -1733,21 +1740,20 @@ std::shared_ptr<business_record::list> block_chain_impl::get_address_business_re
 }
 
 // get special tokens of the wallet/name, just used for token_detail/token_transfer
-std::shared_ptr<business_record::list> block_chain_impl::get_address_business_record(const std::string& address,
-    const std::string& symbol, size_t start_height, size_t end_height, uint64_t limit, uint64_t page_number) const
+std::shared_ptr<business_record::list> block_chain_impl::get_address_business_record(const std::string &address,
+                                                                                     const std::string &symbol, size_t start_height, size_t end_height, uint64_t limit, uint64_t page_number) const
 {
     return database_.address_tokens.get(address, symbol, start_height, end_height, limit, page_number);
 }
 
 // get special tokens of the wallet/name, just used for token_detail/token_transfer
-std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string& addr,
-    business_kind kind, uint8_t confirmed)
+std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string &addr,
+                                                                                       business_kind kind, uint8_t confirmed)
 {
     auto sp_token_vec = std::make_shared<business_history::list>();
 
     business_history::list token_vec = database_.address_tokens.get_business_history(addr, 0, kind, confirmed);
-    const auto add_token = [&](const business_history& addr_token)
-    {
+    const auto add_token = [&](const business_history &addr_token) {
         sp_token_vec->emplace_back(std::move(addr_token));
     };
     std::for_each(token_vec.begin(), token_vec.end(), add_token);
@@ -1756,21 +1762,19 @@ std::shared_ptr<business_history::list> block_chain_impl::get_address_business_h
 }
 
 // get wallet owned business history between begin and end
-std::shared_ptr<business_history::list> block_chain_impl::get_wallet_business_history(const std::string& name,
-    business_kind kind, uint32_t time_begin, uint32_t time_end)
+std::shared_ptr<business_history::list> block_chain_impl::get_wallet_business_history(const std::string &name,
+                                                                                      business_kind kind, uint32_t time_begin, uint32_t time_end)
 {
     auto wallet_addr_vec = get_wallet_addresses(name);
     auto sp_token_vec = std::make_shared<business_history::list>();
 
     // copy each token_vec element to sp_token
-    const auto add_token = [&](const business_history& addr_token)
-    {
+    const auto add_token = [&](const business_history &addr_token) {
         sp_token_vec->emplace_back(std::move(addr_token));
     };
 
     // search all tokens belongs to this address which is owned by wallet
-    const auto action = [&](const wallet_address& elem)
-    {
+    const auto action = [&](const wallet_address &elem) {
         auto token_vec = database_.address_tokens.get_business_history(elem.get_address(), 0, kind, time_begin, time_end);
         std::for_each(token_vec.begin(), token_vec.end(), add_token);
     };
@@ -1779,14 +1783,13 @@ std::shared_ptr<business_history::list> block_chain_impl::get_wallet_business_hi
     return sp_token_vec;
 }
 
-std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string& addr,
-    business_kind kind, uint32_t time_begin, uint32_t time_end)
+std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string &addr,
+                                                                                       business_kind kind, uint32_t time_begin, uint32_t time_end)
 {
     auto sp_token_vec = std::make_shared<business_history::list>();
 
     business_history::list token_vec = database_.address_tokens.get_business_history(addr, 0, kind, time_begin, time_end);
-    const auto add_token = [&](const business_history& addr_token)
-    {
+    const auto add_token = [&](const business_history &addr_token) {
         sp_token_vec->emplace_back(std::move(addr_token));
     };
     std::for_each(token_vec.begin(), token_vec.end(), add_token);
@@ -1794,13 +1797,12 @@ std::shared_ptr<business_history::list> block_chain_impl::get_address_business_h
     return sp_token_vec;
 }
 
-std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string& addr)
+std::shared_ptr<business_history::list> block_chain_impl::get_address_business_history(const std::string &addr)
 {
     auto sp_token_vec = std::make_shared<business_history::list>();
     auto key = get_short_hash(addr);
     business_history::list token_vec = database_.address_tokens.get_business_history(key, 0);
-    const auto add_token = [&](const business_history& addr_token)
-    {
+    const auto add_token = [&](const business_history &addr_token) {
         sp_token_vec->emplace_back(std::move(addr_token));
     };
     std::for_each(token_vec.begin(), token_vec.end(), add_token);
@@ -1809,14 +1811,13 @@ std::shared_ptr<business_history::list> block_chain_impl::get_address_business_h
 }
 
 /// get business record according address
-std::shared_ptr<business_record::list> block_chain_impl::get_address_business_record(const std::string& addr,
-    size_t from_height, size_t limit)
+std::shared_ptr<business_record::list> block_chain_impl::get_address_business_record(const std::string &addr,
+                                                                                     size_t from_height, size_t limit)
 {
     auto sp_token_vec = std::make_shared<business_record::list>();
     auto key = get_short_hash(addr);
     business_record::list token_vec = database_.address_tokens.get(key, from_height, limit);
-    const auto add_token = [&](const business_record& addr_token)
-    {
+    const auto add_token = [&](const business_record &addr_token) {
         sp_token_vec->emplace_back(std::move(addr_token));
     };
     std::for_each(token_vec.begin(), token_vec.end(), add_token);
@@ -1826,27 +1827,25 @@ std::shared_ptr<business_record::list> block_chain_impl::get_address_business_re
 
 // get all tokens belongs to the wallet/name
 std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_tokens(
-    const std::string& name)
+    const std::string &name)
 {
     return get_wallet_tokens(name, business_kind::unknown);
 }
 
 // get special tokens of the wallet/name, just used for token_detail/token_transfer
 std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_tokens(
-    const std::string& name, business_kind kind)
+    const std::string &name, business_kind kind)
 {
     auto wallet_addr_vec = get_wallet_addresses(name);
     auto sp_token_vec = std::make_shared<business_address_token::list>();
 
     // copy each token_vec element to sp_token
-    const auto add_token = [&](const business_address_token& addr_token)
-    {
+    const auto add_token = [&](const business_address_token &addr_token) {
         sp_token_vec->emplace_back(std::move(addr_token));
     };
 
     // search all tokens belongs to this address which is owned by wallet
-    const auto action = [&](const wallet_address& elem)
-    {
+    const auto action = [&](const wallet_address &elem) {
         business_address_token::list token_vec = database_.address_tokens.get_tokens(elem.get_address(), 0, kind);
         std::for_each(token_vec.begin(), token_vec.end(), add_token);
     };
@@ -1861,10 +1860,10 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_token
     auto sh_acc_vec = get_wallets();
     auto ret_vector = std::make_shared<business_address_token::list>();
 
-    for (auto& acc : *sh_acc_vec) {
+    for (auto &acc : *sh_acc_vec)
+    {
         auto sh_vec = get_wallet_tokens(acc.get_name());
-        const auto action = [&](const business_address_token& addr_token)
-        {
+        const auto action = [&](const business_address_token &addr_token) {
             ret_vector->emplace_back(std::move(addr_token));
         };
         std::for_each(sh_vec->begin(), sh_vec->end(), action);
@@ -1873,18 +1872,19 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_token
     return ret_vector;
 }
 
-std::shared_ptr<token_detail> block_chain_impl::get_wallet_unissued_token(const std::string& name,
-    const std::string& symbol)
+std::shared_ptr<token_detail> block_chain_impl::get_wallet_unissued_token(const std::string &name,
+                                                                          const std::string &symbol)
 {
     std::shared_ptr<token_detail> sp_token(nullptr);
 
     // get wallet token which is not issued (not in blockchain)
     auto no_issued_tokens = database_.wallet_tokens.get_unissued_tokens(get_short_hash(name));
-    const auto match = [&](const business_address_token& addr_token) {
+    const auto match = [&](const business_address_token &addr_token) {
         return addr_token.detail.get_symbol() == symbol;
     };
     auto iter = std::find_if(no_issued_tokens->begin(), no_issued_tokens->end(), match);
-    if (iter != no_issued_tokens->end()) {
+    if (iter != no_issued_tokens->end())
+    {
         sp_token = std::make_shared<token_detail>((*iter).detail);
     }
 
@@ -1892,20 +1892,19 @@ std::shared_ptr<token_detail> block_chain_impl::get_wallet_unissued_token(const 
 }
 
 // get all local unissued tokens belongs to the wallet/name
-std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_unissued_tokens(const std::string& name)
+std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_unissued_tokens(const std::string &name)
 {
     auto sp_token_vec = std::make_shared<business_address_token::list>();
     auto sp_issues_token_vec = get_issued_tokens();
     // copy each token_vec element which is unissued to sp_token
-    const auto add_token = [&sp_token_vec, &sp_issues_token_vec](const business_address_token& addr_token)
-    {
-        auto& symbol = addr_token.detail.get_symbol();
+    const auto add_token = [&sp_token_vec, &sp_issues_token_vec](const business_address_token &addr_token) {
+        auto &symbol = addr_token.detail.get_symbol();
         auto pos = std::find_if(sp_issues_token_vec->begin(), sp_issues_token_vec->end(),
-            [&symbol](const token_detail& elem) {
-                return symbol == elem.get_symbol();
-            }
-        );
-        if (pos == sp_issues_token_vec->end()) { // token is unissued in blockchain
+                                [&symbol](const token_detail &elem) {
+                                    return symbol == elem.get_symbol();
+                                });
+        if (pos == sp_issues_token_vec->end())
+        { // token is unissued in blockchain
             sp_token_vec->emplace_back(std::move(addr_token));
         }
     };
@@ -1918,17 +1917,20 @@ std::shared_ptr<business_address_token::list> block_chain_impl::get_wallet_uniss
 }
 
 /// get all the token in blockchain
-std::shared_ptr<token_detail::list> block_chain_impl::get_issued_tokens(const std::string& symbol)
+std::shared_ptr<token_detail::list> block_chain_impl::get_issued_tokens(const std::string &symbol)
 {
     auto sp_vec = std::make_shared<token_detail::list>();
     const auto is_symbol_empty = symbol.empty();
-    if (!is_symbol_empty && bc::wallet::symbol::is_forbidden(symbol)) {
+    if (!is_symbol_empty && bc::wallet::symbol::is_forbidden(symbol))
+    {
         return sp_vec;
     }
     auto sp_blockchain_vec = database_.tokens.get_blockchain_tokens(symbol);
-    for (auto& each : *sp_blockchain_vec) {
-        auto& token = each.get_token();
-        if (is_symbol_empty && bc::wallet::symbol::is_forbidden(token.get_symbol())) {
+    for (auto &each : *sp_blockchain_vec)
+    {
+        auto &token = each.get_token();
+        if (is_symbol_empty && bc::wallet::symbol::is_forbidden(token.get_symbol()))
+        {
             // swallow forbidden symbol
             continue;
         }
@@ -1938,18 +1940,14 @@ std::shared_ptr<token_detail::list> block_chain_impl::get_issued_tokens(const st
     return sp_vec;
 }
 
-
-std::shared_ptr<blockchain_token::list> block_chain_impl::get_token_register_output(const std::string& symbol)
+std::shared_ptr<blockchain_token::list> block_chain_impl::get_token_register_output(const std::string &symbol)
 {
     return database_.tokens.get_token_history(symbol);
 }
 
-
-
-
 /* check uid symbol exist or not
 */
-bool block_chain_impl::is_uid_exist(const std::string& uid_name)
+bool block_chain_impl::is_uid_exist(const std::string &uid_name)
 {
     // find from blockchain database
     return get_registered_uid(uid_name) != nullptr;
@@ -1957,21 +1955,23 @@ bool block_chain_impl::is_uid_exist(const std::string& uid_name)
 
 /* check uid address exist or not
 */
-bool block_chain_impl::is_address_registered_uid(const std::string& uid_address, uint64_t fork_index)
+bool block_chain_impl::is_address_registered_uid(const std::string &uid_address, uint64_t fork_index)
 {
     return !get_uid_from_address(uid_address, fork_index).empty();
 }
 
-bool block_chain_impl::is_wallet_owned_uid(const std::string& wallet, const std::string& symbol)
+bool block_chain_impl::is_wallet_owned_uid(const std::string &wallet, const std::string &symbol)
 {
     auto uid_detail = get_registered_uid(symbol);
-    if (!uid_detail) {
+    if (!uid_detail)
+    {
         return false;
     }
 
     auto pvaddr = get_wallet_addresses(wallet);
-    if (pvaddr) {
-        const auto match = [&uid_detail](const wallet_address& item) {
+    if (pvaddr)
+    {
+        const auto match = [&uid_detail](const wallet_address &item) {
             return item.get_address() == uid_detail->get_address();
         };
         auto iter = std::find_if(pvaddr->begin(), pvaddr->end(), match);
@@ -1981,15 +1981,18 @@ bool block_chain_impl::is_wallet_owned_uid(const std::string& wallet, const std:
     return false;
 }
 
-std::shared_ptr<uid_detail::list> block_chain_impl::get_wallet_uids(const std::string& wallet)
+std::shared_ptr<uid_detail::list> block_chain_impl::get_wallet_uids(const std::string &wallet)
 {
     auto sh_vec = std::make_shared<uid_detail::list>();
     auto pvaddr = get_wallet_addresses(wallet);
-    if (pvaddr) {
-        for (const auto& wallet_address : *pvaddr) {
+    if (pvaddr)
+    {
+        for (const auto &wallet_address : *pvaddr)
+        {
             auto uid_address = wallet_address.get_address();
             auto uid_symbol = get_uid_from_address(uid_address);
-            if (!uid_symbol.empty()) {
+            if (!uid_symbol.empty())
+            {
                 sh_vec->emplace_back(uid_detail(uid_symbol, uid_address));
             }
         }
@@ -1999,32 +2002,33 @@ std::shared_ptr<uid_detail::list> block_chain_impl::get_wallet_uids(const std::s
 }
 /* find uid by address
 */
-std::string block_chain_impl::get_uid_from_address(const std::string& uid_address, uint64_t fork_index)
+std::string block_chain_impl::get_uid_from_address(const std::string &uid_address, uint64_t fork_index)
 {
     //search from address_uid_database first
     business_address_uid::list uid_vec = database_.address_uids.get_uids(uid_address, 0, fork_index);
 
-    std::string  uid_symbol= "";
-    if(!uid_vec.empty())
+    std::string uid_symbol = "";
+    if (!uid_vec.empty())
         uid_symbol = uid_vec[0].detail.get_symbol();
 
-    if(uid_symbol != "")
+    if (uid_symbol != "")
     {
         //double check
-        std::shared_ptr<blockchain_uid::list>  blockchain_uidlist = get_uid_history_addresses(uid_symbol);
+        std::shared_ptr<blockchain_uid::list> blockchain_uidlist = get_uid_history_addresses(uid_symbol);
         auto iter = std::find_if(blockchain_uidlist->begin(), blockchain_uidlist->end(),
-        [fork_index](const blockchain_uid & item){
-            return is_blackhole_address(item.get_uid().get_address()) || item.get_height() <= fork_index;
-        });
-        
-        if(iter == blockchain_uidlist->end() || iter->get_uid().get_address() != uid_address)   
+                                 [fork_index](const blockchain_uid &item) {
+                                     return is_blackhole_address(item.get_uid().get_address()) || item.get_height() <= fork_index;
+                                 });
+
+        if (iter == blockchain_uidlist->end() || iter->get_uid().get_address() != uid_address)
             return "";
     }
-    else if(uid_symbol == "" && fork_index != max_uint64)
+    else if (uid_symbol == "" && fork_index != max_uint64)
     {
         // search from uids database
         auto sp_uid_vec = database_.uids.getuids_from_address_history(uid_address, 0, fork_index);
-        if (sp_uid_vec && !sp_uid_vec->empty()) {
+        if (sp_uid_vec && !sp_uid_vec->empty())
+        {
             uid_symbol = sp_uid_vec->back().get_uid().get_symbol();
         }
     }
@@ -2040,12 +2044,13 @@ std::shared_ptr<blockchain_uid::list> block_chain_impl::get_uid_history_addresse
     return database_.uids.get_history_uids(hash);
 }
 
-std::shared_ptr<uid_detail> block_chain_impl::get_registered_uid(const std::string& symbol)
+std::shared_ptr<uid_detail> block_chain_impl::get_registered_uid(const std::string &symbol)
 {
     std::shared_ptr<uid_detail> sp_uid(nullptr);
     const auto hash = get_hash(symbol);
     auto sh_block_uid = database_.uids.get(hash);
-    if (sh_block_uid) {
+    if (sh_block_uid)
+    {
         sp_uid = std::make_shared<uid_detail>(sh_block_uid->get_uid());
     }
     return sp_uid;
@@ -2059,8 +2064,10 @@ std::shared_ptr<uid_detail::list> block_chain_impl::get_registered_uids()
         return nullptr;
 
     auto sp_blockchain_vec = database_.uids.get_blockchain_uids();
-    for (const auto &each : *sp_blockchain_vec){
-        if (each.get_status() == blockchain_uid::address_current){
+    for (const auto &each : *sp_blockchain_vec)
+    {
+        if (each.get_status() == blockchain_uid::address_current)
+        {
             sp_vec->emplace_back(each.get_uid());
         }
     }
@@ -2068,12 +2075,13 @@ std::shared_ptr<uid_detail::list> block_chain_impl::get_registered_uids()
     return sp_vec;
 }
 
-std::shared_ptr<token_detail> block_chain_impl::get_issued_token(const std::string& symbol)
+std::shared_ptr<token_detail> block_chain_impl::get_issued_token(const std::string &symbol)
 {
     std::shared_ptr<token_detail> sp_token(nullptr);
     const auto hash = get_hash(symbol);
     auto sh_block_token = database_.tokens.get(hash);
-    if (sh_block_token) {
+    if (sh_block_token)
+    {
         sp_token = std::make_shared<token_detail>(sh_block_token->get_token());
     }
     return sp_token;
@@ -2084,11 +2092,12 @@ std::shared_ptr<wallet_address::list> block_chain_impl::get_addresses()
 {
     auto sh_acc_vec = get_wallets();
     auto ret_vector = std::make_shared<wallet_address::list>();
-    const auto action = [&](const wallet_address& addr) {
+    const auto action = [&](const wallet_address &addr) {
         ret_vector->emplace_back(std::move(addr));
     };
 
-    for(auto& acc : *sh_acc_vec) {
+    for (auto &acc : *sh_acc_vec)
+    {
         auto sh_vec = get_wallet_addresses(acc.get_name());
         std::for_each(sh_vec->begin(), sh_vec->end(), action);
     }
@@ -2096,20 +2105,18 @@ std::shared_ptr<wallet_address::list> block_chain_impl::get_addresses()
     return ret_vector;
 }
 
-std::shared_ptr<business_address_message::list> block_chain_impl::get_wallet_messages(const std::string& name)
+std::shared_ptr<business_address_message::list> block_chain_impl::get_wallet_messages(const std::string &name)
 {
     auto wallet_addr_vec = get_wallet_addresses(name);
     auto sp_token_vec = std::make_shared<business_address_message::list>();
 
     // copy each token_vec element to sp_token
-    const auto add_token = [&](const business_address_message& addr_token)
-    {
+    const auto add_token = [&](const business_address_message &addr_token) {
         sp_token_vec->emplace_back(std::move(addr_token));
     };
 
     // search all tokens belongs to this address which is owned by wallet
-    const auto action = [&](const wallet_address& elem)
-    {
+    const auto action = [&](const wallet_address &elem) {
         business_address_message::list token_vec = database_.address_tokens.get_messages(elem.get_address(), 0);
         std::for_each(token_vec.begin(), token_vec.end(), add_token);
     };
@@ -2128,17 +2135,19 @@ void block_chain_impl::fired()
 *  1. find from blockchain
 *  2. find from local database(includes wallet created token) if check_local_db = true
 */
-bool block_chain_impl::is_token_exist(const std::string& token_name, bool check_local_db)
+bool block_chain_impl::is_token_exist(const std::string &token_name, bool check_local_db)
 {
     // 1. find from blockchain database
     if (get_issued_token(token_name))
         return true;
 
     // 2. find from local database token
-    if (check_local_db) {
+    if (check_local_db)
+    {
         auto sh_acc_vec = get_local_tokens();
         // scan all wallet token
-        for (auto& acc : *sh_acc_vec) {
+        for (auto &acc : *sh_acc_vec)
+        {
             if (token_name == acc.get_symbol())
                 return true;
         }
@@ -2147,32 +2156,33 @@ bool block_chain_impl::is_token_exist(const std::string& token_name, bool check_
     return false;
 }
 
-uint64_t block_chain_impl::get_token_height(const std::string& token_name)const
+uint64_t block_chain_impl::get_token_height(const std::string &token_name) const
 {
     return database_.tokens.get_register_height(token_name);
 }
 
-uint64_t block_chain_impl::get_uid_height(const std::string& uid_name)const
+uint64_t block_chain_impl::get_uid_height(const std::string &uid_name) const
 {
     return database_.uids.get_register_height(uid_name);
 }
 
-uint64_t block_chain_impl::get_token_cert_height(const std::string& cert_symbol,const token_cert_type& cert_type)
+uint64_t block_chain_impl::get_token_cert_height(const std::string &cert_symbol, const token_cert_type &cert_type)
 {
-    auto&& key_str = token_cert::get_key(cert_symbol, cert_type);
+    auto &&key_str = token_cert::get_key(cert_symbol, cert_type);
     const auto key = get_hash(key_str);
     auto cert = database_.certs.get(key);
-    if(cert)
+    if (cert)
     {
-       business_history::list history_cert = database_.address_tokens.get_token_certs_history(cert->get_address(), cert_symbol, cert_type, 0);
-       if(history_cert.size()>0){
-           return history_cert.back().output_height;
-       }
+        business_history::list history_cert = database_.address_tokens.get_token_certs_history(cert->get_address(), cert_symbol, cert_type, 0);
+        if (history_cert.size() > 0)
+        {
+            return history_cert.back().output_height;
+        }
     }
     return max_uint64;
 }
 
-uint64_t block_chain_impl::get_candidate_height(const std::string& candidate_symbol) const
+uint64_t block_chain_impl::get_candidate_height(const std::string &candidate_symbol) const
 {
     return database_.candidates.get_register_height(candidate_symbol);
 }
@@ -2183,9 +2193,11 @@ std::shared_ptr<token_detail::list> block_chain_impl::get_local_tokens()
     auto ret_vec = std::make_shared<token_detail::list>();
     auto sh_acc_vec = get_wallets();
     // scan all wallet token -- maybe the token has been issued
-    for(auto& acc : *sh_acc_vec) {
+    for (auto &acc : *sh_acc_vec)
+    {
         auto no_issued_tokens = database_.wallet_tokens.get(get_short_hash(acc.get_name()));
-        for (auto& detail : no_issued_tokens){
+        for (auto &detail : no_issued_tokens)
+        {
             ret_vec->emplace_back(std::move(detail));
         }
     }
@@ -2193,55 +2205,56 @@ std::shared_ptr<token_detail::list> block_chain_impl::get_local_tokens()
     return ret_vec;
 }
 
-void block_chain_impl::uppercase_symbol(std::string& symbol)
+void block_chain_impl::uppercase_symbol(std::string &symbol)
 {
     // uppercase symbol
-    for (auto& i : symbol){
-        if (!(std::isalnum(i) || i=='.'))
+    for (auto &i : symbol)
+    {
+        if (!(std::isalnum(i) || i == '.'))
             throw std::logic_error{"symbol must be alpha or number or dot"};
         i = std::toupper(i);
     }
 }
 
-bool block_chain_impl::is_valid_address(const std::string& address)
+bool block_chain_impl::is_valid_address(const std::string &address)
 {
-    return  is_payment_address(address) ||
-            is_script_address(address) ||
-            is_stealth_address(address) ||
-            is_blackhole_address(address);
+    return is_payment_address(address) ||
+           is_script_address(address) ||
+           is_stealth_address(address) ||
+           is_blackhole_address(address);
 }
 
-bool block_chain_impl::is_blackhole_address(const std::string& address)
+bool block_chain_impl::is_blackhole_address(const std::string &address)
 {
     return (address == bc::wallet::payment_address::blackhole_address);
 }
 
-bool block_chain_impl::is_stealth_address(const std::string& address)
+bool block_chain_impl::is_stealth_address(const std::string &address)
 {
     bc::wallet::stealth_address addr{address};
     return (addr && (addr.version() == bc::wallet::stealth_address::mainnet_p2kh));
 }
 
-bool block_chain_impl::is_payment_address(const std::string& address)
+bool block_chain_impl::is_payment_address(const std::string &address)
 {
     bc::wallet::payment_address addr{address};
     return (addr && (addr.version() == bc::wallet::payment_address::mainnet_p2kh));
 }
 
 // stupid name for this function. should be is_p2sh_address.
-bool block_chain_impl::is_script_address(const std::string& address)
+bool block_chain_impl::is_script_address(const std::string &address)
 {
     bc::wallet::payment_address addr{address};
     return (addr && (addr.version() == bc::wallet::payment_address::mainnet_p2sh));
 }
 
-organizer& block_chain_impl::get_organizer()
+organizer &block_chain_impl::get_organizer()
 {
     return organizer_;
 }
 
-bool block_chain_impl::get_transaction(const hash_digest& hash,
-    chain::transaction& tx, uint64_t& tx_height)
+bool block_chain_impl::get_transaction(const hash_digest &hash,
+                                       chain::transaction &tx, uint64_t &tx_height)
 {
 
     bool ret = false;
@@ -2252,39 +2265,42 @@ bool block_chain_impl::get_transaction(const hash_digest& hash,
     }
 
     const auto result = database_.transactions.get(hash);
-    if(result) {
+    if (result)
+    {
         tx = result.transaction();
         tx_height = result.height();
         ret = true;
-    } else {
+    }
+    else
+    {
         boost::mutex mutex;
         transaction_message::ptr tx_ptr = nullptr;
 
         mutex.lock();
-        auto f = [&tx_ptr, &mutex](const code& ec, transaction_message::ptr tx_) -> void
-        {
-            if((code)error::success == ec)
+        auto f = [&tx_ptr, &mutex](const code &ec, transaction_message::ptr tx_) -> void {
+            if ((code)error::success == ec)
                 tx_ptr = tx_;
             mutex.unlock();
         };
 
         pool().fetch(hash, f);
         boost::unique_lock<boost::mutex> lock(mutex);
-        if(tx_ptr) {
+        if (tx_ptr)
+        {
             tx = *(static_cast<std::shared_ptr<chain::transaction>>(tx_ptr));
             tx_height = 0;
             ret = true;
         }
     }
-    #ifdef UC_DEBUG
-    log::debug("get_transaction=")<<tx.to_string(1);
-    #endif
+#ifdef UC_DEBUG
+    log::debug("get_transaction=") << tx.to_string(1);
+#endif
 
     return ret;
 }
 
-bool block_chain_impl::get_transaction_callback(const hash_digest& hash,
-    std::function<void(const code&, const chain::transaction&)> handler)
+bool block_chain_impl::get_transaction_callback(const hash_digest &hash,
+                                                std::function<void(const code &, const chain::transaction &)> handler)
 {
 
     bool ret = false;
@@ -2295,23 +2311,27 @@ bool block_chain_impl::get_transaction_callback(const hash_digest& hash,
     }
 
     const auto result = database_.transactions.get(hash);
-    if(result) {
+    if (result)
+    {
         handler(error::success, result.transaction());
         ret = true;
-    } else {
+    }
+    else
+    {
         transaction_message::ptr tx_ptr = nullptr;
 
-        auto f = [&tx_ptr, handler](const code& ec, transaction_message::ptr tx_) -> void
-        {
-            if((code)error::success == ec){
+        auto f = [&tx_ptr, handler](const code &ec, transaction_message::ptr tx_) -> void {
+            if ((code)error::success == ec)
+            {
                 tx_ptr = tx_;
-                if(tx_ptr)
+                if (tx_ptr)
                     handler(ec, *(static_cast<std::shared_ptr<chain::transaction>>(tx_ptr)));
             }
         };
 
         pool().fetch(hash, f);
-        if(tx_ptr) {
+        if (tx_ptr)
+        {
             ret = true;
         }
     }
@@ -2319,9 +2339,9 @@ bool block_chain_impl::get_transaction_callback(const hash_digest& hash,
     return ret;
 }
 
-bool block_chain_impl::get_history_callback(const payment_address& address,
-    size_t limit, size_t from_height,
-    std::function<void(const code&, chain::history::list&)> handler)
+bool block_chain_impl::get_history_callback(const payment_address &address,
+                                            size_t limit, size_t from_height,
+                                            std::function<void(const code &, chain::history::list &)> handler)
 {
 
     bool ret = false;
@@ -2331,9 +2351,9 @@ bool block_chain_impl::get_history_callback(const payment_address& address,
         return ret;
     }
 
-    auto f = [&ret, handler](const code& ec, chain::history_compact::list compact) -> void
-    {
-        if((code)error::success == ec){
+    auto f = [&ret, handler](const code &ec, chain::history_compact::list compact) -> void {
+        if ((code)error::success == ec)
+        {
             history::list result;
 
             // Process and remove all outputs.
@@ -2345,7 +2365,7 @@ bool block_chain_impl::get_history_callback(const payment_address& address,
                     row.output = output->point;
                     row.output_height = output->height;
                     row.value = output->value;
-                    row.spend = { null_hash, max_uint32 };
+                    row.spend = {null_hash, max_uint32};
                     row.temporary_checksum = output->point.checksum();
                     result.emplace_back(row);
                     output = compact.erase(output);
@@ -2356,12 +2376,12 @@ bool block_chain_impl::get_history_callback(const payment_address& address,
             }
 
             // All outputs have been removed, process the spends.
-            for (const auto& spend: compact)
+            for (const auto &spend : compact)
             {
                 auto found = false;
 
                 // Update outputs with the corresponding spends.
-                for (auto& row: result)
+                for (auto &row : result)
                 {
                     if (row.temporary_checksum == spend.previous_checksum &&
                         row.spend.hash == null_hash)
@@ -2378,7 +2398,7 @@ bool block_chain_impl::get_history_callback(const payment_address& address,
                 if (!found)
                 {
                     history row;
-                    row.output = { null_hash, max_uint32 };
+                    row.output = {null_hash, max_uint32};
                     row.output_height = max_uint64;
                     row.value = max_uint64;
                     row.spend = spend.point;
@@ -2390,7 +2410,7 @@ bool block_chain_impl::get_history_callback(const payment_address& address,
             compact.clear();
 
             // Clear all remaining checksums from unspent rows.
-            for (auto& row: result)
+            for (auto &row : result)
                 if (row.spend.hash == null_hash)
                     row.spend_height = max_uint64;
 
@@ -2406,7 +2426,7 @@ bool block_chain_impl::get_history_callback(const payment_address& address,
     return ret;
 }
 
-code block_chain_impl::validate_transaction(const chain::transaction& tx)
+code block_chain_impl::validate_transaction(const chain::transaction &tx)
 {
     code ret = error::success;
     if (stopped())
@@ -2422,8 +2442,7 @@ code block_chain_impl::validate_transaction(const chain::transaction& tx)
     boost::mutex mutex;
 
     mutex.lock();
-    auto f = [&ret, &mutex](const code& ec, transaction_message::ptr tx_, chain::point::indexes idx_vec) -> void
-    {
+    auto f = [&ret, &mutex](const code &ec, transaction_message::ptr tx_, chain::point::indexes idx_vec) -> void {
         log::debug("validate_transaction") << "ec=" << ec << " idx_vec=" << idx_vec.size();
         log::debug("validate_transaction") << "ec.message=" << ec.message();
         //if((error::success == ec) && idx_vec.empty())
@@ -2437,7 +2456,7 @@ code block_chain_impl::validate_transaction(const chain::transaction& tx)
     return ret;
 }
 
-code block_chain_impl::broadcast_transaction(const chain::transaction& tx)
+code block_chain_impl::broadcast_transaction(const chain::transaction &tx)
 {
     code ret = error::success;
     if (stopped())
@@ -2456,11 +2475,10 @@ code block_chain_impl::broadcast_transaction(const chain::transaction& tx)
     valid_mutex.lock();
     //send_mutex.lock();
 
-    pool().store(tx_ptr, [tx_ptr](const code& ec, transaction_ptr){
+    pool().store(tx_ptr, [tx_ptr](const code &ec, transaction_ptr) {
         //send_mutex.unlock();
         //ret = true;
-        log::trace("broadcast_transaction") << encode_hash(tx_ptr->hash()) << " confirmed";
-    }, [&valid_mutex, &ret, tx_ptr](const code& ec, std::shared_ptr<transaction_message>, chain::point::indexes idx_vec){
+        log::trace("broadcast_transaction") << encode_hash(tx_ptr->hash()) << " confirmed"; }, [&valid_mutex, &ret, tx_ptr](const code &ec, std::shared_ptr<transaction_message>, chain::point::indexes idx_vec) {
         log::debug("broadcast_transaction") << "ec=" << ec << " idx_vec=" << idx_vec.size();
         log::debug("broadcast_transaction") << "ec.message=" << ec.message();
         ret = ec;
@@ -2470,16 +2488,15 @@ code block_chain_impl::broadcast_transaction(const chain::transaction& tx)
             //send_mutex.unlock(); // incase dead lock
             log::trace("broadcast_transaction") << encode_hash(tx_ptr->hash()) << " invalidated";
         }
-        valid_mutex.unlock();
-    });
+        valid_mutex.unlock(); });
     boost::unique_lock<boost::mutex> lock(valid_mutex);
     //boost::unique_lock<boost::mutex> send_lock(send_mutex);
 
     return ret;
 }
 
-bool block_chain_impl::get_history(const bc::wallet::payment_address& address,
-    uint64_t limit, uint64_t from_height, history_compact::list& history)
+bool block_chain_impl::get_history(const bc::wallet::payment_address &address,
+                                   uint64_t limit, uint64_t from_height, history_compact::list &history)
 {
     if (stopped())
     {
@@ -2490,9 +2507,8 @@ bool block_chain_impl::get_history(const bc::wallet::payment_address& address,
     boost::mutex mutex;
 
     mutex.lock();
-    auto f = [&history, &mutex](const code& ec, const history_compact::list& history_) -> void
-    {
-        if((code)error::success == ec)
+    auto f = [&history, &mutex](const code &ec, const history_compact::list &history_) -> void {
+        if ((code)error::success == ec)
             history = history_;
         mutex.unlock();
     };
@@ -2502,39 +2518,43 @@ bool block_chain_impl::get_history(const bc::wallet::payment_address& address,
     boost::unique_lock<boost::mutex> lock(mutex);
 
 #ifdef UC_DEBUG
-    log::debug("get_history=")<<history.size();
+    log::debug("get_history=") << history.size();
 #endif
 
     return true;
 }
 
-bool block_chain_impl::get_tx_inputs_ucn_value (chain::transaction& tx, uint64_t& ucn_val)
+bool block_chain_impl::get_tx_inputs_ucn_value(chain::transaction &tx, uint64_t &ucn_val)
 {
     chain::transaction tx_temp;
     uint64_t tx_height;
     ucn_val = 0;
 
-    for (auto& each : tx.inputs) {
+    for (auto &each : tx.inputs)
+    {
 
-        if (get_transaction(each.previous_output.hash, tx_temp, tx_height)) {
+        if (get_transaction(each.previous_output.hash, tx_temp, tx_height))
+        {
             auto output = tx_temp.outputs.at(each.previous_output.index);
             ucn_val += output.value;
-        } else {
-            log::debug("get_tx_inputs_ucn_value=")<<each.to_string(true);
+        }
+        else
+        {
+            log::debug("get_tx_inputs_ucn_value=") << each.to_string(true);
             return false;
         }
-
     }
 
     return true;
 }
 
-void block_chain_impl::safe_store_wallet(libbitcoin::chain::wallet& acc, const std::vector<std::shared_ptr<wallet_address>>& addresses)
+void block_chain_impl::safe_store_wallet(libbitcoin::chain::wallet &acc, const std::vector<std::shared_ptr<wallet_address>> &addresses)
 {
     if (stopped())
         return;
 
-    for(auto& address:addresses) {
+    for (auto &address : addresses)
+    {
         const auto hash = get_short_hash(address->get_name());
         database_.wallet_addresses.safe_store(hash, *address);
     }
@@ -2543,7 +2563,6 @@ void block_chain_impl::safe_store_wallet(libbitcoin::chain::wallet& acc, const s
     database_.wallets.store(acc);
     database_.wallets.sync();
 }
-
 
 } // namespace blockchain
 } // namespace libbitcoin

@@ -28,29 +28,31 @@
 #include <UChain/bitcoin/formats/base_16.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 base16::base16()
 {
 }
 
-base16::base16(const std::string& hexcode)
+base16::base16(const std::string &hexcode)
 {
     std::stringstream(hexcode) >> *this;
 }
 
-base16::base16(const data_chunk& value)
-  : value_(value)
+base16::base16(const data_chunk &value)
+    : value_(value)
 {
 }
 
-base16::base16(const base16& other)
-  : base16(other.value_)
+base16::base16(const base16 &other)
+    : base16(other.value_)
 {
 }
 
-base16::operator const data_chunk&() const
+base16::operator const data_chunk &() const
 {
     return value_;
 }
@@ -60,7 +62,7 @@ base16::operator data_slice() const
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, base16& argument)
+std::istream &operator>>(std::istream &input, base16 &argument)
 {
     std::string hexcode;
     input >> hexcode;
@@ -74,7 +76,7 @@ std::istream& operator>>(std::istream& input, base16& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const base16& argument)
+std::ostream &operator<<(std::ostream &output, const base16 &argument)
 {
     output << encode_base16(argument.value_);
     return output;

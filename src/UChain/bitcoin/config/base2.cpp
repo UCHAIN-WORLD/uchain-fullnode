@@ -27,25 +27,27 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/utility/binary.hpp>
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 base2::base2()
 {
 }
 
-base2::base2(const std::string& binary)
+base2::base2(const std::string &binary)
 {
     std::stringstream(binary) >> *this;
 }
 
-base2::base2(const binary& value)
-  : value_(value)
+base2::base2(const binary &value)
+    : value_(value)
 {
 }
 
-base2::base2(const base2& other)
-  : base2(other.value_)
+base2::base2(const base2 &other)
+    : base2(other.value_)
 {
 }
 
@@ -54,12 +56,12 @@ size_t base2::size() const
     return value_.size();
 }
 
-base2::operator const binary&() const
+base2::operator const binary &() const
 {
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, base2& argument)
+std::istream &operator>>(std::istream &input, base2 &argument)
 {
     std::string binary;
     input >> binary;
@@ -75,7 +77,7 @@ std::istream& operator>>(std::istream& input, base2& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const base2& argument)
+std::ostream &operator<<(std::ostream &output, const base2 &argument)
 {
     output << argument.value_;
     return output;

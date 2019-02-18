@@ -24,12 +24,14 @@
 #include <UChain/bitcoin/unicode/unicode.hpp>
 
 #ifdef _MSC_VER
-    #include <shlobj.h>
-    #include <windows.h>
+#include <shlobj.h>
+#include <windows.h>
 #endif
 
-namespace libbitcoin {
-namespace config {
+namespace libbitcoin
+{
+namespace config
+{
 
 // Returns empty string if unable to retrieve (including when not in Windows).
 std::string windows_config_directory()
@@ -37,7 +39,7 @@ std::string windows_config_directory()
 #ifdef _MSC_VER
     wchar_t directory[MAX_PATH];
     const auto result = SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA, NULL,
-        SHGFP_TYPE_CURRENT, directory);
+                                         SHGFP_TYPE_CURRENT, directory);
 
     if (SUCCEEDED(result))
         return to_utf8(directory);

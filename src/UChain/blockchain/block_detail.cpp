@@ -25,8 +25,10 @@
 #include <utility>
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 using namespace message;
 
@@ -34,17 +36,17 @@ using namespace message;
 static constexpr auto orphan_height = 0u;
 
 block_detail::block_detail(block_ptr actual_block)
-  : code_(error::success),
-    processed_(false),
-    height_(orphan_height),
-    actual_block_(actual_block),
-    is_checked_work_proof_(false)
+    : code_(error::success),
+      processed_(false),
+      height_(orphan_height),
+      actual_block_(actual_block),
+      is_checked_work_proof_(false)
 {
 }
 
 // Hand off ownership of a block to this wrapper.
-block_detail::block_detail(chain::block&& actual_block)
-  : block_detail(std::make_shared<block_message>(actual_block))
+block_detail::block_detail(chain::block &&actual_block)
+    : block_detail(std::make_shared<block_message>(actual_block))
 {
 }
 
@@ -84,7 +86,7 @@ bool block_detail::get_is_checked_work_proof() const
     return is_checked_work_proof_.load();
 }
 
-void block_detail::set_error(const code& code)
+void block_detail::set_error(const code &code)
 {
     code_.store(code);
 }
