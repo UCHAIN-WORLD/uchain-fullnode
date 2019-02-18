@@ -30,27 +30,29 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
-block block::factory_from_data(const data_chunk& data,
-    bool with_transaction_count)
+block block::factory_from_data(const data_chunk &data,
+                               bool with_transaction_count)
 {
     block instance;
     instance.from_data(data, with_transaction_count);
     return instance;
 }
 
-block block::factory_from_data(std::istream& stream,
-    bool with_transaction_count)
+block block::factory_from_data(std::istream &stream,
+                               bool with_transaction_count)
 {
     block instance;
     instance.from_data(stream, with_transaction_count);
     return instance;
 }
 
-block block::factory_from_data(reader& source,
-    bool with_transaction_count)
+block block::factory_from_data(reader &source,
+                               bool with_transaction_count)
 {
     block instance;
     instance.from_data(source, with_transaction_count);
@@ -61,30 +63,30 @@ block::block()
 {
 }
 
-block::block(const block& other)
-  : block(other.header, other.transactions)
+block::block(const block &other)
+    : block(other.header, other.transactions)
 {
 }
 
-block::block(const chain::header& header,
-    const chain::transaction::list& transactions)
-  : header(header), transactions(transactions)
+block::block(const chain::header &header,
+             const chain::transaction::list &transactions)
+    : header(header), transactions(transactions)
 {
 }
 
-block::block(block&& other)
-  : block(std::forward<chain::header>(other.header),
-        std::forward<chain::transaction::list>(other.transactions))
+block::block(block &&other)
+    : block(std::forward<chain::header>(other.header),
+            std::forward<chain::transaction::list>(other.transactions))
 {
 }
 
-block::block(chain::header&& header, chain::transaction::list&& transactions)
-  : header(std::forward<chain::header>(header)),
-    transactions(std::forward<chain::transaction::list>(transactions))
+block::block(chain::header &&header, chain::transaction::list &&transactions)
+    : header(std::forward<chain::header>(header)),
+      transactions(std::forward<chain::transaction::list>(transactions))
 {
 }
 
-block& block::operator=(block&& other)
+block &block::operator=(block &&other)
 {
     header = std::move(other.header);
     transactions = std::move(other.transactions);
@@ -103,19 +105,19 @@ void block::reset()
     transactions.shrink_to_fit();
 }
 
-bool block::from_data(const data_chunk& data, bool with_transaction_count)
+bool block::from_data(const data_chunk &data, bool with_transaction_count)
 {
     data_source istream(data);
     return from_data(istream, with_transaction_count);
 }
 
-bool block::from_data(std::istream& stream, bool with_transaction_count)
+bool block::from_data(std::istream &stream, bool with_transaction_count)
 {
     istream_reader source(stream);
     return from_data(source, with_transaction_count);
 }
 
-bool block::from_data(reader& source, bool with_transaction_count)
+bool block::from_data(reader &source, bool with_transaction_count)
 {
     reset();
 
@@ -125,7 +127,7 @@ bool block::from_data(reader& source, bool with_transaction_count)
     {
         transactions.resize(header.transaction_count);
 
-        for (auto& tx: transactions)
+        for (auto &tx : transactions)
         {
             result = tx.from_data(source);
 
@@ -150,17 +152,17 @@ data_chunk block::to_data(bool with_transaction_count) const
     return data;
 }
 
-void block::to_data(std::ostream& stream, bool with_transaction_count) const
+void block::to_data(std::ostream &stream, bool with_transaction_count) const
 {
     ostream_writer sink(stream);
     to_data(sink, with_transaction_count);
 }
 
-void block::to_data(writer& sink, bool with_transaction_count) const
+void block::to_data(writer &sink, bool with_transaction_count) const
 {
     header.to_data(sink, with_transaction_count);
 
-    for (const auto& tx: transactions)
+    for (const auto &tx : transactions)
         tx.to_data(sink);
 }
 
@@ -168,13 +170,13 @@ uint64_t block::serialized_size(bool with_transaction_count) const
 {
     auto block_size = header.serialized_size(with_transaction_count);
 
-    for (const auto& tx: transactions)
+    for (const auto &tx : transactions)
         block_size += tx.serialized_size();
 
     return block_size;
 }
 
-hash_digest build_merkle_tree(hash_list& merkle)
+hash_digest build_merkle_tree(hash_list &merkle)
 {
     // Stop if hash list is empty.
     if (merkle.empty())
@@ -221,11 +223,11 @@ hash_digest build_merkle_tree(hash_list& merkle)
     return merkle[0];
 }
 
-hash_digest block::generate_merkle_root(const transaction::list& transactions)
+hash_digest block::generate_merkle_root(const transaction::list &transactions)
 {
     // Generate list of transaction hashes.
     hash_list tx_hashes;
-    for (const auto& tx: transactions)
+    for (const auto &tx : transactions)
         tx_hashes.push_back(tx.hash());
 
     // Build merkle tree.
@@ -280,8 +282,7 @@ chain::block block::genesis_mainnet()
 
     BITCOIN_ASSERT(genesis.is_valid());
     BITCOIN_ASSERT(genesis.transactions.size() == 1);
-    BITCOIN_ASSERT(chain::block::generate_merkle_root(genesis.transactions)
-        == genesis.header.merkle);
+    BITCOIN_ASSERT(chain::block::generate_merkle_root(genesis.transactions) == genesis.header.merkle);
 
     return genesis;
 }
@@ -294,11 +295,10 @@ chain::block block::genesis_testnet()
 
     BITCOIN_ASSERT(genesis.is_valid());
     BITCOIN_ASSERT(genesis.transactions.size() == 1);
-    BITCOIN_ASSERT(chain::block::generate_merkle_root(genesis.transactions)
-        == genesis.header.merkle);
+    BITCOIN_ASSERT(chain::block::generate_merkle_root(genesis.transactions) == genesis.header.merkle);
 
     return genesis;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

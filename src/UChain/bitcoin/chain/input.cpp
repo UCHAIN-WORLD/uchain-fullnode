@@ -28,24 +28,26 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
-input input::factory_from_data(const data_chunk& data)
+input input::factory_from_data(const data_chunk &data)
 {
     input instance;
     instance.from_data(data);
     return instance;
 }
 
-input input::factory_from_data(std::istream& stream)
+input input::factory_from_data(std::istream &stream)
 {
     input instance;
     instance.from_data(stream);
     return instance;
 }
 
-input input::factory_from_data(reader& source)
+input input::factory_from_data(reader &source)
 {
     input instance;
     instance.from_data(source);
@@ -55,8 +57,8 @@ input input::factory_from_data(reader& source)
 bool input::is_valid() const
 {
     return (sequence != 0) ||
-        previous_output.is_valid() ||
-        script.is_valid();
+           previous_output.is_valid() ||
+           script.is_valid();
 }
 
 void input::reset()
@@ -66,19 +68,19 @@ void input::reset()
     sequence = 0;
 }
 
-bool input::from_data(const data_chunk& data)
+bool input::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool input::from_data(std::istream& stream)
+bool input::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool input::from_data(reader& source)
+bool input::from_data(reader &source)
 {
     reset();
 
@@ -116,13 +118,13 @@ data_chunk input::to_data() const
     return data;
 }
 
-void input::to_data(std::ostream& stream) const
+void input::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void input::to_data(writer& sink) const
+void input::to_data(writer &sink) const
 {
     previous_output.to_data(sink);
     script.to_data(sink, true);
@@ -140,8 +142,8 @@ std::string input::to_string(uint32_t flags) const
     std::ostringstream ss;
 
     ss << previous_output.to_string() << "\n"
-        << "\t" << script.to_string(flags) << "\n"
-        << "\tsequence = " << sequence << "\n";
+       << "\t" << script.to_string(flags) << "\n"
+       << "\tsequence = " << sequence << "\n";
 
     return ss.str();
 }
@@ -157,5 +159,5 @@ std::string input::get_script_address() const
     return payment_address.encoded();
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
