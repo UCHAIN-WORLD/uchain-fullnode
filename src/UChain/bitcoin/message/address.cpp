@@ -27,28 +27,30 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string address::command = "addr";
 const uint32_t address::version_minimum = version::level::minimum;
 const uint32_t address::version_maximum = version::level::maximum;
 
-address address::factory_from_data(uint32_t version, const data_chunk& data)
+address address::factory_from_data(uint32_t version, const data_chunk &data)
 {
     address instance;
     instance.from_data(version, data);
     return instance;
 }
 
-address address::factory_from_data(uint32_t version, std::istream& stream)
+address address::factory_from_data(uint32_t version, std::istream &stream)
 {
     address instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-address address::factory_from_data(uint32_t version, reader& source)
+address address::factory_from_data(uint32_t version, reader &source)
 {
     address instance;
     instance.from_data(version, source);
@@ -66,19 +68,19 @@ void address::reset()
     addresses.shrink_to_fit();
 }
 
-bool address::from_data(uint32_t version, const data_chunk& data)
+bool address::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool address::from_data(uint32_t version, std::istream& stream)
+bool address::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool address::from_data(uint32_t version, reader& source)
+bool address::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -89,7 +91,7 @@ bool address::from_data(uint32_t version, reader& source)
     {
         addresses.resize(count);
 
-        for (auto& address: addresses)
+        for (auto &address : addresses)
         {
             result = address.from_data(version, source, true);
 
@@ -114,24 +116,24 @@ data_chunk address::to_data(uint32_t version) const
     return data;
 }
 
-void address::to_data(uint32_t version, std::ostream& stream) const
+void address::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void address::to_data(uint32_t version, writer& sink) const
+void address::to_data(uint32_t version, writer &sink) const
 {
     sink.write_variable_uint_little_endian(addresses.size());
-    for (const network_address& net_address : addresses)
+    for (const network_address &net_address : addresses)
         net_address.to_data(version, sink, true);
 }
 
 uint64_t address::serialized_size(uint32_t version) const
 {
     return variable_uint_size(addresses.size()) +
-        (addresses.size() * network_address::satoshi_fixed_size(version, true));
+           (addresses.size() * network_address::satoshi_fixed_size(version, true));
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

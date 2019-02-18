@@ -25,15 +25,17 @@
 #include <UChain/bitcoin/message/inventory.hpp>
 #include <UChain/bitcoin/message/version.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string not_found::command = "notfound";
 const uint32_t not_found::version_minimum = version::level::bip37;
 const uint32_t not_found::version_maximum = version::level::maximum;
 
 not_found not_found::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                       const data_chunk &data)
 {
     not_found instance;
     instance.from_data(version, data);
@@ -41,7 +43,7 @@ not_found not_found::factory_from_data(uint32_t version,
 }
 
 not_found not_found::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                       std::istream &stream)
 {
     not_found instance;
     instance.from_data(version, stream);
@@ -49,7 +51,7 @@ not_found not_found::factory_from_data(uint32_t version,
 }
 
 not_found not_found::factory_from_data(uint32_t version,
-    reader& source)
+                                       reader &source)
 {
     not_found instance;
     instance.from_data(version, source);
@@ -57,36 +59,36 @@ not_found not_found::factory_from_data(uint32_t version,
 }
 
 not_found::not_found()
-  : inventory()
+    : inventory()
 {
 }
 
-not_found::not_found(const inventory_vector::list& values)
-  : inventory(values)
+not_found::not_found(const inventory_vector::list &values)
+    : inventory(values)
 {
 }
 
-not_found::not_found(const hash_list& hashes, inventory::type_id type)
-  : inventory(hashes, type)
+not_found::not_found(const hash_list &hashes, inventory::type_id type)
+    : inventory(hashes, type)
 {
 }
 
-not_found::not_found(const std::initializer_list<inventory_vector>& values)
-  : inventory(values)
+not_found::not_found(const std::initializer_list<inventory_vector> &values)
+    : inventory(values)
 {
 }
 
-bool not_found::from_data(uint32_t version, const data_chunk& data)
+bool not_found::from_data(uint32_t version, const data_chunk &data)
 {
     return inventory::from_data(version, data);
 }
 
-bool not_found::from_data(uint32_t version, std::istream& stream)
+bool not_found::from_data(uint32_t version, std::istream &stream)
 {
     return inventory::from_data(version, stream);
 }
 
-bool not_found::from_data(uint32_t version, reader& source)
+bool not_found::from_data(uint32_t version, reader &source)
 {
     bool result = !(version < not_found::version_minimum);
 
@@ -99,5 +101,5 @@ bool not_found::from_data(uint32_t version, reader& source)
     return result;
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

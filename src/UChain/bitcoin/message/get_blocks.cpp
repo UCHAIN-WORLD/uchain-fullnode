@@ -27,15 +27,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string get_blocks::command = "getblocks";
 const uint32_t get_blocks::version_minimum = version::level::minimum;
 const uint32_t get_blocks::version_maximum = version::level::maximum;
 
 get_blocks get_blocks::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                         const data_chunk &data)
 {
     get_blocks instance;
     instance.from_data(version, data);
@@ -43,7 +45,7 @@ get_blocks get_blocks::factory_from_data(uint32_t version,
 }
 
 get_blocks get_blocks::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                         std::istream &stream)
 {
     get_blocks instance;
     instance.from_data(version, stream);
@@ -51,7 +53,7 @@ get_blocks get_blocks::factory_from_data(uint32_t version,
 }
 
 get_blocks get_blocks::factory_from_data(uint32_t version,
-    reader& source)
+                                         reader &source)
 {
     get_blocks instance;
     instance.from_data(version, source);
@@ -59,18 +61,18 @@ get_blocks get_blocks::factory_from_data(uint32_t version,
 }
 
 get_blocks::get_blocks()
-  : start_hashes(), stop_hash()
+    : start_hashes(), stop_hash()
 {
 }
 
-get_blocks::get_blocks(const hash_list& start, const hash_digest& stop)
-  : start_hashes(start), stop_hash(stop)
+get_blocks::get_blocks(const hash_list &start, const hash_digest &stop)
+    : start_hashes(start), stop_hash(stop)
 {
 }
 
-get_blocks::get_blocks(hash_list&& start, hash_digest&& stop)
-  : start_hashes(std::forward<hash_list>(start)),
-    stop_hash(std::forward<hash_digest>(stop))
+get_blocks::get_blocks(hash_list &&start, hash_digest &&stop)
+    : start_hashes(std::forward<hash_list>(start)),
+      stop_hash(std::forward<hash_digest>(stop))
 {
 }
 
@@ -86,19 +88,19 @@ void get_blocks::reset()
     stop_hash.fill(0);
 }
 
-bool get_blocks::from_data(uint32_t version, const data_chunk& data)
+bool get_blocks::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool get_blocks::from_data(uint32_t version, std::istream& stream)
+bool get_blocks::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool get_blocks::from_data(uint32_t version, reader& source)
+bool get_blocks::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -129,18 +131,18 @@ data_chunk get_blocks::to_data(uint32_t version) const
     return data;
 }
 
-void get_blocks::to_data(uint32_t version, std::ostream& stream) const
+void get_blocks::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void get_blocks::to_data(uint32_t version, writer& sink) const
+void get_blocks::to_data(uint32_t version, writer &sink) const
 {
     sink.write_4_bytes_little_endian(version);
     sink.write_variable_uint_little_endian(start_hashes.size());
 
-    for (const auto& start_hash: start_hashes)
+    for (const auto &start_hash : start_hashes)
         sink.write_hash(start_hash);
 
     sink.write_hash(stop_hash);
@@ -149,10 +151,10 @@ void get_blocks::to_data(uint32_t version, writer& sink) const
 uint64_t get_blocks::serialized_size(uint32_t version) const
 {
     return 36 + variable_uint_size(start_hashes.size()) +
-        hash_size * start_hashes.size();
+           hash_size * start_hashes.size();
 }
 
-bool operator==(const get_blocks& left, const get_blocks& right)
+bool operator==(const get_blocks &left, const get_blocks &right)
 {
     auto result = (left.start_hashes.size() == right.start_hashes.size());
 
@@ -162,10 +164,10 @@ bool operator==(const get_blocks& left, const get_blocks& right)
     return result && left.stop_hash == right.stop_hash;
 }
 
-bool operator!=(const get_blocks& left, const get_blocks& right)
+bool operator!=(const get_blocks &left, const get_blocks &right)
 {
     return !(left == right);
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

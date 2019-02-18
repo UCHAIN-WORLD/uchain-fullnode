@@ -27,21 +27,22 @@
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 #include <string.h>
 
-#define    INADDR_NONE        ((in_addr_t) 0xffffffff)
+#define INADDR_NONE ((in_addr_t)0xffffffff)
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 ip_address null_address =
-{
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
+    {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-static const unsigned char pchIPv4[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff };
-static const unsigned char pchOnionCat[] = {0xFD,0x87,0xD8,0x7E,0xEB,0x43};
+static const unsigned char pchIPv4[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff};
+static const unsigned char pchOnionCat[] = {0xFD, 0x87, 0xD8, 0x7E, 0xEB, 0x43};
 
 network_address network_address::factory_from_data(uint32_t version,
-    const data_chunk& data, bool with_timestamp)
+                                                   const data_chunk &data, bool with_timestamp)
 {
     network_address instance;
     instance.from_data(version, data, with_timestamp);
@@ -49,7 +50,7 @@ network_address network_address::factory_from_data(uint32_t version,
 }
 
 network_address network_address::factory_from_data(uint32_t version,
-    std::istream& stream, bool with_timestamp)
+                                                   std::istream &stream, bool with_timestamp)
 {
     network_address instance;
     instance.from_data(version, stream, with_timestamp);
@@ -57,7 +58,7 @@ network_address network_address::factory_from_data(uint32_t version,
 }
 
 network_address network_address::factory_from_data(uint32_t version,
-    reader& source, bool with_timestamp)
+                                                   reader &source, bool with_timestamp)
 {
     network_address instance;
     instance.from_data(version, source, with_timestamp);
@@ -78,7 +79,7 @@ bool network_address::is_valid() const
     // header20 vectorlen3 addr26 addr26 addr26 header20 vectorlen3 addr26 addr26 addr26...
     // so if the first length field is garbled, it reads the second batch
     // of addr misaligned by 3 bytes.
-    if (memcmp(ip.data(), pchIPv4+3, sizeof(pchIPv4)-3) == 0)
+    if (memcmp(ip.data(), pchIPv4 + 3, sizeof(pchIPv4) - 3) == 0)
         return false;
 
     // unspecified IPv6 address (::/128)
@@ -116,21 +117,21 @@ void network_address::reset()
 }
 
 bool network_address::from_data(uint32_t version,
-    const data_chunk& data, bool with_timestamp)
+                                const data_chunk &data, bool with_timestamp)
 {
     data_source istream(data);
     return from_data(version, istream, with_timestamp);
 }
 
 bool network_address::from_data(uint32_t version,
-    std::istream& stream, bool with_timestamp)
+                                std::istream &stream, bool with_timestamp)
 {
     istream_reader source(stream);
     return from_data(version, source, with_timestamp);
 }
 
 bool network_address::from_data(uint32_t version,
-    reader& source, bool with_timestamp)
+                                reader &source, bool with_timestamp)
 {
     auto result = false;
 
@@ -151,7 +152,7 @@ bool network_address::from_data(uint32_t version,
 }
 
 data_chunk network_address::to_data(uint32_t version,
-    bool with_timestamp) const
+                                    bool with_timestamp) const
 {
     data_chunk data;
     data_sink ostream(data);
@@ -162,14 +163,14 @@ data_chunk network_address::to_data(uint32_t version,
 }
 
 void network_address::to_data(uint32_t version,
-    std::ostream& stream, bool with_timestamp) const
+                              std::ostream &stream, bool with_timestamp) const
 {
     ostream_writer sink(stream);
     to_data(version, sink, with_timestamp);
 }
 
 void network_address::to_data(uint32_t version,
-    writer& sink, bool with_timestamp) const
+                              writer &sink, bool with_timestamp) const
 {
     if (with_timestamp)
         sink.write_4_bytes_little_endian(timestamp);
@@ -180,13 +181,13 @@ void network_address::to_data(uint32_t version,
 }
 
 uint64_t network_address::serialized_size(uint32_t version,
-    bool with_timestamp) const
+                                          bool with_timestamp) const
 {
     return network_address::satoshi_fixed_size(version, with_timestamp);
 }
 
 uint64_t network_address::satoshi_fixed_size(uint32_t version,
-    bool with_timestamp)
+                                             bool with_timestamp)
 {
     uint64_t result = 26;
 
@@ -196,10 +197,9 @@ uint64_t network_address::satoshi_fixed_size(uint32_t version,
     return result;
 }
 
-
 unsigned int network_address::get_byte(int n) const
 {
-    return ip[15-n];
+    return ip[15 - n];
 }
 
 bool network_address::is_ipv4() const
@@ -219,10 +219,9 @@ bool network_address::is_private_network()
 
 bool network_address::is_RFC1918() const
 {
-    return is_ipv4() && (
-        get_byte(3) == 10 ||
-        (get_byte(3) == 192 && get_byte(2) == 168) ||
-        (get_byte(3) == 172 && (get_byte(2) >= 16 && get_byte(2) <= 31)));
+    return is_ipv4() && (get_byte(3) == 10 ||
+                         (get_byte(3) == 192 && get_byte(2) == 168) ||
+                         (get_byte(3) == 172 && (get_byte(2) >= 16 && get_byte(2) <= 31)));
     return false;
 }
 
@@ -243,7 +242,7 @@ bool network_address::is_RFC3964() const
 
 bool network_address::is_RFC6052() const
 {
-    static const unsigned char pchRFC6052[] = {0,0x64,0xFF,0x9B,0,0,0,0,0,0,0,0};
+    static const unsigned char pchRFC6052[] = {0, 0x64, 0xFF, 0x9B, 0, 0, 0, 0, 0, 0, 0, 0};
     return (memcmp(ip.data(), pchRFC6052, sizeof(pchRFC6052)) == 0);
 }
 
@@ -254,7 +253,7 @@ bool network_address::is_RFC4380() const
 
 bool network_address::is_RFC4862() const
 {
-    static const unsigned char pchRFC4862[] = {0xFE,0x80,0,0,0,0,0,0};
+    static const unsigned char pchRFC4862[] = {0xFE, 0x80, 0, 0, 0, 0, 0, 0};
     return (memcmp(ip.data(), pchRFC4862, sizeof(pchRFC4862)) == 0);
 }
 
@@ -265,7 +264,7 @@ bool network_address::is_RFC4193() const
 
 bool network_address::is_RFC6145() const
 {
-    static const unsigned char pchRFC6145[] = {0,0,0,0,0,0,0,0,0xFF,0xFF,0,0};
+    static const unsigned char pchRFC6145[] = {0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0};
     return (memcmp(ip.data(), pchRFC6145, sizeof(pchRFC6145)) == 0);
 }
 
@@ -282,20 +281,20 @@ bool network_address::is_tor() const
 bool network_address::is_local() const
 {
     // IPv4 loopback
-   if (is_ipv4() && (get_byte(3) == 127 || get_byte(3) == 0))
-       return true;
+    if (is_ipv4() && (get_byte(3) == 127 || get_byte(3) == 0))
+        return true;
 
-   // IPv6 loopback (::1/128)
-   static const unsigned char pchLocal[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
-   if (memcmp(ip.data(), pchLocal, 16) == 0)
-       return true;
+    // IPv6 loopback (::1/128)
+    static const unsigned char pchLocal[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+    if (memcmp(ip.data(), pchLocal, 16) == 0)
+        return true;
 
-   return false;
+    return false;
 }
 
 bool network_address::is_routable() const
 {
-    return is_valid() && !( is_RFC3927() || is_RFC4862() || (is_RFC4193() && !is_tor()) || is_RFC4843() || is_local());
+    return is_valid() && !(is_RFC3927() || is_RFC4862() || (is_RFC4193() && !is_tor()) || is_RFC4843() || is_local());
     //return is_valid() && !(is_RFC1918() || is_RFC3927() || is_RFC4862() || (is_RFC4193() && !is_tor()) || is_RFC4843() || is_local());
 }
 
@@ -304,6 +303,5 @@ bool network_address::is_ulticast() const
     return (is_ipv4() && (get_byte(3) & 0xF0) == 0xE0) || (get_byte(15) == 0xFF);
 }
 
-
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

@@ -27,28 +27,30 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string ping::command = "ping";
 const uint32_t ping::version_minimum = version::level::minimum;
 const uint32_t ping::version_maximum = version::level::maximum;
 
-ping ping::factory_from_data(uint32_t version, const data_chunk& data)
+ping ping::factory_from_data(uint32_t version, const data_chunk &data)
 {
     ping instance;
     instance.from_data(version, data);
     return instance;
 }
 
-ping ping::factory_from_data(uint32_t version, std::istream& stream)
+ping ping::factory_from_data(uint32_t version, std::istream &stream)
 {
     ping instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-ping ping::factory_from_data(uint32_t version, reader& source)
+ping ping::factory_from_data(uint32_t version, reader &source)
 {
     ping instance;
     instance.from_data(version, source);
@@ -61,28 +63,28 @@ uint64_t ping::satoshi_fixed_size(uint32_t version)
 }
 
 ping::ping()
-  : ping(0)
+    : ping(0)
 {
 }
 
 ping::ping(uint64_t nonce)
-  : nonce(nonce), valid_(nonce != 0)
+    : nonce(nonce), valid_(nonce != 0)
 {
 }
 
-bool ping::from_data(uint32_t version, const data_chunk& data)
+bool ping::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool ping::from_data(uint32_t version, std::istream& stream)
+bool ping::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool ping::from_data(uint32_t version, reader& source)
+bool ping::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -109,13 +111,13 @@ data_chunk ping::to_data(uint32_t version) const
     return data;
 }
 
-void ping::to_data(uint32_t version, std::ostream& stream) const
+void ping::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void ping::to_data(uint32_t version, writer& sink) const
+void ping::to_data(uint32_t version, writer &sink) const
 {
     if (version >= version::level::bip31)
         sink.write_8_bytes_little_endian(nonce);
@@ -136,17 +138,17 @@ uint64_t ping::serialized_size(uint32_t version) const
     return satoshi_fixed_size(version);
 }
 
-bool operator==(const ping& left, const ping& right)
+bool operator==(const ping &left, const ping &right)
 {
     // Nonce should be zero if not used.
     return (left.nonce == right.nonce);
 }
 
-bool operator!=(const ping& left, const ping& right)
+bool operator!=(const ping &left, const ping &right)
 {
     // Nonce should be zero if not used.
     return !(left == right);
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

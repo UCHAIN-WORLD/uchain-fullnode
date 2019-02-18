@@ -27,15 +27,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string get_address::command = "getaddr";
 const uint32_t get_address::version_minimum = version::level::minimum;
 const uint32_t get_address::version_maximum = version::level::maximum;
 
 get_address get_address::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                           const data_chunk &data)
 {
     get_address instance;
     instance.from_data(version, data);
@@ -43,7 +45,7 @@ get_address get_address::factory_from_data(uint32_t version,
 }
 
 get_address get_address::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                           std::istream &stream)
 {
     get_address instance;
     instance.from_data(version, stream);
@@ -51,7 +53,7 @@ get_address get_address::factory_from_data(uint32_t version,
 }
 
 get_address get_address::factory_from_data(uint32_t version,
-    reader& source)
+                                           reader &source)
 {
     get_address instance;
     instance.from_data(version, source);
@@ -67,19 +69,19 @@ void get_address::reset()
 {
 }
 
-bool get_address::from_data(uint32_t version, const data_chunk& data)
+bool get_address::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool get_address::from_data(uint32_t version, std::istream& stream)
+bool get_address::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool get_address::from_data(uint32_t version, reader& source)
+bool get_address::from_data(uint32_t version, reader &source)
 {
     reset();
     return source;
@@ -95,13 +97,13 @@ data_chunk get_address::to_data(uint32_t version) const
     return data;
 }
 
-void get_address::to_data(uint32_t version, std::ostream& stream) const
+void get_address::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void get_address::to_data(uint32_t version, writer& sink) const
+void get_address::to_data(uint32_t version, writer &sink) const
 {
 }
 
@@ -115,5 +117,5 @@ uint64_t get_address::satoshi_fixed_size(uint32_t version)
     return 0;
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

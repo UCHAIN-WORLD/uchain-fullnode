@@ -27,28 +27,30 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string fee_filter::command = "feefilter";
 const uint32_t fee_filter::version_minimum = version::level::bip133;
 const uint32_t fee_filter::version_maximum = version::level::bip133;
 
-fee_filter fee_filter::factory_from_data(uint32_t version, const data_chunk& data)
+fee_filter fee_filter::factory_from_data(uint32_t version, const data_chunk &data)
 {
     fee_filter instance;
     instance.from_data(version, data);
     return instance;
 }
 
-fee_filter fee_filter::factory_from_data(uint32_t version, std::istream& stream)
+fee_filter fee_filter::factory_from_data(uint32_t version, std::istream &stream)
 {
     fee_filter instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-fee_filter fee_filter::factory_from_data(uint32_t version, reader& source)
+fee_filter fee_filter::factory_from_data(uint32_t version, reader &source)
 {
     fee_filter instance;
     instance.from_data(version, source);
@@ -61,28 +63,28 @@ uint64_t fee_filter::satoshi_fixed_size(uint32_t version)
 }
 
 fee_filter::fee_filter()
-  : minimum_fee(0), valid_(false)
+    : minimum_fee(0), valid_(false)
 {
 }
 
 fee_filter::fee_filter(uint64_t minimum)
-  : minimum_fee(minimum), valid_(true)
+    : minimum_fee(minimum), valid_(true)
 {
 }
 
-bool fee_filter::from_data(uint32_t version, const data_chunk& data)
+bool fee_filter::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool fee_filter::from_data(uint32_t version, std::istream& stream)
+bool fee_filter::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool fee_filter::from_data(uint32_t version, reader& source)
+bool fee_filter::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -106,13 +108,13 @@ data_chunk fee_filter::to_data(uint32_t version) const
     return data;
 }
 
-void fee_filter::to_data(uint32_t version, std::ostream& stream) const
+void fee_filter::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void fee_filter::to_data(uint32_t version, writer& sink) const
+void fee_filter::to_data(uint32_t version, writer &sink) const
 {
     sink.write_8_bytes_little_endian(minimum_fee);
 }
@@ -133,15 +135,15 @@ uint64_t fee_filter::serialized_size(uint32_t version) const
     return satoshi_fixed_size(version);
 }
 
-bool fee_filter::operator==(const fee_filter& other) const
+bool fee_filter::operator==(const fee_filter &other) const
 {
     return (minimum_fee == other.minimum_fee);
 }
 
-bool fee_filter::operator!=(const fee_filter& other) const
+bool fee_filter::operator!=(const fee_filter &other) const
 {
     return !(*this == other);
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

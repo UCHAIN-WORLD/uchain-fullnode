@@ -28,15 +28,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string filter_add::command = "filteradd";
 const uint32_t filter_add::version_minimum = version::level::bip37;
 const uint32_t filter_add::version_maximum = version::level::maximum;
 
 filter_add filter_add::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                         const data_chunk &data)
 {
     filter_add instance;
     instance.from_data(version, data);
@@ -44,7 +46,7 @@ filter_add filter_add::factory_from_data(uint32_t version,
 }
 
 filter_add filter_add::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                         std::istream &stream)
 {
     filter_add instance;
     instance.from_data(version, stream);
@@ -52,7 +54,7 @@ filter_add filter_add::factory_from_data(uint32_t version,
 }
 
 filter_add filter_add::factory_from_data(uint32_t version,
-    reader& source)
+                                         reader &source)
 {
     filter_add instance;
     instance.from_data(version, source);
@@ -70,19 +72,19 @@ void filter_add::reset()
     data.shrink_to_fit();
 }
 
-bool filter_add::from_data(uint32_t version, const data_chunk& data)
+bool filter_add::from_data(uint32_t version, const data_chunk &data)
 {
     boost::iostreams::stream<byte_source<data_chunk>> istream(data);
     return from_data(version, istream);
 }
 
-bool filter_add::from_data(uint32_t version, std::istream& stream)
+bool filter_add::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool filter_add::from_data(uint32_t version, reader& source)
+bool filter_add::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -114,13 +116,13 @@ data_chunk filter_add::to_data(uint32_t version) const
     return data;
 }
 
-void filter_add::to_data(uint32_t version, std::ostream& stream) const
+void filter_add::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void filter_add::to_data(uint32_t version, writer& sink) const
+void filter_add::to_data(uint32_t version, writer &sink) const
 {
     sink.write_variable_uint_little_endian(data.size());
     sink.write_data(data);
@@ -131,8 +133,8 @@ uint64_t filter_add::serialized_size(uint32_t version) const
     return variable_uint_size(data.size()) + data.size();
 }
 
-bool operator==(const filter_add& left,
-    const filter_add& right)
+bool operator==(const filter_add &left,
+                const filter_add &right)
 {
     bool result = (left.data.size() == right.data.size());
 
@@ -142,11 +144,11 @@ bool operator==(const filter_add& left,
     return result;
 }
 
-bool operator!=(const filter_add& left,
-    const filter_add& right)
+bool operator!=(const filter_add &left,
+                const filter_add &right)
 {
     return !(left == right);
 }
 
-} // end message
-} // end libbitcoin
+} // namespace message
+} // namespace libbitcoin

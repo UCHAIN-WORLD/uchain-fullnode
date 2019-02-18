@@ -32,15 +32,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string headers::command = "headers";
 const uint32_t headers::version_minimum = version::level::headers;
 const uint32_t headers::version_maximum = version::level::maximum;
 
 headers headers::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                   const data_chunk &data)
 {
     headers instance;
     instance.from_data(version, data);
@@ -48,7 +50,7 @@ headers headers::factory_from_data(uint32_t version,
 }
 
 headers headers::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                   std::istream &stream)
 {
     headers instance;
     instance.from_data(version, stream);
@@ -56,7 +58,7 @@ headers headers::factory_from_data(uint32_t version,
 }
 
 headers headers::factory_from_data(uint32_t version,
-    reader& source)
+                                   reader &source)
 {
     headers instance;
     instance.from_data(version, source);
@@ -67,12 +69,12 @@ headers::headers()
 {
 }
 
-headers::headers(const chain::header::list& values)
+headers::headers(const chain::header::list &values)
 {
     elements.insert(elements.end(), values.begin(), values.end());
 }
 
-headers::headers(const std::initializer_list<chain::header>& values)
+headers::headers(const std::initializer_list<chain::header> &values)
 {
     elements.insert(elements.end(), values.begin(), values.end());
 }
@@ -88,19 +90,19 @@ void headers::reset()
     elements.shrink_to_fit();
 }
 
-bool headers::from_data(uint32_t version, const data_chunk& data)
+bool headers::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool headers::from_data(uint32_t version, std::istream& stream)
+bool headers::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool headers::from_data(uint32_t version, reader& source)
+bool headers::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -112,7 +114,7 @@ bool headers::from_data(uint32_t version, reader& source)
     {
         elements.resize(count);
 
-        for (auto& element: elements)
+        for (auto &element : elements)
         {
             result = element.from_data(source, true);
 
@@ -137,24 +139,23 @@ data_chunk headers::to_data(uint32_t version) const
     return data;
 }
 
-void headers::to_data(uint32_t version, std::ostream& stream) const
+void headers::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void headers::to_data(uint32_t version, writer& sink) const
+void headers::to_data(uint32_t version, writer &sink) const
 {
     sink.write_variable_uint_little_endian(elements.size());
 
-    for (const auto& element: elements)
+    for (const auto &element : elements)
         element.to_data(sink, true);
 }
 
-void headers::to_hashes(hash_list& out) const
+void headers::to_hashes(hash_list &out) const
 {
-    const auto map = [](const chain::header& header)
-    {
+    const auto map = [](const chain::header &header) {
         return header.hash();
     };
 
@@ -162,12 +163,11 @@ void headers::to_hashes(hash_list& out) const
     std::transform(elements.begin(), elements.end(), out.begin(), map);
 }
 
-void headers::to_inventory(inventory_vector::list& out,
-    inventory::type_id type) const
+void headers::to_inventory(inventory_vector::list &out,
+                           inventory::type_id type) const
 {
-    const auto map = [type](const chain::header& header)
-    {
-        return inventory_vector{ type, header.hash() };
+    const auto map = [type](const chain::header &header) {
+        return inventory_vector{type, header.hash()};
     };
 
     out.resize(elements.size());
@@ -178,21 +178,21 @@ uint64_t headers::serialized_size(uint32_t version) const
 {
     uint64_t size = variable_uint_size(elements.size());
 
-    for (const auto& element: elements)
+    for (const auto &element : elements)
         size += element.serialized_size(true);
 
     return size;
 }
 
-bool operator==(const headers& left, const headers& right)
+bool operator==(const headers &left, const headers &right)
 {
     return left.elements == right.elements;
 }
 
-bool operator!=(const headers& left, const headers& right)
+bool operator!=(const headers &left, const headers &right)
 {
     return !(left == right);
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

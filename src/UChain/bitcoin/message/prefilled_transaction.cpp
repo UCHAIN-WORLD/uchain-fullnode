@@ -27,11 +27,13 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 prefilled_transaction prefilled_transaction::factory_from_data(
-    const uint32_t version, const data_chunk& data)
+    const uint32_t version, const data_chunk &data)
 {
     prefilled_transaction instance;
     instance.from_data(version, data);
@@ -39,7 +41,7 @@ prefilled_transaction prefilled_transaction::factory_from_data(
 }
 
 prefilled_transaction prefilled_transaction::factory_from_data(
-    const uint32_t version, std::istream& stream)
+    const uint32_t version, std::istream &stream)
 {
     prefilled_transaction instance;
     instance.from_data(version, stream);
@@ -47,7 +49,7 @@ prefilled_transaction prefilled_transaction::factory_from_data(
 }
 
 prefilled_transaction prefilled_transaction::factory_from_data(
-    const uint32_t version, reader& source)
+    const uint32_t version, reader &source)
 {
     prefilled_transaction instance;
     instance.from_data(version, source);
@@ -66,21 +68,21 @@ void prefilled_transaction::reset()
 }
 
 bool prefilled_transaction::from_data(uint32_t version,
-    const data_chunk& data)
+                                      const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
 bool prefilled_transaction::from_data(uint32_t version,
-    std::istream& stream)
+                                      std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
 bool prefilled_transaction::from_data(uint32_t version,
-    reader& source)
+                                      reader &source)
 {
     reset();
 
@@ -107,14 +109,14 @@ data_chunk prefilled_transaction::to_data(uint32_t version) const
 }
 
 void prefilled_transaction::to_data(uint32_t version,
-    std::ostream& stream) const
+                                    std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
 void prefilled_transaction::to_data(uint32_t version,
-    writer& sink) const
+                                    writer &sink) const
 {
     sink.write_variable_uint_little_endian(index);
     transaction.to_data(sink);
@@ -125,5 +127,5 @@ uint64_t prefilled_transaction::serialized_size(uint32_t version) const
     return variable_uint_size(index) + transaction.serialized_size();
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

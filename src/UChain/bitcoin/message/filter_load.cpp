@@ -28,15 +28,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string filter_load::command = "filterload";
 const uint32_t filter_load::version_minimum = version::level::bip37;
 const uint32_t filter_load::version_maximum = version::level::maximum;
 
 filter_load filter_load::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                           const data_chunk &data)
 {
     filter_load instance;
     instance.from_data(version, data);
@@ -44,7 +46,7 @@ filter_load filter_load::factory_from_data(uint32_t version,
 }
 
 filter_load filter_load::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                           std::istream &stream)
 {
     filter_load instance;
     instance.from_data(version, stream);
@@ -52,7 +54,7 @@ filter_load filter_load::factory_from_data(uint32_t version,
 }
 
 filter_load filter_load::factory_from_data(uint32_t version,
-    reader& source)
+                                           reader &source)
 {
     filter_load instance;
     instance.from_data(version, source);
@@ -61,10 +63,7 @@ filter_load filter_load::factory_from_data(uint32_t version,
 
 bool filter_load::is_valid() const
 {
-    return !filter.empty()
-        || (hash_functions != 0)
-        || (tweak != 0)
-        || (flags != 0x00);
+    return !filter.empty() || (hash_functions != 0) || (tweak != 0) || (flags != 0x00);
 }
 
 void filter_load::reset()
@@ -76,23 +75,23 @@ void filter_load::reset()
     flags = 0x00;
 }
 
-bool filter_load::from_data(uint32_t version, const data_chunk& data)
+bool filter_load::from_data(uint32_t version, const data_chunk &data)
 {
     boost::iostreams::stream<byte_source<data_chunk>> istream(data);
     return from_data(version, istream);
 }
 
-bool filter_load::from_data(uint32_t version, std::istream& stream)
+bool filter_load::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool filter_load::from_data(uint32_t version, reader& source)
+bool filter_load::from_data(uint32_t version, reader &source)
 {
     reset();
 
-    const auto  insufficent_version = (version < filter_load::version_minimum);
+    const auto insufficent_version = (version < filter_load::version_minimum);
     const auto size = source.read_variable_uint_little_endian();
     BITCOIN_ASSERT(size <= bc::max_size_t);
     const auto filter_size = static_cast<size_t>(size);
@@ -123,13 +122,13 @@ data_chunk filter_load::to_data(uint32_t version) const
     return data;
 }
 
-void filter_load::to_data(uint32_t version, std::ostream& stream) const
+void filter_load::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void filter_load::to_data(uint32_t version, writer& sink) const
+void filter_load::to_data(uint32_t version, writer &sink) const
 {
     sink.write_variable_uint_little_endian(filter.size());
     sink.write_data(filter);
@@ -143,13 +142,13 @@ uint64_t filter_load::serialized_size(uint32_t version) const
     return 1 + 4 + 4 + variable_uint_size(filter.size()) + filter.size();
 }
 
-bool operator==(const filter_load& left,
-    const filter_load& right)
+bool operator==(const filter_load &left,
+                const filter_load &right)
 {
     bool result = (left.filter.size() == right.filter.size()) &&
-        (left.hash_functions == right.hash_functions) &&
-        (left.tweak == right.tweak) &&
-        (left.flags == right.flags);
+                  (left.hash_functions == right.hash_functions) &&
+                  (left.tweak == right.tweak) &&
+                  (left.flags == right.flags);
 
     for (data_chunk::size_type i = 0; i < left.filter.size() && result; i++)
         result = (left.filter[i] == right.filter[i]);
@@ -157,11 +156,11 @@ bool operator==(const filter_load& left,
     return result;
 }
 
-bool operator!=(const filter_load& left,
-    const filter_load& right)
+bool operator!=(const filter_load &left,
+                const filter_load &right)
 {
     return !(left == right);
 }
 
-} // end message
-} // end libbitcoin
+} // namespace message
+} // namespace libbitcoin
