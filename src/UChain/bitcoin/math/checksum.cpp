@@ -24,9 +24,10 @@
 #include <UChain/bitcoin/utility/endian.hpp>
 #include <UChain/bitcoin/utility/deserializer.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-void append_checksum(data_chunk& data)
+void append_checksum(data_chunk &data)
 {
     const auto checksum = bitcoin_checksum(data);
     extend_data(data, to_little_endian(checksum));
@@ -49,4 +50,3 @@ bool verify_checksum(data_slice data)
 }
 
 } // namespace libbitcoin
-

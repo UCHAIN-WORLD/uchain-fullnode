@@ -25,7 +25,8 @@
 #include <secp256k1.h>
 #include <UChain/bitcoin/define.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 /**
  * Virtual base class for secp256k1 context management.
@@ -35,10 +36,10 @@ namespace libbitcoin {
  */
 class BC_API secp256k1_initializer
 {
-private:
-    static void set_context(secp256k1_context** context, int flags);
+  private:
+    static void set_context(secp256k1_context **context, int flags);
 
-protected:
+  protected:
     int flags_;
 
     /**
@@ -47,7 +48,7 @@ protected:
      */
     secp256k1_initializer(int flags);
 
-public:
+  public:
     /**
      * Free the context if initialized.
      */
@@ -56,11 +57,11 @@ public:
     /**
      * Call to obtain the secp256k1 context, initialized on first call.
      */
-    secp256k1_context* context();
+    secp256k1_context *context();
 
-private:
+  private:
     std::once_flag mutex_;
-    secp256k1_context* context_;
+    secp256k1_context *context_;
 };
 
 /**
@@ -69,7 +70,7 @@ private:
 class BC_API secp256k1_signing
     : public secp256k1_initializer
 {
-public:
+  public:
     /**
      * Construct a signing context initializer.
      */
@@ -80,9 +81,9 @@ public:
  * Create and hold this class to initialize verification context on first use.
  */
 class BC_API secp256k1_verification
-  : public secp256k1_initializer
+    : public secp256k1_initializer
 {
-public:
+  public:
     /**
      * Construct a verification context initializer.
      */

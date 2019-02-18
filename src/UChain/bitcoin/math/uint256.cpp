@@ -9,10 +9,11 @@
 #include <string.h>
 #include <UChain/bitcoin/utility/assert.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 template <unsigned int BITS>
-base_uint<BITS>::base_uint(const std::vector<unsigned char>& vch)
+base_uint<BITS>::base_uint(const std::vector<unsigned char> &vch)
 {
     if (vch.size() != sizeof(pn))
         throw uint_error("Converting vector of wrong size to base_uint");
@@ -21,7 +22,7 @@ base_uint<BITS>::base_uint(const std::vector<unsigned char>& vch)
 }
 
 template <unsigned int BITS>
-base_uint<BITS>& base_uint<BITS>::operator<<=(unsigned int shift)
+base_uint<BITS> &base_uint<BITS>::operator<<=(unsigned int shift)
 {
     base_uint<BITS> a(*this);
     for (int i = 0; i < WIDTH; i++)
@@ -42,7 +43,7 @@ base_uint<BITS>& base_uint<BITS>::operator<<=(unsigned int shift)
 }
 
 template <unsigned int BITS>
-base_uint<BITS>& base_uint<BITS>::operator>>=(unsigned int shift)
+base_uint<BITS> &base_uint<BITS>::operator>>=(unsigned int shift)
 {
     base_uint<BITS> a(*this);
     for (int i = 0; i < WIDTH; i++)
@@ -63,7 +64,7 @@ base_uint<BITS>& base_uint<BITS>::operator>>=(unsigned int shift)
 }
 
 template <unsigned int BITS>
-base_uint<BITS>& base_uint<BITS>::operator*=(uint32_t b32)
+base_uint<BITS> &base_uint<BITS>::operator*=(uint32_t b32)
 {
     uint64_t carry = 0;
     for (int i = 0; i < WIDTH; i++)
@@ -77,7 +78,7 @@ base_uint<BITS>& base_uint<BITS>::operator*=(uint32_t b32)
 }
 
 template <unsigned int BITS>
-base_uint<BITS>& base_uint<BITS>::operator*=(const base_uint& b)
+base_uint<BITS> &base_uint<BITS>::operator*=(const base_uint &b)
 {
     base_uint<BITS> a = *this;
     *this = 0;
@@ -96,7 +97,7 @@ base_uint<BITS>& base_uint<BITS>::operator*=(const base_uint& b)
 }
 
 template <unsigned int BITS>
-base_uint<BITS>& base_uint<BITS>::operator/=(const base_uint& b)
+base_uint<BITS> &base_uint<BITS>::operator/=(const base_uint &b)
 {
     // make a copy, so we can shift.
     base_uint<BITS> div = b;
@@ -141,7 +142,7 @@ base_uint<BITS>& base_uint<BITS>::operator/=(const base_uint& b)
 }
 
 template <unsigned int BITS>
-int base_uint<BITS>::CompareTo(const base_uint<BITS>& b) const
+int base_uint<BITS>::CompareTo(const base_uint<BITS> &b) const
 {
     for (int i = WIDTH - 1; i >= 0; i--)
     {
@@ -190,13 +191,13 @@ unsigned int base_uint<BITS>::bits() const
 }
 
 // Explicit instantiations for base_uint<256>
-template base_uint<256>::base_uint(const std::vector<unsigned char>&);
-template base_uint<256>& base_uint<256>::operator<<=(unsigned int);
-template base_uint<256>& base_uint<256>::operator>>=(unsigned int);
-template base_uint<256>& base_uint<256>::operator*=(uint32_t b32);
-template base_uint<256>& base_uint<256>::operator*=(const base_uint<256>& b);
-template base_uint<256>& base_uint<256>::operator/=(const base_uint<256>& b);
-template int base_uint<256>::CompareTo(const base_uint<256>&) const;
+template base_uint<256>::base_uint(const std::vector<unsigned char> &);
+template base_uint<256> &base_uint<256>::operator<<=(unsigned int);
+template base_uint<256> &base_uint<256>::operator>>=(unsigned int);
+template base_uint<256> &base_uint<256>::operator*=(uint32_t b32);
+template base_uint<256> &base_uint<256>::operator*=(const base_uint<256> &b);
+template base_uint<256> &base_uint<256>::operator/=(const base_uint<256> &b);
+template int base_uint<256>::CompareTo(const base_uint<256> &) const;
 template bool base_uint<256>::EqualTo(uint64_t) const;
 template unsigned int base_uint<256>::bits() const;
 
@@ -232,8 +233,8 @@ uint32_t uint256_t::GetCompact(bool fNegative) const
 
 // This implementation directly uses shifts instead of going
 // through an intermediate MPI representation.
-uint256_t& uint256_t::SetCompact(uint32_t nCompact, bool* pfNegative,
-    bool* pfOverflow)
+uint256_t &uint256_t::SetCompact(uint32_t nCompact, bool *pfNegative,
+                                 bool *pfOverflow)
 {
     int nSize = nCompact >> 24;
     uint32_t nWord = nCompact & 0x007fffff;
@@ -254,8 +255,8 @@ uint256_t& uint256_t::SetCompact(uint32_t nCompact, bool* pfNegative,
 
     if (pfOverflow != nullptr)
         *pfOverflow = nWord != 0 && ((nSize > 34) ||
-        (nWord > 0xff && nSize > 33) ||
-        (nWord > 0xffff && nSize > 32));
+                                     (nWord > 0xff && nSize > 33) ||
+                                     (nWord > 0xffff && nSize > 32));
 
     return *this;
 }
