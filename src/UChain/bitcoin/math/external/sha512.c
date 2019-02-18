@@ -29,19 +29,19 @@
 #include <stdint.h>
 #include "zeroize.h"
 
-static uint64_t be64dec(const void* pp)
+static uint64_t be64dec(const void *pp)
 {
-    const uint8_t* p = (uint8_t const*)pp;
+    const uint8_t *p = (uint8_t const *)pp;
 
     return ((uint64_t)(p[7]) + ((uint64_t)(p[6]) << 8) +
-        ((uint64_t)(p[5]) << 16) + ((uint64_t)(p[4]) << 24) +
-        ((uint64_t)(p[3]) << 32) + ((uint64_t)(p[2]) << 40) +
-        ((uint64_t)(p[1]) << 48) + ((uint64_t)(p[0]) << 56));
+            ((uint64_t)(p[5]) << 16) + ((uint64_t)(p[4]) << 24) +
+            ((uint64_t)(p[3]) << 32) + ((uint64_t)(p[2]) << 40) +
+            ((uint64_t)(p[1]) << 48) + ((uint64_t)(p[0]) << 56));
 }
 
 static void be64enc(void *pp, uint64_t x)
 {
-    uint8_t* p = (uint8_t*)pp;
+    uint8_t *p = (uint8_t *)pp;
 
     p[7] = x & 0xff;
     p[6] = (x >> 8) & 0xff;
@@ -53,7 +53,7 @@ static void be64enc(void *pp, uint64_t x)
     p[0] = (x >> 56) & 0xff;
 }
 
-static void be64enc_vect(unsigned char* dst, const uint64_t* src, size_t len)
+static void be64enc_vect(unsigned char *dst, const uint64_t *src, size_t len)
 {
     size_t i;
     for (i = 0; i < len / 8; i++)
@@ -62,7 +62,7 @@ static void be64enc_vect(unsigned char* dst, const uint64_t* src, size_t len)
     }
 }
 
-static void be64dec_vect(uint64_t* dst, const unsigned char* src, size_t len)
+static void be64dec_vect(uint64_t *dst, const unsigned char *src, size_t len)
 {
     size_t i;
     for (i = 0; i < len / 8; i++)
@@ -71,42 +71,41 @@ static void be64dec_vect(uint64_t* dst, const unsigned char* src, size_t len)
     }
 }
 
-#define Ch(x, y, z)  ((x & (y ^ z)) ^ z)
+#define Ch(x, y, z) ((x & (y ^ z)) ^ z)
 #define Maj(x, y, z) ((x & (y | z)) | (y & z))
-#define SHR(x, n)    (x >> n)
-#define ROTR(x, n)   ((x >> n) | (x << (64 - n)))
-#define S0(x)        (ROTR(x, 28) ^ ROTR(x, 34) ^ ROTR(x, 39))
-#define S1(x)        (ROTR(x, 14) ^ ROTR(x, 18) ^ ROTR(x, 41))
-#define s0(x)        (ROTR(x, 1) ^ ROTR(x, 8) ^ SHR(x, 7))
-#define s1(x)        (ROTR(x, 19) ^ ROTR(x, 61) ^ SHR(x, 6))
+#define SHR(x, n) (x >> n)
+#define ROTR(x, n) ((x >> n) | (x << (64 - n)))
+#define S0(x) (ROTR(x, 28) ^ ROTR(x, 34) ^ ROTR(x, 39))
+#define S1(x) (ROTR(x, 14) ^ ROTR(x, 18) ^ ROTR(x, 41))
+#define s0(x) (ROTR(x, 1) ^ ROTR(x, 8) ^ SHR(x, 7))
+#define s1(x) (ROTR(x, 19) ^ ROTR(x, 61) ^ SHR(x, 6))
 
 #define RND(a, b, c, d, e, f, g, h, k) \
-    t0 = h + S1(e) + Ch(e, f, g) + k; \
-    t1 = S0(a) + Maj(a, b, c); \
-    d += t0; \
-    h  = t0 + t1;
+    t0 = h + S1(e) + Ch(e, f, g) + k;  \
+    t1 = S0(a) + Maj(a, b, c);         \
+    d += t0;                           \
+    h = t0 + t1;
 
-#define RNDr(S, W, i, k) \
+#define RNDr(S, W, i, k)                  \
     RND(S[(80 - i) % 8], S[(81 - i) % 8], \
-    S[(82 - i) % 8], S[(83 - i) % 8], \
-    S[(84 - i) % 8], S[(85 - i) % 8], \
-    S[(86 - i) % 8], S[(87 - i) % 8], \
-    W[i] + k)
+        S[(82 - i) % 8], S[(83 - i) % 8], \
+        S[(84 - i) % 8], S[(85 - i) % 8], \
+        S[(86 - i) % 8], S[(87 - i) % 8], \
+        W[i] + k)
 
 static unsigned char PAD[SHA512_BLOCK_LENGTH] =
-{
-    0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
+    {
+        0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-void SHA512_(const uint8_t* input, size_t length,
-    uint8_t digest[SHA512_DIGEST_LENGTH])
+void SHA512_(const uint8_t *input, size_t length,
+             uint8_t digest[SHA512_DIGEST_LENGTH])
 {
     SHA512CTX context;
     SHA512Init(&context);
@@ -114,14 +113,14 @@ void SHA512_(const uint8_t* input, size_t length,
     SHA512Final(&context, digest);
 }
 
-void SHA512Final(SHA512CTX* context, uint8_t digest[SHA512_DIGEST_LENGTH])
+void SHA512Final(SHA512CTX *context, uint8_t digest[SHA512_DIGEST_LENGTH])
 {
     SHA512Pad(context);
     be64enc_vect(digest, context->state, SHA512_DIGEST_LENGTH);
-    zeroize((void*)context, sizeof *context);
+    zeroize((void *)context, sizeof *context);
 }
 
-void SHA512Init(SHA512CTX* context)
+void SHA512Init(SHA512CTX *context)
 {
     context->count[0] = context->count[1] = 0;
 
@@ -135,7 +134,7 @@ void SHA512Init(SHA512CTX* context)
     context->state[7] = 0x5be0cd19137e2179ULL;
 }
 
-void SHA512Pad(SHA512CTX* context)
+void SHA512Pad(SHA512CTX *context)
 {
     uint8_t len[16];
     size_t r, plen;
@@ -150,7 +149,7 @@ void SHA512Pad(SHA512CTX* context)
 }
 
 void SHA512Transform(uint64_t state[SHA512_STATE_LENGTH],
-    const uint8_t block[SHA512_BLOCK_LENGTH])
+                     const uint8_t block[SHA512_BLOCK_LENGTH])
 {
     int i;
     uint64_t W[80];
@@ -159,7 +158,8 @@ void SHA512Transform(uint64_t state[SHA512_STATE_LENGTH],
 
     be64dec_vect(W, block, SHA512_BLOCK_LENGTH);
 
-    for (i = 16; i < 80; i++) {
+    for (i = 16; i < 80; i++)
+    {
         W[i] = s1(W[i - 2]) + W[i - 7] + s0(W[i - 15]) + W[i - 16];
     }
 
@@ -251,13 +251,13 @@ void SHA512Transform(uint64_t state[SHA512_STATE_LENGTH],
         state[i] += S[i];
     }
 
-    zeroize((void*)W, sizeof W);
-    zeroize((void*)S, sizeof S);
-    zeroize((void*)&t0, sizeof t0);
-    zeroize((void*)&t1, sizeof t1);
+    zeroize((void *)W, sizeof W);
+    zeroize((void *)S, sizeof S);
+    zeroize((void *)&t0, sizeof t0);
+    zeroize((void *)&t1, sizeof t1);
 }
 
-void SHA512Update(SHA512CTX* context, const uint8_t* input, size_t length)
+void SHA512Update(SHA512CTX *context, const uint8_t *input, size_t length)
 {
     uint64_t bitlen[2];
     size_t r = (context->count[1] >> 3) & 0x7f;

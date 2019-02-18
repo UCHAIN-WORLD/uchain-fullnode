@@ -32,17 +32,18 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/**
+    /**
  * pbkdf2_sha256(passphrase, passphrase_length, salt, salt_length, c, buf, dk_length):
  * Compute pbkdf2(passwd, salt, c, dkLen) using hmac_sha256 as the PRF, and
  * write the output to buf.  The value dkLen must be at most 32 * (2^32 - 1).
  */
-void pbkdf2_sha256(const uint8_t* passphrase, size_t passphrase_length,
-    const uint8_t* salt, size_t salt_length, uint64_t c, uint8_t* buf,
-    size_t dk_length);
+    void pbkdf2_sha256(const uint8_t *passphrase, size_t passphrase_length,
+                       const uint8_t *salt, size_t salt_length, uint64_t c, uint8_t *buf,
+                       size_t dk_length);
 
 #ifdef __cplusplus
 }

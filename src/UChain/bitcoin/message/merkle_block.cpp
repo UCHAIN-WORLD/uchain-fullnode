@@ -28,15 +28,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string merkle_block::command = "merkleblock";
 const uint32_t merkle_block::version_minimum = version::level::bip37;
 const uint32_t merkle_block::version_maximum = version::level::maximum;
 
 merkle_block merkle_block::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                             const data_chunk &data)
 {
     merkle_block instance;
     instance.from_data(version, data);
@@ -44,7 +46,7 @@ merkle_block merkle_block::factory_from_data(uint32_t version,
 }
 
 merkle_block merkle_block::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                             std::istream &stream)
 {
     merkle_block instance;
     instance.from_data(version, stream);
@@ -52,7 +54,7 @@ merkle_block merkle_block::factory_from_data(uint32_t version,
 }
 
 merkle_block merkle_block::factory_from_data(uint32_t version,
-    reader& source)
+                                             reader &source)
 {
     merkle_block instance;
     instance.from_data(version, source);
@@ -73,19 +75,19 @@ void merkle_block::reset()
     flags.shrink_to_fit();
 }
 
-bool merkle_block::from_data(uint32_t version, const data_chunk& data)
+bool merkle_block::from_data(uint32_t version, const data_chunk &data)
 {
     boost::iostreams::stream<byte_source<data_chunk>> istream(data);
     return from_data(version, istream);
 }
 
-bool merkle_block::from_data(uint32_t version, std::istream& stream)
+bool merkle_block::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool merkle_block::from_data(uint32_t version, reader& source)
+bool merkle_block::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -135,19 +137,19 @@ data_chunk merkle_block::to_data(uint32_t version) const
     return data;
 }
 
-void merkle_block::to_data(uint32_t version, std::ostream& stream) const
+void merkle_block::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void merkle_block::to_data(uint32_t version, writer& sink) const
+void merkle_block::to_data(uint32_t version, writer &sink) const
 {
     header.to_data(sink, true);
 
     sink.write_variable_uint_little_endian(hashes.size());
 
-    for (const auto& hash : hashes)
+    for (const auto &hash : hashes)
         sink.write_hash(hash);
 
     sink.write_variable_uint_little_endian(flags.size());
@@ -157,16 +159,16 @@ void merkle_block::to_data(uint32_t version, writer& sink) const
 uint64_t merkle_block::serialized_size(uint32_t version) const
 {
     return header.serialized_size(true) +
-        variable_uint_size(hashes.size()) + (hash_size * hashes.size()) +
-        variable_uint_size(flags.size()) + flags.size();
+           variable_uint_size(hashes.size()) + (hash_size * hashes.size()) +
+           variable_uint_size(flags.size()) + flags.size();
 }
 
-bool operator==(const merkle_block& block_a,
-    const merkle_block& block_b)
+bool operator==(const merkle_block &block_a,
+                const merkle_block &block_b)
 {
     bool result = (block_a.header == block_b.header) &&
-        (block_a.hashes.size() == block_b.hashes.size()) &&
-        (block_a.flags.size() == block_b.flags.size());
+                  (block_a.hashes.size() == block_b.hashes.size()) &&
+                  (block_a.flags.size() == block_b.flags.size());
 
     for (hash_list::size_type i = 0; i < block_a.hashes.size() && result; i++)
         result = (block_a.hashes[i] == block_b.hashes[i]);
@@ -177,11 +179,11 @@ bool operator==(const merkle_block& block_a,
     return result;
 }
 
-bool operator!=(const merkle_block& block_a,
-    const merkle_block& block_b)
+bool operator!=(const merkle_block &block_a,
+                const merkle_block &block_b)
 {
     return !(block_a == block_b);
 }
 
-} // end message
-} // end libbitcoin
+} // namespace message
+} // namespace libbitcoin

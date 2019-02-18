@@ -23,7 +23,7 @@
 
 /* TODO: deal with determination of HAVE_SECUREZEROMEMORY and HAVE_MEMSET_S */
 /* These are performance optimizations, not required for security. */
-void zeroize(void* const buffer, size_t length)
+void zeroize(void *const buffer, size_t length)
 {
 #ifdef HAVE_SECUREZEROMEMORY
     SecureZeroMemory(buffer, length);
@@ -32,7 +32,7 @@ void zeroize(void* const buffer, size_t length)
         abort();
 #else
     size_t i;
-    volatile uint8_t* vbuffer = (volatile uint8_t*)buffer;
+    volatile uint8_t *vbuffer = (volatile uint8_t *)buffer;
     for (i = 0; i < length; i++)
         vbuffer[i] = 0;
 #endif

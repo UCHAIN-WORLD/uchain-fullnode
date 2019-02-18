@@ -23,11 +23,11 @@
 #include "hmac_sha512.h"
 #include "zeroize.h"
 
-int pkcs5_pbkdf2(const uint8_t* passphrase, size_t passphrase_length,
-    const uint8_t* salt, size_t salt_length, uint8_t* key, size_t key_length,
-    size_t iterations)
+int pkcs5_pbkdf2(const uint8_t *passphrase, size_t passphrase_length,
+                 const uint8_t *salt, size_t salt_length, uint8_t *key, size_t key_length,
+                 size_t iterations)
 {
-    uint8_t* asalt;
+    uint8_t *asalt;
     size_t asalt_size;
     size_t count, index, iteration, length;
     uint8_t buffer[HMACSHA512_DIGEST_LENGTH];
@@ -58,7 +58,7 @@ int pkcs5_pbkdf2(const uint8_t* passphrase, size_t passphrase_length,
         for (iteration = 1; iteration < iterations; iteration++)
         {
             HMACSHA512(digest1, sizeof(digest1), passphrase, passphrase_length,
-                digest2);
+                       digest2);
             memcpy(digest1, digest2, sizeof(digest1));
             for (index = 0; index < sizeof(buffer); index++)
                 buffer[index] ^= digest1[index];

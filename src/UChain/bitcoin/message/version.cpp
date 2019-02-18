@@ -27,15 +27,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string version::command = "version";
 const uint32_t message::version::version_minimum = level::minimum;
 const uint32_t message::version::version_maximum = level::maximum;
 
 version version::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                   const data_chunk &data)
 {
     message::version instance;
     instance.from_data(version, data);
@@ -43,7 +45,7 @@ version version::factory_from_data(uint32_t version,
 }
 
 version version::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                   std::istream &stream)
 {
     message::version instance;
     instance.from_data(version, stream);
@@ -51,7 +53,7 @@ version version::factory_from_data(uint32_t version,
 }
 
 version version::factory_from_data(uint32_t version,
-    reader& source)
+                                   reader &source)
 {
     message::version instance;
     instance.from_data(version, source);
@@ -60,15 +62,7 @@ version version::factory_from_data(uint32_t version,
 
 bool version::is_valid() const
 {
-    return (value != 0)
-        || (services != 0)
-        || (timestamp != 0)
-        || address_recevier.is_valid()
-        || address_sender.is_valid()
-        || (nonce != 0)
-        || !user_agent.empty()
-        || (start_height != 0)
-        || (relay != 0);
+    return (value != 0) || (services != 0) || (timestamp != 0) || address_recevier.is_valid() || address_sender.is_valid() || (nonce != 0) || !user_agent.empty() || (start_height != 0) || (relay != 0);
 }
 
 void version::reset()
@@ -85,19 +79,19 @@ void version::reset()
     relay = false;
 }
 
-bool version::from_data(uint32_t version, const data_chunk& data)
+bool version::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool version::from_data(uint32_t version, std::istream& stream)
+bool version::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool version::from_data(uint32_t version, reader& source)
+bool version::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -136,13 +130,13 @@ data_chunk version::to_data(uint32_t version) const
     return data;
 }
 
-void version::to_data(uint32_t version, std::ostream& stream) const
+void version::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void version::to_data(uint32_t version, writer& sink) const
+void version::to_data(uint32_t version, writer &sink) const
 {
     sink.write_4_bytes_little_endian(value);
     const uint32_t effective_version = std::min(version, value);
@@ -176,5 +170,5 @@ uint64_t version::serialized_size(uint32_t version) const
     return size;
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

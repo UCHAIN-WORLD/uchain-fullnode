@@ -28,8 +28,10 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 size_t heading::maximum_size()
 {
@@ -54,24 +56,24 @@ size_t heading::maximum_payload_size(uint32_t)
 size_t heading::serialized_size()
 {
     return sizeof(uint32_t) + command_size + sizeof(uint32_t) +
-        sizeof(uint32_t);
+           sizeof(uint32_t);
 }
 
-heading heading::factory_from_data(const data_chunk& data)
+heading heading::factory_from_data(const data_chunk &data)
 {
     heading instance;
     instance.from_data(data);
     return instance;
 }
 
-heading heading::factory_from_data(std::istream& stream)
+heading heading::factory_from_data(std::istream &stream)
 {
     heading instance;
     instance.from_data(stream);
     return instance;
 }
 
-heading heading::factory_from_data(reader& source)
+heading heading::factory_from_data(reader &source)
 {
     heading instance;
     instance.from_data(source);
@@ -80,10 +82,7 @@ heading heading::factory_from_data(reader& source)
 
 bool heading::is_valid() const
 {
-    return (magic != 0)
-        || (payload_size != 0)
-        || (checksum != 0)
-        || !command.empty();
+    return (magic != 0) || (payload_size != 0) || (checksum != 0) || !command.empty();
 }
 
 void heading::reset()
@@ -95,19 +94,19 @@ void heading::reset()
     checksum = 0;
 }
 
-bool heading::from_data(const data_chunk& data)
+bool heading::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool heading::from_data(std::istream& stream)
+bool heading::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool heading::from_data(reader& source)
+bool heading::from_data(reader &source)
 {
     reset();
     magic = source.read_4_bytes_little_endian();
@@ -131,13 +130,13 @@ data_chunk heading::to_data() const
     return data;
 }
 
-void heading::to_data(std::ostream& stream) const
+void heading::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void heading::to_data(writer& sink) const
+void heading::to_data(writer &sink) const
 {
     sink.write_4_bytes_little_endian(magic);
     sink.write_fixed_string(command, command_size);
@@ -202,18 +201,15 @@ message_type heading::type() const
     return message_type::unknown;
 }
 
-bool operator==(const heading& left, const heading& right)
+bool operator==(const heading &left, const heading &right)
 {
-    return (left.magic == right.magic)
-        && (left.command == right.command)
-        && (left.payload_size == right.payload_size)
-        && (left.checksum == right.checksum);
+    return (left.magic == right.magic) && (left.command == right.command) && (left.payload_size == right.payload_size) && (left.checksum == right.checksum);
 }
 
-bool operator!=(const heading& left, const heading& right)
+bool operator!=(const heading &left, const heading &right)
 {
     return !(left == right);
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

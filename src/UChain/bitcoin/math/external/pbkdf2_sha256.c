@@ -34,9 +34,9 @@
 #include "hmac_sha256.h"
 #include "zeroize.h"
 
-static BC_C_INLINE void be32enc(void* pp, uint32_t x)
+static BC_C_INLINE void be32enc(void *pp, uint32_t x)
 {
-    uint8_t* p = (uint8_t*)pp;
+    uint8_t *p = (uint8_t *)pp;
 
     p[3] = x & 0xff;
     p[2] = (x >> 8) & 0xff;
@@ -49,9 +49,9 @@ static BC_C_INLINE void be32enc(void* pp, uint32_t x)
  * Compute pbkdf2(passwd, salt, c, dkLen) using hmac_sha256 as the PRF, and
  * write the output to buf.  The value dkLen must be at most 32 * (2^32 - 1).
  */
-void pbkdf2_sha256(const uint8_t* passphrase, size_t passphrase_length,
-    const uint8_t* salt, size_t salt_length, uint64_t c,
-    uint8_t* buf, size_t dk_length)
+void pbkdf2_sha256(const uint8_t *passphrase, size_t passphrase_length,
+                   const uint8_t *salt, size_t salt_length, uint64_t c,
+                   uint8_t *buf, size_t dk_length)
 {
     uint8_t ivec[4];
     uint8_t U[32], T[32];
@@ -61,7 +61,8 @@ void pbkdf2_sha256(const uint8_t* passphrase, size_t passphrase_length,
     HMACSHA256Init(&PShctx, passphrase, passphrase_length);
     HMACSHA256Update(&PShctx, salt, salt_length);
 
-    for (i = 0; i * 32 < dk_length; i++) {
+    for (i = 0; i * 32 < dk_length; i++)
+    {
         be32enc(ivec, (uint32_t)(i + 1));
         memcpy(&hctx, &PShctx, sizeof(HMACSHA256CTX));
         HMACSHA256Update(&hctx, ivec, 4);
@@ -69,19 +70,22 @@ void pbkdf2_sha256(const uint8_t* passphrase, size_t passphrase_length,
 
         memcpy(T, U, 32);
         /* LCOV_EXCL_START */
-        for (j = 2; j <= c; j++) {
+        for (j = 2; j <= c; j++)
+        {
             HMACSHA256Init(&hctx, passphrase, passphrase_length);
             HMACSHA256Update(&hctx, U, 32);
             HMACSHA256Final(&hctx, U);
 
-            for (k = 0; k < 32; k++) {
+            for (k = 0; k < 32; k++)
+            {
                 T[k] ^= U[k];
             }
         }
         /* LCOV_EXCL_STOP */
 
         clen = dk_length - i * 32;
-        if (clen > 32) {
+        if (clen > 32)
+        {
             clen = 32;
         }
         memcpy(&buf[i * 32], T, clen);

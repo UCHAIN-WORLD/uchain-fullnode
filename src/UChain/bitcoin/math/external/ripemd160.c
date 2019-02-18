@@ -35,61 +35,63 @@
 #include "zeroize.h"
 
 #ifdef __BIG_ENDIAN__
-    #define RIPEMD160_BIG_ENDIAN
+#define RIPEMD160_BIG_ENDIAN
 #elif defined __LITTLE_ENDIAN__
-    /* override */
+/* override */
 #elif defined __BYTE_ORDER
-    #if __BYTE_ORDER__ ==  __ORDER_BIG_ENDIAN__
-        #define RIPEMD160_BIG_ENDIAN
-    #endif
-#else /* !defined __LITTLE_ENDIAN__ */
-    #include <endian.h> /* machine/endian.h */
-    #if __BYTE_ORDER__ ==  __ORDER_BIG_ENDIAN__
-        #define RIPEMD160_BIG_ENDIAN
-    #endif
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define RIPEMD160_BIG_ENDIAN
+#endif
+#else               /* !defined __LITTLE_ENDIAN__ */
+#include <endian.h> /* machine/endian.h */
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define RIPEMD160_BIG_ENDIAN
+#endif
 #endif
 
 #define byte_length 8
 
-#define PUT_64BIT_LE(cp, value) do \
-{ \
-    (cp)[7] = (uint8_t)((value) >> (byte_length * 7)); \
-    (cp)[6] = (uint8_t)((value) >> (byte_length * 6)); \
-    (cp)[5] = (uint8_t)((value) >> (byte_length * 5)); \
-    (cp)[4] = (uint8_t)((value) >> (byte_length * 4)); \
-    (cp)[3] = (uint8_t)((value) >> (byte_length * 3)); \
-    (cp)[2] = (uint8_t)((value) >> (byte_length * 2)); \
-    (cp)[1] = (uint8_t)((value) >> (byte_length * 1)); \
-    (cp)[0] = (uint8_t)((value) >> (byte_length * 0)); \
-} while (0)
+#define PUT_64BIT_LE(cp, value)                            \
+    do                                                     \
+    {                                                      \
+        (cp)[7] = (uint8_t)((value) >> (byte_length * 7)); \
+        (cp)[6] = (uint8_t)((value) >> (byte_length * 6)); \
+        (cp)[5] = (uint8_t)((value) >> (byte_length * 5)); \
+        (cp)[4] = (uint8_t)((value) >> (byte_length * 4)); \
+        (cp)[3] = (uint8_t)((value) >> (byte_length * 3)); \
+        (cp)[2] = (uint8_t)((value) >> (byte_length * 2)); \
+        (cp)[1] = (uint8_t)((value) >> (byte_length * 1)); \
+        (cp)[0] = (uint8_t)((value) >> (byte_length * 0)); \
+    } while (0)
 
-#define PUT_32BIT_LE(cp, value) do \
-{ \
-    (cp)[3] = (uint8_t)((value) >> (byte_length * 3)); \
-    (cp)[2] = (uint8_t)((value) >> (byte_length * 2)); \
-    (cp)[1] = (uint8_t)((value) >> (byte_length * 1)); \
-    (cp)[0] = (uint8_t)((value) >> (byte_length * 0)); \
-} while (0)
+#define PUT_32BIT_LE(cp, value)                            \
+    do                                                     \
+    {                                                      \
+        (cp)[3] = (uint8_t)((value) >> (byte_length * 3)); \
+        (cp)[2] = (uint8_t)((value) >> (byte_length * 2)); \
+        (cp)[1] = (uint8_t)((value) >> (byte_length * 1)); \
+        (cp)[0] = (uint8_t)((value) >> (byte_length * 0)); \
+    } while (0)
 
-#define    H0 0x67452301U
-#define    H1 0xEFCDAB89U
-#define    H2 0x98BADCFEU
-#define    H3 0x10325476U
-#define    H4 0xC3D2E1F0U
+#define H0 0x67452301U
+#define H1 0xEFCDAB89U
+#define H2 0x98BADCFEU
+#define H3 0x10325476U
+#define H4 0xC3D2E1F0U
 
-#define    K0 0x00000000U
-#define    K1 0x5A827999U
-#define    K2 0x6ED9EBA1U
-#define    K3 0x8F1BBCDCU
-#define    K4 0xA953FD4EU
+#define K0 0x00000000U
+#define K1 0x5A827999U
+#define K2 0x6ED9EBA1U
+#define K3 0x8F1BBCDCU
+#define K4 0xA953FD4EU
 
-#define    KK0 0x50A28BE6U
-#define    KK1 0x5C4DD124U
-#define    KK2 0x6D703EF3U
-#define    KK3 0x7A6D76E9U
-#define    KK4 0x00000000U
+#define KK0 0x50A28BE6U
+#define KK1 0x5C4DD124U
+#define KK2 0x6D703EF3U
+#define KK3 0x7A6D76E9U
+#define KK4 0x00000000U
 
-#define ROL(n, x) (((x) << (n)) | ((x) >> (32-(n))))
+#define ROL(n, x) (((x) << (n)) | ((x) >> (32 - (n))))
 
 #define F0(x, y, z) ((x) ^ (y) ^ (z))
 #define F1(x, y, z) (((x) & (y)) | ((~x) & (z)))
@@ -97,23 +99,23 @@
 #define F3(x, y, z) (((x) & (z)) | ((y) & (~z)))
 #define F4(x, y, z) ((x) ^ ((y) | (~z)))
 
-#define R(a, b, c, d, e, Fj, Kj, sj, rj) do \
-{ \
-    a = ROL(sj, a + Fj(b, c, d) + X(rj) + Kj) + e; \
-    c = ROL(10, c); \
-} while(0)
+#define R(a, b, c, d, e, Fj, Kj, sj, rj)               \
+    do                                                 \
+    {                                                  \
+        a = ROL(sj, a + Fj(b, c, d) + X(rj) + Kj) + e; \
+        c = ROL(10, c);                                \
+    } while (0)
 
 #define X(i) x[i]
 
 static uint8_t PAD[RMD160_BLOCK_LENGTH] =
-{
-    0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
+    {
+        0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-void RMD160(const uint8_t* input, size_t length,
-    uint8_t digest[RMD160_DIGEST_LENGTH])
+void RMD160(const uint8_t *input, size_t length,
+            uint8_t digest[RMD160_DIGEST_LENGTH])
 {
     RMD160CTX ctx;
     RMD160Init(&ctx);
@@ -121,7 +123,7 @@ void RMD160(const uint8_t* input, size_t length,
     RMD160Final(&ctx, digest);
 }
 
-void RMD160Final(RMD160CTX* context, uint8_t digest[RMD160_DIGEST_LENGTH])
+void RMD160Final(RMD160CTX *context, uint8_t digest[RMD160_DIGEST_LENGTH])
 {
     int i;
     RMD160Pad(context);
@@ -133,7 +135,7 @@ void RMD160Final(RMD160CTX* context, uint8_t digest[RMD160_DIGEST_LENGTH])
     zeroize(context, sizeof *context);
 }
 
-void RMD160Init(RMD160CTX* context)
+void RMD160Init(RMD160CTX *context)
 {
     context->count = 0;
 
@@ -144,7 +146,7 @@ void RMD160Init(RMD160CTX* context)
     context->state[4] = H4;
 }
 
-void RMD160Pad(RMD160CTX* context)
+void RMD160Pad(RMD160CTX *context)
 {
     uint8_t len[8];
     uint32_t plen;
@@ -152,7 +154,7 @@ void RMD160Pad(RMD160CTX* context)
     PUT_64BIT_LE(len, context->count);
 
     plen = RMD160_BLOCK_LENGTH -
-        ((context->count / 8) % RMD160_BLOCK_LENGTH);
+           ((context->count / 8) % RMD160_BLOCK_LENGTH);
 
     if (plen < 1 + 8)
     {
@@ -164,7 +166,7 @@ void RMD160Pad(RMD160CTX* context)
 }
 
 void RMD160Transform(uint32_t state[RMD160_STATE_LENGTH],
-    const uint8_t block[RMD160_BLOCK_LENGTH])
+                     const uint8_t block[RMD160_BLOCK_LENGTH])
 {
     uint32_t a, b, c, d, e, aa, bb, cc, dd, ee, t, x[16];
 
@@ -175,10 +177,10 @@ void RMD160Transform(uint32_t state[RMD160_STATE_LENGTH],
     for (i = 0; i < 16; i++)
     {
         x[i] = (uint32_t)(
-        (uint32_t)(block[i * 4 + 0]) |
-        (uint32_t)(block[i * 4 + 1]) << byte_length * 1 |
-        (uint32_t)(block[i * 4 + 2]) << byte_length * 2 |
-        (uint32_t)(block[i * 4 + 3]) << byte_length * 3);
+            (uint32_t)(block[i * 4 + 0]) |
+            (uint32_t)(block[i * 4 + 1]) << byte_length * 1 |
+            (uint32_t)(block[i * 4 + 2]) << byte_length * 2 |
+            (uint32_t)(block[i * 4 + 3]) << byte_length * 3);
     }
 #endif
 
@@ -273,7 +275,11 @@ void RMD160Transform(uint32_t state[RMD160_STATE_LENGTH],
     R(c, d, e, a, b, F4, K4, 5, 15);
     R(b, c, d, e, a, F4, K4, 6, 13);
 
-    aa = a; bb = b; cc = c; dd = d; ee = e;
+    aa = a;
+    bb = b;
+    cc = c;
+    dd = d;
+    ee = e;
 
     a = state[0];
     b = state[1];
@@ -374,7 +380,7 @@ void RMD160Transform(uint32_t state[RMD160_STATE_LENGTH],
     state[0] = t;
 }
 
-void RMD160Update(RMD160CTX* context, const uint8_t* input, size_t length)
+void RMD160Update(RMD160CTX *context, const uint8_t *input, size_t length)
 {
     uint32_t have, off, need;
 

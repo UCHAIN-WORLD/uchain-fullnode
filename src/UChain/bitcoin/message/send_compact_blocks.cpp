@@ -27,15 +27,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string send_compact_blocks::command = "sendcmpct";
 const uint32_t send_compact_blocks::version_minimum = version::level::bip152;
 const uint32_t send_compact_blocks::version_maximum = version::level::bip152;
 
 send_compact_blocks send_compact_blocks::factory_from_data(
-    const uint32_t version, const data_chunk& data)
+    const uint32_t version, const data_chunk &data)
 {
     send_compact_blocks instance;
     instance.from_data(version, data);
@@ -43,7 +45,7 @@ send_compact_blocks send_compact_blocks::factory_from_data(
 }
 
 send_compact_blocks send_compact_blocks::factory_from_data(
-    const uint32_t version, std::istream& stream)
+    const uint32_t version, std::istream &stream)
 {
     send_compact_blocks instance;
     instance.from_data(version, stream);
@@ -51,7 +53,7 @@ send_compact_blocks send_compact_blocks::factory_from_data(
 }
 
 send_compact_blocks send_compact_blocks::factory_from_data(
-    const uint32_t version, reader& source)
+    const uint32_t version, reader &source)
 {
     send_compact_blocks instance;
     instance.from_data(version, source);
@@ -70,21 +72,21 @@ void send_compact_blocks::reset()
 }
 
 bool send_compact_blocks::from_data(uint32_t version,
-    const data_chunk& data)
+                                    const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
 bool send_compact_blocks::from_data(uint32_t version,
-    std::istream& stream)
+                                    std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
 bool send_compact_blocks::from_data(uint32_t version,
-    reader& source)
+                                    reader &source)
 {
     reset();
     const auto insufficient_version = (version < send_compact_blocks::version_minimum);
@@ -117,14 +119,14 @@ data_chunk send_compact_blocks::to_data(uint32_t version) const
 }
 
 void send_compact_blocks::to_data(uint32_t version,
-    std::ostream& stream) const
+                                  std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
 void send_compact_blocks::to_data(uint32_t version,
-    writer& sink) const
+                                  writer &sink) const
 {
     sink.write_byte(high_bandwidth_mode ? 1 : 0);
     sink.write_8_bytes_little_endian(this->version);
@@ -135,11 +137,10 @@ uint64_t send_compact_blocks::serialized_size(uint32_t version) const
     return send_compact_blocks::satoshi_fixed_size(version);
 }
 
-
 uint64_t send_compact_blocks::satoshi_fixed_size(uint32_t version)
 {
     return 9;
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

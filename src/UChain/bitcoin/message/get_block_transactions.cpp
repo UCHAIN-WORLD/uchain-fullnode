@@ -28,15 +28,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string get_block_transactions::command = "getblocktxn";
 const uint32_t get_block_transactions::version_minimum = version::level::bip152;
 const uint32_t get_block_transactions::version_maximum = version::level::bip152;
 
 get_block_transactions get_block_transactions::factory_from_data(
-    const uint32_t version, const data_chunk& data)
+    const uint32_t version, const data_chunk &data)
 {
     get_block_transactions instance;
     instance.from_data(version, data);
@@ -44,7 +46,7 @@ get_block_transactions get_block_transactions::factory_from_data(
 }
 
 get_block_transactions get_block_transactions::factory_from_data(
-    const uint32_t version, std::istream& stream)
+    const uint32_t version, std::istream &stream)
 {
     get_block_transactions instance;
     instance.from_data(version, stream);
@@ -52,7 +54,7 @@ get_block_transactions get_block_transactions::factory_from_data(
 }
 
 get_block_transactions get_block_transactions::factory_from_data(
-    const uint32_t version, reader& source)
+    const uint32_t version, reader &source)
 {
     get_block_transactions instance;
     instance.from_data(version, source);
@@ -72,21 +74,21 @@ void get_block_transactions::reset()
 }
 
 bool get_block_transactions::from_data(uint32_t version,
-    const data_chunk& data)
+                                       const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
 bool get_block_transactions::from_data(uint32_t version,
-    std::istream& stream)
+                                       std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
 bool get_block_transactions::from_data(uint32_t version,
-    reader& source)
+                                       reader &source)
 {
     reset();
     block_hash = source.read_hash();
@@ -121,18 +123,18 @@ data_chunk get_block_transactions::to_data(uint32_t version) const
 }
 
 void get_block_transactions::to_data(uint32_t version,
-    std::ostream& stream) const
+                                     std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
 void get_block_transactions::to_data(uint32_t version,
-    writer& sink) const
+                                     writer &sink) const
 {
     sink.write_hash(block_hash);
     sink.write_variable_uint_little_endian(indexes.size());
-    for (const auto& element: indexes)
+    for (const auto &element : indexes)
         sink.write_variable_uint_little_endian(element);
 }
 
@@ -140,11 +142,11 @@ uint64_t get_block_transactions::serialized_size(uint32_t version) const
 {
     uint64_t size = hash_size + variable_uint_size(indexes.size());
 
-    for (const auto& element: indexes)
+    for (const auto &element : indexes)
         size += variable_uint_size(element);
 
     return size;
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

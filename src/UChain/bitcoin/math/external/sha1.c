@@ -20,18 +20,18 @@
 #include "zeroize.h"
 
 #ifdef __BIG_ENDIAN__
-    #define SHA1_BIG_ENDIAN
+#define SHA1_BIG_ENDIAN
 #elif defined __LITTLE_ENDIAN__
-    /* override */
+/* override */
 #elif defined __BYTE_ORDER
-    #if __BYTE_ORDER__ ==  __ORDER_BIG_ENDIAN__
-        #define SHA1_BIG_ENDIAN
-    #endif
-#else /* !defined __LITTLE_ENDIAN__ */
-    #include <endian.h> /* machine/endian.h */
-    #if __BYTE_ORDER__ ==  __ORDER_BIG_ENDIAN__
-        #define SHA1_BIG_ENDIAN
-    #endif
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define SHA1_BIG_ENDIAN
+#endif
+#else               /* !defined __LITTLE_ENDIAN__ */
+#include <endian.h> /* machine/endian.h */
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define SHA1_BIG_ENDIAN
+#endif
 #endif
 
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
@@ -39,35 +39,36 @@
 #ifdef SHA1_BIG_ENDIAN
 #define blk0(b, i) b->l[i]
 #else
-#define blk0(b, i) (b->l[i] = \
-    (rol(b->l[i], 24) & 0xFF00FF00) | \
-    (rol(b->l[i], 8) & 0x00FF00FF))
+#define blk0(b, i) (b->l[i] =                             \
+                        (rol(b->l[i], 24) & 0xFF00FF00) | \
+                        (rol(b->l[i], 8) & 0x00FF00FF))
 #endif
 
-#define blk(b, i) (b->l[i & 15] = \
-    rol(b->l[(i + 13) & 15]^ \
-    b->l[(i + 8) & 15]^ \
-    b->l[(i + 2) & 15]^ \
-    b->l[i & 15], 1))
+#define blk(b, i) (b->l[i & 15] =                   \
+                       rol(b->l[(i + 13) & 15] ^    \
+                               b->l[(i + 8) & 15] ^ \
+                               b->l[(i + 2) & 15] ^ \
+                               b->l[i & 15],        \
+                           1))
 
-#define R0(b, v, w, x, y, z, i) \
+#define R0(b, v, w, x, y, z, i)                                     \
     z += ((w & (x ^ y)) ^ y) + blk0(b, i) + 0x5A827999 + rol(v, 5); \
     w = rol(w, 30);
 
-#define R1(b, v, w, x, y, z, i) \
+#define R1(b, v, w, x, y, z, i)                                    \
     z += ((w & (x ^ y)) ^ y) + blk(b, i) + 0x5A827999 + rol(v, 5); \
     w = rol(w, 30);
 
-#define R2(b, v, w, x, y, z, i) \
+#define R2(b, v, w, x, y, z, i)                            \
     z += (w ^ x ^ y) + blk(b, i) + 0x6ED9EBA1 + rol(v, 5); \
     w = rol(w, 30);
 
-#define R3(b, v, w, x, y, z, i) \
+#define R3(b, v, w, x, y, z, i)                                          \
     z += (((w | x) & y) | (w & x)) + blk(b, i) + 0x8F1BBCDC + rol(v, 5); \
     w = rol(w, 30);
 
-#define R4(b, v, w, x, y, z, i) \
-    z += (w ^ x ^ y) + blk(b, i)+ 0xCA62C1D6 + rol(v, 5); \
+#define R4(b, v, w, x, y, z, i)                            \
+    z += (w ^ x ^ y) + blk(b, i) + 0xCA62C1D6 + rol(v, 5); \
     w = rol(w, 30);
 
 typedef union {
@@ -75,8 +76,8 @@ typedef union {
     uint32_t l[16];
 } CHAR64LONG16;
 
-void SHA1_(const uint8_t* input, size_t length,
-    uint8_t digest[SHA1_DIGEST_LENGTH])
+void SHA1_(const uint8_t *input, size_t length,
+           uint8_t digest[SHA1_DIGEST_LENGTH])
 {
     SHA1CTX context;
     SHA1Init(&context);
@@ -84,20 +85,19 @@ void SHA1_(const uint8_t* input, size_t length,
     SHA1Final(&context, digest);
 }
 
-void SHA1Final(SHA1CTX* context, uint8_t digest[SHA1_DIGEST_LENGTH])
+void SHA1Final(SHA1CTX *context, uint8_t digest[SHA1_DIGEST_LENGTH])
 {
     uint8_t i;
     SHA1Pad(context);
     for (i = 0; i < SHA1_DIGEST_LENGTH; i++)
     {
-        digest[i] = (uint8_t)
-            ((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
+        digest[i] = (uint8_t)((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
     }
 
     zeroize(context, sizeof *context);
 }
 
-void SHA1Init(SHA1CTX* context)
+void SHA1Init(SHA1CTX *context)
 {
     context->count = 0;
 
@@ -108,33 +108,32 @@ void SHA1Init(SHA1CTX* context)
     context->state[4] = 0xC3D2E1F0;
 }
 
-void SHA1Pad(SHA1CTX* context)
+void SHA1Pad(SHA1CTX *context)
 {
     uint8_t i;
     uint8_t len[8];
 
     for (i = 0; i < 8; i++)
     {
-        len[i] = (uint8_t)
-            ((context->count >> ((7 - (i & 7)) * 8)) & 255);
+        len[i] = (uint8_t)((context->count >> ((7 - (i & 7)) * 8)) & 255);
     }
 
-    SHA1Update(context, (uint8_t*)"\200", 1);
+    SHA1Update(context, (uint8_t *)"\200", 1);
 
     while ((context->count & 504) != 448)
     {
-        SHA1Update(context, (uint8_t*)"\0", 1);
+        SHA1Update(context, (uint8_t *)"\0", 1);
     }
 
     SHA1Update(context, len, 8);
 }
 
 void SHA1Transform(uint32_t state[SHA1_STATE_LENGTH],
-    const uint8_t block[SHA1_BLOCK_LENGTH])
+                   const uint8_t block[SHA1_BLOCK_LENGTH])
 {
     uint32_t a, b, c, d, e;
     uint8_t workspace[SHA1_BLOCK_LENGTH];
-    CHAR64LONG16* w = (CHAR64LONG16*)workspace;
+    CHAR64LONG16 *w = (CHAR64LONG16 *)workspace;
 
     memcpy(w, block, SHA1_BLOCK_LENGTH);
 
@@ -234,7 +233,7 @@ void SHA1Transform(uint32_t state[SHA1_STATE_LENGTH],
     a = b = c = d = e = 0;
 }
 
-void SHA1Update(SHA1CTX* context, const uint8_t* input, size_t length)
+void SHA1Update(SHA1CTX *context, const uint8_t *input, size_t length)
 {
     uint32_t i = 0;
     uint32_t j = (uint32_t)((context->count >> 3) & 63);
@@ -247,7 +246,7 @@ void SHA1Update(SHA1CTX* context, const uint8_t* input, size_t length)
         SHA1Transform(context->state, context->buffer);
 
         for (; i + 63 < length; i += 64)
-            SHA1Transform(context->state, (uint8_t*)&input[i]);
+            SHA1Transform(context->state, (uint8_t *)&input[i]);
 
         j = 0;
     }

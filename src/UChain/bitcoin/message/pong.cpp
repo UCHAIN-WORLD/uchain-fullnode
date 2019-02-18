@@ -27,28 +27,30 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string pong::command = "pong";
 const uint32_t pong::version_minimum = version::level::minimum;
 const uint32_t pong::version_maximum = version::level::maximum;
 
-pong pong::factory_from_data(uint32_t version, const data_chunk& data)
+pong pong::factory_from_data(uint32_t version, const data_chunk &data)
 {
     pong instance;
     instance.from_data(version, data);
     return instance;
 }
 
-pong pong::factory_from_data(uint32_t version, std::istream& stream)
+pong pong::factory_from_data(uint32_t version, std::istream &stream)
 {
     pong instance;
     instance.from_data(version, stream);
     return instance;
 }
 
-pong pong::factory_from_data(uint32_t version, reader& source)
+pong pong::factory_from_data(uint32_t version, reader &source)
 {
     pong instance;
     instance.from_data(version, source);
@@ -60,19 +62,19 @@ uint64_t pong::satoshi_fixed_size(uint32_t version)
     return sizeof(nonce);
 }
 
-bool pong::from_data(uint32_t version, const data_chunk& data)
+bool pong::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool pong::from_data(uint32_t version, std::istream& stream)
+bool pong::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool pong::from_data(uint32_t version, reader& source)
+bool pong::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -94,13 +96,13 @@ data_chunk pong::to_data(uint32_t version) const
     return data;
 }
 
-void pong::to_data(uint32_t version, std::ostream& stream) const
+void pong::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void pong::to_data(uint32_t version, writer& sink) const
+void pong::to_data(uint32_t version, writer &sink) const
 {
     sink.write_8_bytes_little_endian(nonce);
 }
@@ -120,15 +122,15 @@ uint64_t pong::serialized_size(uint32_t version) const
     return satoshi_fixed_size(version);
 }
 
-bool operator==(const pong& left, const pong& right)
+bool operator==(const pong &left, const pong &right)
 {
     return (left.nonce == right.nonce);
 }
 
-bool operator!=(const pong& left, const pong& right)
+bool operator!=(const pong &left, const pong &right)
 {
     return !(left == right);
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

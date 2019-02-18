@@ -30,8 +30,8 @@
 #include "sha512.h"
 #include "zeroize.h"
 
-void HMACSHA512(const uint8_t* input, size_t length, const uint8_t* key,
-    size_t key_length, uint8_t digest[HMACSHA512_DIGEST_LENGTH])
+void HMACSHA512(const uint8_t *input, size_t length, const uint8_t *key,
+                size_t key_length, uint8_t digest[HMACSHA512_DIGEST_LENGTH])
 {
     HMACSHA512CTX context;
     HMACSHA512Init(&context, key, key_length);
@@ -39,8 +39,8 @@ void HMACSHA512(const uint8_t* input, size_t length, const uint8_t* key,
     HMACSHA512Final(&context, digest);
 }
 
-void HMACSHA512Final(HMACSHA512CTX* context,
-    uint8_t digest[HMACSHA512_DIGEST_LENGTH])
+void HMACSHA512Final(HMACSHA512CTX *context,
+                     uint8_t digest[HMACSHA512_DIGEST_LENGTH])
 {
     uint8_t hash[HMACSHA512_DIGEST_LENGTH];
 
@@ -48,11 +48,11 @@ void HMACSHA512Final(HMACSHA512CTX* context,
     SHA512Update(&context->octx, hash, HMACSHA512_DIGEST_LENGTH);
     SHA512Final(&context->octx, digest);
 
-    zeroize((void*)hash, sizeof hash);
+    zeroize((void *)hash, sizeof hash);
 }
 
-void HMACSHA512Init(HMACSHA512CTX* context, const uint8_t* key,
-    size_t key_length)
+void HMACSHA512Init(HMACSHA512CTX *context, const uint8_t *key,
+                    size_t key_length)
 {
     size_t i;
     uint8_t pad[SHA512_BLOCK_LENGTH];
@@ -81,11 +81,11 @@ void HMACSHA512Init(HMACSHA512CTX* context, const uint8_t* key,
         pad[i] ^= key[i];
 
     SHA512Update(&context->octx, pad, SHA512_BLOCK_LENGTH);
-    zeroize((void*)key_hash, sizeof key_hash);
+    zeroize((void *)key_hash, sizeof key_hash);
 }
 
-void HMACSHA512Update(HMACSHA512CTX* context, const uint8_t* input,
-    size_t length)
+void HMACSHA512Update(HMACSHA512CTX *context, const uint8_t *input,
+                      size_t length)
 {
     SHA512Update(&context->ictx, input, length);
 }

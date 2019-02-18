@@ -27,15 +27,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string send_headers::command = "sendheaders";
 const uint32_t send_headers::version_minimum = version::level::bip130;
 const uint32_t send_headers::version_maximum = version::level::maximum;
 
 send_headers send_headers::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                             const data_chunk &data)
 {
     send_headers instance;
     instance.from_data(version, data);
@@ -43,7 +45,7 @@ send_headers send_headers::factory_from_data(uint32_t version,
 }
 
 send_headers send_headers::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                             std::istream &stream)
 {
     send_headers instance;
     instance.from_data(version, stream);
@@ -51,7 +53,7 @@ send_headers send_headers::factory_from_data(uint32_t version,
 }
 
 send_headers send_headers::factory_from_data(uint32_t version,
-    reader& source)
+                                             reader &source)
 {
     send_headers instance;
     instance.from_data(version, source);
@@ -78,19 +80,19 @@ void send_headers::reset()
     version_unsupported_ = false;
 }
 
-bool send_headers::from_data(uint32_t version, const data_chunk& data)
+bool send_headers::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool send_headers::from_data(uint32_t version, std::istream& stream)
+bool send_headers::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool send_headers::from_data(uint32_t version, reader& source)
+bool send_headers::from_data(uint32_t version, reader &source)
 {
     reset();
 
@@ -110,7 +112,7 @@ data_chunk send_headers::to_data(uint32_t version) const
     return data;
 }
 
-void send_headers::to_data(uint32_t version, std::ostream& stream) const
+void send_headers::to_data(uint32_t version, std::ostream &stream) const
 {
 }
 
@@ -119,5 +121,5 @@ uint64_t send_headers::serialized_size(uint32_t version) const
     return send_headers::satoshi_fixed_size(version);
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

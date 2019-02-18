@@ -32,15 +32,17 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string inventory::command = "inv";
 const uint32_t inventory::version_minimum = version::level::minimum;
 const uint32_t inventory::version_maximum = version::level::maximum;
 
 inventory inventory::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                       const data_chunk &data)
 {
     inventory instance;
     instance.from_data(version, data);
@@ -48,7 +50,7 @@ inventory inventory::factory_from_data(uint32_t version,
 }
 
 inventory inventory::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                       std::istream &stream)
 {
     inventory instance;
     instance.from_data(version, stream);
@@ -56,7 +58,7 @@ inventory inventory::factory_from_data(uint32_t version,
 }
 
 inventory inventory::factory_from_data(uint32_t version,
-    reader& source)
+                                       reader &source)
 {
     inventory instance;
     instance.from_data(version, source);
@@ -67,23 +69,22 @@ inventory::inventory()
 {
 }
 
-inventory::inventory(const inventory_vector::list& values)
+inventory::inventory(const inventory_vector::list &values)
 {
     inventories.insert(inventories.end(), values.begin(), values.end());
 }
 
-inventory::inventory(const hash_list& hashes, type_id type)
+inventory::inventory(const hash_list &hashes, type_id type)
 {
-    const auto map = [type](const hash_digest& hash)
-    {
-        return inventory_vector{ type, hash };
+    const auto map = [type](const hash_digest &hash) {
+        return inventory_vector{type, hash};
     };
 
     inventories.resize(hashes.size());
     std::transform(hashes.begin(), hashes.end(), inventories.begin(), map);
 }
 
-inventory::inventory(const std::initializer_list<inventory_vector>& values)
+inventory::inventory(const std::initializer_list<inventory_vector> &values)
 {
     inventories.insert(inventories.end(), values.begin(), values.end());
 }
@@ -99,19 +100,19 @@ void inventory::reset()
     inventories.shrink_to_fit();
 }
 
-bool inventory::from_data(uint32_t version, const data_chunk& data)
+bool inventory::from_data(uint32_t version, const data_chunk &data)
 {
     data_source istream(data);
     return from_data(version, istream);
 }
 
-bool inventory::from_data(uint32_t version, std::istream& stream)
+bool inventory::from_data(uint32_t version, std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(version, source);
 }
 
-bool inventory::from_data(uint32_t version, reader& source)
+bool inventory::from_data(uint32_t version, reader &source)
 {
     reset();
     const auto count = source.read_variable_uint_little_endian();
@@ -121,7 +122,7 @@ bool inventory::from_data(uint32_t version, reader& source)
     {
         inventories.resize(count);
 
-        for (auto& inventory: inventories)
+        for (auto &inventory : inventories)
         {
             result = inventory.from_data(version, source);
 
@@ -146,36 +147,36 @@ data_chunk inventory::to_data(uint32_t version) const
     return data;
 }
 
-void inventory::to_data(uint32_t version, std::ostream& stream) const
+void inventory::to_data(uint32_t version, std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(version, sink);
 }
 
-void inventory::to_data(uint32_t version, writer& sink) const
+void inventory::to_data(uint32_t version, writer &sink) const
 {
     sink.write_variable_uint_little_endian(inventories.size());
 
-    for (const auto& inventory: inventories)
+    for (const auto &inventory : inventories)
         inventory.to_data(version, sink);
 }
 
-void inventory::to_hashes(hash_list& out, type_id type) const
+void inventory::to_hashes(hash_list &out, type_id type) const
 {
     out.reserve(inventories.size());
 
-    for (const auto& inventory: inventories)
+    for (const auto &inventory : inventories)
         if (inventory.type == type)
             out.push_back(inventory.hash);
 
     out.shrink_to_fit();
 }
 
-void inventory::reduce(inventory_vector::list& out, type_id type) const
+void inventory::reduce(inventory_vector::list &out, type_id type) const
 {
     out.reserve(inventories.size());
 
-    for (const auto& inventory: inventories)
+    for (const auto &inventory : inventories)
         if (inventory.type == type)
             out.push_back(inventory);
 
@@ -185,28 +186,27 @@ void inventory::reduce(inventory_vector::list& out, type_id type) const
 uint64_t inventory::serialized_size(uint32_t version) const
 {
     return variable_uint_size(inventories.size()) + inventories.size() *
-        inventory_vector::satoshi_fixed_size(version);
+                                                        inventory_vector::satoshi_fixed_size(version);
 }
 
 size_t inventory::count(type_id type) const
 {
-    const auto is_type = [type](const inventory_vector& element)
-    {
+    const auto is_type = [type](const inventory_vector &element) {
         return element.type == type;
     };
 
     return count_if(inventories.begin(), inventories.end(), is_type);
 }
 
-bool operator==(const inventory& left, const inventory& right)
+bool operator==(const inventory &left, const inventory &right)
 {
     return left.inventories == right.inventories;
 }
 
-bool operator!=(const inventory& left, const inventory& right)
+bool operator!=(const inventory &left, const inventory &right)
 {
     return !(left == right);
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin

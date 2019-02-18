@@ -25,23 +25,25 @@
 #include <UChain/bitcoin/message/inventory.hpp>
 #include <UChain/bitcoin/message/version.hpp>
 
-namespace libbitcoin {
-namespace message {
+namespace libbitcoin
+{
+namespace message
+{
 
 const std::string get_data::command = "getdata";
 const uint32_t get_data::version_minimum = version::level::minimum;
 const uint32_t get_data::version_maximum = version::level::maximum;
 
 get_data get_data::factory_from_data(uint32_t version,
-    const data_chunk& data)
+                                     const data_chunk &data)
 {
     get_data instance;
-    instance.from_data(version,data);
+    instance.from_data(version, data);
     return instance;
 }
 
 get_data get_data::factory_from_data(uint32_t version,
-    std::istream& stream)
+                                     std::istream &stream)
 {
     get_data instance;
     instance.from_data(version, stream);
@@ -49,7 +51,7 @@ get_data get_data::factory_from_data(uint32_t version,
 }
 
 get_data get_data::factory_from_data(uint32_t version,
-    reader& source)
+                                     reader &source)
 {
     get_data instance;
     instance.from_data(version, source);
@@ -57,36 +59,36 @@ get_data get_data::factory_from_data(uint32_t version,
 }
 
 get_data::get_data()
-  : inventory()
+    : inventory()
 {
 }
 
-get_data::get_data(const inventory_vector::list& elements)
-  : inventory(elements)
+get_data::get_data(const inventory_vector::list &elements)
+    : inventory(elements)
 {
 }
 
-get_data::get_data(const hash_list& hashes, inventory::type_id type)
-  : inventory(hashes, type)
+get_data::get_data(const hash_list &hashes, inventory::type_id type)
+    : inventory(hashes, type)
 {
 }
 
-get_data::get_data(const std::initializer_list<inventory_vector>& elements)
-  : inventory(elements)
+get_data::get_data(const std::initializer_list<inventory_vector> &elements)
+    : inventory(elements)
 {
 }
 
-bool get_data::from_data(uint32_t version, const data_chunk& data)
+bool get_data::from_data(uint32_t version, const data_chunk &data)
 {
     return inventory::from_data(version, data);
 }
 
-bool get_data::from_data(uint32_t version, std::istream& stream)
+bool get_data::from_data(uint32_t version, std::istream &stream)
 {
     return inventory::from_data(version, stream);
 }
 
-bool get_data::from_data(uint32_t version, reader& source)
+bool get_data::from_data(uint32_t version, reader &source)
 {
     bool result = !(version < get_data::version_minimum);
 
@@ -99,5 +101,5 @@ bool get_data::from_data(uint32_t version, reader& source)
     return result;
 }
 
-} // namspace message
-} // namspace libbitcoin
+} // namespace message
+} // namespace libbitcoin
