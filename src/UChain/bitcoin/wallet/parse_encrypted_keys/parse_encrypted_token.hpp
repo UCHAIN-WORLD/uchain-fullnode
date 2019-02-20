@@ -28,33 +28,35 @@
 #include <UChain/bitcoin/wallet/encrypted_keys.hpp>
 #include "parse_encrypted_key.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 class parse_encrypted_token
-  : public parse_encrypted_prefix<8u>
+    : public parse_encrypted_prefix<8u>
 {
 public:
-    static byte_array<prefix_size> prefix_factory(bool lot_sequence);
+  static byte_array<prefix_size> prefix_factory(bool lot_sequence);
 
-    explicit parse_encrypted_token(const encrypted_token& value);
+  explicit parse_encrypted_token(const encrypted_token &value);
 
-    bool lot_sequence() const;
-    hash_digest data() const;
-    ek_entropy entropy() const;
-    one_byte sign() const;
+  bool lot_sequence() const;
+  hash_digest data() const;
+  ek_entropy entropy() const;
+  one_byte sign() const;
 
 private:
-    bool verify_context() const;
-    bool verify_magic() const;
+  bool verify_context() const;
+  bool verify_magic() const;
 
-    static constexpr uint8_t lot_context_ = 0x51;
-    static constexpr uint8_t default_context_ = 0x53;
-    static const byte_array<magic_size> magic_;
+  static constexpr uint8_t lot_context_ = 0x51;
+  static constexpr uint8_t default_context_ = 0x53;
+  static const byte_array<magic_size> magic_;
 
-    const ek_entropy entropy_;
-    const one_byte sign_;
-    const hash_digest data_;
+  const ek_entropy entropy_;
+  const one_byte sign_;
+  const hash_digest data_;
 };
 
 } // namespace wallet
