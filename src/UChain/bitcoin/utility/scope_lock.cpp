@@ -23,17 +23,18 @@
 #include <memory>
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
-
-scope_lock::scope_lock(shared_mutex& mutex)
-  : mutex_(mutex)
+namespace libbitcoin
 {
-    mutex_.lock();
+
+scope_lock::scope_lock(shared_mutex &mutex)
+    : mutex_(mutex)
+{
+  mutex_.lock();
 }
 
 scope_lock::~scope_lock()
 {
-    mutex_.unlock();
+  mutex_.unlock();
 }
 
 } // namespace libbitcoin

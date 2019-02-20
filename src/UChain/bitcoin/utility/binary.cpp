@@ -27,16 +27,17 @@
 #include <UChain/bitcoin/utility/assert.hpp>
 #include <UChain/bitcoin/utility/endian.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 binary::size_type binary::blocks_size(size_type bit_size)
 {
     return bit_size == 0 ? 0 : (bit_size - 1) / bits_per_block + 1;
 }
 
-bool binary::is_base2(const std::string& text)
+bool binary::is_base2(const std::string &text)
 {
-    for (const auto& character: text)
+    for (const auto &character : text)
         if (character != '0' && character != '1')
             return false;
 
@@ -44,23 +45,23 @@ bool binary::is_base2(const std::string& text)
 }
 
 binary::binary()
-  : final_block_excess_(0)
+    : final_block_excess_(0)
 {
 }
 
-binary::binary(const binary& other)
-  : blocks_(other.blocks_), final_block_excess_(other.final_block_excess_)
+binary::binary(const binary &other)
+    : blocks_(other.blocks_), final_block_excess_(other.final_block_excess_)
 {
 }
 
-binary::binary(const std::string& bit_string)
-  : binary()
+binary::binary(const std::string &bit_string)
+    : binary()
 {
     std::stringstream(bit_string) >> *this;
 }
 
 binary::binary(size_type size, data_slice blocks)
-  : binary()
+    : binary()
 {
     // Copy blocks
     blocks_.resize(blocks.size());
@@ -99,7 +100,7 @@ bool binary::operator[](size_type index) const
     return (block & bitmask) > 0;
 }
 
-const data_chunk& binary::blocks() const
+const data_chunk &binary::blocks() const
 {
     return blocks_;
 }
@@ -116,7 +117,7 @@ binary::size_type binary::size() const
     return (blocks_.size() * bits_per_block) - final_block_excess_;
 }
 
-void binary::append(const binary& post)
+void binary::append(const binary &post)
 {
     const size_type block_offset = size() / bits_per_block;
     const size_type offset = size() % bits_per_block;
@@ -133,7 +134,7 @@ void binary::append(const binary& post)
     }
 }
 
-void binary::prepend(const binary& prior)
+void binary::prepend(const binary &prior)
 {
     shift_right(prior.size());
     data_chunk prior_blocks = prior.blocks();
@@ -230,7 +231,7 @@ bool binary::is_prefix_of(uint32_t field) const
     return is_prefix_of(to_little_endian(field));
 }
 
-bool binary::is_prefix_of(const binary& field) const
+bool binary::is_prefix_of(const binary &field) const
 {
     return is_prefix_of(field.blocks());
 }
@@ -241,12 +242,12 @@ bool binary::is_prefix_of(data_slice field) const
     return *this == truncated_prefix;
 }
 
-bool binary::operator<(const binary& other) const
+bool binary::operator<(const binary &other) const
 {
     return encoded() < other.encoded();
 }
 
-bool binary::operator==(const binary& other) const
+bool binary::operator==(const binary &other) const
 {
     if (size() != other.size())
         return false;
@@ -259,19 +260,19 @@ bool binary::operator==(const binary& other) const
     return true;
 }
 
-bool binary::operator!=(const binary& other) const
+bool binary::operator!=(const binary &other) const
 {
     return !(*this == other);
 }
 
-binary& binary::operator=(const binary& other)
+binary &binary::operator=(const binary &other)
 {
     blocks_ = other.blocks_;
     final_block_excess_ = other.final_block_excess_;
     return *this;
 }
 
-std::istream& operator>>(std::istream& in, binary& to)
+std::istream &operator>>(std::istream &in, binary &to)
 {
     std::string bitstring;
     in >> bitstring;
@@ -280,7 +281,7 @@ std::istream& operator>>(std::istream& in, binary& to)
     uint8_t block = 0;
     auto bit_iterator = binary::bits_per_block;
 
-    for (const char representation: bitstring)
+    for (const char representation : bitstring)
     {
         if (representation != '0' && representation != '1')
         {
@@ -315,7 +316,7 @@ std::istream& operator>>(std::istream& in, binary& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const binary& of)
+std::ostream &operator<<(std::ostream &out, const binary &of)
 {
     for (binary::size_type i = 0; i < of.size(); ++i)
         if (of[i])
@@ -327,4 +328,3 @@ std::ostream& operator<<(std::ostream& out, const binary& of)
 }
 
 } // namespace libbitcoin
-

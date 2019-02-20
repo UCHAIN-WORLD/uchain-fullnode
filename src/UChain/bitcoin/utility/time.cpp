@@ -20,15 +20,15 @@
 #include <UChain/bitcoin/utility/time.hpp>
 #include <chrono>
 
-namespace libbitcoin { //namespace libbitcoin
+namespace libbitcoin
+{ //namespace libbitcoin
 
 int64_t unix_millisecond()
 {
     using namespace std::chrono;
-    auto ms = duration_cast< milliseconds >(
-        system_clock::now().time_since_epoch()
-    );
+    auto ms = duration_cast<milliseconds>(
+        system_clock::now().time_since_epoch());
     return ms.count();
 }
 
-}//namespace libbitcoin
+} //namespace libbitcoin

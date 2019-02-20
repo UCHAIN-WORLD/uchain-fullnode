@@ -24,18 +24,19 @@
 #include <vector>
 #include <boost/algorithm/string.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-std::string join(const std::vector<std::string>& words,
-    const std::string& delimiter)
+std::string join(const std::vector<std::string> &words,
+                 const std::string &delimiter)
 {
     return boost::join(words, delimiter);
 }
 
 // Note that use of token_compress_on may cause unexpected results when
 // working with CSV-style lists that accept empty elements.
-std::vector<std::string> split(const std::string& sentence,
-    const std::string& delimiter, bool trim)
+std::vector<std::string> split(const std::string &sentence,
+                               const std::string &delimiter, bool trim)
 {
     std::vector<std::string> words;
     const auto compress = boost::token_compress_on;

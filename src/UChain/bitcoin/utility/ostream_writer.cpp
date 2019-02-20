@@ -20,10 +20,11 @@
  */
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-ostream_writer::ostream_writer(std::ostream& stream)
-  : stream_(stream)
+ostream_writer::ostream_writer(std::ostream &stream)
+    : stream_(stream)
 {
 }
 
@@ -118,32 +119,32 @@ void ostream_writer::write_variable_uint_big_endian(uint64_t value)
     }
 }
 
-void ostream_writer::write_data(const data_chunk& data)
+void ostream_writer::write_data(const data_chunk &data)
 {
     write_data<const data_chunk>(data);
 }
 
-void ostream_writer::write_data(const uint8_t* data, size_t size)
+void ostream_writer::write_data(const uint8_t *data, size_t size)
 {
-    stream_.write(reinterpret_cast<const char*>(data), size);
+    stream_.write(reinterpret_cast<const char *>(data), size);
 }
 
-void ostream_writer::write_hash(const hash_digest& value)
+void ostream_writer::write_hash(const hash_digest &value)
 {
-    stream_.write(reinterpret_cast<const char*>(value.data()), value.size());
+    stream_.write(reinterpret_cast<const char *>(value.data()), value.size());
 }
 
-void ostream_writer::write_short_hash(const short_hash& value)
+void ostream_writer::write_short_hash(const short_hash &value)
 {
-    stream_.write(reinterpret_cast<const char*>(value.data()), value.size());
+    stream_.write(reinterpret_cast<const char *>(value.data()), value.size());
 }
 
-void ostream_writer::write_mini_hash(const mini_hash& value)
+void ostream_writer::write_mini_hash(const mini_hash &value)
 {
-    stream_.write(reinterpret_cast<const char*>(value.data()), value.size());
+    stream_.write(reinterpret_cast<const char *>(value.data()), value.size());
 }
 
-void ostream_writer::write_fixed_string(const std::string& value, size_t size)
+void ostream_writer::write_fixed_string(const std::string &value, size_t size)
 {
     const auto min_size = std::min(size, value.size());
     data_chunk raw_string(size, 0);
@@ -151,7 +152,7 @@ void ostream_writer::write_fixed_string(const std::string& value, size_t size)
     write_data(raw_string);
 }
 
-void ostream_writer::write_string(const std::string& value)
+void ostream_writer::write_string(const std::string &value)
 {
     write_variable_uint_little_endian(value.size());
     stream_.write(value.data(), value.size());

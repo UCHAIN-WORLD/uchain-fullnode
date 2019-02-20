@@ -24,10 +24,11 @@
 #include <UChain/bitcoin/utility/threadpool.hpp>
 #include <UChain/bitcoin/utility/work.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-dispatcher::dispatcher(threadpool& pool, const std::string& name)
-  : heap_(pool, name)
+dispatcher::dispatcher(threadpool &pool, const std::string &name)
+    : heap_(pool, name)
 {
 }
 

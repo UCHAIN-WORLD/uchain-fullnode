@@ -23,19 +23,20 @@
 #include <memory>
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 conditional_lock::conditional_lock(std::shared_ptr<shared_mutex> mutex_ptr)
-  : mutex_ptr_(mutex_ptr)
+    : mutex_ptr_(mutex_ptr)
 {
-    if (mutex_ptr_)
-        mutex_ptr->lock();
+  if (mutex_ptr_)
+    mutex_ptr->lock();
 }
 
 conditional_lock::~conditional_lock()
 {
-    if (mutex_ptr_)
-        mutex_ptr_->unlock();
+  if (mutex_ptr_)
+    mutex_ptr_->unlock();
 }
 
 } // namespace libbitcoin

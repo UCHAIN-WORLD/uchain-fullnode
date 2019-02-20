@@ -24,10 +24,11 @@
 #include <UChain/bitcoin/utility/assert.hpp>
 #include <UChain/bitcoin/utility/endian.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-istream_reader::istream_reader(std::istream& stream)
-  : stream_(stream)
+istream_reader::istream_reader(std::istream &stream)
+    : stream_(stream)
 {
 }
 
@@ -49,7 +50,7 @@ bool istream_reader::is_exhausted() const
 uint8_t istream_reader::read_byte()
 {
     uint8_t result;
-    stream_.read(reinterpret_cast<char*>(&result), sizeof result);
+    stream_.read(reinterpret_cast<char *>(&result), sizeof result);
     return result;
 }
 
@@ -118,27 +119,27 @@ data_chunk istream_reader::read_data(size_t size)
 
     if (size > 0)
     {
-        stream_.read(reinterpret_cast<char*>(raw_bytes.data()), size);
+        stream_.read(reinterpret_cast<char *>(raw_bytes.data()), size);
         auto size = stream_.gcount();
         BITCOIN_ASSERT(static_cast<size_t>(size) <= bc::max_size_t);
         const auto read_size = static_cast<size_t>(size);
 
         if (static_cast<size_t>(size) != read_size)
-//          throw std::ios_base::failure(
-//              "read_data failed to read requested number of bytes");
+            //          throw std::ios_base::failure(
+            //              "read_data failed to read requested number of bytes");
             raw_bytes.resize(read_size);
     }
 
     return raw_bytes;
 }
 
-size_t istream_reader::read_data(uint8_t* data, size_t size)
+size_t istream_reader::read_data(uint8_t *data, size_t size)
 {
     size_t read_size = 0;
 
     if (size > 0)
     {
-        stream_.read(reinterpret_cast<char*>(data), size);
+        stream_.read(reinterpret_cast<char *>(data), size);
         auto size = stream_.gcount();
         BITCOIN_ASSERT(static_cast<size_t>(size) <= bc::max_size_t);
         read_size = static_cast<size_t>(size);

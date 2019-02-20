@@ -36,11 +36,12 @@
 #include <UChain/bitcoin/utility/data.hpp>
 
 #ifdef _MSC_VER
-    #include <fcntl.h>
-    #include <io.h>
+#include <fcntl.h>
+#include <io.h>
 #endif
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 using namespace boost::locale;
 
@@ -57,7 +58,7 @@ static std::once_flag io_mutex;
 static std::once_flag icu_mutex;
 
 // Static initializer for bc::cin.
-static std::istream& cin_stream()
+static std::istream &cin_stream()
 {
     std::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
     static unicode_istream input(std::cin, std::wcin, utf16_buffer_size);
@@ -65,7 +66,7 @@ static std::istream& cin_stream()
 }
 
 // Static initializer for bc::cout.
-static std::ostream& cout_stream()
+static std::ostream &cout_stream()
 {
     std::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
     static unicode_ostream output(std::cout, std::wcout, utf16_buffer_size);
@@ -73,7 +74,7 @@ static std::ostream& cout_stream()
 }
 
 // Static initializer for bc::cerr.
-static std::ostream& cerr_stream()
+static std::ostream &cerr_stream()
 {
     std::call_once(io_mutex, console_streambuf::initialize, utf16_buffer_size);
     static unicode_ostream error(std::cerr, std::wcerr, utf16_buffer_size);
@@ -82,19 +83,19 @@ static std::ostream& cerr_stream()
 
 // Use bc::cin in place of std::cin, etc.
 #ifdef __ANDROID__
-std::istream& cin = std::cin;
-std::ostream& cout = std::cout;
-std::ostream& cerr = std::cerr;
+std::istream &cin = std::cin;
+std::ostream &cout = std::cout;
+std::ostream &cerr = std::cerr;
 #else
-std::istream& cin = cin_stream();
-std::ostream& cout = cout_stream();
-std::ostream& cerr = cerr_stream();
+std::istream &cin = cin_stream();
+std::ostream &cout = cout_stream();
+std::ostream &cerr = cerr_stream();
 #endif
 
 #ifdef WITH_ICU
 
 // The backend selection is ignored if invalid (in this case on Windows).
-static std::string normal_form(const std::string& value, norm_type form)
+static std::string normal_form(const std::string &value, norm_type form)
 {
     auto backend = localization_backend_manager::global();
     backend.select(BC_LOCALE_BACKEND);
@@ -116,14 +117,14 @@ static void validate_localization()
 }
 
 // Normalize strings using unicode nfc normalization.
-std::string to_normal_nfc_form(const std::string& value)
+std::string to_normal_nfc_form(const std::string &value)
 {
     std::call_once(icu_mutex, validate_localization);
     return normal_form(value, norm_type::norm_nfc);
 }
 
 // Normalize strings using unicode nfkd normalization.
-std::string to_normal_nfkd_form(const std::string& value)
+std::string to_normal_nfkd_form(const std::string &value)
 {
     std::call_once(icu_mutex, validate_localization);
     return normal_form(value, norm_type::norm_nfkd);
@@ -132,15 +133,16 @@ std::string to_normal_nfkd_form(const std::string& value)
 #endif
 
 // Convert wmain environment to utf8 main environment.
-data_chunk to_utf8(wchar_t* environment[])
+data_chunk to_utf8(wchar_t *environment[])
 {
     int count;
-    for (count = 0; environment[count] != nullptr; count++);
+    for (count = 0; environment[count] != nullptr; count++)
+        ;
     return to_utf8(count, environment);
 }
 
 // Convert wmain parameters to utf8 main parameters.
-data_chunk to_utf8(int argc, wchar_t* argv[])
+data_chunk to_utf8(int argc, wchar_t *argv[])
 {
     auto arg_count = static_cast<size_t>(argc);
 
@@ -154,7 +156,7 @@ data_chunk to_utf8(int argc, wchar_t* argv[])
     }
 
     // Determine the index size.
-    auto index_size = static_cast<size_t>((arg_count + 1)* sizeof(void*));
+    auto index_size = static_cast<size_t>((arg_count + 1) * sizeof(void *));
 
     // Allocate the new buffer.
     auto buffer_size = index_size + payload_size;
@@ -162,8 +164,8 @@ data_chunk to_utf8(int argc, wchar_t* argv[])
     buffer.resize(buffer_size);
 
     // Set pointers into index and payload buffer sections.
-    auto index = reinterpret_cast<char**>(&buffer[0]);
-    auto arguments = reinterpret_cast<char*>(&buffer[index_size]);
+    auto index = reinterpret_cast<char **>(&buffer[0]);
+    auto arguments = reinterpret_cast<char *>(&buffer[index_size]);
 
     // Clone the converted collection into the new narrow argv.
     for (size_t arg = 0; arg < arg_count; arg++)
@@ -177,7 +179,7 @@ data_chunk to_utf8(int argc, wchar_t* argv[])
 }
 
 // Convert wstring to utf8 string.
-std::string to_utf8(const std::wstring& wide)
+std::string to_utf8(const std::wstring &wide)
 {
     using namespace boost::locale;
     return conv::utf_to_utf<char>(wide, conv::method_type::stop);
@@ -185,7 +187,7 @@ std::string to_utf8(const std::wstring& wide)
 
 // Convert wchar_t buffer to utf8 char buffer.
 size_t to_utf8(char out[], size_t out_bytes, const wchar_t in[],
-    size_t in_chars)
+               size_t in_chars)
 {
     BITCOIN_ASSERT(in != nullptr);
     BITCOIN_ASSERT(out != nullptr);
@@ -198,13 +200,13 @@ size_t to_utf8(char out[], size_t out_bytes, const wchar_t in[],
 
     try
     {
-        const auto narrow = to_utf8({ in, &in[in_chars] });
+        const auto narrow = to_utf8({in, &in[in_chars]});
         bytes = narrow.size();
 
         if (bytes <= out_bytes)
             memcpy(out, narrow.data(), bytes);
     }
-    catch (const boost::locale::conv::conversion_error&)
+    catch (const boost::locale::conv::conversion_error &)
     {
         bytes = 0;
     }
@@ -233,29 +235,25 @@ static bool is_utf8_character_sequence(const char sequence[], uint8_t bytes)
     // See tools.ietf.org/html/rfc3629#section-3 for definition.
     switch (bytes)
     {
-        case 1:
-            // 0xxxxxxx
-            return
-                ((0x80 & sequence[0]) == 0x00);
-        case 2:
-            // 110xxxxx 10xxxxxx
-            return
-                ((0xE0 & sequence[0]) == 0xC0) &&
-                is_utf8_trailing_byte(sequence[1]);
-        case 3:
-            // 1110xxxx 10xxxxxx 10xxxxxx
-            return
-                ((0xF0 & sequence[0]) == 0xE0) &&
-                is_utf8_trailing_byte(sequence[1]) &&
-                is_utf8_trailing_byte(sequence[2]);
-        case 4:
-            // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-            return
-                ((0xF8 & sequence[0]) == 0xF0) &&
-                is_utf8_trailing_byte(sequence[1]) &&
-                is_utf8_trailing_byte(sequence[2]) &&
-                is_utf8_trailing_byte(sequence[3]);
-        default:;
+    case 1:
+        // 0xxxxxxx
+        return ((0x80 & sequence[0]) == 0x00);
+    case 2:
+        // 110xxxxx 10xxxxxx
+        return ((0xE0 & sequence[0]) == 0xC0) &&
+               is_utf8_trailing_byte(sequence[1]);
+    case 3:
+        // 1110xxxx 10xxxxxx 10xxxxxx
+        return ((0xF0 & sequence[0]) == 0xE0) &&
+               is_utf8_trailing_byte(sequence[1]) &&
+               is_utf8_trailing_byte(sequence[2]);
+    case 4:
+        // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+        return ((0xF8 & sequence[0]) == 0xF0) &&
+               is_utf8_trailing_byte(sequence[1]) &&
+               is_utf8_trailing_byte(sequence[2]) &&
+               is_utf8_trailing_byte(sequence[3]);
+    default:;
     }
 
     return false;
@@ -268,7 +266,8 @@ static bool is_terminal_utf8_character(const char text[], size_t size)
 
     // Walk back up to the max length of a utf8 character.
     for (uint8_t length = 1; length <= utf8_max_character_size &&
-        length < size; length++)
+                             length < size;
+         length++)
     {
         const auto start = size - length;
         const auto sequence = &text[start];
@@ -289,7 +288,8 @@ static uint8_t offset_to_terminal_utf8_character(const char text[], size_t size)
 
     // Walk back up to the max length of a utf8 character.
     for (uint8_t unread = 0; unread < utf8_max_character_size &&
-        unread < size; unread++)
+                             unread < size;
+         unread++)
     {
         const auto length = size - unread;
         if (is_terminal_utf8_character(text, length))
@@ -301,7 +301,7 @@ static uint8_t offset_to_terminal_utf8_character(const char text[], size_t size)
 
 // Convert utf8 char buffer to wchar_t buffer, with truncation handling.
 size_t to_utf16(wchar_t out[], size_t out_chars, const char in[],
-    size_t in_bytes, uint8_t& truncated)
+                size_t in_bytes, uint8_t &truncated)
 {
     BITCOIN_ASSERT(in != nullptr);
     BITCOIN_ASSERT(out != nullptr);
@@ -317,13 +317,13 @@ size_t to_utf16(wchar_t out[], size_t out_chars, const char in[],
 
     try
     {
-        const auto wide = to_utf16({ in, &in[in_bytes - truncated] });
+        const auto wide = to_utf16({in, &in[in_bytes - truncated]});
         chars = wide.size();
 
         if (chars <= out_chars)
             wmemcpy(out, wide.data(), chars);
     }
-    catch (const boost::locale::conv::conversion_error&)
+    catch (const boost::locale::conv::conversion_error &)
     {
         chars = 0;
     }
@@ -338,7 +338,7 @@ size_t to_utf16(wchar_t out[], size_t out_chars, const char in[],
 }
 
 // Convert utf8 string to wstring.
-std::wstring to_utf16(const std::string& narrow)
+std::wstring to_utf16(const std::string &narrow)
 {
     using namespace boost::locale;
     return conv::utf_to_utf<wchar_t>(narrow, conv::method_type::stop);
@@ -346,7 +346,7 @@ std::wstring to_utf16(const std::string& narrow)
 
 LCOV_EXCL_START("Untestable but visually-verifiable section.")
 
-static void set_utf8_stdio(FILE* file)
+static void set_utf8_stdio(FILE *file)
 {
 #ifdef _MSC_VER
     if (_setmode(_fileno(file), _O_U8TEXT) == -1)
@@ -354,7 +354,7 @@ static void set_utf8_stdio(FILE* file)
 #endif
 }
 
-static void set_binary_stdio(FILE* file)
+static void set_binary_stdio(FILE *file)
 {
 #ifdef _MSC_VER
     if (_setmode(_fileno(file), _O_BINARY) == -1)

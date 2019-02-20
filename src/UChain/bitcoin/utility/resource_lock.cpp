@@ -26,16 +26,17 @@
 #include <UChain/bitcoin/unicode/ofstream.hpp>
 #include <UChain/bitcoin/utility/assert.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-static void touch_file(const resource_lock::file_path& path)
+static void touch_file(const resource_lock::file_path &path)
 {
     bc::ofstream file(path.string(), std::ofstream::app);
     file.close();
 }
 
-resource_lock::resource_lock(const file_path& lock_path)
-  : lock_path_(lock_path)
+resource_lock::resource_lock(const file_path &lock_path)
+    : lock_path_(lock_path)
 {
 }
 
@@ -59,7 +60,7 @@ bool resource_lock::lock()
         lock_ = std::make_shared<boost_file_lock>(lock_path_.string().c_str());
         return lock_->try_lock();
     }
-    catch (const boost::interprocess::interprocess_exception&)
+    catch (const boost::interprocess::interprocess_exception &)
     {
         lock_ = nullptr;
         return false;
@@ -77,4 +78,3 @@ bool resource_lock::unlock()
 }
 
 } // namespace libbitcoin
-

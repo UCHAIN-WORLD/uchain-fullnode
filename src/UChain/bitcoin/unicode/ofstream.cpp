@@ -25,10 +25,11 @@
 #include <UChain/bitcoin/unicode/unicode.hpp>
 #include <boost/filesystem.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // Construct bc::ofstream.
-ofstream::ofstream(const std::string& path, std::ofstream::openmode mode)
+ofstream::ofstream(const std::string &path, std::ofstream::openmode mode)
 #ifdef _MSC_VER
     : std::ofstream(bc::to_utf16(path), mode), max_size_(LOG_MAX_SIZE), path_(path)
 #else
@@ -43,6 +44,5 @@ uint64_t ofstream::increment(uint64_t size)
     current_size_ += size;
     return current_size_;
 }
-
 
 } // namespace libbitcoin

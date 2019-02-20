@@ -26,7 +26,8 @@
 #include <UChain/bitcoin/utility/asio.hpp>
 #include <UChain/bitcoin/utility/thread.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 threadpool::threadpool(size_t number_threads, thread_priority priority)
 {
@@ -52,8 +53,7 @@ void threadpool::spawn_once(thread_priority priority)
     if (!work_)
         work_ = std::make_shared<asio::service::work>(service_);
 
-    const auto action = [this, priority]
-    {
+    const auto action = [this, priority] {
         set_thread_priority(priority);
         service_.run();
     };
@@ -73,7 +73,7 @@ void threadpool::shutdown()
 
 void threadpool::join()
 {
-    for (auto& thread: threads_)
+    for (auto &thread : threads_)
         if (thread.joinable())
             thread.join();
 
@@ -82,12 +82,12 @@ void threadpool::join()
     service_.reset();
 }
 
-asio::service& threadpool::service()
+asio::service &threadpool::service()
 {
     return service_;
 }
 
-const asio::service& threadpool::service() const
+const asio::service &threadpool::service() const
 {
     return service_;
 }
