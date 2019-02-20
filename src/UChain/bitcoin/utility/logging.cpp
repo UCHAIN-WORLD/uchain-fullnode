@@ -30,96 +30,94 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/network/define.hpp>
 
-namespace libbitcoin {
-
-    // Guard against concurrent console writes.
-    static std::mutex console_mutex;
-
-    // Guard against concurrent file writes.
-    static std::mutex file_mutex;
-
-    template<class T>
-    // TODO:limit template type of instance
-    // class = typename std::enable_if<std::is_base_of<std::basic_ostream&, T>::value>::type>
-    static inline void do_logging(T& ofs, log::level level, const std::string& domain,
-        const std::string& body)
-    {
-        if (body.empty())
-        {
-            return;
-        }
-
-        namespace ptime = boost::posix_time;
-
-        static const auto form = "%1% %2% [%3%] %4%\n";
-        const auto message = boost::format(form) %
-            ptime::to_iso_string(ptime::second_clock::local_time()) %
-            log::to_text(level) %
-            domain %
-            body;
-
-        {
-            // Critical Section
-            ///////////////////////////////////////////////////////////////////////
-            std::unique_lock<std::mutex> lock_file(file_mutex);
-            ofs << message;
-
-            // Cut up log file if over max_size
-            if (std::is_same<T, bc::ofstream>::value)
-            {
-                bc::ofstream& bo = dynamic_cast<bc::ofstream&>(ofs);
-                auto& current_size = bo.current_size();
-                current_size += message.size();
-                if (bo.current_size() > bo.max_size())
-                {
-                    bo.close();
-                    bo.open(bo.path(), std::ios::trunc | std::ios::out);
-                    current_size = 0;
-                }
-            }
-
-            ofs.flush();
-            ///////////////////////////////////////////////////////////////////////
-
-        }
-
-}
-
-static void output_ignore(bc::ofstream& file, log::level level,
-    const std::string& domain, const std::string& body)
+namespace libbitcoin
 {
 
+// Guard against concurrent console writes.
+static std::mutex console_mutex;
+
+// Guard against concurrent file writes.
+static std::mutex file_mutex;
+
+template <class T>
+// TODO:limit template type of instance
+// class = typename std::enable_if<std::is_base_of<std::basic_ostream&, T>::value>::type>
+static inline void do_logging(T &ofs, log::level level, const std::string &domain,
+                              const std::string &body)
+{
+    if (body.empty())
+    {
+        return;
+    }
+
+    namespace ptime = boost::posix_time;
+
+    static const auto form = "%1% %2% [%3%] %4%\n";
+    const auto message = boost::format(form) %
+                         ptime::to_iso_string(ptime::second_clock::local_time()) %
+                         log::to_text(level) %
+                         domain %
+                         body;
+
+    {
+        // Critical Section
+        ///////////////////////////////////////////////////////////////////////
+        std::unique_lock<std::mutex> lock_file(file_mutex);
+        ofs << message;
+
+        // Cut up log file if over max_size
+        if (std::is_same<T, bc::ofstream>::value)
+        {
+            bc::ofstream &bo = dynamic_cast<bc::ofstream &>(ofs);
+            auto &current_size = bo.current_size();
+            current_size += message.size();
+            if (bo.current_size() > bo.max_size())
+            {
+                bo.close();
+                bo.open(bo.path(), std::ios::trunc | std::ios::out);
+                current_size = 0;
+            }
+        }
+
+        ofs.flush();
+        ///////////////////////////////////////////////////////////////////////
+    }
 }
 
-static void output_file(bc::ofstream& file, log::level level,
-    const std::string& domain, const std::string& body)
+static void output_ignore(bc::ofstream &file, log::level level,
+                          const std::string &domain, const std::string &body)
+{
+}
+
+static void output_file(bc::ofstream &file, log::level level,
+                        const std::string &domain, const std::string &body)
 {
     do_logging(file, level, domain, body);
 }
 
-static void output_both(bc::ofstream& file, std::ostream& output,
-    log::level level, const std::string& domain, const std::string& body)
+static void output_both(bc::ofstream &file, std::ostream &output,
+                        log::level level, const std::string &domain, const std::string &body)
 {
     do_logging(file, level, domain, body);
     do_logging(output, level, domain, body);
 }
 
-static void error_file(bc::ofstream& file, log::level level,
-    const std::string& domain, const std::string& body)
+static void error_file(bc::ofstream &file, log::level level,
+                       const std::string &domain, const std::string &body)
 {
     do_logging(file, level, domain, body);
 }
 
-static void error_both(bc::ofstream& file, std::ostream& error,
-    log::level level, const std::string& domain, const std::string& body)
+static void error_both(bc::ofstream &file, std::ostream &error,
+                       log::level level, const std::string &domain, const std::string &body)
 {
     do_logging(file, level, domain, body);
     do_logging(error, level, domain, body);
 }
 
-void initialize_logging(bc::ofstream& debug, bc::ofstream& error,
-    std::ostream& output_stream, std::ostream& error_stream,
-    std::string level)
+void initialize_logging(bc::ofstream &debug, bc::ofstream &error,
+                        std::ostream &output_stream, std::ostream &error_stream,
+                        std::string level)
 {
     using namespace std::placeholders;
 
@@ -134,37 +132,37 @@ void initialize_logging(bc::ofstream& debug, bc::ofstream& error,
     {
         // trace|debug|info => debug_log
         log::trace("").set_output_function(std::bind(output_file,
-            std::ref(debug), _1, _2, _3));
+                                                     std::ref(debug), _1, _2, _3));
         log::debug("").set_output_function(std::bind(output_file,
-            std::ref(debug), _1, _2, _3));
+                                                     std::ref(debug), _1, _2, _3));
     }
-    else if (debug_log_level <log::level::info)
+    else if (debug_log_level < log::level::info)
     {
         log::trace("").set_output_function(std::bind(output_ignore,
-            std::ref(debug), _1, _2, _3));
+                                                     std::ref(debug), _1, _2, _3));
         // debug|info => debug_log
         log::debug("").set_output_function(std::bind(output_file,
-            std::ref(debug), _1, _2, _3));
+                                                     std::ref(debug), _1, _2, _3));
     }
-    else if (debug_log_level <log::level::warning)
+    else if (debug_log_level < log::level::warning)
     {
         // info => debug_log
         log::trace("").set_output_function(std::bind(output_ignore,
-            std::ref(debug), _1, _2, _3));
+                                                     std::ref(debug), _1, _2, _3));
         log::debug("").set_output_function(std::bind(output_ignore,
-            std::ref(debug), _1, _2, _3));
+                                                     std::ref(debug), _1, _2, _3));
     }
 
     // info => debug_log + console
     log::info("").set_output_function(std::bind(output_both,
-        std::ref(debug), std::ref(output_stream), _1, _2, _3));
+                                                std::ref(debug), std::ref(output_stream), _1, _2, _3));
     // warning|error|fatal => error_log + console
     log::warning("").set_output_function(std::bind(error_file,
-        std::ref(error), _1, _2, _3));
+                                                   std::ref(error), _1, _2, _3));
     log::error("").set_output_function(std::bind(error_both,
-        std::ref(error), std::ref(error_stream), _1, _2, _3));
+                                                 std::ref(error), std::ref(error_stream), _1, _2, _3));
     log::fatal("").set_output_function(std::bind(error_both,
-        std::ref(error), std::ref(error_stream), _1, _2, _3));
+                                                 std::ref(error), std::ref(error_stream), _1, _2, _3));
 }
 
 } // namespace libbitcoin

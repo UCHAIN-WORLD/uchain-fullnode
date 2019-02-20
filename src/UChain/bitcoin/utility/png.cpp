@@ -33,59 +33,60 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 #ifdef WITH_PNG
 
-bool png::write_png(const data_chunk& data, uint32_t size, std::ostream& out)
+bool png::write_png(const data_chunk &data, uint32_t size, std::ostream &out)
 {
     data_source istream(data);
     return png::write_png(istream, size, out);
 }
 
-bool png::write_png(const data_chunk& data, uint32_t size,
-    uint32_t dots_per_inch, uint32_t margin, uint32_t inches_per_meter,
-    const color& foreground, const color& background, std::ostream& out)
+bool png::write_png(const data_chunk &data, uint32_t size,
+                    uint32_t dots_per_inch, uint32_t margin, uint32_t inches_per_meter,
+                    const color &foreground, const color &background, std::ostream &out)
 {
     data_source istream(data);
     return png::write_png(istream, size, dots_per_inch, margin,
-        inches_per_meter, get_default_foreground(), get_default_background(),
-        out);
+                          inches_per_meter, get_default_foreground(), get_default_background(),
+                          out);
 }
 
-bool png::write_png(std::istream& in, uint32_t size, std::ostream& out)
+bool png::write_png(std::istream &in, uint32_t size, std::ostream &out)
 {
     return png::write_png(in, size, dots_per_inch, margin, inches_per_meter,
-        get_default_foreground(), get_default_background(), out);
+                          get_default_foreground(), get_default_background(), out);
 }
 
 extern "C" void sink_write(png_structp png_ptr, png_bytep data,
-    png_size_t length)
+                           png_size_t length)
 {
     static_assert(sizeof(length) <= sizeof(size_t), "png_size_t too large");
     const auto size = static_cast<size_t>(length);
 
-    auto& sink = *reinterpret_cast<ostream_writer*>(png_get_io_ptr(png_ptr));
-    sink.write_data(reinterpret_cast<const uint8_t*>(data), size);
+    auto &sink = *reinterpret_cast<ostream_writer *>(png_get_io_ptr(png_ptr));
+    sink.write_data(reinterpret_cast<const uint8_t *>(data), size);
 }
 
 extern "C" void error_callback(png_structp png_ptr,
-    png_const_charp error_message)
+                               png_const_charp error_message)
 {
     throw std::runtime_error(error_message);
 }
 
-bool png::write_png(std::istream& in, uint32_t size, uint32_t dots_per_inch,
-    uint32_t margin, uint32_t inches_per_meter, const color& foreground,
-    const color& background, std::ostream& out)
+bool png::write_png(std::istream &in, uint32_t size, uint32_t dots_per_inch,
+                    uint32_t margin, uint32_t inches_per_meter, const color &foreground,
+                    const color &background, std::ostream &out)
 {
     if (size == 0)
         return false;
 
     uint32_t version, width;
     istream_reader source(in);
-    source.read_data(reinterpret_cast<uint8_t*>(&version), sizeof(uint32_t));
-    source.read_data(reinterpret_cast<uint8_t*>(&width), sizeof(uint32_t));
+    source.read_data(reinterpret_cast<uint8_t *>(&version), sizeof(uint32_t));
+    source.read_data(reinterpret_cast<uint8_t *>(&width), sizeof(uint32_t));
 
     if (bc::max_size_t / width < width)
         return false;
@@ -108,7 +109,7 @@ bool png::write_png(std::istream& in, uint32_t size, uint32_t dots_per_inch,
         row.reserve(row_size);
 
         auto png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr,
-            nullptr, nullptr);
+                                               nullptr, nullptr);
         if (png_ptr == nullptr)
             return false;
 
@@ -137,11 +138,11 @@ bool png::write_png(std::istream& in, uint32_t size, uint32_t dots_per_inch,
         png_set_error_fn(png_ptr, nullptr, error_callback, nullptr);
 
         png_set_IHDR(png_ptr, info_ptr, realwidth, realwidth, bit_depth,
-            PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
-            PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+                     PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
+                     PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
         png_set_pHYs(png_ptr, info_ptr, dots_per_inch * inches_per_meter,
-            dots_per_inch * inches_per_meter, PNG_RESOLUTION_METER);
+                     dots_per_inch * inches_per_meter, PNG_RESOLUTION_METER);
 
         png_write_info(png_ptr, info_ptr);
 
@@ -151,7 +152,7 @@ bool png::write_png(std::istream& in, uint32_t size, uint32_t dots_per_inch,
             png_write_row(png_ptr, row.data());
 
         // write data
-        uint8_t* row_ptr = nullptr;
+        uint8_t *row_ptr = nullptr;
         auto data_ptr = data.data();
         for (auto y = 0; y < width; y++)
         {
@@ -192,7 +193,7 @@ bool png::write_png(std::istream& in, uint32_t size, uint32_t dots_per_inch,
 
         out.flush();
     }
-    catch (const std::runtime_error& error)
+    catch (const std::runtime_error &error)
     {
         return false;
     }

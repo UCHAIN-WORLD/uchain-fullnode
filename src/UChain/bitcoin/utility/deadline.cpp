@@ -26,7 +26,8 @@
 #include <UChain/bitcoin/utility/thread.hpp>
 #include <UChain/bitcoin/utility/threadpool.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 using std::placeholders::_1;
 
@@ -34,10 +35,10 @@ using std::placeholders::_1;
 // This can be dereferenced with an outstanding callback because the timer
 // closure captures an instance of this class and the callback.
 // This is guaranteed to call handler exactly once unless canceled or reset.
-deadline::deadline(threadpool& pool, const asio::duration duration)
-  : duration_(duration),
-    timer_(pool.service()),
-    CONSTRUCT_TRACK(deadline)
+deadline::deadline(threadpool &pool, const asio::duration duration)
+    : duration_(duration),
+      timer_(pool.service()),
+      CONSTRUCT_TRACK(deadline)
 {
 }
 
@@ -50,7 +51,7 @@ void deadline::start(handler handle, const asio::duration duration)
 {
     const auto timer_handler =
         std::bind(&deadline::handle_timer,
-            shared_from_this(), _1, handle);
+                  shared_from_this(), _1, handle);
 
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
@@ -81,7 +82,7 @@ void deadline::stop()
 // If the timer expires the callback is fired with a success code.
 // If the timer fails the callback is fired with the normalized error code.
 // If the timer is canceled no call is made.
-void deadline::handle_timer(const boost_code& ec, handler handle) const
+void deadline::handle_timer(const boost_code &ec, handler handle) const
 {
     if (!ec)
         handle(error::success);

@@ -24,10 +24,11 @@
 #include <string>
 #include <UChain/bitcoin/utility/log.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-monitor::monitor(count_ptr counter, const std::string& name)
-  : counter_(counter), name_(name)
+monitor::monitor(count_ptr counter, const std::string &name)
+    : counter_(counter), name_(name)
 {
     trace(++(*counter_), "+");
 }
@@ -37,7 +38,7 @@ monitor::~monitor()
     trace(--(*counter_), "-");
 }
 
-void monitor::trace(size_t count, const std::string& action) const
+void monitor::trace(size_t count, const std::string &action) const
 {
 #ifndef NDEBUG
     ////log::debug(LOG_SYSTEM) << action << " " << name_ << " {" << count << "}";

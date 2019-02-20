@@ -24,15 +24,16 @@
 #include <cstdint>
 #include <stdexcept>
 #ifdef __MINGW32__
-    #include <boost/random/random_device.hpp>
-#else    
-    #include <random>
-#endif    
+#include <boost/random/random_device.hpp>
+#else
+#include <random>
+#endif
 #include <UChain/bitcoin/utility/asio.hpp>
 #include <UChain/bitcoin/utility/assert.hpp>
 #include <UChain/bitcoin/utility/data.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // DO NOT USE srand() and rand() on MSVC as srand must be called per thread.
 // As a result it is difficult to use safely.
@@ -45,7 +46,7 @@ uint64_t pseudo_random()
     boost::random_device device;
 #else
     std::random_device device;
-#endif    
+#endif
     std::uniform_int_distribution<uint64_t> distribution;
     return distribution(device);
 }
@@ -67,15 +68,15 @@ uint64_t nonzero_pseudo_random()
 
 // Not fully testable due to lack of random engine injection.
 // This may be truly random depending on the underlying device.
-void pseudo_random_fill(data_chunk& chunk)
+void pseudo_random_fill(data_chunk &chunk)
 {
 #ifdef __MINGW32__
     boost::random_device device;
 #else
     std::random_device device;
-#endif      
+#endif
     std::uniform_int_distribution<uint16_t> distribution;
-    for (uint8_t& byte: chunk)
+    for (uint8_t &byte : chunk)
     {
         // uniform_int_distribution is undefined for sizes < 16 bits,
         // so we generate a 16 bit value and reduce it to 8 bits.
@@ -86,14 +87,15 @@ void pseudo_random_fill(data_chunk& chunk)
 // Randomly select a time duration in the range:
 // [(expiration - expiration / ratio) .. expiration]
 // Not fully testable due to lack of random engine injection.
-asio::duration pseudo_randomize(const asio::duration& expiration, uint8_t ratio)
+asio::duration pseudo_randomize(const asio::duration &expiration, uint8_t ratio)
 {
     if (ratio == 0)
         return expiration;
 
     // Uses milliseconds level resolution.
     const auto max_expire = std::chrono::duration_cast<asio::milliseconds>(
-        expiration).count();
+                                expiration)
+                                .count();
 
     // [10 secs, 4] => 10000 / 4 => 2500
     const auto divisor = max_expire / ratio;

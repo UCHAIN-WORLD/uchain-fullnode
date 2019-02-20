@@ -28,20 +28,21 @@
 #include <boost/format.hpp>
 #include <UChain/bitcoin/unicode/unicode.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-log::log(level value, const std::string& domain)
-  : level_(value), domain_(domain)
+log::log(level value, const std::string &domain)
+    : level_(value), domain_(domain)
 {
 }
 
 // g++ bug in initializer list.
 // It should be: stream_(std::move(other.stream_))
 // gcc.gnu.org/bugzilla/show_bug.cgi?id=54316
-log::log(log&& other)
-  : level_(other.level_),
-    domain_(std::move(other.domain_)),
-    stream_(other.stream_.str())
+log::log(log &&other)
+    : level_(other.level_),
+      domain_(std::move(other.domain_)),
+      stream_(other.stream_.str())
 {
 }
 
@@ -61,32 +62,32 @@ void log::clear()
     destinations_.clear();
 }
 
-log log::trace(const std::string& domain)
+log log::trace(const std::string &domain)
 {
     return log(level::trace, domain);
 }
 
-log log::debug(const std::string& domain)
+log log::debug(const std::string &domain)
 {
     return log(level::debug, domain);
 }
 
-log log::info(const std::string& domain)
+log log::info(const std::string &domain)
 {
     return log(level::info, domain);
 }
 
-log log::warning(const std::string& domain)
+log log::warning(const std::string &domain)
 {
     return log(level::warning, domain);
 }
 
-log log::error(const std::string& domain)
+log log::error(const std::string &domain)
 {
     return log(level::error, domain);
 }
 
-log log::fatal(const std::string& domain)
+log log::fatal(const std::string &domain)
 {
     return log(level::fatal, domain);
 }
@@ -95,27 +96,27 @@ std::string log::to_text(level value)
 {
     switch (value)
     {
-        case level::trace:
-            return "TRACE";
-        case level::debug:
-            return "DEBUG";
-        case level::info:
-            return "INFO";
-        case level::warning:
-            return "WARNING";
-        case level::error:
-            return "ERROR";
-        case level::fatal:
-            return "FATAL";
-        case level::null:
-            return "NULL";
-        default:
-            return "";
+    case level::trace:
+        return "TRACE";
+    case level::debug:
+        return "DEBUG";
+    case level::info:
+        return "INFO";
+    case level::warning:
+        return "WARNING";
+    case level::error:
+        return "ERROR";
+    case level::fatal:
+        return "FATAL";
+    case level::null:
+        return "NULL";
+    default:
+        return "";
     }
 }
 
-void log::to_stream(std::ostream& out, level value, const std::string& domain,
-    const std::string& body)
+void log::to_stream(std::ostream &out, level value, const std::string &domain,
+                    const std::string &body)
 {
     std::ostringstream buffer;
     buffer << to_text(value);
@@ -129,24 +130,23 @@ void log::to_stream(std::ostream& out, level value, const std::string& domain,
     out.flush();
 }
 
-void log::output_ignore(level, const std::string&, const std::string&)
+void log::output_ignore(level, const std::string &, const std::string &)
 {
 }
 
-void log::output_cout(level value, const std::string& domain,
-    const std::string& body)
+void log::output_cout(level value, const std::string &domain,
+                      const std::string &body)
 {
     to_stream(bc::cout, value, domain, body);
 }
 
-void log::output_cerr(level value, const std::string& domain,
-    const std::string& body)
+void log::output_cerr(level value, const std::string &domain,
+                      const std::string &body)
 {
     to_stream(bc::cerr, value, domain, body);
 }
 
-log::destinations log::destinations_
-{
+log::destinations log::destinations_{
 #ifdef NDEBUG
     std::make_pair(level::trace, output_ignore),
     std::make_pair(level::debug, output_ignore),
@@ -157,7 +157,6 @@ log::destinations log::destinations_
     std::make_pair(level::info, output_cout),
     std::make_pair(level::warning, output_cerr),
     std::make_pair(level::error, output_cerr),
-    std::make_pair(level::fatal, output_cerr)
-};
+    std::make_pair(level::fatal, output_cerr)};
 
 } // namespace libbitcoin

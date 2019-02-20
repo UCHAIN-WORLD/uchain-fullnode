@@ -23,38 +23,39 @@
 #include <stdexcept>
 
 #ifdef _WIN32
-    #include <windows.h>
+#include <windows.h>
 #else
-    #include <unistd.h>
-    #include <pthread.h>
-    #include <sys/resource.h>
-    #include <sys/types.h>
-    #ifndef PRIO_MAX
-        #define PRIO_MAX 20
-    #endif
-    #define THREAD_PRIORITY_ABOVE_NORMAL (-2)
-    #define THREAD_PRIORITY_NORMAL 0
-    #define THREAD_PRIORITY_BELOW_NORMAL 2
-    #define THREAD_PRIORITY_LOWEST PRIO_MAX
+#include <unistd.h>
+#include <pthread.h>
+#include <sys/resource.h>
+#include <sys/types.h>
+#ifndef PRIO_MAX
+#define PRIO_MAX 20
+#endif
+#define THREAD_PRIORITY_ABOVE_NORMAL (-2)
+#define THREAD_PRIORITY_NORMAL 0
+#define THREAD_PRIORITY_BELOW_NORMAL 2
+#define THREAD_PRIORITY_LOWEST PRIO_MAX
 #endif
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // Privately map the class enum thread priority value to an interger.
 static int get_thread_priority(thread_priority priority)
 {
     switch (priority)
     {
-        case thread_priority::high:
-            return THREAD_PRIORITY_ABOVE_NORMAL;
-        case thread_priority::normal:
-            return THREAD_PRIORITY_NORMAL;
-        case thread_priority::low:
-            return THREAD_PRIORITY_BELOW_NORMAL;
-        case thread_priority::lowest:
-            return THREAD_PRIORITY_LOWEST;
-        default:
-            throw std::invalid_argument("priority");
+    case thread_priority::high:
+        return THREAD_PRIORITY_ABOVE_NORMAL;
+    case thread_priority::normal:
+        return THREAD_PRIORITY_NORMAL;
+    case thread_priority::low:
+        return THREAD_PRIORITY_BELOW_NORMAL;
+    case thread_priority::lowest:
+        return THREAD_PRIORITY_LOWEST;
+    default:
+        throw std::invalid_argument("priority");
     }
 }
 
