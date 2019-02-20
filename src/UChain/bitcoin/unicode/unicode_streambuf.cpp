@@ -28,15 +28,16 @@
 #include <UChain/bitcoin/unicode/unicode.hpp>
 #include <UChain/bitcoin/utility/assert.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // Local definition for max number of bytes in a utf8 character.
 constexpr size_t utf8_max_character_size = 4;
 
-unicode_streambuf::unicode_streambuf(std::wstreambuf* wide_buffer, size_t size)
-  : wide_size_(size), narrow_size_(wide_size_ * utf8_max_character_size),
-    narrow_(new char[narrow_size_]), wide_(new wchar_t[narrow_size_]),
-    wide_buffer_(wide_buffer)
+unicode_streambuf::unicode_streambuf(std::wstreambuf *wide_buffer, size_t size)
+    : wide_size_(size), narrow_size_(wide_size_ * utf8_max_character_size),
+      narrow_(new char[narrow_size_]), wide_(new wchar_t[narrow_size_]),
+      wide_buffer_(wide_buffer)
 {
     if (wide_size_ > (bc::max_uint64 / utf8_max_character_size))
         throw std::ios_base::failure(
@@ -112,13 +113,14 @@ std::streambuf::int_type unicode_streambuf::overflow(
     {
         // Convert utf8 to utf16, returning chars written and bytes unread.
         const auto chars = to_utf16(wide_, narrow_size_, narrow_, write,
-            unwritten);
+                                    unwritten);
 
         // Write to the wide output buffer.
         const auto written = wide_buffer_->sputn(wide_, chars);
 
         // Handle write failure as an EOF.
-        if (static_cast<size_t>(written) != chars){
+        if (static_cast<size_t>(written) != chars)
+        {
             return traits_type::eof();
         }
     }

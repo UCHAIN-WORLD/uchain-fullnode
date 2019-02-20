@@ -39,7 +39,8 @@ static LPVOID get_input_handle()
 }
 #endif
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
 // This class/mathod is a no-op on non-windows platforms.
 // When working in Windows console set font to "Lucida Console".
@@ -62,12 +63,12 @@ void console_streambuf::initialize(size_t size)
 }
 
 console_streambuf::console_streambuf(
-    std::wstreambuf const& stream_buffer, size_t size)
+    std::wstreambuf const &stream_buffer, size_t size)
 #ifdef _MSC_VER
-  : buffer_size_(size), buffer_(new wchar_t[buffer_size_]),
-    std::wstreambuf(stream_buffer)
+    : buffer_size_(size), buffer_(new wchar_t[buffer_size_]),
+      std::wstreambuf(stream_buffer)
 #else
-  : buffer_size_(0), buffer_(nullptr)
+    : buffer_size_(0), buffer_(nullptr)
 #endif
 {
 }
@@ -79,15 +80,15 @@ console_streambuf::~console_streambuf()
 #endif
 }
 
-std::streamsize console_streambuf::xsgetn(wchar_t* buffer,
-    std::streamsize size)
+std::streamsize console_streambuf::xsgetn(wchar_t *buffer,
+                                          std::streamsize size)
 {
     std::streamsize read_size = 0;
 
 #ifdef _MSC_VER
     DWORD read_bytes;
     const auto result = ReadConsoleW(get_input_handle(), buffer,
-        static_cast<DWORD>(size), &read_bytes, nullptr);
+                                     static_cast<DWORD>(size), &read_bytes, nullptr);
 
     if (result == FALSE)
         throw std::iostream::failure("Failed to read from console.");

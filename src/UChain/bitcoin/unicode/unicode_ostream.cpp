@@ -24,14 +24,15 @@
 #include <iostream>
 #include <UChain/bitcoin/unicode/unicode_streambuf.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 
-unicode_ostream::unicode_ostream(std::ostream& narrow_stream,
-    std::wostream& wide_stream, size_t size)
+unicode_ostream::unicode_ostream(std::ostream &narrow_stream,
+                                 std::wostream &wide_stream, size_t size)
 #ifdef _MSC_VER
-  : std::ostream(new unicode_streambuf(wide_stream.rdbuf(), size))
+    : std::ostream(new unicode_streambuf(wide_stream.rdbuf(), size))
 #else
-  : std::ostream(narrow_stream.rdbuf())
+    : std::ostream(narrow_stream.rdbuf())
 #endif
 {
 }
@@ -39,7 +40,7 @@ unicode_ostream::unicode_ostream(std::ostream& narrow_stream,
 unicode_ostream::~unicode_ostream()
 {
 #ifdef _MSC_VER
-    delete rdbuf();
+  delete rdbuf();
 #endif
 }
 
