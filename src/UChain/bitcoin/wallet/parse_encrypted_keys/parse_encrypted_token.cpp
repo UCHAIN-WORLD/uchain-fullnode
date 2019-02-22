@@ -27,15 +27,15 @@
 #include <UChain/bitcoin/wallet/encrypted_keys.hpp>
 #include "parse_encrypted_prefix.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 // This prefix results in the prefix "passphrase" in the base58 encoding.
 // The prefix is not modified as the result of variations to address.
-const byte_array<parse_encrypted_token::magic_size> parse_encrypted_token::magic_
-{
-    { 0x2c, 0xe9, 0xb3, 0xe1, 0xff, 0x39, 0xe2 }
-};
+const byte_array<parse_encrypted_token::magic_size> parse_encrypted_token::magic_{
+    {0x2c, 0xe9, 0xb3, 0xe1, 0xff, 0x39, 0xe2}};
 
 byte_array<parse_encrypted_token::prefix_size>
 parse_encrypted_token::prefix_factory(bool lot_sequence)
@@ -44,11 +44,11 @@ parse_encrypted_token::prefix_factory(bool lot_sequence)
     return splice(magic_, to_array(context));
 }
 
-parse_encrypted_token::parse_encrypted_token(const encrypted_token& value)
-  : parse_encrypted_prefix(slice<0, 8>(value)),
-    entropy_(slice<8, 16>(value)),
-    sign_(slice<16, 17>(value)),
-    data_(slice<17, 49>(value))
+parse_encrypted_token::parse_encrypted_token(const encrypted_token &value)
+    : parse_encrypted_prefix(slice<0, 8>(value)),
+      entropy_(slice<8, 16>(value)),
+      sign_(slice<16, 17>(value)),
+      data_(slice<17, 49>(value))
 {
     valid(verify_magic() && verify_context() && verify_checksum(value));
 }

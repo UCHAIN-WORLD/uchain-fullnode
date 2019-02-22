@@ -42,8 +42,10 @@
 #include "parse_encrypted_keys/parse_encrypted_public.hpp"
 #include "parse_encrypted_keys/parse_encrypted_token.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 // Alias commonly-used constants for brevity.
 static constexpr auto half = half_hash_size;
@@ -55,61 +57,61 @@ static_assert(2 * quarter == bc::aes256_block_size, "oops!");
 // address_
 // ----------------------------------------------------------------------------
 
-static hash_digest address_hash(const payment_address& address)
+static hash_digest address_hash(const payment_address &address)
 {
     return bitcoin_hash(to_chunk(address.encoded()));
 }
 
-static bool address_salt(ek_salt& salt, const payment_address& address)
+static bool address_salt(ek_salt &salt, const payment_address &address)
 {
     salt = slice<0, ek_salt_size>(address_hash(address));
     return true;
 }
 
-static bool address_salt(ek_salt& salt, const ec_compressed& point,
-    uint8_t version, bool compressed)
+static bool address_salt(ek_salt &salt, const ec_compressed &point,
+                         uint8_t version, bool compressed)
 {
-    payment_address address({ point, compressed }, version);
+    payment_address address({point, compressed}, version);
     return address ? address_salt(salt, address) : false;
 }
 
-static bool address_salt(ek_salt& salt, const ec_secret& secret,
-    uint8_t version, bool compressed)
+static bool address_salt(ek_salt &salt, const ec_secret &secret,
+                         uint8_t version, bool compressed)
 {
-    payment_address address({ secret, version, compressed });
+    payment_address address({secret, version, compressed});
     return address ? address_salt(salt, address) : false;
 }
 
-static bool address_validate(const ek_salt& salt,
-    const payment_address& address)
+static bool address_validate(const ek_salt &salt,
+                             const payment_address &address)
 {
     const auto hash = address_hash(address);
     return std::equal(hash.begin(), hash.begin() + salt.size(), salt.begin());
 }
 
-static bool address_validate(const ek_salt& salt, const ec_compressed& point,
-    uint8_t version, bool compressed)
+static bool address_validate(const ek_salt &salt, const ec_compressed &point,
+                             uint8_t version, bool compressed)
 {
-    payment_address address({ point, compressed }, version);
+    payment_address address({point, compressed}, version);
     return address ? address_validate(salt, address) : false;
 }
 
-static bool address_validate(const ek_salt& salt, const ec_secret& secret,
-    uint8_t version, bool compressed)
+static bool address_validate(const ek_salt &salt, const ec_secret &secret,
+                             uint8_t version, bool compressed)
 {
-    payment_address address({ secret, version, compressed });
+    payment_address address({secret, version, compressed});
     return address ? address_validate(salt, address) : false;
 }
 
 // point_
 // ----------------------------------------------------------------------------
 
-static hash_digest point_hash(const ec_compressed& point)
+static hash_digest point_hash(const ec_compressed &point)
 {
     return slice<1, ec_compressed_size>(point);
 }
 
-static one_byte point_sign(uint8_t byte, const hash_digest& hash)
+static one_byte point_sign(uint8_t byte, const hash_digest &hash)
 {
     static constexpr uint8_t low_bit_mask = 0x01;
     const uint8_t last_byte = hash.back();
@@ -118,7 +120,7 @@ static one_byte point_sign(uint8_t byte, const hash_digest& hash)
     return to_array(sign_byte);
 }
 
-static one_byte point_sign(const one_byte& single, const hash_digest& hash)
+static one_byte point_sign(const one_byte &single, const hash_digest &hash)
 {
     return point_sign(single.front(), hash);
 }
@@ -176,37 +178,35 @@ static one_byte set_flags(bool compressed)
 // create_key_pair
 // ----------------------------------------------------------------------------
 
-static void create_private_key(encrypted_private& out_private,
-    const one_byte& flags, const ek_salt& salt, const ek_entropy& entropy,
-    const hash_digest& derived1, const hash_digest& derived2,
-    const ek_seed& seed, uint8_t version)
+static void create_private_key(encrypted_private &out_private,
+                               const one_byte &flags, const ek_salt &salt, const ek_entropy &entropy,
+                               const hash_digest &derived1, const hash_digest &derived2,
+                               const ek_seed &seed, uint8_t version)
 {
     const auto prefix = parse_encrypted_private::prefix_factory(version, true);
 
     auto encrypt1 = xor_data<half>(seed, derived1);
     aes256_encrypt(derived2, encrypt1);
     const auto combined = splice(slice<quarter, half>(encrypt1),
-        slice<half, half + quarter>(seed));
+                                 slice<half, half + quarter>(seed));
 
     auto encrypt2 = xor_data<half>(combined, derived1, 0, half);
     aes256_encrypt(derived2, encrypt2);
     const auto quarter1 = slice<0, quarter>(encrypt1);
 
     build_checked_array(out_private,
-    {
-        prefix,
-        flags,
-        salt,
-        entropy,
-        quarter1,
-        encrypt2
-    });
+                        {prefix,
+                         flags,
+                         salt,
+                         entropy,
+                         quarter1,
+                         encrypt2});
 }
 
-static bool create_public_key(encrypted_public& out_public,
-    const one_byte& flags, const ek_salt& salt, const ek_entropy& entropy,
-    const hash_digest& derived1, const hash_digest& derived2,
-    const ec_secret& secret, uint8_t version)
+static bool create_public_key(encrypted_public &out_public,
+                              const one_byte &flags, const ek_salt &salt, const ek_entropy &entropy,
+                              const hash_digest &derived1, const hash_digest &derived2,
+                              const ec_secret &secret, uint8_t version)
 {
     ec_compressed point;
     if (!secret_to_public(point, secret))
@@ -223,22 +223,20 @@ static bool create_public_key(encrypted_public& out_public,
 
     const auto sign = point_sign(point.front(), derived2);
     return build_checked_array(out_public,
-    {
-        prefix,
-        flags,
-        salt,
-        entropy,
-        sign,
-        encrypted1,
-        encrypted2
-    });
+                               {prefix,
+                                flags,
+                                salt,
+                                entropy,
+                                sign,
+                                encrypted1,
+                                encrypted2});
 }
 
 // There is no scenario requiring a public key, we support it for completeness.
-bool create_key_pair(encrypted_private& out_private,
-    encrypted_public& out_public, ec_compressed& out_point,
-    const encrypted_token& token, const ek_seed& seed, uint8_t version,
-    bool compressed)
+bool create_key_pair(encrypted_private &out_private,
+                     encrypted_public &out_public, ec_compressed &out_point,
+                     const encrypted_token &token, const ek_seed &seed, uint8_t version,
+                     bool compressed)
 {
     const parse_encrypted_token parse(token);
     if (!parse.valid())
@@ -259,49 +257,50 @@ bool create_key_pair(encrypted_private& out_private,
     const auto flags = set_flags(compressed, parse.lot_sequence(), true);
 
     if (!create_public_key(out_public, flags, salt, parse.entropy(),
-        derived.left, derived.right, factor, version))
+                           derived.left, derived.right, factor, version))
         return false;
 
     create_private_key(out_private, flags, salt, parse.entropy(), derived.left,
-        derived.right, seed, version);
+                       derived.right, seed, version);
 
     out_point = point_copy;
     return true;
 }
 
-bool create_key_pair(encrypted_private& out_private, ec_compressed& out_point,
-    const encrypted_token& token, const ek_seed& seed, uint8_t version,
-    bool compressed)
+bool create_key_pair(encrypted_private &out_private, ec_compressed &out_point,
+                     const encrypted_token &token, const ek_seed &seed, uint8_t version,
+                     bool compressed)
 {
     encrypted_public out_public;
     return create_key_pair(out_private, out_public, out_point, token, seed,
-        version, compressed);
+                           version, compressed);
 }
 /* encrypt string with extra 0 value */
-void aes256_common_encrypt(data_chunk& mnemonic, data_chunk& passphrase, data_chunk& encry_output)
+void aes256_common_encrypt(data_chunk &mnemonic, data_chunk &passphrase, data_chunk &encry_output)
 {
     aes_secret sec = sha256_hash(ripemd160_hash(passphrase));
 
     encry_output.clear();
 
-    data_chunk& data = mnemonic;
+    data_chunk &data = mnemonic;
     uint32_t start = 0, left = aes256_block_size - (data.size() % aes256_block_size);
 
     encry_output.push_back(static_cast<uint8_t>(left)); // bytes counts which not be encrypted
 
-    while(left--)
+    while (left--)
         data.push_back(uint8_t(0)); // data must to be multiple blocksize
 
-    auto mnem_encrypt = [&encry_output](aes_secret& sec, data_chunk& data){
+    auto mnem_encrypt = [&encry_output](aes_secret &sec, data_chunk &data) {
         uint64_t start = 0, i = 0;
         aes_block block;
-        while( start < data.size() ) {
-            for( i = 0; i < aes256_block_size; i++)
-                block[i] = static_cast<uint8_t>(*(data.begin()+start+i));
+        while (start < data.size())
+        {
+            for (i = 0; i < aes256_block_size; i++)
+                block[i] = static_cast<uint8_t>(*(data.begin() + start + i));
 
             aes256_encrypt(sec, block);
 
-            for( auto x : block )
+            for (auto x : block)
                 encry_output.push_back(static_cast<char>(x));
 
             start += aes256_block_size;
@@ -311,7 +310,7 @@ void aes256_common_encrypt(data_chunk& mnemonic, data_chunk& passphrase, data_ch
 }
 
 /* decrypt string */
-void aes256_common_decrypt(const data_chunk& mnemonic, data_chunk& passphrase, data_chunk& decry_output)
+void aes256_common_decrypt(const data_chunk &mnemonic, data_chunk &passphrase, data_chunk &decry_output)
 {
     aes_secret sec = sha256_hash(ripemd160_hash(passphrase));
 
@@ -319,28 +318,29 @@ void aes256_common_decrypt(const data_chunk& mnemonic, data_chunk& passphrase, d
 
     uint8_t left = static_cast<uint8_t>(*mnemonic.begin());
 
-    auto mnem_decrypt = [&decry_output](aes_secret& sec, const data_chunk& data){
+    auto mnem_decrypt = [&decry_output](aes_secret &sec, const data_chunk &data) {
         uint32_t start = 1, i = 0; // escape first byte
         aes_block block;
-        while( start < data.size() ) {
-            for( i = 0; i < aes256_block_size; i++)
-                block[i] = static_cast<uint8_t>(*(data.begin()+start+i));
+        while (start < data.size())
+        {
+            for (i = 0; i < aes256_block_size; i++)
+                block[i] = static_cast<uint8_t>(*(data.begin() + start + i));
 
             aes256_decrypt(sec, block);
 
-            for( auto x : block )
+            for (auto x : block)
                 decry_output.push_back(static_cast<char>(x));
 
             start += aes256_block_size;
         }
     };
     mnem_decrypt(sec, mnemonic);
-    while(left--)
+    while (left--)
         decry_output.pop_back(); // remove left bytes
 }
 
 /* encrypt string with extra 0 value */
-void encrypt_string(const std::string& mnemonic, std::string& passphrase, std::string& encry_output)
+void encrypt_string(const std::string &mnemonic, std::string &passphrase, std::string &encry_output)
 {
     data_chunk pass_chunk(passphrase.begin(), passphrase.end());
     aes_secret sec = sha256_hash(ripemd160_hash(pass_chunk));
@@ -352,19 +352,20 @@ void encrypt_string(const std::string& mnemonic, std::string& passphrase, std::s
 
     encry_output.push_back(static_cast<char>(left)); // bytes counts which not be encrypted
 
-    while(left--)
+    while (left--)
         data.push_back(uint8_t(0)); // data must to be multiple blocksize
 
-    auto mnem_encrypt = [&encry_output](aes_secret& sec, std::string& data){
+    auto mnem_encrypt = [&encry_output](aes_secret &sec, std::string &data) {
         uint32_t start = 0, i = 0;
         aes_block block;
-        while( start < data.size() ) {
-            for( i = 0; i < aes256_block_size; i++)
-                block[i] = static_cast<uint8_t>(*(data.begin()+start+i));
+        while (start < data.size())
+        {
+            for (i = 0; i < aes256_block_size; i++)
+                block[i] = static_cast<uint8_t>(*(data.begin() + start + i));
 
             aes256_encrypt(sec, block);
 
-            for( auto x : block )
+            for (auto x : block)
                 encry_output.push_back(static_cast<char>(x));
 
             start += aes256_block_size;
@@ -374,7 +375,7 @@ void encrypt_string(const std::string& mnemonic, std::string& passphrase, std::s
 }
 
 /* decrypt string */
-void decrypt_string(const std::string& mnemonic, std::string& passphrase, std::string& decry_output)
+void decrypt_string(const std::string &mnemonic, std::string &passphrase, std::string &decry_output)
 {
     data_chunk pass_chunk(passphrase.begin(), passphrase.end());
     aes_secret sec = sha256_hash(ripemd160_hash(pass_chunk));
@@ -383,16 +384,17 @@ void decrypt_string(const std::string& mnemonic, std::string& passphrase, std::s
 
     uint8_t left = static_cast<uint8_t>(*mnemonic.begin());
 
-    auto mnem_decrypt = [&decry_output](aes_secret& sec, const std::string& data){
+    auto mnem_decrypt = [&decry_output](aes_secret &sec, const std::string &data) {
         uint32_t start = 1, i = 0; // escape first byte
         aes_block block;
-        while( start < data.size() ) {
-            for( i = 0; i < aes256_block_size; i++)
-                block[i] = static_cast<uint8_t>(*(data.begin()+start+i));
+        while (start < data.size())
+        {
+            for (i = 0; i < aes256_block_size; i++)
+                block[i] = static_cast<uint8_t>(*(data.begin() + start + i));
 
             aes256_decrypt(sec, block);
 
-            for( auto x : block )
+            for (auto x : block)
                 decry_output.push_back(static_cast<char>(x));
 
             start += aes256_block_size;
@@ -408,18 +410,18 @@ void decrypt_string(const std::string& mnemonic, std::string& passphrase, std::s
 // ----------------------------------------------------------------------------
 
 // This call requires an ICU build, the other excluded calls are dependencies.
-static data_chunk normal(const std::string& passphrase)
+static data_chunk normal(const std::string &passphrase)
 {
     return to_chunk(to_normal_nfc_form(passphrase));
 }
 
-static bool create_token(encrypted_token& out_token,
-    const std::string& passphrase, data_slice owner_salt,
-    const ek_entropy& owner_entropy,
-    const byte_array<parse_encrypted_token::prefix_size>& prefix)
+static bool create_token(encrypted_token &out_token,
+                         const std::string &passphrase, data_slice owner_salt,
+                         const ek_entropy &owner_entropy,
+                         const byte_array<parse_encrypted_token::prefix_size> &prefix)
 {
     BITCOIN_ASSERT(owner_salt.size() == ek_salt_size ||
-        owner_salt.size() == ek_entropy_size);
+                   owner_salt.size() == ek_entropy_size);
 
     const auto lot_sequence = owner_salt.size() == ek_salt_size;
     auto factor = scrypt_token(normal(passphrase), owner_salt);
@@ -432,16 +434,14 @@ static bool create_token(encrypted_token& out_token,
         return false;
 
     return build_checked_array(out_token,
-    {
-        prefix,
-        owner_entropy,
-        point
-    });
+                               {prefix,
+                                owner_entropy,
+                                point});
 }
 
 // The salt here is owner-supplied random bits, not the address hash.
-bool create_token(encrypted_token& out_token, const std::string& passphrase,
-    const ek_entropy& entropy)
+bool create_token(encrypted_token &out_token, const std::string &passphrase,
+                  const ek_entropy &entropy)
 {
     // BIP38: If lot and sequence numbers are not being included, then
     // owner_salt is 8 random bytes instead of 4, lot_sequence is omitted and
@@ -451,8 +451,8 @@ bool create_token(encrypted_token& out_token, const std::string& passphrase,
 }
 
 // The salt here is owner-supplied random bits, not the address hash.
-bool create_token(encrypted_token& out_token, const std::string& passphrase,
-    const ek_salt& salt, uint32_t lot, uint32_t sequence)
+bool create_token(encrypted_token &out_token, const std::string &passphrase,
+                  const ek_salt &salt, uint32_t lot, uint32_t sequence)
 {
     if (lot > ek_max_lot || sequence > ek_max_sequence)
         return false;
@@ -468,8 +468,8 @@ bool create_token(encrypted_token& out_token, const std::string& passphrase,
 // encrypt
 // ----------------------------------------------------------------------------
 
-bool encrypt(encrypted_private& out_private, const ec_secret& secret,
-    const std::string& passphrase, uint8_t version, bool compressed)
+bool encrypt(encrypted_private &out_private, const ec_secret &secret,
+             const std::string &passphrase, uint8_t version, bool compressed)
 {
     ek_salt salt;
     if (!address_salt(salt, secret, version, compressed))
@@ -477,7 +477,7 @@ bool encrypt(encrypted_private& out_private, const ec_secret& secret,
 
     const auto derived = split(scrypt_private(normal(passphrase), salt));
     const auto prefix = parse_encrypted_private::prefix_factory(version,
-        false);
+                                                                false);
 
     auto encrypted1 = xor_data<half>(secret, derived.left);
     aes256_encrypt(derived.right, encrypted1);
@@ -486,20 +486,18 @@ bool encrypt(encrypted_private& out_private, const ec_secret& secret,
     aes256_encrypt(derived.right, encrypted2);
 
     return build_checked_array(out_private,
-    {
-        prefix,
-        set_flags(compressed),
-        salt,
-        encrypted1,
-        encrypted2
-    });
+                               {prefix,
+                                set_flags(compressed),
+                                salt,
+                                encrypted1,
+                                encrypted2});
 }
 
 // decrypt private_key
 // ----------------------------------------------------------------------------
 
-static bool decrypt_multiplied(ec_secret& out_secret,
-    const parse_encrypted_private& parse, const std::string& passphrase)
+static bool decrypt_multiplied(ec_secret &out_secret,
+                               const parse_encrypted_private &parse, const std::string &passphrase)
 {
     auto secret = scrypt_token(normal(passphrase), parse.owner_salt());
 
@@ -536,13 +534,13 @@ static bool decrypt_multiplied(ec_secret& out_secret,
     return true;
 }
 
-static bool decrypt_secret(ec_secret& out_secret,
-    const parse_encrypted_private& parse, const std::string& passphrase)
+static bool decrypt_secret(ec_secret &out_secret,
+                           const parse_encrypted_private &parse, const std::string &passphrase)
 {
     auto encrypt1 = splice(parse.entropy(), parse.data1());
     auto encrypt2 = parse.data2();
     const auto derived = split(scrypt_private(normal(passphrase),
-        parse.salt()));
+                                              parse.salt()));
 
     aes256_decrypt(derived.right, encrypt1);
     aes256_decrypt(derived.right, encrypt2);
@@ -559,16 +557,14 @@ static bool decrypt_secret(ec_secret& out_secret,
     return true;
 }
 
-bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed,
-    const encrypted_private& key, const std::string& passphrase)
+bool decrypt(ec_secret &out_secret, uint8_t &out_version, bool &out_compressed,
+             const encrypted_private &key, const std::string &passphrase)
 {
     const parse_encrypted_private parse(key);
     if (!parse.valid())
         return false;
 
-    const auto success = parse.multiplied() ?
-        decrypt_multiplied(out_secret, parse, passphrase) :
-        decrypt_secret(out_secret, parse, passphrase);
+    const auto success = parse.multiplied() ? decrypt_multiplied(out_secret, parse, passphrase) : decrypt_secret(out_secret, parse, passphrase);
 
     if (success)
     {
@@ -582,9 +578,9 @@ bool decrypt(ec_secret& out_secret, uint8_t& out_version, bool& out_compressed,
 // decrypt public_key
 // ----------------------------------------------------------------------------
 
-bool decrypt(ec_compressed& out_point, uint8_t& out_version,
-    bool& out_compressed, const encrypted_public& key,
-    const std::string& passphrase)
+bool decrypt(ec_compressed &out_point, uint8_t &out_version,
+             bool &out_compressed, const encrypted_public &key,
+             const std::string &passphrase)
 {
     const parse_encrypted_public parse(key);
     if (!parse.valid())

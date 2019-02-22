@@ -27,8 +27,10 @@
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 #include <UChain/bitcoin/wallet/ec_private.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 static constexpr uint8_t max_recovery_id = 3;
 static constexpr uint8_t magic_compressed = 31;
@@ -52,15 +54,13 @@ hash_digest hash_message(data_slice message)
     return bitcoin_hash(data);
 }
 
-static bool recover(short_hash& out_hash, bool compressed,
-    const ec_signature& compact, uint8_t recovery_id,
-    const hash_digest& message_digest)
+static bool recover(short_hash &out_hash, bool compressed,
+                    const ec_signature &compact, uint8_t recovery_id,
+                    const hash_digest &message_digest)
 {
-    const recoverable_signature recoverable
-    {
+    const recoverable_signature recoverable{
         compact,
-        recovery_id
-    };
+        recovery_id};
 
     if (compressed)
     {
@@ -80,8 +80,8 @@ static bool recover(short_hash& out_hash, bool compressed,
     return true;
 }
 
-bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id,
-    bool compressed)
+bool recovery_id_to_magic(uint8_t &out_magic, uint8_t recovery_id,
+                          bool compressed)
 {
     if (recovery_id > max_recovery_id)
         return false;
@@ -92,8 +92,8 @@ bool recovery_id_to_magic(uint8_t& out_magic, uint8_t recovery_id,
     return true;
 }
 
-bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed,
-    uint8_t magic)
+bool magic_to_recovery_id(uint8_t &out_recovery_id, bool &out_compressed,
+                          uint8_t magic)
 {
     // Magic less offsets cannot exceed recovery id range [0, max_recovery_id].
     if (magic < magic_uncompressed ||
@@ -114,22 +114,22 @@ bool magic_to_recovery_id(uint8_t& out_recovery_id, bool& out_compressed,
     return true;
 }
 
-bool sign_message(message_signature& signature, data_slice message,
-    const ec_private& secret)
+bool sign_message(message_signature &signature, data_slice message,
+                  const ec_private &secret)
 {
     return sign_message(signature, message, secret, secret.compressed());
 }
 
-bool sign_message(message_signature& signature, data_slice message,
-    const std::string& wif)
+bool sign_message(message_signature &signature, data_slice message,
+                  const std::string &wif)
 {
     ec_private secret(wif);
     return (secret &&
-        sign_message(signature, message, secret, secret.compressed()));
+            sign_message(signature, message, secret, secret.compressed()));
 }
 
-bool sign_message(message_signature& signature, data_slice message,
-    const ec_secret& secret, bool compressed)
+bool sign_message(message_signature &signature, data_slice message,
+                  const ec_secret &secret, bool compressed)
 {
     recoverable_signature recoverable;
     if (!sign_recoverable(recoverable, secret, hash_message(message)))
@@ -143,8 +143,8 @@ bool sign_message(message_signature& signature, data_slice message,
     return true;
 }
 
-bool verify_message(data_slice message, const payment_address& address,
-    const message_signature& signature)
+bool verify_message(data_slice message, const payment_address &address,
+                    const message_signature &signature)
 {
     const auto magic = signature.front();
     const auto compact = slice<1, message_signature_size>(signature);
@@ -157,7 +157,7 @@ bool verify_message(data_slice message, const payment_address& address,
     short_hash hash;
     const auto message_digest = hash_message(message);
     return recover(hash, compressed, compact, recovery_id, message_digest) &&
-        (hash == address.hash());
+           (hash == address.hash());
 }
 
 } // namespace wallet

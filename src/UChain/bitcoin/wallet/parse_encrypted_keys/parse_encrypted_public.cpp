@@ -29,16 +29,16 @@
 #include "parse_encrypted_key.hpp"
 #include "parse_encrypted_prefix.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 // This prefix results in the prefix "cfrm" in the base58 encoding but is
 // modified when the payment address is Bitcoin mainnet (0).
 const byte_array<parse_encrypted_public::magic_size>
-parse_encrypted_public::magic_
-{
-    { 0x64, 0x3b, 0xf6, 0xa8 }
-};
+    parse_encrypted_public::magic_{
+        {0x64, 0x3b, 0xf6, 0xa8}};
 
 byte_array<parse_encrypted_public::prefix_size>
 parse_encrypted_public::prefix_factory(uint8_t address)
@@ -47,14 +47,14 @@ parse_encrypted_public::prefix_factory(uint8_t address)
     return splice(magic_, to_array(context));
 }
 
-parse_encrypted_public::parse_encrypted_public(const encrypted_public& key)
-  : parse_encrypted_key<prefix_size>(
-        slice<0, 5>(key),
-        slice<5, 6>(key),
-        slice<6, 10>(key),
-        slice<10, 18>(key)),
-    sign_(slice<18, 19>(key)),
-    data_(slice<19, 51>(key))
+parse_encrypted_public::parse_encrypted_public(const encrypted_public &key)
+    : parse_encrypted_key<prefix_size>(
+          slice<0, 5>(key),
+          slice<5, 6>(key),
+          slice<6, 10>(key),
+          slice<10, 18>(key)),
+      sign_(slice<18, 19>(key)),
+      data_(slice<19, 51>(key))
 {
     valid(verify_magic() && verify_checksum(key));
 }

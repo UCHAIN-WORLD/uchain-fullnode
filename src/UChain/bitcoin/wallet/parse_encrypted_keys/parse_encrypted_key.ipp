@@ -27,44 +27,46 @@
 #include <UChain/bitcoin/wallet/encrypted_keys.hpp>
 #include "parse_encrypted_prefix.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
-template<size_t PrefixSize>
+template <size_t PrefixSize>
 parse_encrypted_key<PrefixSize>::parse_encrypted_key(
-    const byte_array<PrefixSize>& prefix, const one_byte& flags,
-    const ek_salt& salt, const ek_entropy& entropy)
-  : parse_encrypted_prefix<PrefixSize>(prefix),
-    flags_(flags), salt_(salt), entropy_(entropy)
+    const byte_array<PrefixSize> &prefix, const one_byte &flags,
+    const ek_salt &salt, const ek_entropy &entropy)
+    : parse_encrypted_prefix<PrefixSize>(prefix),
+      flags_(flags), salt_(salt), entropy_(entropy)
 {
 }
 
-template<size_t PrefixSize>
+template <size_t PrefixSize>
 bool parse_encrypted_key<PrefixSize>::compressed() const
 {
     return (flags() & ek_flag::ec_compressed_key) != 0;
 }
 
-template<size_t PrefixSize>
+template <size_t PrefixSize>
 ek_entropy parse_encrypted_key<PrefixSize>::entropy() const
 {
     // The owner salt + lot-sequence or owner entropy.
     return entropy_;
 }
 
-template<size_t PrefixSize>
+template <size_t PrefixSize>
 uint8_t parse_encrypted_key<PrefixSize>::flags() const
 {
     return flags_.front();
 }
 
-template<size_t PrefixSize>
+template <size_t PrefixSize>
 bool parse_encrypted_key<PrefixSize>::lot_sequence() const
 {
     return (flags() & ek_flag::lot_sequence_key) != 0;
 }
 
-template<size_t PrefixSize>
+template <size_t PrefixSize>
 data_chunk parse_encrypted_key<PrefixSize>::owner_salt() const
 {
     // Either 4 or 8 bytes, depending on the lot sequence flags.
@@ -74,7 +76,7 @@ data_chunk parse_encrypted_key<PrefixSize>::owner_salt() const
         return to_chunk(entropy());
 }
 
-template<size_t PrefixSize>
+template <size_t PrefixSize>
 ek_salt parse_encrypted_key<PrefixSize>::salt() const
 {
     // The address hash salt.

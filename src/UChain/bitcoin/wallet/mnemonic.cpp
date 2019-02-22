@@ -32,21 +32,23 @@
 #include <UChain/bitcoin/wallet/dictionary.hpp>
 #include "../math/external/pkcs5_pbkdf2.h"
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 // BIP-39 private constants.
 static constexpr size_t bits_per_word = 11;
 static constexpr size_t entropy_bit_divisor = 32;
 static constexpr size_t hmac_iterations = 2048;
-static const char* passphrase_prefix = "mnemonic";
+static const char *passphrase_prefix = "mnemonic";
 
 inline uint8_t bip39_shift(size_t bit)
 {
     return (1 << (byte_bits - (bit % byte_bits) - 1));
 }
 
-bool validate_mnemonic(const word_list& words, const dictionary& lexicon)
+bool validate_mnemonic(const word_list &words, const dictionary &lexicon)
 {
     const auto word_count = words.size();
     if ((word_count % mnemonic_word_multiple) != 0)
@@ -61,7 +63,7 @@ bool validate_mnemonic(const word_list& words, const dictionary& lexicon)
     size_t bit = 0;
     data_chunk data((total_bits + byte_bits - 1) / byte_bits, 0);
 
-    for (const auto& word: words)
+    for (const auto &word : words)
     {
         const auto position = find_position(lexicon, word);
         if (position == -1)
@@ -123,34 +125,34 @@ word_list create_mnemonic(data_slice entropy, const dictionary &lexicon)
     return words;
 }
 
-bool validate_mnemonic(const word_list& mnemonic,
-    const dictionary_list& lexicons)
+bool validate_mnemonic(const word_list &mnemonic,
+                       const dictionary_list &lexicons)
 {
-    for (const auto& lexicon: lexicons)
+    for (const auto &lexicon : lexicons)
         if (validate_mnemonic(mnemonic, *lexicon))
             return true;
 
     return false;
 }
 
-long_hash decode_mnemonic(const word_list& mnemonic)
+long_hash decode_mnemonic(const word_list &mnemonic)
 {
     const auto sentence = join(mnemonic);
     const std::string salt(passphrase_prefix);
     return pkcs5_pbkdf2_hmac_sha512(to_chunk(sentence),
-        to_chunk(salt), hmac_iterations);
+                                    to_chunk(salt), hmac_iterations);
 }
 
 #ifdef WITH_ICU
 
-long_hash decode_mnemonic(const word_list& mnemonic,
-    const std::string& passphrase)
+long_hash decode_mnemonic(const word_list &mnemonic,
+                          const std::string &passphrase)
 {
     const auto sentence = join(mnemonic);
     const std::string prefix(passphrase_prefix);
     const auto salt = to_normal_nfkd_form(prefix + passphrase);
     return pkcs5_pbkdf2_hmac_sha512(to_chunk(sentence),
-        to_chunk(salt), hmac_iterations);
+                                    to_chunk(salt), hmac_iterations);
 }
 
 #endif

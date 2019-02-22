@@ -27,30 +27,32 @@
 #include <UChain/bitcoin/utility/data.hpp>
 #include "parse_encrypted_key.hpp"
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 class parse_encrypted_public
-  : public parse_encrypted_key<5u>
+    : public parse_encrypted_key<5u>
 {
 public:
-    static byte_array<prefix_size> prefix_factory(uint8_t address);
+  static byte_array<prefix_size> prefix_factory(uint8_t address);
 
-    explicit parse_encrypted_public(const encrypted_public& key);
+  explicit parse_encrypted_public(const encrypted_public &key);
 
-    uint8_t address_version() const;
+  uint8_t address_version() const;
 
-    one_byte sign() const;
-    hash_digest data() const;
+  one_byte sign() const;
+  hash_digest data() const;
 
 private:
-    bool verify_magic() const;
+  bool verify_magic() const;
 
-    static constexpr uint8_t default_context_ = 0x9a;
-    static const byte_array<magic_size> magic_;
+  static constexpr uint8_t default_context_ = 0x9a;
+  static const byte_array<magic_size> magic_;
 
-    const one_byte sign_;
-    const hash_digest data_;
+  const one_byte sign_;
+  const hash_digest data_;
 };
 
 } // namespace wallet

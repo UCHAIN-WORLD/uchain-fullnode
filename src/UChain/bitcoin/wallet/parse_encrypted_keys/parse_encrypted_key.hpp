@@ -27,16 +27,18 @@
 #include <UChain/bitcoin/wallet/encrypted_keys.hpp>
 #include "parse_encrypted_prefix.hpp"
 
-namespace libbitcoin {
-namespace wallet {
-
-template<size_t PrefixSize>
-class parse_encrypted_key
-  : public parse_encrypted_prefix<PrefixSize>
+namespace libbitcoin
 {
-public:
-    parse_encrypted_key(const byte_array<PrefixSize>& prefix,
-        const one_byte& flags, const ek_salt& salt, const ek_entropy& entropy);
+namespace wallet
+{
+
+template <size_t PrefixSize>
+class parse_encrypted_key
+    : public parse_encrypted_prefix<PrefixSize>
+{
+  public:
+    parse_encrypted_key(const byte_array<PrefixSize> &prefix,
+                        const one_byte &flags, const ek_salt &salt, const ek_entropy &entropy);
 
     bool compressed() const;
     bool lot_sequence() const;
@@ -46,7 +48,7 @@ public:
     ek_salt salt() const;
     ek_entropy entropy() const;
 
-private:
+  private:
     const one_byte flags_;
     const ek_salt salt_;
     const ek_entropy entropy_;

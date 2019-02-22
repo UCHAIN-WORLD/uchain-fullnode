@@ -28,8 +28,10 @@
 #include <UChain/bitcoin/wallet/ec_private.hpp>
 #include <UChain/bitcoin/wallet/payment_address.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 const uint8_t ec_public::compressed_even = 0x02;
 const uint8_t ec_public::compressed_odd = 0x03;
@@ -38,37 +40,37 @@ const uint8_t ec_public::uncompressed = 0x04;
 uint8_t ec_public::mainnet_p2kh = 0x44;
 
 ec_public::ec_public()
- : valid_(false), compress_(true), point_(null_compressed_point)
+    : valid_(false), compress_(true), point_(null_compressed_point)
 {
 }
 
-ec_public::ec_public(const ec_public& other)
-  : valid_(other.valid_), compress_(other.compress_), point_(other.point_)
+ec_public::ec_public(const ec_public &other)
+    : valid_(other.valid_), compress_(other.compress_), point_(other.point_)
 {
 }
 
-ec_public::ec_public(const ec_private& secret)
-  : ec_public(from_private(secret))
+ec_public::ec_public(const ec_private &secret)
+    : ec_public(from_private(secret))
 {
 }
 
-ec_public::ec_public(const data_chunk& decoded)
-  : ec_public(from_data(decoded))
+ec_public::ec_public(const data_chunk &decoded)
+    : ec_public(from_data(decoded))
 {
 }
 
-ec_public::ec_public(const std::string& base16)
-  : ec_public(from_string(base16))
+ec_public::ec_public(const std::string &base16)
+    : ec_public(from_string(base16))
 {
 }
 
-ec_public::ec_public(const ec_uncompressed& point, bool compress)
-  : ec_public(from_point(point, compress))
+ec_public::ec_public(const ec_uncompressed &point, bool compress)
+    : ec_public(from_point(point, compress))
 {
 }
 
-ec_public::ec_public(const ec_compressed& point, bool compress)
-  : valid_(true), compress_(compress), point_(point)
+ec_public::ec_public(const ec_compressed &point, bool compress)
+    : valid_(true), compress_(compress), point_(point)
 {
 }
 
@@ -83,7 +85,7 @@ bool ec_public::is_point(data_slice decoded)
 // Factories.
 // ----------------------------------------------------------------------------
 
-ec_public ec_public::from_private(const ec_private& secret)
+ec_public ec_public::from_private(const ec_private &secret)
 {
     if (!secret)
         return ec_public();
@@ -91,7 +93,7 @@ ec_public ec_public::from_private(const ec_private& secret)
     return ec_public(secret.to_public());
 }
 
-ec_public ec_public::from_string(const std::string& base16)
+ec_public ec_public::from_string(const std::string &base16)
 {
     data_chunk decoded;
     if (!decode_base16(decoded, base16))
@@ -100,7 +102,7 @@ ec_public ec_public::from_string(const std::string& base16)
     return ec_public(decoded);
 }
 
-ec_public ec_public::from_data(const data_chunk& decoded)
+ec_public ec_public::from_data(const data_chunk &decoded)
 {
     if (!is_point(decoded))
         return ec_public();
@@ -109,18 +111,16 @@ ec_public ec_public::from_data(const data_chunk& decoded)
         return ec_public(to_array<ec_compressed_size>(decoded), true);
 
     ec_compressed compressed;
-    return bc::compress(compressed, to_array<ec_uncompressed_size>(decoded)) ?
-        ec_public(compressed, false) : ec_public();
+    return bc::compress(compressed, to_array<ec_uncompressed_size>(decoded)) ? ec_public(compressed, false) : ec_public();
 }
 
-ec_public ec_public::from_point(const ec_uncompressed& point, bool compress)
+ec_public ec_public::from_point(const ec_uncompressed &point, bool compress)
 {
     if (!is_point(point))
         return ec_public();
 
     ec_compressed compressed;
-    return bc::compress(compressed, point) ? ec_public(compressed, compress) :
-        ec_public();
+    return bc::compress(compressed, point) ? ec_public(compressed, compress) : ec_public();
 }
 
 // Cast operators.
@@ -131,7 +131,7 @@ ec_public::operator const bool() const
     return valid_;
 }
 
-ec_public::operator const ec_compressed&() const
+ec_public::operator const ec_compressed &() const
 {
     return point_;
 }
@@ -153,7 +153,7 @@ std::string ec_public::encoded() const
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const ec_compressed& ec_public::point() const
+const ec_compressed &ec_public::point() const
 {
     return point_;
 }
@@ -166,7 +166,7 @@ const bool ec_public::compressed() const
 // Methods.
 // ----------------------------------------------------------------------------
 
-bool ec_public::to_data(data_chunk& out) const
+bool ec_public::to_data(data_chunk &out) const
 {
     if (!valid_)
         return false;
@@ -189,7 +189,7 @@ bool ec_public::to_data(data_chunk& out) const
     return false;
 }
 
-bool ec_public::to_uncompressed(ec_uncompressed& out) const
+bool ec_public::to_uncompressed(ec_uncompressed &out) const
 {
     if (!valid_)
         return false;
@@ -205,7 +205,7 @@ payment_address ec_public::to_payment_address(uint8_t version) const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ec_public& ec_public::operator=(const ec_public& other)
+ec_public &ec_public::operator=(const ec_public &other)
 {
     valid_ = other.valid_;
     compress_ = other.compress_;
@@ -214,23 +214,23 @@ ec_public& ec_public::operator=(const ec_public& other)
     return *this;
 }
 
-bool ec_public::operator<(const ec_public& other) const
+bool ec_public::operator<(const ec_public &other) const
 {
     return encoded() < other.encoded();
 }
 
-bool ec_public::operator==(const ec_public& other) const
+bool ec_public::operator==(const ec_public &other) const
 {
     return valid_ == other.valid_ && compress_ == other.compress_ &&
-        version_ == other.version_ && point_ == other.point_;
+           version_ == other.version_ && point_ == other.point_;
 }
 
-bool ec_public::operator!=(const ec_public& other) const
+bool ec_public::operator!=(const ec_public &other) const
 {
     return !(*this == other);
 }
 
-std::istream& operator>>(std::istream& in, ec_public& to)
+std::istream &operator>>(std::istream &in, ec_public &to)
 {
     std::string value;
     in >> value;
@@ -245,7 +245,7 @@ std::istream& operator>>(std::istream& in, ec_public& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ec_public& of)
+std::ostream &operator<<(std::ostream &out, const ec_public &of)
 {
     out << of.encoded();
     return out;

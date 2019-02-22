@@ -28,39 +28,40 @@
 #include <UChain/bitcoin/formats/base_58.hpp>
 #include <UChain/bitcoin/math/checksum.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 ek_token::ek_token()
-  : valid_(false), token_()
+    : valid_(false), token_()
 {
 }
 
-ek_token::ek_token(const std::string& encoded)
-  : ek_token(from_string(encoded))
+ek_token::ek_token(const std::string &encoded)
+    : ek_token(from_string(encoded))
 {
 }
 
-ek_token::ek_token(const ek_token& other)
-  : valid_(other.valid_), token_(other.token_)
+ek_token::ek_token(const ek_token &other)
+    : valid_(other.valid_), token_(other.token_)
 {
 }
 
-ek_token::ek_token(const encrypted_token& value)
-  : valid_(true), token_(value)
+ek_token::ek_token(const encrypted_token &value)
+    : valid_(true), token_(value)
 {
 }
 
 // Factories.
 // ----------------------------------------------------------------------------
 
-ek_token ek_token::from_string(const std::string& encoded)
+ek_token ek_token::from_string(const std::string &encoded)
 {
     // TODO: incorporate existing parser here, setting new members.
 
     encrypted_token key;
-    return decode_base58(key, encoded) && verify_checksum(key) ?
-        ek_token(key) : ek_token();
+    return decode_base58(key, encoded) && verify_checksum(key) ? ek_token(key) : ek_token();
 }
 
 // Cast operators.
@@ -71,7 +72,7 @@ ek_token::operator const bool() const
     return valid_;
 }
 
-ek_token::operator const encrypted_token&() const
+ek_token::operator const encrypted_token &() const
 {
     return token_;
 }
@@ -87,7 +88,7 @@ std::string ek_token::encoded() const
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const encrypted_token& ek_token::token() const
+const encrypted_token &ek_token::token() const
 {
     return token_;
 }
@@ -95,29 +96,29 @@ const encrypted_token& ek_token::token() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_token& ek_token::operator=(const ek_token& other)
+ek_token &ek_token::operator=(const ek_token &other)
 {
     valid_ = other.valid_;
     token_ = other.token_;
     return *this;
 }
 
-bool ek_token::operator<(const ek_token& other) const
+bool ek_token::operator<(const ek_token &other) const
 {
     return encoded() < other.encoded();
 }
 
-bool ek_token::operator==(const ek_token& other) const
+bool ek_token::operator==(const ek_token &other) const
 {
     return valid_ == other.valid_ && token_ == other.token_;
 }
 
-bool ek_token::operator!=(const ek_token& other) const
+bool ek_token::operator!=(const ek_token &other) const
 {
     return !(*this == other);
 }
 
-std::istream& operator>>(std::istream& in, ek_token& to)
+std::istream &operator>>(std::istream &in, ek_token &to)
 {
     std::string value;
     in >> value;
@@ -132,7 +133,7 @@ std::istream& operator>>(std::istream& in, ek_token& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ek_token& of)
+std::ostream &operator<<(std::ostream &out, const ek_token &of)
 {
     out << of.encoded();
     return out;
