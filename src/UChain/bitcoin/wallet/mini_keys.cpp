@@ -25,17 +25,19 @@
 #include <UChain/bitcoin/math/elliptic_curve.hpp>
 #include <UChain/bitcoin/math/hash.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
-bool check_minikey(const std::string& minikey)
+bool check_minikey(const std::string &minikey)
 {
     // Legacy minikeys are 22 chars long
     bool valid = minikey.size() == 22 || minikey.size() == 30;
     return valid && sha256_hash(to_chunk(minikey + "?"))[0] == 0x00;
 }
 
-bool minikey_to_secret(ec_secret& out_secret, const std::string& key)
+bool minikey_to_secret(ec_secret &out_secret, const std::string &key)
 {
     if (!check_minikey(key))
         return false;

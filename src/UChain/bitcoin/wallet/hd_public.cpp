@@ -36,8 +36,10 @@
 #include <UChain/bitcoin/wallet/ec_public.hpp>
 #include <UChain/bitcoin/wallet/hd_private.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 const uint32_t hd_public::mainnet = 76067358;
 
@@ -45,65 +47,64 @@ const uint32_t hd_public::mainnet = 76067358;
 // ----------------------------------------------------------------------------
 
 hd_public::hd_public()
-  : valid_(false), chain_(null_hash), lineage_({0, 0, 0, 0}),
-    point_(null_compressed_point)
+    : valid_(false), chain_(null_hash), lineage_({0, 0, 0, 0}),
+      point_(null_compressed_point)
 {
 }
 
-hd_public::hd_public(const hd_public& other)
-  : valid_(other.valid_), chain_(other.chain_), lineage_(other.lineage_),
-    point_(other.point_)
-{
-}
-
-// This cannot validate the version.
-hd_public::hd_public(const hd_key& public_key)
-  : hd_public(from_key(public_key))
+hd_public::hd_public(const hd_public &other)
+    : valid_(other.valid_), chain_(other.chain_), lineage_(other.lineage_),
+      point_(other.point_)
 {
 }
 
 // This cannot validate the version.
-hd_public::hd_public(const std::string& encoded)
-  : hd_public(from_string(encoded))
+hd_public::hd_public(const hd_key &public_key)
+    : hd_public(from_key(public_key))
+{
+}
+
+// This cannot validate the version.
+hd_public::hd_public(const std::string &encoded)
+    : hd_public(from_string(encoded))
 {
 }
 
 // This validates the version.
-hd_public::hd_public(const hd_key& public_key, uint32_t prefix)
-  : hd_public(from_key(public_key, prefix))
+hd_public::hd_public(const hd_key &public_key, uint32_t prefix)
+    : hd_public(from_key(public_key, prefix))
 {
 }
 
 // This validates the version.
-hd_public::hd_public(const std::string& encoded, uint32_t prefix)
-  : hd_public(from_string(encoded, prefix))
+hd_public::hd_public(const std::string &encoded, uint32_t prefix)
+    : hd_public(from_string(encoded, prefix))
 {
 }
 
-hd_public::hd_public(const ec_compressed& point,
-    const hd_chain_code& chain_code, const hd_lineage& lineage)
-  : valid_(true), point_(point), chain_(chain_code), lineage_(lineage)
+hd_public::hd_public(const ec_compressed &point,
+                     const hd_chain_code &chain_code, const hd_lineage &lineage)
+    : valid_(true), point_(point), chain_(chain_code), lineage_(lineage)
 {
 }
 
 // Factories.
 // ----------------------------------------------------------------------------
 
-hd_public hd_public::from_secret(const ec_secret& secret,
-    const hd_chain_code& chain_code, const hd_lineage& lineage)
+hd_public hd_public::from_secret(const ec_secret &secret,
+                                 const hd_chain_code &chain_code, const hd_lineage &lineage)
 {
     ec_compressed point;
-    return secret_to_public(point, secret) ?
-        hd_public(point, chain_code, lineage) : hd_public();
+    return secret_to_public(point, secret) ? hd_public(point, chain_code, lineage) : hd_public();
 }
 
-hd_public hd_public::from_key(const hd_key& key)
+hd_public hd_public::from_key(const hd_key &key)
 {
     const auto prefix = from_big_endian_unsafe<uint32_t>(key.begin());
     return from_key(key, prefix);
 }
 
-hd_public hd_public::from_string(const std::string& encoded)
+hd_public hd_public::from_string(const std::string &encoded)
 {
     hd_key key;
     if (!decode_base58(key, encoded))
@@ -112,7 +113,7 @@ hd_public hd_public::from_string(const std::string& encoded)
     return hd_public(from_key(key));
 }
 
-hd_public hd_public::from_key(const hd_key& key, uint32_t prefix)
+hd_public hd_public::from_key(const hd_key &key, uint32_t prefix)
 {
     // TODO: convert to istream_reader
     auto stream = make_deserializer(key.begin(), key.end());
@@ -122,26 +123,24 @@ hd_public hd_public::from_key(const hd_key& key, uint32_t prefix)
     const auto child = stream.read_big_endian<uint32_t>();
     const auto chain = stream.read_bytes<hd_chain_code_size>();
     const auto compressed = stream.read_bytes<ec_compressed_size>();
-//    const auto point = to_array<ec_compressed_size>(compressed);
+    //    const auto point = to_array<ec_compressed_size>(compressed);
 
     // Validate the prefix against the provided value.
     if (actual_prefix != prefix)
         return hd_public();
 
     // The private prefix will be zero'd here, but there's no way to access it.
-    const hd_lineage lineage
-    {
+    const hd_lineage lineage{
         prefix,
         depth,
         parent,
-        child
-    };
+        child};
 
     return hd_public(compressed, chain, lineage);
 }
 
-hd_public hd_public::from_string(const std::string& encoded,
-    uint32_t prefix)
+hd_public hd_public::from_string(const std::string &encoded,
+                                 uint32_t prefix)
 {
     hd_key key;
     if (!decode_base58(key, encoded))
@@ -158,7 +157,7 @@ hd_public::operator const bool() const
     return valid_;
 }
 
-hd_public::operator const ec_compressed&() const
+hd_public::operator const ec_compressed &() const
 {
     return point_;
 }
@@ -174,17 +173,17 @@ std::string hd_public::encoded() const
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const hd_chain_code& hd_public::chain_code() const
+const hd_chain_code &hd_public::chain_code() const
 {
     return chain_;
 }
 
-const hd_lineage& hd_public::lineage() const
+const hd_lineage &hd_public::lineage() const
 {
     return lineage_;
 }
 
-const ec_compressed& hd_public::point() const
+const ec_compressed &hd_public::point() const
 {
     return point_;
 }
@@ -199,14 +198,12 @@ hd_key hd_public::to_hd_key() const
 {
     hd_key out;
     build_checked_array(out,
-    {
-        to_big_endian(to_prefix(lineage_.prefixes)),
-        to_array(lineage_.depth),
-        to_big_endian(lineage_.parent_fingerprint),
-        to_big_endian(lineage_.child_number),
-        chain_,
-        point_
-    });
+                        {to_big_endian(to_prefix(lineage_.prefixes)),
+                         to_array(lineage_.depth),
+                         to_big_endian(lineage_.parent_fingerprint),
+                         to_big_endian(lineage_.child_number),
+                         chain_,
+                         point_});
 
     return out;
 }
@@ -227,13 +224,11 @@ hd_public hd_public::derive_public(uint32_t index) const
     if (lineage_.depth == max_uint8)
         return hd_public();
 
-    const hd_lineage lineage
-    {
+    const hd_lineage lineage{
         lineage_.prefixes,
         static_cast<uint8_t>(lineage_.depth + 1),
         fingerprint(),
-        index
-    };
+        index};
 
     return hd_public(combined, intermediate.right, lineage);
 }
@@ -250,7 +245,7 @@ uint32_t hd_public::fingerprint() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-hd_public& hd_public::operator=(const hd_public& other)
+hd_public &hd_public::operator=(const hd_public &other)
 {
     valid_ = other.valid_;
     chain_ = other.chain_;
@@ -259,23 +254,23 @@ hd_public& hd_public::operator=(const hd_public& other)
     return *this;
 }
 
-bool hd_public::operator<(const hd_public& other) const
+bool hd_public::operator<(const hd_public &other) const
 {
     return encoded() < other.encoded();
 }
 
-bool hd_public::operator==(const hd_public& other) const
+bool hd_public::operator==(const hd_public &other) const
 {
     return valid_ == other.valid_ && chain_ == other.chain_ &&
-        lineage_ == other.lineage_ && point_ == other.point_;
+           lineage_ == other.lineage_ && point_ == other.point_;
 }
 
-bool hd_public::operator!=(const hd_public& other) const
+bool hd_public::operator!=(const hd_public &other) const
 {
     return !(*this == other);
 }
 
-std::istream& operator>>(std::istream& in, hd_public& to)
+std::istream &operator>>(std::istream &in, hd_public &to)
 {
     std::string value;
     in >> value;
@@ -290,7 +285,7 @@ std::istream& operator>>(std::istream& in, hd_public& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const hd_public& of)
+std::ostream &operator<<(std::ostream &out, const hd_public &of)
 {
     out << of.encoded();
     return out;
@@ -299,14 +294,14 @@ std::ostream& operator<<(std::ostream& out, const hd_public& of)
 // hd_lineage
 // ----------------------------------------------------------------------------
 
-bool hd_lineage::operator == (const hd_lineage& other) const
+bool hd_lineage::operator==(const hd_lineage &other) const
 {
     return prefixes == other.prefixes && depth == other.depth &&
-        parent_fingerprint == other.parent_fingerprint &&
-        child_number == other.child_number;
+           parent_fingerprint == other.parent_fingerprint &&
+           child_number == other.child_number;
 }
 
-bool hd_lineage::operator!=(const hd_lineage& other) const
+bool hd_lineage::operator!=(const hd_lineage &other) const
 {
     return !(*this == other);
 }

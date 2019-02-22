@@ -28,39 +28,40 @@
 #include <UChain/bitcoin/formats/base_58.hpp>
 #include <UChain/bitcoin/math/checksum.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 ek_public::ek_public()
-  : valid_(false), public_()
+    : valid_(false), public_()
 {
 }
 
-ek_public::ek_public(const std::string& encoded)
-  : ek_public(from_string(encoded))
+ek_public::ek_public(const std::string &encoded)
+    : ek_public(from_string(encoded))
 {
 }
 
-ek_public::ek_public(const ek_public& other)
-  : valid_(other.valid_), public_(other.public_)
+ek_public::ek_public(const ek_public &other)
+    : valid_(other.valid_), public_(other.public_)
 {
 }
 
-ek_public::ek_public(const encrypted_public& value)
-  : valid_(true), public_(value)
+ek_public::ek_public(const encrypted_public &value)
+    : valid_(true), public_(value)
 {
 }
 
 // Factories.
 // ----------------------------------------------------------------------------
 
-ek_public ek_public::from_string(const std::string& encoded)
+ek_public ek_public::from_string(const std::string &encoded)
 {
     // TODO: incorporate existing parser here, setting new members.
 
     encrypted_public key;
-    return decode_base58(key, encoded) && verify_checksum(key) ?
-        ek_public(key) : ek_public();
+    return decode_base58(key, encoded) && verify_checksum(key) ? ek_public(key) : ek_public();
 }
 
 // Cast operators.
@@ -71,7 +72,7 @@ ek_public::operator const bool() const
     return valid_;
 }
 
-ek_public::operator const encrypted_public&() const
+ek_public::operator const encrypted_public &() const
 {
     return public_;
 }
@@ -87,7 +88,7 @@ std::string ek_public::encoded() const
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const encrypted_public& ek_public::public_key() const
+const encrypted_public &ek_public::public_key() const
 {
     return public_;
 }
@@ -95,29 +96,29 @@ const encrypted_public& ek_public::public_key() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_public& ek_public::operator=(const ek_public& other)
+ek_public &ek_public::operator=(const ek_public &other)
 {
     valid_ = other.valid_;
     public_ = other.public_;
     return *this;
 }
 
-bool ek_public::operator<(const ek_public& other) const
+bool ek_public::operator<(const ek_public &other) const
 {
     return encoded() < other.encoded();
 }
 
-bool ek_public::operator==(const ek_public& other) const
+bool ek_public::operator==(const ek_public &other) const
 {
     return valid_ == other.valid_ && public_ == other.public_;
 }
 
-bool ek_public::operator!=(const ek_public& other) const
+bool ek_public::operator!=(const ek_public &other) const
 {
     return !(*this == other);
 }
 
-std::istream& operator>>(std::istream& in, ek_public& to)
+std::istream &operator>>(std::istream &in, ek_public &to)
 {
     std::string value;
     in >> value;
@@ -132,7 +133,7 @@ std::istream& operator>>(std::istream& in, ek_public& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ek_public& of)
+std::ostream &operator<<(std::ostream &out, const ek_public &of)
 {
     out << of.encoded();
     return out;

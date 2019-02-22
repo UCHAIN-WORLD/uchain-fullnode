@@ -25,35 +25,34 @@
 #include <UChain/bitcoin/define.hpp>
 #include <UChain/bitcoin/formats/base_16.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 // These character classification functions correspond to RFC 3986.
 // They avoid C standard library character classification functions,
 // since those give different answers based on the current locale.
 static bool is_alpha(const char c)
 {
-    return
-        ('A' <= c && c <= 'Z') ||
-        ('a' <= c && c <= 'z');
+    return ('A' <= c && c <= 'Z') ||
+           ('a' <= c && c <= 'z');
 }
 
 static bool is_scheme(const char c)
 {
-    return
-        is_alpha(c) || ('0' <= c && c <= '9') ||
-        '+' == c || '-' == c || '.' == c;
+    return is_alpha(c) || ('0' <= c && c <= '9') ||
+           '+' == c || '-' == c || '.' == c;
 }
 
 static bool is_path_char(const char c)
 {
-    return
-        is_alpha(c) || ('0' <= c && c <= '9') ||
-        '-' == c || '.' == c || '_' == c || '~' == c || // unreserved
-        '!' == c || '$' == c || '&' == c || '\'' == c ||
-        '(' == c || ')' == c || '*' == c || '+' == c ||
-        ',' == c || ';' == c || '=' == c || // sub-delims
-        ':' == c || '@' == c;
+    return is_alpha(c) || ('0' <= c && c <= '9') ||
+           '-' == c || '.' == c || '_' == c || '~' == c || // unreserved
+           '!' == c || '$' == c || '&' == c || '\'' == c ||
+           '(' == c || ')' == c || '*' == c || '+' == c ||
+           ',' == c || ';' == c || '=' == c || // sub-delims
+           ':' == c || '@' == c;
 }
 
 static bool is_path(const char c)
@@ -73,7 +72,7 @@ static bool is_query_char(const char c)
 
 // Verifies that all RFC 3986 escape sequences in a string are valid, and that
 // all characters belong to the given class.
-static bool validate(const std::string& in, bool (*is_valid)(const char))
+static bool validate(const std::string &in, bool (*is_valid)(const char))
 {
     auto i = in.begin();
     while (in.end() != i)
@@ -98,7 +97,7 @@ static bool validate(const std::string& in, bool (*is_valid)(const char))
 }
 
 // Decodes all RFC 3986 escape sequences in a string.
-static std::string unescape(const std::string& in)
+static std::string unescape(const std::string &in)
 {
     // Do the conversion:
     std::string out;
@@ -110,7 +109,7 @@ static std::string unescape(const std::string& in)
         if ('%' == *i && 2 < in.end() - i && is_base16(i[1]) &&
             is_base16(i[2]))
         {
-            const char temp[] = { i[1], i[2], 0 };
+            const char temp[] = {i[1], i[2], 0};
             out.push_back(base16_literal(temp)[0]);
             i += 3;
         }
@@ -126,11 +125,11 @@ static std::string unescape(const std::string& in)
 
 // URI encodes a string (i.e. percent encoding).
 // is_valid a function returning true for acceptable characters.
-static std::string escape(const std::string& in, bool (*is_valid)(char))
+static std::string escape(const std::string &in, bool (*is_valid)(char))
 {
     std::ostringstream stream;
     stream << std::hex << std::uppercase << std::setfill('0');
-    for (const auto c: in)
+    for (const auto c : in)
     {
         if (is_valid(c))
             stream << c;
@@ -141,7 +140,7 @@ static std::string escape(const std::string& in, bool (*is_valid)(char))
     return stream.str();
 }
 
-bool uri::decode(const std::string& encoded, bool strict)
+bool uri::decode(const std::string &encoded, bool strict)
 {
     auto i = encoded.begin();
 
@@ -242,14 +241,14 @@ std::string uri::encoded() const
 std::string uri::scheme() const
 {
     auto out = scheme_;
-    for (auto& c: out)
+    for (auto &c : out)
         if ('A' <= c && c <= 'Z')
             c = c - 'A' + 'a';
 
     return out;
 }
 
-void uri::set_scheme(const std::string& scheme)
+void uri::set_scheme(const std::string &scheme)
 {
     scheme_ = scheme;
 }
@@ -266,7 +265,7 @@ bool uri::has_authority() const
     return has_authority_;
 }
 
-void uri::set_authority(const std::string& authority)
+void uri::set_authority(const std::string &authority)
 {
     has_authority_ = true;
     authority_ = escape(authority, is_path_char);
@@ -284,7 +283,7 @@ std::string uri::path() const
     return unescape(path_);
 }
 
-void uri::set_path(const std::string& path)
+void uri::set_path(const std::string &path)
 {
     path_ = escape(path, is_path);
 }
@@ -301,7 +300,7 @@ bool uri::has_query() const
     return has_query_;
 }
 
-void uri::set_query(const std::string& query)
+void uri::set_query(const std::string &query)
 {
     has_query_ = true;
     query_ = escape(query, is_query);
@@ -324,7 +323,7 @@ bool uri::has_fragment() const
     return has_fragment_;
 }
 
-void uri::set_fragment(const std::string& fragment)
+void uri::set_fragment(const std::string &fragment)
 {
     has_fragment_ = true;
     fragment_ = escape(fragment, is_query);
@@ -369,11 +368,11 @@ uri::query_map uri::decode_query() const
     return out;
 }
 
-void uri::encode_query(const query_map& map)
+void uri::encode_query(const query_map &map)
 {
     auto first = true;
     std::ostringstream query;
-    for (const auto& term: map)
+    for (const auto &term : map)
     {
         if (!first)
             query << '&';

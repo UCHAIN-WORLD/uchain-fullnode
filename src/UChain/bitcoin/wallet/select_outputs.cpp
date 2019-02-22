@@ -25,13 +25,15 @@
 #include <UChain/bitcoin/formats/base_16.hpp>
 #include <UChain/bitcoin/utility/assert.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 using namespace bc::chain;
 
-void select_outputs::select(points_info& out, output_info::list unspent,
-    uint64_t minimum_value, algorithm DEBUG_ONLY(option))
+void select_outputs::select(points_info &out, output_info::list unspent,
+                            uint64_t minimum_value, algorithm DEBUG_ONLY(option))
 {
     out.change = 0;
     out.points.clear();
@@ -39,29 +41,26 @@ void select_outputs::select(points_info& out, output_info::list unspent,
     if (unspent.empty())
         return;
 
-    const auto below_minimum = [minimum_value](const output_info& out_info)
-    {
+    const auto below_minimum = [minimum_value](const output_info &out_info) {
         return out_info.value < minimum_value;
     };
 
-    const auto lesser = [](const output_info& left, const output_info& right)
-    {
+    const auto lesser = [](const output_info &left, const output_info &right) {
         return left.value < right.value;
     };
 
-    const auto greater = [](const output_info& left, const output_info& right)
-    {
+    const auto greater = [](const output_info &left, const output_info &right) {
         return left.value > right.value;
     };
 
     const auto lesser_begin = unspent.begin();
     const auto lesser_end = std::partition(unspent.begin(), unspent.end(),
-        below_minimum);
+                                           below_minimum);
 
     const auto greater_begin = lesser_end;
     const auto greater_end = unspent.end();
     const auto minimum_greater = std::min_element(greater_begin, greater_end,
-        lesser);
+                                                  lesser);
 
     if (minimum_greater != greater_end)
     {
@@ -92,5 +91,5 @@ void select_outputs::select(points_info& out, output_info::list unspent,
     out.points.clear();
 }
 
-} // namspace wallet
-} // namspace libbitcoin
+} // namespace wallet
+} // namespace libbitcoin

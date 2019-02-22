@@ -28,39 +28,40 @@
 #include <UChain/bitcoin/formats/base_58.hpp>
 #include <UChain/bitcoin/math/checksum.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 ek_private::ek_private()
-  : valid_(false), private_()
+    : valid_(false), private_()
 {
 }
 
-ek_private::ek_private(const std::string& encoded)
-  : ek_private(from_string(encoded))
+ek_private::ek_private(const std::string &encoded)
+    : ek_private(from_string(encoded))
 {
 }
 
-ek_private::ek_private(const ek_private& other)
-  : valid_(other.valid_), private_(other.private_)
+ek_private::ek_private(const ek_private &other)
+    : valid_(other.valid_), private_(other.private_)
 {
 }
 
-ek_private::ek_private(const encrypted_private& value)
-  : valid_(true), private_(value)
+ek_private::ek_private(const encrypted_private &value)
+    : valid_(true), private_(value)
 {
 }
 
 // Factories.
 // ----------------------------------------------------------------------------
 
-ek_private ek_private::from_string(const std::string& encoded)
+ek_private ek_private::from_string(const std::string &encoded)
 {
     // TODO: incorporate existing parser here, setting new members.
 
     encrypted_private key;
-    return decode_base58(key, encoded) && verify_checksum(key) ?
-        ek_private(key) : ek_private();
+    return decode_base58(key, encoded) && verify_checksum(key) ? ek_private(key) : ek_private();
 }
 
 // Cast operators.
@@ -71,7 +72,7 @@ ek_private::operator const bool() const
     return valid_;
 }
 
-ek_private::operator const encrypted_private&() const
+ek_private::operator const encrypted_private &() const
 {
     return private_;
 }
@@ -87,7 +88,7 @@ std::string ek_private::encoded() const
 // Accessors.
 // ----------------------------------------------------------------------------
 
-const encrypted_private& ek_private::private_key() const
+const encrypted_private &ek_private::private_key() const
 {
     return private_;
 }
@@ -95,29 +96,29 @@ const encrypted_private& ek_private::private_key() const
 // Operators.
 // ----------------------------------------------------------------------------
 
-ek_private& ek_private::operator=(const ek_private& other)
+ek_private &ek_private::operator=(const ek_private &other)
 {
     valid_ = other.valid_;
     private_ = other.private_;
     return *this;
 }
 
-bool ek_private::operator<(const ek_private& other) const
+bool ek_private::operator<(const ek_private &other) const
 {
     return encoded() < other.encoded();
 }
 
-bool ek_private::operator==(const ek_private& other) const
+bool ek_private::operator==(const ek_private &other) const
 {
     return valid_ == other.valid_ && private_ == other.private_;
 }
 
-bool ek_private::operator!=(const ek_private& other) const
+bool ek_private::operator!=(const ek_private &other) const
 {
     return !(*this == other);
 }
 
-std::istream& operator>>(std::istream& in, ek_private& to)
+std::istream &operator>>(std::istream &in, ek_private &to)
 {
     std::string value;
     in >> value;
@@ -132,7 +133,7 @@ std::istream& operator>>(std::istream& in, ek_private& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const ek_private& of)
+std::ostream &operator<<(std::ostream &out, const ek_private &of)
 {
     out << of.encoded();
     return out;

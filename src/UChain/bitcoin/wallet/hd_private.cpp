@@ -37,67 +37,69 @@
 #include <UChain/bitcoin/wallet/ec_private.hpp>
 #include <UChain/bitcoin/wallet/ec_public.hpp>
 
-namespace libbitcoin {
-namespace wallet {
+namespace libbitcoin
+{
+namespace wallet
+{
 
 const uint64_t hd_private::mainnet = to_prefixes(76066276,
-    hd_public::mainnet);
+                                                 hd_public::mainnet);
 
 hd_private::hd_private()
-  : hd_public(), secret_(null_hash)
+    : hd_public(), secret_(null_hash)
 {
 }
 
-hd_private::hd_private(const hd_private& other)
-  : hd_public(other), secret_(other.secret_)
+hd_private::hd_private(const hd_private &other)
+    : hd_public(other), secret_(other.secret_)
 {
 }
 
-hd_private::hd_private(const data_chunk& seed, uint64_t prefixes)
-  : hd_private(from_seed(seed, prefixes))
-{
-}
-
-// This reads the private version and sets the public to mainnet.
-hd_private::hd_private(const hd_key& private_key)
-  : hd_private(from_key(private_key, hd_public::mainnet))
+hd_private::hd_private(const data_chunk &seed, uint64_t prefixes)
+    : hd_private(from_seed(seed, prefixes))
 {
 }
 
 // This reads the private version and sets the public to mainnet.
-hd_private::hd_private(const std::string& encoded)
+hd_private::hd_private(const hd_key &private_key)
+    : hd_private(from_key(private_key, hd_public::mainnet))
+{
+}
+
+// This reads the private version and sets the public to mainnet.
+hd_private::hd_private(const std::string &encoded)
     : hd_private(from_string(encoded, hd_public::mainnet))
 {
 }
 
 // This reads the private version and sets the public.
-hd_private::hd_private(const hd_key& private_key, uint32_t prefix)
-  : hd_private(from_key(private_key, prefix))
+hd_private::hd_private(const hd_key &private_key, uint32_t prefix)
+    : hd_private(from_key(private_key, prefix))
 {
 }
 
 // This validates the private version and sets the public.
-hd_private::hd_private(const hd_key& private_key, uint64_t prefixes)
-  : hd_private(from_key(private_key, prefixes))
+hd_private::hd_private(const hd_key &private_key, uint64_t prefixes)
+    : hd_private(from_key(private_key, prefixes))
 {
 }
 
 // This reads the private version and sets the public.
-hd_private::hd_private(const std::string& encoded, uint32_t prefix)
-  : hd_private(from_string(encoded, prefix))
+hd_private::hd_private(const std::string &encoded, uint32_t prefix)
+    : hd_private(from_string(encoded, prefix))
 {
 }
 
 // This validates the private version and sets the public.
-hd_private::hd_private(const std::string& encoded, uint64_t prefixes)
-  : hd_private(from_string(encoded, prefixes))
+hd_private::hd_private(const std::string &encoded, uint64_t prefixes)
+    : hd_private(from_string(encoded, prefixes))
 {
 }
 
-hd_private::hd_private(const ec_secret& secret,
-    const hd_chain_code& chain_code, const hd_lineage& lineage)
-  : hd_public(from_secret(secret, chain_code, lineage)),
-    secret_(secret)
+hd_private::hd_private(const ec_secret &secret,
+                       const hd_chain_code &chain_code, const hd_lineage &lineage)
+    : hd_public(from_secret(secret, chain_code, lineage)),
+      secret_(secret)
 {
 }
 
@@ -115,24 +117,22 @@ hd_private hd_private::from_seed(data_slice seed, uint64_t prefixes)
     if (!verify(intermediate.left))
         return hd_private();
 
-    const auto master = hd_lineage
-    {
+    const auto master = hd_lineage{
         prefixes,
         0x00,
         0x00000000,
-        0x00000000
-    };
+        0x00000000};
 
     return hd_private(intermediate.left, intermediate.right, master);
 }
 
-hd_private hd_private::from_key(const hd_key& key, uint32_t public_prefix)
+hd_private hd_private::from_key(const hd_key &key, uint32_t public_prefix)
 {
     const auto prefix = from_big_endian_unsafe<uint32_t>(key.begin());
     return from_key(key, to_prefixes(prefix, public_prefix));
 }
 
-hd_private hd_private::from_key(const hd_key& key, uint64_t prefixes)
+hd_private hd_private::from_key(const hd_key &key, uint64_t prefixes)
 {
     // TODO: convert to istream_reader
     auto stream = make_deserializer(key.begin(), key.end());
@@ -141,26 +141,24 @@ hd_private hd_private::from_key(const hd_key& key, uint64_t prefixes)
     const auto parent = stream.read_big_endian<uint32_t>();
     const auto child = stream.read_big_endian<uint32_t>();
     const auto chain = stream.read_bytes<hd_chain_code_size>();
-    /*const auto padding =*/ stream.read_big_endian<uint8_t>();
+    /*const auto padding =*/stream.read_big_endian<uint8_t>();
     const auto secret = stream.read_bytes<ec_secret_size>();
 
     // Validate the prefix against the provided value.
     if (prefix != to_prefix(prefixes))
         return hd_private();
 
-    const hd_lineage lineage
-    {
+    const hd_lineage lineage{
         prefixes,
         depth,
         parent,
-        child
-    };
+        child};
 
     return hd_private(secret, chain, lineage);
 }
 
-hd_private hd_private::from_string(const std::string& encoded,
-    uint32_t public_prefix)
+hd_private hd_private::from_string(const std::string &encoded,
+                                   uint32_t public_prefix)
 {
     hd_key key;
     if (!decode_base58(key, encoded))
@@ -169,18 +167,17 @@ hd_private hd_private::from_string(const std::string& encoded,
     return hd_private(from_key(key, public_prefix));
 }
 
-hd_private hd_private::from_string(const std::string& encoded,
-    uint64_t prefixes)
+hd_private hd_private::from_string(const std::string &encoded,
+                                   uint64_t prefixes)
 {
     hd_key key;
-    return decode_base58(key, encoded) ? hd_private(key, prefixes) :
-        hd_private();
+    return decode_base58(key, encoded) ? hd_private(key, prefixes) : hd_private();
 }
 
 // Cast operators.
 // ----------------------------------------------------------------------------
 
-hd_private::operator const ec_secret&() const
+hd_private::operator const ec_secret &() const
 {
     return secret_;
 }
@@ -196,7 +193,7 @@ std::string hd_private::encoded() const
 /// Accessors.
 // ----------------------------------------------------------------------------
 
-const ec_secret& hd_private::secret() const
+const ec_secret &hd_private::secret() const
 {
     return secret_;
 }
@@ -213,32 +210,28 @@ hd_key hd_private::to_hd_key() const
 
     hd_key out;
     build_checked_array(out,
-    {
-        to_big_endian(to_prefix(lineage_.prefixes)),
-        to_array(lineage_.depth),
-        to_big_endian(lineage_.parent_fingerprint),
-        to_big_endian(lineage_.child_number),
-        chain_,
-        to_array(private_key_padding),
-        secret_
-    });
+                        {to_big_endian(to_prefix(lineage_.prefixes)),
+                         to_array(lineage_.depth),
+                         to_big_endian(lineage_.parent_fingerprint),
+                         to_big_endian(lineage_.child_number),
+                         chain_,
+                         to_array(private_key_padding),
+                         secret_});
 
     return out;
 }
 
 hd_public hd_private::to_public() const
 {
-    return hd_public(((hd_public)*this).to_hd_key(),
-        hd_public::to_prefix(lineage_.prefixes));
+    return hd_public(((hd_public) * this).to_hd_key(),
+                     hd_public::to_prefix(lineage_.prefixes));
 }
 
 hd_private hd_private::derive_private(uint32_t index) const
 {
     constexpr uint8_t depth = 0;
 
-    const auto data = (index >= hd_first_hardened_key) ?
-        splice(to_array(depth), secret_, to_big_endian(index)) :
-        splice(point_, to_big_endian(index));
+    const auto data = (index >= hd_first_hardened_key) ? splice(to_array(depth), secret_, to_big_endian(index)) : splice(point_, to_big_endian(index));
 
     const auto intermediate = split(hmac_sha512_hash(data, chain_));
 
@@ -250,13 +243,11 @@ hd_private hd_private::derive_private(uint32_t index) const
     if (lineage_.depth == max_uint8)
         return hd_private();
 
-    const hd_lineage lineage
-    {
+    const hd_lineage lineage{
         lineage_.prefixes,
         static_cast<uint8_t>(lineage_.depth + 1),
         fingerprint(),
-        index
-    };
+        index};
 
     return hd_private(child, intermediate.right, lineage);
 }
@@ -269,7 +260,7 @@ hd_public hd_private::derive_public(uint32_t index) const
 // Operators.
 // ----------------------------------------------------------------------------
 
-hd_private& hd_private::operator=(const hd_private& other)
+hd_private &hd_private::operator=(const hd_private &other)
 {
     secret_ = other.secret_;
     valid_ = other.valid_;
@@ -279,19 +270,19 @@ hd_private& hd_private::operator=(const hd_private& other)
     return *this;
 }
 
-bool hd_private::operator<(const hd_private& other) const
+bool hd_private::operator<(const hd_private &other) const
 {
     return encoded() < other.encoded();
 }
 
-bool hd_private::operator==(const hd_private& other) const
+bool hd_private::operator==(const hd_private &other) const
 {
     return secret_ == other.secret_ && valid_ == other.valid_ &&
-        chain_ == other.chain_ && lineage_ == other.lineage_ &&
-        point_ == other.point_;
+           chain_ == other.chain_ && lineage_ == other.lineage_ &&
+           point_ == other.point_;
 }
 
-bool hd_private::operator!=(const hd_private& other) const
+bool hd_private::operator!=(const hd_private &other) const
 {
     return !(*this == other);
 }
@@ -299,7 +290,7 @@ bool hd_private::operator!=(const hd_private& other) const
 // We must assume mainnet for public version here.
 // When converting this to public a clone of this key should be used, with the
 // public version specified - after validating the private version.
-std::istream& operator>>(std::istream& in, hd_private& to)
+std::istream &operator>>(std::istream &in, hd_private &to)
 {
     std::string value;
     in >> value;
@@ -314,7 +305,7 @@ std::istream& operator>>(std::istream& in, hd_private& to)
     return in;
 }
 
-std::ostream& operator<<(std::ostream& out, const hd_private& of)
+std::ostream &operator<<(std::ostream &out, const hd_private &of)
 {
     out << of.encoded();
     return out;

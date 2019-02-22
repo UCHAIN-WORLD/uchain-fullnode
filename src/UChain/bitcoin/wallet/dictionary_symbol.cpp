@@ -21,100 +21,106 @@
 #include <UChain/bitcoin/wallet/dictionary.hpp>
 #include <boost/algorithm/string.hpp>
 
-namespace libbitcoin {
-namespace wallet {
-namespace symbol {
+namespace libbitcoin
+{
+namespace wallet
+{
+namespace symbol
+{
 
-    const std::array<const char*, 64> ban_list = {
-        "HUJINTAO",
-        "WENJIABAO",
-        "WJB",
-        "XIJINPING",
-        "XJP",
-        "TANKMAN",
-        "LIUSI",
-        "VPN",
-        "64MEMO",
-        "GFW",
-        "FREEDOM",
-        "FREECHINA",
-        "LIKEQIANG",
-        "ZHOUYONGKANG",
-        "LICHANGCHUN",
-        "WUBANGGUO",
-        "HEGUOQIANG",
-        "JIANGZEMIN",
-        "JZM",
-        "FUCK",
-        "SHIT",
-        "198964",
-        "GONGCHANDANG",
-        "GCD",
-        "TUGONG",
-        "COMMUNISM",
-        "FALUNGONG",
-        "COMMUNIST",
-        "PARTY",
-        "CCP",
-        "CPC",
-        "HONGZHI",
-        "LIHONGZHI",
-        "LHZ",
-        "DAJIYUAN",
-        "ZANGDU",
-        "DALAI",
-        "MINZHU",
-        "CHINA",
-        "CHINESE",
-        "TAIWAN",
-        "SHABI",
-        "PENIS",
-        "J8",
-        "ISLAM",
-        "ALLHA",
-        "USD",
-        "CNY",
-        "EUR",
-        "AUD",
-        "GBP",
-        "CHF",
-        "UCN",
-        "CURRENCY",
-        "TOKEN",
-        "BALANCE",
-        "EXCHANGE",
-        "TOKEN",
-        "BUY",
-        "SELL",
-        "ASK",
-        "BID",
-        "UID",
-        "ZEN."
-    };
+const std::array<const char *, 64> ban_list = {
+    "HUJINTAO",
+    "WENJIABAO",
+    "WJB",
+    "XIJINPING",
+    "XJP",
+    "TANKMAN",
+    "LIUSI",
+    "VPN",
+    "64MEMO",
+    "GFW",
+    "FREEDOM",
+    "FREECHINA",
+    "LIKEQIANG",
+    "ZHOUYONGKANG",
+    "LICHANGCHUN",
+    "WUBANGGUO",
+    "HEGUOQIANG",
+    "JIANGZEMIN",
+    "JZM",
+    "FUCK",
+    "SHIT",
+    "198964",
+    "GONGCHANDANG",
+    "GCD",
+    "TUGONG",
+    "COMMUNISM",
+    "FALUNGONG",
+    "COMMUNIST",
+    "PARTY",
+    "CCP",
+    "CPC",
+    "HONGZHI",
+    "LIHONGZHI",
+    "LHZ",
+    "DAJIYUAN",
+    "ZANGDU",
+    "DALAI",
+    "MINZHU",
+    "CHINA",
+    "CHINESE",
+    "TAIWAN",
+    "SHABI",
+    "PENIS",
+    "J8",
+    "ISLAM",
+    "ALLHA",
+    "USD",
+    "CNY",
+    "EUR",
+    "AUD",
+    "GBP",
+    "CHF",
+    "UCN",
+    "CURRENCY",
+    "TOKEN",
+    "BALANCE",
+    "EXCHANGE",
+    "TOKEN",
+    "BUY",
+    "SELL",
+    "ASK",
+    "BID",
+    "UID",
+    "ZEN."};
 
-    bool is_sensitive(const std::string& symbol) {
-        for(auto& each : ban_list) {
-            if (symbol.find(each) != std::string::npos) {
-               return true;
-            }
+bool is_sensitive(const std::string &symbol)
+{
+    for (auto &each : ban_list)
+    {
+        if (symbol.find(each) != std::string::npos)
+        {
+            return true;
         }
-        return false;
     }
+    return false;
+}
 
-    const std::array<const char*, 1> forbidden_list = {
-        "UCN"
-    };
+const std::array<const char *, 1> forbidden_list = {
+    "UCN"};
 
-    bool is_forbidden(const std::string& symbol) {
-        for(auto& each : forbidden_list) {
-            if (symbol == each) {
-               return true;
-            }
+bool is_forbidden(const std::string &symbol)
+{
+    for (auto &each : forbidden_list)
+    {
+        if (symbol == each)
+        {
+            return true;
         }
-        return false;
     }
+    return false;
+}
 
-
-} // namespace language
+} // namespace symbol
 } // namespace wallet
 } // namespace libbitcoin
