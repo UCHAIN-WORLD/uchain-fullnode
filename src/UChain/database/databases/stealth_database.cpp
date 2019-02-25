@@ -27,8 +27,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 using namespace bc::chain;
@@ -39,12 +41,12 @@ constexpr size_t prefix_size = sizeof(uint32_t);
 // ephemkey is without sign byte and address is without version byte.
 // [ prefix_bitfield:4 ][ height:32 ][ ephemkey:32 ][ address:20 ][ tx_id:32 ]
 constexpr size_t row_size = prefix_size + height_size + hash_size +
-    short_hash_size + hash_size;
+                            short_hash_size + hash_size;
 
-stealth_database::stealth_database(const path& rows_filename,
-    std::shared_ptr<shared_mutex> mutex)
-  : rows_file_(rows_filename, mutex),
-    rows_manager_(rows_file_, 0, row_size)
+stealth_database::stealth_database(const path &rows_filename,
+                                   std::shared_ptr<shared_mutex> mutex)
+    : rows_file_(rows_filename, mutex),
+      rows_manager_(rows_file_, 0, row_size)
 {
 }
 
@@ -79,9 +81,8 @@ bool stealth_database::create()
 
 bool stealth_database::start()
 {
-    return
-        rows_file_.start() &&
-        rows_manager_.start();
+    return rows_file_.start() &&
+           rows_manager_.start();
 }
 
 bool stealth_database::stop()
@@ -98,8 +99,8 @@ bool stealth_database::close()
 
 // The prefix is fixed at 32 bits, but the filter is 0-32 bits, so the records
 // cannot be indexed using a hash table. We also do not index by height.
-stealth_compact::list stealth_database::scan(const binary& filter,
-    size_t from_height) const
+stealth_compact::list stealth_database::scan(const binary &filter,
+                                             size_t from_height) const
 {
     stealth_compact::list result;
 
@@ -122,11 +123,9 @@ stealth_compact::list stealth_database::scan(const binary& filter,
         // Add row to results.
         auto deserial = make_deserializer_unsafe(record + height_size);
         result.push_back(
-        {
-            deserial.read_hash(),
-            deserial.read_short_hash(),
-            deserial.read_hash()
-        });
+            {deserial.read_hash(),
+             deserial.read_short_hash(),
+             deserial.read_hash()});
     }
 
     // TODO: we could sort result here.
@@ -134,7 +133,7 @@ stealth_compact::list stealth_database::scan(const binary& filter,
 }
 
 void stealth_database::store(uint32_t prefix, uint32_t height,
-    const stealth_compact& row)
+                             const stealth_compact &row)
 {
     // Allocate new row.
     const auto index = rows_manager_.new_records(1);
