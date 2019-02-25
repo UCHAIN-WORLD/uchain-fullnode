@@ -28,8 +28,10 @@
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/result/transaction_result.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 
@@ -37,12 +39,12 @@ BC_CONSTEXPR size_t number_buckets = 100000000;
 BC_CONSTEXPR size_t header_size = slab_hash_table_header_size(number_buckets);
 BC_CONSTEXPR size_t initial_map_file_size = header_size + minimum_slabs_size;
 
-transaction_database::transaction_database(const path& map_filename,
-    std::shared_ptr<shared_mutex> mutex)
-  : lookup_file_(map_filename, mutex),
-    lookup_header_(lookup_file_, number_buckets),
-    lookup_manager_(lookup_file_, header_size),
-    lookup_map_(lookup_header_, lookup_manager_)
+transaction_database::transaction_database(const path &map_filename,
+                                           std::shared_ptr<shared_mutex> mutex)
+    : lookup_file_(map_filename, mutex),
+      lookup_header_(lookup_file_, number_buckets),
+      lookup_manager_(lookup_file_, header_size),
+      lookup_map_(lookup_header_, lookup_manager_)
 {
 }
 
@@ -70,9 +72,8 @@ bool transaction_database::create()
         return false;
 
     // Should not call start after create, already started.
-    return
-        lookup_header_.start() &&
-        lookup_manager_.start();
+    return lookup_header_.start() &&
+           lookup_manager_.start();
 }
 
 // Startup and shutdown.
@@ -81,10 +82,9 @@ bool transaction_database::create()
 // Start files and primitives.
 bool transaction_database::start()
 {
-    return
-        lookup_file_.start() &&
-        lookup_header_.start() &&
-        lookup_manager_.start();
+    return lookup_file_.start() &&
+           lookup_header_.start() &&
+           lookup_manager_.start();
 }
 
 // Stop files.
@@ -101,14 +101,14 @@ bool transaction_database::close()
 
 // ----------------------------------------------------------------------------
 
-transaction_result transaction_database::get(const hash_digest& hash) const
+transaction_result transaction_database::get(const hash_digest &hash) const
 {
     const auto memory = lookup_map_.find(hash);
     return transaction_result(memory);
 }
 
 void transaction_database::store(size_t height, size_t index,
-    const chain::transaction& tx)
+                                 const chain::transaction &tx)
 {
     // Write block data.
     const auto key = tx.hash();
@@ -123,8 +123,7 @@ void transaction_database::store(size_t height, size_t index,
     BITCOIN_ASSERT(tx_size <= max_size_t - 4 - 4);
     const auto value_size = 4 + 4 + static_cast<size_t>(tx_size);
 
-    auto write = [&hight32, &index32, &tx](memory_ptr data)
-    {
+    auto write = [&hight32, &index32, &tx](memory_ptr data) {
         auto serial = make_serializer(REMAP_ADDRESS(data));
         serial.write_4_bytes_little_endian(hight32);
         serial.write_4_bytes_little_endian(index32);
@@ -133,9 +132,10 @@ void transaction_database::store(size_t height, size_t index,
     lookup_map_.store(key, write, value_size);
 }
 
-void transaction_database::remove(const hash_digest& hash)
+void transaction_database::remove(const hash_digest &hash)
 {
-    DEBUG_ONLY(bool success =) lookup_map_.unlink(hash);
+    DEBUG_ONLY(bool success =)
+    lookup_map_.unlink(hash);
     BITCOIN_ASSERT(success);
 }
 

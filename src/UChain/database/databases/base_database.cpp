@@ -28,8 +28,10 @@
 #include <UChain/database/memory/memory.hpp>
 //#include <UChain/database/result/base_result.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 
@@ -37,12 +39,12 @@ BC_CONSTEXPR size_t number_buckets = 9997;
 BC_CONSTEXPR size_t header_size = slab_hash_table_header_size(number_buckets);
 BC_CONSTEXPR size_t initial_map_file_size = header_size + minimum_slabs_size;
 
-base_database::base_database(const path& map_filename,
-    std::shared_ptr<shared_mutex> mutex)
-  : lookup_file_(map_filename, mutex),
-    lookup_header_(lookup_file_, number_buckets),
-    lookup_manager_(lookup_file_, header_size),
-    lookup_map_(lookup_header_, lookup_manager_)
+base_database::base_database(const path &map_filename,
+                             std::shared_ptr<shared_mutex> mutex)
+    : lookup_file_(map_filename, mutex),
+      lookup_header_(lookup_file_, number_buckets),
+      lookup_manager_(lookup_file_, header_size),
+      lookup_map_(lookup_header_, lookup_manager_)
 {
 }
 
@@ -70,9 +72,8 @@ bool base_database::create()
         return false;
 
     // Should not call start after create, already started.
-    return
-        lookup_header_.start() &&
-        lookup_manager_.start();
+    return lookup_header_.start() &&
+           lookup_manager_.start();
 }
 
 // Startup and shutdown.
@@ -81,10 +82,9 @@ bool base_database::create()
 // Start files and primitives.
 bool base_database::start()
 {
-    return
-        lookup_file_.start() &&
-        lookup_header_.start() &&
-        lookup_manager_.start();
+    return lookup_file_.start() &&
+           lookup_header_.start() &&
+           lookup_manager_.start();
 }
 
 // Stop files.
@@ -100,15 +100,16 @@ bool base_database::close()
 }
 
 // ----------------------------------------------------------------------------
-memory_ptr base_database::get(const hash_digest& hash) const
+memory_ptr base_database::get(const hash_digest &hash) const
 {
     const auto memory = lookup_map_.find(hash);
     return memory;
 }
 
-void base_database::remove(const hash_digest& hash)
+void base_database::remove(const hash_digest &hash)
 {
-    DEBUG_ONLY(bool success =) lookup_map_.unlink(hash);
+    DEBUG_ONLY(bool success =)
+    lookup_map_.unlink(hash);
     BITCOIN_ASSERT(success);
 }
 

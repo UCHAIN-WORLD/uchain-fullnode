@@ -28,8 +28,10 @@
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/result/block_result.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 using namespace bc::chain;
@@ -51,14 +53,14 @@ const file_offset block_database::empty = 0;
 //  [ [ tx_hash:32 ] ]
 //  [ [    ...     ] ]
 
-block_database::block_database(const path& map_filename,
-    const path& index_filename, std::shared_ptr<shared_mutex> mutex)
-  : lookup_file_(map_filename, mutex),
-    lookup_header_(lookup_file_, number_buckets),
-    lookup_manager_(lookup_file_, header_size),
-    lookup_map_(lookup_header_, lookup_manager_),
-    index_file_(index_filename, mutex),
-    index_manager_(index_file_, 0, sizeof(file_offset))
+block_database::block_database(const path &map_filename,
+                               const path &index_filename, std::shared_ptr<shared_mutex> mutex)
+    : lookup_file_(map_filename, mutex),
+      lookup_header_(lookup_file_, number_buckets),
+      lookup_manager_(lookup_file_, header_size),
+      lookup_map_(lookup_header_, lookup_manager_),
+      index_file_(index_filename, mutex),
+      index_manager_(index_file_, 0, sizeof(file_offset))
 {
 }
 
@@ -89,10 +91,9 @@ bool block_database::create()
         return false;
 
     // Should not call start after create, already started.
-    return
-        lookup_header_.start() &&
-        lookup_manager_.start() &&
-        index_manager_.start();
+    return lookup_header_.start() &&
+           lookup_manager_.start() &&
+           index_manager_.start();
 }
 
 // Startup and shutdown.
@@ -101,28 +102,25 @@ bool block_database::create()
 // Start files and primitives.
 bool block_database::start()
 {
-    return
-        lookup_file_.start() &&
-        index_file_.start() &&
-        lookup_header_.start() &&
-        lookup_manager_.start() &&
-        index_manager_.start();
+    return lookup_file_.start() &&
+           index_file_.start() &&
+           lookup_header_.start() &&
+           lookup_manager_.start() &&
+           index_manager_.start();
 }
 
 // Stop files.
 bool block_database::stop()
 {
-    return
-        lookup_file_.stop() &&
-        index_file_.stop();
+    return lookup_file_.stop() &&
+           index_file_.stop();
 }
 
 // Close files.
 bool block_database::close()
 {
-    return
-        lookup_file_.close() &&
-        index_file_.close();
+    return lookup_file_.close() &&
+           index_file_.close();
 }
 
 // ----------------------------------------------------------------------------
@@ -137,18 +135,18 @@ block_result block_database::get(size_t height) const
     return block_result(memory);
 }
 
-block_result block_database::get(const hash_digest& hash) const
+block_result block_database::get(const hash_digest &hash) const
 {
     const auto memory = lookup_map_.find(hash);
     return block_result(memory);
 }
 
-void block_database::store(const block& block)
+void block_database::store(const block &block)
 {
     store(block, index_manager_.count());
 }
 
-void block_database::store(const block& block, size_t height)
+void block_database::store(const block &block, size_t height)
 {
     BITCOIN_ASSERT(height <= max_uint32);
     const auto height32 = static_cast<uint32_t>(height);
@@ -158,20 +156,19 @@ void block_database::store(const block& block, size_t height)
     const auto tx_count32 = static_cast<uint32_t>(tx_count);
 
     // Write block data.
-    const auto write = [&](memory_ptr data)
-    {
+    const auto write = [&](memory_ptr data) {
         auto serial = make_serializer(REMAP_ADDRESS(data));
         const auto header_data = block.header.to_data(false);
         serial.write_data(header_data);
         serial.write_4_bytes_little_endian(height32);
         serial.write_4_bytes_little_endian(tx_count32);
 
-        for (const auto& tx: block.transactions)
+        for (const auto &tx : block.transactions)
             serial.write_hash(tx.hash());
     };
 
     const auto key = block.header.hash();
-    const auto value_size = /*148*/76 + 4 + 4 + tx_count * hash_size;
+    const auto value_size = /*148*/ 76 + 4 + 4 + tx_count * hash_size;
 
     // Write block header, height, tx count and hashes to hash table.
     const auto position = lookup_map_.store(key, write, value_size);
@@ -185,9 +182,10 @@ void block_database::unlink(size_t from_height)
     if (index_manager_.count() > from_height)
         index_manager_.set_count(from_height);
 }
-void block_database::remove(const hash_digest& hash)
+void block_database::remove(const hash_digest &hash)
 {
-    DEBUG_ONLY(bool success =) lookup_map_.unlink(hash);
+    DEBUG_ONLY(bool success =)
+    lookup_map_.unlink(hash);
     BITCOIN_ASSERT(success);
 }
 
@@ -248,7 +246,7 @@ file_offset block_database::read_position(array_index height) const
 }
 
 // The index of the highest existing block, independent of gaps.
-bool block_database::top(size_t& out_height) const
+bool block_database::top(size_t &out_height) const
 {
     const auto count = index_manager_.count();
 
@@ -260,7 +258,7 @@ bool block_database::top(size_t& out_height) const
     return true;
 }
 
-bool block_database::gap_range(size_t& out_first, size_t& out_last) const
+bool block_database::gap_range(size_t &out_first, size_t &out_last) const
 {
     size_t first;
     const auto count = index_manager_.count();
@@ -294,7 +292,7 @@ bool block_database::gap_range(size_t& out_first, size_t& out_last) const
     return true;
 }
 
-bool block_database::next_gap(size_t& out_height, size_t start_height) const
+bool block_database::next_gap(size_t &out_height, size_t start_height) const
 {
     const auto count = index_manager_.count();
 
