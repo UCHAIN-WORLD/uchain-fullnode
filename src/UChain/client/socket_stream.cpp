@@ -23,17 +23,19 @@
 #include <cstdint>
 #include <UChain/protocol.hpp>
 
-namespace libbitcoin {
-namespace client {
+namespace libbitcoin
+{
+namespace client
+{
 
 using namespace bc::protocol;
 
-socket_stream::socket_stream(zmq::socket& socket)
-  : socket_(socket)
+socket_stream::socket_stream(zmq::socket &socket)
+    : socket_(socket)
 {
 }
 
-zmq::socket& socket_stream::socket()
+zmq::socket &socket_stream::socket()
 {
     return socket_;
 }
@@ -46,7 +48,7 @@ int32_t socket_stream::refresh()
 
 // TODO: optimize by passing the internal type of the message object.
 // Receieve a message from this socket onto the stream parameter.
-bool socket_stream::read(stream& stream)
+bool socket_stream::read(stream &stream)
 {
     data_stack data;
     zmq::message message;
@@ -77,12 +79,12 @@ bool socket_stream::read(stream& stream)
 
 // TODO: optimize by passing the internal type of the message object.
 // Send a message built from the stack parameter to this socket.
-bool socket_stream::write(const data_stack& data)
+bool socket_stream::write(const data_stack &data)
 {
     zmq::message message;
 
     // Copy the data stack to a message.
-    for (const auto& chunk: data)
+    for (const auto &chunk : data)
         message.enqueue(chunk);
 
     return socket_.send(message) == (code)error::success;

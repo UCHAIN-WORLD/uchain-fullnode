@@ -20,7 +20,8 @@
  */
 #include <UChain/bitcoin/constants.hpp>
 
-namespace libbitcoin {
+namespace libbitcoin
+{
 uint32_t coinbase_maturity = 1;
 
 hash_number max_target()
@@ -32,27 +33,30 @@ hash_number max_target()
 
 std::string get_developer_community_address(bool is_testnet)
 {
-    std::string address("UNKAn2fsG5CPeP4s9mxTvJKSjmqqdwu3Tq");  // developers address for mainnet
-    if (is_testnet) {
-        address = "tJNo92g6DavpaCZbYjrH45iQ8eAKnLqmms";         // developers address for testnet
+    std::string address("UNKAn2fsG5CPeP4s9mxTvJKSjmqqdwu3Tq"); // developers address for mainnet
+    if (is_testnet)
+    {
+        address = "tJNo92g6DavpaCZbYjrH45iQ8eAKnLqmms"; // developers address for testnet
     }
     return address;
 }
 
 std::string get_foundation_address(bool is_testnet)
 {
-    std::string address("UNfrtAxhJRi83PjTPjV3yNPKnjLYR22Bhx");  // foundation address for mainnet
-    if (is_testnet) {
-        address = "tFzJJnso5tKDdwTiztMq1qMg1uHfqbbpq6";         // foundation address for testnet
+    std::string address("UNfrtAxhJRi83PjTPjV3yNPKnjLYR22Bhx"); // foundation address for mainnet
+    if (is_testnet)
+    {
+        address = "tFzJJnso5tKDdwTiztMq1qMg1uHfqbbpq6"; // foundation address for testnet
     }
     return address;
 }
 
 std::string get_reward_pool_address(bool is_testnet)
 {
-    std::string address("UkwAarnHiVUoBi4mHupZ3GyLcVLDxPe9eo");  // foundation address for mainnet
-    if (is_testnet) {
-        address = "tFzJJnso5tKDdwTiztMq1qMg1uHfqbbpq6";         // foundation address for testnet
+    std::string address("UkwAarnHiVUoBi4mHupZ3GyLcVLDxPe9eo"); // foundation address for mainnet
+    if (is_testnet)
+    {
+        address = "tFzJJnso5tKDdwTiztMq1qMg1uHfqbbpq6"; // foundation address for testnet
     }
     return address;
 }
