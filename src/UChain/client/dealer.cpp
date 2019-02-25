@@ -35,22 +35,22 @@
 // By v4 client we can always send the delimiter (expecting v3+ server).
 #undef USE_ADDRESS_DELIMITER
 
-namespace libbitcoin {
-namespace client {
+namespace libbitcoin
+{
+namespace client
+{
 
 using namespace bc::chain;
 using namespace bc::wallet;
 
 typedef boost::iostreams::stream<byte_source<data_chunk>> byte_stream;
 
-static const auto on_update_nop = [](const payment_address&, size_t,
-    const hash_digest&, const transaction&)
-{
+static const auto on_update_nop = [](const payment_address &, size_t,
+                                     const hash_digest &, const transaction &) {
 };
 
-static const auto on_stealth_update_nop = [](const binary&, size_t,
-    const hash_digest&, const transaction&)
-{
+static const auto on_stealth_update_nop = [](const binary &, size_t,
+                                             const hash_digest &, const transaction &) {
 };
 
 static int32_t unsigned_to_signed(uint32_t value)
@@ -60,15 +60,15 @@ static int32_t unsigned_to_signed(uint32_t value)
     return static_cast<int32_t>(capped_signed);
 }
 
-dealer::dealer(stream& out, unknown_handler on_unknown_command,
-    uint32_t timeout_milliseconds, uint8_t resends)
-  : last_request_index_(0),
-    resends_(resends),
-    timeout_milliseconds_(unsigned_to_signed(timeout_milliseconds)),
-    on_unknown_(on_unknown_command),
-    on_update_(on_update_nop),
-    on_stealth_update_(on_stealth_update_nop),
-    out_(out)
+dealer::dealer(stream &out, unknown_handler on_unknown_command,
+               uint32_t timeout_milliseconds, uint8_t resends)
+    : last_request_index_(0),
+      resends_(resends),
+      timeout_milliseconds_(unsigned_to_signed(timeout_milliseconds)),
+      on_unknown_(on_unknown_command),
+      on_update_(on_update_nop),
+      on_stealth_update_(on_stealth_update_nop),
+      out_(out)
 {
 }
 
@@ -82,9 +82,9 @@ bool dealer::empty() const
     return pending_.empty();
 }
 
-void dealer::clear(const code& code)
+void dealer::clear(const code &code)
 {
-    for (const auto& request: pending_)
+    for (const auto &request : pending_)
         request.second.on_error(code);
 
     pending_.clear();
@@ -125,7 +125,7 @@ int32_t dealer::refresh()
             // A zmq router drops messages as it reaches the high water mark.
             request->second.resends++;
             request->second.deadline = asio::steady_clock::now() +
-                asio::milliseconds(timeout_milliseconds_);
+                                       asio::milliseconds(timeout_milliseconds_);
 
             // Timed out and not done, go to sleep for no more than timeout.
             interval = std::min(interval, timeout_milliseconds_);
@@ -147,7 +147,7 @@ int32_t dealer::refresh()
 }
 
 // Return time to deadline in milliseconds.
-int32_t dealer::remaining(const asio::time_point& deadline)
+int32_t dealer::remaining(const asio::time_point &deadline)
 {
     // Convert bounds to the larger type of the conversion.
     static constexpr auto maximum = static_cast<int64_t>(max_int32);
@@ -156,7 +156,8 @@ int32_t dealer::remaining(const asio::time_point& deadline)
     // Get the remaining time in milliseconds (may be negative).
     const auto remainder = deadline - asio::steady_clock::now();
     const auto count = std::chrono::duration_cast<asio::milliseconds>(
-        remainder).count();
+                           remainder)
+                           .count();
 
     // Prevent overflow and underflow in the conversion to int32.
     const auto capped = std::min(count, maximum);
@@ -166,13 +167,13 @@ int32_t dealer::remaining(const asio::time_point& deadline)
 
 // Create a message with identity and send it via the message stream.
 // This is invoked by derived class message senders, such as the proxy.
-bool dealer::send_request(const std::string& command,
-    const data_chunk& payload, error_handler on_error, decoder on_reply)
+bool dealer::send_request(const std::string &command,
+                          const data_chunk &payload, error_handler on_error, decoder on_reply)
 {
     const auto now = asio::steady_clock::now();
     const auto id = ++last_request_index_;
-    auto& request = pending_[id];
-    request.message = obelisk_message{ command, id, payload };
+    auto &request = pending_[id];
+    request.message = obelisk_message{command, id, payload};
     request.on_error = on_error;
     request.on_reply = on_reply;
     request.resends = 0;
@@ -181,7 +182,7 @@ bool dealer::send_request(const std::string& command,
 }
 
 // Send or resend an existing message by writing it to the message stream.
-bool dealer::send(const obelisk_message& message)
+bool dealer::send(const obelisk_message &message)
 {
     data_stack data;
 
@@ -198,13 +199,13 @@ bool dealer::send(const obelisk_message& message)
 }
 
 // Stream interface, not utilized on this class.
-bool dealer::read(stream& stream)
+bool dealer::read(stream &stream)
 {
     return false;
 }
 
 // stream interface.
-bool dealer::write(const data_stack& data)
+bool dealer::write(const data_stack &data)
 {
     if (data.size() < 3 || data.size() > 4)
         return false;
@@ -235,7 +236,7 @@ bool dealer::write(const data_stack& data)
 }
 
 // Handle a message, call from write.
-bool dealer::receive(const obelisk_message& message)
+bool dealer::receive(const obelisk_message &message)
 {
     // Subscription updates are not tracked in pending.
     if (message.command == "address.update")
@@ -263,8 +264,8 @@ bool dealer::receive(const obelisk_message& message)
     return true;
 }
 
-void dealer::decode_reply(const obelisk_message& message,
-    error_handler& on_error, decoder& on_reply)
+void dealer::decode_reply(const obelisk_message &message,
+                          error_handler &on_error, decoder &on_reply)
 {
     byte_stream istream(message.payload);
     istream_reader source(istream);
@@ -277,7 +278,7 @@ void dealer::decode_reply(const obelisk_message& message,
         on_error(error::bad_stream);
 }
 
-void dealer::decode_payment_update(const obelisk_message& message)
+void dealer::decode_payment_update(const obelisk_message &message)
 {
     byte_stream istream(message.payload);
     istream_reader source(istream);
@@ -300,7 +301,7 @@ void dealer::decode_payment_update(const obelisk_message& message)
     on_update_(address, height, block_hash, tx);
 }
 
-void dealer::decode_stealth_update(const obelisk_message& message)
+void dealer::decode_stealth_update(const obelisk_message &message)
 {
     byte_stream istream(message.payload);
     istream_reader source(istream);

@@ -29,8 +29,10 @@ using namespace bc::config;
 using namespace bc::protocol;
 using namespace std::this_thread;
 
-namespace libbitcoin {
-namespace client {
+namespace libbitcoin
+{
+namespace client
+{
 
 static uint32_t to_milliseconds(uint16_t seconds)
 {
@@ -38,30 +40,30 @@ static uint32_t to_milliseconds(uint16_t seconds)
     return std::min(milliseconds, max_uint32);
 };
 
-static const auto on_unknown = [](const std::string&){};
+static const auto on_unknown = [](const std::string &) {};
 
 // Retries is overloaded as configuration for resends as well.
 // Timeout is capped at ~ 25 days by signed/millsecond conversions.
 obelisk_client::obelisk_client(uint16_t timeout_seconds, uint8_t retries)
-  : socket_(context_, zmq::socket::role::dealer),
-    stream_(socket_),
-    retries_(retries),
-    proxy(stream_, on_unknown, to_milliseconds(timeout_seconds), retries)
+    : socket_(context_, zmq::socket::role::dealer),
+      stream_(socket_),
+      retries_(retries),
+      proxy(stream_, on_unknown, to_milliseconds(timeout_seconds), retries)
 {
 }
 
-obelisk_client::obelisk_client(const connection_type& channel)
-  : obelisk_client(channel.timeout_seconds, channel.retries)
+obelisk_client::obelisk_client(const connection_type &channel)
+    : obelisk_client(channel.timeout_seconds, channel.retries)
 {
 }
 
-bool obelisk_client::connect(const connection_type& channel)
+bool obelisk_client::connect(const connection_type &channel)
 {
     return connect(channel.server, channel.server_public_key,
-        channel.client_private_key);
+                   channel.client_private_key);
 }
 
-bool obelisk_client::connect(const endpoint& address)
+bool obelisk_client::connect(const endpoint &address)
 {
     const auto host_address = address.to_string();
 
@@ -77,8 +79,8 @@ bool obelisk_client::connect(const endpoint& address)
     return false;
 }
 
-bool obelisk_client::connect(const endpoint& address,
-    const sodium& server_public_key, const sodium& client_private_key)
+bool obelisk_client::connect(const endpoint &address,
+                             const sodium &server_public_key, const sodium &client_private_key)
 {
     // Only apply the client (and server) key if server key is configured.
     if (server_public_key)
@@ -87,7 +89,7 @@ bool obelisk_client::connect(const endpoint& address,
             return false;
 
         // Generates arbitrary client keys if private key is not configured.
-        if (!socket_.set_certificate({ client_private_key }))
+        if (!socket_.set_certificate({client_private_key}))
             return false;
     }
 
@@ -115,7 +117,7 @@ void obelisk_client::wait()
 void obelisk_client::monitor(uint32_t timeout_seconds)
 {
     const auto deadline = asio::steady_clock::now() +
-        asio::seconds(timeout_seconds);
+                          asio::seconds(timeout_seconds);
 
     zmq::poller poller;
     poller.add(socket_);
