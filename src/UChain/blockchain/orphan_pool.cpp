@@ -24,8 +24,10 @@
 #include <cstddef>
 #include <UChain/blockchain/block_detail.hpp>
 
-namespace libbitcoin {
-namespace blockchain {
+namespace libbitcoin
+{
+namespace blockchain
+{
 
 orphan_pool::orphan_pool(size_t capacity)
 {
@@ -35,7 +37,7 @@ orphan_pool::orphan_pool(size_t capacity)
 // There is no validation whatsoever of the block up to this pont.
 bool orphan_pool::add(block_detail::ptr block)
 {
-    const auto& header = block->actual()->header;
+    const auto &header = block->actual()->header;
 
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -94,7 +96,7 @@ void orphan_pool::remove(block_detail::ptr block)
 // TODO: use hash table pool to eliminate this O(n^2) search.
 void orphan_pool::filter(message::get_data::ptr message) const
 {
-    auto& inventories = message->inventories;
+    auto &inventories = message->inventories;
 
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -155,10 +157,10 @@ block_detail::list orphan_pool::unprocessed() const
     return unprocessed;
 }
 
-bool orphan_pool::add_pending_block(const hash_digest& needed_block, const block_detail::ptr& pending_block)
+bool orphan_pool::add_pending_block(const hash_digest &needed_block, const block_detail::ptr &pending_block)
 {
     auto hash = pending_block->actual()->header.hash();
-    if(pending_blocks_hash_.find(hash) != pending_blocks_hash_.end())
+    if (pending_blocks_hash_.find(hash) != pending_blocks_hash_.end())
     {
         return false;
     }
@@ -168,11 +170,11 @@ bool orphan_pool::add_pending_block(const hash_digest& needed_block, const block
     return true;
 }
 
-block_detail::ptr orphan_pool::delete_pending_block(const hash_digest& needed_block)
+block_detail::ptr orphan_pool::delete_pending_block(const hash_digest &needed_block)
 {
     block_detail::ptr ret;
     auto it = pending_blocks_.find(needed_block);
-    if(it != pending_blocks_.end())
+    if (it != pending_blocks_.end())
     {
         ret = it->second;
         pending_blocks_hash_.erase(it->second->actual()->header.hash());
@@ -185,20 +187,18 @@ block_detail::ptr orphan_pool::delete_pending_block(const hash_digest& needed_bl
 // private
 //-----------------------------------------------------------------------------
 
-bool orphan_pool::exists(const hash_digest& hash) const
+bool orphan_pool::exists(const hash_digest &hash) const
 {
-    const auto match = [&hash](const block_detail::ptr& entry)
-    {
+    const auto match = [&hash](const block_detail::ptr &entry) {
         return hash == entry->hash();
     };
 
     return std::any_of(buffer_.begin(), buffer_.end(), match);
 }
 
-bool orphan_pool::exists(const chain::header& header) const
+bool orphan_pool::exists(const chain::header &header) const
 {
-    const auto match = [&header](const block_detail::ptr& entry)
-    {
+    const auto match = [&header](const block_detail::ptr &entry) {
         return header == entry->actual()->header;
     };
 
@@ -217,10 +217,9 @@ orphan_pool::const_iterator orphan_pool::find(buffer::const_iterator begin, cons
 }
 */
 
-orphan_pool::const_reverse_iterator orphan_pool::rfind(buffer::const_reverse_iterator begin, const hash_digest& hash) const
+orphan_pool::const_reverse_iterator orphan_pool::rfind(buffer::const_reverse_iterator begin, const hash_digest &hash) const
 {
-    const auto match = [&hash](const block_detail::ptr& entry)
-    {
+    const auto match = [&hash](const block_detail::ptr &entry) {
         return hash == entry->hash();
     };
 
