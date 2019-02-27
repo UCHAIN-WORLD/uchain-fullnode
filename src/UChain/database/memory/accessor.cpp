@@ -24,13 +24,15 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/define.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 #ifdef REMAP_SAFETY
 
-accessor::accessor(shared_mutex& mutex, uint8_t*& data)
-  : mutex_(mutex)
+accessor::accessor(shared_mutex &mutex, uint8_t *&data)
+    : mutex_(mutex)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Begin Critical Section
@@ -44,7 +46,7 @@ accessor::accessor(shared_mutex& mutex, uint8_t*& data)
     data_ = data;
 }
 
-uint8_t* accessor::buffer()
+uint8_t *accessor::buffer()
 {
     return data_;
 }

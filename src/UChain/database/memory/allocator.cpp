@@ -24,14 +24,16 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/define.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 #ifdef REMAP_SAFETY
 
-allocator::allocator(shared_mutex& mutex)
-  : mutex_(mutex),
-    data_(nullptr)
+allocator::allocator(shared_mutex &mutex)
+    : mutex_(mutex),
+      data_(nullptr)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Begin Critical Section
@@ -40,7 +42,7 @@ allocator::allocator(shared_mutex& mutex)
     mutex_.lock();
 }
 
-uint8_t* allocator::buffer()
+uint8_t *allocator::buffer()
 {
     BITCOIN_ASSERT_MSG(data_ != nullptr, "Downgrade must be called.");
     return data_;
@@ -53,7 +55,7 @@ void allocator::increment(size_t value)
 }
 
 // protected/friend
-void allocator::downgrade(uint8_t* data)
+void allocator::downgrade(uint8_t *data)
 {
     BITCOIN_ASSERT_MSG(data != nullptr, "Invalid pointer value.");
 
