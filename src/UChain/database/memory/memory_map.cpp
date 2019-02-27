@@ -23,18 +23,18 @@
 #include <iostream>
 
 #ifdef _WIN32
-    #include <io.h>
-    #ifdef __MINGW32__
-        #include "../mman-mingw/mman.h"
-    #else
-        #include "../mman-win32/mman.h"
-    #endif  
-    #define FILE_OPEN_PERMISSIONS _S_IREAD | _S_IWRITE
+#include <io.h>
+#ifdef __MINGW32__
+#include "../mman-mingw/mman.h"
 #else
-    #include <unistd.h>
-    #include <stddef.h>
-    #include <sys/mman.h>
-    #define FILE_OPEN_PERMISSIONS S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
+#include "../mman-win32/mman.h"
+#endif
+#define FILE_OPEN_PERMISSIONS _S_IREAD | _S_IWRITE
+#else
+#include <unistd.h>
+#include <stddef.h>
+#include <sys/mman.h>
+#define FILE_OPEN_PERMISSIONS S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
 #endif
 #include <cstddef>
 #include <cstdint>
@@ -53,11 +53,13 @@
 // memory_map is be able to support 32 bit but because the database
 // requires a larger file this is not validated or supported.
 #ifndef __ANDROID__
-static_assert(sizeof(void*) == sizeof(uint64_t), "Not a 64 bit system!");
+static_assert(sizeof(void *) == sizeof(uint64_t), "Not a 64 bit system!");
 #endif
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using boost::filesystem::path;
 
@@ -69,8 +71,8 @@ size_t memory_map::file_size(int file_handle)
     if (file_handle == -1)
         return 0;
 
-    // This is required because off_t is defined as long, whcih is 32 bits in
-    // msvc and 64 bits in linux/osx, and stat contains off_t.
+        // This is required because off_t is defined as long, whcih is 32 bits in
+        // msvc and 64 bits in linux/osx, and stat contains off_t.
 #ifdef _WIN32
 #ifdef _WIN64
     struct _stat64 sbuf;
@@ -92,20 +94,20 @@ size_t memory_map::file_size(int file_handle)
     return static_cast<size_t>(sbuf.st_size);
 }
 
-int memory_map::open_file(const path& filename)
+int memory_map::open_file(const path &filename)
 {
 #ifdef _WIN32
     int handle = _wopen(filename.wstring().c_str(), O_RDWR,
-        FILE_OPEN_PERMISSIONS);
+                        FILE_OPEN_PERMISSIONS);
 #else
     int handle = open(filename.string().c_str(), O_RDWR,
-        FILE_OPEN_PERMISSIONS);
+                      FILE_OPEN_PERMISSIONS);
 #endif
     return handle;
 }
 
-bool memory_map::handle_error(const std::string& context,
-    const path& filename)
+bool memory_map::handle_error(const std::string &context,
+                              const path &filename)
 {
 #ifdef _WIN32
     const auto error = GetLastError();
@@ -138,19 +140,19 @@ void memory_map::log_unmapped()
 }
 
 // mmap documentation: tinyurl.com/hnbw8t5
-memory_map::memory_map(const path& filename)
-  : file_handle_(open_file(filename)),
-    filename_(filename),
-    data_(nullptr),
-    file_size_(file_size(file_handle_)),
-    logical_size_(file_size_),
-    closed_(true),
-    stopped_(true)
+memory_map::memory_map(const path &filename)
+    : file_handle_(open_file(filename)),
+      filename_(filename),
+      data_(nullptr),
+      file_size_(file_size(file_handle_)),
+      logical_size_(file_size_),
+      closed_(true),
+      stopped_(true)
 {
 }
 
-memory_map::memory_map(const path& filename, mutex_ptr mutex)
-  : memory_map(filename)
+memory_map::memory_map(const path &filename, mutex_ptr mutex)
+    : memory_map(filename)
 {
     remap_mutex_ = mutex;
 }
@@ -379,8 +381,8 @@ bool memory_map::map(size_t size)
     if (size == 0)
         return false;
 
-    data_ = reinterpret_cast<uint8_t*>(mmap(0, size, PROT_READ | PROT_WRITE,
-        MAP_SHARED, file_handle_, 0));
+    data_ = reinterpret_cast<uint8_t *>(mmap(0, size, PROT_READ | PROT_WRITE,
+                                             MAP_SHARED, file_handle_, 0));
 
     return validate(size);
 }
@@ -388,8 +390,8 @@ bool memory_map::map(size_t size)
 bool memory_map::remap(size_t size)
 {
 #ifdef MREMAP_MAYMOVE
-    data_ = reinterpret_cast<uint8_t*>(mremap(data_, file_size_, size,
-        MREMAP_MAYMOVE));
+    data_ = reinterpret_cast<uint8_t *>(mremap(data_, file_size_, size,
+                                               MREMAP_MAYMOVE));
 
     return validate(size);
 #else
