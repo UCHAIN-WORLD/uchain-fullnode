@@ -10,7 +10,7 @@
 #include <io.h>
 
 #ifndef FILE_MAP_EXECUTE
-    #define FILE_MAP_EXECUTE 0x0020
+#define FILE_MAP_EXECUTE 0x0020
 #endif
 
 /* private functions */
@@ -34,8 +34,7 @@ static DWORD protect_page(const int prot)
 
     if ((prot & PROT_EXEC) != 0)
     {
-        protect = ((prot & PROT_WRITE) != 0) ? PAGE_EXECUTE_READWRITE :
-            PAGE_EXECUTE_READ;
+        protect = ((prot & PROT_WRITE) != 0) ? PAGE_EXECUTE_READWRITE : PAGE_EXECUTE_READ;
     }
     else
     {
@@ -66,23 +65,23 @@ static DWORD protect_file(const int prot)
 
 /* public interface */
 
-void* mmap(void* addr, size_t len, int prot, int flags, int fildes, oft__ off)
+void *mmap(void *addr, size_t len, int prot, int flags, int fildes, oft__ off)
 {
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4293)
+#pragma warning(disable : 4293)
 #endif
 
-    const DWORD access  = protect_file(prot);
+    const DWORD access = protect_file(prot);
     const DWORD protect = protect_page(prot);
 
     const oft__ max = off + (oft__)len;
     const int less = (sizeof(oft__) <= sizeof(DWORD));
 
-    const DWORD max_lo  = less ? (DWORD)max : (DWORD)((max      ) & MAXDWORD);
-    const DWORD max_hi  = less ? (DWORD)0   : (DWORD)((max >> 32) & MAXDWORD);
-    const DWORD file_lo = less ? (DWORD)off : (DWORD)((off      ) & MAXDWORD);
-    const DWORD file_hi = less ? (DWORD)0   : (DWORD)((off >> 32) & MAXDWORD);
+    const DWORD max_lo = less ? (DWORD)max : (DWORD)((max)&MAXDWORD);
+    const DWORD max_hi = less ? (DWORD)0 : (DWORD)((max >> 32) & MAXDWORD);
+    const DWORD file_lo = less ? (DWORD)off : (DWORD)((off)&MAXDWORD);
+    const DWORD file_hi = less ? (DWORD)0 : (DWORD)((off >> 32) & MAXDWORD);
 
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -96,8 +95,7 @@ void* mmap(void* addr, size_t len, int prot, int flags, int fildes, oft__ off)
         return MAP_FAILED;
     }
 
-    const HANDLE handle = ((flags & MAP_ANONYMOUS) == 0) ?
-        (HANDLE)_get_osfhandle(fildes) : INVALID_HANDLE_VALUE;
+    const HANDLE handle = ((flags & MAP_ANONYMOUS) == 0) ? (HANDLE)_get_osfhandle(fildes) : INVALID_HANDLE_VALUE;
 
     if ((flags & MAP_ANONYMOUS) == 0 && handle == INVALID_HANDLE_VALUE)
     {
@@ -106,7 +104,7 @@ void* mmap(void* addr, size_t len, int prot, int flags, int fildes, oft__ off)
     }
 
     const HANDLE mapping = CreateFileMapping(handle, NULL, protect, max_hi,
-        max_lo, NULL);
+                                             max_lo, NULL);
 
     if (mapping == NULL)
     {
@@ -126,7 +124,7 @@ void* mmap(void* addr, size_t len, int prot, int flags, int fildes, oft__ off)
     return map;
 }
 
-int munmap(void* addr, size_t len)
+int munmap(void *addr, size_t len)
 {
     if (UnmapViewOfFile(addr) != FALSE)
         return 0;
@@ -135,16 +133,16 @@ int munmap(void* addr, size_t len)
     return -1;
 }
 
-int madvise(void* addr, size_t len, int advice)
+int madvise(void *addr, size_t len, int advice)
 {
 
-#if(_WIN32_WINNT >= _WIN32_WINNT_WIN8)
-	PrefetchVirtualMemory(GetCurrentProcess(), len, addr, 0);
+#if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
+    PrefetchVirtualMemory(GetCurrentProcess(), len, addr, 0);
 #endif
     return 0;
 }
 
-int mprotect(void* addr, size_t len, int prot)
+int mprotect(void *addr, size_t len, int prot)
 {
     DWORD old_protect = 0;
     const DWORD new_protect = protect_page(prot);
@@ -156,7 +154,7 @@ int mprotect(void* addr, size_t len, int prot)
     return -1;
 }
 
-int msync(void* addr, size_t len, int flags)
+int msync(void *addr, size_t len, int flags)
 {
     if (FlushViewOfFile(addr, len) != FALSE)
         return 0;
@@ -165,7 +163,7 @@ int msync(void* addr, size_t len, int flags)
     return -1;
 }
 
-int mlock(const void* addr, size_t len)
+int mlock(const void *addr, size_t len)
 {
     if (VirtualLock((LPVOID)addr, len) != FALSE)
         return 0;
@@ -174,7 +172,7 @@ int mlock(const void* addr, size_t len)
     return -1;
 }
 
-int munlock(const void* addr, size_t len)
+int munlock(const void *addr, size_t len)
 {
     if (VirtualUnlock((LPVOID)addr, len) != FALSE)
         return 0;
@@ -221,15 +219,15 @@ int ftruncate(int fd, oft__ size)
 
         switch (error)
         {
-            case ERROR_INVALID_HANDLE:
-                errno = EBADF;
-                break;
-            case ERROR_DISK_FULL:
-                errno = ENOSPC;
-                break;
-            default:
-                errno = EIO;
-                break;
+        case ERROR_INVALID_HANDLE:
+            errno = EBADF;
+            break;
+        case ERROR_DISK_FULL:
+            errno = ENOSPC;
+            break;
+        default:
+            errno = EIO;
+            break;
         }
 
         return -1;
