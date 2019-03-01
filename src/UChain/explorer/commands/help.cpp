@@ -27,16 +27,17 @@
 #include <UChain/explorer/display.hpp>
 #include <UChain/explorer/generated.hpp>
 
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-console_result help::invoke(std::ostream& output, std::ostream& error)
+console_result help::invoke(std::ostream &output, std::ostream &error)
 {
     // Bound parameters.
-    const auto& symbol = get_command_argument();
+    const auto &symbol = get_command_argument();
 
     if (symbol.empty())
     {

@@ -29,16 +29,18 @@
 #include <UChain/explorer/display.hpp>
 #include <UChain/explorer/utility.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::client;
 
-console_result send_tx::invoke(std::ostream& output, std::ostream& error)
+console_result send_tx::invoke(std::ostream &output, std::ostream &error)
 {
     // Bound parameters.
-    const auto& transaction = get_transaction_argument();
+    const auto &transaction = get_transaction_argument();
     const auto connection = get_connection(*this);
 
     obelisk_client client(connection);
@@ -51,13 +53,11 @@ console_result send_tx::invoke(std::ostream& output, std::ostream& error)
 
     callback_state state(error, output);
 
-    auto on_done = [&state]()
-    {
+    auto on_done = [&state]() {
         state.output(std::string(BX_SEND_TX_OUTPUT));
     };
 
-    auto on_error = [&state](const code& error)
-    {
+    auto on_error = [&state](const code &error) {
         state.succeeded(error);
     };
 

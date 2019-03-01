@@ -27,17 +27,19 @@
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/utility.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
-console_result commands::settings::invoke(std::ostream& output,
-    std::ostream& error)
+console_result commands::settings::invoke(std::ostream &output,
+                                          std::ostream &error)
 {
     // bound parameters
-    const auto& encoding = get_format_option();
+    const auto &encoding = get_format_option();
 
     // TODO: look into serializer object quoting.
     // TODO: load from metadata into settings list.
@@ -76,11 +78,11 @@ console_result commands::settings::invoke(std::ostream& output,
         get_network_error_file_setting().string();
 
     network::settings settings(bc::settings::mainnet);
-    const auto& nodes = get_network_seeds_setting();
-    const auto& seeds = nodes.empty() ? settings.seeds : nodes;
+    const auto &nodes = get_network_seeds_setting();
+    const auto &seeds = nodes.empty() ? settings.seeds : nodes;
 
     std::vector<std::string> buffer;
-    for (const auto& node: seeds)
+    for (const auto &node : seeds)
         buffer.push_back(node.to_string());
 
     list["network.seeds"] = join(buffer, ",");
