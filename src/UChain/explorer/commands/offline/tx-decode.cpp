@@ -26,17 +26,19 @@
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/utility.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
-console_result tx_decode::invoke(std::ostream& output, std::ostream& error)
+console_result tx_decode::invoke(std::ostream &output, std::ostream &error)
 {
     // Bound parameters.
-    const auto& encoding = get_format_option();
-    const auto& transaction = get_transaction_argument();
+    const auto &encoding = get_format_option();
+    const auto &transaction = get_transaction_argument();
 
     // This enables json-style array formatting.
     const auto json = encoding == encoding_engine::json;
