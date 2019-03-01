@@ -28,13 +28,15 @@
 #include <boost/filesystem.hpp>
 #include <UChain/bitcoin.hpp>
 #include <UChainService/txs/utility/path.hpp>
-#include <UChain/bitcoin/config/base16.hpp>  // used by db_metadata and push_asset
+#include <UChain/bitcoin/config/base16.hpp> // used by db_metadata and push_asset
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/settings.hpp>
 #include <UChain/database/version.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 using namespace bc::chain;
@@ -44,11 +46,11 @@ using namespace libbitcoin::config;
 // BIP30 exception blocks.
 // github.com/bitcoin/bips/blob/master/bip-0030.mediawiki#specification
 static const config::checkpoint exception1 =
-{ "00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842 };
+    {"00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec", 91842};
 static const config::checkpoint exception2 =
-{ "00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721", 91880 };
+    {"00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721", 91880};
 
-bool data_base::touch_file(const path& file_path)
+bool data_base::touch_file(const path &file_path)
 {
     bc::ofstream file(file_path.string());
     if (file.bad())
@@ -59,7 +61,7 @@ bool data_base::touch_file(const path& file_path)
     return true;
 }
 
-bool data_base::initialize(const path& prefix, const chain::block& genesis)
+bool data_base::initialize(const path &prefix, const chain::block &genesis)
 {
     // Create paths.
     const store paths(prefix);
@@ -69,7 +71,8 @@ bool data_base::initialize(const path& prefix, const chain::block& genesis)
 
     data_base instance(paths, 0, 0);
 
-    if (!instance.create()) {
+    if (!instance.create())
+    {
         return false;
     }
     auto metadata_path = prefix / db_metadata::file_name;
@@ -79,7 +82,7 @@ bool data_base::initialize(const path& prefix, const chain::block& genesis)
     return instance.stop();
 }
 
-bool data_base::initialize_uids(const path& prefix)
+bool data_base::initialize_uids(const path &prefix)
 {
     const store paths(prefix);
     if (paths.uids_exist())
@@ -99,7 +102,7 @@ bool data_base::initialize_uids(const path& prefix)
     return instance.stop();
 }
 
-bool data_base::initialize_tokens(const path& prefix)
+bool data_base::initialize_tokens(const path &prefix)
 {
     const store paths(prefix);
     if (paths.tokens_exist())
@@ -118,7 +121,7 @@ bool data_base::initialize_tokens(const path& prefix)
     return instance.stop();
 }
 
-bool data_base::initialize_certs(const path& prefix)
+bool data_base::initialize_certs(const path &prefix)
 {
     const store paths(prefix);
     if (paths.certs_exist())
@@ -136,7 +139,7 @@ bool data_base::initialize_certs(const path& prefix)
     return instance.stop();
 }
 
-bool data_base::initialize_candidates(const path& prefix)
+bool data_base::initialize_candidates(const path &prefix)
 {
     const store paths(prefix);
     if (paths.candidates_exist())
@@ -156,7 +159,7 @@ bool data_base::initialize_candidates(const path& prefix)
     return instance.stop();
 }
 
-bool data_base::upgrade_version_63(const path& prefix)
+bool data_base::upgrade_version_63(const path &prefix)
 {
     auto metadata_path = prefix / db_metadata::file_name;
     if (!boost::filesystem::exists(metadata_path))
@@ -164,29 +167,34 @@ bool data_base::upgrade_version_63(const path& prefix)
 
     data_base::db_metadata metadata;
     data_base::read_metadata(metadata_path, metadata);
-    if (metadata.version_.empty()) {
+    if (metadata.version_.empty())
+    {
         return false; // no version before, initialize all intead of upgrade.
     }
 
-    if (!initialize_uids(prefix)) {
+    if (!initialize_uids(prefix))
+    {
         log::error(LOG_DATABASE)
             << "Failed to upgrade uid database.";
         return false;
     }
 
-    if (!initialize_certs(prefix)) {
+    if (!initialize_certs(prefix))
+    {
         log::error(LOG_DATABASE)
             << "Failed to upgrade cert database.";
         return false;
     }
 
-    if (!initialize_candidates(prefix)) {
+    if (!initialize_candidates(prefix))
+    {
         log::error(LOG_DATABASE)
             << "Failed to upgrade candidate database.";
         return false;
     }
 
-    if (metadata.version_ != db_metadata::current_version) {
+    if (metadata.version_ != db_metadata::current_version)
+    {
         // write new db version to metadata
         metadata = db_metadata(db_metadata::current_version);
         data_base::write_metadata(metadata_path, metadata);
@@ -195,7 +203,7 @@ bool data_base::upgrade_version_63(const path& prefix)
     return true;
 }
 
-void data_base::set_admin(const std::string& name, const std::string& passwd)
+void data_base::set_admin(const std::string &name, const std::string &passwd)
 {
     wallets.set_admin(name, passwd);
 }
@@ -203,7 +211,7 @@ void data_base::set_admin(const std::string& name, const std::string& passwd)
 void data_base::set_blackhole_uid()
 {
     const std::string uid_symbol = UC_BLACKHOLE_UID_SYMBOL;
-    const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
+    const std::string &uid_address = bc::wallet::payment_address::blackhole_address;
     uid_detail blackholeuiddetail(uid_symbol, uid_address);
     data_chunk blackholedata(uid_address.begin(), uid_address.end());
     short_hash blackholedatahash = ripemd160_hash(blackholedata);
@@ -214,33 +222,32 @@ void data_base::set_blackhole_uid()
     data_chunk rewardpooldata(rewardpool_uid_address.begin(), rewardpool_uid_address.end());
     short_hash rewardpoolhash = ripemd160_hash(rewardpooldata);*/
 
-    output_point outpoint = { null_hash, max_uint32 };
+    output_point outpoint = {null_hash, max_uint32};
     uint64_t value = 0;
 
     push_uid_detail(blackholeuiddetail, blackholedatahash, outpoint, max_uint32, value);
     //push_uid_detail(rewardpooluiddetail, rewardpoolhash, outpoint, 0, value);
-    
+
     //synchronize_uids();
 }
 
 void data_base::set_block_vote_token()
 {
-    const std::string& uid_address = bc::wallet::payment_address::blackhole_address;
+    const std::string &uid_address = bc::wallet::payment_address::blackhole_address;
     token_detail blocktokendetail(
-    UC_BLOCK_TOKEN_SYMBOL, 0,
-    1, 0, UC_BLACKHOLE_UID_SYMBOL,
-    bc::wallet::payment_address::blackhole_address, "'BLOCK' token is issued by blackhole.Miners can use it to get reward");
+        UC_BLOCK_TOKEN_SYMBOL, 0,
+        1, 0, UC_BLACKHOLE_UID_SYMBOL,
+        bc::wallet::payment_address::blackhole_address, "'BLOCK' token is issued by blackhole.Miners can use it to get reward");
 
     token_detail votetokendetail(
-    UC_VOTE_TOKEN_SYMBOL, 0,
-    1, 0, UC_BLACKHOLE_UID_SYMBOL,
-    bc::wallet::payment_address::blackhole_address, "'VOTE' token is issued by blackhole.Users can use it to vote.");
-
+        UC_VOTE_TOKEN_SYMBOL, 0,
+        1, 0, UC_BLACKHOLE_UID_SYMBOL,
+        bc::wallet::payment_address::blackhole_address, "'VOTE' token is issued by blackhole.Users can use it to vote.");
 
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
 
-    output_point outpoint = { null_hash, max_uint32 };
+    output_point outpoint = {null_hash, max_uint32};
     uint32_t output_height = max_uint32;
     uint64_t value = 0;
 
@@ -251,23 +258,23 @@ void data_base::set_block_vote_token()
 
 void data_base::set_reward_pool_candidate()
 {
-    const std::string& uid_address = get_reward_pool_address(false);
+    const std::string &uid_address = get_reward_pool_address(false);
     candidate candidatedetail(
-    UC_REWARD_POOL_CANDIDATE_SYMBOL, uid_address, 
-    "'reward_pool_miner' candidate is issued by reward_pool just to maintain blockchain when there is no any other miner.",CANDIDATE_STATUS_REGISTER);
+        UC_REWARD_POOL_CANDIDATE_SYMBOL, uid_address,
+        "'reward_pool_miner' candidate is issued by reward_pool just to maintain blockchain when there is no any other miner.", CANDIDATE_STATUS_REGISTER);
 
     data_chunk data(uid_address.begin(), uid_address.end());
     short_hash hash = ripemd160_hash(data);
 
-    output_point outpoint = { null_hash, max_uint32 };
+    output_point outpoint = {null_hash, max_uint32};
     uint32_t output_height = max_uint32;
     uint64_t value = 0;
 
-    push_candidate(candidatedetail, hash, outpoint, output_height, value, UC_REWARD_POOL_UID_SYMBOL,UC_REWARD_POOL_UID_SYMBOL);
+    push_candidate(candidatedetail, hash, outpoint, output_height, value, UC_REWARD_POOL_UID_SYMBOL, UC_REWARD_POOL_UID_SYMBOL);
     //synchronize_candidates();
 }
 
-data_base::store::store(const path& prefix)
+data_base::store::store(const path &prefix)
 {
     // Hash-based lookup (hash tables).
     blocks_lookup = prefix / "block_table";
@@ -276,23 +283,23 @@ data_base::store::store(const path& prefix)
     transactions_lookup = prefix / "transaction_table";
     /* begin database for wallet, token, address_token relationship */
     wallets_lookup = prefix / "wallet_table";
-    tokens_lookup = prefix / "token_table";  // for blockchain tokens
-    certs_lookup = prefix / "cert_table";   // for blockchain certs
+    tokens_lookup = prefix / "token_table";                 // for blockchain tokens
+    certs_lookup = prefix / "cert_table";                   // for blockchain certs
     address_tokens_lookup = prefix / "address_token_table"; // for blockchain
-    address_tokens_rows = prefix / "address_token_row"; // for blockchain
+    address_tokens_rows = prefix / "address_token_row";     // for blockchain
     wallet_tokens_lookup = prefix / "wallet_token_table";
     wallet_tokens_rows = prefix / "wallet_token_row";
     uids_lookup = prefix / "uid_table";
     address_uids_lookup = prefix / "address_uid_table"; // for blockchain
-    address_uids_rows = prefix / "address_uid_row"; // for blockchain
+    address_uids_rows = prefix / "address_uid_row";     // for blockchain
     wallet_addresses_lookup = prefix / "wallet_address_table";
     wallet_addresses_rows = prefix / "wallet_address_rows";
     /* end database for wallet, token, address_token relationship */
     candidates_lookup = prefix / "candidate_table";
     address_candidates_lookup = prefix / "address_candidate_table"; // for blockchain
-    address_candidates_rows = prefix / "address_candidate_row"; // for blockchain
-    candidate_history_lookup = prefix / "candidate_history_table"; // for blockchain
-    candidate_history_rows = prefix / "candidate_history_row"; // for blockchain
+    address_candidates_rows = prefix / "address_candidate_row";     // for blockchain
+    candidate_history_lookup = prefix / "candidate_history_table";  // for blockchain
+    candidate_history_rows = prefix / "candidate_history_row";      // for blockchain
 
     // Height-based (reverse) lookup.
     blocks_index = prefix / "block_index";
@@ -308,65 +315,60 @@ data_base::store::store(const path& prefix)
 bool data_base::store::touch_all() const
 {
     // Return the result of the database file create.
-    return
-        touch_file(blocks_lookup) &&
-        touch_file(blocks_index) &&
-        touch_file(history_lookup) &&
-        touch_file(history_rows) &&
-        touch_file(stealth_rows) &&
-        touch_file(spends_lookup) &&
-        touch_file(transactions_lookup) &&
-        /* begin database for wallet, token, address_token relationship */
-        touch_file(wallets_lookup) &&
-        touch_file(tokens_lookup) &&
-        touch_file(certs_lookup) &&
-        touch_file(address_tokens_lookup) &&
-        touch_file(address_tokens_rows) &&
-        touch_file(wallet_tokens_lookup) &&
-        touch_file(wallet_tokens_rows) &&
-        touch_file(uids_lookup) &&
-        touch_file(address_uids_lookup) &&
-        touch_file(address_uids_rows) &&
-        touch_file(wallet_addresses_lookup) &&
-        touch_file(wallet_addresses_rows) &&
-        /* end database for wallet, token, address_token relationship */
-        touch_file(candidates_lookup) &&
-        touch_file(address_candidates_lookup) &&
-        touch_file(address_candidates_rows) &&
-        touch_file(candidate_history_lookup) &&
-        touch_file(candidate_history_rows);
+    return touch_file(blocks_lookup) &&
+           touch_file(blocks_index) &&
+           touch_file(history_lookup) &&
+           touch_file(history_rows) &&
+           touch_file(stealth_rows) &&
+           touch_file(spends_lookup) &&
+           touch_file(transactions_lookup) &&
+           /* begin database for wallet, token, address_token relationship */
+           touch_file(wallets_lookup) &&
+           touch_file(tokens_lookup) &&
+           touch_file(certs_lookup) &&
+           touch_file(address_tokens_lookup) &&
+           touch_file(address_tokens_rows) &&
+           touch_file(wallet_tokens_lookup) &&
+           touch_file(wallet_tokens_rows) &&
+           touch_file(uids_lookup) &&
+           touch_file(address_uids_lookup) &&
+           touch_file(address_uids_rows) &&
+           touch_file(wallet_addresses_lookup) &&
+           touch_file(wallet_addresses_rows) &&
+           /* end database for wallet, token, address_token relationship */
+           touch_file(candidates_lookup) &&
+           touch_file(address_candidates_lookup) &&
+           touch_file(address_candidates_rows) &&
+           touch_file(candidate_history_lookup) &&
+           touch_file(candidate_history_rows);
 }
 
 bool data_base::store::uids_exist() const
 {
-    return
-        boost::filesystem::exists(uids_lookup) ||
-        boost::filesystem::exists(address_uids_lookup) ||
-        boost::filesystem::exists(address_uids_rows);
+    return boost::filesystem::exists(uids_lookup) ||
+           boost::filesystem::exists(address_uids_lookup) ||
+           boost::filesystem::exists(address_uids_rows);
 }
 
 bool data_base::store::touch_uids() const
 {
-    return
-        touch_file(uids_lookup) &&
-        touch_file(address_uids_lookup) &&
-        touch_file(address_uids_rows);
+    return touch_file(uids_lookup) &&
+           touch_file(address_uids_lookup) &&
+           touch_file(address_uids_rows);
 }
 
 bool data_base::store::tokens_exist() const
 {
-    return
-        boost::filesystem::exists(tokens_lookup) ||
-        boost::filesystem::exists(address_tokens_lookup) ||
-        boost::filesystem::exists(address_tokens_rows);
+    return boost::filesystem::exists(tokens_lookup) ||
+           boost::filesystem::exists(address_tokens_lookup) ||
+           boost::filesystem::exists(address_tokens_rows);
 }
 
 bool data_base::store::touch_tokens() const
 {
-    return
-        touch_file(tokens_lookup) &&
-        touch_file(address_tokens_lookup) &&
-        touch_file(address_tokens_rows);
+    return touch_file(tokens_lookup) &&
+           touch_file(address_tokens_lookup) &&
+           touch_file(address_tokens_rows);
 }
 
 bool data_base::store::certs_exist() const
@@ -381,29 +383,27 @@ bool data_base::store::touch_certs() const
 
 bool data_base::store::candidates_exist() const
 {
-    return
-        boost::filesystem::exists(candidates_lookup) ||
-        boost::filesystem::exists(address_candidates_lookup) ||
-        boost::filesystem::exists(address_candidates_rows) ||
-        boost::filesystem::exists(candidate_history_lookup) ||
-        boost::filesystem::exists(candidate_history_rows);
+    return boost::filesystem::exists(candidates_lookup) ||
+           boost::filesystem::exists(address_candidates_lookup) ||
+           boost::filesystem::exists(address_candidates_rows) ||
+           boost::filesystem::exists(candidate_history_lookup) ||
+           boost::filesystem::exists(candidate_history_rows);
 }
 
 bool data_base::store::touch_candidates() const
 {
-    return
-        touch_file(candidates_lookup) &&
-        touch_file(address_candidates_lookup) &&
-        touch_file(address_candidates_rows) &&
-        touch_file(candidate_history_lookup) &&
-        touch_file(candidate_history_rows);
+    return touch_file(candidates_lookup) &&
+           touch_file(address_candidates_lookup) &&
+           touch_file(address_candidates_rows) &&
+           touch_file(candidate_history_lookup) &&
+           touch_file(candidate_history_rows);
 }
 
-data_base::db_metadata::db_metadata():version_("")
+data_base::db_metadata::db_metadata() : version_("")
 {
 }
 
-data_base::db_metadata::db_metadata(std::string version):version_(version)
+data_base::db_metadata::db_metadata(std::string version) : version_(version)
 {
 }
 
@@ -412,19 +412,19 @@ void data_base::db_metadata::reset()
     version_ = "";
 }
 
-bool data_base::db_metadata::from_data(const data_chunk& data)
+bool data_base::db_metadata::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool data_base::db_metadata::from_data(std::istream& stream)
+bool data_base::db_metadata::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool data_base::db_metadata::from_data(reader& source)
+bool data_base::db_metadata::from_data(reader &source)
 {
     reset();
     version_ = source.read_string();
@@ -442,13 +442,13 @@ data_chunk data_base::db_metadata::to_data() const
     return data;
 }
 
-void data_base::db_metadata::to_data(std::ostream& stream) const
+void data_base::db_metadata::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void data_base::db_metadata::to_data(writer& sink) const
+void data_base::db_metadata::to_data(writer &sink) const
 {
     sink.write_string(version_);
 }
@@ -463,13 +463,12 @@ std::string data_base::db_metadata::to_string() const
 {
     std::ostringstream ss;
 
-    ss << "\t version = " << version_ << "\n"
-        ;
+    ss << "\t version = " << version_ << "\n";
     return ss.str();
 }
 #endif
 
-std::istream& operator>>(std::istream& input, data_base::db_metadata& metadata)
+std::istream &operator>>(std::istream &input, data_base::db_metadata &metadata)
 {
     std::string hexcode;
     input >> hexcode;
@@ -479,7 +478,7 @@ std::istream& operator>>(std::istream& input, data_base::db_metadata& metadata)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const data_base::db_metadata& metadata)
+std::ostream &operator<<(std::ostream &output, const data_base::db_metadata &metadata)
 {
     // tx base16 is a private encoding in bx, used to pass between commands.
     const auto bytes = metadata.to_data();
@@ -490,14 +489,14 @@ std::ostream& operator<<(std::ostream& output, const data_base::db_metadata& met
 const std::string data_base::db_metadata::current_version = UC_DATABASE_VERSION;
 const std::string data_base::db_metadata::file_name = "metadata";
 
-data_base::file_lock data_base::initialize_lock(const path& lock)
+data_base::file_lock data_base::initialize_lock(const path &lock)
 {
     // Touch the lock file to ensure its existence.
     const auto lock_file_path = lock.string();
     bc::ofstream file(lock_file_path, std::ios::app);
     file.close();
 #ifdef UNICODE
-    std::function<std::string(std::wstring)> f = [&](std::wstring wide) ->std::string {
+    std::function<std::string(std::wstring)> f = [&](std::wstring wide) -> std::string {
         int ansiiLen = WideCharToMultiByte(CP_ACP, 0, wide.c_str(), -1, nullptr, 0, nullptr, nullptr);
         char *pAssii = new char[ansiiLen];
         WideCharToMultiByte(CP_ACP, 0, wide.c_str(), -1, pAssii, ansiiLen, nullptr, nullptr);
@@ -516,48 +515,48 @@ data_base::file_lock data_base::initialize_lock(const path& lock)
     return file_lock(path_str.c_str());
 }
 
-void data_base::uninitialize_lock(const path& lock)
+void data_base::uninitialize_lock(const path &lock)
 {
     // BUGBUG: Throws if the lock is not held (i.e. in error condition).
     boost::filesystem::remove(lock);
 }
 
-data_base::data_base(const settings& settings)
-  : data_base(settings.directory, settings.history_start_height,
-        settings.stealth_start_height)
+data_base::data_base(const settings &settings)
+    : data_base(settings.directory, settings.history_start_height,
+                settings.stealth_start_height)
 {
 }
 
-data_base::data_base(const path& prefix, size_t history_height,
-    size_t stealth_height)
-  : data_base(store(prefix), history_height, stealth_height)
+data_base::data_base(const path &prefix, size_t history_height,
+                     size_t stealth_height)
+    : data_base(store(prefix), history_height, stealth_height)
 {
 }
 
-data_base::data_base(const store& paths, size_t history_height,
-    size_t stealth_height)
-  : lock_file_path_(paths.database_lock),
-    history_height_(history_height),
-    stealth_height_(stealth_height),
-    sequential_lock_(0),
-    mutex_(std::make_shared<shared_mutex>()),
-    blocks(paths.blocks_lookup, paths.blocks_index, mutex_),
-    history(paths.history_lookup, paths.history_rows, mutex_),
-    stealth(paths.stealth_rows, mutex_),
-    spends(paths.spends_lookup, mutex_),
-    transactions(paths.transactions_lookup, mutex_),
-    /* begin database for wallet, token, address_token, uid relationship */
-    wallets(paths.wallets_lookup, mutex_),
-    tokens(paths.tokens_lookup, mutex_),
-    address_tokens(paths.address_tokens_lookup, paths.address_tokens_rows, mutex_),
-    wallet_tokens(paths.wallet_tokens_lookup, paths.wallet_tokens_rows, mutex_),
-    certs(paths.certs_lookup, mutex_),
-    uids(paths.uids_lookup, mutex_),
-    address_uids(paths.address_uids_lookup, paths.address_uids_rows, mutex_),
-    wallet_addresses(paths.wallet_addresses_lookup, paths.wallet_addresses_rows, mutex_),
-    /* end database for wallet, token, address_token, uid relationship */
-    candidates(paths.candidates_lookup, mutex_),
-    candidate_history(paths.candidate_history_lookup, paths.candidate_history_rows, mutex_)
+data_base::data_base(const store &paths, size_t history_height,
+                     size_t stealth_height)
+    : lock_file_path_(paths.database_lock),
+      history_height_(history_height),
+      stealth_height_(stealth_height),
+      sequential_lock_(0),
+      mutex_(std::make_shared<shared_mutex>()),
+      blocks(paths.blocks_lookup, paths.blocks_index, mutex_),
+      history(paths.history_lookup, paths.history_rows, mutex_),
+      stealth(paths.stealth_rows, mutex_),
+      spends(paths.spends_lookup, mutex_),
+      transactions(paths.transactions_lookup, mutex_),
+      /* begin database for wallet, token, address_token, uid relationship */
+      wallets(paths.wallets_lookup, mutex_),
+      tokens(paths.tokens_lookup, mutex_),
+      address_tokens(paths.address_tokens_lookup, paths.address_tokens_rows, mutex_),
+      wallet_tokens(paths.wallet_tokens_lookup, paths.wallet_tokens_rows, mutex_),
+      certs(paths.certs_lookup, mutex_),
+      uids(paths.uids_lookup, mutex_),
+      address_uids(paths.address_uids_lookup, paths.address_uids_rows, mutex_),
+      wallet_addresses(paths.wallet_addresses_lookup, paths.wallet_addresses_rows, mutex_),
+      /* end database for wallet, token, address_token, uid relationship */
+      candidates(paths.candidates_lookup, mutex_),
+      candidate_history(paths.candidate_history_lookup, paths.candidate_history_rows, mutex_)
 {
 }
 
@@ -567,7 +566,7 @@ data_base::~data_base()
     close();
 }
 
-void data_base::write_metadata(const path& metadata_path, data_base::db_metadata& metadata)
+void data_base::write_metadata(const path &metadata_path, data_base::db_metadata &metadata)
 {
     bc::ofstream file_output(metadata_path.string(), std::ofstream::out);
     file_output << metadata;
@@ -575,15 +574,17 @@ void data_base::write_metadata(const path& metadata_path, data_base::db_metadata
     file_output.close();
 }
 
-void data_base::read_metadata(const path& metadata_path, data_base::db_metadata& metadata)
+void data_base::read_metadata(const path &metadata_path, data_base::db_metadata &metadata)
 {
-    if(!boost::filesystem::exists(metadata_path)) {
+    if (!boost::filesystem::exists(metadata_path))
+    {
         metadata = data_base::db_metadata();
         return;
     }
     bc::ifstream file_input(metadata_path.string(), std::ofstream::in);
-    if (!file_input.good()) {
-        throw std::logic_error{std::string("read_metadata error : ")+ strerror(errno)};
+    if (!file_input.good())
+    {
+        throw std::logic_error{std::string("read_metadata error : ") + strerror(errno)};
     }
     file_input >> metadata;
     file_input.close();
@@ -599,51 +600,46 @@ void data_base::read_metadata(const path& metadata_path, data_base::db_metadata&
 bool data_base::create()
 {
     // Return the result of the database create.
-    return
-        blocks.create() &&
-        history.create() &&
-        spends.create() &&
-        stealth.create() &&
-        transactions.create() &&
-        /* begin database for wallet, token, address_token relationship */
-        wallets.create() &&
-        tokens.create() &&
-        address_tokens.create() &&
-        wallet_tokens.create() &&
-        certs.create() &&
-        uids.create() &&
-        address_uids.create() &&
-        wallet_addresses.create() &&
-        /* end database for wallet, token, address_token relationship */
-        candidates.create() &&
-        candidate_history.create();
+    return blocks.create() &&
+           history.create() &&
+           spends.create() &&
+           stealth.create() &&
+           transactions.create() &&
+           /* begin database for wallet, token, address_token relationship */
+           wallets.create() &&
+           tokens.create() &&
+           address_tokens.create() &&
+           wallet_tokens.create() &&
+           certs.create() &&
+           uids.create() &&
+           address_uids.create() &&
+           wallet_addresses.create() &&
+           /* end database for wallet, token, address_token relationship */
+           candidates.create() &&
+           candidate_history.create();
 }
 
 bool data_base::create_uids()
 {
-    return
-        uids.create() &&
-        address_uids.create();
+    return uids.create() &&
+           address_uids.create();
 }
 
 bool data_base::create_tokens()
 {
-    return
-        tokens.create() &&
-        address_tokens.create();
+    return tokens.create() &&
+           address_tokens.create();
 }
 
 bool data_base::create_certs()
 {
-    return
-        certs.create();
+    return certs.create();
 }
 
 bool data_base::create_candidates()
 {
-    return
-        candidates.create() &&
-        candidate_history.create();
+    return candidates.create() &&
+           candidate_history.create();
 }
 
 // Start must be called before performing queries.
@@ -682,8 +678,7 @@ bool data_base::start()
         wallet_addresses.start() &&
         /* end database for wallet, token, address_token relationship */
         candidates.start() &&
-        candidate_history.start()
-        ;
+        candidate_history.start();
     const auto end_exclusive = end_write();
 
     // Return the result of the database start.
@@ -719,26 +714,25 @@ bool data_base::stop()
     uninitialize_lock(lock_file_path_);
 
     // Return the cumulative result of the database shutdowns.
-    return
-        start_exclusive &&
-        blocks_stop &&
-        history_stop &&
-        spends_stop &&
-        stealth_stop &&
-        transactions_stop &&
-        /* begin database for wallet, token, address_token relationship */
-        wallets_stop &&
-        tokens_stop &&
-        address_tokens_stop &&
-        wallet_tokens_stop &&
-        certs_stop &&
-        uids_stop &&
-        address_uids_stop &&
-        wallet_addresses_stop &&
-        /* end database for wallet, token, address_token relationship */
-        candidates_stop &&
-        candidate_history_stop &&
-        end_exclusive;
+    return start_exclusive &&
+           blocks_stop &&
+           history_stop &&
+           spends_stop &&
+           stealth_stop &&
+           transactions_stop &&
+           /* begin database for wallet, token, address_token relationship */
+           wallets_stop &&
+           tokens_stop &&
+           address_tokens_stop &&
+           wallet_tokens_stop &&
+           certs_stop &&
+           uids_stop &&
+           address_uids_stop &&
+           wallet_addresses_stop &&
+           /* end database for wallet, token, address_token relationship */
+           candidates_stop &&
+           candidate_history_stop &&
+           end_exclusive;
 }
 
 // Close is optional as the database will close on destruct.
@@ -763,24 +757,23 @@ bool data_base::close()
     const auto candidate_history_close = candidate_history.close();
 
     // Return the cumulative result of the database closes.
-    return
-        blocks_close &&
-        history_close &&
-        spends_close &&
-        stealth_close &&
-        transactions_close&&
-        /* begin database for wallet, token, address_token relationship */
-        wallets_close &&
-        tokens_close &&
-        address_tokens_close&&
-        address_uids_close &&
-        wallet_tokens_close&&
-        certs_close &&
-        uids_close &&
-        wallet_addresses_close &&
-        /* end database for wallet, token, address_token relationship */
-        candidates_close &&
-        candidate_history_close;
+    return blocks_close &&
+           history_close &&
+           spends_close &&
+           stealth_close &&
+           transactions_close &&
+           /* begin database for wallet, token, address_token relationship */
+           wallets_close &&
+           tokens_close &&
+           address_tokens_close &&
+           address_uids_close &&
+           wallet_tokens_close &&
+           certs_close &&
+           uids_close &&
+           wallet_addresses_close &&
+           /* end database for wallet, token, address_token relationship */
+           candidates_close &&
+           candidate_history_close;
 }
 
 // Locking.
@@ -820,18 +813,17 @@ bool data_base::end_write()
 // Query engines.
 // ----------------------------------------------------------------------------
 
-static size_t get_next_height(const block_database& blocks)
+static size_t get_next_height(const block_database &blocks)
 {
     size_t current_height;
     const auto empty_chain = !blocks.top(current_height);
     return empty_chain ? 0 : current_height + 1;
 }
 
-static bool is_allowed_duplicate(const header& head, size_t height)
+static bool is_allowed_duplicate(const header &head, size_t height)
 {
-    return
-        (height == exception1.height() && head.hash() == exception1.hash()) ||
-        (height == exception2.height() && head.hash() == exception2.hash());
+    return (height == exception1.height() && head.hash() == exception1.hash()) ||
+           (height == exception2.height() && head.hash() == exception2.hash());
 }
 
 void data_base::synchronize()
@@ -879,13 +871,13 @@ void data_base::synchronize_tokens()
     wallet_tokens.sync();
 }
 
-void data_base::push(const block& block)
+void data_base::push(const block &block)
 {
     // Height is unsafe unless database locked.
     push(block, get_next_height(blocks));
 }
 
-void data_base::push(const block& block, uint64_t height)
+void data_base::push(const block &block, uint64_t height)
 {
     for (size_t index = 0; index < block.transactions.size(); ++index)
     {
@@ -894,7 +886,7 @@ void data_base::push(const block& block, uint64_t height)
         if (index == 0 && is_allowed_duplicate(block.header, height))
             continue;
 
-        const auto& tx = block.transactions[index];
+        const auto &tx = block.transactions[index];
         const auto tx_hash = tx.hash();
 
         timestamp_ = block.header.timestamp; // for address_token_database store_input/store_output used only
@@ -926,14 +918,14 @@ void data_base::push(const block& block, uint64_t height)
     synchronize();
 }
 
-void data_base::push_inputs(const hash_digest& tx_hash, size_t height,
-    const input::list& inputs)
+void data_base::push_inputs(const hash_digest &tx_hash, size_t height,
+                            const input::list &inputs)
 {
     for (uint32_t index = 0; index < inputs.size(); ++index)
     {
         // We also push spends in the inputs loop.
-        const auto& input = inputs[index];
-        const chain::input_point point{ tx_hash, index };
+        const auto &input = inputs[index];
+        const chain::input_point point{tx_hash, index};
         spends.store(input.previous_output, point);
 
         if (height < history_height_)
@@ -944,7 +936,7 @@ void data_base::push_inputs(const hash_digest& tx_hash, size_t height,
         if (!address)
             continue;
 
-        const auto& previous = input.previous_output;
+        const auto &previous = input.previous_output;
         history.add_input(address.hash(), point, height, previous);
 
         /* begin added for token issue/transfer */
@@ -957,16 +949,16 @@ void data_base::push_inputs(const hash_digest& tx_hash, size_t height,
     }
 }
 
-void data_base::push_outputs(const hash_digest& tx_hash, size_t height,
-    const output::list& outputs)
+void data_base::push_outputs(const hash_digest &tx_hash, size_t height,
+                             const output::list &outputs)
 {
     if (height < history_height_)
         return;
 
     for (uint32_t index = 0; index < outputs.size(); ++index)
     {
-        const auto& output = outputs[index];
-        const chain::output_point point{ tx_hash, index };
+        const auto &output = outputs[index];
+        const chain::output_point point{tx_hash, index};
 
         // Try to extract an address.
         const auto address = payment_address::extract(output.script);
@@ -980,8 +972,8 @@ void data_base::push_outputs(const hash_digest& tx_hash, size_t height,
     }
 }
 
-void data_base::push_stealth(const hash_digest& tx_hash, size_t height,
-    const output::list& outputs)
+void data_base::push_stealth(const hash_digest &tx_hash, size_t height,
+                             const output::list &outputs)
 {
     if (height < stealth_height_ || outputs.empty())
         return;
@@ -989,8 +981,8 @@ void data_base::push_stealth(const hash_digest& tx_hash, size_t height,
     // Stealth outputs are paired by convention.
     for (size_t index = 0; index < (outputs.size() - 1); ++index)
     {
-        const auto& ephemeral_script = outputs[index].script;
-        const auto& payment_script = outputs[index + 1].script;
+        const auto &ephemeral_script = outputs[index].script;
+        const auto &payment_script = outputs[index + 1].script;
 
         // Try to extract an unsigned ephemeral key from the first output.
         hash_digest unsigned_ephemeral_key;
@@ -1008,12 +1000,10 @@ void data_base::push_stealth(const hash_digest& tx_hash, size_t height,
             continue;
 
         // The payment address versions are arbitrary and unused here.
-        const chain::stealth_compact row
-        {
+        const chain::stealth_compact row{
             unsigned_ephemeral_key,
             address.hash(),
-            tx_hash
-        };
+            tx_hash};
 
         stealth.store(prefix, height, row);
     }
@@ -1022,7 +1012,8 @@ void data_base::push_stealth(const hash_digest& tx_hash, size_t height,
 chain::block data_base::pop()
 {
     size_t height;
-    DEBUG_ONLY(const auto result =) blocks.top(height);
+    DEBUG_ONLY(const auto result =)
+    blocks.top(height);
     BITCOIN_ASSERT_MSG(result, "Pop on empty database.");
 
     const auto block_result = blocks.get(height);
@@ -1032,7 +1023,7 @@ chain::block data_base::pop()
     chain::block block;
     block.header = block_result.header();
     block.transactions.reserve(count);
-    auto& txs = block.transactions;
+    auto &txs = block.transactions;
 
     for (size_t tx = 0; tx < count; ++tx)
     {
@@ -1076,7 +1067,7 @@ chain::block data_base::pop()
     return block;
 }
 
-void data_base::pop_inputs(const input::list& inputs, size_t height)
+void data_base::pop_inputs(const input::list &inputs, size_t height)
 {
     // Loop in reverse.
     for (auto input = inputs.rbegin(); input != inputs.rend(); ++input)
@@ -1089,7 +1080,8 @@ void data_base::pop_inputs(const input::list& inputs, size_t height)
         // Try to extract an address.
         const auto address = payment_address::extract(input->script);
 
-        if (address) {
+        if (address)
+        {
             history.delete_last_row(address.hash());
             // delete address token record
             auto address_str = address.encoded();
@@ -1100,7 +1092,7 @@ void data_base::pop_inputs(const input::list& inputs, size_t height)
     }
 }
 
-void data_base::pop_outputs(const output::list& outputs, size_t height)
+void data_base::pop_outputs(const output::list &outputs, size_t height)
 {
     if (height < history_height_)
         return;
@@ -1111,7 +1103,8 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
         // Try to extract an address.
         const auto address = payment_address::extract(output->script);
 
-        if (address) {
+        if (address)
+        {
             history.delete_last_row(address.hash());
             // delete address token record
             auto address_str = address.encoded();
@@ -1121,34 +1114,37 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
             // NOTICE: pop only the pushed row, at present uid and candidate is
             // not stored in address_token, but stored separately
             // in address_uid and address_uid
-            if (!op.is_uid() && !op.is_candidate()) {
+            if (!op.is_uid() && !op.is_candidate())
+            {
                 address_tokens.delete_last_row(hash);
             }
             // remove token or uid from database
-            if (op.is_token_issue() || op.is_token_secondaryissue()) {
+            if (op.is_token_issue() || op.is_token_secondaryissue())
+            {
                 auto symbol = op.get_token_symbol();
-                const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
+                const data_chunk &symbol_data = data_chunk(symbol.begin(), symbol.end());
                 const auto symbol_hash = sha256_hash(symbol_data);
                 tokens.remove(symbol_hash);
             }
-            else if (op.is_uid()) {
+            else if (op.is_uid())
+            {
                 auto symbol = op.get_uid_symbol();
-                const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
+                const data_chunk &symbol_data = data_chunk(symbol.begin(), symbol.end());
                 const auto symbol_hash = sha256_hash(symbol_data);
 
-                if(op.is_uid_register())
+                if (op.is_uid_register())
                 {
                     address_uids.delete_last_row(hash);
                     address_uids.sync();
                     uids.remove(symbol_hash);
                     uids.sync();
                 }
-                else if(op.is_uid_transfer() )
+                else if (op.is_uid_transfer())
                 {
-                    std::shared_ptr<blockchain_uid> blockchain_uid_=  uids.pop_uid_transfer(symbol_hash);
+                    std::shared_ptr<blockchain_uid> blockchain_uid_ = uids.pop_uid_transfer(symbol_hash);
                     uids.sync();
 
-                    if(blockchain_uid_)
+                    if (blockchain_uid_)
                     {
                         auto old_address = blockchain_uid_->get_uid().get_address();
                         data_chunk data_old(old_address.begin(), old_address.end());
@@ -1158,33 +1154,35 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
                         address_uids.delete_last_row(hash);
 
                         address_uids.store_output(old_hash, blockchain_uid_->get_tx_point(), blockchain_uid_->get_height(), 0,
-                            static_cast<typename std::underlying_type<business_kind>::type>(business_kind::uid_register),
-                            timestamp_, blockchain_uid_->get_uid());
+                                                  static_cast<typename std::underlying_type<business_kind>::type>(business_kind::uid_register),
+                                                  timestamp_, blockchain_uid_->get_uid());
                         address_uids.sync();
-
                     }
                 }
-
             }
-            else if (op.is_token_cert()) {
+            else if (op.is_token_cert())
+            {
                 const auto token_cert = op.get_token_cert();
-                if (token_cert.is_newly_generated()) {
+                if (token_cert.is_newly_generated())
+                {
                     const auto key_str = token_cert.get_key();
-                    const data_chunk& data = data_chunk(key_str.begin(), key_str.end());
+                    const data_chunk &data = data_chunk(key_str.begin(), key_str.end());
                     const auto key_hash = sha256_hash(data);
                     certs.remove(key_hash);
                 }
             }
-            else if (op.is_candidate()) {
+            else if (op.is_candidate())
+            {
 
                 const auto candidate = op.get_candidate();
                 auto symbol = candidate.get_symbol();
-                const data_chunk& symbol_data = data_chunk(symbol.begin(), symbol.end());
+                const data_chunk &symbol_data = data_chunk(symbol.begin(), symbol.end());
 
                 const auto symbol_short_hash = ripemd160_hash(symbol_data);
                 candidate_history.delete_last_row(symbol_short_hash);
 
-                if (candidate.is_register_status()) {
+                if (candidate.is_register_status())
+                {
                     const auto symbol_hash = sha256_hash(symbol_data);
                     candidates.remove(symbol_hash);
                 }
@@ -1197,8 +1195,8 @@ void data_base::pop_outputs(const output::list& outputs, size_t height)
 #include <UChain/bitcoin/config/base16.hpp>
 using namespace libbitcoin::config;
 
-void data_base::push_asset(const asset& attach, const payment_address& address,
-    const output_point& outpoint, uint32_t output_height, uint64_t value)
+void data_base::push_asset(const asset &attach, const payment_address &address,
+                           const output_point &outpoint, uint32_t output_height, uint64_t value)
 {
     auto address_str = address.encoded();
     log::trace(LOG_DATABASE) << "push_asset address_str=" << address_str;
@@ -1206,117 +1204,119 @@ void data_base::push_asset(const asset& attach, const payment_address& address,
     data_chunk data(address_str.begin(), address_str.end());
     short_hash hash = ripemd160_hash(data);
     auto visitor = asset_visitor(this, hash, outpoint, output_height, value,
-        attach.get_from_uid(), attach.get_to_uid());
-    boost::apply_visitor(visitor, const_cast<asset&>(attach).get_attach());
+                                 attach.get_from_uid(), attach.get_to_uid());
+    boost::apply_visitor(visitor, const_cast<asset &>(attach).get_attach());
 }
 
-void data_base::push_ucn(const ucn& ucn, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value)
+void data_base::push_ucn(const ucn &ucn, const short_hash &key,
+                         const output_point &outpoint, uint32_t output_height, uint64_t value)
 {
     address_tokens.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::ucn),
-        timestamp_, ucn);
-    address_tokens.sync();
-
-}
-
-void data_base::push_ucn_award(const ucn_award& award, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value)
-{
-    address_tokens.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::ucn_award),
-        timestamp_, award);
+                                static_cast<typename std::underlying_type<business_kind>::type>(business_kind::ucn),
+                                timestamp_, ucn);
     address_tokens.sync();
 }
 
-void data_base::push_message(const chain::blockchain_message& msg, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value)
+void data_base::push_ucn_award(const ucn_award &award, const short_hash &key,
+                               const output_point &outpoint, uint32_t output_height, uint64_t value)
 {
     address_tokens.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::message),
-        timestamp_, msg);
+                                static_cast<typename std::underlying_type<business_kind>::type>(business_kind::ucn_award),
+                                timestamp_, award);
     address_tokens.sync();
 }
 
-void data_base::push_token(const token& sp, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value) // sp = smart property
+void data_base::push_message(const chain::blockchain_message &msg, const short_hash &key,
+                             const output_point &outpoint, uint32_t output_height, uint64_t value)
+{
+    address_tokens.store_output(key, outpoint, output_height, value,
+                                static_cast<typename std::underlying_type<business_kind>::type>(business_kind::message),
+                                timestamp_, msg);
+    address_tokens.sync();
+}
+
+void data_base::push_token(const token &sp, const short_hash &key,
+                           const output_point &outpoint, uint32_t output_height, uint64_t value) // sp = smart property
 {
     auto visitor = token_visitor(this, key, outpoint, output_height, value);
-    boost::apply_visitor(visitor, const_cast<token&>(sp).get_data());
+    boost::apply_visitor(visitor, const_cast<token &>(sp).get_data());
 }
 
-void data_base::push_token_cert(const token_cert& sp_cert, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value)
+void data_base::push_token_cert(const token_cert &sp_cert, const short_hash &key,
+                                const output_point &outpoint, uint32_t output_height, uint64_t value)
 {
-    if (sp_cert.is_newly_generated()) {
+    if (sp_cert.is_newly_generated())
+    {
         certs.store(sp_cert);
         certs.sync();
     }
     address_tokens.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_cert),
-        timestamp_, sp_cert);
+                                static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_cert),
+                                timestamp_, sp_cert);
     address_tokens.sync();
 }
 
-void data_base::push_token_detail(const token_detail& sp_detail, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value)
+void data_base::push_token_detail(const token_detail &sp_detail, const short_hash &key,
+                                  const output_point &outpoint, uint32_t output_height, uint64_t value)
 {
-    const data_chunk& data = data_chunk(sp_detail.get_symbol().begin(), sp_detail.get_symbol().end());
+    const data_chunk &data = data_chunk(sp_detail.get_symbol().begin(), sp_detail.get_symbol().end());
     const auto hash = sha256_hash(data);
-    auto bc_token = blockchain_token(0, outpoint,output_height, sp_detail);
+    auto bc_token = blockchain_token(0, outpoint, output_height, sp_detail);
     tokens.store(hash, bc_token);
     tokens.sync();
     address_tokens.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_issue),
-        timestamp_, sp_detail);
+                                static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_issue),
+                                timestamp_, sp_detail);
     address_tokens.sync();
 }
 
-void data_base::push_token_transfer(const token_transfer& sp_transfer, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value)
+void data_base::push_token_transfer(const token_transfer &sp_transfer, const short_hash &key,
+                                    const output_point &outpoint, uint32_t output_height, uint64_t value)
 {
     address_tokens.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_transfer),
-        timestamp_, sp_transfer);
+                                static_cast<typename std::underlying_type<business_kind>::type>(business_kind::token_transfer),
+                                timestamp_, sp_transfer);
     address_tokens.sync();
 }
 /* end store token related info into database */
 
 /* begin store uid related info into database */
-void data_base::push_uid(const uid& sp, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value) // sp = smart property
+void data_base::push_uid(const uid &sp, const short_hash &key,
+                         const output_point &outpoint, uint32_t output_height, uint64_t value) // sp = smart property
 {
     push_uid_detail(sp.get_data(), key, outpoint, output_height, value);
 }
 
-void data_base::push_uid_detail(const uid_detail& sp_detail, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value)
+void data_base::push_uid_detail(const uid_detail &sp_detail, const short_hash &key,
+                                const output_point &outpoint, uint32_t output_height, uint64_t value)
 {
-    const data_chunk& data = data_chunk(sp_detail.get_symbol().begin(), sp_detail.get_symbol().end());
+    const data_chunk &data = data_chunk(sp_detail.get_symbol().begin(), sp_detail.get_symbol().end());
     const auto hash = sha256_hash(data);
-    auto bc_uid = blockchain_uid(0, outpoint,output_height, blockchain_uid::address_current,sp_detail);
+    auto bc_uid = blockchain_uid(0, outpoint, output_height, blockchain_uid::address_current, sp_detail);
     uids.store(hash, bc_uid);
     uids.sync();
     address_uids.store_output(key, outpoint, output_height, value,
-        static_cast<typename std::underlying_type<business_kind>::type>(business_kind::uid_register),
-        timestamp_, sp_detail);
+                              static_cast<typename std::underlying_type<business_kind>::type>(business_kind::uid_register),
+                              timestamp_, sp_detail);
     address_uids.sync();
 }
 
 /* end store uid related info into database */
 
 /* begin store candidate related info into database */
-void data_base::push_candidate(const candidate& candidate, const short_hash& key,
-    const output_point& outpoint, uint32_t output_height, uint64_t value,
-    const std::string from_uid, std::string to_uid)
+void data_base::push_candidate(const candidate &candidate, const short_hash &key,
+                               const output_point &outpoint, uint32_t output_height, uint64_t value,
+                               const std::string from_uid, std::string to_uid)
 {
     candidate_info candidate_info{output_height, timestamp_, 0, to_uid, candidate};
 
-    if (candidate.is_register_status()) {
+    if (candidate.is_register_status())
+    {
         candidates.store(candidate_info);
         candidates.sync();
     }
-    if(candidate.is_transfer_status()){
+    if (candidate.is_transfer_status())
+    {
         candidates.store(candidate_info);
         candidates.sync();
         candidate_history.update_address_status(candidate_info, CANDIDATE_STATUS_HISTORY);
@@ -1327,6 +1327,5 @@ void data_base::push_candidate(const candidate& candidate, const short_hash& key
 }
 /* end store candidate related info into database */
 
-} // namespace data_base
+} // namespace database
 } // namespace libbitcoin
-

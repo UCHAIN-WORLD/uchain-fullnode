@@ -22,41 +22,43 @@
 
 #include <boost/filesystem.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 
 settings::settings()
-  : history_start_height(0),
-    stealth_start_height(0),
-    directory("database")
+    : history_start_height(0),
+      stealth_start_height(0),
+      directory("database")
 {
 }
 
 settings::settings(bc::settings context)
-  : settings()
+    : settings()
 {
     switch (context)
     {
-        case bc::settings::mainnet:
-        {
-            stealth_start_height = 350000;
-            directory = default_directory = { "mainnet" };
-            break;
-        }
+    case bc::settings::mainnet:
+    {
+        stealth_start_height = 350000;
+        directory = default_directory = {"mainnet"};
+        break;
+    }
 
-        case bc::settings::testnet:
-        {
-            stealth_start_height = 500000;
-            directory = default_directory = { "testnet" };
-            break;
-        }
+    case bc::settings::testnet:
+    {
+        stealth_start_height = 500000;
+        directory = default_directory = {"testnet"};
+        break;
+    }
 
-        default:
-        case bc::settings::none:
-        {
-        }
+    default:
+    case bc::settings::none:
+    {
+    }
     }
 }
 
