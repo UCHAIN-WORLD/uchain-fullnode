@@ -23,12 +23,14 @@
 #include <UChain/database/primitives/record_list.hpp>
 #include <UChain/database/primitives/record_multimap_iterable.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
-record_multimap_iterator::record_multimap_iterator(const record_list& records,
-    array_index index)
-  : index_(index), records_(records)
+record_multimap_iterator::record_multimap_iterator(const record_list &records,
+                                                   array_index index)
+    : index_(index), records_(records)
 {
 }
 

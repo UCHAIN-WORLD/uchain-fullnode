@@ -24,17 +24,19 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 // std::numeric_limits<array_index>::max()
 const array_index record_list::empty = bc::max_uint32;
 
-record_list::record_list(record_manager& manager)
-  : manager_(manager)
+record_list::record_list(record_manager &manager)
+    : manager_(manager)
 {
     static_assert(sizeof(array_index) == sizeof(uint32_t),
-        "array_index incorrect size");
+                  "array_index incorrect size");
 }
 
 array_index record_list::create()
