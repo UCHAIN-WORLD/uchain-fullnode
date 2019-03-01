@@ -24,8 +24,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 template <typename Iterator>
 token_transfer deserialize_token_transfer(const Iterator first)
@@ -37,7 +39,7 @@ token_transfer deserialize_token_transfer(const Iterator first)
 }
 
 wallet_token_result::wallet_token_result(const memory_ptr slab)
-  : base_result(slab)
+    : base_result(slab)
 {
 }
 

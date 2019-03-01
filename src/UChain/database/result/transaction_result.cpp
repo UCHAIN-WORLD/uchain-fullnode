@@ -25,8 +25,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace bc::chain;
 
@@ -43,7 +45,7 @@ chain::transaction deserialize_tx(const Iterator first)
 }
 
 transaction_result::transaction_result(const memory_ptr slab)
-  : slab_(slab)
+    : slab_(slab)
 {
 }
 

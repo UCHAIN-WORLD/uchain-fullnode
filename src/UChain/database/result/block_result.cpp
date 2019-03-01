@@ -25,8 +25,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace bc::chain;
 
@@ -35,7 +37,7 @@ static constexpr size_t height_size = sizeof(uint32_t);
 static constexpr size_t count_size = sizeof(uint32_t);
 
 block_result::block_result(const memory_ptr slab)
-  : slab_(slab)
+    : slab_(slab)
 {
 }
 
