@@ -24,20 +24,21 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
 
-
-
 // This is nearly the same as ec-multiply + sha256.
 // Pass either (ephem_secret, scan_pubkey) or (scan_secret, ephem_pubkey).
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
-console_result stealth_shared::invoke(std::ostream& output,
-    std::ostream& error)
+console_result stealth_shared::invoke(std::ostream &output,
+                                      std::ostream &error)
 {
     // Bound parameters.
-    const auto& secret = get_secret_argument();
-    const auto& pubkey = get_pubkey_argument();
+    const auto &secret = get_secret_argument();
+    const auto &pubkey = get_pubkey_argument();
 
     ec_compressed product(pubkey);
     if (!bc::ec_multiply(product, secret))

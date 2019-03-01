@@ -24,8 +24,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 template <typename Iterator>
 std::shared_ptr<libbitcoin::chain::wallet> deserialize_wallet_detail(const Iterator first)
@@ -36,7 +38,7 @@ std::shared_ptr<libbitcoin::chain::wallet> deserialize_wallet_detail(const Itera
     return detail;
 }
 wallet_result::wallet_result(const memory_ptr slab)
-  : base_result(slab)
+    : base_result(slab)
 {
 }
 
@@ -44,7 +46,7 @@ std::shared_ptr<libbitcoin::chain::wallet> wallet_result::get_wallet_detail() co
 {
     //BITCOIN_ASSERT(get_slab());
     std::shared_ptr<libbitcoin::chain::wallet> sp_acc(nullptr);
-    if(get_slab())
+    if (get_slab())
     {
         const auto memory = REMAP_ADDRESS(get_slab());
         sp_acc = deserialize_wallet_detail(memory);
@@ -53,4 +55,3 @@ std::shared_ptr<libbitcoin::chain::wallet> wallet_result::get_wallet_detail() co
 }
 } // namespace database
 } // namespace libbitcoin
-

@@ -26,21 +26,24 @@
 #include <boost/program_options.hpp>
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
-address::address(const std::string& base58)
+address::address(const std::string &base58)
 {
     std::stringstream(base58) >> *this;
 }
 
-address::operator const std::string&() const
+address::operator const std::string &() const
 {
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, address& argument)
+std::istream &operator>>(std::istream &input, address &argument)
 {
     std::string base58;
     input >> base58;
@@ -63,6 +66,6 @@ std::istream& operator>>(std::istream& input, address& argument)
     BOOST_THROW_EXCEPTION(invalid_option_value(base58));
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

@@ -26,21 +26,23 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::wallet;
 
-console_result stealth_encode::invoke(std::ostream& output,
-    std::ostream& error)
+console_result stealth_encode::invoke(std::ostream &output,
+                                      std::ostream &error)
 {
     // Bound parameters.
     const auto version = get_version_option();
-    const auto& filter = get_filter_option();
-    const auto& scan_pubkey = get_scan_pubkey_argument();
-    const auto& spend_pubkeys = get_spend_pubkeys_argument();
-    const auto& signatures = get_signatures_option();
+    const auto &filter = get_filter_option();
+    const auto &scan_pubkey = get_scan_pubkey_argument();
+    const auto &spend_pubkeys = get_spend_pubkeys_argument();
+    const auto &signatures = get_signatures_option();
 
     const size_t maximum = std::max(size_t(1), spend_pubkeys.size());
 
@@ -63,7 +65,7 @@ console_result stealth_encode::invoke(std::ostream& output,
 
     const auto spend_points = cast<ec_public, ec_compressed>(spend_pubkeys);
     const stealth_address address(filter, scan_pubkey, spend_points,
-        signatures, version);
+                                  signatures, version);
 
     output << address << std::flush;
     return console_result::okay;

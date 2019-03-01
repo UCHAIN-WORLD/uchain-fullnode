@@ -28,29 +28,32 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 static auto algorithm_greedy = "greedy";
 
 algorithm::algorithm()
-  : value_(bc::wallet::select_outputs::algorithm::greedy)
+    : value_(bc::wallet::select_outputs::algorithm::greedy)
 {
 }
 
-algorithm::algorithm(const std::string& token)
+algorithm::algorithm(const std::string &token)
 {
     std::stringstream(token) >> *this;
 }
 
-algorithm::algorithm(bc::wallet::select_outputs::algorithm& algorithm)
-  : value_(algorithm)
+algorithm::algorithm(bc::wallet::select_outputs::algorithm &algorithm)
+    : value_(algorithm)
 {
 }
 
-algorithm::algorithm(const algorithm& other)
-  : value_(other.value_)
+algorithm::algorithm(const algorithm &other)
+    : value_(other.value_)
 {
 }
 
@@ -59,7 +62,7 @@ algorithm::operator const bc::wallet::select_outputs::algorithm() const
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, algorithm& argument)
+std::istream &operator>>(std::istream &input, algorithm &argument)
 {
     std::string text;
     input >> text;
@@ -72,11 +75,11 @@ std::istream& operator>>(std::istream& input, algorithm& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const algorithm& argument)
+std::ostream &operator<<(std::ostream &output, const algorithm &argument)
 {
     std::string text;
 
-    if(argument.value_ == bc::wallet::select_outputs::algorithm::greedy)
+    if (argument.value_ == bc::wallet::select_outputs::algorithm::greedy)
     {
         text = algorithm_greedy;
     }

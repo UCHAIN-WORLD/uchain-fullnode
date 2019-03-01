@@ -24,19 +24,21 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::wallet;
 
 // This is nearly the same as ec-add.
-console_result stealth_public::invoke(std::ostream& output,
-    std::ostream& error)
+console_result stealth_public::invoke(std::ostream &output,
+                                      std::ostream &error)
 {
     // Bound parameters.
-    const auto& spend_pubkey = get_spend_pubkey_argument();
-    const auto& shared_secret = get_shared_secret_argument();
+    const auto &spend_pubkey = get_spend_pubkey_argument();
+    const auto &shared_secret = get_shared_secret_argument();
 
     ec_compressed sum(spend_pubkey);
     if (!bc::ec_add(sum, shared_secret))

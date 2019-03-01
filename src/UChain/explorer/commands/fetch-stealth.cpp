@@ -28,21 +28,23 @@
 #include <UChain/explorer/display.hpp>
 #include <UChain/explorer/json_helper.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::chain;
 using namespace bc::client;
 using namespace bc::explorer::config;
 using namespace bc::wallet;
 
-console_result fetch_stealth::invoke(std::ostream& output, std::ostream& error)
+console_result fetch_stealth::invoke(std::ostream &output, std::ostream &error)
 {
     // Bound parameters.
     const auto height = get_height_option();
-    const auto& encoding = get_format_option();
-    const auto& filter = get_filter_argument();
+    const auto &encoding = get_format_option();
+    const auto &filter = get_filter_argument();
     const auto connection = get_connection(*this);
 
     obelisk_client client(connection);
@@ -64,14 +66,12 @@ console_result fetch_stealth::invoke(std::ostream& output, std::ostream& error)
     // This enables json-style array formatting.
     const auto json = encoding == encoding_engine::json;
 
-    auto on_done = [&state, json](const stealth::list& list)
-    {
+    auto on_done = [&state, json](const stealth::list &list) {
         // Write out the transaction hashes of *potential* matches.
         state.output(json_helper().prop_tree(list, json));
     };
 
-    auto on_error = [&state](const std::error_code& error)
-    {
+    auto on_error = [&state](const std::error_code &error) {
         state.succeeded(error);
     };
 

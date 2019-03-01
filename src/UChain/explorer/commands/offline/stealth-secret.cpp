@@ -25,19 +25,20 @@
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/config/ec_private.hpp>
 
-
-
 // This is nearly the same as ec-add-secrets.
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
-console_result stealth_secret::invoke(std::ostream& output,
-    std::ostream& error)
+console_result stealth_secret::invoke(std::ostream &output,
+                                      std::ostream &error)
 {
     // Bound parameters.
-    const auto& scan_secret = get_spend_secret_argument();
-    const auto& shared_secret = get_shared_secret_argument();
+    const auto &scan_secret = get_spend_secret_argument();
+    const auto &shared_secret = get_shared_secret_argument();
 
     ec_secret sum(scan_secret);
     if (!bc::ec_add(sum, shared_secret))

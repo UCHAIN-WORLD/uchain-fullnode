@@ -22,9 +22,12 @@
 #include <UChain/explorer/commands/offline_commands_impl.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 //seed
 data_chunk get_seed(uint16_t bit_length)
@@ -42,7 +45,7 @@ data_chunk get_seed(uint16_t bit_length)
 }
 
 //mnemonic-new
-bw::word_list get_mnemonic_new(const bw::dictionary_list& language, const data_chunk& entropy)
+bw::word_list get_mnemonic_new(const bw::dictionary_list &language, const data_chunk &entropy)
 {
     const auto entropy_size = entropy.size();
 
@@ -57,11 +60,10 @@ bw::word_list get_mnemonic_new(const bw::dictionary_list& language, const data_c
     return bw::create_mnemonic(entropy, *dictionary);
 }
 
-
 //mnemonic-to-seed
-data_chunk get_mnemonic_to_seed(const bw::dictionary_list& language,
-    const bw::word_list& words,
-    std::string passphrase)
+data_chunk get_mnemonic_to_seed(const bw::dictionary_list &language,
+                                const bw::word_list &words,
+                                std::string passphrase)
 {
     const auto word_count = words.size();
 
@@ -78,10 +80,10 @@ data_chunk get_mnemonic_to_seed(const bw::dictionary_list& language,
 
     // check if mnemonic words are all in someone/specified dictionary
     bool all_word_in_dictionary = true;
-    for (const auto& lexicon: language)
+    for (const auto &lexicon : language)
     {
         all_word_in_dictionary = true;
-        for (const auto& word: words)
+        for (const auto &word : words)
         {
             if (std::find(lexicon->begin(), lexicon->end(), word) == lexicon->end())
             {
@@ -130,7 +132,7 @@ data_chunk get_mnemonic_to_seed(const bw::dictionary_list& language,
 }
 
 //hd-new
-bw::hd_private get_hd_new(const data_chunk& seed, uint32_t version)
+bw::hd_private get_hd_new(const data_chunk &seed, uint32_t version)
 {
     if (seed.size() < minimum_seed_size)
     {

@@ -28,10 +28,12 @@
 #include <UChain/explorer/display.hpp>
 #include <UChain/explorer/json_helper.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::chain;
 using namespace bc::client;
 using namespace bc::explorer::config;
@@ -43,11 +45,11 @@ using namespace bc::explorer::config;
 // by 'mining' addresses with the same prefix, allowing us to fetch the
 // prefix group. Obelisk will eventually support privacy enhanced history for
 // address scan by prefix.
-console_result fetch_history::invoke(std::ostream& output, std::ostream& error)
+console_result fetch_history::invoke(std::ostream &output, std::ostream &error)
 {
     // Bound parameters.
-    const auto& encoding = get_format_option();
-    const auto& address = get_payment_address_argument();
+    const auto &encoding = get_format_option();
+    const auto &address = get_payment_address_argument();
     const auto connection = get_connection(*this);
 
     obelisk_client client(connection);
@@ -63,13 +65,11 @@ console_result fetch_history::invoke(std::ostream& output, std::ostream& error)
     // This enables json-style array formatting.
     const auto json = encoding == encoding_engine::json;
 
-    auto on_done = [&state, json](const history::list& rows)
-    {
+    auto on_done = [&state, json](const history::list &rows) {
         state.output(json_helper().prop_tree(rows, json));
     };
 
-    auto on_error = [&state](const code& error)
-    {
+    auto on_error = [&state](const code &error) {
         state.succeeded(error);
     };
 

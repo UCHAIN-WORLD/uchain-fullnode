@@ -29,18 +29,20 @@
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/utility.hpp>
 
-
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::client;
 using namespace bc::explorer::config;
 
-console_result validate_tx::invoke(std::ostream& output,
-    std::ostream& error)
+console_result validate_tx::invoke(std::ostream &output,
+                                   std::ostream &error)
 {
     // Bound parameters.
-    const auto& transaction = get_transaction_argument();
+    const auto &transaction = get_transaction_argument();
     const auto connection = get_connection(*this);
 
     obelisk_client client(connection);
@@ -53,8 +55,7 @@ console_result validate_tx::invoke(std::ostream& output,
 
     callback_state state(error, output);
 
-    auto on_done = [&state](const chain::point::indexes& indexes)
-    {
+    auto on_done = [&state](const chain::point::indexes &indexes) {
         if (indexes.empty())
         {
             state.output(std::string(BX_VALIDATE_TX_VALID));
@@ -65,8 +66,7 @@ console_result validate_tx::invoke(std::ostream& output,
         state.output(format(BX_VALIDATE_TX_UNCONFIRMED_INPUTS) % unconfirmed);
     };
 
-    auto on_error = [&state](const code& error)
-    {
+    auto on_error = [&state](const code &error) {
         // BX_VALIDATE_TX_INVALID_INPUT is not currently utilized.
         // The client suppresses an index list which may have 0 or one element.
         // The list contains the index of the input which caused the failure.
