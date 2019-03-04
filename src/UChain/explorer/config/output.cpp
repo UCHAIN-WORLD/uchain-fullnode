@@ -33,18 +33,21 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 output::output()
-  : amount_(0), version_(0), script_(), pay_to_hash_(null_short_hash),
-    ephemeral_data_({})
+    : amount_(0), version_(0), script_(), pay_to_hash_(null_short_hash),
+      ephemeral_data_({})
 {
 }
 
-output::output(const std::string& tuple)
-  : output()
+output::output(const std::string &tuple)
+    : output()
 {
     std::stringstream(tuple) >> *this;
 }
@@ -59,22 +62,22 @@ uint8_t output::version() const
     return version_;
 }
 
-const chain::script& output::script() const
+const chain::script &output::script() const
 {
     return script_;
 }
 
-const short_hash& output::pay_to_hash() const
+const short_hash &output::pay_to_hash() const
 {
     return pay_to_hash_;
 }
 
-const data_chunk& output::ephemeral_data() const
+const data_chunk &output::ephemeral_data() const
 {
     return ephemeral_data_;
 }
 
-std::istream& operator>>(std::istream& input, output& argument)
+std::istream &operator>>(std::istream &input, output &argument)
 {
     std::string tuple;
     input >> tuple;
@@ -93,7 +96,7 @@ std::istream& operator>>(std::istream& input, output& argument)
     }
 
     argument.amount_ = amount;
-    const auto& target = tokens.front();
+    const auto &target = tokens.front();
 
     // Is the target a payment address?
     const bc::wallet::payment_address payment(target);
@@ -123,14 +126,14 @@ std::istream& operator>>(std::istream& input, output& argument)
 
         ec_secret ephemeral_secret;
         if (!create_stealth_data(argument.ephemeral_data_, ephemeral_secret,
-            stealth.filter(), seed))
+                                 stealth.filter(), seed))
         {
             BOOST_THROW_EXCEPTION(invalid_option_value(target));
         }
 
         ec_compressed stealth_key;
         if (!uncover_stealth(stealth_key, stealth.scan_key(), ephemeral_secret,
-            stealth.spend_keys().front()))
+                             stealth.spend_keys().front()))
         {
             BOOST_THROW_EXCEPTION(invalid_option_value(target));
         }
@@ -151,6 +154,6 @@ std::istream& operator>>(std::istream& input, output& argument)
     return input;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

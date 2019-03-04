@@ -29,25 +29,28 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 //constexpr uint8_t cert_key_byte_size = 32;
 constexpr uint8_t cert_key_string_length = 40;
 
 cert_key::cert_key()
-  : value_()
+    : value_()
 {
 }
 
-cert_key::cert_key(const std::string& base85)
+cert_key::cert_key(const std::string &base85)
 {
     std::stringstream(base85) >> *this;
 }
 
-cert_key::cert_key(const cert_key& other)
-  : value_(other.value_)
+cert_key::cert_key(const cert_key &other)
+    : value_(other.value_)
 {
 }
 
@@ -59,7 +62,7 @@ std::string cert_key::get_base85() const
     return base85.str();
 }
 
-cert_key::operator const data_chunk&() const
+cert_key::operator const data_chunk &() const
 {
     return value_;
 }
@@ -69,7 +72,7 @@ cert_key::operator data_slice() const
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, cert_key& argument)
+std::istream &operator>>(std::istream &input, cert_key &argument)
 {
     std::string base85;
     input >> base85;
@@ -83,7 +86,7 @@ std::istream& operator>>(std::istream& input, cert_key& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const cert_key& argument)
+std::ostream &operator<<(std::ostream &output, const cert_key &argument)
 {
     std::string decoded;
 
@@ -95,6 +98,6 @@ std::ostream& operator<<(std::ostream& output, const cert_key& argument)
     return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

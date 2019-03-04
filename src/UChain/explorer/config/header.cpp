@@ -31,58 +31,61 @@
 using namespace po;
 using namespace bc::config;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 header::header()
-  : value_()
+    : value_()
 {
 }
 
-header::header(const std::string& hexcode)
+header::header(const std::string &hexcode)
 {
-    std::stringstream(hexcode) >> *this;
+  std::stringstream(hexcode) >> *this;
 }
 
-header::header(const chain::header& value)
-  : value_(value)
-{
-}
-
-header::header(const header& other)
-  : header(other.value_)
+header::header(const chain::header &value)
+    : value_(value)
 {
 }
 
-header::operator const chain::header&() const
+header::header(const header &other)
+    : header(other.value_)
 {
-    return value_;
 }
 
-std::istream& operator>>(std::istream& input, header& argument)
+header::operator const chain::header &() const
 {
-    std::string hexcode;
-    input >> hexcode;
-
-    // header base16 is a private encoding in bx, used to pass between commands.
-    if (!argument.value_.from_data(base16(hexcode), false))
-    {
-        BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
-    }
-
-    return input;
+  return value_;
 }
 
-std::ostream& operator<<(std::ostream& output, const header& argument)
+std::istream &operator>>(std::istream &input, header &argument)
 {
-    const auto bytes = argument.value_.to_data(false);
+  std::string hexcode;
+  input >> hexcode;
 
-    // header base16 is a private encoding in bx, used to pass between commands.
-    output << base16(bytes);
-    return output;
+  // header base16 is a private encoding in bx, used to pass between commands.
+  if (!argument.value_.from_data(base16(hexcode), false))
+  {
+    BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
+  }
+
+  return input;
 }
 
-} // namespace explorer
+std::ostream &operator<<(std::ostream &output, const header &argument)
+{
+  const auto bytes = argument.value_.to_data(false);
+
+  // header base16 is a private encoding in bx, used to pass between commands.
+  output << base16(bytes);
+  return output;
+}
+
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

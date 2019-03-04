@@ -29,11 +29,14 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
-hd_key::hd_key(const std::string& base58)
+hd_key::hd_key(const std::string &base58)
 {
     std::stringstream(base58) >> *this;
 }
@@ -43,12 +46,12 @@ uint32_t hd_key::version() const
     return from_big_endian_unsafe<uint32_t>(value_.begin());
 }
 
-hd_key::operator const bc::wallet::hd_key&() const
+hd_key::operator const bc::wallet::hd_key &() const
 {
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, hd_key& argument)
+std::istream &operator>>(std::istream &input, hd_key &argument)
 {
     std::string base58;
     input >> base58;

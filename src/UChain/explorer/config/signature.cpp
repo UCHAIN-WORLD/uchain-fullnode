@@ -31,13 +31,16 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 // message_signature format is currently private to bx.
-static bool decode_signature(bc::wallet::message_signature& signature,
-    const std::string& encoded)
+static bool decode_signature(bc::wallet::message_signature &signature,
+                             const std::string &encoded)
 {
     // There is no bc::decode_base64 array-based override.
     data_chunk decoded;
@@ -49,37 +52,37 @@ static bool decode_signature(bc::wallet::message_signature& signature,
     return true;
 }
 
-static std::string encode_signature(const bc::wallet::message_signature& signature)
+static std::string encode_signature(const bc::wallet::message_signature &signature)
 {
     return encode_base64(signature);
 }
 
 signature::signature()
-  : value_()
+    : value_()
 {
 }
 
-signature::signature(const std::string& hexcode)
+signature::signature(const std::string &hexcode)
 {
     std::stringstream(hexcode) >> *this;
 }
 
-signature::signature(const bc::wallet::message_signature& value)
-  : value_(value)
+signature::signature(const bc::wallet::message_signature &value)
+    : value_(value)
 {
 }
 
-signature::signature(const signature& other)
-  : signature(other.value_)
+signature::signature(const signature &other)
+    : signature(other.value_)
 {
 }
 
-signature::operator const bc::wallet::message_signature&() const
+signature::operator const bc::wallet::message_signature &() const
 {
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, signature& argument)
+std::istream &operator>>(std::istream &input, signature &argument)
 {
     std::string hexcode;
     input >> hexcode;
@@ -92,12 +95,12 @@ std::istream& operator>>(std::istream& input, signature& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const signature& argument)
+std::ostream &operator<<(std::ostream &output, const signature &argument)
 {
     output << encode_signature(argument.value_);
     return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin
