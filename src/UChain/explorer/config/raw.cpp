@@ -25,54 +25,57 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/explorer/define.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 raw::raw()
-  : value_()
+    : value_()
 {
 }
 
-raw::raw(const std::string& hexcode)
+raw::raw(const std::string &hexcode)
 {
-    std::stringstream(hexcode) >> *this;
+  std::stringstream(hexcode) >> *this;
 }
 
-raw::raw(const data_chunk& value)
-  : value_(value)
-{
-}
-
-raw::raw(const raw& other)
-  : raw(other.value_)
+raw::raw(const data_chunk &value)
+    : value_(value)
 {
 }
 
-raw::operator const data_chunk&() const
+raw::raw(const raw &other)
+    : raw(other.value_)
 {
-    return value_;
+}
+
+raw::operator const data_chunk &() const
+{
+  return value_;
 }
 
 raw::operator data_slice() const
 {
-    return value_;
+  return value_;
 }
 
-std::istream& operator>>(std::istream& input, raw& argument)
+std::istream &operator>>(std::istream &input, raw &argument)
 {
-    std::istreambuf_iterator<char> first(input), last;
-    argument.value_.assign(first, last);
-    return input;
+  std::istreambuf_iterator<char> first(input), last;
+  argument.value_.assign(first, last);
+  return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const raw& argument)
+std::ostream &operator<<(std::ostream &output, const raw &argument)
 {
-    std::ostreambuf_iterator<char> iterator(output);
-    std::copy(argument.value_.begin(), argument.value_.end(), iterator);
-    return output;
+  std::ostreambuf_iterator<char> iterator(output);
+  std::copy(argument.value_.begin(), argument.value_.end(), iterator);
+  return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

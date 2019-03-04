@@ -31,13 +31,16 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 // endorsement format is currently private to bx.
-static bool decode_endorsement(bc::endorsement& endorsement,
-    const std::string& encoded)
+static bool decode_endorsement(bc::endorsement &endorsement,
+                               const std::string &encoded)
 {
     bc::endorsement decoded;
     if (!decode_base16(decoded, encoded) ||
@@ -54,26 +57,26 @@ static std::string encode_endorsement(data_slice signature)
 }
 
 endorsement::endorsement()
-  : value_()
+    : value_()
 {
 }
 
-endorsement::endorsement(const std::string& hexcode)
+endorsement::endorsement(const std::string &hexcode)
 {
     std::stringstream(hexcode) >> *this;
 }
 
-endorsement::endorsement(const data_chunk& value)
-  : value_(value)
+endorsement::endorsement(const data_chunk &value)
+    : value_(value)
 {
 }
 
-endorsement::endorsement(const endorsement& other)
-  : endorsement(other.value_)
+endorsement::endorsement(const endorsement &other)
+    : endorsement(other.value_)
 {
 }
 
-endorsement::operator const data_chunk&() const
+endorsement::operator const data_chunk &() const
 {
     return value_;
 }
@@ -83,7 +86,7 @@ endorsement::operator data_slice() const
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, endorsement& argument)
+std::istream &operator>>(std::istream &input, endorsement &argument)
 {
     std::string hexcode;
     input >> hexcode;
@@ -96,12 +99,12 @@ std::istream& operator>>(std::istream& input, endorsement& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const endorsement& argument)
+std::ostream &operator<<(std::ostream &output, const endorsement &argument)
 {
     output << encode_endorsement(argument.value_);
     return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

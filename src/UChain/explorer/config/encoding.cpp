@@ -28,9 +28,12 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 // DRY
 static auto encoding_info = "info";
@@ -38,22 +41,22 @@ static auto encoding_json = "json";
 static auto encoding_xml = "xml";
 
 encoding::encoding()
-  : encoding(encoding_engine::json)
+    : encoding(encoding_engine::json)
 {
 }
 
-encoding::encoding(const std::string& token)
+encoding::encoding(const std::string &token)
 {
     std::stringstream(token) >> *this;
 }
 
 encoding::encoding(encoding_engine engine)
-  : value_(engine)
+    : value_(engine)
 {
 }
 
-encoding::encoding(const encoding& other)
-  : value_(other.value_)
+encoding::encoding(const encoding &other)
+    : value_(other.value_)
 {
 }
 
@@ -62,7 +65,7 @@ encoding::operator encoding_engine() const
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, encoding& argument)
+std::istream &operator>>(std::istream &input, encoding &argument)
 {
     std::string text;
     input >> text;
@@ -81,28 +84,28 @@ std::istream& operator>>(std::istream& input, encoding& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const encoding& argument)
+std::ostream &operator<<(std::ostream &output, const encoding &argument)
 {
     std::string value;
 
     switch (argument.value_)
     {
-        case encoding_engine::info:
-            value = encoding_info;
-            break;
-        case encoding_engine::json:
-            value = encoding_json;
-            break;
-        case encoding_engine::xml:
-            value = encoding_xml;
-            break;
-        default:
-            BITCOIN_ASSERT_MSG(false, "Unexpected encoding value.");
+    case encoding_engine::info:
+        value = encoding_info;
+        break;
+    case encoding_engine::json:
+        value = encoding_json;
+        break;
+    case encoding_engine::xml:
+        value = encoding_xml;
+        break;
+    default:
+        BITCOIN_ASSERT_MSG(false, "Unexpected encoding value.");
     }
 
     return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

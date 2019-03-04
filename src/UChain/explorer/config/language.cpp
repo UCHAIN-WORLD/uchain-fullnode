@@ -29,9 +29,12 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 // DRY
 static auto language_en = "en";
@@ -42,22 +45,22 @@ static auto language_zh_Hant = "zh_Hant";
 static auto language_any = "any";
 
 language::language()
-  : value_(bc::wallet::language::all)
+    : value_(bc::wallet::language::all)
 {
 }
 
-language::language(const std::string& token)
+language::language(const std::string &token)
 {
     std::stringstream(token) >> *this;
 }
 
-language::language(bc::wallet::dictionary_list& languages)
-  : value_(languages)
+language::language(bc::wallet::dictionary_list &languages)
+    : value_(languages)
 {
 }
 
-language::language(const language& other)
-  : value_(other.value_)
+language::language(const language &other)
+    : value_(other.value_)
 {
 }
 
@@ -66,7 +69,7 @@ language::operator const bc::wallet::dictionary_list() const
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, language& argument)
+std::istream &operator>>(std::istream &input, language &argument)
 {
     std::string text;
     input >> text;
@@ -75,8 +78,8 @@ std::istream& operator>>(std::istream& input, language& argument)
 
     if (text == language_any)
         argument.value_.assign(bc::wallet::language::all.begin(),
-            bc::wallet::language::all.end());
-    else if(text == language_en)
+                               bc::wallet::language::all.end());
+    else if (text == language_en)
         argument.value_.push_back(&bc::wallet::language::en);
     else if (text == language_es)
         argument.value_.push_back(&bc::wallet::language::es);
@@ -94,13 +97,13 @@ std::istream& operator>>(std::istream& input, language& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const language& argument)
+std::ostream &operator<<(std::ostream &output, const language &argument)
 {
     std::string text;
 
     if (argument.value_.size() > 1)
         text = language_any;
-    else if(argument.value_.front() == &bc::wallet::language::en)
+    else if (argument.value_.front() == &bc::wallet::language::en)
         text = language_en;
     else if (argument.value_.front() == &bc::wallet::language::es)
         text = language_es;

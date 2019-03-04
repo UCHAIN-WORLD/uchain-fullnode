@@ -31,14 +31,17 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 using namespace bc::config;
 
 // point format is currently private to bx.
-static bool decode_point(chain::output_point& point, const std::string& tuple)
+static bool decode_point(chain::output_point &point, const std::string &tuple)
 {
     const auto tokens = split(tuple, BX_TX_POINT_DELIMITER);
     if (tokens.size() != 2)
@@ -46,7 +49,7 @@ static bool decode_point(chain::output_point& point, const std::string& tuple)
 
     // validate and deserialize the transaction hash
     const hash256 digest(tokens[0]);
-    const hash_digest& txhash = digest;
+    const hash_digest &txhash = digest;
 
     // copy the input point values
     std::copy(txhash.begin(), txhash.end(), point.hash.begin());
@@ -56,7 +59,7 @@ static bool decode_point(chain::output_point& point, const std::string& tuple)
 }
 
 // point format is currently private to bx.
-static std::string encode_point(const chain::output_point& point)
+static std::string encode_point(const chain::output_point &point)
 {
     std::stringstream result;
     result << hash256(point.hash) << BX_TX_POINT_DELIMITER << point.index;
@@ -64,31 +67,31 @@ static std::string encode_point(const chain::output_point& point)
 }
 
 point::point()
-  : value_()
+    : value_()
 {
 }
 
-point::point(const std::string& tuple)
+point::point(const std::string &tuple)
 {
     std::stringstream(tuple) >> *this;
 }
 
-point::point(const chain::output_point& value)
-  : value_(value)
+point::point(const chain::output_point &value)
+    : value_(value)
 {
 }
 
-point::point(const point& other)
-  : point(other.value_)
+point::point(const point &other)
+    : point(other.value_)
 {
 }
 
-point::operator const chain::output_point&() const
+point::operator const chain::output_point &() const
 {
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, point& argument)
+std::istream &operator>>(std::istream &input, point &argument)
 {
     std::string tuple;
     input >> tuple;
@@ -101,12 +104,12 @@ std::istream& operator>>(std::istream& input, point& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const point& argument)
+std::ostream &operator<<(std::ostream &output, const point &argument)
 {
     output << encode_point(argument.value_);
     return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

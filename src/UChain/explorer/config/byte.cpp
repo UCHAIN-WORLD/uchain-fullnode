@@ -30,62 +30,65 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 byte::byte()
-  : value_(0)
+    : value_(0)
 {
 }
 
-byte::byte(const std::string& decimal)
+byte::byte(const std::string &decimal)
 {
-    std::stringstream(decimal) >> *this;
+  std::stringstream(decimal) >> *this;
 }
 
 byte::byte(uint8_t byte)
-  : value_(byte)
+    : value_(byte)
 {
 }
 
-byte::byte(const byte& other)
-  : byte(other.value_)
+byte::byte(const byte &other)
+    : byte(other.value_)
 {
 }
 
 byte::operator uint8_t() const
 {
-    return value_;
+  return value_;
 }
 
-std::istream& operator>>(std::istream& input, byte& argument)
+std::istream &operator>>(std::istream &input, byte &argument)
 {
-    std::string decimal;
-    input >> decimal;
+  std::string decimal;
+  input >> decimal;
 
-    // We have this byte class only because deserialization doesn't
-    // treat 8 bit values as decimal numbers (unlike 16+ bit numbers).
+  // We have this byte class only because deserialization doesn't
+  // treat 8 bit values as decimal numbers (unlike 16+ bit numbers).
 
-    uint16_t number;
-    deserialize(number, decimal, true);
+  uint16_t number;
+  deserialize(number, decimal, true);
 
-    if (number > max_uint8)
-    {
-        BOOST_THROW_EXCEPTION(invalid_option_value(decimal));
-    }
+  if (number > max_uint8)
+  {
+    BOOST_THROW_EXCEPTION(invalid_option_value(decimal));
+  }
 
-    argument.value_ = static_cast<uint8_t>(number);
-    return input;
+  argument.value_ = static_cast<uint8_t>(number);
+  return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const byte& argument)
+std::ostream &operator<<(std::ostream &output, const byte &argument)
 {
-    uint16_t number(argument.value_);
-    output << number;
-    return output;
+  uint16_t number(argument.value_);
+  output << number;
+  return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

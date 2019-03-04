@@ -31,62 +31,65 @@
 using namespace po;
 using namespace bc::config;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 transaction::transaction()
-  : value_()
+    : value_()
 {
 }
 
-transaction::transaction(const std::string& hexcode)
+transaction::transaction(const std::string &hexcode)
 {
-    std::stringstream(hexcode) >> *this;
+  std::stringstream(hexcode) >> *this;
 }
 
-transaction::transaction(const tx_type& value)
-  : value_(value)
-{
-}
-
-transaction::transaction(const transaction& other)
-  : transaction(other.value_)
+transaction::transaction(const tx_type &value)
+    : value_(value)
 {
 }
 
-tx_type& transaction::data()
+transaction::transaction(const transaction &other)
+    : transaction(other.value_)
 {
-    return value_;
 }
 
-transaction::operator const tx_type&() const
+tx_type &transaction::data()
 {
-    return value_;
+  return value_;
 }
 
-std::istream& operator>>(std::istream& input, transaction& argument)
+transaction::operator const tx_type &() const
 {
-    std::string hexcode;
-    input >> hexcode;
-
-    // tx base16 is a private encoding in bx, used to pass between commands.
-    if (!deserialize_satoshi_item(argument.value_, base16(hexcode)))
-    {
-        BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
-    }
-
-    return input;
+  return value_;
 }
 
-std::ostream& operator<<(std::ostream& output, const transaction& argument)
+std::istream &operator>>(std::istream &input, transaction &argument)
 {
-    // tx base16 is a private encoding in bx, used to pass between commands.
-    const auto bytes = serialize_satoshi_item(argument.value_);
-    output << base16(bytes);
-    return output;
+  std::string hexcode;
+  input >> hexcode;
+
+  // tx base16 is a private encoding in bx, used to pass between commands.
+  if (!deserialize_satoshi_item(argument.value_, base16(hexcode)))
+  {
+    BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
+  }
+
+  return input;
 }
 
-} // namespace explorer
+std::ostream &operator<<(std::ostream &output, const transaction &argument)
+{
+  // tx base16 is a private encoding in bx, used to pass between commands.
+  const auto bytes = serialize_satoshi_item(argument.value_);
+  output << base16(bytes);
+  return output;
+}
+
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

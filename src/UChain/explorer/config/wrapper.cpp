@@ -29,77 +29,80 @@
 using namespace po;
 using namespace bc::config;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 wrapper::wrapper()
-  : value_()
+    : value_()
 {
 }
 
-wrapper::wrapper(const std::string& wrapped)
+wrapper::wrapper(const std::string &wrapped)
 {
-    std::stringstream(wrapped) >> *this;
+  std::stringstream(wrapped) >> *this;
 }
 
-wrapper::wrapper(const data_chunk& wrapped)
-  : wrapper(encode_base16(wrapped))
-{
-}
-
-wrapper::wrapper(const bc::wallet::wrapped_data& wrapped)
-  : value_(wrapped)
+wrapper::wrapper(const data_chunk &wrapped)
+    : wrapper(encode_base16(wrapped))
 {
 }
 
-wrapper::wrapper(const bc::wallet::payment_address& address)
-  : wrapper(encode_base16(address.to_payment()))
+wrapper::wrapper(const bc::wallet::wrapped_data &wrapped)
+    : value_(wrapped)
 {
 }
 
-wrapper::wrapper(uint8_t version, const data_chunk& payload)
-  : wrapper(bc::wallet::wrapped_data{ version, payload, 0 })
+wrapper::wrapper(const bc::wallet::payment_address &address)
+    : wrapper(encode_base16(address.to_payment()))
 {
 }
 
-wrapper::wrapper(const wrapper& other)
-  : value_(other.value_)
+wrapper::wrapper(uint8_t version, const data_chunk &payload)
+    : wrapper(bc::wallet::wrapped_data{version, payload, 0})
+{
+}
+
+wrapper::wrapper(const wrapper &other)
+    : value_(other.value_)
 {
 }
 
 const data_chunk wrapper::to_data() const
 {
-    return wrap(value_);
+  return wrap(value_);
 }
 
-wrapper::operator const bc::wallet::wrapped_data&() const
+wrapper::operator const bc::wallet::wrapped_data &() const
 {
-    return value_;
+  return value_;
 }
 
-std::istream& operator>>(std::istream& input, wrapper& argument)
+std::istream &operator>>(std::istream &input, wrapper &argument)
 {
-    std::string hexcode;
-    input >> hexcode;
+  std::string hexcode;
+  input >> hexcode;
 
-    // The checksum is validated here.
-    if (!unwrap(argument.value_, base16(hexcode)))
-    {
-        BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
-    }
+  // The checksum is validated here.
+  if (!unwrap(argument.value_, base16(hexcode)))
+  {
+    BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
+  }
 
-    return input;
+  return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const wrapper& argument)
+std::ostream &operator<<(std::ostream &output, const wrapper &argument)
 {
-    // The checksum is calculated here (value_ checksum is ignored).
-    const auto bytes = wrap(argument.value_);
-    output << base16(bytes);
-    return output;
+  // The checksum is calculated here (value_ checksum is ignored).
+  const auto bytes = wrap(argument.value_);
+  output << base16(bytes);
+  return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

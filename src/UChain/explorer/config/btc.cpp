@@ -28,56 +28,59 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 btc::btc()
-  : value_(0)
+    : value_(0)
 {
 }
 
-btc::btc(const std::string& btc)
+btc::btc(const std::string &btc)
 {
-    std::stringstream(btc) >> *this;
+  std::stringstream(btc) >> *this;
 }
 
 btc::btc(uint64_t satoshi)
-  : value_(satoshi)
+    : value_(satoshi)
 {
 }
 
-btc::btc(const btc& other)
-  : value_(other.value_)
+btc::btc(const btc &other)
+    : value_(other.value_)
 {
 }
 
 btc::operator uint64_t() const
 {
-    return value_;
+  return value_;
 }
 
-std::istream& operator>>(std::istream& input, btc& argument)
+std::istream &operator>>(std::istream &input, btc &argument)
 {
-    std::string bitcoins;
-    input >> bitcoins;
+  std::string bitcoins;
+  input >> bitcoins;
 
-    if (!decode_base10(argument.value_, bitcoins, btc_decimal_places))
-    {
-        BOOST_THROW_EXCEPTION(invalid_option_value(bitcoins));
-    }
+  if (!decode_base10(argument.value_, bitcoins, btc_decimal_places))
+  {
+    BOOST_THROW_EXCEPTION(invalid_option_value(bitcoins));
+  }
 
-    return input;
+  return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const btc& argument)
+std::ostream &operator<<(std::ostream &output, const btc &argument)
 {
-    std::string bitcoins;
-    bitcoins = encode_base10(argument.value_, btc_decimal_places);
-    output << bitcoins;
-    return output;
+  std::string bitcoins;
+  bitcoins = encode_base10(argument.value_, btc_decimal_places);
+  output << bitcoins;
+  return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

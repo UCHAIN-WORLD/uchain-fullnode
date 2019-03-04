@@ -28,9 +28,12 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 // DRY
 static auto hashtype_all = "all";
@@ -38,22 +41,22 @@ static auto hashtype_none = "none";
 static auto hashtype_single = "single";
 
 hashtype::hashtype()
-  : hashtype(chain::signature_hash_algorithm::all)
+    : hashtype(chain::signature_hash_algorithm::all)
 {
 }
 
-hashtype::hashtype(const std::string& token)
+hashtype::hashtype(const std::string &token)
 {
     std::stringstream(token) >> *this;
 }
 
-hashtype::hashtype(const chain::signature_hash_algorithm& value)
-  : value_(value)
+hashtype::hashtype(const chain::signature_hash_algorithm &value)
+    : value_(value)
 {
 }
 
-hashtype::hashtype(const hashtype& other)
-  : value_(other.value_)
+hashtype::hashtype(const hashtype &other)
+    : value_(other.value_)
 {
 }
 
@@ -62,7 +65,7 @@ hashtype::operator chain::signature_hash_algorithm() const
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, hashtype& argument)
+std::istream &operator>>(std::istream &input, hashtype &argument)
 {
     std::string text;
     input >> text;
@@ -81,28 +84,28 @@ std::istream& operator>>(std::istream& input, hashtype& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const hashtype& argument)
+std::ostream &operator<<(std::ostream &output, const hashtype &argument)
 {
     std::string value;
 
     switch (argument.value_)
     {
-        case chain::signature_hash_algorithm::all:
-            value = hashtype_all;
-            break;
-        case chain::signature_hash_algorithm::none:
-            value = hashtype_none;
-            break;
-        case chain::signature_hash_algorithm::single:
-            value = hashtype_single;
-            break;
-        default:
-            BITCOIN_ASSERT_MSG(false, "Unexpected signature hash type value.");
+    case chain::signature_hash_algorithm::all:
+        value = hashtype_all;
+        break;
+    case chain::signature_hash_algorithm::none:
+        value = hashtype_none;
+        break;
+    case chain::signature_hash_algorithm::single:
+        value = hashtype_single;
+        break;
+    default:
+        BITCOIN_ASSERT_MSG(false, "Unexpected signature hash type value.");
     }
 
     return output;
 }
 
-} // namespace explorer
 } // namespace config
+} // namespace explorer
 } // namespace libbitcoin

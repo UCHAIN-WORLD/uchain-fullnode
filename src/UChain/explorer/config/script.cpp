@@ -31,39 +31,42 @@
 
 using namespace po;
 
-namespace libbitcoin {
-namespace explorer {
-namespace config {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace config
+{
 
 script::script()
-  : value_()
+    : value_()
 {
 }
 
-script::script(const std::string& mnemonic)
+script::script(const std::string &mnemonic)
 {
     std::stringstream(mnemonic) >> *this;
 }
 
-script::script(const chain::script& value)
-  : value_(value)
+script::script(const chain::script &value)
+    : value_(value)
 {
 }
 
-script::script(const data_chunk& value)
+script::script(const data_chunk &value)
 {
     value_.from_data(value, false,
-        chain::script::parse_mode::raw_data_fallback);
+                     chain::script::parse_mode::raw_data_fallback);
 }
 
-script::script(const std::vector<std::string>& tokens)
+script::script(const std::vector<std::string> &tokens)
 {
     const auto mnemonic = join(tokens);
     std::stringstream(mnemonic) >> *this;
 }
 
-script::script(const script& other)
-  : script(other.value_)
+script::script(const script &other)
+    : script(other.value_)
 {
 }
 
@@ -78,12 +81,12 @@ const std::string script::to_string() const
     return value_.to_string(flags);
 }
 
-script::operator const chain::script&() const
+script::operator const chain::script &() const
 {
     return value_;
 }
 
-std::istream& operator>>(std::istream& input, script& argument)
+std::istream &operator>>(std::istream &input, script &argument)
 {
     std::istreambuf_iterator<char> end;
     std::string mnemonic(std::istreambuf_iterator<char>(input), end);
@@ -98,7 +101,7 @@ std::istream& operator>>(std::istream& input, script& argument)
     return input;
 }
 
-std::ostream& operator<<(std::ostream& output, const script& argument)
+std::ostream &operator<<(std::ostream &output, const script &argument)
 {
     static constexpr auto flags = chain::script_context::all_enabled;
     output << argument.value_.to_string(flags);
