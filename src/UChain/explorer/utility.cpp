@@ -43,10 +43,12 @@
 using namespace bc::client;
 using boost::filesystem::path;
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
-connection_type get_connection(const command& cmd)
+connection_type get_connection(const command &cmd)
 {
     connection_type connection;
     connection.retries = cmd.get_server_connect_retries_setting();
@@ -58,7 +60,7 @@ connection_type get_connection(const command& cmd)
 }
 
 // The key may be invalid, caller may test for null secret.
-ec_secret new_key(const data_chunk& seed)
+ec_secret new_key(const data_chunk &seed)
 {
     const bc::wallet::hd_private key(seed);
     return key.secret();
@@ -74,10 +76,10 @@ data_chunk new_seed(size_t bitlength)
 }
 
 std::vector<std::string> numbers_to_strings(
-    const chain::point::indexes& indexes)
+    const chain::point::indexes &indexes)
 {
     std::vector<std::string> stringlist;
-    for (const auto index: indexes)
+    for (const auto index : indexes)
         stringlist.push_back(std::to_string(index));
 
     return stringlist;
@@ -85,13 +87,13 @@ std::vector<std::string> numbers_to_strings(
 
 // Not testable due to lack of random engine injection.
 // DEPRECATED in favor of libbitcoin::pseudo_random_fill.
-void random_fill(data_chunk& chunk)
+void random_fill(data_chunk &chunk)
 {
     pseudo_random_fill(chunk);
 }
 
 // TODO: switch to binary for raw (primitive) reads in windows.
-std::string read_stream(std::istream& stream)
+std::string read_stream(std::istream &stream)
 {
     std::istreambuf_iterator<char> first(stream), last;
     std::string result(first, last);
@@ -99,14 +101,14 @@ std::string read_stream(std::istream& stream)
 }
 
 name_value_pairs split_pairs(const std::vector<std::string> tokens,
-    const std::string delimiter)
+                             const std::string delimiter)
 {
     name_value_pairs list;
 
-    for (const auto& token: tokens)
+    for (const auto &token : tokens)
     {
         const auto words = split(token, delimiter);
-        const auto& left = words[0];
+        const auto &left = words[0];
 
         std::string right;
         if (words.size() > 1)
@@ -118,7 +120,7 @@ name_value_pairs split_pairs(const std::vector<std::string> tokens,
     return list;
 }
 
-bool starts_with(const std::string& value, const std::string& prefix)
+bool starts_with(const std::string &value, const std::string &prefix)
 {
     try
     {
@@ -131,7 +133,7 @@ bool starts_with(const std::string& value, const std::string& prefix)
 }
 
 // This verifies the checksum.
-bool unwrap(bc::wallet::wrapped_data& data, data_slice wrapped)
+bool unwrap(bc::wallet::wrapped_data &data, data_slice wrapped)
 {
     if (!verify_checksum(wrapped))
         return false;
@@ -146,7 +148,7 @@ bool unwrap(bc::wallet::wrapped_data& data, data_slice wrapped)
 }
 
 // This recalculates the checksum, ignoring what is in data.checksum.
-data_chunk wrap(const bc::wallet::wrapped_data& data)
+data_chunk wrap(const bc::wallet::wrapped_data &data)
 {
     auto bytes = to_chunk(data.version);
     extend_data(bytes, data.payload);
@@ -154,17 +156,17 @@ data_chunk wrap(const bc::wallet::wrapped_data& data)
     return bytes;
 }
 
-std::ostream& write_stream(std::ostream& output, const Json::Value& tree,
-    encoding_engine engine)
+std::ostream &write_stream(std::ostream &output, const Json::Value &tree,
+                           encoding_engine engine)
 {
     switch (engine)
     {
-        case encoding_engine::json:
-            output << tree.toStyledString();
-            break;
-        default:
-            output << tree.toStyledString();
-            break;
+    case encoding_engine::json:
+        output << tree.toStyledString();
+        break;
+    default:
+        output << tree.toStyledString();
+        break;
     }
 
     return output;
