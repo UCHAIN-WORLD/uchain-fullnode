@@ -27,29 +27,32 @@
 #include <UChain/node/protocols/protocol_transaction_in.hpp>
 #include <UChain/node/protocols/protocol_transaction_out.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 using namespace bc::blockchain;
 using namespace bc::network;
 using namespace std::placeholders;
 
-session_manual::session_manual(p2p& network, block_chain& blockchain,
-    transaction_pool& pool)
-  : network::session_manual(network),
-    blockchain_(blockchain),
-    pool_(pool)
+session_manual::session_manual(p2p &network, block_chain &blockchain,
+                               transaction_pool &pool)
+    : network::session_manual(network),
+      blockchain_(blockchain),
+      pool_(pool)
 {
     log::info(LOG_NODE)
         << "Starting manual session.";
 }
 
 void session_manual::attach_handshake_protocols(channel::ptr channel,
-        result_handler handle_started)
+                                                result_handler handle_started)
 {
     auto self = shared_from_this();
-    attach<protocol_version>(channel)->start([channel, handle_started, this, self](const code& ec){
-        if (!ec) {
+    attach<protocol_version>(channel)->start([channel, handle_started, this, self](const code &ec) {
+        if (!ec)
+        {
             auto pt_ping = attach<protocol_ping>(channel)->do_subscribe();
             auto pt_address = attach<protocol_address>(channel)->do_subscribe();
             auto pt_block_in = attach<protocol_block_in>(channel, blockchain_)->do_subscribe();
@@ -70,10 +73,9 @@ void session_manual::attach_handshake_protocols(channel::ptr channel,
             channel->invoke_protocol_start_handler(error::channel_stopped);
         }
         handle_started(ec);
-        if(stopped())
+        if (stopped())
             channel->invoke_protocol_start_handler(error::channel_stopped);
     });
-
 }
 
 void session_manual::attach_protocols(channel::ptr channel)

@@ -28,29 +28,32 @@
 #include <UChain/node/protocols/protocol_transaction_out.hpp>
 #include <UChain/node/protocols/protocol_miner.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 using namespace bc::blockchain;
 using namespace bc::network;
 using namespace std::placeholders;
 
-session_outbound::session_outbound(p2p& network, block_chain& blockchain,
-    transaction_pool& pool)
-  : network::session_outbound(network),
-    blockchain_(blockchain),
-    pool_(pool)
+session_outbound::session_outbound(p2p &network, block_chain &blockchain,
+                                   transaction_pool &pool)
+    : network::session_outbound(network),
+      blockchain_(blockchain),
+      pool_(pool)
 {
     log::info(LOG_NODE)
         << "Starting outbound session.";
 }
 
 void session_outbound::attach_handshake_protocols(channel::ptr channel,
-        result_handler handle_started)
+                                                  result_handler handle_started)
 {
     auto self = shared_from_this();
-    attach<protocol_version>(channel)->start([channel, handle_started, this, self](const code& ec){
-        if (!ec) {
+    attach<protocol_version>(channel)->start([channel, handle_started, this, self](const code &ec) {
+        if (!ec)
+        {
             auto pt_ping = attach<protocol_ping>(channel)->do_subscribe();
             auto pt_address = attach<protocol_address>(channel)->do_subscribe();
             auto pt_block_in = attach<protocol_block_in>(channel, blockchain_)->do_subscribe();
@@ -75,12 +78,11 @@ void session_outbound::attach_handshake_protocols(channel::ptr channel,
 
         handle_started(ec);
     });
-
 }
 
 void session_outbound::attach_protocols(channel::ptr channel)
 {
-//    attach<protocol_miner>(channel, blockchain_)->start();
+    //    attach<protocol_miner>(channel, blockchain_)->start();
     channel->invoke_protocol_start_handler(error::success);
 }
 
