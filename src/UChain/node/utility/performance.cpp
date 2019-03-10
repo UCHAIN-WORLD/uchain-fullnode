@@ -21,8 +21,10 @@
 
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 double performance::normal() const
 {

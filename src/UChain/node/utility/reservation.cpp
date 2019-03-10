@@ -29,8 +29,10 @@
 #include <UChain/node/utility/performance.hpp>
 #include <UChain/node/utility/reservations.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 using namespace std::chrono;
 using namespace bc::chain;
@@ -49,15 +51,15 @@ static constexpr size_t minimum_history = 3;
 // Simple conversion factor, since we trace in micro and report in seconds.
 static constexpr size_t micro_per_second = 1000 * 1000;
 
-reservation::reservation(reservations& reservations, size_t slot,
-    uint32_t block_timeout_seconds)
-  : rate_({ true, 0, 0, 0 }),
-    stopped_(false),
-    pending_(true),
-    partitioned_(false),
-    reservations_(reservations),
-    slot_(slot),
-    rate_window_(minimum_history * block_timeout_seconds * micro_per_second)
+reservation::reservation(reservations &reservations, size_t slot,
+                         uint32_t block_timeout_seconds)
+    : rate_({true, 0, 0, 0}),
+      stopped_(false),
+      pending_(true),
+      partitioned_(false),
+      reservations_(reservations),
+      slot_(slot),
+      rate_window_(minimum_history * block_timeout_seconds * micro_per_second)
 {
 }
 
@@ -98,7 +100,7 @@ high_resolution_clock::time_point reservation::now() const
 // Clears rate/history but leaves hashes unchanged.
 void reservation::reset()
 {
-    set_rate({ true, 0, 0, 0 });
+    set_rate({true, 0, 0, 0});
     clear_history();
 }
 
@@ -113,7 +115,7 @@ bool reservation::idle() const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void reservation::set_rate(const performance& rate)
+void reservation::set_rate(const performance &rate)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
@@ -172,13 +174,13 @@ void reservation::clear_history()
 
 // It is possible to get a rate update after idling and before starting anew.
 // This can reduce the average during startup of the new channel until start.
-void reservation::update_rate(size_t events, const microseconds& database)
+void reservation::update_rate(size_t events, const microseconds &database)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
     history_mutex_.lock();
 
-    performance rate{ false, 0, 0, 0 };
+    performance rate{false, 0, 0, 0};
     const auto end = now();
     const auto event_start = end - microseconds(database);
     const auto start = end - rate_window();
@@ -186,11 +188,12 @@ void reservation::update_rate(size_t events, const microseconds& database)
 
     // Remove expired entries from the head of the queue.
     for (auto it = history_.begin(); it != history_.end() && it->time < start;
-        it = history_.erase(it));
+         it = history_.erase(it))
+        ;
 
     const auto window_full = history_count > history_.size();
     const auto event_cost = static_cast<uint64_t>(database.count());
-    history_.push_back({ events, event_cost, event_start });
+    history_.push_back({events, event_cost, event_start});
 
     // We can't set the rate until we have a period (two or more data points).
     if (history_.size() < minimum_history)
@@ -201,7 +204,7 @@ void reservation::update_rate(size_t events, const microseconds& database)
     }
 
     // Summarize event count and database cost.
-    for (const auto& record: history_)
+    for (const auto &record : history_)
     {
         BITCOIN_ASSERT(rate.events <= max_size_t - record.events);
         rate.events += record.events;
@@ -283,10 +286,10 @@ message::get_data reservation::request(bool new_channel)
 
     // Build get_blocks request message.
     for (auto height = heights_.right.begin(); height != heights_.right.end();
-        ++height)
+         ++height)
     {
         static const auto id = message::inventory::type_id::block;
-        const message::inventory_vector inventory{ id, height->second };
+        const message::inventory_vector inventory{id, height->second};
         packet.inventories.emplace_back(inventory);
     }
 
@@ -299,12 +302,12 @@ message::get_data reservation::request(bool new_channel)
     return packet;
 }
 
-void reservation::insert(const config::checkpoint& checkpoint)
+void reservation::insert(const config::checkpoint &checkpoint)
 {
     insert(checkpoint.hash(), checkpoint.height());
 }
 
-void reservation::insert(const hash_digest& hash, size_t height)
+void reservation::insert(const hash_digest &hash, size_t height)
 {
     BITCOIN_ASSERT(height <= max_uint32);
     const auto height32 = static_cast<uint32_t>(height);
@@ -314,7 +317,7 @@ void reservation::insert(const hash_digest& hash, size_t height)
     unique_lock lock(hash_mutex_);
 
     pending_ = true;
-    heights_.insert({ hash, height32 });
+    heights_.insert({hash, height32});
     ///////////////////////////////////////////////////////////////////////////
 }
 
@@ -333,8 +336,7 @@ void reservation::import(block::ptr block)
     }
 
     bool success;
-    const auto importer = [this, &block, &height, &success]()
-    {
+    const auto importer = [this, &block, &height, &success]() {
         success = reservations_.import(block, height);
     };
 
@@ -351,7 +353,7 @@ void reservation::import(block::ptr block)
 
         log::info(LOG_NODE)
             << boost::format(formatter) % height % slot() % encoded %
-            (record.total() * micro_per_second) % (record.ratio() * 100);
+                   (record.total() * micro_per_second) % (record.ratio() * 100);
     }
     else
     {
@@ -459,8 +461,8 @@ bool reservation::partition(reservation::ptr minimal)
     return populated;
 }
 
-bool reservation::find_height_and_erase(const hash_digest& hash,
-    uint32_t& out_height)
+bool reservation::find_height_and_erase(const hash_digest &hash,
+                                        uint32_t &out_height)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
