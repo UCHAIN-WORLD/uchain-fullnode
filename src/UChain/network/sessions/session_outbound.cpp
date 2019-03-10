@@ -28,17 +28,19 @@
 #include <UChain/network/protocols/protocol_ping.hpp>
 #include <UChain/bitcoin/utility/deadline.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define CLASS session_outbound
 
 using namespace std::placeholders;
 
-session_outbound::session_outbound(p2p& network)
-  : session_batch(network, true),
-    network__(network),
-    CONSTRUCT_TRACK(session_outbound)
+session_outbound::session_outbound(p2p &network)
+    : session_batch(network, true),
+      network__(network),
+      CONSTRUCT_TRACK(session_outbound)
 {
     outbound_counter = 0;
     in_reseeding = false;
@@ -60,7 +62,7 @@ void session_outbound::start(result_handler handler)
     session::start(CONCURRENT2(handle_started, _1, handler));
 }
 
-void session_outbound::handle_started(const code& ec, result_handler handler)
+void session_outbound::handle_started(const code &ec, result_handler handler)
 {
     if (ec)
     {
@@ -102,13 +104,13 @@ void session_outbound::delay_new_connect(connector::ptr connect)
 {
     auto timer = std::make_shared<deadline>(pool_, asio::seconds(2));
     auto self = shared_from_this();
-    timer->start([this, connect, timer, self](const code& ec){
+    timer->start([this, connect, timer, self](const code &ec) {
         if (stopped())
         {
             return;
         }
         auto pThis = shared_from_this();
-        auto action = [this, pThis, connect](){
+        auto action = [this, pThis, connect]() {
             new_connection(connect);
         };
         pool_.service().post(action);
@@ -117,26 +119,29 @@ void session_outbound::delay_new_connect(connector::ptr connect)
 
 void session_outbound::delay_reseeding()
 {
-    if (!network__.network_settings().enable_re_seeding) {
+    if (!network__.network_settings().enable_re_seeding)
+    {
         return;
     }
 
-    if (in_reseeding) {
+    if (in_reseeding)
+    {
         return;
     }
     in_reseeding = true;
     log::debug(LOG_NETWORK) << "outbound channel counter decreased, the re-seeding will be triggered 60s later!";
     auto timer = std::make_shared<deadline>(pool_, asio::seconds(60));
     auto self = shared_from_this();
-    timer->start([this, timer, self](const code& ec){
+    timer->start([this, timer, self](const code &ec) {
         if (stopped())
         {
             return;
         }
         auto pThis = shared_from_this();
-        auto action = [this, pThis](){
+        auto action = [this, pThis]() {
             const int counter = outbound_counter;
-            if (counter > 1) {
+            if (counter > 1)
+            {
                 log::debug(LOG_NETWORK) << "outbound channel counter recovered to [" << counter << "], re-seeding is canceled!";
                 in_reseeding = false;
                 return;
@@ -149,8 +154,8 @@ void session_outbound::delay_reseeding()
     });
 }
 
-void session_outbound::handle_connect(const code& ec, channel::ptr channel,
-    connector::ptr connect)
+void session_outbound::handle_connect(const code &ec, channel::ptr channel,
+                                      connector::ptr connect)
 {
     if (ec)
     {
@@ -164,12 +169,12 @@ void session_outbound::handle_connect(const code& ec, channel::ptr channel,
         << "Connected to outbound channel [" << channel->authority() << "]";
     ++outbound_counter;
     register_channel(channel,
-        BIND3(handle_channel_start, _1, connect, channel),
-        BIND3(handle_channel_stop, _1, connect, channel));
+                     BIND3(handle_channel_start, _1, connect, channel),
+                     BIND3(handle_channel_stop, _1, connect, channel));
 }
 
-void session_outbound::handle_channel_start(const code& ec,
-    connector::ptr connect, channel::ptr channel)
+void session_outbound::handle_channel_start(const code &ec,
+                                            connector::ptr connect, channel::ptr channel)
 {
     // Treat a start failure just like a stop.
     if (ec)
@@ -191,25 +196,24 @@ void session_outbound::attach_protocols(channel::ptr channel)
     attach<protocol_address>(channel)->do_subscribe()->start();
 }
 
-void session_outbound::handle_channel_stop(const code& ec,
-    connector::ptr connect, channel::ptr channel)
+void session_outbound::handle_channel_stop(const code &ec,
+                                           connector::ptr connect, channel::ptr channel)
 {
     channel->invoke_protocol_start_handler(error::channel_stopped);
     log::debug(LOG_NETWORK) << "channel stopped," << ec.message();
 
     const int counter = --outbound_counter;
 
-    if(! stopped() && ec.value() != error::service_stopped)
+    if (!stopped() && ec.value() != error::service_stopped)
     {
         delay_new_connect(connect);
         //restart the seeding procedure with in 1 minutes when outbound session count reduce to 1.
-        if (counter <= 1) {
+        if (counter <= 1)
+        {
             delay_reseeding();
         }
     }
 }
-
-
 
 } // namespace network
 } // namespace libbitcoin

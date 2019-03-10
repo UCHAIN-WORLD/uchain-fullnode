@@ -26,8 +26,10 @@
 #include <UChain/network/connector.hpp>
 #include <UChain/network/p2p.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define CLASS session_batch
 #define NAME "session_batch"
@@ -35,15 +37,15 @@ namespace network {
 using namespace bc::config;
 using namespace std::placeholders;
 
-session_batch::session_batch(p2p& network, bool persistent)
-  : session(network, true, persistent),
-    batch_size_(std::max(settings_.connect_batch_size, 1u))
+session_batch::session_batch(p2p &network, bool persistent)
+    : session(network, true, persistent),
+      batch_size_(std::max(settings_.connect_batch_size, 1u))
 {
 }
 
-void session_batch::converge(const code& ec, channel::ptr channel,
-     atomic_counter_ptr counter, upgrade_mutex_ptr mutex,
-     channel_handler handler)
+void session_batch::converge(const code &ec, channel::ptr channel,
+                             atomic_counter_ptr counter, upgrade_mutex_ptr mutex,
+                             channel_handler handler)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -96,7 +98,7 @@ void session_batch::connect(connector::ptr connect, channel_handler handler)
 }
 
 void session_batch::new_connect(connector::ptr connect,
-    atomic_counter_ptr counter, channel_handler handler)
+                                atomic_counter_ptr counter, channel_handler handler)
 {
     if (stopped())
     {
@@ -110,8 +112,8 @@ void session_batch::new_connect(connector::ptr connect,
     fetch_address(BIND5(start_connect, _1, _2, connect, counter, handler));
 }
 
-void session_batch::start_connect(const code& ec, const authority& host,
-    connector::ptr connect, atomic_counter_ptr counter, channel_handler handler)
+void session_batch::start_connect(const code &ec, const authority &host,
+                                  connector::ptr connect, atomic_counter_ptr counter, channel_handler handler)
 {
     if (counter->load() == batch_size_ || ec == (code)error::service_stopped)
         return;
@@ -137,12 +139,12 @@ void session_batch::start_connect(const code& ec, const authority& host,
 
     // CONNECT
     connect->connect(host, BIND7(handle_connect, _1, _2, host, connect,
-        counter, 3, handler));
+                                 counter, 3, handler));
 }
 
-void session_batch::handle_connect(const code& ec, channel::ptr channel,
-    const authority& host, connector::ptr connect, atomic_counter_ptr counter, std::size_t count,
-    channel_handler handler)
+void session_batch::handle_connect(const code &ec, channel::ptr channel,
+                                   const authority &host, connector::ptr connect, atomic_counter_ptr counter, std::size_t count,
+                                   channel_handler handler)
 {
     if (counter->load() == batch_size_)
         return;
@@ -152,7 +154,7 @@ void session_batch::handle_connect(const code& ec, channel::ptr channel,
         log::trace(LOG_NETWORK)
             << "Failure connecting to [" << host << "] " << count << ","
             << ec.message();
-        remove(host.to_network_address(), [](const code&){});
+        remove(host.to_network_address(), [](const code &) {});
         handler(ec, channel);
         return;
     }
