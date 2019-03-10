@@ -31,8 +31,10 @@
 #include <UChain/node/utility/header_queue.hpp>
 #include <UChain/node/utility/reservation.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 #define CLASS session_block_sync
 #define NAME "session_block_sync"
@@ -45,14 +47,14 @@ using namespace std::placeholders;
 // The interval in which all-channel block download performance is tested.
 static const asio::seconds regulator_interval(5);
 
-session_block_sync::session_block_sync(p2p& network, header_queue& hashes,
-    simple_chain& chain, const settings& settings)
-  : session_batch(network, false),
-    blockchain_(chain),
-    reservations_count_{0},
-    settings_(settings),
-    reservations_(hashes, chain, settings),
-    CONSTRUCT_TRACK(session_block_sync)
+session_block_sync::session_block_sync(p2p &network, header_queue &hashes,
+                                       simple_chain &chain, const settings &settings)
+    : session_batch(network, false),
+      blockchain_(chain),
+      reservations_count_{0},
+      settings_(settings),
+      reservations_(hashes, chain, settings),
+      CONSTRUCT_TRACK(session_block_sync)
 {
 }
 
@@ -66,7 +68,7 @@ void session_block_sync::start(result_handler handler)
     session::start(CONCURRENT2(handle_started, _1, handler));
 }
 
-void session_block_sync::handle_started(const code& ec, result_handler handler)
+void session_block_sync::handle_started(const code &ec, result_handler handler)
 {
     if (ec)
     {
@@ -89,15 +91,14 @@ void session_block_sync::handle_started(const code& ec, result_handler handler)
     const auto connector = create_connector();
     reservations_count_ = table.size();
     const auto complete = synchronize(handler, table.size(), NAME);
-    std::function<void(const code&)> func = complete;
+    std::function<void(const code &)> func = complete;
     // This is the end of the start sequence.
-    for (const auto row: table)
-        new_connection(connector, row, [func](const code& ec){
-        func(ec);
-    });
+    for (const auto row : table)
+        new_connection(connector, row, [func](const code &ec) {
+            func(ec);
+        });
     log::info(LOG_NODE)
-            << "table size," << table.size();
-
+        << "table size," << table.size();
 
     ////reset_timer(connector);
 }
@@ -106,12 +107,12 @@ void session_block_sync::handle_started(const code& ec, result_handler handler)
 // ----------------------------------------------------------------------------
 
 void session_block_sync::new_connection(connector::ptr connect,
-    reservation::ptr row, result_handler handler)
+                                        reservation::ptr row, result_handler handler)
 {
     if (stopped())
     {
         log::debug(LOG_NODE)
-            << "Suspending slot (" << row ->slot() << ").";
+            << "Suspending slot (" << row->slot() << ").";
         return;
     }
 
@@ -120,18 +121,18 @@ void session_block_sync::new_connection(connector::ptr connect,
 
     // BLOCK SYNC CONNECT
     this->connect(connect,
-        BIND5(handle_connect, _1, _2, connect, row, handler));
+                  BIND5(handle_connect, _1, _2, connect, row, handler));
 }
 
-void session_block_sync::handle_connect(const code& ec, channel::ptr channel,
-    connector::ptr connect, reservation::ptr row, result_handler handler)
+void session_block_sync::handle_connect(const code &ec, channel::ptr channel,
+                                        connector::ptr connect, reservation::ptr row, result_handler handler)
 {
     if (ec)
     {
         log::debug(LOG_NODE)
             << "Failure connecting slot (" << row->slot() << ") "
             << ec.message();
-        if(ec.value() == error::not_satisfied)
+        if (ec.value() == error::not_satisfied)
         {
             log::debug(LOG_NETWORK) << "session block sync handle connect, not satified";
             handle_complete(ec, channel, connect, row, handler);
@@ -146,19 +147,19 @@ void session_block_sync::handle_connect(const code& ec, channel::ptr channel,
         << channel->authority() << "]";
 
     register_channel(channel,
-        BIND5(handle_channel_start, _1, channel, connect, row, handler),
-        BIND4(handle_channel_stop, _1, connect, row, handler));
+                     BIND5(handle_channel_start, _1, channel, connect, row, handler),
+                     BIND4(handle_channel_stop, _1, connect, row, handler));
 }
 
 void session_block_sync::attach_handshake_protocols(channel::ptr channel,
-    result_handler handle_started)
+                                                    result_handler handle_started)
 {
     attach<protocol_version_quiet>(channel)->start(handle_started);
 }
 
-void session_block_sync::handle_channel_start(const code& ec,
-    channel::ptr channel, connector::ptr connect, reservation::ptr row,
-    result_handler handler)
+void session_block_sync::handle_channel_start(const code &ec,
+                                              channel::ptr channel, connector::ptr connect, reservation::ptr row,
+                                              result_handler handler)
 {
     // Treat a start failure just like a completion failure.
     if (ec)
@@ -171,17 +172,16 @@ void session_block_sync::handle_channel_start(const code& ec,
 }
 
 void session_block_sync::attach_protocols(channel::ptr channel,
-    connector::ptr connect, reservation::ptr row, result_handler handler)
+                                          connector::ptr connect, reservation::ptr row, result_handler handler)
 {
     attach<protocol_ping>(channel)->start();
     attach<protocol_address>(channel)->start();
-    attach<protocol_block_sync>(channel, row)->start(
-        BIND5(handle_complete, _1, channel, connect, row, handler));
+    attach<protocol_block_sync>(channel, row)->start(BIND5(handle_complete, _1, channel, connect, row, handler));
 }
 
-void session_block_sync::handle_complete(const code& ec, channel::ptr channel,
-    network::connector::ptr connect, reservation::ptr row,
-    result_handler handler)
+void session_block_sync::handle_complete(const code &ec, channel::ptr channel,
+                                         network::connector::ptr connect, reservation::ptr row,
+                                         result_handler handler)
 {
     if (!ec)
     {
@@ -190,17 +190,18 @@ void session_block_sync::handle_complete(const code& ec, channel::ptr channel,
         --reservations_count_;
         reservations_.remove(row);
         log::debug(LOG_NODE)
-            << "Completed slot (" << row->slot() << ")" << ",resd size," << reservations_.size();
+            << "Completed slot (" << row->slot() << ")"
+            << ",resd size," << reservations_.size();
         // This is the end of the block sync sequence.
         handler(ec);
 
         return;
     }
 
-    if(ec.value() == error::not_satisfied)
+    if (ec.value() == error::not_satisfied)
     {
         scoped_lock lock{mutex_};
-        if(reservations_count_ != 1)
+        if (reservations_count_ != 1)
         {
             --reservations_count_;
             handler(error::success);
@@ -212,13 +213,12 @@ void session_block_sync::handle_complete(const code& ec, channel::ptr channel,
     new_connection(connect, row, handler);
 }
 
-void session_block_sync::handle_channel_stop(const code& ec,
-        network::connector::ptr connect, reservation::ptr row, result_handler handler)
+void session_block_sync::handle_channel_stop(const code &ec,
+                                             network::connector::ptr connect, reservation::ptr row, result_handler handler)
 {
     log::info(LOG_NODE)
         << "Channel stopped on slot (" << row->slot() << ") " << ec.message();
 }
-
 
 // Timer.
 // ----------------------------------------------------------------------------
@@ -232,7 +232,7 @@ void session_block_sync::reset_timer(connector::ptr connect)
     timer_->start(BIND2(handle_timer, _1, connect));
 }
 
-void session_block_sync::handle_timer(const code& ec, connector::ptr connect)
+void session_block_sync::handle_timer(const code &ec, connector::ptr connect)
 {
     if (stopped())
         return;
