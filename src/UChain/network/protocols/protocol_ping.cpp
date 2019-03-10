@@ -27,8 +27,10 @@
 #include <UChain/network/p2p.hpp>
 #include <UChain/network/protocols/protocol_timer.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define NAME "ping"
 #define CLASS protocol_ping
@@ -36,10 +38,10 @@ namespace network {
 using namespace bc::message;
 using namespace std::placeholders;
 
-protocol_ping::protocol_ping(p2p& network, channel::ptr channel)
-  : protocol_timer(network, channel, true, NAME),
-    settings_(network.network_settings()),
-    CONSTRUCT_TRACK(protocol_ping)
+protocol_ping::protocol_ping(p2p &network, channel::ptr channel)
+    : protocol_timer(network, channel, true, NAME),
+      settings_(network.network_settings()),
+      CONSTRUCT_TRACK(protocol_ping)
 {
 }
 
@@ -53,14 +55,14 @@ protocol_ping::ptr protocol_ping::do_subscribe()
 void protocol_ping::start()
 {
 
-//    SUBSCRIBE2(ping, handle_receive_ping, _1, _2);
+    //    SUBSCRIBE2(ping, handle_receive_ping, _1, _2);
 
     // Send initial ping message by simulating first heartbeat.
     set_event(error::success);
 }
 
 // This is fired by the callback (i.e. base timer and stop handler).
-void protocol_ping::send_ping(const code& ec)
+void protocol_ping::send_ping(const code &ec)
 {
     if (stopped())
         return;
@@ -77,11 +79,11 @@ void protocol_ping::send_ping(const code& ec)
     const auto nonce = pseudo_random();
 
     SUBSCRIBE3(pong, handle_receive_pong, _1, _2, nonce);
-    SEND2(ping{ nonce }, handle_send, _1, pong::command);
+    SEND2(ping{nonce}, handle_send, _1, pong::command);
 }
 
-bool protocol_ping::handle_receive_ping(const code& ec,
-    message::ping::ptr message)
+bool protocol_ping::handle_receive_ping(const code &ec,
+                                        message::ping::ptr message)
 {
     if (stopped())
         return false;
@@ -95,14 +97,14 @@ bool protocol_ping::handle_receive_ping(const code& ec,
         return false;
     }
 
-    SEND2(pong{ message->nonce }, handle_send, _1, pong::command);
+    SEND2(pong{message->nonce}, handle_send, _1, pong::command);
 
     // RESUBSCRIBE
     return true;
 }
 
-bool protocol_ping::handle_receive_pong(const code& ec,
-    message::pong::ptr message, uint64_t nonce)
+bool protocol_ping::handle_receive_pong(const code &ec,
+                                        message::pong::ptr message, uint64_t nonce)
 {
     if (stopped())
         return false;

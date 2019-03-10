@@ -26,8 +26,10 @@
 #include <UChain/network/p2p.hpp>
 #include <UChain/network/protocols/protocol_timer.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define NAME "seed"
 #define CLASS protocol_seed
@@ -36,10 +38,10 @@ using namespace bc::message;
 using namespace std::placeholders;
 
 // Require three callbacks (or any error) before calling complete.
-protocol_seed::protocol_seed(p2p& network, channel::ptr channel)
-  : protocol_timer(network, channel, false, NAME),
-    network_(network),
-    CONSTRUCT_TRACK(protocol_seed)
+protocol_seed::protocol_seed(p2p &network, channel::ptr channel)
+    : protocol_timer(network, channel, false, NAME),
+      network_(network),
+      CONSTRUCT_TRACK(protocol_seed)
 {
 }
 
@@ -48,7 +50,7 @@ protocol_seed::protocol_seed(p2p& network, channel::ptr channel)
 
 void protocol_seed::start(event_handler handler)
 {
-    const auto& settings = network_.network_settings();
+    const auto &settings = network_.network_settings();
 
     auto complete = BIND2(handle_seeding_complete, _1, handler);
 
@@ -59,7 +61,7 @@ void protocol_seed::start(event_handler handler)
     }
 
     protocol_timer::start(settings.channel_germination(),
-        synchronize(complete, 3, NAME, false));
+                          synchronize(complete, 3, NAME, false));
 
     SUBSCRIBE2(address, handle_receive_address, _1, _2);
     send_own_address(settings);
@@ -69,7 +71,7 @@ void protocol_seed::start(event_handler handler)
 // Protocol.
 // ----------------------------------------------------------------------------
 
-void protocol_seed::send_own_address(const settings& settings)
+void protocol_seed::send_own_address(const settings &settings)
 {
     if (settings.self.port() == 0)
     {
@@ -77,19 +79,19 @@ void protocol_seed::send_own_address(const settings& settings)
         return;
     }
 
-    const address self({ { settings.self.to_network_address() } });
+    const address self({{settings.self.to_network_address()}});
     SEND1(self, handle_send_address, _1);
 }
 
-void protocol_seed::handle_seeding_complete(const code& ec,
-    event_handler handler)
+void protocol_seed::handle_seeding_complete(const code &ec,
+                                            event_handler handler)
 {
     handler(ec);
     stop(ec);
 }
 
-bool protocol_seed::handle_receive_address(const code& ec,
-    address::ptr message)
+bool protocol_seed::handle_receive_address(const code &ec,
+                                           address::ptr message)
 {
     if (stopped())
         return false;
@@ -113,7 +115,7 @@ bool protocol_seed::handle_receive_address(const code& ec,
     return false;
 }
 
-void protocol_seed::handle_send_address(const code& ec)
+void protocol_seed::handle_send_address(const code &ec)
 {
     if (stopped())
         return;
@@ -131,7 +133,7 @@ void protocol_seed::handle_send_address(const code& ec)
     set_event(error::success);
 }
 
-void protocol_seed::handle_send_get_address(const code& ec)
+void protocol_seed::handle_send_get_address(const code &ec)
 {
     if (stopped())
         return;
@@ -149,7 +151,7 @@ void protocol_seed::handle_send_get_address(const code& ec)
     set_event(error::success);
 }
 
-void protocol_seed::handle_store_addresses(const code& ec)
+void protocol_seed::handle_store_addresses(const code &ec)
 {
     if (stopped())
         return;
