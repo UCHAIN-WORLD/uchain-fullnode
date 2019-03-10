@@ -27,8 +27,10 @@
 #include <UChain/node/p2p_node.hpp>
 #include <UChain/node/utility/header_queue.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 #define NAME "header_sync"
 #define CLASS protocol_header_sync
@@ -45,16 +47,16 @@ static constexpr size_t max_header_response = 500;
 static const asio::seconds expiry_interval(5);
 
 // This class requires protocol version 31800.
-protocol_header_sync::protocol_header_sync(p2p& network,
-    channel::ptr channel, header_queue& hashes, uint32_t minimum_rate,
-    const checkpoint& last)
-  : protocol_timer(network, channel, true, NAME),
-    hashes_(hashes),
-    current_second_(0),
-    minimum_rate_(minimum_rate),
-    start_size_(hashes.size()),
-    last_(last),
-    CONSTRUCT_TRACK(protocol_header_sync)
+protocol_header_sync::protocol_header_sync(p2p &network,
+                                           channel::ptr channel, header_queue &hashes, uint32_t minimum_rate,
+                                           const checkpoint &last)
+    : protocol_timer(network, channel, true, NAME),
+      hashes_(hashes),
+      current_second_(0),
+      minimum_rate_(minimum_rate),
+      start_size_(hashes.size()),
+      last_(last),
+      CONSTRUCT_TRACK(protocol_header_sync)
 {
 }
 
@@ -95,16 +97,14 @@ void protocol_header_sync::send_get_headers(event_handler complete)
     if (stopped())
         return;
 
-    const get_headers request
-    {
-        { hashes_.last_hash() },
-        last_.hash()
-    };
+    const get_headers request{
+        {hashes_.last_hash()},
+        last_.hash()};
     log::trace(LOG_NODE) << "send get headers, [" << encode_hash(hashes_.last_hash()) << "], stop hash[" << encode_hash(last_.hash()) << ']';
     SEND2(request, handle_send, _1, complete);
 }
 
-void protocol_header_sync::handle_send(const code& ec, event_handler complete)
+void protocol_header_sync::handle_send(const code &ec, event_handler complete)
 {
     if (stopped())
         return;
@@ -118,8 +118,8 @@ void protocol_header_sync::handle_send(const code& ec, event_handler complete)
     }
 }
 
-bool protocol_header_sync::handle_receive(const code& ec, headers_ptr message,
-    event_handler complete)
+bool protocol_header_sync::handle_receive(const code &ec, headers_ptr message,
+                                          event_handler complete)
 {
     if (stopped())
         return false;
@@ -170,7 +170,7 @@ bool protocol_header_sync::handle_receive(const code& ec, headers_ptr message,
 }
 
 // This is fired by the base timer and stop handler.
-void protocol_header_sync::handle_event(const code& ec, event_handler complete)
+void protocol_header_sync::handle_event(const code &ec, event_handler complete)
 {
     if (ec == (code)error::channel_stopped)
     {
@@ -201,8 +201,8 @@ void protocol_header_sync::handle_event(const code& ec, event_handler complete)
     }
 }
 
-void protocol_header_sync::headers_complete(const code& ec,
-    event_handler handler)
+void protocol_header_sync::headers_complete(const code &ec,
+                                            event_handler handler)
 {
 
     // This is end of the header sync sequence.

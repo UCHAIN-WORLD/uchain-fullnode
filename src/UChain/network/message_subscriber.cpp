@@ -25,7 +25,7 @@
 #include <string>
 #include <UChain/bitcoin.hpp>
 
-#define INITIALIZE_SUBSCRIBER(pool, value) \
+#define INITIALIZE_SUBSCRIBER(pool, value)                         \
     value##_subscriber_(std::make_shared<value##_subscriber_type>( \
         pool, #value "_sub"))
 
@@ -33,11 +33,11 @@
     value##_subscriber_->relay(code, nullptr)
 
 #define CASE_HANDLE_MESSAGE(stream, version, value) \
-    case message_type::value: \
+    case message_type::value:                       \
         return handle<message::value>(stream, version, value##_subscriber_)
 
 #define CASE_RELAY_MESSAGE(stream, version, value) \
-    case message_type::value: \
+    case message_type::value:                      \
         return relay<message::value>(stream, version, value##_subscriber_)
 
 #define START_SUBSCRIBER(value) \
@@ -46,42 +46,44 @@
 #define STOP_SUBSCRIBER(value) \
     value##_subscriber_->stop()
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 using namespace message;
 
-message_subscriber::message_subscriber(threadpool& pool)
-  : INITIALIZE_SUBSCRIBER(pool, address),
-    INITIALIZE_SUBSCRIBER(pool, block_message),
-    INITIALIZE_SUBSCRIBER(pool, block_transactions),
-    INITIALIZE_SUBSCRIBER(pool, compact_block),
-    INITIALIZE_SUBSCRIBER(pool, fee_filter),
-    INITIALIZE_SUBSCRIBER(pool, filter_add),
-    INITIALIZE_SUBSCRIBER(pool, filter_clear),
-    INITIALIZE_SUBSCRIBER(pool, filter_load),
-    INITIALIZE_SUBSCRIBER(pool, get_address),
-    INITIALIZE_SUBSCRIBER(pool, get_blocks),
-    INITIALIZE_SUBSCRIBER(pool, get_block_transactions),
-    INITIALIZE_SUBSCRIBER(pool, get_data),
-    INITIALIZE_SUBSCRIBER(pool, get_headers),
-    INITIALIZE_SUBSCRIBER(pool, headers),
-    INITIALIZE_SUBSCRIBER(pool, inventory),
-    INITIALIZE_SUBSCRIBER(pool, memory_pool),
-    INITIALIZE_SUBSCRIBER(pool, merkle_block),
-    INITIALIZE_SUBSCRIBER(pool, not_found),
-    INITIALIZE_SUBSCRIBER(pool, ping),
-    INITIALIZE_SUBSCRIBER(pool, pong),
-    INITIALIZE_SUBSCRIBER(pool, reject),
-    INITIALIZE_SUBSCRIBER(pool, send_headers),
-    INITIALIZE_SUBSCRIBER(pool, send_compact_blocks),
-    INITIALIZE_SUBSCRIBER(pool, transaction_message),
-    INITIALIZE_SUBSCRIBER(pool, verack),
-    INITIALIZE_SUBSCRIBER(pool, version)
+message_subscriber::message_subscriber(threadpool &pool)
+    : INITIALIZE_SUBSCRIBER(pool, address),
+      INITIALIZE_SUBSCRIBER(pool, block_message),
+      INITIALIZE_SUBSCRIBER(pool, block_transactions),
+      INITIALIZE_SUBSCRIBER(pool, compact_block),
+      INITIALIZE_SUBSCRIBER(pool, fee_filter),
+      INITIALIZE_SUBSCRIBER(pool, filter_add),
+      INITIALIZE_SUBSCRIBER(pool, filter_clear),
+      INITIALIZE_SUBSCRIBER(pool, filter_load),
+      INITIALIZE_SUBSCRIBER(pool, get_address),
+      INITIALIZE_SUBSCRIBER(pool, get_blocks),
+      INITIALIZE_SUBSCRIBER(pool, get_block_transactions),
+      INITIALIZE_SUBSCRIBER(pool, get_data),
+      INITIALIZE_SUBSCRIBER(pool, get_headers),
+      INITIALIZE_SUBSCRIBER(pool, headers),
+      INITIALIZE_SUBSCRIBER(pool, inventory),
+      INITIALIZE_SUBSCRIBER(pool, memory_pool),
+      INITIALIZE_SUBSCRIBER(pool, merkle_block),
+      INITIALIZE_SUBSCRIBER(pool, not_found),
+      INITIALIZE_SUBSCRIBER(pool, ping),
+      INITIALIZE_SUBSCRIBER(pool, pong),
+      INITIALIZE_SUBSCRIBER(pool, reject),
+      INITIALIZE_SUBSCRIBER(pool, send_headers),
+      INITIALIZE_SUBSCRIBER(pool, send_compact_blocks),
+      INITIALIZE_SUBSCRIBER(pool, transaction_message),
+      INITIALIZE_SUBSCRIBER(pool, verack),
+      INITIALIZE_SUBSCRIBER(pool, version)
 {
 }
 
-void message_subscriber::broadcast(const code& ec)
+void message_subscriber::broadcast(const code &ec)
 {
     RELAY_CODE(ec, address);
     RELAY_CODE(ec, block_message);
@@ -112,7 +114,7 @@ void message_subscriber::broadcast(const code& ec)
 }
 
 code message_subscriber::load(message_type type, uint32_t version,
-    std::istream& stream) const
+                              std::istream &stream) const
 {
     switch (type)
     {
@@ -142,9 +144,9 @@ code message_subscriber::load(message_type type, uint32_t version,
         CASE_RELAY_MESSAGE(stream, version, transaction_message);
         CASE_RELAY_MESSAGE(stream, version, verack);
         CASE_HANDLE_MESSAGE(stream, version, version);
-        case message_type::unknown:
-        default:
-            return error::not_found;
+    case message_type::unknown:
+    default:
+        return error::not_found;
     }
 }
 

@@ -29,16 +29,18 @@
 #include <UChain/network/protocols/protocol_address.hpp>
 #include <UChain/network/protocols/protocol_ping.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define CLASS session_manual
 
 using namespace std::placeholders;
 
-session_manual::session_manual(p2p& network)
-  : session_batch(network, true),
-    CONSTRUCT_TRACK(session_manual)
+session_manual::session_manual(p2p &network)
+    : session_batch(network, true),
+      CONSTRUCT_TRACK(session_manual)
 {
 }
 
@@ -51,7 +53,7 @@ void session_manual::start(result_handler handler)
     session::start(CONCURRENT2(handle_started, _1, handler));
 }
 
-void session_manual::handle_started(const code& ec, result_handler handler)
+void session_manual::handle_started(const code &ec, result_handler handler)
 {
     if (ec)
     {
@@ -68,21 +70,21 @@ void session_manual::handle_started(const code& ec, result_handler handler)
 // Connect sequence/cycle.
 // ----------------------------------------------------------------------------
 
-void session_manual::connect(const std::string& hostname, uint16_t port)
+void session_manual::connect(const std::string &hostname, uint16_t port)
 {
     const auto unhandled = [](code, channel::ptr) {};
     connect(hostname, port, unhandled);
 }
 
-void session_manual::connect(const std::string& hostname, uint16_t port,
-    channel_handler handler)
+void session_manual::connect(const std::string &hostname, uint16_t port,
+                             channel_handler handler)
 {
     start_connect(hostname, port, handler, settings_.manual_attempt_limit);
 }
 
 // The first connect is a sequence, which then spawns a cycle.
-void session_manual::start_connect(const std::string& hostname, uint16_t port,
-    channel_handler handler, uint32_t retries)
+void session_manual::start_connect(const std::string &hostname, uint16_t port,
+                                   channel_handler handler, uint32_t retries)
 {
     if (stopped())
     {
@@ -99,12 +101,12 @@ void session_manual::start_connect(const std::string& hostname, uint16_t port,
 
     // MANUAL CONNECT OUTBOUND
     connector->connect(hostname, port,
-        BIND6(handle_connect, _1, _2, hostname, port, handler, retries - 1));
+                       BIND6(handle_connect, _1, _2, hostname, port, handler, retries - 1));
 }
 
-void session_manual::handle_connect(const code& ec, channel::ptr channel,
-    const std::string& hostname, uint16_t port, channel_handler handler,
-    uint32_t retries)
+void session_manual::handle_connect(const code &ec, channel::ptr channel,
+                                    const std::string &hostname, uint16_t port, channel_handler handler,
+                                    uint32_t retries)
 {
     if (ec)
     {
@@ -131,13 +133,13 @@ void session_manual::handle_connect(const code& ec, channel::ptr channel,
         << "] as [" << channel->authority() << "]";
 
     register_channel(channel,
-        BIND5(handle_channel_start, _1, hostname, port, channel, handler),
-        BIND3(handle_channel_stop, _1, hostname, port));
+                     BIND5(handle_channel_start, _1, hostname, port, channel, handler),
+                     BIND3(handle_channel_stop, _1, hostname, port));
 }
 
-void session_manual::handle_channel_start(const code& ec,
-    const std::string& hostname, uint16_t port, channel::ptr channel,
-    channel_handler handler)
+void session_manual::handle_channel_start(const code &ec,
+                                          const std::string &hostname, uint16_t port, channel::ptr channel,
+                                          channel_handler handler)
 {
     // Treat a start failure just like a stop, but preserve the start handler.
     if (ec)
@@ -169,18 +171,17 @@ void session_manual::attach_protocols(channel::ptr channel)
     attach<protocol_address>(channel)->do_subscribe()->start();
 }
 
-void session_manual::delay_new_connection(const std::string& hostname, uint16_t port
-        , channel_handler handler, uint32_t retries)
+void session_manual::delay_new_connection(const std::string &hostname, uint16_t port, channel_handler handler, uint32_t retries)
 {
     auto timer = std::make_shared<deadline>(pool_, asio::seconds(2));
     auto self = shared_from_this();
-    timer->start([this, timer, self, hostname, port, handler, retries](const code& ec){
+    timer->start([this, timer, self, hostname, port, handler, retries](const code &ec) {
         if (stopped())
         {
             return;
         }
         auto pThis = shared_from_this();
-        auto action = [this, pThis, hostname, port, handler, retries](){
+        auto action = [this, pThis, hostname, port, handler, retries]() {
             start_connect(hostname, port, handler, retries);
         };
         pool_.service().post(action);
@@ -188,8 +189,8 @@ void session_manual::delay_new_connection(const std::string& hostname, uint16_t 
 }
 
 // After a stop we don't use the caller's start handler, but keep connecting.
-void session_manual::handle_channel_stop(const code& ec,
-    const std::string& hostname, uint16_t port)
+void session_manual::handle_channel_stop(const code &ec,
+                                         const std::string &hostname, uint16_t port)
 {
     log::debug(LOG_NETWORK)
         << "Manual channel stopped: " << ec.message();
@@ -197,8 +198,7 @@ void session_manual::handle_channel_stop(const code& ec,
     if (stopped() || (ec.value() == error::service_stopped))
         return;
 
-    delay_new_connection(hostname, port, [](code, channel::ptr){}, settings_.manual_attempt_limit);
-
+    delay_new_connection(hostname, port, [](code, channel::ptr) {}, settings_.manual_attempt_limit);
 }
 
 } // namespace network

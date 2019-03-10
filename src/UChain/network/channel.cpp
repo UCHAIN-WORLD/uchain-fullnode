@@ -30,14 +30,16 @@
 #include <UChain/network/settings.hpp>
 #include <UChain/network/socket.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 using namespace bc::message;
 using namespace std::placeholders;
 
 // Factory for deadline timer pointer construction.
-static deadline::ptr alarm(threadpool& pool, const asio::duration& duration)
+static deadline::ptr alarm(threadpool &pool, const asio::duration &duration)
 {
     return std::make_shared<deadline>(pool, pseudo_randomize(duration));
 }
@@ -48,14 +50,14 @@ static deadline::ptr alarm(threadpool& pool, const asio::duration& duration)
 // On handshake send peer version.maxiumum and on receipt of protocol_peer
 // if it is below protocol_minimum drop the channel, otherwise set
 // protocol_version to the lesser of protocol_maximum and protocol_peer.
-channel::channel(threadpool& pool, socket::ptr socket,
-    const settings& settings)
-  : proxy(pool, socket, settings.identifier, settings.protocol),
-    notify_(false),
-    nonce_(0),
-    expiration_(alarm(pool, settings.channel_expiration())),
-    inactivity_(alarm(pool, settings.channel_inactivity())),
-    CONSTRUCT_TRACK(channel)
+channel::channel(threadpool &pool, socket::ptr socket,
+                 const settings &settings)
+    : proxy(pool, socket, settings.identifier, settings.protocol),
+      notify_(false),
+      nonce_(0),
+      expiration_(alarm(pool, settings.channel_expiration())),
+      inactivity_(alarm(pool, settings.channel_inactivity())),
+      CONSTRUCT_TRACK(channel)
 {
 }
 
@@ -67,11 +69,11 @@ void channel::start(result_handler handler)
 {
     proxy::start(
         std::bind(&channel::do_start,
-            shared_from_base<channel>(), _1, handler));
+                  shared_from_base<channel>(), _1, handler));
 }
 
 // Don't start the timers until the socket is enabled.
-void channel::do_start(const code& ec, result_handler handler)
+void channel::do_start(const code &ec, result_handler handler)
 {
     start_expiration();
     start_inactivity();
@@ -106,14 +108,15 @@ void channel::set_protocol_start_handler(std::function<void()> handler)
     protocol_start_handler_ = std::move(handler);
 }
 
-void channel::invoke_protocol_start_handler(const code& ec)
+void channel::invoke_protocol_start_handler(const code &ec)
 {
     std::function<void()> func;
     {
         unique_lock lock{mutex_};
         if (!protocol_start_handler_)
             return;
-        if (ec) {
+        if (ec)
+        {
             protocol_start_handler_ = nullptr;
             return;
         }
@@ -150,12 +153,12 @@ void channel::start_expiration()
 
     expiration_->start(
         std::bind(&channel::handle_expiration,
-            shared_from_base<channel>(), _1));
+                  shared_from_base<channel>(), _1));
     if (stopped())
         expiration_->stop();
 }
 
-void channel::handle_expiration(const code& ec)
+void channel::handle_expiration(const code &ec)
 {
     if (stopped())
     {
@@ -175,12 +178,12 @@ void channel::start_inactivity()
 
     inactivity_->start(
         std::bind(&channel::handle_inactivity,
-            shared_from_base<channel>(), _1));
+                  shared_from_base<channel>(), _1));
     if (stopped())
         inactivity_->stop();
 }
 
-void channel::handle_inactivity(const code& ec)
+void channel::handle_inactivity(const code &ec)
 {
     if (stopped())
     {

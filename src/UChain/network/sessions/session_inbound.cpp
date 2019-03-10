@@ -28,17 +28,19 @@
 #include <UChain/network/protocols/protocol_address.hpp>
 #include <UChain/network/protocols/protocol_ping.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define CLASS session_inbound
 
 using namespace std::placeholders;
 
-session_inbound::session_inbound(p2p& network)
-  : session(network, true, true),
-    network_{network},
-    CONSTRUCT_TRACK(session_inbound)
+session_inbound::session_inbound(p2p &network)
+    : session(network, true, true),
+      network_{network},
+      CONSTRUCT_TRACK(session_inbound)
 {
 }
 
@@ -58,7 +60,7 @@ void session_inbound::start(result_handler handler)
     session::start(CONCURRENT2(handle_started, _1, handler));
 }
 
-void session_inbound::handle_started(const code& ec, result_handler handler)
+void session_inbound::handle_started(const code &ec, result_handler handler)
 {
     if (ec)
     {
@@ -79,7 +81,7 @@ void session_inbound::handle_started(const code& ec, result_handler handler)
 // Accept sequence.
 // ----------------------------------------------------------------------------
 
-void session_inbound::start_accept(const code& ec, acceptor::ptr accept)
+void session_inbound::start_accept(const code &ec, acceptor::ptr accept)
 {
     if (stopped())
     {
@@ -100,8 +102,8 @@ void session_inbound::start_accept(const code& ec, acceptor::ptr accept)
     accept->accept(BIND3(handle_accept, _1, _2, accept));
 }
 
-void session_inbound::handle_accept(const code& ec, channel::ptr channel,
-    acceptor::ptr accept)
+void session_inbound::handle_accept(const code &ec, channel::ptr channel,
+                                    acceptor::ptr accept)
 {
     if (stopped())
     {
@@ -132,10 +134,10 @@ void session_inbound::handle_accept(const code& ec, channel::ptr channel,
 }
 
 void session_inbound::handle_connection_count(size_t connections,
-    channel::ptr channel)
+                                              channel::ptr channel)
 {
     const auto connection_limit = settings_.inbound_connections +
-        settings_.outbound_connections;
+                                  settings_.outbound_connections;
 
     if (connections >= connection_limit)
     {
@@ -149,12 +151,12 @@ void session_inbound::handle_connection_count(size_t connections,
         << "Connected inbound channel [" << channel->authority() << "]";
 
     register_channel(channel,
-        BIND2(handle_channel_start, _1, channel),
-        BIND1(handle_channel_stop, _1));
+                     BIND2(handle_channel_start, _1, channel),
+                     BIND1(handle_channel_stop, _1));
 }
 
-void session_inbound::handle_channel_start(const code& ec,
-    channel::ptr channel)
+void session_inbound::handle_channel_start(const code &ec,
+                                           channel::ptr channel)
 {
     if (ec)
     {
@@ -174,7 +176,7 @@ void session_inbound::attach_protocols(channel::ptr channel)
     attach<protocol_address>(channel)->do_subscribe()->start();
 }
 
-void session_inbound::handle_channel_stop(const code& ec)
+void session_inbound::handle_channel_stop(const code &ec)
 {
     log::trace(LOG_NETWORK)
         << "Inbound channel stopped: " << ec.message();

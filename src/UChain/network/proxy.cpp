@@ -33,42 +33,52 @@
 #include <UChain/network/socket.hpp>
 #include <UChain/bitcoin/utility/time.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #ifndef NDEBUG
-class traffic{
-public:
-    static traffic& instance();
+class traffic
+{
+  public:
+    static traffic &instance();
 
-    void rx(uint64_t bytes){
+    void rx(uint64_t bytes)
+    {
         rx_.fetch_add(bytes);
     }
 
-    void tx(uint64_t bytes){
+    void tx(uint64_t bytes)
+    {
         tx_.fetch_add(bytes);
     }
 
-    ~traffic(){
+    ~traffic()
+    {
         auto now = std::chrono::system_clock::now();
         std::cout << "it costs " << std::chrono::duration_cast<std::chrono::seconds>(now - start_time_).count() << " seconds, rx," << rx_.load() << ", tx," << tx_.load() << std::endl;
     }
-private:
+
+  private:
     static boost::detail::spinlock spinlock_;
     static std::shared_ptr<traffic> instance_;
-    traffic():rx_{0}, tx_{0}, start_time_{std::chrono::system_clock::now()}
+    traffic() : rx_{0}, tx_{0}, start_time_{std::chrono::system_clock::now()}
     {
     }
 
-private:
+  private:
     std::atomic<uint64_t> rx_;
     std::atomic<uint64_t> tx_;
     std::chrono::system_clock::time_point start_time_;
 };
-traffic& traffic::instance(){
-    if (instance_ == nullptr) {
+traffic &traffic::instance()
+{
+    if (instance_ == nullptr)
+    {
         boost::detail::spinlock::scoped_lock guard{spinlock_};
-        if (instance_ == nullptr) {
+        if (instance_ == nullptr)
+        {
             instance_.reset(new traffic{});
         }
     }
@@ -83,21 +93,21 @@ std::shared_ptr<traffic> traffic::instance_ = nullptr;
 using namespace message;
 using namespace std::placeholders;
 
-proxy::proxy(threadpool& pool, socket::ptr socket, uint32_t protocol_magic,
-    uint32_t protocol_version)
-  : protocol_magic_(protocol_magic),
-    protocol_version_(protocol_version),
-    authority_(socket->get_authority()),
-    heading_buffer_(heading::maximum_size()),
-    payload_buffer_(heading::maximum_payload_size(protocol_version_)),
-    dispatch_{pool, "proxy"},
-    socket_(socket),
-    stopped_(true),
-    peer_protocol_version_(message::version::level::maximum),
-    message_subscriber_(pool),
-    stop_subscriber_(std::make_shared<stop_subscriber>(pool, NAME)),
-    has_sent_{true},
-    misbehaving_{0}
+proxy::proxy(threadpool &pool, socket::ptr socket, uint32_t protocol_magic,
+             uint32_t protocol_version)
+    : protocol_magic_(protocol_magic),
+      protocol_version_(protocol_version),
+      authority_(socket->get_authority()),
+      heading_buffer_(heading::maximum_size()),
+      payload_buffer_(heading::maximum_payload_size(protocol_version_)),
+      dispatch_{pool, "proxy"},
+      socket_(socket),
+      stopped_(true),
+      peer_protocol_version_(message::version::level::maximum),
+      message_subscriber_(pool),
+      stop_subscriber_(std::make_shared<stop_subscriber>(pool, NAME)),
+      has_sent_{true},
+      misbehaving_{0}
 {
 }
 
@@ -109,7 +119,7 @@ proxy::~proxy()
 // Properties.
 // ----------------------------------------------------------------------------
 
-const config::authority& proxy::authority() const
+const config::authority &proxy::authority() const
 {
     return authority_;
 }
@@ -172,12 +182,12 @@ void proxy::read_heading()
     const auto socket = socket_->get_socket();
     using namespace boost::asio;
     async_read(socket->get(), buffer(heading_buffer_, heading_buffer_.size()),
-        std::bind(&proxy::handle_read_heading,
-            shared_from_this(), _1, _2));
+               std::bind(&proxy::handle_read_heading,
+                         shared_from_this(), _1, _2));
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void proxy::handle_read_heading(const boost_code& ec, size_t)
+void proxy::handle_read_heading(const boost_code &ec, size_t)
 {
     if (stopped())
         return;
@@ -227,7 +237,7 @@ void proxy::handle_read_heading(const boost_code& ec, size_t)
     read_payload(head);
 }
 
-void proxy::read_payload(const heading& head)
+void proxy::read_payload(const heading &head)
 {
     if (stopped())
         return;
@@ -242,13 +252,13 @@ void proxy::read_payload(const heading& head)
     const auto socket = socket_->get_socket();
     using namespace boost::asio;
     async_read(socket->get(), buffer(payload_buffer_, head.payload_size),
-        std::bind(&proxy::handle_read_payload,
-            shared_from_this(), _1, _2, head));
+               std::bind(&proxy::handle_read_payload,
+                         shared_from_this(), _1, _2, head));
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void proxy::handle_read_payload(const boost_code& ec, size_t payload_size,
-    const heading& head)
+void proxy::handle_read_payload(const boost_code &ec, size_t payload_size,
+                                const heading &head)
 {
     if (stopped())
         return;
@@ -328,8 +338,8 @@ void proxy::handle_request(data_chunk payload_buffer, uint32_t peer_protocol_ver
 // Message send sequence.
 // ----------------------------------------------------------------------------
 
-void proxy::do_send(const std::string& command, const_buffer buffer,
-    result_handler handler)
+void proxy::do_send(const std::string &command, const_buffer buffer,
+                    result_handler handler)
 {
     if (stopped())
     {
@@ -337,7 +347,8 @@ void proxy::do_send(const std::string& command, const_buffer buffer,
         return;
     }
 
-    if (command == "headers") {
+    if (command == "headers")
+    {
         log::trace(LOG_NETWORK) << "";
     }
 
@@ -356,17 +367,17 @@ void proxy::do_send(const std::string& command, const_buffer buffer,
     request_callback h{nullptr};
     {
         auto pThis = shared_from_this();
-        auto f = [this, pThis, buffer, handler](){
+        auto f = [this, pThis, buffer, handler]() {
             if (stopped())
             {
                 handler(error::channel_stopped);
                 return;
             }
             const auto socket = socket_->get_socket();
-            auto& native_socket = socket->get();
+            auto &native_socket = socket->get();
             async_write(native_socket, buffer,
-                    std::bind(&proxy::handle_send,
-                            shared_from_this(), _1, buffer, handler));
+                        std::bind(&proxy::handle_send,
+                                  shared_from_this(), _1, buffer, handler));
         };
         const auto socket = socket_->get_socket();
         outbound_size = outbound_queue_.size();
@@ -378,12 +389,14 @@ void proxy::do_send(const std::string& command, const_buffer buffer,
             h = std::move(f);
             has_sent_.store(false);
         }
-        else{
+        else
+        {
             outbound_queue_.push(std::move(f));
         }
     }
 
-    if (outbound_size > 500) {
+    if (outbound_size > 500)
+    {
         stop(error::size_limits);
         return;
     }
@@ -398,15 +411,15 @@ void proxy::do_send(const std::string& command, const_buffer buffer,
     // The shared buffer is kept in scope until the handler is invoked.
     using namespace boost::asio;
     async_write(socket->get(), buffer,
-        std::bind(&proxy::handle_send,
-            shared_from_this(), _1, buffer, handler));
+                std::bind(&proxy::handle_send,
+                          shared_from_this(), _1, buffer, handler));
 #endif
     // The shared buffer is kept in scope until the handler is invoked.
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void proxy::handle_send(const boost_code& ec, const_buffer buffer,
-    result_handler handler)
+void proxy::handle_send(const boost_code &ec, const_buffer buffer,
+                        result_handler handler)
 {
     const auto error = code(error::boost_to_error_code(ec));
 
@@ -414,7 +427,8 @@ void proxy::handle_send(const boost_code& ec, const_buffer buffer,
         log::trace(LOG_NETWORK)
             << "Failure sending " << buffer.size() << " byte message to ["
             << authority() << "] " << error.message();
-    else{
+    else
+    {
 #ifndef NDEBUG
         traffic::instance().tx(buffer.size());
 #endif
@@ -422,7 +436,8 @@ void proxy::handle_send(const boost_code& ec, const_buffer buffer,
 
     handler(error);
 #ifdef QUEUE_REQUEST
-    if(error){
+    if (error)
+    {
         const auto socket = socket_->get_socket();
         std::queue<request_callback>{}.swap(outbound_queue_);
         return;
@@ -433,7 +448,7 @@ void proxy::handle_send(const boost_code& ec, const_buffer buffer,
     request_callback h{nullptr};
     {
         const auto socket = socket_->get_socket();
-        if(outbound_queue_.empty())
+        if (outbound_queue_.empty())
             return;
         log::trace(LOG_NETWORK) << "channel:" << reinterpret_cast<int64_t>(this) << " outbound size," << outbound_queue_.size();
         h = std::move(outbound_queue_.front());
@@ -451,7 +466,7 @@ void proxy::handle_send(const boost_code& ec, const_buffer buffer,
 // completes at least once before invoking the handler. That would require a
 // lock be taken around the entire section, which poses a deadlock risk.
 // Instead this is thread safe and idempotent, allowing it to be unguarded.
-void proxy::stop(const code& ec)
+void proxy::stop(const code &ec)
 {
     BITCOIN_ASSERT_MSG(ec, "The stop code must be an error code.");
 
@@ -483,7 +498,7 @@ void proxy::stop(const code& ec)
     }
 }
 
-void proxy::stop(const boost_code& ec)
+void proxy::stop(const boost_code &ec)
 {
     stop(error::boost_to_error_code(ec));
 }
@@ -498,13 +513,13 @@ std::list<config::authority> proxy::manual_banned_;
 boost::detail::spinlock proxy::spinlock_;
 boost::detail::spinlock proxy::manual_banned_spinlock_;
 
-bool proxy::blacklisted(const config::authority& authority)
+bool proxy::blacklisted(const config::authority &authority)
 {
     int64_t ms{0};
     {
         boost::detail::spinlock::scoped_lock guard{proxy::spinlock_};
         auto it = banned_.find(authority);
-        if(it == banned_.end())
+        if (it == banned_.end())
             return false;
         ms = it->second;
     }
@@ -517,35 +532,36 @@ bool proxy::blacklisted(const config::authority& authority)
     return false;
 }
 
-bool proxy::manualbanned(const config::authority& authority)
+bool proxy::manualbanned(const config::authority &authority)
 {
     boost::detail::spinlock::scoped_lock guard{proxy::manual_banned_spinlock_};
     auto it = find(manual_banned_.begin(), manual_banned_.end(), config::authority(authority.ip(), 0));
     return (it != manual_banned_.end());
 }
 
-void proxy::manual_ban(const config::authority& authority)
+void proxy::manual_ban(const config::authority &authority)
 {
     const config::authority local_authority{authority.ip(), 0};
     boost::detail::spinlock::scoped_lock guard{proxy::manual_banned_spinlock_};
     auto it = find(manual_banned_.begin(), manual_banned_.end(), local_authority);
-    if (it == manual_banned_.end()) {
+    if (it == manual_banned_.end())
+    {
         manual_banned_.push_back(local_authority);
         log::info(LOG_NETWORK) << "add to manual_ban_list: " << local_authority.to_string();
     }
 }
 
-void proxy::manual_unban(const config::authority& authority)
+void proxy::manual_unban(const config::authority &authority)
 {
     const config::authority local_authority{authority.ip(), 0};
     boost::detail::spinlock::scoped_lock guard{proxy::manual_banned_spinlock_};
     auto it = find(manual_banned_.begin(), manual_banned_.end(), local_authority);
-    if (it != manual_banned_.end()) {
+    if (it != manual_banned_.end())
+    {
         manual_banned_.erase(it);
         log::info(LOG_NETWORK) << "remove from manual_ban_list: " << local_authority.to_string();
     }
 }
-
 
 bool proxy::misbehaving(int32_t howmuch)
 {

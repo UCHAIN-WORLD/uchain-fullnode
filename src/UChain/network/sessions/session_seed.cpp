@@ -30,17 +30,19 @@
 #include <UChain/network/proxy.hpp>
 #include <UChain/bitcoin/config/authority.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define CLASS session_seed
 #define NAME "session_seed"
 
 using namespace std::placeholders;
-session_seed::session_seed(p2p& network)
-  : session(network, true, false),
-    CONSTRUCT_TRACK(session_seed),
-    network_{network}
+session_seed::session_seed(p2p &network)
+    : session(network, true, false),
+      CONSTRUCT_TRACK(session_seed),
+      network_{network}
 {
 }
 
@@ -65,7 +67,7 @@ void session_seed::restart(result_handler handler)
     handle_started(error::success, handler);
 }
 
-void session_seed::handle_started(const code& ec, result_handler handler)
+void session_seed::handle_started(const code &ec, result_handler handler)
 {
     if (ec)
     {
@@ -104,7 +106,7 @@ void session_seed::handle_count(size_t start_size, result_handler handler)
 // ----------------------------------------------------------------------------
 
 void session_seed::start_seeding(size_t start_size, connector::ptr connect,
-    result_handler handler)
+                                 result_handler handler)
 {
     // When all seeds are synchronized call session_seed::handle_complete.
     auto all = BIND2(handle_complete, start_size, handler);
@@ -113,12 +115,12 @@ void session_seed::start_seeding(size_t start_size, connector::ptr connect,
     auto each = synchronize(all, settings_.seeds.size(), NAME, true);
 
     // We don't use parallel here because connect is itself asynchronous.
-    for (const auto& seed: settings_.seeds)
+    for (const auto &seed : settings_.seeds)
         start_seed(seed, connect, each);
 }
 
-void session_seed::start_seed(const config::endpoint& seed,
-    connector::ptr connect, result_handler handler)
+void session_seed::start_seed(const config::endpoint &seed,
+                              connector::ptr connect, result_handler handler)
 {
     if (stopped())
     {
@@ -132,14 +134,14 @@ void session_seed::start_seed(const config::endpoint& seed,
         << "Contacting seed [" << seed << "]";
 
     // OUTBOUND CONNECT
-    connect->connect(seed, BIND4(handle_connect, _1, _2, seed, handler), [this](const asio::endpoint& endpoint){
-        network_.store(config::authority{endpoint}.to_network_address(), [](const code& ec){});
-        log::debug(LOG_NETWORK) << "session seed store," << endpoint ;
+    connect->connect(seed, BIND4(handle_connect, _1, _2, seed, handler), [this](const asio::endpoint &endpoint) {
+        network_.store(config::authority{endpoint}.to_network_address(), [](const code &ec) {});
+        log::debug(LOG_NETWORK) << "session seed store," << endpoint;
     });
 }
 
-void session_seed::handle_connect(const code& ec, channel::ptr channel,
-    const config::endpoint& seed, result_handler handler)
+void session_seed::handle_connect(const code &ec, channel::ptr channel,
+                                  const config::endpoint &seed, result_handler handler)
 {
     if (ec)
     {
@@ -162,12 +164,12 @@ void session_seed::handle_connect(const code& ec, channel::ptr channel,
         << "Connected seed [" << seed << "] as " << channel->authority();
 
     register_channel(channel,
-        BIND3(handle_channel_start, _1, channel, handler),
-        BIND1(handle_channel_stop, _1));
+                     BIND3(handle_channel_start, _1, channel, handler),
+                     BIND1(handle_channel_stop, _1));
 }
 
-void session_seed::handle_channel_start(const code& ec, channel::ptr channel,
-    result_handler handler)
+void session_seed::handle_channel_start(const code &ec, channel::ptr channel,
+                                        result_handler handler)
 {
     if (ec)
     {
@@ -179,13 +181,13 @@ void session_seed::handle_channel_start(const code& ec, channel::ptr channel,
 };
 
 void session_seed::attach_protocols(channel::ptr channel,
-    result_handler handler)
+                                    result_handler handler)
 {
     attach<protocol_ping>(channel)->start();
     attach<protocol_seed>(channel)->start(handler);
 }
 
-void session_seed::handle_channel_stop(const code& ec)
+void session_seed::handle_channel_stop(const code &ec)
 {
     log::info(LOG_NETWORK)
         << "Seed channel stopped: " << ec.message();
@@ -197,15 +199,14 @@ void session_seed::handle_complete(size_t start_size, result_handler handler)
     address_count(BIND3(handle_final_count, _1, start_size, handler));
 
     log::info(LOG_NETWORK)
-            << "session_seed complete!";
+        << "session_seed complete!";
 }
 
 // We succeed only if there is a host count increase.
 void session_seed::handle_final_count(size_t current_size, size_t start_size,
-    result_handler handler)
+                                      result_handler handler)
 {
-    const auto result = current_size > start_size ? error::success :
-        error::operation_failed;
+    const auto result = current_size > start_size ? error::success : error::operation_failed;
 
     // This is the end of the seed sequence.
     handler(result);

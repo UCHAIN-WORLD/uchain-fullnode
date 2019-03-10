@@ -25,8 +25,10 @@
 #include <UChain/network/proxy.hpp>
 #include <UChain/network/socket.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 pending_sockets::pending_sockets()
 {
@@ -44,7 +46,7 @@ void pending_sockets::clear()
     unique_lock lock(mutex_);
 
     // This will asynchronously invoke the handler of each pending connect.
-    for (auto socket: sockets_)
+    for (auto socket : sockets_)
         socket->close();
 
     sockets_.clear();

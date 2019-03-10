@@ -35,8 +35,10 @@
 #include <UChain/network/protocols/protocol_version.hpp>
 #include <UChain/network/settings.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define NAME "session"
 
@@ -54,14 +56,14 @@ namespace network {
 
 using namespace std::placeholders;
 
-session::session(p2p& network, bool outgoing, bool persistent)
-  : stopped_(true),
-    incoming_(!outgoing),
-    notify_(persistent),
-    network_(network),
-    settings_(network.network_settings()),
-    pool_(network.thread_pool()),
-    dispatch_(pool_, NAME)
+session::session(p2p &network, bool outgoing, bool persistent)
+    : stopped_(true),
+      incoming_(!outgoing),
+      notify_(persistent),
+      network_(network),
+      settings_(network.network_settings()),
+      pool_(network.thread_pool()),
+      dispatch_(pool_, NAME)
 {
 }
 
@@ -92,26 +94,26 @@ void session::connection_count(count_handler handler)
 }
 
 // protected:
-bool session::blacklisted(const authority& authority) const
+bool session::blacklisted(const authority &authority) const
 {
-    const auto& blocked = settings_.blacklists;
+    const auto &blocked = settings_.blacklists;
     // black through IP, does not care port.
     const auto it = std::find_if(blocked.begin(), blocked.end(),
-        [&authority](const config::authority& elem){
-            return (authority.ip() == elem.ip());
-        });
+                                 [&authority](const config::authority &elem) {
+                                     return (authority.ip() == elem.ip());
+                                 });
     auto result = it != blocked.end();
     return result || channel::blacklisted(authority) || channel::manualbanned(authority);
 }
 
-void session::remove(const message::network_address& address, result_handler handler)
+void session::remove(const message::network_address &address, result_handler handler)
 {
     network_.remove(address, handler);
 }
 
-void session::store(const message::network_address& address)
+void session::store(const message::network_address &address)
 {
-    network_.store(address, [](const code&){});
+    network_.store(address, [](const code &) {});
 }
 
 // Socket creators.
@@ -126,7 +128,7 @@ acceptor::ptr session::create_acceptor()
     return accept;
 }
 
-void session::do_stop_acceptor(const code&, acceptor::ptr accept)
+void session::do_stop_acceptor(const code &, acceptor::ptr accept)
 {
     accept->stop();
 }
@@ -139,7 +141,7 @@ connector::ptr session::create_connector()
     return connect;
 }
 
-void session::do_stop_connector(const code&, connector::ptr connect)
+void session::do_stop_connector(const code &, connector::ptr connect)
 {
     connect->stop();
 }
@@ -163,7 +165,7 @@ void session::start(result_handler handler)
     handler(error::success);
 }
 
-void session::do_stop_session(const code&)
+void session::do_stop_session(const code &)
 {
     // This signals the session to stop creating connections, but does not
     // close the session. Channels are stopped resulting in session lost scope.
@@ -189,7 +191,7 @@ void session::subscribe_stop(result_handler handler)
 
 // protected:
 void session::register_channel(channel::ptr channel,
-    result_handler handle_started, result_handler handle_stopped)
+                               result_handler handle_started, result_handler handle_stopped)
 {
     result_handler stop_handler =
         BIND_3(do_remove, _1, channel, handle_stopped);
@@ -216,11 +218,11 @@ void session::register_channel(channel::ptr channel,
         BIND_3(do_unpend, _1, channel, start_handler);
 
     pending_.store(channel,
-        BIND_3(handle_pend, _1, channel, unpend_handler));
+                   BIND_3(handle_pend, _1, channel, unpend_handler));
 }
 
-void session::handle_pend(const code& ec, channel::ptr channel,
-    result_handler handle_started)
+void session::handle_pend(const code &ec, channel::ptr channel,
+                          result_handler handle_started)
 {
     if (ec)
     {
@@ -233,8 +235,8 @@ void session::handle_pend(const code& ec, channel::ptr channel,
         BIND_3(handle_channel_start, _1, channel, handle_started));
 }
 
-void session::handle_channel_start(const code& ec, channel::ptr channel,
-    result_handler handle_started)
+void session::handle_channel_start(const code &ec, channel::ptr channel,
+                                   result_handler handle_started)
 {
     if (ec)
     {
@@ -253,13 +255,13 @@ void session::handle_channel_start(const code& ec, channel::ptr channel,
 
 // Sessions that desire to customize the version message must override this.
 void session::attach_handshake_protocols(channel::ptr channel,
-    result_handler handle_started)
+                                         result_handler handle_started)
 {
     attach<protocol_version>(channel)->start(handle_started);
 }
 
-void session::handle_handshake(const code& ec, channel::ptr channel,
-    result_handler handle_started)
+void session::handle_handshake(const code &ec, channel::ptr channel,
+                               result_handler handle_started)
 {
     if (ec)
     {
@@ -281,7 +283,7 @@ void session::handle_handshake(const code& ec, channel::ptr channel,
 }
 
 void session::handle_is_pending(bool pending, channel::ptr channel,
-    result_handler handle_started)
+                                result_handler handle_started)
 {
     if (pending)
     {
@@ -292,7 +294,7 @@ void session::handle_is_pending(bool pending, channel::ptr channel,
         return;
     }
 
-    const auto& version = channel->version();
+    const auto &version = channel->version();
 
     if (version.value < version.minimum)
     {
@@ -307,8 +309,8 @@ void session::handle_is_pending(bool pending, channel::ptr channel,
     network_.store(channel, handle_started);
 }
 
-void session::handle_start(const code& ec, channel::ptr channel,
-    result_handler handle_started, result_handler handle_stopped)
+void session::handle_start(const code &ec, channel::ptr channel,
+                           result_handler handle_started, result_handler handle_stopped)
 {
     if (ec)
     {
@@ -324,28 +326,28 @@ void session::handle_start(const code& ec, channel::ptr channel,
     handle_started(ec);
 }
 
-void session::do_unpend(const code& ec, channel::ptr channel,
-    result_handler handle_started)
+void session::do_unpend(const code &ec, channel::ptr channel,
+                        result_handler handle_started)
 {
     pending_.remove(channel, BIND_1(handle_unpend, _1));
     handle_started(ec);
 }
 
-void session::do_remove(const code& ec, channel::ptr channel,
-    result_handler handle_stopped)
+void session::do_remove(const code &ec, channel::ptr channel,
+                        result_handler handle_stopped)
 {
     network_.remove(channel, BIND_1(handle_remove, _1));
     handle_stopped(ec);
 }
 
-void session::handle_unpend(const code& ec)
+void session::handle_unpend(const code &ec)
 {
     if (ec)
         log::trace(LOG_NETWORK)
             << "Failed to unpend a channel: " << ec.message();
 }
 
-void session::handle_remove(const code& ec)
+void session::handle_remove(const code &ec)
 {
     if (ec)
         log::trace(LOG_NETWORK)

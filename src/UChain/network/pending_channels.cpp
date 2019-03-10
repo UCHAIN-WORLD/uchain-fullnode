@@ -26,8 +26,10 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/network/channel.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 pending_channels::pending_channels()
 {
@@ -41,8 +43,7 @@ pending_channels::~pending_channels()
 bool pending_channels::safe_store(channel::ptr channel)
 {
     const auto version_nonce = channel->nonce();
-    const auto match = [version_nonce](const channel::ptr& entry)
-    {
+    const auto match = [version_nonce](const channel::ptr &entry) {
         return entry->nonce() == version_nonce;
     };
 
@@ -106,8 +107,7 @@ void pending_channels::remove(channel::ptr channel, result_handler handler)
 
 bool pending_channels::safe_exists(uint64_t version_nonce) const
 {
-    const auto match = [version_nonce](channel::ptr entry)
-    {
+    const auto match = [version_nonce](channel::ptr entry) {
         return entry->nonce() == version_nonce;
     };
 
@@ -121,7 +121,7 @@ bool pending_channels::safe_exists(uint64_t version_nonce) const
 }
 
 void pending_channels::exists(uint64_t version_nonce,
-    truth_handler handler) const
+                              truth_handler handler) const
 {
     // This is an optimization that requires we always set a non-zero nonce.
     handler(version_nonce == 0 ? false : safe_exists(version_nonce));
