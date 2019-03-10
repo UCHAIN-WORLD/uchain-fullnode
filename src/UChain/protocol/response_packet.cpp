@@ -29,11 +29,13 @@
 #include <UChain/protocol/zmq/message.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
-namespace libbitcoin {
-namespace protocol {
+namespace libbitcoin
+{
+namespace protocol
+{
 
 response_packet::response_packet()
-  : response_(nullptr)
+    : response_(nullptr)
 {
 }
 
@@ -47,28 +49,28 @@ void response_packet::set_response(std::shared_ptr<response> payload)
     response_ = payload;
 }
 
-bool response_packet::encode_payload(zmq::message& message) const
+bool response_packet::encode_payload(zmq::message &message) const
 {
     if (!response_)
         return false;
 
     const auto data = response_->SerializeAsString();
-    message.append({ data.begin(), data.end() });
+    message.append({data.begin(), data.end()});
     return true;
 }
 
-bool response_packet::decode_payload(const data_chunk& payload)
+bool response_packet::decode_payload(const data_chunk &payload)
 {
     const auto data = std::make_shared<response>();
 
-    if (!data->ParseFromString({ payload.begin(), payload.end() }))
+    if (!data->ParseFromString({payload.begin(), payload.end()}))
         return false;
 
     response_ = data;
     return true;
 }
 
-}
-}
+} // namespace protocol
+} // namespace libbitcoin
 
 #endif
