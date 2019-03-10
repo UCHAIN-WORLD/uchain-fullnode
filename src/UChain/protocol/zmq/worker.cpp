@@ -26,16 +26,19 @@
 #include <UChain/protocol/zmq/message.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 #define NAME "worker"
 
 // Derive from this abstract worker to implement real worker.
-worker::worker(threadpool& pool)
-  : dispatch_(pool, NAME),
-    stopped_(true)
+worker::worker(threadpool &pool)
+    : dispatch_(pool, NAME),
+      stopped_(true)
 {
 }
 
@@ -121,14 +124,14 @@ bool worker::finished(bool result)
 }
 
 // Call from work to forward a message from one socket to another.
-bool worker::forward(socket& from, socket& to)
+bool worker::forward(socket &from, socket &to)
 {
     message packet;
     return !from.receive(packet) && !to.send(packet);
 }
 
 // Call from work to establish a proxy between two sockets.
-void worker::relay(socket& left, socket& right)
+void worker::relay(socket &left, socket &right)
 {
     // Blocks until the context is terminated, always returns -1.
     zmq_proxy_steerable(left.self(), right.self(), nullptr, nullptr);

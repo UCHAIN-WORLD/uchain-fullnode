@@ -25,18 +25,21 @@
 #include <UChain/protocol/zmq/identifiers.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 poller::poller()
-  : expired_(false),
-    terminated_(false)
+    : expired_(false),
+      terminated_(false)
 {
 }
 
 // Parameter fd is non-zmq socket (unused when socket is set).
-void poller::add(socket& socket)
+void poller::add(socket &socket)
 {
     zmq_pollitem item;
     item.socket = socket.self();
@@ -87,25 +90,25 @@ identifiers poller::wait(int32_t timeout_milliseconds)
     BITCOIN_ASSERT(size <= max_int32);
 
     const auto item_count = static_cast<int32_t>(size);
-    const auto items = reinterpret_cast<zmq_pollitem_t*>(pollers_.data());
+    const auto items = reinterpret_cast<zmq_pollitem_t *>(pollers_.data());
     const auto signaled = zmq_poll(items, item_count, timeout_milliseconds);
 
     // Either one of the sockets was terminated or a signal intervened.
     if (signaled < 0)
     {
         terminated_ = true;
-        return{};
+        return {};
     }
 
     // No events have been signaled and no failure, so ther timer expired.
     if (signaled == 0)
     {
         expired_ = true;
-        return{};
+        return {};
     }
 
     identifiers result;
-    for (const auto& poller: pollers_)
+    for (const auto &poller : pollers_)
         if ((poller.revents & ZMQ_POLLIN) != 0)
             result.push(poller.socket);
 

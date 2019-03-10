@@ -24,15 +24,18 @@
 #include <UChain/bitcoin.hpp>
 #include <mutex>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 std::mutex zmq_mtx;
 static constexpr int32_t zmq_fail = -1;
 
 context::context(bool started)
-  : self_(nullptr)
+    : self_(nullptr)
 {
     if (started)
         start();
@@ -88,7 +91,7 @@ context::operator const bool() const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void* context::self()
+void *context::self()
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section

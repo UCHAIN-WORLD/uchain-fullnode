@@ -22,9 +22,12 @@
 #include <algorithm>
 #include <UChain/protocol/zmq/identifiers.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 bool identifiers::empty() const
 {
@@ -36,7 +39,7 @@ bool identifiers::contains(identifier value) const
     return std::find(ids_.begin(), ids_.end(), value) != ids_.end();
 }
 
-void identifiers::push(const void* socket)
+void identifiers::push(const void *socket)
 {
     const auto value = reinterpret_cast<identifier>(socket);
     ids_.push_back(value);

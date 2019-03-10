@@ -22,48 +22,51 @@
 #include <zmq.h>
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 // See: zmq::errno_to_string
 code get_last_error()
 {
     switch (zmq_errno())
     {
-        case 0:
-            return error::success;
+    case 0:
+        return error::success;
 
 #if defined _WIN32
-        case ENOBUFS:
-        case ENOTSUP:
-        case EPROTONOSUPPORT:
-            return error::operation_failed;
-        case ENETDOWN:
-            return error::network_unreachable;
-        case EADDRINUSE:
-            return error::address_in_use;
-        case EADDRNOTAVAIL:
-            return error::resolve_failed;
-        case ECONNREFUSED:
-            return error::accept_failed;
-        case EINPROGRESS:
-            return error::channel_timeout;
+    case ENOBUFS:
+    case ENOTSUP:
+    case EPROTONOSUPPORT:
+        return error::operation_failed;
+    case ENETDOWN:
+        return error::network_unreachable;
+    case EADDRINUSE:
+        return error::address_in_use;
+    case EADDRNOTAVAIL:
+        return error::resolve_failed;
+    case ECONNREFUSED:
+        return error::accept_failed;
+    case EINPROGRESS:
+        return error::channel_timeout;
 #endif
-        case EFSM:
-        case EAGAIN:
-            return error::channel_timeout;
-        case EFAULT:
-            return error::bad_stream;
-        case EINTR:
-        case ETERM:
-            return error::service_stopped;
-        case ENOTSOCK:
-        case EMTHREAD:
-        case ENOCOMPATPROTO:
-            return error::operation_failed;
-        default:
-            return error::unknown;
+    case EFSM:
+    case EAGAIN:
+        return error::channel_timeout;
+    case EFAULT:
+        return error::bad_stream;
+    case EINTR:
+    case ETERM:
+        return error::service_stopped;
+    case ENOTSOCK:
+    case EMTHREAD:
+    case ENOCOMPATPROTO:
+        return error::operation_failed;
+    default:
+        return error::unknown;
     }
 }
 

@@ -23,9 +23,12 @@
 #include <zmq.h>
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 static constexpr int32_t zmq_fail = -1;
 static constexpr size_t zmq_encoded_key_size = 40;
@@ -37,7 +40,7 @@ certificate::certificate()
 }
 
 // Full key space.
-certificate::certificate(const config::sodium& private_key)
+certificate::certificate(const config::sodium &private_key)
 {
     if (!private_key)
     {
@@ -50,14 +53,14 @@ certificate::certificate(const config::sodium& private_key)
         private_ = private_key;
 }
 
-bool certificate::derive(config::sodium& out_public,
-    const config::sodium& private_key)
+bool certificate::derive(config::sodium &out_public,
+                         const config::sodium &private_key)
 {
     if (!private_key)
         return false;
 
     const auto key = private_key.to_string();
-    char public_key[zmq_encoded_key_size + 1] = { 0 };
+    char public_key[zmq_encoded_key_size + 1] = {0};
 
     if (zmq_curve_public(public_key, key.data()) == zmq_fail)
         return false;
@@ -68,20 +71,20 @@ bool certificate::derive(config::sodium& out_public,
 
 // TODO: update settings loader so this isn't necessary.
 // BUGBUG: this limitation weakens security by reducing key space.
-static inline bool ok_setting(const std::string& key)
+static inline bool ok_setting(const std::string &key)
 {
     return key.find_first_of('#') == std::string::npos;
 };
 
-bool certificate::create(config::sodium& out_public,
-    config::sodium& out_private, bool setting)
+bool certificate::create(config::sodium &out_public,
+                         config::sodium &out_private, bool setting)
 {
     // Loop until neither key's base85 encoding includes the # character.
     // This ensures that the value can be used in libbitcoin settings files.
     for (uint8_t attempt = 0; attempt <= max_uint8; attempt++)
     {
-        char public_key[zmq_encoded_key_size + 1] = { 0 };
-        char private_key[zmq_encoded_key_size + 1] = { 0 };
+        char public_key[zmq_encoded_key_size + 1] = {0};
+        char private_key[zmq_encoded_key_size + 1] = {0};
 
         if (zmq_curve_keypair(public_key, private_key) == zmq_fail)
             return false;
@@ -102,12 +105,12 @@ certificate::operator const bool() const
     return public_;
 }
 
-const config::sodium& certificate::public_key() const
+const config::sodium &certificate::public_key() const
 {
     return public_;
 }
 
-const config::sodium& certificate::private_key() const
+const config::sodium &certificate::private_key() const
 {
     return private_;
 }

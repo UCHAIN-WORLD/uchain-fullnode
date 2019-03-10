@@ -27,9 +27,12 @@
 #include <UChain/protocol/zmq/socket.hpp>
 #include <UChain/protocol/zmq/zeromq.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 // If ZMQ_DONTWAIT is set we fail on busy socket.
 // This would happen if a message is being read when we try to send.
@@ -38,13 +41,13 @@ static constexpr auto zmq_fail = -1;
 
 // Use for receiving.
 frame::frame()
-  : more_(false), valid_(initialize(message_, {}))
+    : more_(false), valid_(initialize(message_, {}))
 {
 }
 
 // Use for sending.
-frame::frame(const data_chunk& data)
-  : more_(false), valid_(initialize(message_, data))
+frame::frame(const data_chunk &data)
+    : more_(false), valid_(initialize(message_, data))
 {
 }
 
@@ -54,9 +57,9 @@ frame::~frame()
 }
 
 // static
-bool frame::initialize(zmq_msg& message, const data_chunk& data)
+bool frame::initialize(zmq_msg &message, const data_chunk &data)
 {
-    const auto buffer = reinterpret_cast<zmq_msg_t*>(&message);
+    const auto buffer = reinterpret_cast<zmq_msg_t *>(&message);
 
     if (data.empty())
         return (zmq_msg_init(buffer) != zmq_fail);
@@ -79,7 +82,7 @@ bool frame::more() const
 }
 
 // private
-bool frame::set_more(socket& socket)
+bool frame::set_more(socket &socket)
 {
     int more;
     auto length = static_cast<size_t>(sizeof(int));
@@ -93,33 +96,32 @@ bool frame::set_more(socket& socket)
 
 data_chunk frame::payload()
 {
-    const auto buffer = reinterpret_cast<zmq_msg_t*>(&message_);
+    const auto buffer = reinterpret_cast<zmq_msg_t *>(&message_);
     const auto size = zmq_msg_size(buffer);
     const auto data = zmq_msg_data(buffer);
-    const auto begin = static_cast<uint8_t*>(data);
-    return{ begin, begin + size };
+    const auto begin = static_cast<uint8_t *>(data);
+    return {begin, begin + size};
 }
 
 // Must be called on the socket thread.
-code frame::receive(socket& socket)
+code frame::receive(socket &socket)
 {
     if (!valid_)
         return error::operation_failed;
 
-    const auto buffer = reinterpret_cast<zmq_msg_t*>(&message_);
-    const auto result = zmq_recvmsg(socket.self(), buffer, wait_flag)
-        != zmq_fail && set_more(socket);
+    const auto buffer = reinterpret_cast<zmq_msg_t *>(&message_);
+    const auto result = zmq_recvmsg(socket.self(), buffer, wait_flag) != zmq_fail && set_more(socket);
     return result ? error::success : get_last_error();
 }
 
 // Must be called on the socket thread.
-code frame::send(socket& socket, bool last)
+code frame::send(socket &socket, bool last)
 {
     if (!valid_)
         return error::operation_failed;
 
     const int flags = (last ? 0 : ZMQ_SNDMORE) | wait_flag;
-    const auto buffer = reinterpret_cast<zmq_msg_t*>(&message_);
+    const auto buffer = reinterpret_cast<zmq_msg_t *>(&message_);
     const auto result = zmq_sendmsg(socket.self(), buffer, flags) != zmq_fail;
     return result ? error::success : get_last_error();
 }
@@ -127,7 +129,7 @@ code frame::send(socket& socket, bool last)
 // private
 bool frame::destroy()
 {
-    const auto buffer = reinterpret_cast<zmq_msg_t*>(&message_);
+    const auto buffer = reinterpret_cast<zmq_msg_t *>(&message_);
     return valid_ && (zmq_msg_close(buffer) != zmq_fail);
 }
 
