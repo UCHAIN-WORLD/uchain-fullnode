@@ -34,11 +34,13 @@ using namespace po;
 using namespace std;
 using namespace boost::filesystem;
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 using namespace commands;
 
-void broadcast(const function<void(shared_ptr<command>)> func, std::ostream& os)
+void broadcast(const function<void(shared_ptr<command>)> func, std::ostream &os)
 {
     /*os <<"== original commands ==\r\n";
 
@@ -59,7 +61,7 @@ void broadcast(const function<void(shared_ptr<command>)> func, std::ostream& os)
     broadcast_extension(func, os);
 }
 
-shared_ptr<command> find(const string& symbol)
+shared_ptr<command> find(const string &symbol)
 {
     if (symbol == help::symbol())
         return make_shared<help>();
@@ -87,7 +89,7 @@ shared_ptr<command> find(const string& symbol)
     return find_extension(symbol);
 }
 
-std::string formerly(const string& former)
+std::string formerly(const string &former)
 {
     if (former == send_tx::formerly())
         return send_tx::symbol();

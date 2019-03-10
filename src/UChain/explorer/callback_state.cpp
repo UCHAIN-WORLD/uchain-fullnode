@@ -30,53 +30,55 @@
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/utility.hpp>
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
-callback_state::callback_state(std::ostream& error, std::ostream& output,
-    const encoding_engine engine)
-  : stopped_(true), refcount_(0), result_(console_result::okay),
-    engine_(engine), error_(error), output_(output)
+callback_state::callback_state(std::ostream &error, std::ostream &output,
+                               const encoding_engine engine)
+    : stopped_(true), refcount_(0), result_(console_result::okay),
+      engine_(engine), error_(error), output_(output)
 
 {
 }
 
-callback_state::callback_state(std::ostream& error, std::ostream& output)
-  : callback_state(error, output, encoding_engine::info)
+callback_state::callback_state(std::ostream &error, std::ostream &output)
+    : callback_state(error, output, encoding_engine::info)
 {
 }
 
 // std::endl adds "/n" and flushes the stream.
-void callback_state::error(const Json::Value& tree)
+void callback_state::error(const Json::Value &tree)
 {
     write_stream(error_, tree, engine_);
 }
 
 // std::endl adds "/n" and flushes the stream.
-void callback_state::error(const format& message)
+void callback_state::error(const format &message)
 {
     error_ << message;
     error_.flush();
 }
 
-void callback_state::error(const std::string& message)
+void callback_state::error(const std::string &message)
 {
     error(format(message));
 }
 
-void callback_state::output(const Json::Value& tree)
+void callback_state::output(const Json::Value &tree)
 {
     write_stream(output_, tree, engine_);
 }
 
 // std::endl adds "/n" and flushes the stream.
-void callback_state::output(const format& message)
+void callback_state::output(const format &message)
 {
     output_ << message;
     output_.flush();
 }
 
-void callback_state::output(const std::string& message)
+void callback_state::output(const std::string &message)
 {
     output(format(message));
 }
@@ -100,12 +102,12 @@ void callback_state::stop(console_result result)
     result_ = result;
 }
 
-bool& callback_state::stopped()
+bool &callback_state::stopped()
 {
     return stopped_;
 }
 
-bool callback_state::succeeded(const code& ec, const std::string& format)
+bool callback_state::succeeded(const code &ec, const std::string &format)
 {
     if (ec)
     {
@@ -154,13 +156,13 @@ callback_state::operator size_t() const
     return refcount_;
 }
 
-callback_state& callback_state::operator++()
+callback_state &callback_state::operator++()
 {
     increment();
     return *this;
 }
 
-callback_state& callback_state::operator--()
+callback_state &callback_state::operator--()
 {
     decrement();
     return *this;

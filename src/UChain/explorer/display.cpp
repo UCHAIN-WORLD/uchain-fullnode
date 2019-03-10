@@ -30,30 +30,31 @@
 #include <UChain/explorer/utility.hpp>
 #include <UChain/explorer/version.hpp>
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 using namespace bc::config;
 
-void display_command_names(std::ostream& stream)
+void display_command_names(std::ostream &stream)
 {
-    const auto func = [&stream](std::shared_ptr<command> explorer_command)
-    {
+    const auto func = [&stream](std::shared_ptr<command> explorer_command) {
         BITCOIN_ASSERT(explorer_command != nullptr);
         if (!explorer_command->obsolete())
-            stream << "  " <<explorer_command->name() << "\r\n";
+            stream << "  " << explorer_command->name() << "\r\n";
     };
 
     broadcast(func, stream);
 }
 
-void display_connection_failure(std::ostream& stream, const endpoint& url)
+void display_connection_failure(std::ostream &stream, const endpoint &url)
 {
-    stream << format(BX_CONNECTION_FAILURE) % url ;
+    stream << format(BX_CONNECTION_FAILURE) % url;
 }
 
-void display_invalid_command(std::ostream& stream, const std::string& command,
-    const std::string& superseding)
+void display_invalid_command(std::ostream &stream, const std::string &command,
+                             const std::string &superseding)
 {
     if (superseding.empty())
         stream << format(BX_INVALID_COMMAND) % command;
@@ -62,25 +63,27 @@ void display_invalid_command(std::ostream& stream, const std::string& command,
 }
 
 // English only hack to patch missing arg name in boost exception message.
-static std::string fixup_boost_po_what_en(const std::string& what)
+static std::string fixup_boost_po_what_en(const std::string &what)
 {
     std::string message(what);
     boost::replace_all(message, "for option is invalid", "is invalid");
     return message;
 }
 
-void display_invalid_parameter(std::ostream& stream,
-    const std::string& message)
+void display_invalid_parameter(std::ostream &stream,
+                               const std::string &message)
 {
     stream << format(BX_INVALID_PARAMETER) % fixup_boost_po_what_en(message);
 }
 
-void display_usage(std::ostream& stream)
+void display_usage(std::ostream &stream)
 {
     stream
-        << std::endl << BX_COMMAND_USAGE << std::endl
+        << std::endl
+        << BX_COMMAND_USAGE << std::endl
         << format(BX_VERSION_MESSAGE) %
-            UC_EXPLORER_VERSION << std::endl
+               UC_EXPLORER_VERSION
+        << std::endl
         << BX_COMMANDS_HEADER << std::endl;
 
     display_command_names(stream);

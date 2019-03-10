@@ -30,8 +30,10 @@
 #include <UChain/network/protocols/protocol_timer.hpp>
 #include <UChain/network/settings.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define NAME "version"
 #define CLASS protocol_version
@@ -49,7 +51,7 @@ static uint64_t time_stamp()
 }
 
 message::version protocol_version::version_factory(
-    const config::authority& authority, const settings& settings,
+    const config::authority &authority, const settings &settings,
     uint64_t nonce, size_t height)
 {
     BITCOIN_ASSERT_MSG(height < max_uint32, "Time to upgrade the protocol.");
@@ -59,8 +61,7 @@ message::version protocol_version::version_factory(
     auto self = authority.to_network_address();
     self.services = services::node_network;
 
-    return
-    {
+    return {
         settings.protocol,
         self.services,
         time_stamp(),
@@ -69,14 +70,13 @@ message::version protocol_version::version_factory(
         nonce,
         BC_USER_AGENT,
         height32,
-        settings.relay_transactions
-    };
+        settings.relay_transactions};
 }
 
-protocol_version::protocol_version(p2p& network, channel::ptr channel)
-  : protocol_timer(network, channel, false, NAME),
-    network_(network),
-    CONSTRUCT_TRACK(protocol_version)
+protocol_version::protocol_version(p2p &network, channel::ptr channel)
+    : protocol_timer(network, channel, false, NAME),
+      network_(network),
+      CONSTRUCT_TRACK(protocol_version)
 {
 }
 
@@ -86,19 +86,19 @@ protocol_version::protocol_version(p2p& network, channel::ptr channel)
 void protocol_version::start(event_handler handler)
 {
     const auto height = network_.height();
-    const auto& settings = network_.network_settings();
+    const auto &settings = network_.network_settings();
     complete_handler_ = handler;
 
     // The handler is invoked in the context of the last message receipt.
     protocol_timer::start(settings.channel_handshake(),
-        synchronize(BIND1(handle_complete, _1), 2, NAME, false));
+                          synchronize(BIND1(handle_complete, _1), 2, NAME, false));
 
     SUBSCRIBE2(version, handle_receive_version, _1, _2);
     SUBSCRIBE2(verack, handle_receive_verack, _1, _2);
     send_version(version_factory(authority(), settings, nonce(), height));
 }
 
-void protocol_version::handle_complete(const code& ec)
+void protocol_version::handle_complete(const code &ec)
 {
     if (!complete_handler_)
         return;
@@ -106,7 +106,7 @@ void protocol_version::handle_complete(const code& ec)
     complete_handler_ = nullptr;
 }
 
-void protocol_version::send_version(const message::version& self)
+void protocol_version::send_version(const message::version &self)
 {
     SEND1(self, handle_version_sent, _1);
 }
@@ -114,8 +114,8 @@ void protocol_version::send_version(const message::version& self)
 // Protocol.
 // ----------------------------------------------------------------------------
 
-bool protocol_version::handle_receive_version(const code& ec,
-    version::ptr message)
+bool protocol_version::handle_receive_version(const code &ec,
+                                              version::ptr message)
 {
     if (stopped())
         return false;
@@ -142,7 +142,7 @@ bool protocol_version::handle_receive_version(const code& ec,
     return false;
 }
 
-bool protocol_version::handle_receive_verack(const code& ec, verack::ptr)
+bool protocol_version::handle_receive_verack(const code &ec, verack::ptr)
 {
     if (stopped())
         return false;
@@ -161,7 +161,7 @@ bool protocol_version::handle_receive_verack(const code& ec, verack::ptr)
     return false;
 }
 
-void protocol_version::handle_version_sent(const code& ec)
+void protocol_version::handle_version_sent(const code &ec)
 {
     if (stopped())
         return;
@@ -176,7 +176,7 @@ void protocol_version::handle_version_sent(const code& ec)
     }
 }
 
-void protocol_version::handle_verack_sent(const code& ec)
+void protocol_version::handle_verack_sent(const code &ec)
 {
     if (stopped())
         return;

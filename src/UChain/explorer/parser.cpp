@@ -31,11 +31,13 @@ using namespace boost::filesystem;
 using namespace boost::program_options;
 using namespace boost::system;
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
-parser::parser(command& instance)
-  : help_(false), instance_(instance)
+parser::parser(command &instance)
+    : help_(false), instance_(instance)
 {
 }
 
@@ -68,8 +70,8 @@ options_metadata parser::load_environment()
     return environment;
 }
 
-void parser::load_command_variables(variables_map& variables,
-    std::istream& input, int argc, const char* argv[])
+void parser::load_command_variables(variables_map &variables,
+                                    std::istream &input, int argc, const char *argv[])
 {
     bc::config::parser::load_command_variables(variables, argc, argv);
 
@@ -79,35 +81,38 @@ void parser::load_command_variables(variables_map& variables,
         instance_.load_fallbacks(input, variables);
 }
 
-bool parser::is_negative(const char* c)
+bool parser::is_negative(const char *c)
 {
     return (c[0] == '-') && c[1] != '\0' && std::isdigit(c[1]);
 }
 
-bool parser::parse(std::string& out_error, std::istream& input,
-    int argc, const char* argv[])
+bool parser::parse(std::string &out_error, std::istream &input,
+                   int argc, const char *argv[])
 {
     try
     {
         variables_map variables;
         size_t pos;
         //no negative parameters
-        for(size_t i = 2; i<argc; i++)
+        for (size_t i = 2; i < argc; i++)
         {
             std::string parameter(argv[i]);
-            if((pos=parameter.find(':')) != std::string::npos){
-                if(is_negative(parameter.substr(0, pos).c_str()) || is_negative(parameter.erase(0, pos+1).c_str()))
+            if ((pos = parameter.find(':')) != std::string::npos)
+            {
+                if (is_negative(parameter.substr(0, pos).c_str()) || is_negative(parameter.erase(0, pos + 1).c_str()))
                 {
                     out_error = "Parameter cannot be negative.";
                     return false;
                 }
-            }else{
-                if(is_negative(argv[i]))
+            }
+            else
+            {
+                if (is_negative(argv[i]))
                 {
                     out_error = "Parameter cannot be negative.";
                     return false;
                 }
-            }          
+            }
         }
         // Must store before environment in order for commands to supercede.
         load_command_variables(variables, input, argc, argv);
@@ -117,23 +122,25 @@ bool parser::parse(std::string& out_error, std::istream& input,
         {
             // Must store before configuration in order to specify the path.
             load_environment_variables(variables,
-                BX_ENVIRONMENT_VARIABLE_PREFIX);
+                                       BX_ENVIRONMENT_VARIABLE_PREFIX);
 
             // Is lowest priority, which will cause confusion if there is
             // composition between them, which therefore should be avoided.
             /* auto file = */ load_configuration_variables(variables,
-                BX_CONFIG_VARIABLE);
+                                                           BX_CONFIG_VARIABLE);
 
             // Set variable defaults, send notifications and update bound vars.
             notify(variables);
 
             // Set the instance defaults from config values.
             instance_.set_defaults_from_config(variables);
-        } else {
+        }
+        else
+        {
             help_ = true;
         }
     }
-    catch (const po::invalid_option_value& e)
+    catch (const po::invalid_option_value &e)
     {
         // prevent boost from throwing 'std::out_of_range' when calling e.what()
         // see /usr/include/boost/program_options/errors.hpp
@@ -144,7 +151,7 @@ bool parser::parse(std::string& out_error, std::istream& input,
         out_error = ex.what();
         return false;
     }
-    catch (const po::error& e)
+    catch (const po::error &e)
     {
         // This is obtained from boost, which circumvents our localization.
         out_error = e.what();

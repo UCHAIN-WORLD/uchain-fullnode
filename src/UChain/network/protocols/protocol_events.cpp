@@ -27,16 +27,18 @@
 #include <UChain/network/p2p.hpp>
 #include <UChain/network/protocols/protocol.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define CLASS protocol_events
 
 using namespace std::placeholders;
 
-protocol_events::protocol_events(p2p& network, channel::ptr channel,
-    const std::string& name)
-  : protocol(network, channel, name)
+protocol_events::protocol_events(p2p &network, channel::ptr channel,
+                                 const std::string &name)
+    : protocol(network, channel, name)
 {
 }
 
@@ -62,7 +64,7 @@ void protocol_events::start(event_handler handler)
 // Stop.
 // ----------------------------------------------------------------------------
 
-void protocol_events::handle_stopped(const code& ec)
+void protocol_events::handle_stopped(const code &ec)
 {
     log::trace(LOG_NETWORK)
         << "Stop protocol_" << name() << " on [" << authority() << "] "
@@ -75,7 +77,7 @@ void protocol_events::handle_stopped(const code& ec)
 // Set Event.
 // ----------------------------------------------------------------------------
 
-void protocol_events::set_event(const code& ec)
+void protocol_events::set_event(const code &ec)
 {
     auto handler = handler_.load();
     if (!handler)
@@ -90,7 +92,7 @@ void protocol_events::set_event(const code& ec)
 // Send Handler.
 // ----------------------------------------------------------------------------
 
-void protocol_events::handle_send(const code& ec, const std::string& command)
+void protocol_events::handle_send(const code &ec, const std::string &command)
 {
     if (stopped())
         return;

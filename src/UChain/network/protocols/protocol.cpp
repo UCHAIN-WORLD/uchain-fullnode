@@ -25,14 +25,16 @@
 #include <UChain/network/channel.hpp>
 #include <UChain/network/p2p.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
-protocol::protocol(p2p& network, channel::ptr channel,
-    const std::string& name)
-  : pool_(network.thread_pool()),
-    channel_(channel),
-    name_(name)
+protocol::protocol(p2p &network, channel::ptr channel,
+                   const std::string &name)
+    : pool_(network.thread_pool()),
+      channel_(channel),
+      name_(name)
 {
 }
 
@@ -41,7 +43,7 @@ config::authority protocol::authority() const
     return channel_->authority();
 }
 
-const std::string& protocol::name() const
+const std::string &protocol::name() const
 {
     return name_;
 }
@@ -66,13 +68,13 @@ uint32_t protocol::peer_start_height()
     return channel_->peer_start_height();
 }
 
-threadpool& protocol::pool()
+threadpool &protocol::pool()
 {
     return pool_;
 }
 
 // Stop the channel.
-void protocol::stop(const code& ec)
+void protocol::stop(const code &ec)
 {
     channel_->stop(ec);
 }

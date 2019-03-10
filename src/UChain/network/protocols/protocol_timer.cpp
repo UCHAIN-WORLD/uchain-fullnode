@@ -28,16 +28,18 @@
 #include <UChain/network/p2p.hpp>
 #include <UChain/network/protocols/protocol_events.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define CLASS protocol_timer
 using namespace std::placeholders;
 
-protocol_timer::protocol_timer(p2p& network, channel::ptr channel,
-    bool perpetual, const std::string& name)
-  : protocol_events(network, channel, name),
-    perpetual_(perpetual)
+protocol_timer::protocol_timer(p2p &network, channel::ptr channel,
+                               bool perpetual, const std::string &name)
+    : protocol_events(network, channel, name),
+      perpetual_(perpetual)
 {
 }
 
@@ -45,8 +47,8 @@ protocol_timer::protocol_timer(p2p& network, channel::ptr channel,
 // ----------------------------------------------------------------------------
 
 // protected:
-void protocol_timer::start(const asio::duration& timeout,
-    event_handler handle_event)
+void protocol_timer::start(const asio::duration &timeout,
+                           event_handler handle_event)
 {
     // The deadline timer is thread safe.
     timer_ = std::make_shared<deadline>(pool(), timeout);
@@ -54,7 +56,7 @@ void protocol_timer::start(const asio::duration& timeout,
     reset_timer();
 }
 
-void protocol_timer::handle_notify(const code& ec, event_handler handler)
+void protocol_timer::handle_notify(const code &ec, event_handler handler)
 {
     if (ec == (code)error::channel_stopped)
         timer_->stop();
@@ -79,7 +81,7 @@ void protocol_timer::reset_timer()
     }
 }
 
-void protocol_timer::handle_timer(const code& ec)
+void protocol_timer::handle_timer(const code &ec)
 {
     if (stopped())
     {

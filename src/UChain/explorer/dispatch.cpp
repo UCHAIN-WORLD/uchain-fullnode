@@ -38,11 +38,13 @@ using namespace boost::filesystem;
 using namespace boost::program_options;
 using namespace boost::system;
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
 // Swap Unicode input stream for binary stream in Windows builds.
-static std::istream& get_command_input(command& command, std::istream& input)
+static std::istream &get_command_input(command &command, std::istream &input)
 {
 #ifdef _MSC_VER
     if (command.requires_raw_input())
@@ -58,7 +60,7 @@ static std::istream& get_command_input(command& command, std::istream& input)
 }
 
 // Swap Unicode output stream for binary stream in Windows builds.
-static std::ostream& get_command_output(command& command, std::ostream& output)
+static std::ostream &get_command_output(command &command, std::ostream &output)
 {
 #ifdef _MSC_VER
     if (command.requires_raw_output())
@@ -74,14 +76,14 @@ static std::ostream& get_command_output(command& command, std::ostream& output)
 }
 
 // Set Unicode error stream in Windows builds.
-static std::ostream& get_command_error(command& command, std::ostream& error)
+static std::ostream &get_command_error(command &command, std::ostream &error)
 {
     bc::set_utf8_stderr();
     return error;
 }
 
-console_result dispatch(int argc, const char* argv[],
-    std::istream& input, std::ostream& output, std::ostream& error)
+console_result dispatch(int argc, const char *argv[],
+                        std::istream &input, std::ostream &output, std::ostream &error)
 {
     if (argc == 1)
     {
@@ -90,13 +92,13 @@ console_result dispatch(int argc, const char* argv[],
     }
 
     auto ret = dispatch_command(argc - 1, &argv[1], input, output, error);
-    output<<std::endl;
+    output << std::endl;
     //error<<std::endl; // once \n is okay
     return ret;
 }
 
-console_result dispatch_command(int argc, const char* argv[],
-    std::istream& input, std::ostream& output, std::ostream& error)
+console_result dispatch_command(int argc, const char *argv[],
+                                std::istream &input, std::ostream &output, std::ostream &error)
 {
     const std::string target(argv[0]);
     const auto command = find(target);
@@ -108,9 +110,9 @@ console_result dispatch_command(int argc, const char* argv[],
         return console_result::failure;
     }
 
-    auto& in = get_command_input(*command, input);
-    auto& err = get_command_error(*command, error);
-    auto& out = get_command_output(*command, output);
+    auto &in = get_command_input(*command, input);
+    auto &err = get_command_error(*command, error);
+    auto &out = get_command_output(*command, output);
 
     parser metadata(*command);
     std::string error_message;
@@ -130,9 +132,9 @@ console_result dispatch_command(int argc, const char* argv[],
     return command->invoke(out, err);
 }
 
-console_result dispatch_command(int argc, const char* argv[],
-    Json::Value& jv_output,
-    libbitcoin::server::server_node& node, uint8_t api_version)
+console_result dispatch_command(int argc, const char *argv[],
+                                Json::Value &jv_output,
+                                libbitcoin::server::server_node &node, uint8_t api_version)
 {
     std::istringstream input;
     std::ostringstream output;
@@ -144,11 +146,11 @@ console_result dispatch_command(int argc, const char* argv[],
     {
         const std::string superseding(formerly(target));
         display_invalid_command(output, target, superseding);
-        throw invalid_command_exception{ output.str() };
+        throw invalid_command_exception{output.str()};
     }
-    if(node.server_settings().read_only)
+    if (node.server_settings().read_only)
         check_read_only(target);
-    auto& in = get_command_input(*command, input);
+    auto &in = get_command_input(*command, input);
 
     parser metadata(*command);
     std::string error_message;
@@ -156,7 +158,7 @@ console_result dispatch_command(int argc, const char* argv[],
     if (!metadata.parse(error_message, in, argc, argv))
     {
         display_invalid_parameter(output, error_message);
-        throw command_params_exception{ output.str() };
+        throw command_params_exception{output.str()};
     }
 
     if (metadata.help())
@@ -173,7 +175,8 @@ console_result dispatch_command(int argc, const char* argv[],
         // fixme. is_blockchain_sync has some problem.
         // if (command->category(ctgy_online) && node.is_blockchain_sync()) {
         if (command->category(ctgy_online) &&
-            !node.chain_impl().chain_settings().use_testnet_rules) {
+            !node.chain_impl().chain_settings().use_testnet_rules)
+        {
             uint64_t height{0};
             /*node.chain_impl().get_last_height(height);
             if (!command->is_block_height_fullfilled(height)) {
@@ -181,16 +184,16 @@ console_result dispatch_command(int argc, const char* argv[],
             }*/
         }
 
-        return static_cast<commands::command_extension*>(command.get())->invoke(jv_output, node);
+        return static_cast<commands::command_extension *>(command.get())->invoke(jv_output, node);
     }
-    else {
+    else
+    {
         command->set_api_version(1); // only compatible for v1
         auto retcode = command->invoke(output, output);
         jv_output = output.str();
         return retcode;
     }
 }
-
 
 } // namespace explorer
 } // namespace libbitcoin

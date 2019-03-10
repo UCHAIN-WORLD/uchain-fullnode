@@ -27,8 +27,10 @@
 #include <UChain/network/protocols/protocol.hpp>
 #include <UChain/network/protocols/protocol_events.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define NAME "address"
 #define CLASS protocol_address
@@ -36,10 +38,10 @@ namespace network {
 using namespace bc::message;
 using namespace std::placeholders;
 
-protocol_address::protocol_address(p2p& network, channel::ptr channel)
-  : protocol_events(network, channel, NAME),
-    network_(network),
-    CONSTRUCT_TRACK(protocol_address)
+protocol_address::protocol_address(p2p &network, channel::ptr channel)
+    : protocol_events(network, channel, NAME),
+      network_(network),
+      CONSTRUCT_TRACK(protocol_address)
 {
 }
 
@@ -57,39 +59,44 @@ protocol_address::ptr protocol_address::do_subscribe()
 
 void protocol_address::start()
 {
-    const auto& settings = network_.network_settings();
+    const auto &settings = network_.network_settings();
 
     if (settings.self.port() != 0)
     {
-        network_address nt_address=settings.self.to_network_address();
+        network_address nt_address = settings.self.to_network_address();
 
         //for testnet don't filter local ip
-        if (settings.hosts_file == "hosts-test.cache") {
-            self_ = address({ { nt_address } });
+        if (settings.hosts_file == "hosts-test.cache")
+        {
+            self_ = address({{nt_address}});
             SEND2(self_, handle_send, _1, self_.command);
         }
         //only outer address can be broadcast
-        else if (!nt_address.is_private_network()) {
-            self_ = address({ { nt_address } });
+        else if (!nt_address.is_private_network())
+        {
+            self_ = address({{nt_address}});
             SEND2(self_, handle_send, _1, self_.command);
         }
-
     }
 
 #ifdef USE_UPNP
-    if (settings.upnp_map_port && settings.be_found) {
+    if (settings.upnp_map_port && settings.be_found)
+    {
         config::authority::ptr sp_out_address = network_.get_out_address();
 
-        if (sp_out_address && (settings.self != *sp_out_address)) {
-            const config::authority& out_address = *sp_out_address;
+        if (sp_out_address && (settings.self != *sp_out_address))
+        {
+            const config::authority &out_address = *sp_out_address;
             network_address nt_address = out_address.to_network_address();
-            if (settings.hosts_file == "hosts-test.cache") {
-                address self = address({ { nt_address } });
+            if (settings.hosts_file == "hosts-test.cache")
+            {
+                address self = address({{nt_address}});
                 log::info("upnp") << "send addresss " << out_address.to_string();
                 SEND2(self, handle_send, _1, self.command);
             }
-            else if (!nt_address.is_private_network()) {
-                address self = address({ { nt_address } });
+            else if (!nt_address.is_private_network())
+            {
+                address self = address({{nt_address}});
                 log::info("upnp") << "send addresss " << out_address.to_string();
                 SEND2(self, handle_send, _1, self.command);
             }
@@ -98,7 +105,6 @@ void protocol_address::start()
 
 #endif
 
-
     // If we can't store addresses we don't ask for or handle them.
     if (settings.host_pool_capacity == 0)
         return;
@@ -106,21 +112,21 @@ void protocol_address::start()
     SEND2(get_address(), handle_send, _1, get_address::command);
 }
 
-void protocol_address::remove_useless_address(address::ptr& message)
+void protocol_address::remove_useless_address(address::ptr &message)
 {
-    auto& addresses = message->addresses;
-    const auto& settings = network_.network_settings();
-    if(settings.self.port() != 0)
+    auto &addresses = message->addresses;
+    const auto &settings = network_.network_settings();
+    if (settings.self.port() != 0)
     {
-        auto iter = std::find_if(addresses.begin(), addresses.end(), [&settings](const message::network_address& addr){
-            if(config::authority{addr} == settings.self)
+        auto iter = std::find_if(addresses.begin(), addresses.end(), [&settings](const message::network_address &addr) {
+            if (config::authority{addr} == settings.self)
             {
                 return true;
             }
             return false;
         });
 
-        if(iter != addresses.end())
+        if (iter != addresses.end())
         {
             addresses.erase(iter);
         }
@@ -130,8 +136,8 @@ void protocol_address::remove_useless_address(address::ptr& message)
 // Protocol.
 // ----------------------------------------------------------------------------
 
-bool protocol_address::handle_receive_address(const code& ec,
-    address::ptr message)
+bool protocol_address::handle_receive_address(const code &ec,
+                                              address::ptr message)
 {
     if (stopped())
         return false;
@@ -141,7 +147,7 @@ bool protocol_address::handle_receive_address(const code& ec,
         log::trace(LOG_NETWORK)
             << "Failure receiving address message from ["
             << authority() << "] " << ec.message();
-          stop(ec);
+        stop(ec);
 
         return false;
     }
@@ -150,15 +156,17 @@ bool protocol_address::handle_receive_address(const code& ec,
         << "Storing addresses from [" << authority() << "] ("
         << message->addresses.size() << ")";
 
-//    if (message->addresses.size() > 1000)
-//    {
-//        return ! misbehaving(20);
-//    }
+    //    if (message->addresses.size() > 1000)
+    //    {
+    //        return ! misbehaving(20);
+    //    }
     network_address::list addresses;
     addresses.reserve(message->addresses.size());
-    for (auto& addr:message->addresses) {
+    for (auto &addr : message->addresses)
+    {
         //if (!channel::blacklisted(addr)) {
-        if (!channel::manualbanned(addr)) {
+        if (!channel::manualbanned(addr))
+        {
             addresses.push_back(addr);
         }
     }
@@ -170,8 +178,8 @@ bool protocol_address::handle_receive_address(const code& ec,
     return true;
 }
 
-bool protocol_address::handle_receive_get_address(const code& ec,
-    get_address::ptr message)
+bool protocol_address::handle_receive_get_address(const code &ec,
+                                                  get_address::ptr message)
 {
     if (stopped())
         return false;
@@ -181,36 +189,35 @@ bool protocol_address::handle_receive_get_address(const code& ec,
         log::trace(LOG_NETWORK)
             << "Failure receiving get_address message from ["
             << authority() << "] " << ec.message();
-           stop(ec);
+        stop(ec);
         return false;
     }
-
 
     // TODO: allowing repeated queries can allow a channel to map our history.
     // TODO: pull active hosts from host cache (currently just resending self).
     // TODO: need to distort for privacy, don't send currently-connected peers.
 
-    auto&& address_list = network_.address_list();
+    auto &&address_list = network_.address_list();
     auto channel_authorithy = authority();
 
-    auto iter = std::find_if(address_list.begin(), address_list.end(), [&channel_authorithy](const message::network_address& address){
-        if(config::authority{address} == channel_authorithy)
+    auto iter = std::find_if(address_list.begin(), address_list.end(), [&channel_authorithy](const message::network_address &address) {
+        if (config::authority{address} == channel_authorithy)
         {
             return true;
         }
         return false;
     });
-    if(iter != address_list.end() )
+    if (iter != address_list.end())
     {
         address_list.erase(iter);
     }
 
-    if(address_list.empty())
+    if (address_list.empty())
     {
         return true;
     }
-//    if (self_.addresses.empty())
-//        return false;
+    //    if (self_.addresses.empty())
+    //        return false;
 
     log::trace(LOG_NETWORK)
         << "Sending addresses to [" << authority() << "] ("
@@ -222,7 +229,7 @@ bool protocol_address::handle_receive_get_address(const code& ec,
     return true;
 }
 
-void protocol_address::handle_store_addresses(const code& ec, address::ptr message)
+void protocol_address::handle_store_addresses(const code &ec, address::ptr message)
 {
     if (stopped())
         return;
@@ -236,7 +243,7 @@ void protocol_address::handle_store_addresses(const code& ec, address::ptr messa
     }
 }
 
-void protocol_address::handle_stop(const code&)
+void protocol_address::handle_stop(const code &)
 {
     log::trace(LOG_NETWORK)
         << "Stopped addresss protocol";
