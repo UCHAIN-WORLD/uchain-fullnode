@@ -31,8 +31,10 @@
 #include <UChain/node/utility/performance.hpp>
 #include <UChain/node/utility/reservation.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 using namespace bc::blockchain;
 using namespace bc::chain;
@@ -40,12 +42,12 @@ using namespace bc::chain;
 // The protocol maximum size of get data block requests.
 static constexpr size_t max_block_request = 50000;
 
-reservations::reservations(header_queue& hashes, simple_chain& chain,
-    const settings& settings)
-  : hashes_(hashes),
-    blockchain_(chain),
-    max_request_(max_block_request),
-    timeout_(settings.block_timeout_seconds)
+reservations::reservations(header_queue &hashes, simple_chain &chain,
+                           const settings &settings)
+    : hashes_(hashes),
+      blockchain_(chain),
+      max_request_(max_block_request),
+      timeout_(settings.block_timeout_seconds)
 {
     initialize(settings.download_connections);
 }
@@ -65,8 +67,7 @@ reservations::rate_statistics reservations::rates() const
 {
     // Copy row pointer table to prevent need for lock during iteration.
     auto rows = table();
-    const auto idle = [](reservation::ptr row)
-    {
+    const auto idle = [](reservation::ptr row) {
         return row->idle();
     };
 
@@ -75,8 +76,7 @@ reservations::rate_statistics reservations::rates() const
     const auto active_rows = rows.size();
 
     std::vector<double> rates(active_rows);
-    const auto normal_rate = [](reservation::ptr row)
-    {
+    const auto normal_rate = [](reservation::ptr row) {
         return row->rate().normal();
     };
 
@@ -86,8 +86,7 @@ reservations::rate_statistics reservations::rates() const
 
     // Calculate mean and sum of deviations.
     const auto mean = divide<double>(total, active_rows);
-    const auto summary = [mean](double initial, double rate)
-    {
+    const auto summary = [mean](double initial, double rate) {
         const auto difference = mean - rate;
         return initial + (difference * difference);
     };
@@ -96,7 +95,7 @@ reservations::rate_statistics reservations::rates() const
     auto squares = std::accumulate(rates.begin(), rates.end(), 0.0, summary);
     auto quotient = divide<double>(squares, active_rows);
     auto standard_deviation = std::sqrt(quotient);
-    return{ active_rows, mean, standard_deviation };
+    return {active_rows, mean, standard_deviation};
 }
 
 // Table methods.
@@ -201,7 +200,7 @@ void reservations::initialize(size_t size)
     }
 
     // This is required as any rows left empty above will not populate or stop.
-    for (auto row: table_)
+    for (auto row : table_)
         row->populate();
 
     log::debug(LOG_NODE)
@@ -242,8 +241,7 @@ reservation::ptr reservations::find_maximal()
         return nullptr;
 
     // The maximal row is that with the most block hashes reserved.
-    const auto comparer = [](reservation::ptr left, reservation::ptr right)
-    {
+    const auto comparer = [](reservation::ptr left, reservation::ptr right) {
         return left->size() < right->size();
     };
 

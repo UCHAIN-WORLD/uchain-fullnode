@@ -25,18 +25,20 @@
 #include <memory>
 #include <UChain/blockchain.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 using namespace bc::blockchain;
 using namespace bc::chain;
 using namespace bc::config;
 using namespace bc::message;
 
-header_queue::header_queue(const config::checkpoint::list& checkpoints)
-  : height_(0),
-    head_(list_.begin()),
-    checkpoints_(checkpoints)
+header_queue::header_queue(const config::checkpoint::list &checkpoints)
+    : height_(0),
+      head_(list_.begin()),
+      checkpoints_(checkpoints)
 {
 }
 
@@ -90,20 +92,19 @@ hash_digest header_queue::last_hash() const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void header_queue::initialize(const checkpoint& check)
+void header_queue::initialize(const checkpoint &check)
 {
     initialize(check.hash(), check.height());
 }
 
-void header_queue::initialize(const hash_digest& hash, size_t height)
+void header_queue::initialize(const hash_digest &hash, size_t height)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
     mutex_.lock_upgrade();
 
     const auto size =
-        (checkpoints_.empty() || height > checkpoints_.back().height()) ? 1 :
-        (checkpoints_.back().height() - height + 1);
+        (checkpoints_.empty() || height > checkpoints_.back().height()) ? 1 : (checkpoints_.back().height() - height + 1);
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     mutex_.unlock_upgrade_and_lock();
@@ -145,7 +146,7 @@ void header_queue::invalidate(size_t first_height, size_t count)
 }
 
 // static
-bool header_queue::valid(const hash_digest& hash)
+bool header_queue::valid(const hash_digest &hash)
 {
     return hash != null_hash;
 }
@@ -204,7 +205,7 @@ bool header_queue::dequeue(size_t count)
 }
 
 // This allows the list to become emptied, which breaks the chain.
-bool header_queue::dequeue(hash_digest& out_hash, size_t& out_height)
+bool header_queue::dequeue(hash_digest &out_hash, size_t &out_height)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
@@ -261,7 +262,7 @@ bool header_queue::enqueue(headers::ptr message)
 //-----------------------------------------------------------------------------
 
 // TODO: add PoW validation to reduce importance of intermediate checkpoints.
-bool header_queue::merge(const header::list& headers)
+bool header_queue::merge(const header::list &headers)
 {
     // If we exceed capacity the header pointer becomes invalid, so prevent.
     const auto size = get_size();
@@ -269,11 +270,11 @@ bool header_queue::merge(const header::list& headers)
     list_.reserve(size + headers.size());
     head_ = list_.begin();
 
-    for (const auto& header: headers)
+    for (const auto &header : headers)
     {
-        const auto& new_hash = header.hash();
+        const auto &new_hash = header.hash();
         const auto next_height = last() + 1;
-        const auto& last_hash = is_empty() ? null_hash : list_.back();
+        const auto &last_hash = is_empty() ? null_hash : list_.back();
 
         if (!linked(header, last_hash) || !check(new_hash, next_height))
         {
@@ -315,13 +316,13 @@ void header_queue::rollback()
     head_ = list_.begin();
 }
 
-bool header_queue::check(const hash_digest& hash, size_t height) const
+bool header_queue::check(const hash_digest &hash, size_t height) const
 {
     return checkpoint::validate(hash, height, checkpoints_);
 }
 
-bool header_queue::linked(const chain::header& header,
-    const hash_digest& hash) const
+bool header_queue::linked(const chain::header &header,
+                          const hash_digest &hash) const
 {
     return header.previous_block_hash == hash;
 }
