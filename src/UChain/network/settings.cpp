@@ -21,88 +21,90 @@
 
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 using namespace bc::asio;
 using namespace bc::message;
 
 // Common default values (no settings context).
 settings::settings()
-  : threads(16),
-    protocol(version::level::maximum),
-    inbound_connections(32),
-    outbound_connections(8),
-    manual_attempt_limit(0),
-    connect_batch_size(5),
-    connect_timeout_seconds(5),
-    channel_handshake_seconds(30),
-    channel_heartbeat_minutes(5),
-    channel_inactivity_minutes(10),
-    channel_expiration_minutes(1440),
-    channel_germination_seconds(30),
-    host_pool_capacity(1000),
-    relay_transactions(true),
-    enable_re_seeding(true),
-    upnp_map_port(true),
-    be_found(true),
-    hosts_file("hosts.cache"),
-    debug_file("debug.log"),
-    error_file("error.log"),
-    self(unspecified_network_address)
+    : threads(16),
+      protocol(version::level::maximum),
+      inbound_connections(32),
+      outbound_connections(8),
+      manual_attempt_limit(0),
+      connect_batch_size(5),
+      connect_timeout_seconds(5),
+      channel_handshake_seconds(30),
+      channel_heartbeat_minutes(5),
+      channel_inactivity_minutes(10),
+      channel_expiration_minutes(1440),
+      channel_germination_seconds(30),
+      host_pool_capacity(1000),
+      relay_transactions(true),
+      enable_re_seeding(true),
+      upnp_map_port(true),
+      be_found(true),
+      hosts_file("hosts.cache"),
+      debug_file("debug.log"),
+      error_file("error.log"),
+      self(unspecified_network_address)
 {
 }
 
 // Use push_back due to initializer_list bug:
 // stackoverflow.com/a/20168627/1172329
 settings::settings(bc::settings context)
-  : settings()
+    : settings()
 {
     // Handle deviations from common defaults.
     switch (context)
     {
-        case bc::settings::mainnet:
-        {
-            //identifier = 0x4d53564d;
-            //identifier = 1234567891;//for UIP0.2
-            identifier = 1234567904;//for UIP0.5
-            inbound_port = 5682;
+    case bc::settings::mainnet:
+    {
+        //identifier = 0x4d53564d;
+        //identifier = 1234567891;//for UIP0.2
+        identifier = 1234567904; //for UIP0.5
+        inbound_port = 5682;
 
-            // Seeds based on uc.live/network/dns-servers
-            seeds.reserve(5);
-            //seeds.push_back({ "main-uchain-a.live", 5682 });
-            //seeds.push_back({ "main-uchain-b.live", 5682 });
-            //seeds.push_back({ "main-uchain-c.live", 5682 });
-            //seeds.push_back({ "main-uchain-d.live", 5682 });
-            //seeds.push_back({ "main-uchain-e.live", 5682 });
-            //seeds.push_back({ "main-uchain-f.live", 5682 });
-            seeds.push_back({ "35.182.225.90", 5682 });
-            seeds.push_back({ "13.124.250.27", 5682 });
-            seeds.push_back({ "112.74.181.29", 5682 });
-            seeds.push_back({ "120.78.209.248", 5682 });
-            seeds.push_back({ "116.62.238.230"/*"seed.getuc.org"*/, 5682 });
-            break;
-        }
+        // Seeds based on uc.live/network/dns-servers
+        seeds.reserve(5);
+        //seeds.push_back({ "main-uchain-a.live", 5682 });
+        //seeds.push_back({ "main-uchain-b.live", 5682 });
+        //seeds.push_back({ "main-uchain-c.live", 5682 });
+        //seeds.push_back({ "main-uchain-d.live", 5682 });
+        //seeds.push_back({ "main-uchain-e.live", 5682 });
+        //seeds.push_back({ "main-uchain-f.live", 5682 });
+        seeds.push_back({"35.182.225.90", 5682});
+        seeds.push_back({"13.124.250.27", 5682});
+        seeds.push_back({"112.74.181.29", 5682});
+        seeds.push_back({"120.78.209.248", 5682});
+        seeds.push_back({"116.62.238.230" /*"seed.getuc.org"*/, 5682});
+        break;
+    }
 
-        case bc::settings::testnet:
-        {
-            identifier = 0x73766d74;
-            inbound_port = 15678;
+    case bc::settings::testnet:
+    {
+        identifier = 0x73766d74;
+        inbound_port = 15678;
 
-            seeds.reserve(6);
-            seeds.push_back({ "test-uchain-a.live", 15678 });
-            seeds.push_back({ "test-uchain-b.live", 15678 });
-            seeds.push_back({ "test-uchain-c.live", 15678 });
-            seeds.push_back({ "test-uchain-d.live", 15678 });
-            seeds.push_back({ "test-uchain-e.live", 15678 });
-            seeds.push_back({ "test-uchain-f.live", 15678 });
-            break;
-        }
+        seeds.reserve(6);
+        seeds.push_back({"test-uchain-a.live", 15678});
+        seeds.push_back({"test-uchain-b.live", 15678});
+        seeds.push_back({"test-uchain-c.live", 15678});
+        seeds.push_back({"test-uchain-d.live", 15678});
+        seeds.push_back({"test-uchain-e.live", 15678});
+        seeds.push_back({"test-uchain-f.live", 15678});
+        break;
+    }
 
-        default:
-        case bc::settings::none:
-        {
-        }
+    default:
+    case bc::settings::none:
+    {
+    }
     }
 }
 

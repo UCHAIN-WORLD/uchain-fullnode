@@ -22,20 +22,22 @@
 
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
-locked_socket::locked_socket(asio::socket& socket, upgrade_mutex& mutex)
-  : socket_(socket),
-    mutex_(mutex),
-    CONSTRUCT_TRACK(locked_socket)
+locked_socket::locked_socket(asio::socket &socket, upgrade_mutex &mutex)
+    : socket_(socket),
+      mutex_(mutex),
+      CONSTRUCT_TRACK(locked_socket)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
     mutex_.lock();
 }
 
-asio::socket& locked_socket::get()
+asio::socket &locked_socket::get()
 {
     return socket_;
 }

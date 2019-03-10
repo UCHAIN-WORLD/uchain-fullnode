@@ -24,15 +24,17 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/network/channel.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 using namespace bc::config;
 
 #define NAME "connections"
 
 connections::connections()
-  : stopped_(false)
+    : stopped_(false)
 {
 }
 
@@ -42,7 +44,7 @@ connections::~connections()
 }
 
 // This is idempotent.
-void connections::stop(const code& ec)
+void connections::stop(const code &ec)
 {
     connections::list channels;
 
@@ -66,7 +68,7 @@ void connections::stop(const code& ec)
     ///////////////////////////////////////////////////////////////////////////
 
     // Channel stop handlers should remove channels from list.
-    for (const auto channel: channels)
+    for (const auto channel : channels)
         channel->stop(ec);
 }
 
@@ -80,10 +82,9 @@ connections::list connections::safe_copy() const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-bool connections::safe_exists(const authority& address) const
+bool connections::safe_exists(const authority &address) const
 {
-    const auto match = [&address](channel::ptr entry)
-    {
+    const auto match = [&address](channel::ptr entry) {
         return entry->authority() == address;
     };
 
@@ -96,7 +97,7 @@ bool connections::safe_exists(const authority& address) const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void connections::exists(const authority& address, truth_handler handler) const
+void connections::exists(const authority &address, truth_handler handler) const
 {
     handler(safe_exists(address));
 }
@@ -106,7 +107,7 @@ config::authority::list connections::authority_list()
     config::authority::list address_list;
     address_list.reserve(channels_.size());
     mutex_.lock_upgrade();
-    std::find_if(channels_.begin(), channels_.end(), [&address_list](channel::ptr channel){
+    std::find_if(channels_.begin(), channels_.end(), [&address_list](channel::ptr channel) {
         address_list.push_back(channel->authority());
         return false;
     });
@@ -144,15 +145,15 @@ void connections::remove(channel::ptr channel, result_handler handler)
     handler(safe_remove(channel) ? error::success : error::not_found);
 }
 
-void connections::stop(const config::authority& address)
+void connections::stop(const config::authority &address)
 {
     // Critical Section
     ///////////////////////////////////////////////////////////////////////////
     shared_lock lock(mutex_);
 
-    for(auto it = channels_.begin(); it != channels_.end(); ++it)
+    for (auto it = channels_.begin(); it != channels_.end(); ++it)
     {
-        if ( (*it)->authority().ip() == address.ip())
+        if ((*it)->authority().ip() == address.ip())
         {
             (*it)->stop(error::address_blocked);
         }
@@ -162,9 +163,8 @@ void connections::stop(const config::authority& address)
 code connections::safe_store(channel::ptr channel)
 {
     const auto nonce = channel->nonce();
-    const auto& authority = channel->authority();
-    const auto match = [&authority, nonce](channel::ptr entry)
-    {
+    const auto &authority = channel->authority();
+    const auto match = [&authority, nonce](channel::ptr entry) {
         return entry->authority() == authority || entry->nonce() == nonce;
     };
 

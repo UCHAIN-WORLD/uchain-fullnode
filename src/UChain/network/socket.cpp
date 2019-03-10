@@ -25,12 +25,14 @@
 #include <UChain/network/define.hpp>
 #include <UChain/network/locked_socket.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
-socket::socket(threadpool& pool)
-  : socket_(pool.service()),
-    CONSTRUCT_TRACK(socket)
+socket::socket(threadpool &pool)
+    : socket_(pool.service()),
+      CONSTRUCT_TRACK(socket)
 {
 }
 

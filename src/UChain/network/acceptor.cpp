@@ -30,8 +30,10 @@
 #include <UChain/network/settings.hpp>
 #include <UChain/network/socket.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define NAME "acceptor"
 
@@ -39,12 +41,12 @@ using namespace std::placeholders;
 
 static const auto reuse_address = asio::acceptor::reuse_address(true);
 
-acceptor::acceptor(threadpool& pool, const settings& settings)
-  : pool_(pool),
-    settings_(settings),
-    dispatch_(pool, NAME),
-    acceptor_(std::make_shared<asio::acceptor>(pool_.service())),
-    CONSTRUCT_TRACK(acceptor)
+acceptor::acceptor(threadpool &pool, const settings &settings)
+    : pool_(pool),
+      settings_(settings),
+      dispatch_(pool, NAME),
+      acceptor_(std::make_shared<asio::acceptor>(pool_.service())),
+      CONSTRUCT_TRACK(acceptor)
 {
 }
 
@@ -139,13 +141,13 @@ void acceptor::safe_accept(socket::ptr socket, accept_handler handler)
 
     // async_accept will not invoke the handler within this function.
     acceptor_->async_accept(locked->get(),
-        std::bind(&acceptor::handle_accept,
-            shared_from_this(), _1, socket, handler));
+                            std::bind(&acceptor::handle_accept,
+                                      shared_from_this(), _1, socket, handler));
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void acceptor::handle_accept(const boost_code& ec, socket::ptr socket,
-    accept_handler handler)
+void acceptor::handle_accept(const boost_code &ec, socket::ptr socket,
+                             accept_handler handler)
 {
     // This is the end of the accept sequence.
     if (ec)

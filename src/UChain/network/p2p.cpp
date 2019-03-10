@@ -46,27 +46,29 @@
 #include <miniupnpc/upnperrors.h>
 #endif
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 #define NAME "p2p"
 
 using namespace std::placeholders;
 
 #ifdef USE_UPNP
-static std::atomic<size_t> out_address_use_count_ = { 0 };
+static std::atomic<size_t> out_address_use_count_ = {0};
 bc::atomic<config::authority::ptr> upnp_out;
 #endif
 
-p2p::p2p(const settings& settings)
+p2p::p2p(const settings &settings)
     : settings_(settings),
-    stopped_(true),
-    height_(0),
-    hosts_(std::make_shared<hosts>(threadpool_, settings_)),
-    connections_(std::make_shared<connections>()),
-    stop_subscriber_(std::make_shared<stop_subscriber>(threadpool_, NAME "_stop_sub")),
-    channel_subscriber_(std::make_shared<channel_subscriber>(threadpool_, NAME "_sub")),
-    seed(nullptr)
+      stopped_(true),
+      height_(0),
+      hosts_(std::make_shared<hosts>(threadpool_, settings_)),
+      connections_(std::make_shared<connections>()),
+      stop_subscriber_(std::make_shared<stop_subscriber>(threadpool_, NAME "_stop_sub")),
+      channel_subscriber_(std::make_shared<channel_subscriber>(threadpool_, NAME "_sub")),
+      seed(nullptr)
 {
 }
 
@@ -101,13 +103,13 @@ void p2p::start(result_handler handler)
     // This is invoked on a new thread.
     manual->start(
         std::bind(&p2p::handle_manual_started,
-            this, _1, handler));
+                  this, _1, handler));
 
     //start upnp map port
     map_port(settings_.upnp_map_port);
 }
 
-void p2p::handle_manual_started(const code& ec, result_handler handler)
+void p2p::handle_manual_started(const code &ec, result_handler handler)
 {
     if (stopped())
     {
@@ -126,7 +128,7 @@ void p2p::handle_manual_started(const code& ec, result_handler handler)
     handle_hosts_loaded(hosts_->start(), handler);
 }
 
-void p2p::handle_hosts_loaded(const code& ec, result_handler handler)
+void p2p::handle_hosts_loaded(const code &ec, result_handler handler)
 {
     if (stopped())
     {
@@ -148,10 +150,10 @@ void p2p::handle_hosts_loaded(const code& ec, result_handler handler)
     // This is invoked on a new thread.
     seed->start(
         std::bind(&p2p::handle_started,
-            this, _1, handler));
+                  this, _1, handler));
 }
 
-void p2p::handle_started(const code& ec, result_handler handler)
+void p2p::handle_started(const code &ec, result_handler handler)
 {
     if (stopped())
     {
@@ -182,7 +184,7 @@ void p2p::handle_started(const code& ec, result_handler handler)
 void p2p::run(result_handler handler)
 {
     // Start node.peer persistent connections.
-    for (const auto& peer: settings_.peers)
+    for (const auto &peer : settings_.peers)
         connect(peer);
 
     // The instance is retained by the stop handler (until shutdown).
@@ -191,10 +193,10 @@ void p2p::run(result_handler handler)
     // This is invoked on a new thread.
     inbound->start(
         std::bind(&p2p::handle_inbound_started,
-            this, _1, handler));
+                  this, _1, handler));
 }
 
-void p2p::handle_inbound_started(const code& ec, result_handler handler)
+void p2p::handle_inbound_started(const code &ec, result_handler handler)
 {
     if (ec)
     {
@@ -210,10 +212,10 @@ void p2p::handle_inbound_started(const code& ec, result_handler handler)
     // This is invoked on a new thread.
     outbound->start(
         std::bind(&p2p::handle_running,
-            this, _1, handler));
+                  this, _1, handler));
 }
 
-void p2p::handle_running(const code& ec, result_handler handler)
+void p2p::handle_running(const code &ec, result_handler handler)
 {
     if (ec)
     {
@@ -302,7 +304,7 @@ bool p2p::close()
 // Properties.
 // ----------------------------------------------------------------------------
 
-const settings& p2p::network_settings() const
+const settings &p2p::network_settings() const
 {
     return settings_;
 }
@@ -324,7 +326,7 @@ bool p2p::stopped() const
     return stopped_;
 }
 
-threadpool& p2p::thread_pool()
+threadpool &p2p::thread_pool()
 {
     return threadpool_;
 }
@@ -345,12 +347,12 @@ void p2p::subscribe_stop(result_handler handler)
 // Manual connections.
 // ----------------------------------------------------------------------------
 
-void p2p::connect(const config::endpoint& peer)
+void p2p::connect(const config::endpoint &peer)
 {
     connect(peer.host(), peer.port());
 }
 
-void p2p::connect(const std::string& hostname, uint16_t port)
+void p2p::connect(const std::string &hostname, uint16_t port)
 {
     if (stopped())
         return;
@@ -360,8 +362,8 @@ void p2p::connect(const std::string& hostname, uint16_t port)
         manual->connect(hostname, port);
 }
 
-void p2p::connect(const std::string& hostname, uint16_t port,
-    channel_handler handler)
+void p2p::connect(const std::string &hostname, uint16_t port,
+                  channel_handler handler)
 {
     if (stopped())
     {
@@ -380,7 +382,7 @@ void p2p::connect(const std::string& hostname, uint16_t port,
 // Connections collection.
 // ----------------------------------------------------------------------------
 
-void p2p::connected(const address& address, truth_handler handler)
+void p2p::connected(const address &address, truth_handler handler)
 {
     connections_->exists(address, handler);
 }
@@ -389,13 +391,13 @@ void p2p::store(channel::ptr channel, result_handler handler)
 {
     const auto new_connection_handler =
         std::bind(&p2p::handle_new_connection,
-            this, _1, channel, handler);
+                  this, _1, channel, handler);
 
     connections_->store(channel, new_connection_handler);
 }
 
-void p2p::handle_new_connection(const code& ec, channel::ptr channel,
-    result_handler handler)
+void p2p::handle_new_connection(const code &ec, channel::ptr channel,
+                                result_handler handler)
 {
     // Connection-in-use indicated here by error::address_in_use.
     handler(ec);
@@ -417,7 +419,7 @@ void p2p::connected_count(count_handler handler)
 // Hosts collection.
 // ----------------------------------------------------------------------------
 
-void p2p::fetch_address(const config::authority::list& excluded_list, address_handler handler)
+void p2p::fetch_address(const config::authority::list &excluded_list, address_handler handler)
 {
     address out;
     handler(hosts_->fetch(out, excluded_list), out);
@@ -428,18 +430,18 @@ config::authority::list p2p::authority_list()
     return connections_->authority_list();
 }
 
-void p2p::store(const address& address, result_handler handler)
+void p2p::store(const address &address, result_handler handler)
 {
     handler(hosts_->store(address));
 }
 
-void p2p::store(const address::list& addresses, result_handler handler)
+void p2p::store(const address::list &addresses, result_handler handler)
 {
     // Store is invoked on a new thread.
     hosts_->store(addresses, handler);
 }
 
-void p2p::remove(const address& address, result_handler handler)
+void p2p::remove(const address &address, result_handler handler)
 {
     handler(hosts_->remove(address));
 }
@@ -464,9 +466,9 @@ connections::ptr p2p::connections_ptr()
 void p2p::thread_map_port(uint16_t map_port)
 {
     std::string port = std::to_string(map_port);
-    const char * multicastif = nullptr;
-    const char * minissdpdpath = nullptr;
-    struct UPNPDev * devlist = nullptr;
+    const char *multicastif = nullptr;
+    const char *minissdpdpath = nullptr;
+    struct UPNPDev *devlist = nullptr;
     char lanaddr[64];
 
 #ifndef UPNPDISCOVER_SUCCESS
@@ -486,10 +488,12 @@ void p2p::thread_map_port(uint16_t map_port)
     struct UPNPUrls urls;
     struct IGDdatas data;
     int r;
-    try {
+    try
+    {
         r = UPNP_GetValidIGD(devlist, &urls, &data, lanaddr, sizeof(lanaddr));
     }
-    catch (...) {
+    catch (...)
+    {
         r = 0;
         log::info("upnp") << "Get UPnP IGDs exception";
     }
@@ -497,17 +501,18 @@ void p2p::thread_map_port(uint16_t map_port)
     {
         std::string strDesc = std::string("UCN v") + UC_VERSION;
 
-
-        try {
-            while (true) {
+        try
+        {
+            while (true)
+            {
 #ifndef UPNPDISCOVER_SUCCESS
                 /* miniupnpc 1.5 */
                 r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype,
-                    port.c_str(), port.c_str(), lanaddr, strDesc.c_str(), "TCP", 0);
+                                        port.c_str(), port.c_str(), lanaddr, strDesc.c_str(), "TCP", 0);
 #else
                 /* miniupnpc 1.6 */
                 r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype,
-                    port.c_str(), port.c_str(), lanaddr, strDesc.c_str(), "TCP", 0, "0");
+                                        port.c_str(), port.c_str(), lanaddr, strDesc.c_str(), "TCP", 0, "0");
 #endif
 
                 if (r != UPNPCOMMAND_SUCCESS)
@@ -518,34 +523,39 @@ void p2p::thread_map_port(uint16_t map_port)
                 std::this_thread::sleep_for(asio::milliseconds(20 * 60 * 1000));
             }
         }
-        catch (const boost::thread_interrupted&)
+        catch (const boost::thread_interrupted &)
         {
             r = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, port.c_str(), "TCP", 0);
-            log::info("upnp") << "UPNP_DeletePortMapping() returned: "<< r;
-            freeUPNPDevlist(devlist); devlist = nullptr;
+            log::info("upnp") << "UPNP_DeletePortMapping() returned: " << r;
+            freeUPNPDevlist(devlist);
+            devlist = nullptr;
             FreeUPNPUrls(&urls);
             throw;
         }
     }
-    else {
+    else
+    {
         log::info("upnp") << "No valid UPnP IGDs found";
-        freeUPNPDevlist(devlist); devlist = nullptr;
+        freeUPNPDevlist(devlist);
+        devlist = nullptr;
         if (r != 0)
             FreeUPNPUrls(&urls);
     }
 }
 
-config::authority::ptr p2p::get_out_address() {
+config::authority::ptr p2p::get_out_address()
+{
 
     //every 8 times,get a new one
-    if (out_address_use_count_!= 0 && out_address_use_count_ <= 8) {
+    if (out_address_use_count_ != 0 && out_address_use_count_ <= 8)
+    {
         out_address_use_count_++;
         return upnp_out.load();
     }
 
-    const char * multicastif = nullptr;
-    const char * minissdpdpath = nullptr;
-    struct UPNPDev * devlist = nullptr;
+    const char *multicastif = nullptr;
+    const char *minissdpdpath = nullptr;
+    struct UPNPDev *devlist = nullptr;
     char lanaddr[64];
 
 #ifndef UPNPDISCOVER_SUCCESS
@@ -566,10 +576,12 @@ config::authority::ptr p2p::get_out_address() {
     struct IGDdatas data;
     int r;
 
-    try {
+    try
+    {
         r = UPNP_GetValidIGD(devlist, &urls, &data, lanaddr, sizeof(lanaddr));
     }
-    catch (...) {
+    catch (...)
+    {
         r = 0;
         log::info("upnp") << "Get UPnP IGDs exception";
     }
@@ -584,7 +596,8 @@ config::authority::ptr p2p::get_out_address() {
             std::string outaddressstr = std::string(externalIPAddress) + ":" + std::to_string(settings_.inbound_port);
             upnp_out.store(std::make_shared<config::authority>(outaddressstr));
             out_address_use_count_ = 1;
-            freeUPNPDevlist(devlist); devlist = nullptr;
+            freeUPNPDevlist(devlist);
+            devlist = nullptr;
             if (r != 0)
                 FreeUPNPUrls(&urls);
             return upnp_out.load();
@@ -592,7 +605,8 @@ config::authority::ptr p2p::get_out_address() {
     }
 
     //log::info("upnp") << "No valid UPnP IGDs found";
-    freeUPNPDevlist(devlist); devlist = nullptr;
+    freeUPNPDevlist(devlist);
+    devlist = nullptr;
     if (r != 0)
         FreeUPNPUrls(&urls);
 
@@ -605,20 +619,22 @@ void p2p::map_port(bool use_upnp)
 
     if (use_upnp)
     {
-        if (upnp_thread) {
+        if (upnp_thread)
+        {
             upnp_thread->interrupt();
             upnp_thread->join();
         }
         upnp_thread.reset(new boost::thread(boost::bind(p2p::thread_map_port, settings_.inbound_port)));
     }
-    else if (upnp_thread) {
+    else if (upnp_thread)
+    {
         upnp_thread->interrupt();
         upnp_thread->join();
         upnp_thread.reset();
     }
 }
 
-#else // #ifdef USE_UPNP
+#else  // #ifdef USE_UPNP
 void p2p::map_port(bool)
 {
     // Intentionally left blank.
@@ -632,14 +648,13 @@ void p2p::restart_seeding()
     log::debug(LOG_NETWORK) << "restart_seeding clear hosts cache: " << result.message();
 
     //2. start the session_seed
-    result_handler handler = [this](const code& ec) {
+    result_handler handler = [this](const code &ec) {
         log::debug(LOG_NETWORK) << "restart_seeding result: " << ec.message();
         hosts_->after_reseeding();
     };
 
     seed->restart(handler);
 }
-
 
 } // namespace network
 } // namespace libbitcoin

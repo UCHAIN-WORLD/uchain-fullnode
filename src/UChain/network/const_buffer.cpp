@@ -24,40 +24,42 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/network/define.hpp>
 
-namespace libbitcoin {
-namespace network {
+namespace libbitcoin
+{
+namespace network
+{
 
 const_buffer::const_buffer()
-  : data_(std::make_shared<data_chunk>()),
-    buffer_(boost::asio::buffer(*data_))
+    : data_(std::make_shared<data_chunk>()),
+      buffer_(boost::asio::buffer(*data_))
 {
 }
 
-const_buffer::const_buffer(data_chunk&& data)
-  : data_(std::make_shared<data_chunk>(std::forward<data_chunk>(data))),
-    buffer_(boost::asio::buffer(*data_))
+const_buffer::const_buffer(data_chunk &&data)
+    : data_(std::make_shared<data_chunk>(std::forward<data_chunk>(data))),
+      buffer_(boost::asio::buffer(*data_))
 {
 }
 
-const_buffer::const_buffer(const data_chunk& data)
-  : data_(std::make_shared<data_chunk>(data)),
-    buffer_(boost::asio::buffer(*data_))
+const_buffer::const_buffer(const data_chunk &data)
+    : data_(std::make_shared<data_chunk>(data)),
+      buffer_(boost::asio::buffer(*data_))
 {
 }
 
 size_t const_buffer::size() const
 {
-    return data_->size();
+  return data_->size();
 }
 
 const_buffer::const_iterator const_buffer::begin() const
 {
-    return &buffer_;
+  return &buffer_;
 }
 
 const_buffer::const_iterator const_buffer::end() const
 {
-    return &buffer_ + 1;
+  return &buffer_ + 1;
 }
 
 } // namespace network
