@@ -28,8 +28,10 @@
 #include <UChain/network.hpp>
 #include <UChain/node/utility/reservation.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 #define NAME "block_sync"
 #define CLASS protocol_block_sync
@@ -42,11 +44,11 @@ using namespace std::placeholders;
 static const asio::seconds expiry_interval(5);
 
 // Depends on protocol_header_sync, which requires protocol version 31800.
-protocol_block_sync::protocol_block_sync(p2p& network, channel::ptr channel,
-    reservation::ptr row)
-  : protocol_timer(network, channel, true, NAME),
-    reservation_(row),
-    CONSTRUCT_TRACK(protocol_block_sync)
+protocol_block_sync::protocol_block_sync(p2p &network, channel::ptr channel,
+                                         reservation::ptr row)
+    : protocol_timer(network, channel, true, NAME),
+      reservation_(row),
+      CONSTRUCT_TRACK(protocol_block_sync)
 {
 }
 
@@ -94,7 +96,7 @@ void protocol_block_sync::send_get_blocks(event_handler complete, bool reset)
     SEND2(request, handle_send, _1, complete);
 }
 
-void protocol_block_sync::handle_send(const code& ec, event_handler complete)
+void protocol_block_sync::handle_send(const code &ec, event_handler complete)
 {
     if (stopped())
         return;
@@ -112,8 +114,8 @@ void protocol_block_sync::handle_send(const code& ec, event_handler complete)
 // block messages. This requires that this handler never call back into the
 // subscriber. Otherwise a deadlock will result. This in turn requires that
 // the 'complete' parameter handler never call into the message subscriber.
-bool protocol_block_sync::handle_receive(const code& ec, block_ptr message,
-    event_handler complete)
+bool protocol_block_sync::handle_receive(const code &ec, block_ptr message,
+                                         event_handler complete)
 {
     if (stopped())
         return false;
@@ -144,12 +146,12 @@ bool protocol_block_sync::handle_receive(const code& ec, block_ptr message,
 }
 
 // This is fired by the base timer and stop handler.
-void protocol_block_sync::handle_event(const code& ec, event_handler complete)
+void protocol_block_sync::handle_event(const code &ec, event_handler complete)
 {
     if (ec == (code)error::service_stopped)
     {
         complete(ec);
-        return ;
+        return;
     }
 
     if (ec == (code)error::channel_stopped)
@@ -188,8 +190,8 @@ void protocol_block_sync::handle_event(const code& ec, event_handler complete)
     complete(ec);
 }
 
-void protocol_block_sync::blocks_complete(const code& ec,
-    event_handler handler)
+void protocol_block_sync::blocks_complete(const code &ec,
+                                          event_handler handler)
 {
     // We are no longer receiving blocks, so exclude from average.
     reservation_->reset();
