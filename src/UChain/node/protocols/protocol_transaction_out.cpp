@@ -25,8 +25,10 @@
 #include <memory>
 #include <UChain/network.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 #define NAME "transaction"
 #define CLASS protocol_transaction_out
@@ -36,18 +38,18 @@ using namespace bc::message;
 using namespace bc::network;
 using namespace std::placeholders;
 
-protocol_transaction_out::protocol_transaction_out(p2p& network,
-    channel::ptr channel, block_chain& blockchain, transaction_pool& pool)
-  : protocol_events(network, channel, NAME),
-    blockchain_(blockchain),
-    pool_(pool),
+protocol_transaction_out::protocol_transaction_out(p2p &network,
+                                                   channel::ptr channel, block_chain &blockchain, transaction_pool &pool)
+    : protocol_events(network, channel, NAME),
+      blockchain_(blockchain),
+      pool_(pool),
 
-    // TODO: move fee filter to a derived class protocol_transaction_out_70013.
-    minimum_fee_(0),
+      // TODO: move fee filter to a derived class protocol_transaction_out_70013.
+      minimum_fee_(0),
 
-    // TODO: move relay to a derived class protocol_transaction_out_70001.
-    relay_to_peer_(peer_version().relay),
-    CONSTRUCT_TRACK(protocol_transaction_out)
+      // TODO: move relay to a derived class protocol_transaction_out_70001.
+      relay_to_peer_(peer_version().relay),
+      CONSTRUCT_TRACK(protocol_transaction_out)
 {
 }
 
@@ -73,22 +75,22 @@ void protocol_transaction_out::start()
     {
         // Subscribe to transaction pool notifications and relay txs.
         pool_.subscribe_transaction(BIND3(handle_floated, _1, _2, _3));
-        if (channel_stopped()) {
+        if (channel_stopped())
+        {
             pool_.fired();
         }
     }
 
     // TODO: move fee filter to a derived class protocol_transaction_out_70013.
     // Filter announcements by fee if set.
-
 }
 
 // Receive send_headers.
 //-----------------------------------------------------------------------------
 
 // TODO: move fee_filters to a derived class protocol_transaction_out_70013.
-bool protocol_transaction_out::handle_receive_fee_filter(const code& ec,
-    fee_filter_ptr message)
+bool protocol_transaction_out::handle_receive_fee_filter(const code &ec,
+                                                         fee_filter_ptr message)
 {
     if (stopped())
         return false;
@@ -113,30 +115,35 @@ bool protocol_transaction_out::handle_receive_fee_filter(const code& ec,
 // Receive mempool sequence.
 //-----------------------------------------------------------------------------
 
-bool protocol_transaction_out::handle_receive_memory_pool(const code& ec,
-    memory_pool_ptr)
+bool protocol_transaction_out::handle_receive_memory_pool(const code &ec,
+                                                          memory_pool_ptr)
 {
-    if (stopped()) {
+    if (stopped())
+    {
         return false;
     }
 
-    if (ec) {
+    if (ec)
+    {
         return false;
     }
 
     auto self = shared_from_this();
-    pool_.fetch([this, self](const code& ec, const std::vector<transaction_ptr>& txs){
-        if (stopped() || ec) {
+    pool_.fetch([this, self](const code &ec, const std::vector<transaction_ptr> &txs) {
+        if (stopped() || ec)
+        {
             log::debug(LOG_NODE) << "pool fetch transaction failed," << ec.message();
             return;
         }
 
-        if (txs.empty()) {
+        if (txs.empty())
+        {
             return;
         }
         std::vector<hash_digest> hashes;
         hashes.reserve(txs.size());
-        for(auto& t:txs) {
+        for (auto &t : txs)
+        {
             hashes.push_back(t->hash());
         }
         send<protocol_transaction_out>(inventory{hashes, inventory::type_id::transaction}, &protocol_transaction_out::handle_send, _1, inventory::command);
@@ -147,8 +154,8 @@ bool protocol_transaction_out::handle_receive_memory_pool(const code& ec,
 // Receive get_data sequence.
 //-----------------------------------------------------------------------------
 
-bool protocol_transaction_out::handle_receive_get_data(const code& ec,
-    get_data_ptr message)
+bool protocol_transaction_out::handle_receive_get_data(const code &ec,
+                                                       get_data_ptr message)
 {
     if (stopped())
         return false;
@@ -162,34 +169,33 @@ bool protocol_transaction_out::handle_receive_get_data(const code& ec,
         return false;
     }
 
-//    if (message->inventories.size() > 50000)
-//    {
-//        return ! misbehaving(20);
-//    }
+    //    if (message->inventories.size() > 50000)
+    //    {
+    //        return ! misbehaving(20);
+    //    }
 
     // TODO: these must return message objects or be copied!
     // Ignore non-transaction inventory requests in this protocol.
-    for (const auto& inv: message->inventories)
+    for (const auto &inv : message->inventories)
         if (inv.type == inventory::type_id::transaction)
         {
             auto pThis = shared_from_this();
-            pool_.fetch(inv.hash, [this, &inv, pThis](const code& ec, transaction_ptr tx){
+            pool_.fetch(inv.hash, [this, &inv, pThis](const code &ec, transaction_ptr tx) {
                 auto t = tx ? *tx : chain::transaction{};
                 send_transaction(ec, t, inv.hash);
-                if(ec)
+                if (ec)
                 {
                     blockchain_.fetch_transaction(inv.hash,
-                    BIND3(send_transaction, _1, _2, inv.hash));
+                                                  BIND3(send_transaction, _1, _2, inv.hash));
                 }
             });
         }
 
-
     return true;
 }
 
-void protocol_transaction_out::send_transaction(const code& ec,
-    const chain::transaction& transaction, const hash_digest& hash)
+void protocol_transaction_out::send_transaction(const code &ec,
+                                                const chain::transaction &transaction, const hash_digest &hash)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return;
@@ -199,8 +205,8 @@ void protocol_transaction_out::send_transaction(const code& ec,
         log::trace(LOG_NODE)
             << "Transaction requested by [" << authority() << "] not found.";
 
-//        const not_found reply{ { inventory::type_id::transaction, hash } };
-//        SEND2(reply, handle_send, _1, reply.command);
+        //        const not_found reply{ { inventory::type_id::transaction, hash } };
+        //        SEND2(reply, handle_send, _1, reply.command);
         return;
     }
 
@@ -217,14 +223,14 @@ void protocol_transaction_out::send_transaction(const code& ec,
 
     // TODO: eliminate copy.
     SEND2(transaction_message(transaction), handle_send, _1,
-        transaction_message::command);
+          transaction_message::command);
 }
 
 // Subscription.
 //-----------------------------------------------------------------------------
 
-bool protocol_transaction_out::handle_floated(const code& ec,
-    const index_list& unconfirmed, transaction_ptr message)
+bool protocol_transaction_out::handle_floated(const code &ec,
+                                              const index_list &unconfirmed, transaction_ptr message)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;
@@ -248,15 +254,15 @@ bool protocol_transaction_out::handle_floated(const code& ec,
     if (message->originator() != nonce() && fee >= minimum_fee_.load())
     {
         static const auto id = inventory::type_id::transaction;
-        const inventory announcement{ { id, message->hash() } };
-        log::trace(LOG_NODE) << "handle floated send transaction hash," << encode_hash(message->hash()) ;
+        const inventory announcement{{id, message->hash()}};
+        log::trace(LOG_NODE) << "handle floated send transaction hash," << encode_hash(message->hash());
         SEND2(announcement, handle_send, _1, announcement.command);
     }
 
     return true;
 }
 
-void protocol_transaction_out::handle_stop(const code&)
+void protocol_transaction_out::handle_stop(const code &)
 {
     log::trace(LOG_NETWORK)
         << "Stopped transaction_out protocol";

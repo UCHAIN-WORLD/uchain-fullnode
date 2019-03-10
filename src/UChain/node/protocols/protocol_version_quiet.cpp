@@ -22,22 +22,24 @@
 
 #include <UChain/network.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 using namespace bc::network;
 
-protocol_version_quiet::protocol_version_quiet(p2p& network,
-    channel::ptr channel)
-  : protocol_version(network, channel)
+protocol_version_quiet::protocol_version_quiet(p2p &network,
+                                               channel::ptr channel)
+    : protocol_version(network, channel)
 {
 }
 
-void protocol_version_quiet::send_version(const message::version& self)
+void protocol_version_quiet::send_version(const message::version &self)
 {
-    auto version = self;
-    version.relay = false;
-    protocol_version::send_version(version);
+  auto version = self;
+  version.relay = false;
+  protocol_version::send_version(version);
 }
 
 } // namespace node
