@@ -30,18 +30,21 @@
 #include <UChain/protocol/zmq/socket.hpp>
 #include <UChain/protocol/zmq/worker.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 // ZAP endpoint, see: rfc.zeromq.org/spec:27/ZAP
 const config::endpoint authenticator::endpoint("inproc://zeromq.zap.01");
 
 // There may be only one authenticator per process.
-authenticator::authenticator(threadpool& pool)
-  : worker(pool),
-    context_(false),
-    require_address_(false)
+authenticator::authenticator(threadpool &pool)
+    : worker(pool),
+      context_(false),
+      require_address_(false)
 {
 }
 
@@ -50,7 +53,7 @@ authenticator::~authenticator()
     stop();
 }
 
-authenticator::operator context&()
+authenticator::operator context &()
 {
     return context_;
 }
@@ -221,7 +224,8 @@ void authenticator::work()
         response.enqueue(userid);
         response.enqueue(metadata);
 
-        DEBUG_ONLY(ec =) router.send(response);
+        DEBUG_ONLY(ec =)
+        router.send(response);
         BITCOIN_ASSERT_MSG(!ec, "Failed to send ZAP response.");
     }
 
@@ -231,8 +235,8 @@ void authenticator::work()
 // This must be called on the socket thread.
 // Addresses and client keys may be updated after this is applied.
 // The configuration at the time of this call determines the mode of security.
-bool authenticator::apply(socket& socket, const std::string& domain,
-    bool secure)
+bool authenticator::apply(socket &socket, const std::string &domain,
+                          bool secure)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -262,17 +266,16 @@ bool authenticator::apply(socket& socket, const std::string& domain,
 
     if (private_key)
     {
-        return
-            socket.set_private_key(private_key) &&
-            socket.set_curve_server() &&
-            socket.set_authentication_domain(domain);
+        return socket.set_private_key(private_key) &&
+               socket.set_curve_server() &&
+               socket.set_authentication_domain(domain);
     }
 
     // We do not have a private key to set so we cannot set secure.
     return false;
 }
 
-void authenticator::set_private_key(const config::sodium& private_key)
+void authenticator::set_private_key(const config::sodium &private_key)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -282,7 +285,7 @@ void authenticator::set_private_key(const config::sodium& private_key)
     ///////////////////////////////////////////////////////////////////////////
 }
 
-bool authenticator::allowed_address(const std::string& ip_address) const
+bool authenticator::allowed_address(const std::string &ip_address) const
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -292,7 +295,7 @@ bool authenticator::allowed_address(const std::string& ip_address) const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-bool authenticator::allowed_key(const hash_digest& public_key) const
+bool authenticator::allowed_key(const hash_digest &public_key) const
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -302,7 +305,7 @@ bool authenticator::allowed_key(const hash_digest& public_key) const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-bool authenticator::allowed_weak(const std::string& domain) const
+bool authenticator::allowed_weak(const std::string &domain) const
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -312,7 +315,7 @@ bool authenticator::allowed_weak(const std::string& domain) const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void authenticator::allow(const hash_digest& public_key)
+void authenticator::allow(const hash_digest &public_key)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -322,7 +325,7 @@ void authenticator::allow(const hash_digest& public_key)
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void authenticator::allow(const config::authority& address)
+void authenticator::allow(const config::authority &address)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -333,7 +336,7 @@ void authenticator::allow(const config::authority& address)
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void authenticator::deny(const config::authority& address)
+void authenticator::deny(const config::authority &address)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section

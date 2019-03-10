@@ -29,9 +29,12 @@
 #include <UChain/protocol/zmq/message.hpp>
 #include <UChain/protocol/zmq/zeromq.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 static constexpr int32_t zmq_true = 1;
 static constexpr int32_t zmq_fail = -1;
@@ -43,29 +46,42 @@ int32_t socket::to_socket_type(role socket_role)
 {
     switch (socket_role)
     {
-        case role::pair: return ZMQ_PAIR;
-        case role::publisher: return ZMQ_PUB;
-        case role::subscriber: return ZMQ_SUB;
-        case role::requester: return ZMQ_REQ;
-        case role::replier: return ZMQ_REP;
-        case role::dealer: return ZMQ_DEALER;
-        case role::router: return ZMQ_ROUTER;
-        case role::puller: return ZMQ_PULL;
-        case role::pusher: return ZMQ_PUSH;
-        case role::extended_publisher: return ZMQ_XPUB;
-        case role::extended_subscriber: return ZMQ_XSUB;
-        case role::streamer: return ZMQ_STREAM;
-        default: return -1;
+    case role::pair:
+        return ZMQ_PAIR;
+    case role::publisher:
+        return ZMQ_PUB;
+    case role::subscriber:
+        return ZMQ_SUB;
+    case role::requester:
+        return ZMQ_REQ;
+    case role::replier:
+        return ZMQ_REP;
+    case role::dealer:
+        return ZMQ_DEALER;
+    case role::router:
+        return ZMQ_ROUTER;
+    case role::puller:
+        return ZMQ_PULL;
+    case role::pusher:
+        return ZMQ_PUSH;
+    case role::extended_publisher:
+        return ZMQ_XPUB;
+    case role::extended_subscriber:
+        return ZMQ_XSUB;
+    case role::streamer:
+        return ZMQ_STREAM;
+    default:
+        return -1;
     }
 }
 
 // zmq_term terminates blocking operations but blocks until each socket in the
 // context is explicitly closed. Socket close kills transfers after linger.
-socket::socket(void* zmq_socket)
-  : self_(zmq_socket),
-    send_buffer_(zmq_send_buffer),
-    receive_buffer_(zmq_receive_buffer),
-    identifier_(reinterpret_cast<identifier>(zmq_socket))
+socket::socket(void *zmq_socket)
+    : self_(zmq_socket),
+      send_buffer_(zmq_send_buffer),
+      receive_buffer_(zmq_receive_buffer),
+      identifier_(reinterpret_cast<identifier>(zmq_socket))
 {
     if (self_ == nullptr)
         return;
@@ -79,8 +95,8 @@ socket::socket(void* zmq_socket)
     }
 }
 
-socket::socket(context& context, role socket_role)
-  : socket(zmq_socket(context.self(), to_socket_type(socket_role)))
+socket::socket(context &context, role socket_role)
+    : socket(zmq_socket(context.self(), to_socket_type(socket_role)))
 {
 }
 
@@ -115,7 +131,7 @@ socket::operator const bool() const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-void* socket::self()
+void *socket::self()
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -133,7 +149,7 @@ identifier socket::id() const
 }
 
 // This must be called on the socket thread.
-code socket::bind(const config::endpoint& address)
+code socket::bind(const config::endpoint &address)
 {
     if (zmq_bind(self_, address.to_string().c_str()) == zmq_fail)
         return get_last_error();
@@ -142,7 +158,7 @@ code socket::bind(const config::endpoint& address)
 }
 
 // This must be called on the socket thread.
-code socket::connect(const config::endpoint& address)
+code socket::connect(const config::endpoint &address)
 {
     if (zmq_connect(self_, address.to_string().c_str()) == zmq_fail)
         return get_last_error();
@@ -157,7 +173,7 @@ bool socket::set(int32_t option, int32_t value)
 }
 
 // private
-bool socket::set(int32_t option, const std::string& value)
+bool socket::set(int32_t option, const std::string &value)
 {
     if (value.empty())
         return true;
@@ -167,7 +183,7 @@ bool socket::set(int32_t option, const std::string& value)
 }
 
 // This must be called on the socket thread.
-bool socket::set_authentication_domain(const std::string& domain)
+bool socket::set_authentication_domain(const std::string &domain)
 {
     return set(ZMQ_ZAP_DOMAIN, domain);
 }
@@ -179,37 +195,37 @@ bool socket::set_curve_server()
 }
 
 // This must be called on the socket thread.
-bool socket::set_curve_client(const config::sodium& server_public_key)
+bool socket::set_curve_client(const config::sodium &server_public_key)
 {
     return set(ZMQ_CURVE_SERVERKEY, server_public_key.to_string());
 }
 
 // This must be called on the socket thread.
-bool socket::set_public_key(const config::sodium& key)
+bool socket::set_public_key(const config::sodium &key)
 {
     return set(ZMQ_CURVE_PUBLICKEY, key.to_string());
 }
 
 // This must be called on the socket thread.
-bool socket::set_private_key(const config::sodium& key)
+bool socket::set_private_key(const config::sodium &key)
 {
     return set(ZMQ_CURVE_SECRETKEY, key.to_string());
 }
 
 // This must be called on the socket thread.
-bool socket::set_certificate(const certificate& certificate)
+bool socket::set_certificate(const certificate &certificate)
 {
     return certificate &&
-        set_public_key(certificate.public_key().to_string()) &&
-        set_private_key(certificate.private_key().to_string());
+           set_public_key(certificate.public_key().to_string()) &&
+           set_private_key(certificate.private_key().to_string());
 }
 
-code socket::send(message& packet)
+code socket::send(message &packet)
 {
     return packet.send(*this);
 }
 
-code socket::receive(message& packet)
+code socket::receive(message &packet)
 {
     return packet.receive(*this);
 }

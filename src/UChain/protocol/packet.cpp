@@ -26,8 +26,10 @@
 #include <UChain/protocol/zmq/message.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
-namespace libbitcoin {
-namespace protocol {
+namespace libbitcoin
+{
+namespace protocol
+{
 
 packet::packet()
 {
@@ -43,12 +45,12 @@ const data_chunk packet::destination() const
     return destination_;
 }
 
-void packet::set_destination(const data_chunk& destination)
+void packet::set_destination(const data_chunk &destination)
 {
     destination_ = destination;
 }
 
-bool packet::receive(zmq::socket& socket)
+bool packet::receive(zmq::socket &socket)
 {
     zmq::message message;
 
@@ -70,7 +72,7 @@ bool packet::receive(zmq::socket& socket)
 ////    return (socket != nullptr) && receive(*(socket.get()));
 ////}
 
-bool packet::send(zmq::socket& socket)
+bool packet::send(zmq::socket &socket)
 {
     zmq::message message;
 
@@ -89,7 +91,7 @@ bool packet::send(zmq::socket& socket)
 ////    return (socket != nullptr) && send(*(socket.get()));
 ////}
 
-}
-}
+} // namespace protocol
+} // namespace libbitcoin
 
 #endif

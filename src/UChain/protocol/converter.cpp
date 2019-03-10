@@ -25,14 +25,16 @@
 #include <string>
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace protocol {
+namespace libbitcoin
+{
+namespace protocol
+{
 
 /**
  * Copy `binary` data from protobuf's storage format (std::string)
  * to libbitcoin's storage format (hash_digest).
  */
-static bool unpack_hash(hash_digest& out, const std::string& in)
+static bool unpack_hash(hash_digest &out, const std::string &in)
 {
     if (in.size() != hash_size)
         return false;
@@ -46,7 +48,7 @@ static std::string pack_hash(hash_digest in)
     return std::string(in.begin(), in.end());
 }
 
-bool converter::from_protocol(const point* point, chain::output_point& result)
+bool converter::from_protocol(const point *point, chain::output_point &result)
 {
     if (point == nullptr)
         return false;
@@ -56,12 +58,12 @@ bool converter::from_protocol(const point* point, chain::output_point& result)
 }
 
 bool converter::from_protocol(const std::shared_ptr<point> point,
-    chain::output_point& result)
+                              chain::output_point &result)
 {
     return from_protocol(point.get(), result);
 }
 
-bool converter::from_protocol(const tx_input* input, chain::input& result)
+bool converter::from_protocol(const tx_input *input, chain::input &result)
 {
     if (input == nullptr)
         return false;
@@ -80,16 +82,16 @@ bool converter::from_protocol(const tx_input* input, chain::input& result)
     // protocol question - is the data encoding of the script to be
     // prefixed with operation count?
     return result.script.from_data(data, false,
-        chain::script::parse_mode::raw_data_fallback);
+                                   chain::script::parse_mode::raw_data_fallback);
 }
 
 bool converter::from_protocol(const std::shared_ptr<tx_input> input,
-    chain::input& result)
+                              chain::input &result)
 {
     return from_protocol(input.get(), result);
 }
 
-bool converter::from_protocol(const tx_output* output, chain::output& result)
+bool converter::from_protocol(const tx_output *output, chain::output &result)
 {
     if (output == nullptr || !output->has_script())
         return false;
@@ -101,17 +103,17 @@ bool converter::from_protocol(const tx_output* output, chain::output& result)
     // protocol question - is the data encoding of the script to be
     // prefixed with operation count?
     return result.script.from_data(data, false,
-        chain::script::parse_mode::raw_data_fallback);
+                                   chain::script::parse_mode::raw_data_fallback);
 }
 
 bool converter::from_protocol(const std::shared_ptr<tx_output> output,
-    chain::output& result)
+                              chain::output &result)
 {
     return from_protocol(output.get(), result);
 }
 
-bool converter::from_protocol(const tx* transaction,
-    chain::transaction& result)
+bool converter::from_protocol(const tx *transaction,
+                              chain::transaction &result)
 {
     if (transaction == nullptr)
         return false;
@@ -120,7 +122,7 @@ bool converter::from_protocol(const tx* transaction,
     result.version = transaction->version();
     result.locktime = transaction->locktime();
 
-    for (auto input: transaction->inputs())
+    for (auto input : transaction->inputs())
     {
         chain::input bitcoin_input;
 
@@ -135,7 +137,7 @@ bool converter::from_protocol(const tx* transaction,
 
     if (success)
     {
-        for (auto output: transaction->outputs())
+        for (auto output : transaction->outputs())
         {
             chain::output bitcoin_output;
 
@@ -161,13 +163,13 @@ bool converter::from_protocol(const tx* transaction,
 }
 
 bool converter::from_protocol(const std::shared_ptr<tx> transaction,
-    chain::transaction& result)
+                              chain::transaction &result)
 {
     return from_protocol(transaction.get(), result);
 }
 
-bool converter::from_protocol(const block_header* header,
-    chain::header& result)
+bool converter::from_protocol(const block_header *header,
+                              chain::header &result)
 {
     if (header == nullptr)
         return false;
@@ -178,29 +180,30 @@ bool converter::from_protocol(const block_header* header,
     result.nonce = header->nonce();
     result.transaction_count = header->tx_count();
     return unpack_hash(result.merkle, header->merkle_root()) &&
-        unpack_hash(result.previous_block_hash, header->previous_block_hash());
+           unpack_hash(result.previous_block_hash, header->previous_block_hash());
 }
 
 bool converter::from_protocol(const std::shared_ptr<block_header> header,
-    chain::header& result)
+                              chain::header &result)
 {
     return from_protocol(header.get(), result);
 }
 
-bool converter::from_protocol(const protocol::block* block,
-    chain::block& result)
+bool converter::from_protocol(const protocol::block *block,
+                              chain::block &result)
 {
     if (block == nullptr || !from_protocol(&(block->header()), result.header))
         return false;
 
-    for (auto tx: block->transactions())
+    for (auto tx : block->transactions())
     {
         chain::transaction bitcoin_tx;
 
         if (!from_protocol(&tx, bitcoin_tx))
         {
             result.transactions.clear();
-            return false;;
+            return false;
+            ;
         }
 
         result.transactions.push_back(bitcoin_tx);
@@ -210,20 +213,20 @@ bool converter::from_protocol(const protocol::block* block,
 }
 
 bool converter::from_protocol(const std::shared_ptr<block> block,
-    chain::block& result)
+                              chain::block &result)
 {
     return from_protocol(block.get(), result);
 }
 
-bool converter::to_protocol(const chain::output_point& point,
-    protocol::point& result)
+bool converter::to_protocol(const chain::output_point &point,
+                            protocol::point &result)
 {
     result.set_hash(pack_hash(point.hash));
     result.set_index(point.index);
     return true;
 }
 
-point* converter::to_protocol(const chain::output_point& point)
+point *converter::to_protocol(const chain::output_point &point)
 {
     std::unique_ptr<protocol::point> result(new protocol::point());
 
@@ -233,9 +236,9 @@ point* converter::to_protocol(const chain::output_point& point)
     return result.release();
 }
 
-bool converter::to_protocol(const chain::input& input, tx_input& result)
+bool converter::to_protocol(const chain::input &input, tx_input &result)
 {
-    const auto& previous_output = input.previous_output;
+    const auto &previous_output = input.previous_output;
     result.set_allocated_previous_output(to_protocol(previous_output));
 
     // protocol question - is the data encoding of the script to be prefixed
@@ -246,7 +249,7 @@ bool converter::to_protocol(const chain::input& input, tx_input& result)
     return true;
 }
 
-tx_input* converter::to_protocol(const chain::input& input)
+tx_input *converter::to_protocol(const chain::input &input)
 {
     std::unique_ptr<tx_input> result(new tx_input());
 
@@ -256,18 +259,18 @@ tx_input* converter::to_protocol(const chain::input& input)
     return result.release();
 }
 
-bool converter::to_protocol(const chain::output& output, tx_output& result)
+bool converter::to_protocol(const chain::output &output, tx_output &result)
 {
     result.set_value(output.value);
 
     // protocol question - is the data encoding of the script to be prefixed
     // with operation count?
     const auto script_data = output.script.to_data(false);
-    result.set_script({ script_data.begin(), script_data.end() });
+    result.set_script({script_data.begin(), script_data.end()});
     return true;
 }
 
-tx_output* converter::to_protocol(const chain::output& output)
+tx_output *converter::to_protocol(const chain::output &output)
 {
     std::unique_ptr<tx_output> result(new tx_output());
 
@@ -277,7 +280,7 @@ tx_output* converter::to_protocol(const chain::output& output)
     return result.release();
 }
 
-bool converter::to_protocol(const chain::transaction& transaction, tx& result)
+bool converter::to_protocol(const chain::transaction &transaction, tx &result)
 {
     result.set_version(transaction.version);
     result.set_locktime(transaction.locktime);
@@ -285,7 +288,7 @@ bool converter::to_protocol(const chain::transaction& transaction, tx& result)
 
     auto success = true;
 
-    for (const auto& input: transaction.inputs)
+    for (const auto &input : transaction.inputs)
     {
         if (!to_protocol(input, *(repeated_inputs->Add())))
         {
@@ -298,7 +301,7 @@ bool converter::to_protocol(const chain::transaction& transaction, tx& result)
 
     if (success)
     {
-        for (const auto& output: transaction.outputs)
+        for (const auto &output : transaction.outputs)
         {
             if (!to_protocol(output, *(repeated_outputs->Add())))
             {
@@ -319,7 +322,7 @@ bool converter::to_protocol(const chain::transaction& transaction, tx& result)
     return success;
 }
 
-tx* converter::to_protocol(const chain::transaction& transaction)
+tx *converter::to_protocol(const chain::transaction &transaction)
 {
     std::unique_ptr<tx> result(new tx());
 
@@ -329,7 +332,7 @@ tx* converter::to_protocol(const chain::transaction& transaction)
     return result.release();
 }
 
-bool converter::to_protocol(const chain::header& header, block_header& result)
+bool converter::to_protocol(const chain::header &header, block_header &result)
 {
     result.set_version(header.version);
     result.set_timestamp(header.timestamp);
@@ -341,7 +344,7 @@ bool converter::to_protocol(const chain::header& header, block_header& result)
     return true;
 }
 
-block_header* converter::to_protocol(const chain::header& header)
+block_header *converter::to_protocol(const chain::header &header)
 {
     std::unique_ptr<block_header> result(new block_header());
 
@@ -351,7 +354,7 @@ block_header* converter::to_protocol(const chain::header& header)
     return result.release();
 }
 
-bool converter::to_protocol(const chain::block& block, protocol::block& result)
+bool converter::to_protocol(const chain::block &block, protocol::block &result)
 {
     result.set_allocated_header(to_protocol(block.header));
     if (!result.has_header())
@@ -359,7 +362,7 @@ bool converter::to_protocol(const chain::block& block, protocol::block& result)
 
     auto repeated_transactions = result.mutable_transactions();
 
-    for (const auto& transaction: block.transactions)
+    for (const auto &transaction : block.transactions)
     {
         if (!to_protocol(transaction, *(repeated_transactions->Add())))
         {
@@ -372,7 +375,7 @@ bool converter::to_protocol(const chain::block& block, protocol::block& result)
     return true;
 }
 
-protocol::block* converter::to_protocol(const chain::block& block)
+protocol::block *converter::to_protocol(const chain::block &block)
 {
     std::unique_ptr<protocol::block> result(new protocol::block());
 
@@ -382,7 +385,7 @@ protocol::block* converter::to_protocol(const chain::block& block)
     return result.release();
 }
 
-}
-}
+} // namespace protocol
+} // namespace libbitcoin
 
 #endif

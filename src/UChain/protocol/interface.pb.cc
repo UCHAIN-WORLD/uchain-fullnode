@@ -18,496 +18,505 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace libbitcoin {
-namespace protocol {
+namespace libbitcoin
+{
+namespace protocol
+{
 
-namespace {
+namespace
+{
 
-const ::google::protobuf::Descriptor* block_header_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  block_header_reflection_ = NULL;
-const ::google::protobuf::Descriptor* point_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  point_reflection_ = NULL;
-const ::google::protobuf::Descriptor* tx_input_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  tx_input_reflection_ = NULL;
-const ::google::protobuf::Descriptor* tx_output_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  tx_output_reflection_ = NULL;
-const ::google::protobuf::Descriptor* tx_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  tx_reflection_ = NULL;
-const ::google::protobuf::Descriptor* block_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  block_reflection_ = NULL;
-const ::google::protobuf::Descriptor* filter_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  filter_reflection_ = NULL;
-const ::google::protobuf::Descriptor* block_id_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  block_id_reflection_ = NULL;
-const ::google::protobuf::Descriptor* block_location_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  block_location_reflection_ = NULL;
-const ::google::protobuf::Descriptor* tx_hash_result_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  tx_hash_result_reflection_ = NULL;
-const ::google::protobuf::Descriptor* tx_result_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  tx_result_reflection_ = NULL;
-const ::google::protobuf::Descriptor* output_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  output_reflection_ = NULL;
-const ::google::protobuf::Descriptor* utxo_result_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  utxo_result_reflection_ = NULL;
-const ::google::protobuf::Descriptor* block_headers_request_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  block_headers_request_reflection_ = NULL;
-const ::google::protobuf::Descriptor* transactions_request_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  transactions_request_reflection_ = NULL;
-const ::google::protobuf::Descriptor* request_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  request_reflection_ = NULL;
-struct requestOneofInstance {
-  const ::libbitcoin::protocol::block_headers_request* get_block_headers_;
-  const ::libbitcoin::protocol::transactions_request* get_transactions_;
-  const ::libbitcoin::protocol::tx* post_transaction_;
-  const ::libbitcoin::protocol::tx* validate_transaction_;
-  const ::libbitcoin::protocol::block* post_block_;
-  const ::libbitcoin::protocol::block* validate_block_;
-}* request_default_oneof_instance_ = NULL;
-const ::google::protobuf::Descriptor* response_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  response_reflection_ = NULL;
-struct responseOneofInstance {
-  const ::libbitcoin::protocol::response_block_headers* get_block_headers_response_;
-  const ::libbitcoin::protocol::response_transactions* get_transactions_response_;
+const ::google::protobuf::Descriptor *block_header_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    block_header_reflection_ = NULL;
+const ::google::protobuf::Descriptor *point_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    point_reflection_ = NULL;
+const ::google::protobuf::Descriptor *tx_input_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    tx_input_reflection_ = NULL;
+const ::google::protobuf::Descriptor *tx_output_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    tx_output_reflection_ = NULL;
+const ::google::protobuf::Descriptor *tx_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    tx_reflection_ = NULL;
+const ::google::protobuf::Descriptor *block_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    block_reflection_ = NULL;
+const ::google::protobuf::Descriptor *filter_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    filter_reflection_ = NULL;
+const ::google::protobuf::Descriptor *block_id_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    block_id_reflection_ = NULL;
+const ::google::protobuf::Descriptor *block_location_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    block_location_reflection_ = NULL;
+const ::google::protobuf::Descriptor *tx_hash_result_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    tx_hash_result_reflection_ = NULL;
+const ::google::protobuf::Descriptor *tx_result_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    tx_result_reflection_ = NULL;
+const ::google::protobuf::Descriptor *output_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    output_reflection_ = NULL;
+const ::google::protobuf::Descriptor *utxo_result_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    utxo_result_reflection_ = NULL;
+const ::google::protobuf::Descriptor *block_headers_request_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    block_headers_request_reflection_ = NULL;
+const ::google::protobuf::Descriptor *transactions_request_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    transactions_request_reflection_ = NULL;
+const ::google::protobuf::Descriptor *request_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    request_reflection_ = NULL;
+struct requestOneofInstance
+{
+  const ::libbitcoin::protocol::block_headers_request *get_block_headers_;
+  const ::libbitcoin::protocol::transactions_request *get_transactions_;
+  const ::libbitcoin::protocol::tx *post_transaction_;
+  const ::libbitcoin::protocol::tx *validate_transaction_;
+  const ::libbitcoin::protocol::block *post_block_;
+  const ::libbitcoin::protocol::block *validate_block_;
+} *request_default_oneof_instance_ = NULL;
+const ::google::protobuf::Descriptor *response_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    response_reflection_ = NULL;
+struct responseOneofInstance
+{
+  const ::libbitcoin::protocol::response_block_headers *get_block_headers_response_;
+  const ::libbitcoin::protocol::response_transactions *get_transactions_response_;
   bool post_transaction_succeeded_;
   bool validate_transaction_succeeded_;
   bool post_block_succeeded_;
   bool validate_block_succeeded_;
-}* response_default_oneof_instance_ = NULL;
-const ::google::protobuf::Descriptor* response_block_headers_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  response_block_headers_reflection_ = NULL;
-const ::google::protobuf::Descriptor* response_transactions_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  response_transactions_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* filters_descriptor_ = NULL;
-const ::google::protobuf::EnumDescriptor* transaction_results_descriptor_ = NULL;
-const ::google::protobuf::EnumDescriptor* locations_descriptor_ = NULL;
+} *response_default_oneof_instance_ = NULL;
+const ::google::protobuf::Descriptor *response_block_headers_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    response_block_headers_reflection_ = NULL;
+const ::google::protobuf::Descriptor *response_transactions_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection *
+    response_transactions_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor *filters_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor *transaction_results_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor *locations_descriptor_ = NULL;
 
-}  // namespace
+} // namespace
 
-
-void protobuf_AssignDesc_bitcoin_2fprotocol_2finterface_2eproto() {
+void protobuf_AssignDesc_bitcoin_2fprotocol_2finterface_2eproto()
+{
   protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
-  const ::google::protobuf::FileDescriptor* file =
-    ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
-      "bitcoin/protocol/interface.proto");
+  const ::google::protobuf::FileDescriptor *file =
+      ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
+          "bitcoin/protocol/interface.proto");
   GOOGLE_CHECK(file != NULL);
   block_header_descriptor_ = file->message_type(0);
   static const int block_header_offsets_[7] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, version_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, previous_block_hash_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, merkle_root_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, timestamp_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, bits_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, nonce_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, tx_count_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, version_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, previous_block_hash_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, merkle_root_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, timestamp_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, bits_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, nonce_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, tx_count_),
   };
   block_header_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      block_header_descriptor_,
-      block_header::default_instance_,
-      block_header_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(block_header));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          block_header_descriptor_,
+          block_header::default_instance_,
+          block_header_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_header, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(block_header));
   point_descriptor_ = file->message_type(1);
   static const int point_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(point, hash_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(point, index_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(point, hash_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(point, index_),
   };
   point_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      point_descriptor_,
-      point::default_instance_,
-      point_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(point, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(point, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(point));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          point_descriptor_,
+          point::default_instance_,
+          point_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(point, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(point, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(point));
   tx_input_descriptor_ = file->message_type(2);
   static const int tx_input_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, previous_output_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, script_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, sequence_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, previous_output_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, script_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, sequence_),
   };
   tx_input_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      tx_input_descriptor_,
-      tx_input::default_instance_,
-      tx_input_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(tx_input));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          tx_input_descriptor_,
+          tx_input::default_instance_,
+          tx_input_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_input, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(tx_input));
   tx_output_descriptor_ = file->message_type(3);
   static const int tx_output_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_output, value_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_output, script_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_output, value_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_output, script_),
   };
   tx_output_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      tx_output_descriptor_,
-      tx_output::default_instance_,
-      tx_output_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_output, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_output, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(tx_output));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          tx_output_descriptor_,
+          tx_output::default_instance_,
+          tx_output_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_output, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_output, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(tx_output));
   tx_descriptor_ = file->message_type(4);
   static const int tx_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, version_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, locktime_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, inputs_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, outputs_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, version_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, locktime_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, inputs_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, outputs_),
   };
   tx_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      tx_descriptor_,
-      tx::default_instance_,
-      tx_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(tx));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          tx_descriptor_,
+          tx::default_instance_,
+          tx_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(tx));
   block_descriptor_ = file->message_type(5);
   static const int block_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, header_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, transactions_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, tree_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, header_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, transactions_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, tree_),
   };
   block_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      block_descriptor_,
-      block::default_instance_,
-      block_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(block));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          block_descriptor_,
+          block::default_instance_,
+          block_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(block));
   filter_descriptor_ = file->message_type(6);
   static const int filter_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, filter_type_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, bits_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, prefix_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, filter_type_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, bits_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, prefix_),
   };
   filter_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      filter_descriptor_,
-      filter::default_instance_,
-      filter_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(filter));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          filter_descriptor_,
+          filter::default_instance_,
+          filter_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(filter, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(filter));
   block_id_descriptor_ = file->message_type(7);
   static const int block_id_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_id, height_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_id, hash_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_id, height_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_id, hash_),
   };
   block_id_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      block_id_descriptor_,
-      block_id::default_instance_,
-      block_id_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_id, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_id, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(block_id));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          block_id_descriptor_,
+          block_id::default_instance_,
+          block_id_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_id, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_id, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(block_id));
   block_location_descriptor_ = file->message_type(8);
   static const int block_location_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, identity_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, index_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, branch_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, identity_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, index_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, branch_),
   };
   block_location_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      block_location_descriptor_,
-      block_location::default_instance_,
-      block_location_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(block_location));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          block_location_descriptor_,
+          block_location::default_instance_,
+          block_location_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_location, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(block_location));
   tx_hash_result_descriptor_ = file->message_type(9);
   static const int tx_hash_result_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_hash_result, hash_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_hash_result, location_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_hash_result, hash_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_hash_result, location_),
   };
   tx_hash_result_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      tx_hash_result_descriptor_,
-      tx_hash_result::default_instance_,
-      tx_hash_result_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_hash_result, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_hash_result, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(tx_hash_result));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          tx_hash_result_descriptor_,
+          tx_hash_result::default_instance_,
+          tx_hash_result_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_hash_result, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_hash_result, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(tx_hash_result));
   tx_result_descriptor_ = file->message_type(10);
   static const int tx_result_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_result, transaction_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_result, location_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_result, transaction_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_result, location_),
   };
   tx_result_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      tx_result_descriptor_,
-      tx_result::default_instance_,
-      tx_result_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_result, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_result, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(tx_result));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          tx_result_descriptor_,
+          tx_result::default_instance_,
+          tx_result_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_result, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(tx_result, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(tx_result));
   output_descriptor_ = file->message_type(11);
   static const int output_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, index_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, satoshis_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, script_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, index_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, satoshis_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, script_),
   };
   output_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      output_descriptor_,
-      output::default_instance_,
-      output_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(output));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          output_descriptor_,
+          output::default_instance_,
+          output_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(output, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(output));
   utxo_result_descriptor_ = file->message_type(12);
   static const int utxo_result_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, tx_hash_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, location_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, outputs_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, tx_hash_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, location_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, outputs_),
   };
   utxo_result_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      utxo_result_descriptor_,
-      utxo_result::default_instance_,
-      utxo_result_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(utxo_result));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          utxo_result_descriptor_,
+          utxo_result::default_instance_,
+          utxo_result_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(utxo_result, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(utxo_result));
   block_headers_request_descriptor_ = file->message_type(13);
   static const int block_headers_request_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_headers_request, start_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_headers_request, results_per_page_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_headers_request, start_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_headers_request, results_per_page_),
   };
   block_headers_request_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      block_headers_request_descriptor_,
-      block_headers_request::default_instance_,
-      block_headers_request_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_headers_request, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_headers_request, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(block_headers_request));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          block_headers_request_descriptor_,
+          block_headers_request::default_instance_,
+          block_headers_request_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_headers_request, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(block_headers_request, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(block_headers_request));
   transactions_request_descriptor_ = file->message_type(14);
   static const int transactions_request_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, start_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, results_per_page_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, query_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, result_type_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, location_type_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, start_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, results_per_page_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, query_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, result_type_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, location_type_),
   };
   transactions_request_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      transactions_request_descriptor_,
-      transactions_request::default_instance_,
-      transactions_request_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(transactions_request));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          transactions_request_descriptor_,
+          transactions_request::default_instance_,
+          transactions_request_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(transactions_request, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(transactions_request));
   request_descriptor_ = file->message_type(15);
   static const int request_offsets_[8] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, id_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, get_block_headers_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, get_transactions_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, post_transaction_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, validate_transaction_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, post_block_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, validate_block_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, request_type_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, id_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, get_block_headers_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, get_transactions_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, post_transaction_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, validate_transaction_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, post_block_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(request_default_oneof_instance_, validate_block_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, request_type_),
   };
   request_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      request_descriptor_,
-      request::default_instance_,
-      request_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, _unknown_fields_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, _extensions_),
-      request_default_oneof_instance_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, _oneof_case_[0]),
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(request));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          request_descriptor_,
+          request::default_instance_,
+          request_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, _unknown_fields_),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, _extensions_),
+          request_default_oneof_instance_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(request, _oneof_case_[0]),
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(request));
   response_descriptor_ = file->message_type(16);
   static const int response_offsets_[9] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, status_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, get_block_headers_response_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, get_transactions_response_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, post_transaction_succeeded_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, validate_transaction_succeeded_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, post_block_succeeded_),
-    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, validate_block_succeeded_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, response_type_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, id_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, status_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, get_block_headers_response_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, get_transactions_response_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, post_transaction_succeeded_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, validate_transaction_succeeded_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, post_block_succeeded_),
+      PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(response_default_oneof_instance_, validate_block_succeeded_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, response_type_),
   };
   response_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      response_descriptor_,
-      response::default_instance_,
-      response_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, _unknown_fields_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, _extensions_),
-      response_default_oneof_instance_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, _oneof_case_[0]),
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(response));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          response_descriptor_,
+          response::default_instance_,
+          response_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, _unknown_fields_),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, _extensions_),
+          response_default_oneof_instance_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response, _oneof_case_[0]),
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(response));
   response_block_headers_descriptor_ = response_descriptor_->nested_type(0);
   static const int response_block_headers_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, next_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, top_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, headers_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, next_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, top_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, headers_),
   };
   response_block_headers_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      response_block_headers_descriptor_,
-      response_block_headers::default_instance_,
-      response_block_headers_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(response_block_headers));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          response_block_headers_descriptor_,
+          response_block_headers::default_instance_,
+          response_block_headers_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_block_headers, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(response_block_headers));
   response_transactions_descriptor_ = response_descriptor_->nested_type(1);
   static const int response_transactions_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, next_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, top_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, hashes_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, transactions_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, utxos_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, next_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, top_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, hashes_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, transactions_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, utxos_),
   };
   response_transactions_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      response_transactions_descriptor_,
-      response_transactions::default_instance_,
-      response_transactions_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(response_transactions));
+      new ::google::protobuf::internal::GeneratedMessageReflection(
+          response_transactions_descriptor_,
+          response_transactions::default_instance_,
+          response_transactions_offsets_,
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, _has_bits_[0]),
+          GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(response_transactions, _unknown_fields_),
+          -1,
+          ::google::protobuf::DescriptorPool::generated_pool(),
+          ::google::protobuf::MessageFactory::generated_factory(),
+          sizeof(response_transactions));
   filters_descriptor_ = file->enum_type(0);
   transaction_results_descriptor_ = file->enum_type(1);
   locations_descriptor_ = file->enum_type(2);
 }
 
-namespace {
+namespace
+{
 
 GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AssignDescriptors_once_);
-inline void protobuf_AssignDescriptorsOnce() {
+inline void protobuf_AssignDescriptorsOnce()
+{
   ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
-                 &protobuf_AssignDesc_bitcoin_2fprotocol_2finterface_2eproto);
+                                     &protobuf_AssignDesc_bitcoin_2fprotocol_2finterface_2eproto);
 }
 
-void protobuf_RegisterTypes(const ::std::string&) {
+void protobuf_RegisterTypes(const ::std::string &)
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    block_header_descriptor_, &block_header::default_instance());
+      block_header_descriptor_, &block_header::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    point_descriptor_, &point::default_instance());
+      point_descriptor_, &point::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    tx_input_descriptor_, &tx_input::default_instance());
+      tx_input_descriptor_, &tx_input::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    tx_output_descriptor_, &tx_output::default_instance());
+      tx_output_descriptor_, &tx_output::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    tx_descriptor_, &tx::default_instance());
+      tx_descriptor_, &tx::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    block_descriptor_, &block::default_instance());
+      block_descriptor_, &block::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    filter_descriptor_, &filter::default_instance());
+      filter_descriptor_, &filter::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    block_id_descriptor_, &block_id::default_instance());
+      block_id_descriptor_, &block_id::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    block_location_descriptor_, &block_location::default_instance());
+      block_location_descriptor_, &block_location::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    tx_hash_result_descriptor_, &tx_hash_result::default_instance());
+      tx_hash_result_descriptor_, &tx_hash_result::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    tx_result_descriptor_, &tx_result::default_instance());
+      tx_result_descriptor_, &tx_result::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    output_descriptor_, &output::default_instance());
+      output_descriptor_, &output::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    utxo_result_descriptor_, &utxo_result::default_instance());
+      utxo_result_descriptor_, &utxo_result::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    block_headers_request_descriptor_, &block_headers_request::default_instance());
+      block_headers_request_descriptor_, &block_headers_request::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    transactions_request_descriptor_, &transactions_request::default_instance());
+      transactions_request_descriptor_, &transactions_request::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    request_descriptor_, &request::default_instance());
+      request_descriptor_, &request::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    response_descriptor_, &response::default_instance());
+      response_descriptor_, &response::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    response_block_headers_descriptor_, &response_block_headers::default_instance());
+      response_block_headers_descriptor_, &response_block_headers::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    response_transactions_descriptor_, &response_transactions::default_instance());
+      response_transactions_descriptor_, &response_transactions::default_instance());
 }
 
-}  // namespace
+} // namespace
 
-void protobuf_ShutdownFile_bitcoin_2fprotocol_2finterface_2eproto() {
+void protobuf_ShutdownFile_bitcoin_2fprotocol_2finterface_2eproto()
+{
   delete block_header::default_instance_;
   delete block_header_reflection_;
   delete point::default_instance_;
@@ -550,91 +559,94 @@ void protobuf_ShutdownFile_bitcoin_2fprotocol_2finterface_2eproto() {
   delete response_transactions_reflection_;
 }
 
-void protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto() {
+void protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto()
+{
   static bool already_here = false;
-  if (already_here) return;
+  if (already_here)
+    return;
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n bitcoin/protocol/interface.proto\022\023libb"
-    "itcoin.protocol\"\223\001\n\014block_header\022\017\n\007vers"
-    "ion\030\001 \002(\r\022\033\n\023previous_block_hash\030\002 \002(\014\022\023"
-    "\n\013merkle_root\030\003 \002(\014\022\021\n\ttimestamp\030\004 \002(\r\022\014"
-    "\n\004bits\030\005 \002(\r\022\r\n\005nonce\030\006 \002(\r\022\020\n\010tx_count\030"
-    "\007 \002(\004\"$\n\005point\022\014\n\004hash\030\001 \002(\014\022\r\n\005index\030\002 "
-    "\002(\r\"a\n\010tx_input\0223\n\017previous_output\030\001 \002(\013"
-    "2\032.libbitcoin.protocol.point\022\016\n\006script\030\002"
-    " \002(\014\022\020\n\010sequence\030\003 \002(\r\"*\n\ttx_output\022\r\n\005v"
-    "alue\030\001 \002(\004\022\016\n\006script\030\002 \002(\014\"\207\001\n\002tx\022\017\n\007ver"
-    "sion\030\001 \002(\r\022\020\n\010locktime\030\002 \002(\r\022-\n\006inputs\030\003"
-    " \003(\0132\035.libbitcoin.protocol.tx_input\022/\n\007o"
-    "utputs\030\004 \003(\0132\036.libbitcoin.protocol.tx_ou"
-    "tput\"w\n\005block\0221\n\006header\030\001 \002(\0132!.libbitco"
-    "in.protocol.block_header\022-\n\014transactions"
-    "\030\002 \003(\0132\027.libbitcoin.protocol.tx\022\014\n\004tree\030"
-    "\003 \003(\014\"Y\n\006filter\0221\n\013filter_type\030\001 \002(\0162\034.l"
-    "ibbitcoin.protocol.filters\022\014\n\004bits\030\002 \001(\r"
-    "\022\016\n\006prefix\030\003 \002(\014\"(\n\010block_id\022\016\n\006height\030\001"
-    " \001(\r\022\014\n\004hash\030\002 \001(\014\"`\n\016block_location\022/\n\010"
-    "identity\030\001 \001(\0132\035.libbitcoin.protocol.blo"
-    "ck_id\022\r\n\005index\030\002 \001(\004\022\016\n\006branch\030\003 \003(\014\"U\n\016"
-    "tx_hash_result\022\014\n\004hash\030\001 \002(\014\0225\n\010location"
-    "\030\002 \002(\0132#.libbitcoin.protocol.block_locat"
-    "ion\"p\n\ttx_result\022,\n\013transaction\030\001 \002(\0132\027."
-    "libbitcoin.protocol.tx\0225\n\010location\030\002 \002(\013"
-    "2#.libbitcoin.protocol.block_location\"9\n"
-    "\006output\022\r\n\005index\030\001 \002(\r\022\020\n\010satoshis\030\002 \002(\004"
-    "\022\016\n\006script\030\003 \002(\014\"\203\001\n\013utxo_result\022\017\n\007tx_h"
-    "ash\030\001 \002(\014\0225\n\010location\030\002 \002(\0132#.libbitcoin"
-    ".protocol.block_location\022,\n\007outputs\030\003 \003("
-    "\0132\033.libbitcoin.protocol.output\"_\n\025block_"
-    "headers_request\022,\n\005start\030\001 \001(\0132\035.libbitc"
-    "oin.protocol.block_id\022\030\n\020results_per_pag"
-    "e\030\002 \001(\r\"\217\002\n\024transactions_request\022,\n\005star"
-    "t\030\001 \001(\0132\035.libbitcoin.protocol.block_id\022\030"
-    "\n\020results_per_page\030\002 \001(\r\022*\n\005query\030\003 \003(\0132"
-    "\033.libbitcoin.protocol.filter\022F\n\013result_t"
-    "ype\030\004 \001(\0162(.libbitcoin.protocol.transact"
-    "ion_results:\007TX_HASH\022;\n\rlocation_type\030\005 "
-    "\001(\0162\036.libbitcoin.protocol.locations:\004NON"
-    "E\"\222\003\n\007request\022\n\n\002id\030\001 \002(\r\022G\n\021get_block_h"
-    "eaders\030\002 \001(\0132*.libbitcoin.protocol.block"
-    "_headers_requestH\000\022E\n\020get_transactions\030\003"
-    " \001(\0132).libbitcoin.protocol.transactions_"
-    "requestH\000\0223\n\020post_transaction\030\004 \001(\0132\027.li"
-    "bbitcoin.protocol.txH\000\0227\n\024validate_trans"
-    "action\030\005 \001(\0132\027.libbitcoin.protocol.txH\000\022"
-    "0\n\npost_block\030\006 \001(\0132\032.libbitcoin.protoco"
-    "l.blockH\000\0224\n\016validate_block\030\007 \001(\0132\032.libb"
-    "itcoin.protocol.blockH\000*\005\010d\020\310\001B\016\n\014reques"
-    "t_type\"\233\006\n\010response\022\n\n\002id\030\001 \002(\r\022\016\n\006statu"
-    "s\030\002 \001(\021\022Q\n\032get_block_headers_response\030\003 "
-    "\001(\0132+.libbitcoin.protocol.response.block"
-    "_headersH\000\022O\n\031get_transactions_response\030"
-    "\004 \001(\0132*.libbitcoin.protocol.response.tra"
-    "nsactionsH\000\022$\n\032post_transaction_succeede"
-    "d\030\005 \001(\010H\000\022(\n\036validate_transaction_succee"
-    "ded\030\006 \001(\010H\000\022\036\n\024post_block_succeeded\030\007 \001("
-    "\010H\000\022\"\n\030validate_block_succeeded\030\010 \001(\010H\000\032"
-    "\234\001\n\rblock_headers\022+\n\004next\030\001 \001(\0132\035.libbit"
-    "coin.protocol.block_id\022*\n\003top\030\002 \001(\0132\035.li"
-    "bbitcoin.protocol.block_id\0222\n\007headers\030\003 "
-    "\003(\0132!.libbitcoin.protocol.block_header\032\203"
-    "\002\n\014transactions\022+\n\004next\030\001 \001(\0132\035.libbitco"
-    "in.protocol.block_id\022*\n\003top\030\002 \001(\0132\035.libb"
-    "itcoin.protocol.block_id\0223\n\006hashes\030\003 \003(\013"
-    "2#.libbitcoin.protocol.tx_hash_result\0224\n"
-    "\014transactions\030\004 \003(\0132\036.libbitcoin.protoco"
-    "l.tx_result\022/\n\005utxos\030\005 \003(\0132 .libbitcoin."
-    "protocol.utxo_result*\005\010d\020\310\001B\017\n\rresponse_"
-    "type*4\n\007filters\022\013\n\007ADDRESS\020\001\022\017\n\013TRANSACT"
-    "ION\020\002\022\013\n\007STEALTH\020\003*B\n\023transaction_result"
-    "s\022\013\n\007TX_HASH\020\001\022\r\n\tTX_RESULT\020\002\022\017\n\013UTXO_RE"
-    "SULT\020\003*,\n\tlocations\022\010\n\004NONE\020\000\022\t\n\005BLOCK\020\001"
-    "\022\n\n\006MERKLE\020\002", 3012);
+      "\n bitcoin/protocol/interface.proto\022\023libb"
+      "itcoin.protocol\"\223\001\n\014block_header\022\017\n\007vers"
+      "ion\030\001 \002(\r\022\033\n\023previous_block_hash\030\002 \002(\014\022\023"
+      "\n\013merkle_root\030\003 \002(\014\022\021\n\ttimestamp\030\004 \002(\r\022\014"
+      "\n\004bits\030\005 \002(\r\022\r\n\005nonce\030\006 \002(\r\022\020\n\010tx_count\030"
+      "\007 \002(\004\"$\n\005point\022\014\n\004hash\030\001 \002(\014\022\r\n\005index\030\002 "
+      "\002(\r\"a\n\010tx_input\0223\n\017previous_output\030\001 \002(\013"
+      "2\032.libbitcoin.protocol.point\022\016\n\006script\030\002"
+      " \002(\014\022\020\n\010sequence\030\003 \002(\r\"*\n\ttx_output\022\r\n\005v"
+      "alue\030\001 \002(\004\022\016\n\006script\030\002 \002(\014\"\207\001\n\002tx\022\017\n\007ver"
+      "sion\030\001 \002(\r\022\020\n\010locktime\030\002 \002(\r\022-\n\006inputs\030\003"
+      " \003(\0132\035.libbitcoin.protocol.tx_input\022/\n\007o"
+      "utputs\030\004 \003(\0132\036.libbitcoin.protocol.tx_ou"
+      "tput\"w\n\005block\0221\n\006header\030\001 \002(\0132!.libbitco"
+      "in.protocol.block_header\022-\n\014transactions"
+      "\030\002 \003(\0132\027.libbitcoin.protocol.tx\022\014\n\004tree\030"
+      "\003 \003(\014\"Y\n\006filter\0221\n\013filter_type\030\001 \002(\0162\034.l"
+      "ibbitcoin.protocol.filters\022\014\n\004bits\030\002 \001(\r"
+      "\022\016\n\006prefix\030\003 \002(\014\"(\n\010block_id\022\016\n\006height\030\001"
+      " \001(\r\022\014\n\004hash\030\002 \001(\014\"`\n\016block_location\022/\n\010"
+      "identity\030\001 \001(\0132\035.libbitcoin.protocol.blo"
+      "ck_id\022\r\n\005index\030\002 \001(\004\022\016\n\006branch\030\003 \003(\014\"U\n\016"
+      "tx_hash_result\022\014\n\004hash\030\001 \002(\014\0225\n\010location"
+      "\030\002 \002(\0132#.libbitcoin.protocol.block_locat"
+      "ion\"p\n\ttx_result\022,\n\013transaction\030\001 \002(\0132\027."
+      "libbitcoin.protocol.tx\0225\n\010location\030\002 \002(\013"
+      "2#.libbitcoin.protocol.block_location\"9\n"
+      "\006output\022\r\n\005index\030\001 \002(\r\022\020\n\010satoshis\030\002 \002(\004"
+      "\022\016\n\006script\030\003 \002(\014\"\203\001\n\013utxo_result\022\017\n\007tx_h"
+      "ash\030\001 \002(\014\0225\n\010location\030\002 \002(\0132#.libbitcoin"
+      ".protocol.block_location\022,\n\007outputs\030\003 \003("
+      "\0132\033.libbitcoin.protocol.output\"_\n\025block_"
+      "headers_request\022,\n\005start\030\001 \001(\0132\035.libbitc"
+      "oin.protocol.block_id\022\030\n\020results_per_pag"
+      "e\030\002 \001(\r\"\217\002\n\024transactions_request\022,\n\005star"
+      "t\030\001 \001(\0132\035.libbitcoin.protocol.block_id\022\030"
+      "\n\020results_per_page\030\002 \001(\r\022*\n\005query\030\003 \003(\0132"
+      "\033.libbitcoin.protocol.filter\022F\n\013result_t"
+      "ype\030\004 \001(\0162(.libbitcoin.protocol.transact"
+      "ion_results:\007TX_HASH\022;\n\rlocation_type\030\005 "
+      "\001(\0162\036.libbitcoin.protocol.locations:\004NON"
+      "E\"\222\003\n\007request\022\n\n\002id\030\001 \002(\r\022G\n\021get_block_h"
+      "eaders\030\002 \001(\0132*.libbitcoin.protocol.block"
+      "_headers_requestH\000\022E\n\020get_transactions\030\003"
+      " \001(\0132).libbitcoin.protocol.transactions_"
+      "requestH\000\0223\n\020post_transaction\030\004 \001(\0132\027.li"
+      "bbitcoin.protocol.txH\000\0227\n\024validate_trans"
+      "action\030\005 \001(\0132\027.libbitcoin.protocol.txH\000\022"
+      "0\n\npost_block\030\006 \001(\0132\032.libbitcoin.protoco"
+      "l.blockH\000\0224\n\016validate_block\030\007 \001(\0132\032.libb"
+      "itcoin.protocol.blockH\000*\005\010d\020\310\001B\016\n\014reques"
+      "t_type\"\233\006\n\010response\022\n\n\002id\030\001 \002(\r\022\016\n\006statu"
+      "s\030\002 \001(\021\022Q\n\032get_block_headers_response\030\003 "
+      "\001(\0132+.libbitcoin.protocol.response.block"
+      "_headersH\000\022O\n\031get_transactions_response\030"
+      "\004 \001(\0132*.libbitcoin.protocol.response.tra"
+      "nsactionsH\000\022$\n\032post_transaction_succeede"
+      "d\030\005 \001(\010H\000\022(\n\036validate_transaction_succee"
+      "ded\030\006 \001(\010H\000\022\036\n\024post_block_succeeded\030\007 \001("
+      "\010H\000\022\"\n\030validate_block_succeeded\030\010 \001(\010H\000\032"
+      "\234\001\n\rblock_headers\022+\n\004next\030\001 \001(\0132\035.libbit"
+      "coin.protocol.block_id\022*\n\003top\030\002 \001(\0132\035.li"
+      "bbitcoin.protocol.block_id\0222\n\007headers\030\003 "
+      "\003(\0132!.libbitcoin.protocol.block_header\032\203"
+      "\002\n\014transactions\022+\n\004next\030\001 \001(\0132\035.libbitco"
+      "in.protocol.block_id\022*\n\003top\030\002 \001(\0132\035.libb"
+      "itcoin.protocol.block_id\0223\n\006hashes\030\003 \003(\013"
+      "2#.libbitcoin.protocol.tx_hash_result\0224\n"
+      "\014transactions\030\004 \003(\0132\036.libbitcoin.protoco"
+      "l.tx_result\022/\n\005utxos\030\005 \003(\0132 .libbitcoin."
+      "protocol.utxo_result*\005\010d\020\310\001B\017\n\rresponse_"
+      "type*4\n\007filters\022\013\n\007ADDRESS\020\001\022\017\n\013TRANSACT"
+      "ION\020\002\022\013\n\007STEALTH\020\003*B\n\023transaction_result"
+      "s\022\013\n\007TX_HASH\020\001\022\r\n\tTX_RESULT\020\002\022\017\n\013UTXO_RE"
+      "SULT\020\003*,\n\tlocations\022\010\n\004NONE\020\000\022\t\n\005BLOCK\020\001"
+      "\022\n\n\006MERKLE\020\002",
+      3012);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
-    "bitcoin/protocol/interface.proto", &protobuf_RegisterTypes);
+      "bitcoin/protocol/interface.proto", &protobuf_RegisterTypes);
   block_header::default_instance_ = new block_header();
   point::default_instance_ = new point();
   tx_input::default_instance_ = new tx_input();
@@ -679,56 +691,66 @@ void protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto() {
 }
 
 // Force AddDescriptors() to be called at static initialization time.
-struct StaticDescriptorInitializer_bitcoin_2fprotocol_2finterface_2eproto {
-  StaticDescriptorInitializer_bitcoin_2fprotocol_2finterface_2eproto() {
+struct StaticDescriptorInitializer_bitcoin_2fprotocol_2finterface_2eproto
+{
+  StaticDescriptorInitializer_bitcoin_2fprotocol_2finterface_2eproto()
+  {
     protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   }
 } static_descriptor_initializer_bitcoin_2fprotocol_2finterface_2eproto_;
-const ::google::protobuf::EnumDescriptor* filters_descriptor() {
+const ::google::protobuf::EnumDescriptor *filters_descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return filters_descriptor_;
 }
-bool filters_IsValid(int value) {
-  switch(value) {
-    case 1:
-    case 2:
-    case 3:
-      return true;
-    default:
-      return false;
+bool filters_IsValid(int value)
+{
+  switch (value)
+  {
+  case 1:
+  case 2:
+  case 3:
+    return true;
+  default:
+    return false;
   }
 }
 
-const ::google::protobuf::EnumDescriptor* transaction_results_descriptor() {
+const ::google::protobuf::EnumDescriptor *transaction_results_descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return transaction_results_descriptor_;
 }
-bool transaction_results_IsValid(int value) {
-  switch(value) {
-    case 1:
-    case 2:
-    case 3:
-      return true;
-    default:
-      return false;
+bool transaction_results_IsValid(int value)
+{
+  switch (value)
+  {
+  case 1:
+  case 2:
+  case 3:
+    return true;
+  default:
+    return false;
   }
 }
 
-const ::google::protobuf::EnumDescriptor* locations_descriptor() {
+const ::google::protobuf::EnumDescriptor *locations_descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return locations_descriptor_;
 }
-bool locations_IsValid(int value) {
-  switch(value) {
-    case 0:
-    case 1:
-    case 2:
-      return true;
-    default:
-      return false;
+bool locations_IsValid(int value)
+{
+  switch (value)
+  {
+  case 0:
+  case 1:
+  case 2:
+    return true;
+  default:
+    return false;
   }
 }
-
 
 // ===================================================================
 
@@ -740,30 +762,34 @@ const int block_header::kTimestampFieldNumber;
 const int block_header::kBitsFieldNumber;
 const int block_header::kNonceFieldNumber;
 const int block_header::kTxCountFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 block_header::block_header()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.block_header)
 }
 
-void block_header::InitAsDefaultInstance() {
+void block_header::InitAsDefaultInstance()
+{
 }
 
-block_header::block_header(const block_header& from)
-  : ::google::protobuf::Message() {
+block_header::block_header(const block_header &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.block_header)
 }
 
-void block_header::SharedCtor() {
+void block_header::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   version_ = 0u;
-  previous_block_hash_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  merkle_root_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  previous_block_hash_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  merkle_root_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   timestamp_ = 0u;
   bits_ = 0u;
   nonce_ = 0u;
@@ -771,64 +797,82 @@ void block_header::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-block_header::~block_header() {
+block_header::~block_header()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.block_header)
   SharedDtor();
 }
 
-void block_header::SharedDtor() {
-  if (previous_block_hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void block_header::SharedDtor()
+{
+  if (previous_block_hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete previous_block_hash_;
   }
-  if (merkle_root_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (merkle_root_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete merkle_root_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
   }
 }
 
-void block_header::SetCachedSize(int size) const {
+void block_header::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* block_header::descriptor() {
+const ::google::protobuf::Descriptor *block_header::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return block_header_descriptor_;
 }
 
-const block_header& block_header::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const block_header &block_header::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-block_header* block_header::default_instance_ = NULL;
+block_header *block_header::default_instance_ = NULL;
 
-block_header* block_header::New() const {
+block_header *block_header::New() const
+{
   return new block_header;
 }
 
-void block_header::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<block_header*>(16)->f) - \
-   reinterpret_cast<char*>(16))
+void block_header::Clear()
+{
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char *>(                       \
+                                 &reinterpret_cast<block_header *>(16)->f) - \
+                             reinterpret_cast<char *>(16))
 
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
+#define ZR_(first, last)                                  \
+  do                                                      \
+  {                                                       \
+    size_t f = OFFSET_OF_FIELD_(first);                   \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last); \
+    ::memset(&first, 0, n);                               \
   } while (0)
 
-  if (_has_bits_[0 / 32] & 127) {
+  if (_has_bits_[0 / 32] & 127)
+  {
     ZR_(version_, timestamp_);
     ZR_(bits_, tx_count_);
-    if (has_previous_block_hash()) {
-      if (previous_block_hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    if (has_previous_block_hash())
+    {
+      if (previous_block_hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         previous_block_hash_->clear();
       }
     }
-    if (has_merkle_root()) {
-      if (merkle_root_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    if (has_merkle_root())
+    {
+      if (merkle_root_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         merkle_root_->clear();
       }
     }
@@ -842,126 +886,169 @@ void block_header::Clear() {
 }
 
 bool block_header::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.block_header)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint32 version = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &version_)));
-          set_has_version();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_previous_block_hash;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required uint32 version = 1;
+    case 1:
+    {
+      if (tag == 8)
+      {
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &version_)));
+        set_has_version();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_previous_block_hash;
+      break;
+    }
 
-      // required bytes previous_block_hash = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_previous_block_hash:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_previous_block_hash()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_merkle_root;
-        break;
+    // required bytes previous_block_hash = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_previous_block_hash:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_previous_block_hash()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_merkle_root;
+      break;
+    }
 
-      // required bytes merkle_root = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_merkle_root:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_merkle_root()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(32)) goto parse_timestamp;
-        break;
+    // required bytes merkle_root = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_merkle_root:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_merkle_root()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(32))
+        goto parse_timestamp;
+      break;
+    }
 
-      // required uint32 timestamp = 4;
-      case 4: {
-        if (tag == 32) {
-         parse_timestamp:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &timestamp_)));
-          set_has_timestamp();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(40)) goto parse_bits;
-        break;
+    // required uint32 timestamp = 4;
+    case 4:
+    {
+      if (tag == 32)
+      {
+      parse_timestamp:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &timestamp_)));
+        set_has_timestamp();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(40))
+        goto parse_bits;
+      break;
+    }
 
-      // required uint32 bits = 5;
-      case 5: {
-        if (tag == 40) {
-         parse_bits:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &bits_)));
-          set_has_bits();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(48)) goto parse_nonce;
-        break;
+    // required uint32 bits = 5;
+    case 5:
+    {
+      if (tag == 40)
+      {
+      parse_bits:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &bits_)));
+        set_has_bits();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(48))
+        goto parse_nonce;
+      break;
+    }
 
-      // required uint32 nonce = 6;
-      case 6: {
-        if (tag == 48) {
-         parse_nonce:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &nonce_)));
-          set_has_nonce();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(56)) goto parse_tx_count;
-        break;
+    // required uint32 nonce = 6;
+    case 6:
+    {
+      if (tag == 48)
+      {
+      parse_nonce:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &nonce_)));
+        set_has_nonce();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(56))
+        goto parse_tx_count;
+      break;
+    }
 
-      // required uint64 tx_count = 7;
-      case 7: {
-        if (tag == 56) {
-         parse_tx_count:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &tx_count_)));
-          set_has_tx_count();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // required uint64 tx_count = 7;
+    case 7:
+    {
+      if (tag == 56)
+      {
+      parse_tx_count:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+            input, &tx_count_)));
+        set_has_tx_count();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -974,95 +1061,113 @@ failure:
 }
 
 void block_header::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.block_header)
   // required uint32 version = 1;
-  if (has_version()) {
+  if (has_version())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->version(), output);
   }
 
   // required bytes previous_block_hash = 2;
-  if (has_previous_block_hash()) {
+  if (has_previous_block_hash())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->previous_block_hash(), output);
+        2, this->previous_block_hash(), output);
   }
 
   // required bytes merkle_root = 3;
-  if (has_merkle_root()) {
+  if (has_merkle_root())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->merkle_root(), output);
+        3, this->merkle_root(), output);
   }
 
   // required uint32 timestamp = 4;
-  if (has_timestamp()) {
+  if (has_timestamp())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->timestamp(), output);
   }
 
   // required uint32 bits = 5;
-  if (has_bits()) {
+  if (has_bits())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->bits(), output);
   }
 
   // required uint32 nonce = 6;
-  if (has_nonce()) {
+  if (has_nonce())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->nonce(), output);
   }
 
   // required uint64 tx_count = 7;
-  if (has_tx_count()) {
+  if (has_tx_count())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(7, this->tx_count(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.block_header)
 }
 
-::google::protobuf::uint8* block_header::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *block_header::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.block_header)
   // required uint32 version = 1;
-  if (has_version()) {
+  if (has_version())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->version(), target);
   }
 
   // required bytes previous_block_hash = 2;
-  if (has_previous_block_hash()) {
+  if (has_previous_block_hash())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->previous_block_hash(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            2, this->previous_block_hash(), target);
   }
 
   // required bytes merkle_root = 3;
-  if (has_merkle_root()) {
+  if (has_merkle_root())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->merkle_root(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            3, this->merkle_root(), target);
   }
 
   // required uint32 timestamp = 4;
-  if (has_timestamp()) {
+  if (has_timestamp())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->timestamp(), target);
   }
 
   // required uint32 bits = 5;
-  if (has_bits()) {
+  if (has_bits())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->bits(), target);
   }
 
   // required uint32 nonce = 6;
-  if (has_nonce()) {
+  if (has_nonce())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->nonce(), target);
   }
 
   // required uint64 tx_count = 7;
-  if (has_tx_count()) {
+  if (has_tx_count())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(7, this->tx_count(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -1070,64 +1175,73 @@ void block_header::SerializeWithCachedSizes(
   return target;
 }
 
-int block_header::ByteSize() const {
+int block_header::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required uint32 version = 1;
-    if (has_version()) {
+    if (has_version())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->version());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->version());
     }
 
     // required bytes previous_block_hash = 2;
-    if (has_previous_block_hash()) {
+    if (has_previous_block_hash())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->previous_block_hash());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->previous_block_hash());
     }
 
     // required bytes merkle_root = 3;
-    if (has_merkle_root()) {
+    if (has_merkle_root())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->merkle_root());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->merkle_root());
     }
 
     // required uint32 timestamp = 4;
-    if (has_timestamp()) {
+    if (has_timestamp())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->timestamp());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->timestamp());
     }
 
     // required uint32 bits = 5;
-    if (has_bits()) {
+    if (has_bits())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->bits());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->bits());
     }
 
     // required uint32 nonce = 6;
-    if (has_nonce()) {
+    if (has_nonce())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->nonce());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->nonce());
     }
 
     // required uint64 tx_count = 7;
-    if (has_tx_count()) {
+    if (has_tx_count())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->tx_count());
+                    ::google::protobuf::internal::WireFormatLite::UInt64Size(
+                        this->tx_count());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -1135,66 +1249,87 @@ int block_header::ByteSize() const {
   return total_size;
 }
 
-void block_header::MergeFrom(const ::google::protobuf::Message& from) {
+void block_header::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const block_header* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const block_header*>(
-      &from);
-  if (source == NULL) {
+  const block_header *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const block_header *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void block_header::MergeFrom(const block_header& from) {
+void block_header::MergeFrom(const block_header &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_version()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_version())
+    {
       set_version(from.version());
     }
-    if (from.has_previous_block_hash()) {
+    if (from.has_previous_block_hash())
+    {
       set_previous_block_hash(from.previous_block_hash());
     }
-    if (from.has_merkle_root()) {
+    if (from.has_merkle_root())
+    {
       set_merkle_root(from.merkle_root());
     }
-    if (from.has_timestamp()) {
+    if (from.has_timestamp())
+    {
       set_timestamp(from.timestamp());
     }
-    if (from.has_bits()) {
+    if (from.has_bits())
+    {
       set_bits(from.bits());
     }
-    if (from.has_nonce()) {
+    if (from.has_nonce())
+    {
       set_nonce(from.nonce());
     }
-    if (from.has_tx_count()) {
+    if (from.has_tx_count())
+    {
       set_tx_count(from.tx_count());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void block_header::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void block_header::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void block_header::CopyFrom(const block_header& from) {
-  if (&from == this) return;
+void block_header::CopyFrom(const block_header &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool block_header::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000007f) != 0x0000007f) return false;
+bool block_header::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x0000007f) != 0x0000007f)
+    return false;
 
   return true;
 }
 
-void block_header::Swap(block_header* other) {
-  if (other != this) {
+void block_header::Swap(block_header *other)
+{
+  if (other != this)
+  {
     std::swap(version_, other->version_);
     std::swap(previous_block_hash_, other->previous_block_hash_);
     std::swap(merkle_root_, other->merkle_root_);
@@ -1208,7 +1343,8 @@ void block_header::Swap(block_header* other) {
   }
 }
 
-::google::protobuf::Metadata block_header::GetMetadata() const {
+::google::protobuf::Metadata block_header::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = block_header_descriptor_;
@@ -1216,76 +1352,92 @@ void block_header::Swap(block_header* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int point::kHashFieldNumber;
 const int point::kIndexFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 point::point()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.point)
 }
 
-void point::InitAsDefaultInstance() {
+void point::InitAsDefaultInstance()
+{
 }
 
-point::point(const point& from)
-  : ::google::protobuf::Message() {
+point::point(const point &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.point)
 }
 
-void point::SharedCtor() {
+void point::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  hash_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  hash_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   index_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-point::~point() {
+point::~point()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.point)
   SharedDtor();
 }
 
-void point::SharedDtor() {
-  if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void point::SharedDtor()
+{
+  if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete hash_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
   }
 }
 
-void point::SetCachedSize(int size) const {
+void point::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* point::descriptor() {
+const ::google::protobuf::Descriptor *point::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return point_descriptor_;
 }
 
-const point& point::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const point &point::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-point* point::default_instance_ = NULL;
+point *point::default_instance_ = NULL;
 
-point* point::New() const {
+point *point::New() const
+{
   return new point;
 }
 
-void point::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_hash()) {
-      if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void point::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
+    if (has_hash())
+    {
+      if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         hash_->clear();
       }
     }
@@ -1296,53 +1448,71 @@ void point::Clear() {
 }
 
 bool point::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.point)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required bytes hash = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_hash()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_index;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required bytes hash = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_hash()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(16))
+        goto parse_index;
+      break;
+    }
 
-      // required uint32 index = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_index:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &index_)));
-          set_has_index();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // required uint32 index = 2;
+    case 2:
+    {
+      if (tag == 16)
+      {
+      parse_index:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &index_)));
+        set_has_index();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -1355,42 +1525,50 @@ failure:
 }
 
 void point::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.point)
   // required bytes hash = 1;
-  if (has_hash()) {
+  if (has_hash())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      1, this->hash(), output);
+        1, this->hash(), output);
   }
 
   // required uint32 index = 2;
-  if (has_index()) {
+  if (has_index())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->index(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.point)
 }
 
-::google::protobuf::uint8* point::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *point::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.point)
   // required bytes hash = 1;
-  if (has_hash()) {
+  if (has_hash())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        1, this->hash(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            1, this->hash(), target);
   }
 
   // required uint32 index = 2;
-  if (has_index()) {
+  if (has_index())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->index(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -1398,29 +1576,33 @@ void point::SerializeWithCachedSizes(
   return target;
 }
 
-int point::ByteSize() const {
+int point::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required bytes hash = 1;
-    if (has_hash()) {
+    if (has_hash())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->hash());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->hash());
     }
 
     // required uint32 index = 2;
-    if (has_index()) {
+    if (has_index())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->index());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->index());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -1428,51 +1610,67 @@ int point::ByteSize() const {
   return total_size;
 }
 
-void point::MergeFrom(const ::google::protobuf::Message& from) {
+void point::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const point* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const point*>(
-      &from);
-  if (source == NULL) {
+  const point *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const point *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void point::MergeFrom(const point& from) {
+void point::MergeFrom(const point &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_hash()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_hash())
+    {
       set_hash(from.hash());
     }
-    if (from.has_index()) {
+    if (from.has_index())
+    {
       set_index(from.index());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void point::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void point::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void point::CopyFrom(const point& from) {
-  if (&from == this) return;
+void point::CopyFrom(const point &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool point::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+bool point::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003)
+    return false;
 
   return true;
 }
 
-void point::Swap(point* other) {
-  if (other != this) {
+void point::Swap(point *other)
+{
+  if (other != this)
+  {
     std::swap(hash_, other->hash_);
     std::swap(index_, other->index_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -1481,7 +1679,8 @@ void point::Swap(point* other) {
   }
 }
 
-::google::protobuf::Metadata point::GetMetadata() const {
+::google::protobuf::Metadata point::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = point_descriptor_;
@@ -1489,83 +1688,101 @@ void point::Swap(point* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int tx_input::kPreviousOutputFieldNumber;
 const int tx_input::kScriptFieldNumber;
 const int tx_input::kSequenceFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 tx_input::tx_input()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.tx_input)
 }
 
-void tx_input::InitAsDefaultInstance() {
-  previous_output_ = const_cast< ::libbitcoin::protocol::point*>(&::libbitcoin::protocol::point::default_instance());
+void tx_input::InitAsDefaultInstance()
+{
+  previous_output_ = const_cast<::libbitcoin::protocol::point *>(&::libbitcoin::protocol::point::default_instance());
 }
 
-tx_input::tx_input(const tx_input& from)
-  : ::google::protobuf::Message() {
+tx_input::tx_input(const tx_input &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.tx_input)
 }
 
-void tx_input::SharedCtor() {
+void tx_input::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   previous_output_ = NULL;
-  script_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  script_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sequence_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-tx_input::~tx_input() {
+tx_input::~tx_input()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.tx_input)
   SharedDtor();
 }
 
-void tx_input::SharedDtor() {
-  if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void tx_input::SharedDtor()
+{
+  if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete script_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
     delete previous_output_;
   }
 }
 
-void tx_input::SetCachedSize(int size) const {
+void tx_input::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* tx_input::descriptor() {
+const ::google::protobuf::Descriptor *tx_input::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return tx_input_descriptor_;
 }
 
-const tx_input& tx_input::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const tx_input &tx_input::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-tx_input* tx_input::default_instance_ = NULL;
+tx_input *tx_input::default_instance_ = NULL;
 
-tx_input* tx_input::New() const {
+tx_input *tx_input::New() const
+{
   return new tx_input;
 }
 
-void tx_input::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_previous_output()) {
-      if (previous_output_ != NULL) previous_output_->::libbitcoin::protocol::point::Clear();
+void tx_input::Clear()
+{
+  if (_has_bits_[0 / 32] & 7)
+  {
+    if (has_previous_output())
+    {
+      if (previous_output_ != NULL)
+        previous_output_->::libbitcoin::protocol::point::Clear();
     }
-    if (has_script()) {
-      if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    if (has_script())
+    {
+      if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         script_->clear();
       }
     }
@@ -1576,66 +1793,89 @@ void tx_input::Clear() {
 }
 
 bool tx_input::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.tx_input)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .libbitcoin.protocol.point previous_output = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_previous_output()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_script;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required .libbitcoin.protocol.point previous_output = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_previous_output()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_script;
+      break;
+    }
 
-      // required bytes script = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_script:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_script()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_sequence;
-        break;
+    // required bytes script = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_script:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_script()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(24))
+        goto parse_sequence;
+      break;
+    }
 
-      // required uint32 sequence = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_sequence:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &sequence_)));
-          set_has_sequence();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // required uint32 sequence = 3;
+    case 3:
+    {
+      if (tag == 24)
+      {
+      parse_sequence:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &sequence_)));
+        set_has_sequence();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -1648,55 +1888,65 @@ failure:
 }
 
 void tx_input::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.tx_input)
   // required .libbitcoin.protocol.point previous_output = 1;
-  if (has_previous_output()) {
+  if (has_previous_output())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->previous_output(), output);
+        1, this->previous_output(), output);
   }
 
   // required bytes script = 2;
-  if (has_script()) {
+  if (has_script())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->script(), output);
+        2, this->script(), output);
   }
 
   // required uint32 sequence = 3;
-  if (has_sequence()) {
+  if (has_sequence())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->sequence(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.tx_input)
 }
 
-::google::protobuf::uint8* tx_input::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *tx_input::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.tx_input)
   // required .libbitcoin.protocol.point previous_output = 1;
-  if (has_previous_output()) {
+  if (has_previous_output())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->previous_output(), target);
+        WriteMessageNoVirtualToArray(
+            1, this->previous_output(), target);
   }
 
   // required bytes script = 2;
-  if (has_script()) {
+  if (has_script())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->script(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            2, this->script(), target);
   }
 
   // required uint32 sequence = 3;
-  if (has_sequence()) {
+  if (has_sequence())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->sequence(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -1704,36 +1954,41 @@ void tx_input::SerializeWithCachedSizes(
   return target;
 }
 
-int tx_input::ByteSize() const {
+int tx_input::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required .libbitcoin.protocol.point previous_output = 1;
-    if (has_previous_output()) {
+    if (has_previous_output())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->previous_output());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->previous_output());
     }
 
     // required bytes script = 2;
-    if (has_script()) {
+    if (has_script())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->script());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->script());
     }
 
     // required uint32 sequence = 3;
-    if (has_sequence()) {
+    if (has_sequence())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->sequence());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->sequence());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -1741,57 +1996,76 @@ int tx_input::ByteSize() const {
   return total_size;
 }
 
-void tx_input::MergeFrom(const ::google::protobuf::Message& from) {
+void tx_input::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const tx_input* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const tx_input*>(
-      &from);
-  if (source == NULL) {
+  const tx_input *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const tx_input *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void tx_input::MergeFrom(const tx_input& from) {
+void tx_input::MergeFrom(const tx_input &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_previous_output()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_previous_output())
+    {
       mutable_previous_output()->::libbitcoin::protocol::point::MergeFrom(from.previous_output());
     }
-    if (from.has_script()) {
+    if (from.has_script())
+    {
       set_script(from.script());
     }
-    if (from.has_sequence()) {
+    if (from.has_sequence())
+    {
       set_sequence(from.sequence());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void tx_input::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void tx_input::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void tx_input::CopyFrom(const tx_input& from) {
-  if (&from == this) return;
+void tx_input::CopyFrom(const tx_input &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool tx_input::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+bool tx_input::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000007) != 0x00000007)
+    return false;
 
-  if (has_previous_output()) {
-    if (!this->previous_output().IsInitialized()) return false;
+  if (has_previous_output())
+  {
+    if (!this->previous_output().IsInitialized())
+      return false;
   }
   return true;
 }
 
-void tx_input::Swap(tx_input* other) {
-  if (other != this) {
+void tx_input::Swap(tx_input *other)
+{
+  if (other != this)
+  {
     std::swap(previous_output_, other->previous_output_);
     std::swap(script_, other->script_);
     std::swap(sequence_, other->sequence_);
@@ -1801,7 +2075,8 @@ void tx_input::Swap(tx_input* other) {
   }
 }
 
-::google::protobuf::Metadata tx_input::GetMetadata() const {
+::google::protobuf::Metadata tx_input::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = tx_input_descriptor_;
@@ -1809,77 +2084,93 @@ void tx_input::Swap(tx_input* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int tx_output::kValueFieldNumber;
 const int tx_output::kScriptFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 tx_output::tx_output()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.tx_output)
 }
 
-void tx_output::InitAsDefaultInstance() {
+void tx_output::InitAsDefaultInstance()
+{
 }
 
-tx_output::tx_output(const tx_output& from)
-  : ::google::protobuf::Message() {
+tx_output::tx_output(const tx_output &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.tx_output)
 }
 
-void tx_output::SharedCtor() {
+void tx_output::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   value_ = GOOGLE_ULONGLONG(0);
-  script_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  script_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-tx_output::~tx_output() {
+tx_output::~tx_output()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.tx_output)
   SharedDtor();
 }
 
-void tx_output::SharedDtor() {
-  if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void tx_output::SharedDtor()
+{
+  if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete script_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
   }
 }
 
-void tx_output::SetCachedSize(int size) const {
+void tx_output::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* tx_output::descriptor() {
+const ::google::protobuf::Descriptor *tx_output::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return tx_output_descriptor_;
 }
 
-const tx_output& tx_output::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const tx_output &tx_output::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-tx_output* tx_output::default_instance_ = NULL;
+tx_output *tx_output::default_instance_ = NULL;
 
-tx_output* tx_output::New() const {
+tx_output *tx_output::New() const
+{
   return new tx_output;
 }
 
-void tx_output::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
+void tx_output::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
     value_ = GOOGLE_ULONGLONG(0);
-    if (has_script()) {
-      if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    if (has_script())
+    {
+      if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         script_->clear();
       }
     }
@@ -1889,53 +2180,71 @@ void tx_output::Clear() {
 }
 
 bool tx_output::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.tx_output)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint64 value = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &value_)));
-          set_has_value();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_script;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required uint64 value = 1;
+    case 1:
+    {
+      if (tag == 8)
+      {
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+            input, &value_)));
+        set_has_value();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_script;
+      break;
+    }
 
-      // required bytes script = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_script:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_script()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // required bytes script = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_script:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_script()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -1948,42 +2257,50 @@ failure:
 }
 
 void tx_output::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.tx_output)
   // required uint64 value = 1;
-  if (has_value()) {
+  if (has_value())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->value(), output);
   }
 
   // required bytes script = 2;
-  if (has_script()) {
+  if (has_script())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->script(), output);
+        2, this->script(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.tx_output)
 }
 
-::google::protobuf::uint8* tx_output::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *tx_output::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.tx_output)
   // required uint64 value = 1;
-  if (has_value()) {
+  if (has_value())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->value(), target);
   }
 
   // required bytes script = 2;
-  if (has_script()) {
+  if (has_script())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->script(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            2, this->script(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -1991,29 +2308,33 @@ void tx_output::SerializeWithCachedSizes(
   return target;
 }
 
-int tx_output::ByteSize() const {
+int tx_output::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required uint64 value = 1;
-    if (has_value()) {
+    if (has_value())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->value());
+                    ::google::protobuf::internal::WireFormatLite::UInt64Size(
+                        this->value());
     }
 
     // required bytes script = 2;
-    if (has_script()) {
+    if (has_script())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->script());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->script());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -2021,51 +2342,67 @@ int tx_output::ByteSize() const {
   return total_size;
 }
 
-void tx_output::MergeFrom(const ::google::protobuf::Message& from) {
+void tx_output::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const tx_output* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const tx_output*>(
-      &from);
-  if (source == NULL) {
+  const tx_output *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const tx_output *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void tx_output::MergeFrom(const tx_output& from) {
+void tx_output::MergeFrom(const tx_output &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_value()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_value())
+    {
       set_value(from.value());
     }
-    if (from.has_script()) {
+    if (from.has_script())
+    {
       set_script(from.script());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void tx_output::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void tx_output::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void tx_output::CopyFrom(const tx_output& from) {
-  if (&from == this) return;
+void tx_output::CopyFrom(const tx_output &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool tx_output::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+bool tx_output::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003)
+    return false;
 
   return true;
 }
 
-void tx_output::Swap(tx_output* other) {
-  if (other != this) {
+void tx_output::Swap(tx_output *other)
+{
+  if (other != this)
+  {
     std::swap(value_, other->value_);
     std::swap(script_, other->script_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -2074,14 +2411,14 @@ void tx_output::Swap(tx_output* other) {
   }
 }
 
-::google::protobuf::Metadata tx_output::GetMetadata() const {
+::google::protobuf::Metadata tx_output::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = tx_output_descriptor_;
   metadata.reflection = tx_output_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -2090,71 +2427,86 @@ const int tx::kVersionFieldNumber;
 const int tx::kLocktimeFieldNumber;
 const int tx::kInputsFieldNumber;
 const int tx::kOutputsFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 tx::tx()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.tx)
 }
 
-void tx::InitAsDefaultInstance() {
+void tx::InitAsDefaultInstance()
+{
 }
 
-tx::tx(const tx& from)
-  : ::google::protobuf::Message() {
+tx::tx(const tx &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.tx)
 }
 
-void tx::SharedCtor() {
+void tx::SharedCtor()
+{
   _cached_size_ = 0;
   version_ = 0u;
   locktime_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-tx::~tx() {
+tx::~tx()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.tx)
   SharedDtor();
 }
 
-void tx::SharedDtor() {
-  if (this != default_instance_) {
+void tx::SharedDtor()
+{
+  if (this != default_instance_)
+  {
   }
 }
 
-void tx::SetCachedSize(int size) const {
+void tx::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* tx::descriptor() {
+const ::google::protobuf::Descriptor *tx::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return tx_descriptor_;
 }
 
-const tx& tx::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const tx &tx::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-tx* tx::default_instance_ = NULL;
+tx *tx::default_instance_ = NULL;
 
-tx* tx::New() const {
+tx *tx::New() const
+{
   return new tx;
 }
 
-void tx::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<tx*>(16)->f) - \
-   reinterpret_cast<char*>(16))
+void tx::Clear()
+{
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char *>(             \
+                                 &reinterpret_cast<tx *>(16)->f) - \
+                             reinterpret_cast<char *>(16))
 
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
+#define ZR_(first, last)                                  \
+  do                                                      \
+  {                                                       \
+    size_t f = OFFSET_OF_FIELD_(first);                   \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last); \
+    ::memset(&first, 0, n);                               \
   } while (0)
 
   ZR_(version_, locktime_);
@@ -2169,83 +2521,113 @@ void tx::Clear() {
 }
 
 bool tx::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.tx)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint32 version = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &version_)));
-          set_has_version();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_locktime;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required uint32 version = 1;
+    case 1:
+    {
+      if (tag == 8)
+      {
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &version_)));
+        set_has_version();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(16))
+        goto parse_locktime;
+      break;
+    }
 
-      // required uint32 locktime = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_locktime:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &locktime_)));
-          set_has_locktime();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_inputs;
-        break;
+    // required uint32 locktime = 2;
+    case 2:
+    {
+      if (tag == 16)
+      {
+      parse_locktime:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &locktime_)));
+        set_has_locktime();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_inputs;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.tx_input inputs = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_inputs:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_inputs()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_inputs;
-        if (input->ExpectTag(34)) goto parse_outputs;
-        break;
+    // repeated .libbitcoin.protocol.tx_input inputs = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_inputs:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_inputs()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_inputs;
+      if (input->ExpectTag(34))
+        goto parse_outputs;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.tx_output outputs = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_outputs:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_outputs()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_outputs;
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // repeated .libbitcoin.protocol.tx_output outputs = 4;
+    case 4:
+    {
+      if (tag == 34)
+      {
+      parse_outputs:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_outputs()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(34))
+        goto parse_outputs;
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -2258,65 +2640,77 @@ failure:
 }
 
 void tx::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.tx)
   // required uint32 version = 1;
-  if (has_version()) {
+  if (has_version())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->version(), output);
   }
 
   // required uint32 locktime = 2;
-  if (has_locktime()) {
+  if (has_locktime())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->locktime(), output);
   }
 
   // repeated .libbitcoin.protocol.tx_input inputs = 3;
-  for (int i = 0; i < this->inputs_size(); i++) {
+  for (int i = 0; i < this->inputs_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->inputs(i), output);
+        3, this->inputs(i), output);
   }
 
   // repeated .libbitcoin.protocol.tx_output outputs = 4;
-  for (int i = 0; i < this->outputs_size(); i++) {
+  for (int i = 0; i < this->outputs_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->outputs(i), output);
+        4, this->outputs(i), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.tx)
 }
 
-::google::protobuf::uint8* tx::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *tx::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.tx)
   // required uint32 version = 1;
-  if (has_version()) {
+  if (has_version())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->version(), target);
   }
 
   // required uint32 locktime = 2;
-  if (has_locktime()) {
+  if (has_locktime())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->locktime(), target);
   }
 
   // repeated .libbitcoin.protocol.tx_input inputs = 3;
-  for (int i = 0; i < this->inputs_size(); i++) {
+  for (int i = 0; i < this->inputs_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->inputs(i), target);
+        WriteMessageNoVirtualToArray(
+            3, this->inputs(i), target);
   }
 
   // repeated .libbitcoin.protocol.tx_output outputs = 4;
-  for (int i = 0; i < this->outputs_size(); i++) {
+  for (int i = 0; i < this->outputs_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->outputs(i), target);
+        WriteMessageNoVirtualToArray(
+            4, this->outputs(i), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -2324,45 +2718,51 @@ void tx::SerializeWithCachedSizes(
   return target;
 }
 
-int tx::ByteSize() const {
+int tx::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required uint32 version = 1;
-    if (has_version()) {
+    if (has_version())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->version());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->version());
     }
 
     // required uint32 locktime = 2;
-    if (has_locktime()) {
+    if (has_locktime())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->locktime());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->locktime());
     }
-
   }
   // repeated .libbitcoin.protocol.tx_input inputs = 3;
   total_size += 1 * this->inputs_size();
-  for (int i = 0; i < this->inputs_size(); i++) {
+  for (int i = 0; i < this->inputs_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->inputs(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->inputs(i));
   }
 
   // repeated .libbitcoin.protocol.tx_output outputs = 4;
   total_size += 1 * this->outputs_size();
-  for (int i = 0; i < this->outputs_size(); i++) {
+  for (int i = 0; i < this->outputs_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->outputs(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->outputs(i));
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -2370,55 +2770,73 @@ int tx::ByteSize() const {
   return total_size;
 }
 
-void tx::MergeFrom(const ::google::protobuf::Message& from) {
+void tx::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const tx* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const tx*>(
-      &from);
-  if (source == NULL) {
+  const tx *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const tx *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void tx::MergeFrom(const tx& from) {
+void tx::MergeFrom(const tx &from)
+{
   GOOGLE_CHECK_NE(&from, this);
   inputs_.MergeFrom(from.inputs_);
   outputs_.MergeFrom(from.outputs_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_version()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_version())
+    {
       set_version(from.version());
     }
-    if (from.has_locktime()) {
+    if (from.has_locktime())
+    {
       set_locktime(from.locktime());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void tx::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void tx::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void tx::CopyFrom(const tx& from) {
-  if (&from == this) return;
+void tx::CopyFrom(const tx &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool tx::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+bool tx::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003)
+    return false;
 
-  if (!::google::protobuf::internal::AllAreInitialized(this->inputs())) return false;
-  if (!::google::protobuf::internal::AllAreInitialized(this->outputs())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->inputs()))
+    return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->outputs()))
+    return false;
   return true;
 }
 
-void tx::Swap(tx* other) {
-  if (other != this) {
+void tx::Swap(tx *other)
+{
+  if (other != this)
+  {
     std::swap(version_, other->version_);
     std::swap(locktime_, other->locktime_);
     inputs_.Swap(&other->inputs_);
@@ -2429,7 +2847,8 @@ void tx::Swap(tx* other) {
   }
 }
 
-::google::protobuf::Metadata tx::GetMetadata() const {
+::google::protobuf::Metadata tx::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = tx_descriptor_;
@@ -2437,74 +2856,88 @@ void tx::Swap(tx* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int block::kHeaderFieldNumber;
 const int block::kTransactionsFieldNumber;
 const int block::kTreeFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 block::block()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.block)
 }
 
-void block::InitAsDefaultInstance() {
-  header_ = const_cast< ::libbitcoin::protocol::block_header*>(&::libbitcoin::protocol::block_header::default_instance());
+void block::InitAsDefaultInstance()
+{
+  header_ = const_cast<::libbitcoin::protocol::block_header *>(&::libbitcoin::protocol::block_header::default_instance());
 }
 
-block::block(const block& from)
-  : ::google::protobuf::Message() {
+block::block(const block &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.block)
 }
 
-void block::SharedCtor() {
+void block::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   header_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-block::~block() {
+block::~block()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.block)
   SharedDtor();
 }
 
-void block::SharedDtor() {
-  if (this != default_instance_) {
+void block::SharedDtor()
+{
+  if (this != default_instance_)
+  {
     delete header_;
   }
 }
 
-void block::SetCachedSize(int size) const {
+void block::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* block::descriptor() {
+const ::google::protobuf::Descriptor *block::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return block_descriptor_;
 }
 
-const block& block::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const block &block::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-block* block::default_instance_ = NULL;
+block *block::default_instance_ = NULL;
 
-block* block::New() const {
+block *block::New() const
+{
   return new block;
 }
 
-void block::Clear() {
-  if (has_header()) {
-    if (header_ != NULL) header_->::libbitcoin::protocol::block_header::Clear();
+void block::Clear()
+{
+  if (has_header())
+  {
+    if (header_ != NULL)
+      header_->::libbitcoin::protocol::block_header::Clear();
   }
   transactions_.Clear();
   tree_.Clear();
@@ -2513,66 +2946,91 @@ void block::Clear() {
 }
 
 bool block::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.block)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .libbitcoin.protocol.block_header header = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_header()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_transactions;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required .libbitcoin.protocol.block_header header = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_header()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_transactions;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.tx transactions = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_transactions:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_transactions()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_transactions;
-        if (input->ExpectTag(26)) goto parse_tree;
-        break;
+    // repeated .libbitcoin.protocol.tx transactions = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_transactions:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_transactions()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_transactions;
+      if (input->ExpectTag(26))
+        goto parse_tree;
+      break;
+    }
 
-      // repeated bytes tree = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_tree:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->add_tree()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_tree;
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // repeated bytes tree = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_tree:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->add_tree()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_tree;
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -2585,57 +3043,67 @@ failure:
 }
 
 void block::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.block)
   // required .libbitcoin.protocol.block_header header = 1;
-  if (has_header()) {
+  if (has_header())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->header(), output);
+        1, this->header(), output);
   }
 
   // repeated .libbitcoin.protocol.tx transactions = 2;
-  for (int i = 0; i < this->transactions_size(); i++) {
+  for (int i = 0; i < this->transactions_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->transactions(i), output);
+        2, this->transactions(i), output);
   }
 
   // repeated bytes tree = 3;
-  for (int i = 0; i < this->tree_size(); i++) {
+  for (int i = 0; i < this->tree_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      3, this->tree(i), output);
+        3, this->tree(i), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.block)
 }
 
-::google::protobuf::uint8* block::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *block::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.block)
   // required .libbitcoin.protocol.block_header header = 1;
-  if (has_header()) {
+  if (has_header())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->header(), target);
+        WriteMessageNoVirtualToArray(
+            1, this->header(), target);
   }
 
   // repeated .libbitcoin.protocol.tx transactions = 2;
-  for (int i = 0; i < this->transactions_size(); i++) {
+  for (int i = 0; i < this->transactions_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->transactions(i), target);
+        WriteMessageNoVirtualToArray(
+            2, this->transactions(i), target);
   }
 
   // repeated bytes tree = 3;
-  for (int i = 0; i < this->tree_size(); i++) {
+  for (int i = 0; i < this->tree_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteBytesToArray(3, this->tree(i), target);
+        WriteBytesToArray(3, this->tree(i), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -2643,37 +3111,42 @@ void block::SerializeWithCachedSizes(
   return target;
 }
 
-int block::ByteSize() const {
+int block::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required .libbitcoin.protocol.block_header header = 1;
-    if (has_header()) {
+    if (has_header())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->header());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->header());
     }
-
   }
   // repeated .libbitcoin.protocol.tx transactions = 2;
   total_size += 1 * this->transactions_size();
-  for (int i = 0; i < this->transactions_size(); i++) {
+  for (int i = 0; i < this->transactions_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->transactions(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->transactions(i));
   }
 
   // repeated bytes tree = 3;
   total_size += 1 * this->tree_size();
-  for (int i = 0; i < this->tree_size(); i++) {
+  for (int i = 0; i < this->tree_size(); i++)
+  {
     total_size += ::google::protobuf::internal::WireFormatLite::BytesSize(
-      this->tree(i));
+        this->tree(i));
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -2681,54 +3154,72 @@ int block::ByteSize() const {
   return total_size;
 }
 
-void block::MergeFrom(const ::google::protobuf::Message& from) {
+void block::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const block* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const block*>(
-      &from);
-  if (source == NULL) {
+  const block *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const block *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void block::MergeFrom(const block& from) {
+void block::MergeFrom(const block &from)
+{
   GOOGLE_CHECK_NE(&from, this);
   transactions_.MergeFrom(from.transactions_);
   tree_.MergeFrom(from.tree_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_header()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_header())
+    {
       mutable_header()->::libbitcoin::protocol::block_header::MergeFrom(from.header());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void block::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void block::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void block::CopyFrom(const block& from) {
-  if (&from == this) return;
+void block::CopyFrom(const block &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool block::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+bool block::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001)
+    return false;
 
-  if (has_header()) {
-    if (!this->header().IsInitialized()) return false;
+  if (has_header())
+  {
+    if (!this->header().IsInitialized())
+      return false;
   }
-  if (!::google::protobuf::internal::AllAreInitialized(this->transactions())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->transactions()))
+    return false;
   return true;
 }
 
-void block::Swap(block* other) {
-  if (other != this) {
+void block::Swap(block *other)
+{
+  if (other != this)
+  {
     std::swap(header_, other->header_);
     transactions_.Swap(&other->transactions_);
     tree_.Swap(&other->tree_);
@@ -2738,7 +3229,8 @@ void block::Swap(block* other) {
   }
 }
 
-::google::protobuf::Metadata block::GetMetadata() const {
+::google::protobuf::Metadata block::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = block_descriptor_;
@@ -2746,80 +3238,96 @@ void block::Swap(block* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int filter::kFilterTypeFieldNumber;
 const int filter::kBitsFieldNumber;
 const int filter::kPrefixFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 filter::filter()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.filter)
 }
 
-void filter::InitAsDefaultInstance() {
+void filter::InitAsDefaultInstance()
+{
 }
 
-filter::filter(const filter& from)
-  : ::google::protobuf::Message() {
+filter::filter(const filter &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.filter)
 }
 
-void filter::SharedCtor() {
+void filter::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   filter_type_ = 1;
   bits_ = 0u;
-  prefix_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  prefix_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-filter::~filter() {
+filter::~filter()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.filter)
   SharedDtor();
 }
 
-void filter::SharedDtor() {
-  if (prefix_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void filter::SharedDtor()
+{
+  if (prefix_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete prefix_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
   }
 }
 
-void filter::SetCachedSize(int size) const {
+void filter::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* filter::descriptor() {
+const ::google::protobuf::Descriptor *filter::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return filter_descriptor_;
 }
 
-const filter& filter::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const filter &filter::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-filter* filter::default_instance_ = NULL;
+filter *filter::default_instance_ = NULL;
 
-filter* filter::New() const {
+filter *filter::New() const
+{
   return new filter;
 }
 
-void filter::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
+void filter::Clear()
+{
+  if (_has_bits_[0 / 32] & 7)
+  {
     filter_type_ = 1;
     bits_ = 0u;
-    if (has_prefix()) {
-      if (prefix_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    if (has_prefix())
+    {
+      if (prefix_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         prefix_->clear();
       }
     }
@@ -2829,73 +3337,99 @@ void filter::Clear() {
 }
 
 bool filter::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.filter)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .libbitcoin.protocol.filters filter_type = 1;
-      case 1: {
-        if (tag == 8) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::libbitcoin::protocol::filters_IsValid(value)) {
-            set_filter_type(static_cast< ::libbitcoin::protocol::filters >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(1, value);
-          }
-        } else {
-          goto handle_unusual;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required .libbitcoin.protocol.filters filter_type = 1;
+    case 1:
+    {
+      if (tag == 8)
+      {
+        int value;
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+            input, &value)));
+        if (::libbitcoin::protocol::filters_IsValid(value))
+        {
+          set_filter_type(static_cast<::libbitcoin::protocol::filters>(value));
         }
-        if (input->ExpectTag(16)) goto parse_bits;
-        break;
+        else
+        {
+          mutable_unknown_fields()->AddVarint(1, value);
+        }
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(16))
+        goto parse_bits;
+      break;
+    }
 
-      // optional uint32 bits = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_bits:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &bits_)));
-          set_has_bits();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_prefix;
-        break;
+    // optional uint32 bits = 2;
+    case 2:
+    {
+      if (tag == 16)
+      {
+      parse_bits:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &bits_)));
+        set_has_bits();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_prefix;
+      break;
+    }
 
-      // required bytes prefix = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_prefix:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_prefix()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // required bytes prefix = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_prefix:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_prefix()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -2908,54 +3442,64 @@ failure:
 }
 
 void filter::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.filter)
   // required .libbitcoin.protocol.filters filter_type = 1;
-  if (has_filter_type()) {
+  if (has_filter_type())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      1, this->filter_type(), output);
+        1, this->filter_type(), output);
   }
 
   // optional uint32 bits = 2;
-  if (has_bits()) {
+  if (has_bits())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->bits(), output);
   }
 
   // required bytes prefix = 3;
-  if (has_prefix()) {
+  if (has_prefix())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->prefix(), output);
+        3, this->prefix(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.filter)
 }
 
-::google::protobuf::uint8* filter::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *filter::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.filter)
   // required .libbitcoin.protocol.filters filter_type = 1;
-  if (has_filter_type()) {
+  if (has_filter_type())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      1, this->filter_type(), target);
+        1, this->filter_type(), target);
   }
 
   // optional uint32 bits = 2;
-  if (has_bits()) {
+  if (has_bits())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->bits(), target);
   }
 
   // required bytes prefix = 3;
-  if (has_prefix()) {
+  if (has_prefix())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->prefix(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            3, this->prefix(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -2963,35 +3507,40 @@ void filter::SerializeWithCachedSizes(
   return target;
 }
 
-int filter::ByteSize() const {
+int filter::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required .libbitcoin.protocol.filters filter_type = 1;
-    if (has_filter_type()) {
+    if (has_filter_type())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->filter_type());
+                    ::google::protobuf::internal::WireFormatLite::EnumSize(this->filter_type());
     }
 
     // optional uint32 bits = 2;
-    if (has_bits()) {
+    if (has_bits())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->bits());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->bits());
     }
 
     // required bytes prefix = 3;
-    if (has_prefix()) {
+    if (has_prefix())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->prefix());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->prefix());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -2999,54 +3548,71 @@ int filter::ByteSize() const {
   return total_size;
 }
 
-void filter::MergeFrom(const ::google::protobuf::Message& from) {
+void filter::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const filter* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const filter*>(
-      &from);
-  if (source == NULL) {
+  const filter *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const filter *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void filter::MergeFrom(const filter& from) {
+void filter::MergeFrom(const filter &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_filter_type()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_filter_type())
+    {
       set_filter_type(from.filter_type());
     }
-    if (from.has_bits()) {
+    if (from.has_bits())
+    {
       set_bits(from.bits());
     }
-    if (from.has_prefix()) {
+    if (from.has_prefix())
+    {
       set_prefix(from.prefix());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void filter::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void filter::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void filter::CopyFrom(const filter& from) {
-  if (&from == this) return;
+void filter::CopyFrom(const filter &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool filter::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000005) != 0x00000005) return false;
+bool filter::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000005) != 0x00000005)
+    return false;
 
   return true;
 }
 
-void filter::Swap(filter* other) {
-  if (other != this) {
+void filter::Swap(filter *other)
+{
+  if (other != this)
+  {
     std::swap(filter_type_, other->filter_type_);
     std::swap(bits_, other->bits_);
     std::swap(prefix_, other->prefix_);
@@ -3056,7 +3622,8 @@ void filter::Swap(filter* other) {
   }
 }
 
-::google::protobuf::Metadata filter::GetMetadata() const {
+::google::protobuf::Metadata filter::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = filter_descriptor_;
@@ -3064,77 +3631,93 @@ void filter::Swap(filter* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int block_id::kHeightFieldNumber;
 const int block_id::kHashFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 block_id::block_id()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.block_id)
 }
 
-void block_id::InitAsDefaultInstance() {
+void block_id::InitAsDefaultInstance()
+{
 }
 
-block_id::block_id(const block_id& from)
-  : ::google::protobuf::Message() {
+block_id::block_id(const block_id &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.block_id)
 }
 
-void block_id::SharedCtor() {
+void block_id::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   height_ = 0u;
-  hash_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  hash_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-block_id::~block_id() {
+block_id::~block_id()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.block_id)
   SharedDtor();
 }
 
-void block_id::SharedDtor() {
-  if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void block_id::SharedDtor()
+{
+  if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete hash_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
   }
 }
 
-void block_id::SetCachedSize(int size) const {
+void block_id::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* block_id::descriptor() {
+const ::google::protobuf::Descriptor *block_id::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return block_id_descriptor_;
 }
 
-const block_id& block_id::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const block_id &block_id::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-block_id* block_id::default_instance_ = NULL;
+block_id *block_id::default_instance_ = NULL;
 
-block_id* block_id::New() const {
+block_id *block_id::New() const
+{
   return new block_id;
 }
 
-void block_id::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
+void block_id::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
     height_ = 0u;
-    if (has_hash()) {
-      if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    if (has_hash())
+    {
+      if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         hash_->clear();
       }
     }
@@ -3144,53 +3727,71 @@ void block_id::Clear() {
 }
 
 bool block_id::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.block_id)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 height = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &height_)));
-          set_has_height();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_hash;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // optional uint32 height = 1;
+    case 1:
+    {
+      if (tag == 8)
+      {
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &height_)));
+        set_has_height();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_hash;
+      break;
+    }
 
-      // optional bytes hash = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_hash:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_hash()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // optional bytes hash = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_hash:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_hash()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -3203,42 +3804,50 @@ failure:
 }
 
 void block_id::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.block_id)
   // optional uint32 height = 1;
-  if (has_height()) {
+  if (has_height())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->height(), output);
   }
 
   // optional bytes hash = 2;
-  if (has_hash()) {
+  if (has_hash())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->hash(), output);
+        2, this->hash(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.block_id)
 }
 
-::google::protobuf::uint8* block_id::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *block_id::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.block_id)
   // optional uint32 height = 1;
-  if (has_height()) {
+  if (has_height())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->height(), target);
   }
 
   // optional bytes hash = 2;
-  if (has_hash()) {
+  if (has_hash())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->hash(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            2, this->hash(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -3246,29 +3855,33 @@ void block_id::SerializeWithCachedSizes(
   return target;
 }
 
-int block_id::ByteSize() const {
+int block_id::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // optional uint32 height = 1;
-    if (has_height()) {
+    if (has_height())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->height());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->height());
     }
 
     // optional bytes hash = 2;
-    if (has_hash()) {
+    if (has_hash())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->hash());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->hash());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -3276,50 +3889,65 @@ int block_id::ByteSize() const {
   return total_size;
 }
 
-void block_id::MergeFrom(const ::google::protobuf::Message& from) {
+void block_id::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const block_id* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const block_id*>(
-      &from);
-  if (source == NULL) {
+  const block_id *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const block_id *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void block_id::MergeFrom(const block_id& from) {
+void block_id::MergeFrom(const block_id &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_height()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_height())
+    {
       set_height(from.height());
     }
-    if (from.has_hash()) {
+    if (from.has_hash())
+    {
       set_hash(from.hash());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void block_id::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void block_id::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void block_id::CopyFrom(const block_id& from) {
-  if (&from == this) return;
+void block_id::CopyFrom(const block_id &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool block_id::IsInitialized() const {
+bool block_id::IsInitialized() const
+{
 
   return true;
 }
 
-void block_id::Swap(block_id* other) {
-  if (other != this) {
+void block_id::Swap(block_id *other)
+{
+  if (other != this)
+  {
     std::swap(height_, other->height_);
     std::swap(hash_, other->hash_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -3328,7 +3956,8 @@ void block_id::Swap(block_id* other) {
   }
 }
 
-::google::protobuf::Metadata block_id::GetMetadata() const {
+::google::protobuf::Metadata block_id::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = block_id_descriptor_;
@@ -3336,33 +3965,36 @@ void block_id::Swap(block_id* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int block_location::kIdentityFieldNumber;
 const int block_location::kIndexFieldNumber;
 const int block_location::kBranchFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 block_location::block_location()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.block_location)
 }
 
-void block_location::InitAsDefaultInstance() {
-  identity_ = const_cast< ::libbitcoin::protocol::block_id*>(&::libbitcoin::protocol::block_id::default_instance());
+void block_location::InitAsDefaultInstance()
+{
+  identity_ = const_cast<::libbitcoin::protocol::block_id *>(&::libbitcoin::protocol::block_id::default_instance());
 }
 
-block_location::block_location(const block_location& from)
-  : ::google::protobuf::Message() {
+block_location::block_location(const block_location &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.block_location)
 }
 
-void block_location::SharedCtor() {
+void block_location::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   identity_ = NULL;
@@ -3370,42 +4002,54 @@ void block_location::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-block_location::~block_location() {
+block_location::~block_location()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.block_location)
   SharedDtor();
 }
 
-void block_location::SharedDtor() {
-  if (this != default_instance_) {
+void block_location::SharedDtor()
+{
+  if (this != default_instance_)
+  {
     delete identity_;
   }
 }
 
-void block_location::SetCachedSize(int size) const {
+void block_location::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* block_location::descriptor() {
+const ::google::protobuf::Descriptor *block_location::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return block_location_descriptor_;
 }
 
-const block_location& block_location::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const block_location &block_location::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-block_location* block_location::default_instance_ = NULL;
+block_location *block_location::default_instance_ = NULL;
 
-block_location* block_location::New() const {
+block_location *block_location::New() const
+{
   return new block_location;
 }
 
-void block_location::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_identity()) {
-      if (identity_ != NULL) identity_->::libbitcoin::protocol::block_id::Clear();
+void block_location::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
+    if (has_identity())
+    {
+      if (identity_ != NULL)
+        identity_->::libbitcoin::protocol::block_id::Clear();
     }
     index_ = GOOGLE_ULONGLONG(0);
   }
@@ -3415,67 +4059,91 @@ void block_location::Clear() {
 }
 
 bool block_location::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.block_location)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .libbitcoin.protocol.block_id identity = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_identity()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_index;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // optional .libbitcoin.protocol.block_id identity = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_identity()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(16))
+        goto parse_index;
+      break;
+    }
 
-      // optional uint64 index = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_index:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &index_)));
-          set_has_index();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_branch;
-        break;
+    // optional uint64 index = 2;
+    case 2:
+    {
+      if (tag == 16)
+      {
+      parse_index:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+            input, &index_)));
+        set_has_index();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_branch;
+      break;
+    }
 
-      // repeated bytes branch = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_branch:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->add_branch()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_branch;
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // repeated bytes branch = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_branch:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->add_branch()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_branch;
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -3488,54 +4156,64 @@ failure:
 }
 
 void block_location::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.block_location)
   // optional .libbitcoin.protocol.block_id identity = 1;
-  if (has_identity()) {
+  if (has_identity())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->identity(), output);
+        1, this->identity(), output);
   }
 
   // optional uint64 index = 2;
-  if (has_index()) {
+  if (has_index())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->index(), output);
   }
 
   // repeated bytes branch = 3;
-  for (int i = 0; i < this->branch_size(); i++) {
+  for (int i = 0; i < this->branch_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      3, this->branch(i), output);
+        3, this->branch(i), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.block_location)
 }
 
-::google::protobuf::uint8* block_location::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *block_location::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.block_location)
   // optional .libbitcoin.protocol.block_id identity = 1;
-  if (has_identity()) {
+  if (has_identity())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->identity(), target);
+        WriteMessageNoVirtualToArray(
+            1, this->identity(), target);
   }
 
   // optional uint64 index = 2;
-  if (has_index()) {
+  if (has_index())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->index(), target);
   }
 
   // repeated bytes branch = 3;
-  for (int i = 0; i < this->branch_size(); i++) {
+  for (int i = 0; i < this->branch_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteBytesToArray(3, this->branch(i), target);
+        WriteBytesToArray(3, this->branch(i), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -3543,36 +4221,41 @@ void block_location::SerializeWithCachedSizes(
   return target;
 }
 
-int block_location::ByteSize() const {
+int block_location::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // optional .libbitcoin.protocol.block_id identity = 1;
-    if (has_identity()) {
+    if (has_identity())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->identity());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->identity());
     }
 
     // optional uint64 index = 2;
-    if (has_index()) {
+    if (has_index())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->index());
+                    ::google::protobuf::internal::WireFormatLite::UInt64Size(
+                        this->index());
     }
-
   }
   // repeated bytes branch = 3;
   total_size += 1 * this->branch_size();
-  for (int i = 0; i < this->branch_size(); i++) {
+  for (int i = 0; i < this->branch_size(); i++)
+  {
     total_size += ::google::protobuf::internal::WireFormatLite::BytesSize(
-      this->branch(i));
+        this->branch(i));
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -3580,51 +4263,66 @@ int block_location::ByteSize() const {
   return total_size;
 }
 
-void block_location::MergeFrom(const ::google::protobuf::Message& from) {
+void block_location::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const block_location* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const block_location*>(
-      &from);
-  if (source == NULL) {
+  const block_location *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const block_location *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void block_location::MergeFrom(const block_location& from) {
+void block_location::MergeFrom(const block_location &from)
+{
   GOOGLE_CHECK_NE(&from, this);
   branch_.MergeFrom(from.branch_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_identity()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_identity())
+    {
       mutable_identity()->::libbitcoin::protocol::block_id::MergeFrom(from.identity());
     }
-    if (from.has_index()) {
+    if (from.has_index())
+    {
       set_index(from.index());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void block_location::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void block_location::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void block_location::CopyFrom(const block_location& from) {
-  if (&from == this) return;
+void block_location::CopyFrom(const block_location &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool block_location::IsInitialized() const {
+bool block_location::IsInitialized() const
+{
 
   return true;
 }
 
-void block_location::Swap(block_location* other) {
-  if (other != this) {
+void block_location::Swap(block_location *other)
+{
+  if (other != this)
+  {
     std::swap(identity_, other->identity_);
     std::swap(index_, other->index_);
     branch_.Swap(&other->branch_);
@@ -3634,7 +4332,8 @@ void block_location::Swap(block_location* other) {
   }
 }
 
-::google::protobuf::Metadata block_location::GetMetadata() const {
+::google::protobuf::Metadata block_location::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = block_location_descriptor_;
@@ -3642,83 +4341,101 @@ void block_location::Swap(block_location* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int tx_hash_result::kHashFieldNumber;
 const int tx_hash_result::kLocationFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 tx_hash_result::tx_hash_result()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.tx_hash_result)
 }
 
-void tx_hash_result::InitAsDefaultInstance() {
-  location_ = const_cast< ::libbitcoin::protocol::block_location*>(&::libbitcoin::protocol::block_location::default_instance());
+void tx_hash_result::InitAsDefaultInstance()
+{
+  location_ = const_cast<::libbitcoin::protocol::block_location *>(&::libbitcoin::protocol::block_location::default_instance());
 }
 
-tx_hash_result::tx_hash_result(const tx_hash_result& from)
-  : ::google::protobuf::Message() {
+tx_hash_result::tx_hash_result(const tx_hash_result &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.tx_hash_result)
 }
 
-void tx_hash_result::SharedCtor() {
+void tx_hash_result::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  hash_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  hash_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   location_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-tx_hash_result::~tx_hash_result() {
+tx_hash_result::~tx_hash_result()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.tx_hash_result)
   SharedDtor();
 }
 
-void tx_hash_result::SharedDtor() {
-  if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void tx_hash_result::SharedDtor()
+{
+  if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete hash_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
     delete location_;
   }
 }
 
-void tx_hash_result::SetCachedSize(int size) const {
+void tx_hash_result::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* tx_hash_result::descriptor() {
+const ::google::protobuf::Descriptor *tx_hash_result::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return tx_hash_result_descriptor_;
 }
 
-const tx_hash_result& tx_hash_result::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const tx_hash_result &tx_hash_result::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-tx_hash_result* tx_hash_result::default_instance_ = NULL;
+tx_hash_result *tx_hash_result::default_instance_ = NULL;
 
-tx_hash_result* tx_hash_result::New() const {
+tx_hash_result *tx_hash_result::New() const
+{
   return new tx_hash_result;
 }
 
-void tx_hash_result::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_hash()) {
-      if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void tx_hash_result::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
+    if (has_hash())
+    {
+      if (hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         hash_->clear();
       }
     }
-    if (has_location()) {
-      if (location_ != NULL) location_->::libbitcoin::protocol::block_location::Clear();
+    if (has_location())
+    {
+      if (location_ != NULL)
+        location_->::libbitcoin::protocol::block_location::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3726,51 +4443,69 @@ void tx_hash_result::Clear() {
 }
 
 bool tx_hash_result::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.tx_hash_result)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required bytes hash = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_hash()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_location;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required bytes hash = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_hash()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_location;
+      break;
+    }
 
-      // required .libbitcoin.protocol.block_location location = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_location:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_location()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // required .libbitcoin.protocol.block_location location = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_location:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_location()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -3783,45 +4518,53 @@ failure:
 }
 
 void tx_hash_result::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.tx_hash_result)
   // required bytes hash = 1;
-  if (has_hash()) {
+  if (has_hash())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      1, this->hash(), output);
+        1, this->hash(), output);
   }
 
   // required .libbitcoin.protocol.block_location location = 2;
-  if (has_location()) {
+  if (has_location())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->location(), output);
+        2, this->location(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.tx_hash_result)
 }
 
-::google::protobuf::uint8* tx_hash_result::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *tx_hash_result::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.tx_hash_result)
   // required bytes hash = 1;
-  if (has_hash()) {
+  if (has_hash())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        1, this->hash(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            1, this->hash(), target);
   }
 
   // required .libbitcoin.protocol.block_location location = 2;
-  if (has_location()) {
+  if (has_location())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->location(), target);
+        WriteMessageNoVirtualToArray(
+            2, this->location(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -3829,29 +4572,33 @@ void tx_hash_result::SerializeWithCachedSizes(
   return target;
 }
 
-int tx_hash_result::ByteSize() const {
+int tx_hash_result::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required bytes hash = 1;
-    if (has_hash()) {
+    if (has_hash())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->hash());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->hash());
     }
 
     // required .libbitcoin.protocol.block_location location = 2;
-    if (has_location()) {
+    if (has_location())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->location());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->location());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -3859,51 +4606,67 @@ int tx_hash_result::ByteSize() const {
   return total_size;
 }
 
-void tx_hash_result::MergeFrom(const ::google::protobuf::Message& from) {
+void tx_hash_result::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const tx_hash_result* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const tx_hash_result*>(
-      &from);
-  if (source == NULL) {
+  const tx_hash_result *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const tx_hash_result *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void tx_hash_result::MergeFrom(const tx_hash_result& from) {
+void tx_hash_result::MergeFrom(const tx_hash_result &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_hash()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_hash())
+    {
       set_hash(from.hash());
     }
-    if (from.has_location()) {
+    if (from.has_location())
+    {
       mutable_location()->::libbitcoin::protocol::block_location::MergeFrom(from.location());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void tx_hash_result::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void tx_hash_result::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void tx_hash_result::CopyFrom(const tx_hash_result& from) {
-  if (&from == this) return;
+void tx_hash_result::CopyFrom(const tx_hash_result &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool tx_hash_result::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+bool tx_hash_result::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003)
+    return false;
 
   return true;
 }
 
-void tx_hash_result::Swap(tx_hash_result* other) {
-  if (other != this) {
+void tx_hash_result::Swap(tx_hash_result *other)
+{
+  if (other != this)
+  {
     std::swap(hash_, other->hash_);
     std::swap(location_, other->location_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -3912,7 +4675,8 @@ void tx_hash_result::Swap(tx_hash_result* other) {
   }
 }
 
-::google::protobuf::Metadata tx_hash_result::GetMetadata() const {
+::google::protobuf::Metadata tx_hash_result::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = tx_hash_result_descriptor_;
@@ -3920,79 +4684,96 @@ void tx_hash_result::Swap(tx_hash_result* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int tx_result::kTransactionFieldNumber;
 const int tx_result::kLocationFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 tx_result::tx_result()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.tx_result)
 }
 
-void tx_result::InitAsDefaultInstance() {
-  transaction_ = const_cast< ::libbitcoin::protocol::tx*>(&::libbitcoin::protocol::tx::default_instance());
-  location_ = const_cast< ::libbitcoin::protocol::block_location*>(&::libbitcoin::protocol::block_location::default_instance());
+void tx_result::InitAsDefaultInstance()
+{
+  transaction_ = const_cast<::libbitcoin::protocol::tx *>(&::libbitcoin::protocol::tx::default_instance());
+  location_ = const_cast<::libbitcoin::protocol::block_location *>(&::libbitcoin::protocol::block_location::default_instance());
 }
 
-tx_result::tx_result(const tx_result& from)
-  : ::google::protobuf::Message() {
+tx_result::tx_result(const tx_result &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.tx_result)
 }
 
-void tx_result::SharedCtor() {
+void tx_result::SharedCtor()
+{
   _cached_size_ = 0;
   transaction_ = NULL;
   location_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-tx_result::~tx_result() {
+tx_result::~tx_result()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.tx_result)
   SharedDtor();
 }
 
-void tx_result::SharedDtor() {
-  if (this != default_instance_) {
+void tx_result::SharedDtor()
+{
+  if (this != default_instance_)
+  {
     delete transaction_;
     delete location_;
   }
 }
 
-void tx_result::SetCachedSize(int size) const {
+void tx_result::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* tx_result::descriptor() {
+const ::google::protobuf::Descriptor *tx_result::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return tx_result_descriptor_;
 }
 
-const tx_result& tx_result::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const tx_result &tx_result::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-tx_result* tx_result::default_instance_ = NULL;
+tx_result *tx_result::default_instance_ = NULL;
 
-tx_result* tx_result::New() const {
+tx_result *tx_result::New() const
+{
   return new tx_result;
 }
 
-void tx_result::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_transaction()) {
-      if (transaction_ != NULL) transaction_->::libbitcoin::protocol::tx::Clear();
+void tx_result::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
+    if (has_transaction())
+    {
+      if (transaction_ != NULL)
+        transaction_->::libbitcoin::protocol::tx::Clear();
     }
-    if (has_location()) {
-      if (location_ != NULL) location_->::libbitcoin::protocol::block_location::Clear();
+    if (has_location())
+    {
+      if (location_ != NULL)
+        location_->::libbitcoin::protocol::block_location::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -4000,51 +4781,69 @@ void tx_result::Clear() {
 }
 
 bool tx_result::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.tx_result)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .libbitcoin.protocol.tx transaction = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_transaction()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_location;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required .libbitcoin.protocol.tx transaction = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_transaction()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_location;
+      break;
+    }
 
-      // required .libbitcoin.protocol.block_location location = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_location:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_location()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // required .libbitcoin.protocol.block_location location = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_location:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_location()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -4057,45 +4856,53 @@ failure:
 }
 
 void tx_result::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.tx_result)
   // required .libbitcoin.protocol.tx transaction = 1;
-  if (has_transaction()) {
+  if (has_transaction())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->transaction(), output);
+        1, this->transaction(), output);
   }
 
   // required .libbitcoin.protocol.block_location location = 2;
-  if (has_location()) {
+  if (has_location())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->location(), output);
+        2, this->location(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.tx_result)
 }
 
-::google::protobuf::uint8* tx_result::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *tx_result::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.tx_result)
   // required .libbitcoin.protocol.tx transaction = 1;
-  if (has_transaction()) {
+  if (has_transaction())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->transaction(), target);
+        WriteMessageNoVirtualToArray(
+            1, this->transaction(), target);
   }
 
   // required .libbitcoin.protocol.block_location location = 2;
-  if (has_location()) {
+  if (has_location())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->location(), target);
+        WriteMessageNoVirtualToArray(
+            2, this->location(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -4103,29 +4910,33 @@ void tx_result::SerializeWithCachedSizes(
   return target;
 }
 
-int tx_result::ByteSize() const {
+int tx_result::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required .libbitcoin.protocol.tx transaction = 1;
-    if (has_transaction()) {
+    if (has_transaction())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->transaction());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->transaction());
     }
 
     // required .libbitcoin.protocol.block_location location = 2;
-    if (has_location()) {
+    if (has_location())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->location());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->location());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -4133,54 +4944,72 @@ int tx_result::ByteSize() const {
   return total_size;
 }
 
-void tx_result::MergeFrom(const ::google::protobuf::Message& from) {
+void tx_result::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const tx_result* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const tx_result*>(
-      &from);
-  if (source == NULL) {
+  const tx_result *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const tx_result *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void tx_result::MergeFrom(const tx_result& from) {
+void tx_result::MergeFrom(const tx_result &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_transaction()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_transaction())
+    {
       mutable_transaction()->::libbitcoin::protocol::tx::MergeFrom(from.transaction());
     }
-    if (from.has_location()) {
+    if (from.has_location())
+    {
       mutable_location()->::libbitcoin::protocol::block_location::MergeFrom(from.location());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void tx_result::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void tx_result::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void tx_result::CopyFrom(const tx_result& from) {
-  if (&from == this) return;
+void tx_result::CopyFrom(const tx_result &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool tx_result::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+bool tx_result::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003)
+    return false;
 
-  if (has_transaction()) {
-    if (!this->transaction().IsInitialized()) return false;
+  if (has_transaction())
+  {
+    if (!this->transaction().IsInitialized())
+      return false;
   }
   return true;
 }
 
-void tx_result::Swap(tx_result* other) {
-  if (other != this) {
+void tx_result::Swap(tx_result *other)
+{
+  if (other != this)
+  {
     std::swap(transaction_, other->transaction_);
     std::swap(location_, other->location_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -4189,7 +5018,8 @@ void tx_result::Swap(tx_result* other) {
   }
 }
 
-::google::protobuf::Metadata tx_result::GetMetadata() const {
+::google::protobuf::Metadata tx_result::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = tx_result_descriptor_;
@@ -4197,80 +5027,96 @@ void tx_result::Swap(tx_result* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int output::kIndexFieldNumber;
 const int output::kSatoshisFieldNumber;
 const int output::kScriptFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 output::output()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.output)
 }
 
-void output::InitAsDefaultInstance() {
+void output::InitAsDefaultInstance()
+{
 }
 
-output::output(const output& from)
-  : ::google::protobuf::Message() {
+output::output(const output &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.output)
 }
 
-void output::SharedCtor() {
+void output::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   index_ = 0u;
   satoshis_ = GOOGLE_ULONGLONG(0);
-  script_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  script_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-output::~output() {
+output::~output()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.output)
   SharedDtor();
 }
 
-void output::SharedDtor() {
-  if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void output::SharedDtor()
+{
+  if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete script_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
   }
 }
 
-void output::SetCachedSize(int size) const {
+void output::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* output::descriptor() {
+const ::google::protobuf::Descriptor *output::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return output_descriptor_;
 }
 
-const output& output::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const output &output::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-output* output::default_instance_ = NULL;
+output *output::default_instance_ = NULL;
 
-output* output::New() const {
+output *output::New() const
+{
   return new output;
 }
 
-void output::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
+void output::Clear()
+{
+  if (_has_bits_[0 / 32] & 7)
+  {
     index_ = 0u;
     satoshis_ = GOOGLE_ULONGLONG(0);
-    if (has_script()) {
-      if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    if (has_script())
+    {
+      if (script_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         script_->clear();
       }
     }
@@ -4280,68 +5126,91 @@ void output::Clear() {
 }
 
 bool output::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.output)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint32 index = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &index_)));
-          set_has_index();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_satoshis;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required uint32 index = 1;
+    case 1:
+    {
+      if (tag == 8)
+      {
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &index_)));
+        set_has_index();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(16))
+        goto parse_satoshis;
+      break;
+    }
 
-      // required uint64 satoshis = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_satoshis:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &satoshis_)));
-          set_has_satoshis();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_script;
-        break;
+    // required uint64 satoshis = 2;
+    case 2:
+    {
+      if (tag == 16)
+      {
+      parse_satoshis:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+            input, &satoshis_)));
+        set_has_satoshis();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_script;
+      break;
+    }
 
-      // required bytes script = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_script:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_script()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // required bytes script = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_script:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_script()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -4354,52 +5223,62 @@ failure:
 }
 
 void output::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.output)
   // required uint32 index = 1;
-  if (has_index()) {
+  if (has_index())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->index(), output);
   }
 
   // required uint64 satoshis = 2;
-  if (has_satoshis()) {
+  if (has_satoshis())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->satoshis(), output);
   }
 
   // required bytes script = 3;
-  if (has_script()) {
+  if (has_script())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->script(), output);
+        3, this->script(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.output)
 }
 
-::google::protobuf::uint8* output::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *output::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.output)
   // required uint32 index = 1;
-  if (has_index()) {
+  if (has_index())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->index(), target);
   }
 
   // required uint64 satoshis = 2;
-  if (has_satoshis()) {
+  if (has_satoshis())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->satoshis(), target);
   }
 
   // required bytes script = 3;
-  if (has_script()) {
+  if (has_script())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->script(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            3, this->script(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -4407,36 +5286,41 @@ void output::SerializeWithCachedSizes(
   return target;
 }
 
-int output::ByteSize() const {
+int output::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required uint32 index = 1;
-    if (has_index()) {
+    if (has_index())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->index());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->index());
     }
 
     // required uint64 satoshis = 2;
-    if (has_satoshis()) {
+    if (has_satoshis())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->satoshis());
+                    ::google::protobuf::internal::WireFormatLite::UInt64Size(
+                        this->satoshis());
     }
 
     // required bytes script = 3;
-    if (has_script()) {
+    if (has_script())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->script());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->script());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -4444,54 +5328,71 @@ int output::ByteSize() const {
   return total_size;
 }
 
-void output::MergeFrom(const ::google::protobuf::Message& from) {
+void output::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const output* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const output*>(
-      &from);
-  if (source == NULL) {
+  const output *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const output *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void output::MergeFrom(const output& from) {
+void output::MergeFrom(const output &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_index()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_index())
+    {
       set_index(from.index());
     }
-    if (from.has_satoshis()) {
+    if (from.has_satoshis())
+    {
       set_satoshis(from.satoshis());
     }
-    if (from.has_script()) {
+    if (from.has_script())
+    {
       set_script(from.script());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void output::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void output::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void output::CopyFrom(const output& from) {
-  if (&from == this) return;
+void output::CopyFrom(const output &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool output::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+bool output::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000007) != 0x00000007)
+    return false;
 
   return true;
 }
 
-void output::Swap(output* other) {
-  if (other != this) {
+void output::Swap(output *other)
+{
+  if (other != this)
+  {
     std::swap(index_, other->index_);
     std::swap(satoshis_, other->satoshis_);
     std::swap(script_, other->script_);
@@ -4501,7 +5402,8 @@ void output::Swap(output* other) {
   }
 }
 
-::google::protobuf::Metadata output::GetMetadata() const {
+::google::protobuf::Metadata output::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = output_descriptor_;
@@ -4509,84 +5411,102 @@ void output::Swap(output* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int utxo_result::kTxHashFieldNumber;
 const int utxo_result::kLocationFieldNumber;
 const int utxo_result::kOutputsFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 utxo_result::utxo_result()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.utxo_result)
 }
 
-void utxo_result::InitAsDefaultInstance() {
-  location_ = const_cast< ::libbitcoin::protocol::block_location*>(&::libbitcoin::protocol::block_location::default_instance());
+void utxo_result::InitAsDefaultInstance()
+{
+  location_ = const_cast<::libbitcoin::protocol::block_location *>(&::libbitcoin::protocol::block_location::default_instance());
 }
 
-utxo_result::utxo_result(const utxo_result& from)
-  : ::google::protobuf::Message() {
+utxo_result::utxo_result(const utxo_result &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.utxo_result)
 }
 
-void utxo_result::SharedCtor() {
+void utxo_result::SharedCtor()
+{
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  tx_hash_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  tx_hash_ = const_cast<::std::string *>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   location_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-utxo_result::~utxo_result() {
+utxo_result::~utxo_result()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.utxo_result)
   SharedDtor();
 }
 
-void utxo_result::SharedDtor() {
-  if (tx_hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void utxo_result::SharedDtor()
+{
+  if (tx_hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+  {
     delete tx_hash_;
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
     delete location_;
   }
 }
 
-void utxo_result::SetCachedSize(int size) const {
+void utxo_result::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* utxo_result::descriptor() {
+const ::google::protobuf::Descriptor *utxo_result::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return utxo_result_descriptor_;
 }
 
-const utxo_result& utxo_result::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const utxo_result &utxo_result::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-utxo_result* utxo_result::default_instance_ = NULL;
+utxo_result *utxo_result::default_instance_ = NULL;
 
-utxo_result* utxo_result::New() const {
+utxo_result *utxo_result::New() const
+{
   return new utxo_result;
 }
 
-void utxo_result::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_tx_hash()) {
-      if (tx_hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+void utxo_result::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
+    if (has_tx_hash())
+    {
+      if (tx_hash_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited())
+      {
         tx_hash_->clear();
       }
     }
-    if (has_location()) {
-      if (location_ != NULL) location_->::libbitcoin::protocol::block_location::Clear();
+    if (has_location())
+    {
+      if (location_ != NULL)
+        location_->::libbitcoin::protocol::block_location::Clear();
     }
   }
   outputs_.Clear();
@@ -4595,65 +5515,89 @@ void utxo_result::Clear() {
 }
 
 bool utxo_result::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.utxo_result)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required bytes tx_hash = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_tx_hash()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_location;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required bytes tx_hash = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+            input, this->mutable_tx_hash()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_location;
+      break;
+    }
 
-      // required .libbitcoin.protocol.block_location location = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_location:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_location()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_outputs;
-        break;
+    // required .libbitcoin.protocol.block_location location = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_location:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_location()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_outputs;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.output outputs = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_outputs:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_outputs()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_outputs;
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // repeated .libbitcoin.protocol.output outputs = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_outputs:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_outputs()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_outputs;
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -4666,58 +5610,68 @@ failure:
 }
 
 void utxo_result::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.utxo_result)
   // required bytes tx_hash = 1;
-  if (has_tx_hash()) {
+  if (has_tx_hash())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      1, this->tx_hash(), output);
+        1, this->tx_hash(), output);
   }
 
   // required .libbitcoin.protocol.block_location location = 2;
-  if (has_location()) {
+  if (has_location())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->location(), output);
+        2, this->location(), output);
   }
 
   // repeated .libbitcoin.protocol.output outputs = 3;
-  for (int i = 0; i < this->outputs_size(); i++) {
+  for (int i = 0; i < this->outputs_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->outputs(i), output);
+        3, this->outputs(i), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.utxo_result)
 }
 
-::google::protobuf::uint8* utxo_result::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *utxo_result::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.utxo_result)
   // required bytes tx_hash = 1;
-  if (has_tx_hash()) {
+  if (has_tx_hash())
+  {
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        1, this->tx_hash(), target);
+        ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+            1, this->tx_hash(), target);
   }
 
   // required .libbitcoin.protocol.block_location location = 2;
-  if (has_location()) {
+  if (has_location())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->location(), target);
+        WriteMessageNoVirtualToArray(
+            2, this->location(), target);
   }
 
   // repeated .libbitcoin.protocol.output outputs = 3;
-  for (int i = 0; i < this->outputs_size(); i++) {
+  for (int i = 0; i < this->outputs_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->outputs(i), target);
+        WriteMessageNoVirtualToArray(
+            3, this->outputs(i), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -4725,37 +5679,42 @@ void utxo_result::SerializeWithCachedSizes(
   return target;
 }
 
-int utxo_result::ByteSize() const {
+int utxo_result::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required bytes tx_hash = 1;
-    if (has_tx_hash()) {
+    if (has_tx_hash())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->tx_hash());
+                    ::google::protobuf::internal::WireFormatLite::BytesSize(
+                        this->tx_hash());
     }
 
     // required .libbitcoin.protocol.block_location location = 2;
-    if (has_location()) {
+    if (has_location())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->location());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->location());
     }
-
   }
   // repeated .libbitcoin.protocol.output outputs = 3;
   total_size += 1 * this->outputs_size();
-  for (int i = 0; i < this->outputs_size(); i++) {
+  for (int i = 0; i < this->outputs_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->outputs(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->outputs(i));
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -4763,53 +5722,70 @@ int utxo_result::ByteSize() const {
   return total_size;
 }
 
-void utxo_result::MergeFrom(const ::google::protobuf::Message& from) {
+void utxo_result::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const utxo_result* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const utxo_result*>(
-      &from);
-  if (source == NULL) {
+  const utxo_result *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const utxo_result *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void utxo_result::MergeFrom(const utxo_result& from) {
+void utxo_result::MergeFrom(const utxo_result &from)
+{
   GOOGLE_CHECK_NE(&from, this);
   outputs_.MergeFrom(from.outputs_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_tx_hash()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_tx_hash())
+    {
       set_tx_hash(from.tx_hash());
     }
-    if (from.has_location()) {
+    if (from.has_location())
+    {
       mutable_location()->::libbitcoin::protocol::block_location::MergeFrom(from.location());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void utxo_result::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void utxo_result::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void utxo_result::CopyFrom(const utxo_result& from) {
-  if (&from == this) return;
+void utxo_result::CopyFrom(const utxo_result &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool utxo_result::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+bool utxo_result::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003)
+    return false;
 
-  if (!::google::protobuf::internal::AllAreInitialized(this->outputs())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->outputs()))
+    return false;
   return true;
 }
 
-void utxo_result::Swap(utxo_result* other) {
-  if (other != this) {
+void utxo_result::Swap(utxo_result *other)
+{
+  if (other != this)
+  {
     std::swap(tx_hash_, other->tx_hash_);
     std::swap(location_, other->location_);
     outputs_.Swap(&other->outputs_);
@@ -4819,7 +5795,8 @@ void utxo_result::Swap(utxo_result* other) {
   }
 }
 
-::google::protobuf::Metadata utxo_result::GetMetadata() const {
+::google::protobuf::Metadata utxo_result::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = utxo_result_descriptor_;
@@ -4827,74 +5804,89 @@ void utxo_result::Swap(utxo_result* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int block_headers_request::kStartFieldNumber;
 const int block_headers_request::kResultsPerPageFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 block_headers_request::block_headers_request()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.block_headers_request)
 }
 
-void block_headers_request::InitAsDefaultInstance() {
-  start_ = const_cast< ::libbitcoin::protocol::block_id*>(&::libbitcoin::protocol::block_id::default_instance());
+void block_headers_request::InitAsDefaultInstance()
+{
+  start_ = const_cast<::libbitcoin::protocol::block_id *>(&::libbitcoin::protocol::block_id::default_instance());
 }
 
-block_headers_request::block_headers_request(const block_headers_request& from)
-  : ::google::protobuf::Message() {
+block_headers_request::block_headers_request(const block_headers_request &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.block_headers_request)
 }
 
-void block_headers_request::SharedCtor() {
+void block_headers_request::SharedCtor()
+{
   _cached_size_ = 0;
   start_ = NULL;
   results_per_page_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-block_headers_request::~block_headers_request() {
+block_headers_request::~block_headers_request()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.block_headers_request)
   SharedDtor();
 }
 
-void block_headers_request::SharedDtor() {
-  if (this != default_instance_) {
+void block_headers_request::SharedDtor()
+{
+  if (this != default_instance_)
+  {
     delete start_;
   }
 }
 
-void block_headers_request::SetCachedSize(int size) const {
+void block_headers_request::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* block_headers_request::descriptor() {
+const ::google::protobuf::Descriptor *block_headers_request::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return block_headers_request_descriptor_;
 }
 
-const block_headers_request& block_headers_request::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const block_headers_request &block_headers_request::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-block_headers_request* block_headers_request::default_instance_ = NULL;
+block_headers_request *block_headers_request::default_instance_ = NULL;
 
-block_headers_request* block_headers_request::New() const {
+block_headers_request *block_headers_request::New() const
+{
   return new block_headers_request;
 }
 
-void block_headers_request::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_start()) {
-      if (start_ != NULL) start_->::libbitcoin::protocol::block_id::Clear();
+void block_headers_request::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
+    if (has_start())
+    {
+      if (start_ != NULL)
+        start_->::libbitcoin::protocol::block_id::Clear();
     }
     results_per_page_ = 0u;
   }
@@ -4903,53 +5895,71 @@ void block_headers_request::Clear() {
 }
 
 bool block_headers_request::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.block_headers_request)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .libbitcoin.protocol.block_id start = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_start()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_results_per_page;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // optional .libbitcoin.protocol.block_id start = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_start()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(16))
+        goto parse_results_per_page;
+      break;
+    }
 
-      // optional uint32 results_per_page = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_results_per_page:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &results_per_page_)));
-          set_has_results_per_page();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // optional uint32 results_per_page = 2;
+    case 2:
+    {
+      if (tag == 16)
+      {
+      parse_results_per_page:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &results_per_page_)));
+        set_has_results_per_page();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -4962,42 +5972,50 @@ failure:
 }
 
 void block_headers_request::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.block_headers_request)
   // optional .libbitcoin.protocol.block_id start = 1;
-  if (has_start()) {
+  if (has_start())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->start(), output);
+        1, this->start(), output);
   }
 
   // optional uint32 results_per_page = 2;
-  if (has_results_per_page()) {
+  if (has_results_per_page())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->results_per_page(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.block_headers_request)
 }
 
-::google::protobuf::uint8* block_headers_request::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *block_headers_request::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.block_headers_request)
   // optional .libbitcoin.protocol.block_id start = 1;
-  if (has_start()) {
+  if (has_start())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->start(), target);
+        WriteMessageNoVirtualToArray(
+            1, this->start(), target);
   }
 
   // optional uint32 results_per_page = 2;
-  if (has_results_per_page()) {
+  if (has_results_per_page())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->results_per_page(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -5005,29 +6023,33 @@ void block_headers_request::SerializeWithCachedSizes(
   return target;
 }
 
-int block_headers_request::ByteSize() const {
+int block_headers_request::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // optional .libbitcoin.protocol.block_id start = 1;
-    if (has_start()) {
+    if (has_start())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->start());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->start());
     }
 
     // optional uint32 results_per_page = 2;
-    if (has_results_per_page()) {
+    if (has_results_per_page())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->results_per_page());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->results_per_page());
     }
-
   }
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -5035,50 +6057,65 @@ int block_headers_request::ByteSize() const {
   return total_size;
 }
 
-void block_headers_request::MergeFrom(const ::google::protobuf::Message& from) {
+void block_headers_request::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const block_headers_request* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const block_headers_request*>(
-      &from);
-  if (source == NULL) {
+  const block_headers_request *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const block_headers_request *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void block_headers_request::MergeFrom(const block_headers_request& from) {
+void block_headers_request::MergeFrom(const block_headers_request &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_start()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_start())
+    {
       mutable_start()->::libbitcoin::protocol::block_id::MergeFrom(from.start());
     }
-    if (from.has_results_per_page()) {
+    if (from.has_results_per_page())
+    {
       set_results_per_page(from.results_per_page());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void block_headers_request::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void block_headers_request::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void block_headers_request::CopyFrom(const block_headers_request& from) {
-  if (&from == this) return;
+void block_headers_request::CopyFrom(const block_headers_request &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool block_headers_request::IsInitialized() const {
+bool block_headers_request::IsInitialized() const
+{
 
   return true;
 }
 
-void block_headers_request::Swap(block_headers_request* other) {
-  if (other != this) {
+void block_headers_request::Swap(block_headers_request *other)
+{
+  if (other != this)
+  {
     std::swap(start_, other->start_);
     std::swap(results_per_page_, other->results_per_page_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -5087,14 +6124,14 @@ void block_headers_request::Swap(block_headers_request* other) {
   }
 }
 
-::google::protobuf::Metadata block_headers_request::GetMetadata() const {
+::google::protobuf::Metadata block_headers_request::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = block_headers_request_descriptor_;
   metadata.reflection = block_headers_request_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -5104,26 +6141,30 @@ const int transactions_request::kResultsPerPageFieldNumber;
 const int transactions_request::kQueryFieldNumber;
 const int transactions_request::kResultTypeFieldNumber;
 const int transactions_request::kLocationTypeFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 transactions_request::transactions_request()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.transactions_request)
 }
 
-void transactions_request::InitAsDefaultInstance() {
-  start_ = const_cast< ::libbitcoin::protocol::block_id*>(&::libbitcoin::protocol::block_id::default_instance());
+void transactions_request::InitAsDefaultInstance()
+{
+  start_ = const_cast<::libbitcoin::protocol::block_id *>(&::libbitcoin::protocol::block_id::default_instance());
 }
 
-transactions_request::transactions_request(const transactions_request& from)
-  : ::google::protobuf::Message() {
+transactions_request::transactions_request(const transactions_request &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.transactions_request)
 }
 
-void transactions_request::SharedCtor() {
+void transactions_request::SharedCtor()
+{
   _cached_size_ = 0;
   start_ = NULL;
   results_per_page_ = 0u;
@@ -5132,42 +6173,54 @@ void transactions_request::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-transactions_request::~transactions_request() {
+transactions_request::~transactions_request()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.transactions_request)
   SharedDtor();
 }
 
-void transactions_request::SharedDtor() {
-  if (this != default_instance_) {
+void transactions_request::SharedDtor()
+{
+  if (this != default_instance_)
+  {
     delete start_;
   }
 }
 
-void transactions_request::SetCachedSize(int size) const {
+void transactions_request::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* transactions_request::descriptor() {
+const ::google::protobuf::Descriptor *transactions_request::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return transactions_request_descriptor_;
 }
 
-const transactions_request& transactions_request::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const transactions_request &transactions_request::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-transactions_request* transactions_request::default_instance_ = NULL;
+transactions_request *transactions_request::default_instance_ = NULL;
 
-transactions_request* transactions_request::New() const {
+transactions_request *transactions_request::New() const
+{
   return new transactions_request;
 }
 
-void transactions_request::Clear() {
-  if (_has_bits_[0 / 32] & 27) {
-    if (has_start()) {
-      if (start_ != NULL) start_->::libbitcoin::protocol::block_id::Clear();
+void transactions_request::Clear()
+{
+  if (_has_bits_[0 / 32] & 27)
+  {
+    if (has_start())
+    {
+      if (start_ != NULL)
+        start_->::libbitcoin::protocol::block_id::Clear();
     }
     results_per_page_ = 0u;
     result_type_ = 1;
@@ -5179,107 +6232,147 @@ void transactions_request::Clear() {
 }
 
 bool transactions_request::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.transactions_request)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .libbitcoin.protocol.block_id start = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_start()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_results_per_page;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // optional .libbitcoin.protocol.block_id start = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_start()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(16))
+        goto parse_results_per_page;
+      break;
+    }
 
-      // optional uint32 results_per_page = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_results_per_page:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &results_per_page_)));
-          set_has_results_per_page();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_query;
-        break;
+    // optional uint32 results_per_page = 2;
+    case 2:
+    {
+      if (tag == 16)
+      {
+      parse_results_per_page:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &results_per_page_)));
+        set_has_results_per_page();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_query;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.filter query = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_query:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_query()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_query;
-        if (input->ExpectTag(32)) goto parse_result_type;
-        break;
+    // repeated .libbitcoin.protocol.filter query = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_query:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_query()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_query;
+      if (input->ExpectTag(32))
+        goto parse_result_type;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
-      case 4: {
-        if (tag == 32) {
-         parse_result_type:
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::libbitcoin::protocol::transaction_results_IsValid(value)) {
-            set_result_type(static_cast< ::libbitcoin::protocol::transaction_results >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(4, value);
-          }
-        } else {
-          goto handle_unusual;
+    // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
+    case 4:
+    {
+      if (tag == 32)
+      {
+      parse_result_type:
+        int value;
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+            input, &value)));
+        if (::libbitcoin::protocol::transaction_results_IsValid(value))
+        {
+          set_result_type(static_cast<::libbitcoin::protocol::transaction_results>(value));
         }
-        if (input->ExpectTag(40)) goto parse_location_type;
-        break;
+        else
+        {
+          mutable_unknown_fields()->AddVarint(4, value);
+        }
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(40))
+        goto parse_location_type;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.locations location_type = 5 [default = NONE];
-      case 5: {
-        if (tag == 40) {
-         parse_location_type:
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::libbitcoin::protocol::locations_IsValid(value)) {
-            set_location_type(static_cast< ::libbitcoin::protocol::locations >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(5, value);
-          }
-        } else {
-          goto handle_unusual;
+    // optional .libbitcoin.protocol.locations location_type = 5 [default = NONE];
+    case 5:
+    {
+      if (tag == 40)
+      {
+      parse_location_type:
+        int value;
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+            input, &value)));
+        if (::libbitcoin::protocol::locations_IsValid(value))
+        {
+          set_location_type(static_cast<::libbitcoin::protocol::locations>(value));
         }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+        else
+        {
+          mutable_unknown_fields()->AddVarint(5, value);
+        }
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -5292,79 +6385,93 @@ failure:
 }
 
 void transactions_request::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.transactions_request)
   // optional .libbitcoin.protocol.block_id start = 1;
-  if (has_start()) {
+  if (has_start())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->start(), output);
+        1, this->start(), output);
   }
 
   // optional uint32 results_per_page = 2;
-  if (has_results_per_page()) {
+  if (has_results_per_page())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->results_per_page(), output);
   }
 
   // repeated .libbitcoin.protocol.filter query = 3;
-  for (int i = 0; i < this->query_size(); i++) {
+  for (int i = 0; i < this->query_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->query(i), output);
+        3, this->query(i), output);
   }
 
   // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
-  if (has_result_type()) {
+  if (has_result_type())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      4, this->result_type(), output);
+        4, this->result_type(), output);
   }
 
   // optional .libbitcoin.protocol.locations location_type = 5 [default = NONE];
-  if (has_location_type()) {
+  if (has_location_type())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      5, this->location_type(), output);
+        5, this->location_type(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.transactions_request)
 }
 
-::google::protobuf::uint8* transactions_request::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *transactions_request::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.transactions_request)
   // optional .libbitcoin.protocol.block_id start = 1;
-  if (has_start()) {
+  if (has_start())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->start(), target);
+        WriteMessageNoVirtualToArray(
+            1, this->start(), target);
   }
 
   // optional uint32 results_per_page = 2;
-  if (has_results_per_page()) {
+  if (has_results_per_page())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->results_per_page(), target);
   }
 
   // repeated .libbitcoin.protocol.filter query = 3;
-  for (int i = 0; i < this->query_size(); i++) {
+  for (int i = 0; i < this->query_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->query(i), target);
+        WriteMessageNoVirtualToArray(
+            3, this->query(i), target);
   }
 
   // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
-  if (has_result_type()) {
+  if (has_result_type())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      4, this->result_type(), target);
+        4, this->result_type(), target);
   }
 
   // optional .libbitcoin.protocol.locations location_type = 5 [default = NONE];
-  if (has_location_type()) {
+  if (has_location_type())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      5, this->location_type(), target);
+        5, this->location_type(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -5372,49 +6479,56 @@ void transactions_request::SerializeWithCachedSizes(
   return target;
 }
 
-int transactions_request::ByteSize() const {
+int transactions_request::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // optional .libbitcoin.protocol.block_id start = 1;
-    if (has_start()) {
+    if (has_start())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->start());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->start());
     }
 
     // optional uint32 results_per_page = 2;
-    if (has_results_per_page()) {
+    if (has_results_per_page())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->results_per_page());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->results_per_page());
     }
 
     // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
-    if (has_result_type()) {
+    if (has_result_type())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->result_type());
+                    ::google::protobuf::internal::WireFormatLite::EnumSize(this->result_type());
     }
 
     // optional .libbitcoin.protocol.locations location_type = 5 [default = NONE];
-    if (has_location_type()) {
+    if (has_location_type())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->location_type());
+                    ::google::protobuf::internal::WireFormatLite::EnumSize(this->location_type());
     }
-
   }
   // repeated .libbitcoin.protocol.filter query = 3;
   total_size += 1 * this->query_size();
-  for (int i = 0; i < this->query_size(); i++) {
+  for (int i = 0; i < this->query_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->query(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->query(i));
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -5422,58 +6536,76 @@ int transactions_request::ByteSize() const {
   return total_size;
 }
 
-void transactions_request::MergeFrom(const ::google::protobuf::Message& from) {
+void transactions_request::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const transactions_request* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const transactions_request*>(
-      &from);
-  if (source == NULL) {
+  const transactions_request *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const transactions_request *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void transactions_request::MergeFrom(const transactions_request& from) {
+void transactions_request::MergeFrom(const transactions_request &from)
+{
   GOOGLE_CHECK_NE(&from, this);
   query_.MergeFrom(from.query_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_start()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_start())
+    {
       mutable_start()->::libbitcoin::protocol::block_id::MergeFrom(from.start());
     }
-    if (from.has_results_per_page()) {
+    if (from.has_results_per_page())
+    {
       set_results_per_page(from.results_per_page());
     }
-    if (from.has_result_type()) {
+    if (from.has_result_type())
+    {
       set_result_type(from.result_type());
     }
-    if (from.has_location_type()) {
+    if (from.has_location_type())
+    {
       set_location_type(from.location_type());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void transactions_request::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void transactions_request::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void transactions_request::CopyFrom(const transactions_request& from) {
-  if (&from == this) return;
+void transactions_request::CopyFrom(const transactions_request &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool transactions_request::IsInitialized() const {
+bool transactions_request::IsInitialized() const
+{
 
-  if (!::google::protobuf::internal::AllAreInitialized(this->query())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->query()))
+    return false;
   return true;
 }
 
-void transactions_request::Swap(transactions_request* other) {
-  if (other != this) {
+void transactions_request::Swap(transactions_request *other)
+{
+  if (other != this)
+  {
     std::swap(start_, other->start_);
     std::swap(results_per_page_, other->results_per_page_);
     query_.Swap(&other->query_);
@@ -5485,14 +6617,14 @@ void transactions_request::Swap(transactions_request* other) {
   }
 }
 
-::google::protobuf::Metadata transactions_request::GetMetadata() const {
+::google::protobuf::Metadata transactions_request::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = transactions_request_descriptor_;
   metadata.reflection = transactions_request_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -5504,106 +6636,128 @@ const int request::kPostTransactionFieldNumber;
 const int request::kValidateTransactionFieldNumber;
 const int request::kPostBlockFieldNumber;
 const int request::kValidateBlockFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 request::request()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.request)
 }
 
-void request::InitAsDefaultInstance() {
-  request_default_oneof_instance_->get_block_headers_ = const_cast< ::libbitcoin::protocol::block_headers_request*>(&::libbitcoin::protocol::block_headers_request::default_instance());
-  request_default_oneof_instance_->get_transactions_ = const_cast< ::libbitcoin::protocol::transactions_request*>(&::libbitcoin::protocol::transactions_request::default_instance());
-  request_default_oneof_instance_->post_transaction_ = const_cast< ::libbitcoin::protocol::tx*>(&::libbitcoin::protocol::tx::default_instance());
-  request_default_oneof_instance_->validate_transaction_ = const_cast< ::libbitcoin::protocol::tx*>(&::libbitcoin::protocol::tx::default_instance());
-  request_default_oneof_instance_->post_block_ = const_cast< ::libbitcoin::protocol::block*>(&::libbitcoin::protocol::block::default_instance());
-  request_default_oneof_instance_->validate_block_ = const_cast< ::libbitcoin::protocol::block*>(&::libbitcoin::protocol::block::default_instance());
+void request::InitAsDefaultInstance()
+{
+  request_default_oneof_instance_->get_block_headers_ = const_cast<::libbitcoin::protocol::block_headers_request *>(&::libbitcoin::protocol::block_headers_request::default_instance());
+  request_default_oneof_instance_->get_transactions_ = const_cast<::libbitcoin::protocol::transactions_request *>(&::libbitcoin::protocol::transactions_request::default_instance());
+  request_default_oneof_instance_->post_transaction_ = const_cast<::libbitcoin::protocol::tx *>(&::libbitcoin::protocol::tx::default_instance());
+  request_default_oneof_instance_->validate_transaction_ = const_cast<::libbitcoin::protocol::tx *>(&::libbitcoin::protocol::tx::default_instance());
+  request_default_oneof_instance_->post_block_ = const_cast<::libbitcoin::protocol::block *>(&::libbitcoin::protocol::block::default_instance());
+  request_default_oneof_instance_->validate_block_ = const_cast<::libbitcoin::protocol::block *>(&::libbitcoin::protocol::block::default_instance());
 }
 
-request::request(const request& from)
-  : ::google::protobuf::Message() {
+request::request(const request &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.request)
 }
 
-void request::SharedCtor() {
+void request::SharedCtor()
+{
   _cached_size_ = 0;
   id_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   clear_has_request_type();
 }
 
-request::~request() {
+request::~request()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.request)
   SharedDtor();
 }
 
-void request::SharedDtor() {
-  if (has_request_type()) {
+void request::SharedDtor()
+{
+  if (has_request_type())
+  {
     clear_request_type();
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
   }
 }
 
-void request::SetCachedSize(int size) const {
+void request::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* request::descriptor() {
+const ::google::protobuf::Descriptor *request::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return request_descriptor_;
 }
 
-const request& request::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const request &request::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-request* request::default_instance_ = NULL;
+request *request::default_instance_ = NULL;
 
-request* request::New() const {
+request *request::New() const
+{
   return new request;
 }
 
-void request::clear_request_type() {
-  switch(request_type_case()) {
-    case kGetBlockHeaders: {
-      delete request_type_.get_block_headers_;
-      break;
-    }
-    case kGetTransactions: {
-      delete request_type_.get_transactions_;
-      break;
-    }
-    case kPostTransaction: {
-      delete request_type_.post_transaction_;
-      break;
-    }
-    case kValidateTransaction: {
-      delete request_type_.validate_transaction_;
-      break;
-    }
-    case kPostBlock: {
-      delete request_type_.post_block_;
-      break;
-    }
-    case kValidateBlock: {
-      delete request_type_.validate_block_;
-      break;
-    }
-    case REQUEST_TYPE_NOT_SET: {
-      break;
-    }
+void request::clear_request_type()
+{
+  switch (request_type_case())
+  {
+  case kGetBlockHeaders:
+  {
+    delete request_type_.get_block_headers_;
+    break;
+  }
+  case kGetTransactions:
+  {
+    delete request_type_.get_transactions_;
+    break;
+  }
+  case kPostTransaction:
+  {
+    delete request_type_.post_transaction_;
+    break;
+  }
+  case kValidateTransaction:
+  {
+    delete request_type_.validate_transaction_;
+    break;
+  }
+  case kPostBlock:
+  {
+    delete request_type_.post_block_;
+    break;
+  }
+  case kValidateBlock:
+  {
+    delete request_type_.validate_block_;
+    break;
+  }
+  case REQUEST_TYPE_NOT_SET:
+  {
+    break;
+  }
   }
   _oneof_case_[0] = REQUEST_TYPE_NOT_SET;
 }
 
-
-void request::Clear() {
+void request::Clear()
+{
   _extensions_.Clear();
   id_ = 0u;
   clear_request_type();
@@ -5612,123 +6766,167 @@ void request::Clear() {
 }
 
 bool request::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.request)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint32 id = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &id_)));
-          set_has_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_get_block_headers;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required uint32 id = 1;
+    case 1:
+    {
+      if (tag == 8)
+      {
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &id_)));
+        set_has_id();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_get_block_headers;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.block_headers_request get_block_headers = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_get_block_headers:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_get_block_headers()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_get_transactions;
-        break;
+    // optional .libbitcoin.protocol.block_headers_request get_block_headers = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_get_block_headers:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_get_block_headers()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_get_transactions;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.transactions_request get_transactions = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_get_transactions:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_get_transactions()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_post_transaction;
-        break;
+    // optional .libbitcoin.protocol.transactions_request get_transactions = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_get_transactions:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_get_transactions()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(34))
+        goto parse_post_transaction;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.tx post_transaction = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_post_transaction:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_post_transaction()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(42)) goto parse_validate_transaction;
-        break;
+    // optional .libbitcoin.protocol.tx post_transaction = 4;
+    case 4:
+    {
+      if (tag == 34)
+      {
+      parse_post_transaction:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_post_transaction()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(42))
+        goto parse_validate_transaction;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.tx validate_transaction = 5;
-      case 5: {
-        if (tag == 42) {
-         parse_validate_transaction:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_validate_transaction()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(50)) goto parse_post_block;
-        break;
+    // optional .libbitcoin.protocol.tx validate_transaction = 5;
+    case 5:
+    {
+      if (tag == 42)
+      {
+      parse_validate_transaction:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_validate_transaction()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(50))
+        goto parse_post_block;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.block post_block = 6;
-      case 6: {
-        if (tag == 50) {
-         parse_post_block:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_post_block()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(58)) goto parse_validate_block;
-        break;
+    // optional .libbitcoin.protocol.block post_block = 6;
+    case 6:
+    {
+      if (tag == 50)
+      {
+      parse_post_block:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_post_block()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(58))
+        goto parse_validate_block;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.block validate_block = 7;
-      case 7: {
-        if (tag == 58) {
-         parse_validate_block:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_validate_block()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // optional .libbitcoin.protocol.block validate_block = 7;
+    case 7:
+    {
+      if (tag == 58)
+      {
+      parse_validate_block:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_validate_block()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        if ((800u <= tag && tag < 1600u)) {
-          DO_(_extensions_.ParseField(tag, input, default_instance_,
-                                      mutable_unknown_fields()));
-          continue;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      if ((800u <= tag && tag < 1600u))
+      {
+        DO_(_extensions_.ParseField(tag, input, default_instance_,
+                                    mutable_unknown_fields()));
+        continue;
+      }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -5741,115 +6939,133 @@ failure:
 }
 
 void request::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.request)
   // required uint32 id = 1;
-  if (has_id()) {
+  if (has_id())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->id(), output);
   }
 
   // optional .libbitcoin.protocol.block_headers_request get_block_headers = 2;
-  if (has_get_block_headers()) {
+  if (has_get_block_headers())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->get_block_headers(), output);
+        2, this->get_block_headers(), output);
   }
 
   // optional .libbitcoin.protocol.transactions_request get_transactions = 3;
-  if (has_get_transactions()) {
+  if (has_get_transactions())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->get_transactions(), output);
+        3, this->get_transactions(), output);
   }
 
   // optional .libbitcoin.protocol.tx post_transaction = 4;
-  if (has_post_transaction()) {
+  if (has_post_transaction())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->post_transaction(), output);
+        4, this->post_transaction(), output);
   }
 
   // optional .libbitcoin.protocol.tx validate_transaction = 5;
-  if (has_validate_transaction()) {
+  if (has_validate_transaction())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->validate_transaction(), output);
+        5, this->validate_transaction(), output);
   }
 
   // optional .libbitcoin.protocol.block post_block = 6;
-  if (has_post_block()) {
+  if (has_post_block())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->post_block(), output);
+        6, this->post_block(), output);
   }
 
   // optional .libbitcoin.protocol.block validate_block = 7;
-  if (has_validate_block()) {
+  if (has_validate_block())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, this->validate_block(), output);
+        7, this->validate_block(), output);
   }
 
   // Extension range [100, 200)
   _extensions_.SerializeWithCachedSizes(
       100, 200, output);
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.request)
 }
 
-::google::protobuf::uint8* request::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *request::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.request)
   // required uint32 id = 1;
-  if (has_id()) {
+  if (has_id())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->id(), target);
   }
 
   // optional .libbitcoin.protocol.block_headers_request get_block_headers = 2;
-  if (has_get_block_headers()) {
+  if (has_get_block_headers())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->get_block_headers(), target);
+        WriteMessageNoVirtualToArray(
+            2, this->get_block_headers(), target);
   }
 
   // optional .libbitcoin.protocol.transactions_request get_transactions = 3;
-  if (has_get_transactions()) {
+  if (has_get_transactions())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->get_transactions(), target);
+        WriteMessageNoVirtualToArray(
+            3, this->get_transactions(), target);
   }
 
   // optional .libbitcoin.protocol.tx post_transaction = 4;
-  if (has_post_transaction()) {
+  if (has_post_transaction())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->post_transaction(), target);
+        WriteMessageNoVirtualToArray(
+            4, this->post_transaction(), target);
   }
 
   // optional .libbitcoin.protocol.tx validate_transaction = 5;
-  if (has_validate_transaction()) {
+  if (has_validate_transaction())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        5, this->validate_transaction(), target);
+        WriteMessageNoVirtualToArray(
+            5, this->validate_transaction(), target);
   }
 
   // optional .libbitcoin.protocol.block post_block = 6;
-  if (has_post_block()) {
+  if (has_post_block())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        6, this->post_block(), target);
+        WriteMessageNoVirtualToArray(
+            6, this->post_block(), target);
   }
 
   // optional .libbitcoin.protocol.block validate_block = 7;
-  if (has_validate_block()) {
+  if (has_validate_block())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        7, this->validate_block(), target);
+        WriteMessageNoVirtualToArray(
+            7, this->validate_block(), target);
   }
 
   // Extension range [100, 200)
   target = _extensions_.SerializeWithCachedSizesToArray(
       100, 200, target);
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -5857,71 +7073,82 @@ void request::SerializeWithCachedSizes(
   return target;
 }
 
-int request::ByteSize() const {
+int request::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required uint32 id = 1;
-    if (has_id()) {
+    if (has_id())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->id());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->id());
     }
-
   }
-  switch (request_type_case()) {
-    // optional .libbitcoin.protocol.block_headers_request get_block_headers = 2;
-    case kGetBlockHeaders: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->get_block_headers());
-      break;
-    }
-    // optional .libbitcoin.protocol.transactions_request get_transactions = 3;
-    case kGetTransactions: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->get_transactions());
-      break;
-    }
-    // optional .libbitcoin.protocol.tx post_transaction = 4;
-    case kPostTransaction: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->post_transaction());
-      break;
-    }
-    // optional .libbitcoin.protocol.tx validate_transaction = 5;
-    case kValidateTransaction: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->validate_transaction());
-      break;
-    }
-    // optional .libbitcoin.protocol.block post_block = 6;
-    case kPostBlock: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->post_block());
-      break;
-    }
-    // optional .libbitcoin.protocol.block validate_block = 7;
-    case kValidateBlock: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->validate_block());
-      break;
-    }
-    case REQUEST_TYPE_NOT_SET: {
-      break;
-    }
+  switch (request_type_case())
+  {
+  // optional .libbitcoin.protocol.block_headers_request get_block_headers = 2;
+  case kGetBlockHeaders:
+  {
+    total_size += 1 +
+                  ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                      this->get_block_headers());
+    break;
+  }
+  // optional .libbitcoin.protocol.transactions_request get_transactions = 3;
+  case kGetTransactions:
+  {
+    total_size += 1 +
+                  ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                      this->get_transactions());
+    break;
+  }
+  // optional .libbitcoin.protocol.tx post_transaction = 4;
+  case kPostTransaction:
+  {
+    total_size += 1 +
+                  ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                      this->post_transaction());
+    break;
+  }
+  // optional .libbitcoin.protocol.tx validate_transaction = 5;
+  case kValidateTransaction:
+  {
+    total_size += 1 +
+                  ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                      this->validate_transaction());
+    break;
+  }
+  // optional .libbitcoin.protocol.block post_block = 6;
+  case kPostBlock:
+  {
+    total_size += 1 +
+                  ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                      this->post_block());
+    break;
+  }
+  // optional .libbitcoin.protocol.block validate_block = 7;
+  case kValidateBlock:
+  {
+    total_size += 1 +
+                  ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                      this->validate_block());
+    break;
+  }
+  case REQUEST_TYPE_NOT_SET:
+  {
+    break;
+  }
   }
   total_size += _extensions_.ByteSize();
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -5929,51 +7156,66 @@ int request::ByteSize() const {
   return total_size;
 }
 
-void request::MergeFrom(const ::google::protobuf::Message& from) {
+void request::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const request* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const request*>(
-      &from);
-  if (source == NULL) {
+  const request *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const request *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void request::MergeFrom(const request& from) {
+void request::MergeFrom(const request &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  switch (from.request_type_case()) {
-    case kGetBlockHeaders: {
-      mutable_get_block_headers()->::libbitcoin::protocol::block_headers_request::MergeFrom(from.get_block_headers());
-      break;
-    }
-    case kGetTransactions: {
-      mutable_get_transactions()->::libbitcoin::protocol::transactions_request::MergeFrom(from.get_transactions());
-      break;
-    }
-    case kPostTransaction: {
-      mutable_post_transaction()->::libbitcoin::protocol::tx::MergeFrom(from.post_transaction());
-      break;
-    }
-    case kValidateTransaction: {
-      mutable_validate_transaction()->::libbitcoin::protocol::tx::MergeFrom(from.validate_transaction());
-      break;
-    }
-    case kPostBlock: {
-      mutable_post_block()->::libbitcoin::protocol::block::MergeFrom(from.post_block());
-      break;
-    }
-    case kValidateBlock: {
-      mutable_validate_block()->::libbitcoin::protocol::block::MergeFrom(from.validate_block());
-      break;
-    }
-    case REQUEST_TYPE_NOT_SET: {
-      break;
-    }
+  switch (from.request_type_case())
+  {
+  case kGetBlockHeaders:
+  {
+    mutable_get_block_headers()->::libbitcoin::protocol::block_headers_request::MergeFrom(from.get_block_headers());
+    break;
   }
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_id()) {
+  case kGetTransactions:
+  {
+    mutable_get_transactions()->::libbitcoin::protocol::transactions_request::MergeFrom(from.get_transactions());
+    break;
+  }
+  case kPostTransaction:
+  {
+    mutable_post_transaction()->::libbitcoin::protocol::tx::MergeFrom(from.post_transaction());
+    break;
+  }
+  case kValidateTransaction:
+  {
+    mutable_validate_transaction()->::libbitcoin::protocol::tx::MergeFrom(from.validate_transaction());
+    break;
+  }
+  case kPostBlock:
+  {
+    mutable_post_block()->::libbitcoin::protocol::block::MergeFrom(from.post_block());
+    break;
+  }
+  case kValidateBlock:
+  {
+    mutable_validate_block()->::libbitcoin::protocol::block::MergeFrom(from.validate_block());
+    break;
+  }
+  case REQUEST_TYPE_NOT_SET:
+  {
+    break;
+  }
+  }
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_id())
+    {
       set_id(from.id());
     }
   }
@@ -5981,42 +7223,62 @@ void request::MergeFrom(const request& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void request::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void request::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void request::CopyFrom(const request& from) {
-  if (&from == this) return;
+void request::CopyFrom(const request &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool request::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+bool request::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001)
+    return false;
 
-  if (has_get_transactions()) {
-    if (!this->get_transactions().IsInitialized()) return false;
+  if (has_get_transactions())
+  {
+    if (!this->get_transactions().IsInitialized())
+      return false;
   }
-  if (has_post_transaction()) {
-    if (!this->post_transaction().IsInitialized()) return false;
+  if (has_post_transaction())
+  {
+    if (!this->post_transaction().IsInitialized())
+      return false;
   }
-  if (has_validate_transaction()) {
-    if (!this->validate_transaction().IsInitialized()) return false;
+  if (has_validate_transaction())
+  {
+    if (!this->validate_transaction().IsInitialized())
+      return false;
   }
-  if (has_post_block()) {
-    if (!this->post_block().IsInitialized()) return false;
+  if (has_post_block())
+  {
+    if (!this->post_block().IsInitialized())
+      return false;
   }
-  if (has_validate_block()) {
-    if (!this->validate_block().IsInitialized()) return false;
+  if (has_validate_block())
+  {
+    if (!this->validate_block().IsInitialized())
+      return false;
   }
 
-  if (!_extensions_.IsInitialized()) return false;  return true;
+  if (!_extensions_.IsInitialized())
+    return false;
+  return true;
 }
 
-void request::Swap(request* other) {
-  if (other != this) {
+void request::Swap(request *other)
+{
+  if (other != this)
+  {
     std::swap(id_, other->id_);
     std::swap(request_type_, other->request_type_);
     std::swap(_oneof_case_[0], other->_oneof_case_[0]);
@@ -6027,7 +7289,8 @@ void request::Swap(request* other) {
   }
 }
 
-::google::protobuf::Metadata request::GetMetadata() const {
+::google::protobuf::Metadata request::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = request_descriptor_;
@@ -6035,80 +7298,97 @@ void request::Swap(request* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int response_block_headers::kNextFieldNumber;
 const int response_block_headers::kTopFieldNumber;
 const int response_block_headers::kHeadersFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 response_block_headers::response_block_headers()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.response.block_headers)
 }
 
-void response_block_headers::InitAsDefaultInstance() {
-  next_ = const_cast< ::libbitcoin::protocol::block_id*>(&::libbitcoin::protocol::block_id::default_instance());
-  top_ = const_cast< ::libbitcoin::protocol::block_id*>(&::libbitcoin::protocol::block_id::default_instance());
+void response_block_headers::InitAsDefaultInstance()
+{
+  next_ = const_cast<::libbitcoin::protocol::block_id *>(&::libbitcoin::protocol::block_id::default_instance());
+  top_ = const_cast<::libbitcoin::protocol::block_id *>(&::libbitcoin::protocol::block_id::default_instance());
 }
 
-response_block_headers::response_block_headers(const response_block_headers& from)
-  : ::google::protobuf::Message() {
+response_block_headers::response_block_headers(const response_block_headers &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.response.block_headers)
 }
 
-void response_block_headers::SharedCtor() {
+void response_block_headers::SharedCtor()
+{
   _cached_size_ = 0;
   next_ = NULL;
   top_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-response_block_headers::~response_block_headers() {
+response_block_headers::~response_block_headers()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.response.block_headers)
   SharedDtor();
 }
 
-void response_block_headers::SharedDtor() {
-  if (this != default_instance_) {
+void response_block_headers::SharedDtor()
+{
+  if (this != default_instance_)
+  {
     delete next_;
     delete top_;
   }
 }
 
-void response_block_headers::SetCachedSize(int size) const {
+void response_block_headers::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* response_block_headers::descriptor() {
+const ::google::protobuf::Descriptor *response_block_headers::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return response_block_headers_descriptor_;
 }
 
-const response_block_headers& response_block_headers::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const response_block_headers &response_block_headers::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-response_block_headers* response_block_headers::default_instance_ = NULL;
+response_block_headers *response_block_headers::default_instance_ = NULL;
 
-response_block_headers* response_block_headers::New() const {
+response_block_headers *response_block_headers::New() const
+{
   return new response_block_headers;
 }
 
-void response_block_headers::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_next()) {
-      if (next_ != NULL) next_->::libbitcoin::protocol::block_id::Clear();
+void response_block_headers::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
+    if (has_next())
+    {
+      if (next_ != NULL)
+        next_->::libbitcoin::protocol::block_id::Clear();
     }
-    if (has_top()) {
-      if (top_ != NULL) top_->::libbitcoin::protocol::block_id::Clear();
+    if (has_top())
+    {
+      if (top_ != NULL)
+        top_->::libbitcoin::protocol::block_id::Clear();
     }
   }
   headers_.Clear();
@@ -6117,65 +7397,89 @@ void response_block_headers::Clear() {
 }
 
 bool response_block_headers::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.response.block_headers)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .libbitcoin.protocol.block_id next = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_next()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_top;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // optional .libbitcoin.protocol.block_id next = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_next()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_top;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.block_id top = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_top:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_top()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_headers;
-        break;
+    // optional .libbitcoin.protocol.block_id top = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_top:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_top()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_headers;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.block_header headers = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_headers:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_headers()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_headers;
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // repeated .libbitcoin.protocol.block_header headers = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_headers:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_headers()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_headers;
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -6188,58 +7492,68 @@ failure:
 }
 
 void response_block_headers::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.response.block_headers)
   // optional .libbitcoin.protocol.block_id next = 1;
-  if (has_next()) {
+  if (has_next())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->next(), output);
+        1, this->next(), output);
   }
 
   // optional .libbitcoin.protocol.block_id top = 2;
-  if (has_top()) {
+  if (has_top())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->top(), output);
+        2, this->top(), output);
   }
 
   // repeated .libbitcoin.protocol.block_header headers = 3;
-  for (int i = 0; i < this->headers_size(); i++) {
+  for (int i = 0; i < this->headers_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->headers(i), output);
+        3, this->headers(i), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.response.block_headers)
 }
 
-::google::protobuf::uint8* response_block_headers::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *response_block_headers::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.response.block_headers)
   // optional .libbitcoin.protocol.block_id next = 1;
-  if (has_next()) {
+  if (has_next())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->next(), target);
+        WriteMessageNoVirtualToArray(
+            1, this->next(), target);
   }
 
   // optional .libbitcoin.protocol.block_id top = 2;
-  if (has_top()) {
+  if (has_top())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->top(), target);
+        WriteMessageNoVirtualToArray(
+            2, this->top(), target);
   }
 
   // repeated .libbitcoin.protocol.block_header headers = 3;
-  for (int i = 0; i < this->headers_size(); i++) {
+  for (int i = 0; i < this->headers_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->headers(i), target);
+        WriteMessageNoVirtualToArray(
+            3, this->headers(i), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -6247,37 +7561,42 @@ void response_block_headers::SerializeWithCachedSizes(
   return target;
 }
 
-int response_block_headers::ByteSize() const {
+int response_block_headers::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // optional .libbitcoin.protocol.block_id next = 1;
-    if (has_next()) {
+    if (has_next())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->next());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->next());
     }
 
     // optional .libbitcoin.protocol.block_id top = 2;
-    if (has_top()) {
+    if (has_top())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->top());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->top());
     }
-
   }
   // repeated .libbitcoin.protocol.block_header headers = 3;
   total_size += 1 * this->headers_size();
-  for (int i = 0; i < this->headers_size(); i++) {
+  for (int i = 0; i < this->headers_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->headers(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->headers(i));
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -6285,52 +7604,68 @@ int response_block_headers::ByteSize() const {
   return total_size;
 }
 
-void response_block_headers::MergeFrom(const ::google::protobuf::Message& from) {
+void response_block_headers::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const response_block_headers* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const response_block_headers*>(
-      &from);
-  if (source == NULL) {
+  const response_block_headers *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const response_block_headers *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void response_block_headers::MergeFrom(const response_block_headers& from) {
+void response_block_headers::MergeFrom(const response_block_headers &from)
+{
   GOOGLE_CHECK_NE(&from, this);
   headers_.MergeFrom(from.headers_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_next()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_next())
+    {
       mutable_next()->::libbitcoin::protocol::block_id::MergeFrom(from.next());
     }
-    if (from.has_top()) {
+    if (from.has_top())
+    {
       mutable_top()->::libbitcoin::protocol::block_id::MergeFrom(from.top());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void response_block_headers::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void response_block_headers::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void response_block_headers::CopyFrom(const response_block_headers& from) {
-  if (&from == this) return;
+void response_block_headers::CopyFrom(const response_block_headers &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool response_block_headers::IsInitialized() const {
+bool response_block_headers::IsInitialized() const
+{
 
-  if (!::google::protobuf::internal::AllAreInitialized(this->headers())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->headers()))
+    return false;
   return true;
 }
 
-void response_block_headers::Swap(response_block_headers* other) {
-  if (other != this) {
+void response_block_headers::Swap(response_block_headers *other)
+{
+  if (other != this)
+  {
     std::swap(next_, other->next_);
     std::swap(top_, other->top_);
     headers_.Swap(&other->headers_);
@@ -6340,14 +7675,14 @@ void response_block_headers::Swap(response_block_headers* other) {
   }
 }
 
-::google::protobuf::Metadata response_block_headers::GetMetadata() const {
+::google::protobuf::Metadata response_block_headers::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = response_block_headers_descriptor_;
   metadata.reflection = response_block_headers_reflection_;
   return metadata;
 }
-
 
 // -------------------------------------------------------------------
 
@@ -6357,73 +7692,91 @@ const int response_transactions::kTopFieldNumber;
 const int response_transactions::kHashesFieldNumber;
 const int response_transactions::kTransactionsFieldNumber;
 const int response_transactions::kUtxosFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 response_transactions::response_transactions()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.response.transactions)
 }
 
-void response_transactions::InitAsDefaultInstance() {
-  next_ = const_cast< ::libbitcoin::protocol::block_id*>(&::libbitcoin::protocol::block_id::default_instance());
-  top_ = const_cast< ::libbitcoin::protocol::block_id*>(&::libbitcoin::protocol::block_id::default_instance());
+void response_transactions::InitAsDefaultInstance()
+{
+  next_ = const_cast<::libbitcoin::protocol::block_id *>(&::libbitcoin::protocol::block_id::default_instance());
+  top_ = const_cast<::libbitcoin::protocol::block_id *>(&::libbitcoin::protocol::block_id::default_instance());
 }
 
-response_transactions::response_transactions(const response_transactions& from)
-  : ::google::protobuf::Message() {
+response_transactions::response_transactions(const response_transactions &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.response.transactions)
 }
 
-void response_transactions::SharedCtor() {
+void response_transactions::SharedCtor()
+{
   _cached_size_ = 0;
   next_ = NULL;
   top_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-response_transactions::~response_transactions() {
+response_transactions::~response_transactions()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.response.transactions)
   SharedDtor();
 }
 
-void response_transactions::SharedDtor() {
-  if (this != default_instance_) {
+void response_transactions::SharedDtor()
+{
+  if (this != default_instance_)
+  {
     delete next_;
     delete top_;
   }
 }
 
-void response_transactions::SetCachedSize(int size) const {
+void response_transactions::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* response_transactions::descriptor() {
+const ::google::protobuf::Descriptor *response_transactions::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return response_transactions_descriptor_;
 }
 
-const response_transactions& response_transactions::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const response_transactions &response_transactions::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-response_transactions* response_transactions::default_instance_ = NULL;
+response_transactions *response_transactions::default_instance_ = NULL;
 
-response_transactions* response_transactions::New() const {
+response_transactions *response_transactions::New() const
+{
   return new response_transactions;
 }
 
-void response_transactions::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_next()) {
-      if (next_ != NULL) next_->::libbitcoin::protocol::block_id::Clear();
+void response_transactions::Clear()
+{
+  if (_has_bits_[0 / 32] & 3)
+  {
+    if (has_next())
+    {
+      if (next_ != NULL)
+        next_->::libbitcoin::protocol::block_id::Clear();
     }
-    if (has_top()) {
-      if (top_ != NULL) top_->::libbitcoin::protocol::block_id::Clear();
+    if (has_top())
+    {
+      if (top_ != NULL)
+        top_->::libbitcoin::protocol::block_id::Clear();
     }
   }
   hashes_.Clear();
@@ -6434,93 +7787,129 @@ void response_transactions::Clear() {
 }
 
 bool response_transactions::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.response.transactions)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .libbitcoin.protocol.block_id next = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_next()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_top;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // optional .libbitcoin.protocol.block_id next = 1;
+    case 1:
+    {
+      if (tag == 10)
+      {
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_next()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(18))
+        goto parse_top;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.block_id top = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_top:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_top()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_hashes;
-        break;
+    // optional .libbitcoin.protocol.block_id top = 2;
+    case 2:
+    {
+      if (tag == 18)
+      {
+      parse_top:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_top()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_hashes;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.tx_hash_result hashes = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_hashes:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_hashes()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_hashes;
-        if (input->ExpectTag(34)) goto parse_transactions;
-        break;
+    // repeated .libbitcoin.protocol.tx_hash_result hashes = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_hashes:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_hashes()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_hashes;
+      if (input->ExpectTag(34))
+        goto parse_transactions;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.tx_result transactions = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_transactions:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_transactions()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_transactions;
-        if (input->ExpectTag(42)) goto parse_utxos;
-        break;
+    // repeated .libbitcoin.protocol.tx_result transactions = 4;
+    case 4:
+    {
+      if (tag == 34)
+      {
+      parse_transactions:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_transactions()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(34))
+        goto parse_transactions;
+      if (input->ExpectTag(42))
+        goto parse_utxos;
+      break;
+    }
 
-      // repeated .libbitcoin.protocol.utxo_result utxos = 5;
-      case 5: {
-        if (tag == 42) {
-         parse_utxos:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_utxos()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(42)) goto parse_utxos;
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // repeated .libbitcoin.protocol.utxo_result utxos = 5;
+    case 5:
+    {
+      if (tag == 42)
+      {
+      parse_utxos:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, add_utxos()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(42))
+        goto parse_utxos;
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -6533,84 +7922,98 @@ failure:
 }
 
 void response_transactions::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.response.transactions)
   // optional .libbitcoin.protocol.block_id next = 1;
-  if (has_next()) {
+  if (has_next())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->next(), output);
+        1, this->next(), output);
   }
 
   // optional .libbitcoin.protocol.block_id top = 2;
-  if (has_top()) {
+  if (has_top())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->top(), output);
+        2, this->top(), output);
   }
 
   // repeated .libbitcoin.protocol.tx_hash_result hashes = 3;
-  for (int i = 0; i < this->hashes_size(); i++) {
+  for (int i = 0; i < this->hashes_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->hashes(i), output);
+        3, this->hashes(i), output);
   }
 
   // repeated .libbitcoin.protocol.tx_result transactions = 4;
-  for (int i = 0; i < this->transactions_size(); i++) {
+  for (int i = 0; i < this->transactions_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->transactions(i), output);
+        4, this->transactions(i), output);
   }
 
   // repeated .libbitcoin.protocol.utxo_result utxos = 5;
-  for (int i = 0; i < this->utxos_size(); i++) {
+  for (int i = 0; i < this->utxos_size(); i++)
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->utxos(i), output);
+        5, this->utxos(i), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.response.transactions)
 }
 
-::google::protobuf::uint8* response_transactions::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *response_transactions::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.response.transactions)
   // optional .libbitcoin.protocol.block_id next = 1;
-  if (has_next()) {
+  if (has_next())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->next(), target);
+        WriteMessageNoVirtualToArray(
+            1, this->next(), target);
   }
 
   // optional .libbitcoin.protocol.block_id top = 2;
-  if (has_top()) {
+  if (has_top())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->top(), target);
+        WriteMessageNoVirtualToArray(
+            2, this->top(), target);
   }
 
   // repeated .libbitcoin.protocol.tx_hash_result hashes = 3;
-  for (int i = 0; i < this->hashes_size(); i++) {
+  for (int i = 0; i < this->hashes_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->hashes(i), target);
+        WriteMessageNoVirtualToArray(
+            3, this->hashes(i), target);
   }
 
   // repeated .libbitcoin.protocol.tx_result transactions = 4;
-  for (int i = 0; i < this->transactions_size(); i++) {
+  for (int i = 0; i < this->transactions_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->transactions(i), target);
+        WriteMessageNoVirtualToArray(
+            4, this->transactions(i), target);
   }
 
   // repeated .libbitcoin.protocol.utxo_result utxos = 5;
-  for (int i = 0; i < this->utxos_size(); i++) {
+  for (int i = 0; i < this->utxos_size(); i++)
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        5, this->utxos(i), target);
+        WriteMessageNoVirtualToArray(
+            5, this->utxos(i), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -6618,53 +8021,60 @@ void response_transactions::SerializeWithCachedSizes(
   return target;
 }
 
-int response_transactions::ByteSize() const {
+int response_transactions::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // optional .libbitcoin.protocol.block_id next = 1;
-    if (has_next()) {
+    if (has_next())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->next());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->next());
     }
 
     // optional .libbitcoin.protocol.block_id top = 2;
-    if (has_top()) {
+    if (has_top())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->top());
+                    ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                        this->top());
     }
-
   }
   // repeated .libbitcoin.protocol.tx_hash_result hashes = 3;
   total_size += 1 * this->hashes_size();
-  for (int i = 0; i < this->hashes_size(); i++) {
+  for (int i = 0; i < this->hashes_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->hashes(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->hashes(i));
   }
 
   // repeated .libbitcoin.protocol.tx_result transactions = 4;
   total_size += 1 * this->transactions_size();
-  for (int i = 0; i < this->transactions_size(); i++) {
+  for (int i = 0; i < this->transactions_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->transactions(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->transactions(i));
   }
 
   // repeated .libbitcoin.protocol.utxo_result utxos = 5;
   total_size += 1 * this->utxos_size();
-  for (int i = 0; i < this->utxos_size(); i++) {
+  for (int i = 0; i < this->utxos_size(); i++)
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->utxos(i));
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+            this->utxos(i));
   }
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -6672,56 +8082,74 @@ int response_transactions::ByteSize() const {
   return total_size;
 }
 
-void response_transactions::MergeFrom(const ::google::protobuf::Message& from) {
+void response_transactions::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const response_transactions* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const response_transactions*>(
-      &from);
-  if (source == NULL) {
+  const response_transactions *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const response_transactions *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void response_transactions::MergeFrom(const response_transactions& from) {
+void response_transactions::MergeFrom(const response_transactions &from)
+{
   GOOGLE_CHECK_NE(&from, this);
   hashes_.MergeFrom(from.hashes_);
   transactions_.MergeFrom(from.transactions_);
   utxos_.MergeFrom(from.utxos_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_next()) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_next())
+    {
       mutable_next()->::libbitcoin::protocol::block_id::MergeFrom(from.next());
     }
-    if (from.has_top()) {
+    if (from.has_top())
+    {
       mutable_top()->::libbitcoin::protocol::block_id::MergeFrom(from.top());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void response_transactions::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void response_transactions::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void response_transactions::CopyFrom(const response_transactions& from) {
-  if (&from == this) return;
+void response_transactions::CopyFrom(const response_transactions &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool response_transactions::IsInitialized() const {
+bool response_transactions::IsInitialized() const
+{
 
-  if (!::google::protobuf::internal::AllAreInitialized(this->hashes())) return false;
-  if (!::google::protobuf::internal::AllAreInitialized(this->transactions())) return false;
-  if (!::google::protobuf::internal::AllAreInitialized(this->utxos())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->hashes()))
+    return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->transactions()))
+    return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->utxos()))
+    return false;
   return true;
 }
 
-void response_transactions::Swap(response_transactions* other) {
-  if (other != this) {
+void response_transactions::Swap(response_transactions *other)
+{
+  if (other != this)
+  {
     std::swap(next_, other->next_);
     std::swap(top_, other->top_);
     hashes_.Swap(&other->hashes_);
@@ -6733,14 +8161,14 @@ void response_transactions::Swap(response_transactions* other) {
   }
 }
 
-::google::protobuf::Metadata response_transactions::GetMetadata() const {
+::google::protobuf::Metadata response_transactions::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = response_transactions_descriptor_;
   metadata.reflection = response_transactions_reflection_;
   return metadata;
 }
-
 
 // -------------------------------------------------------------------
 
@@ -6753,31 +8181,35 @@ const int response::kPostTransactionSucceededFieldNumber;
 const int response::kValidateTransactionSucceededFieldNumber;
 const int response::kPostBlockSucceededFieldNumber;
 const int response::kValidateBlockSucceededFieldNumber;
-#endif  // !_MSC_VER
+#endif // !_MSC_VER
 
 response::response()
-  : ::google::protobuf::Message() {
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   // @@protoc_insertion_point(constructor:libbitcoin.protocol.response)
 }
 
-void response::InitAsDefaultInstance() {
-  response_default_oneof_instance_->get_block_headers_response_ = const_cast< ::libbitcoin::protocol::response_block_headers*>(&::libbitcoin::protocol::response_block_headers::default_instance());
-  response_default_oneof_instance_->get_transactions_response_ = const_cast< ::libbitcoin::protocol::response_transactions*>(&::libbitcoin::protocol::response_transactions::default_instance());
+void response::InitAsDefaultInstance()
+{
+  response_default_oneof_instance_->get_block_headers_response_ = const_cast<::libbitcoin::protocol::response_block_headers *>(&::libbitcoin::protocol::response_block_headers::default_instance());
+  response_default_oneof_instance_->get_transactions_response_ = const_cast<::libbitcoin::protocol::response_transactions *>(&::libbitcoin::protocol::response_transactions::default_instance());
   response_default_oneof_instance_->post_transaction_succeeded_ = false;
   response_default_oneof_instance_->validate_transaction_succeeded_ = false;
   response_default_oneof_instance_->post_block_succeeded_ = false;
   response_default_oneof_instance_->validate_block_succeeded_ = false;
 }
 
-response::response(const response& from)
-  : ::google::protobuf::Message() {
+response::response(const response &from)
+    : ::google::protobuf::Message()
+{
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:libbitcoin.protocol.response)
 }
 
-void response::SharedCtor() {
+void response::SharedCtor()
+{
   _cached_size_ = 0;
   id_ = 0u;
   status_ = 0;
@@ -6785,84 +8217,104 @@ void response::SharedCtor() {
   clear_has_response_type();
 }
 
-response::~response() {
+response::~response()
+{
   // @@protoc_insertion_point(destructor:libbitcoin.protocol.response)
   SharedDtor();
 }
 
-void response::SharedDtor() {
-  if (has_response_type()) {
+void response::SharedDtor()
+{
+  if (has_response_type())
+  {
     clear_response_type();
   }
-  if (this != default_instance_) {
+  if (this != default_instance_)
+  {
   }
 }
 
-void response::SetCachedSize(int size) const {
+void response::SetCachedSize(int size) const
+{
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* response::descriptor() {
+const ::google::protobuf::Descriptor *response::descriptor()
+{
   protobuf_AssignDescriptorsOnce();
   return response_descriptor_;
 }
 
-const response& response::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
+const response &response::default_instance()
+{
+  if (default_instance_ == NULL)
+    protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto();
   return *default_instance_;
 }
 
-response* response::default_instance_ = NULL;
+response *response::default_instance_ = NULL;
 
-response* response::New() const {
+response *response::New() const
+{
   return new response;
 }
 
-void response::clear_response_type() {
-  switch(response_type_case()) {
-    case kGetBlockHeadersResponse: {
-      delete response_type_.get_block_headers_response_;
-      break;
-    }
-    case kGetTransactionsResponse: {
-      delete response_type_.get_transactions_response_;
-      break;
-    }
-    case kPostTransactionSucceeded: {
-      // No need to clear
-      break;
-    }
-    case kValidateTransactionSucceeded: {
-      // No need to clear
-      break;
-    }
-    case kPostBlockSucceeded: {
-      // No need to clear
-      break;
-    }
-    case kValidateBlockSucceeded: {
-      // No need to clear
-      break;
-    }
-    case RESPONSE_TYPE_NOT_SET: {
-      break;
-    }
+void response::clear_response_type()
+{
+  switch (response_type_case())
+  {
+  case kGetBlockHeadersResponse:
+  {
+    delete response_type_.get_block_headers_response_;
+    break;
+  }
+  case kGetTransactionsResponse:
+  {
+    delete response_type_.get_transactions_response_;
+    break;
+  }
+  case kPostTransactionSucceeded:
+  {
+    // No need to clear
+    break;
+  }
+  case kValidateTransactionSucceeded:
+  {
+    // No need to clear
+    break;
+  }
+  case kPostBlockSucceeded:
+  {
+    // No need to clear
+    break;
+  }
+  case kValidateBlockSucceeded:
+  {
+    // No need to clear
+    break;
+  }
+  case RESPONSE_TYPE_NOT_SET:
+  {
+    break;
+  }
   }
   _oneof_case_[0] = RESPONSE_TYPE_NOT_SET;
 }
 
-
-void response::Clear() {
+void response::Clear()
+{
   _extensions_.Clear();
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<response*>(16)->f) - \
-   reinterpret_cast<char*>(16))
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char *>(                   \
+                                 &reinterpret_cast<response *>(16)->f) - \
+                             reinterpret_cast<char *>(16))
 
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
+#define ZR_(first, last)                                  \
+  do                                                      \
+  {                                                       \
+    size_t f = OFFSET_OF_FIELD_(first);                   \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last); \
+    ::memset(&first, 0, n);                               \
   } while (0)
 
   ZR_(id_, status_);
@@ -6876,150 +8328,199 @@ void response::Clear() {
 }
 
 bool response::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+    ::google::protobuf::io::CodedInputStream *input)
+{
+#define DO_(EXPRESSION) \
+  if (!(EXPRESSION))    \
+  goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:libbitcoin.protocol.response)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+  for (;;)
+  {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint32 id = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &id_)));
-          set_has_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_status;
-        break;
+    if (!p.second)
+      goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag))
+    {
+    // required uint32 id = 1;
+    case 1:
+    {
+      if (tag == 8)
+      {
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+            input, &id_)));
+        set_has_id();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(16))
+        goto parse_status;
+      break;
+    }
 
-      // optional sint32 status = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_status:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_SINT32>(
-                 input, &status_)));
-          set_has_status();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_get_block_headers_response;
-        break;
+    // optional sint32 status = 2;
+    case 2:
+    {
+      if (tag == 16)
+      {
+      parse_status:
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_SINT32>(
+            input, &status_)));
+        set_has_status();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(26))
+        goto parse_get_block_headers_response;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.response.block_headers get_block_headers_response = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_get_block_headers_response:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_get_block_headers_response()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_get_transactions_response;
-        break;
+    // optional .libbitcoin.protocol.response.block_headers get_block_headers_response = 3;
+    case 3:
+    {
+      if (tag == 26)
+      {
+      parse_get_block_headers_response:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_get_block_headers_response()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(34))
+        goto parse_get_transactions_response;
+      break;
+    }
 
-      // optional .libbitcoin.protocol.response.transactions get_transactions_response = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_get_transactions_response:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_get_transactions_response()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(40)) goto parse_post_transaction_succeeded;
-        break;
+    // optional .libbitcoin.protocol.response.transactions get_transactions_response = 4;
+    case 4:
+    {
+      if (tag == 34)
+      {
+      parse_get_transactions_response:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+            input, mutable_get_transactions_response()));
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(40))
+        goto parse_post_transaction_succeeded;
+      break;
+    }
 
-      // optional bool post_transaction_succeeded = 5;
-      case 5: {
-        if (tag == 40) {
-         parse_post_transaction_succeeded:
-          clear_response_type();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &response_type_.post_transaction_succeeded_)));
-          set_has_post_transaction_succeeded();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(48)) goto parse_validate_transaction_succeeded;
-        break;
+    // optional bool post_transaction_succeeded = 5;
+    case 5:
+    {
+      if (tag == 40)
+      {
+      parse_post_transaction_succeeded:
+        clear_response_type();
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+            input, &response_type_.post_transaction_succeeded_)));
+        set_has_post_transaction_succeeded();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(48))
+        goto parse_validate_transaction_succeeded;
+      break;
+    }
 
-      // optional bool validate_transaction_succeeded = 6;
-      case 6: {
-        if (tag == 48) {
-         parse_validate_transaction_succeeded:
-          clear_response_type();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &response_type_.validate_transaction_succeeded_)));
-          set_has_validate_transaction_succeeded();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(56)) goto parse_post_block_succeeded;
-        break;
+    // optional bool validate_transaction_succeeded = 6;
+    case 6:
+    {
+      if (tag == 48)
+      {
+      parse_validate_transaction_succeeded:
+        clear_response_type();
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+            input, &response_type_.validate_transaction_succeeded_)));
+        set_has_validate_transaction_succeeded();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(56))
+        goto parse_post_block_succeeded;
+      break;
+    }
 
-      // optional bool post_block_succeeded = 7;
-      case 7: {
-        if (tag == 56) {
-         parse_post_block_succeeded:
-          clear_response_type();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &response_type_.post_block_succeeded_)));
-          set_has_post_block_succeeded();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(64)) goto parse_validate_block_succeeded;
-        break;
+    // optional bool post_block_succeeded = 7;
+    case 7:
+    {
+      if (tag == 56)
+      {
+      parse_post_block_succeeded:
+        clear_response_type();
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+            input, &response_type_.post_block_succeeded_)));
+        set_has_post_block_succeeded();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectTag(64))
+        goto parse_validate_block_succeeded;
+      break;
+    }
 
-      // optional bool validate_block_succeeded = 8;
-      case 8: {
-        if (tag == 64) {
-         parse_validate_block_succeeded:
-          clear_response_type();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &response_type_.validate_block_succeeded_)));
-          set_has_validate_block_succeeded();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
+    // optional bool validate_block_succeeded = 8;
+    case 8:
+    {
+      if (tag == 64)
+      {
+      parse_validate_block_succeeded:
+        clear_response_type();
+        DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+             bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+            input, &response_type_.validate_block_succeeded_)));
+        set_has_validate_block_succeeded();
       }
+      else
+      {
+        goto handle_unusual;
+      }
+      if (input->ExpectAtEnd())
+        goto success;
+      break;
+    }
 
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        if ((800u <= tag && tag < 1600u)) {
-          DO_(_extensions_.ParseField(tag, input, default_instance_,
-                                      mutable_unknown_fields()));
-          continue;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
+    default:
+    {
+    handle_unusual:
+      if (tag == 0 ||
+          ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+              ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP)
+      {
+        goto success;
       }
+      if ((800u <= tag && tag < 1600u))
+      {
+        DO_(_extensions_.ParseField(tag, input, default_instance_,
+                                    mutable_unknown_fields()));
+        continue;
+      }
+      DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, mutable_unknown_fields()));
+      break;
+    }
     }
   }
 success:
@@ -7032,47 +8533,56 @@ failure:
 }
 
 void response::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google::protobuf::io::CodedOutputStream *output) const
+{
   // @@protoc_insertion_point(serialize_start:libbitcoin.protocol.response)
   // required uint32 id = 1;
-  if (has_id()) {
+  if (has_id())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->id(), output);
   }
 
   // optional sint32 status = 2;
-  if (has_status()) {
+  if (has_status())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteSInt32(2, this->status(), output);
   }
 
   // optional .libbitcoin.protocol.response.block_headers get_block_headers_response = 3;
-  if (has_get_block_headers_response()) {
+  if (has_get_block_headers_response())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->get_block_headers_response(), output);
+        3, this->get_block_headers_response(), output);
   }
 
   // optional .libbitcoin.protocol.response.transactions get_transactions_response = 4;
-  if (has_get_transactions_response()) {
+  if (has_get_transactions_response())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->get_transactions_response(), output);
+        4, this->get_transactions_response(), output);
   }
 
   // optional bool post_transaction_succeeded = 5;
-  if (has_post_transaction_succeeded()) {
+  if (has_post_transaction_succeeded())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->post_transaction_succeeded(), output);
   }
 
   // optional bool validate_transaction_succeeded = 6;
-  if (has_validate_transaction_succeeded()) {
+  if (has_validate_transaction_succeeded())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->validate_transaction_succeeded(), output);
   }
 
   // optional bool post_block_succeeded = 7;
-  if (has_post_block_succeeded()) {
+  if (has_post_block_succeeded())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->post_block_succeeded(), output);
   }
 
   // optional bool validate_block_succeeded = 8;
-  if (has_validate_block_succeeded()) {
+  if (has_validate_block_succeeded())
+  {
     ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->validate_block_succeeded(), output);
   }
 
@@ -7080,57 +8590,67 @@ void response::SerializeWithCachedSizes(
   _extensions_.SerializeWithCachedSizes(
       100, 200, output);
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
   // @@protoc_insertion_point(serialize_end:libbitcoin.protocol.response)
 }
 
-::google::protobuf::uint8* response::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8 *response::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8 *target) const
+{
   // @@protoc_insertion_point(serialize_to_array_start:libbitcoin.protocol.response)
   // required uint32 id = 1;
-  if (has_id()) {
+  if (has_id())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->id(), target);
   }
 
   // optional sint32 status = 2;
-  if (has_status()) {
+  if (has_status())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteSInt32ToArray(2, this->status(), target);
   }
 
   // optional .libbitcoin.protocol.response.block_headers get_block_headers_response = 3;
-  if (has_get_block_headers_response()) {
+  if (has_get_block_headers_response())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->get_block_headers_response(), target);
+        WriteMessageNoVirtualToArray(
+            3, this->get_block_headers_response(), target);
   }
 
   // optional .libbitcoin.protocol.response.transactions get_transactions_response = 4;
-  if (has_get_transactions_response()) {
+  if (has_get_transactions_response())
+  {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->get_transactions_response(), target);
+        WriteMessageNoVirtualToArray(
+            4, this->get_transactions_response(), target);
   }
 
   // optional bool post_transaction_succeeded = 5;
-  if (has_post_transaction_succeeded()) {
+  if (has_post_transaction_succeeded())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->post_transaction_succeeded(), target);
   }
 
   // optional bool validate_transaction_succeeded = 6;
-  if (has_validate_transaction_succeeded()) {
+  if (has_validate_transaction_succeeded())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->validate_transaction_succeeded(), target);
   }
 
   // optional bool post_block_succeeded = 7;
-  if (has_post_block_succeeded()) {
+  if (has_post_block_succeeded())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->post_block_succeeded(), target);
   }
 
   // optional bool validate_block_succeeded = 8;
-  if (has_validate_block_succeeded()) {
+  if (has_validate_block_succeeded())
+  {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->validate_block_succeeded(), target);
   }
 
@@ -7138,7 +8658,8 @@ void response::SerializeWithCachedSizes(
   target = _extensions_.SerializeWithCachedSizesToArray(
       100, 200, target);
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -7146,70 +8667,82 @@ void response::SerializeWithCachedSizes(
   return target;
 }
 
-int response::ByteSize() const {
+int response::ByteSize() const
+{
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
     // required uint32 id = 1;
-    if (has_id()) {
+    if (has_id())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->id());
+                    ::google::protobuf::internal::WireFormatLite::UInt32Size(
+                        this->id());
     }
 
     // optional sint32 status = 2;
-    if (has_status()) {
+    if (has_status())
+    {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::SInt32Size(
-          this->status());
+                    ::google::protobuf::internal::WireFormatLite::SInt32Size(
+                        this->status());
     }
-
   }
-  switch (response_type_case()) {
-    // optional .libbitcoin.protocol.response.block_headers get_block_headers_response = 3;
-    case kGetBlockHeadersResponse: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->get_block_headers_response());
-      break;
-    }
-    // optional .libbitcoin.protocol.response.transactions get_transactions_response = 4;
-    case kGetTransactionsResponse: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->get_transactions_response());
-      break;
-    }
-    // optional bool post_transaction_succeeded = 5;
-    case kPostTransactionSucceeded: {
-      total_size += 1 + 1;
-      break;
-    }
-    // optional bool validate_transaction_succeeded = 6;
-    case kValidateTransactionSucceeded: {
-      total_size += 1 + 1;
-      break;
-    }
-    // optional bool post_block_succeeded = 7;
-    case kPostBlockSucceeded: {
-      total_size += 1 + 1;
-      break;
-    }
-    // optional bool validate_block_succeeded = 8;
-    case kValidateBlockSucceeded: {
-      total_size += 1 + 1;
-      break;
-    }
-    case RESPONSE_TYPE_NOT_SET: {
-      break;
-    }
+  switch (response_type_case())
+  {
+  // optional .libbitcoin.protocol.response.block_headers get_block_headers_response = 3;
+  case kGetBlockHeadersResponse:
+  {
+    total_size += 1 +
+                  ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                      this->get_block_headers_response());
+    break;
+  }
+  // optional .libbitcoin.protocol.response.transactions get_transactions_response = 4;
+  case kGetTransactionsResponse:
+  {
+    total_size += 1 +
+                  ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+                      this->get_transactions_response());
+    break;
+  }
+  // optional bool post_transaction_succeeded = 5;
+  case kPostTransactionSucceeded:
+  {
+    total_size += 1 + 1;
+    break;
+  }
+  // optional bool validate_transaction_succeeded = 6;
+  case kValidateTransactionSucceeded:
+  {
+    total_size += 1 + 1;
+    break;
+  }
+  // optional bool post_block_succeeded = 7;
+  case kPostBlockSucceeded:
+  {
+    total_size += 1 + 1;
+    break;
+  }
+  // optional bool validate_block_succeeded = 8;
+  case kValidateBlockSucceeded:
+  {
+    total_size += 1 + 1;
+    break;
+  }
+  case RESPONSE_TYPE_NOT_SET:
+  {
+    break;
+  }
   }
   total_size += _extensions_.ByteSize();
 
-  if (!unknown_fields().empty()) {
+  if (!unknown_fields().empty())
+  {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
+        ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+            unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -7217,54 +8750,70 @@ int response::ByteSize() const {
   return total_size;
 }
 
-void response::MergeFrom(const ::google::protobuf::Message& from) {
+void response::MergeFrom(const ::google::protobuf::Message &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  const response* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const response*>(
-      &from);
-  if (source == NULL) {
+  const response *source =
+      ::google::protobuf::internal::dynamic_cast_if_available<const response *>(
+          &from);
+  if (source == NULL)
+  {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
+  }
+  else
+  {
     MergeFrom(*source);
   }
 }
 
-void response::MergeFrom(const response& from) {
+void response::MergeFrom(const response &from)
+{
   GOOGLE_CHECK_NE(&from, this);
-  switch (from.response_type_case()) {
-    case kGetBlockHeadersResponse: {
-      mutable_get_block_headers_response()->::libbitcoin::protocol::response_block_headers::MergeFrom(from.get_block_headers_response());
-      break;
-    }
-    case kGetTransactionsResponse: {
-      mutable_get_transactions_response()->::libbitcoin::protocol::response_transactions::MergeFrom(from.get_transactions_response());
-      break;
-    }
-    case kPostTransactionSucceeded: {
-      set_post_transaction_succeeded(from.post_transaction_succeeded());
-      break;
-    }
-    case kValidateTransactionSucceeded: {
-      set_validate_transaction_succeeded(from.validate_transaction_succeeded());
-      break;
-    }
-    case kPostBlockSucceeded: {
-      set_post_block_succeeded(from.post_block_succeeded());
-      break;
-    }
-    case kValidateBlockSucceeded: {
-      set_validate_block_succeeded(from.validate_block_succeeded());
-      break;
-    }
-    case RESPONSE_TYPE_NOT_SET: {
-      break;
-    }
+  switch (from.response_type_case())
+  {
+  case kGetBlockHeadersResponse:
+  {
+    mutable_get_block_headers_response()->::libbitcoin::protocol::response_block_headers::MergeFrom(from.get_block_headers_response());
+    break;
   }
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_id()) {
+  case kGetTransactionsResponse:
+  {
+    mutable_get_transactions_response()->::libbitcoin::protocol::response_transactions::MergeFrom(from.get_transactions_response());
+    break;
+  }
+  case kPostTransactionSucceeded:
+  {
+    set_post_transaction_succeeded(from.post_transaction_succeeded());
+    break;
+  }
+  case kValidateTransactionSucceeded:
+  {
+    set_validate_transaction_succeeded(from.validate_transaction_succeeded());
+    break;
+  }
+  case kPostBlockSucceeded:
+  {
+    set_post_block_succeeded(from.post_block_succeeded());
+    break;
+  }
+  case kValidateBlockSucceeded:
+  {
+    set_validate_block_succeeded(from.validate_block_succeeded());
+    break;
+  }
+  case RESPONSE_TYPE_NOT_SET:
+  {
+    break;
+  }
+  }
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32)))
+  {
+    if (from.has_id())
+    {
       set_id(from.id());
     }
-    if (from.has_status()) {
+    if (from.has_status())
+    {
       set_status(from.status());
     }
   }
@@ -7272,33 +8821,47 @@ void response::MergeFrom(const response& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void response::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
+void response::CopyFrom(const ::google::protobuf::Message &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-void response::CopyFrom(const response& from) {
-  if (&from == this) return;
+void response::CopyFrom(const response &from)
+{
+  if (&from == this)
+    return;
   Clear();
   MergeFrom(from);
 }
 
-bool response::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+bool response::IsInitialized() const
+{
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001)
+    return false;
 
-  if (has_get_block_headers_response()) {
-    if (!this->get_block_headers_response().IsInitialized()) return false;
+  if (has_get_block_headers_response())
+  {
+    if (!this->get_block_headers_response().IsInitialized())
+      return false;
   }
-  if (has_get_transactions_response()) {
-    if (!this->get_transactions_response().IsInitialized()) return false;
+  if (has_get_transactions_response())
+  {
+    if (!this->get_transactions_response().IsInitialized())
+      return false;
   }
 
-  if (!_extensions_.IsInitialized()) return false;  return true;
+  if (!_extensions_.IsInitialized())
+    return false;
+  return true;
 }
 
-void response::Swap(response* other) {
-  if (other != this) {
+void response::Swap(response *other)
+{
+  if (other != this)
+  {
     std::swap(id_, other->id_);
     std::swap(status_, other->status_);
     std::swap(response_type_, other->response_type_);
@@ -7310,7 +8873,8 @@ void response::Swap(response* other) {
   }
 }
 
-::google::protobuf::Metadata response::GetMetadata() const {
+::google::protobuf::Metadata response::GetMetadata() const
+{
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = response_descriptor_;
@@ -7318,11 +8882,10 @@ void response::Swap(response* other) {
   return metadata;
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace protocol
-}  // namespace libbitcoin
+} // namespace protocol
+} // namespace libbitcoin
 
 // @@protoc_insertion_point(global_scope)
 

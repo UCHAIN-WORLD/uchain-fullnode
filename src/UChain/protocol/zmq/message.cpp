@@ -23,9 +23,12 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/protocol/zmq/frame.hpp>
 
-namespace libbitcoin {
-namespace protocol {
-namespace zmq {
+namespace libbitcoin
+{
+namespace protocol
+{
+namespace zmq
+{
 
 void message::enqueue()
 {
@@ -41,12 +44,12 @@ bool message::dequeue()
     return true;
 }
 
-bool message::dequeue(uint32_t& value)
+bool message::dequeue(uint32_t &value)
 {
     if (queue_.empty())
         return false;
 
-    const auto& front = queue_.front();
+    const auto &front = queue_.front();
 
     if (front.size() == sizeof(uint32_t))
     {
@@ -59,7 +62,7 @@ bool message::dequeue(uint32_t& value)
     return false;
 }
 
-bool message::dequeue(data_chunk& value)
+bool message::dequeue(data_chunk &value)
 {
     if (queue_.empty())
         return false;
@@ -68,7 +71,7 @@ bool message::dequeue(data_chunk& value)
     return true;
 }
 
-bool message::dequeue(std::string& value)
+bool message::dequeue(std::string &value)
 {
     if (queue_.empty())
         return false;
@@ -77,12 +80,12 @@ bool message::dequeue(std::string& value)
     return true;
 }
 
-bool message::dequeue(hash_digest& value)
+bool message::dequeue(hash_digest &value)
 {
     if (queue_.empty())
         return false;
 
-    const auto& front = queue_.front();
+    const auto &front = queue_.front();
 
     if (front.size() == hash_size)
     {
@@ -98,7 +101,7 @@ bool message::dequeue(hash_digest& value)
 data_chunk message::dequeue_data()
 {
     if (queue_.empty())
-        return{};
+        return {};
 
     const auto data = queue_.front();
     queue_.pop();
@@ -108,9 +111,9 @@ data_chunk message::dequeue_data()
 std::string message::dequeue_text()
 {
     if (queue_.empty())
-        return{};
+        return {};
 
-    const auto& front = queue_.front();
+    const auto &front = queue_.front();
     const auto text = std::string(front.begin(), front.end());
     queue_.pop();
     return text;
@@ -133,7 +136,7 @@ size_t message::size() const
 }
 
 // Must be called on the socket thread.
-code message::send(socket& socket)
+code message::send(socket &socket)
 {
     auto count = queue_.size();
 
@@ -151,7 +154,7 @@ code message::send(socket& socket)
 }
 
 // Must be called on the socket thread.
-code message::receive(socket& socket)
+code message::receive(socket &socket)
 {
     clear();
     auto done = false;
