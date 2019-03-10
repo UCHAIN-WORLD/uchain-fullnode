@@ -33,8 +33,10 @@
 #include <UChain/node/settings.hpp>
 #include <UChain/node/utility/header_queue.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 #define CLASS session_header_sync
 
@@ -51,16 +53,16 @@ static constexpr float back_off_factor = 0.75f;
 static constexpr uint32_t headers_per_second = 10000;
 
 // Sort is required here but not in configuration settings.
-session_header_sync::session_header_sync(p2p& network, header_queue& hashes,
-    simple_chain& blockchain, const checkpoint::list& checkpoints)
-  : session_batch(network, false),
-    hashes_(hashes),
-    minimum_rate_(headers_per_second),
-    blockchain_(blockchain),
-    checkpoints_(checkpoint::sort(checkpoints)),
-    try_count_{0},
-    synced_{false},
-    CONSTRUCT_TRACK(session_header_sync)
+session_header_sync::session_header_sync(p2p &network, header_queue &hashes,
+                                         simple_chain &blockchain, const checkpoint::list &checkpoints)
+    : session_batch(network, false),
+      hashes_(hashes),
+      minimum_rate_(headers_per_second),
+      blockchain_(blockchain),
+      checkpoints_(checkpoint::sort(checkpoints)),
+      try_count_{0},
+      synced_{false},
+      CONSTRUCT_TRACK(session_header_sync)
 {
     static_assert(back_off_factor < 1.0, "invalid back-off factor");
 }
@@ -73,8 +75,8 @@ void session_header_sync::start(result_handler handler)
     session::start(CONCURRENT2(handle_started, _1, handler));
 }
 
-void session_header_sync::handle_started(const code& ec,
-    result_handler handler)
+void session_header_sync::handle_started(const code &ec,
+                                         result_handler handler)
 {
     if (ec)
     {
@@ -93,7 +95,7 @@ void session_header_sync::handle_started(const code& ec,
 // ----------------------------------------------------------------------------
 
 void session_header_sync::new_connection(connector::ptr connect,
-    result_handler handler)
+                                         result_handler handler)
 {
     if (stopped())
     {
@@ -106,14 +108,14 @@ void session_header_sync::new_connection(connector::ptr connect,
     this->connect(connect, BIND4(handle_connect, _1, _2, connect, handler));
 }
 
-void session_header_sync::handle_connect(const code& ec, channel::ptr channel,
-    connector::ptr connect, result_handler handler)
+void session_header_sync::handle_connect(const code &ec, channel::ptr channel,
+                                         connector::ptr connect, result_handler handler)
 {
     if (ec)
     {
         log::debug(LOG_NODE)
             << "Failure connecting header sync channel: " << ec.message();
-        if(ec.value() == error::not_satisfied)
+        if (ec.value() == error::not_satisfied)
         {
             log::debug(LOG_NETWORK) << "session header sync handle connect, not satified";
             handler(ec);
@@ -127,18 +129,18 @@ void session_header_sync::handle_connect(const code& ec, channel::ptr channel,
         << "Connected to header sync channel [" << channel->authority() << "]";
 
     register_channel(channel,
-        BIND4(handle_channel_start, _1, connect, channel, handler),
-        BIND3(handle_channel_stop, _1, connect, handler));
+                     BIND4(handle_channel_start, _1, connect, channel, handler),
+                     BIND3(handle_channel_stop, _1, connect, handler));
 }
 
 void session_header_sync::attach_handshake_protocols(channel::ptr channel,
-    result_handler handle_started)
+                                                     result_handler handle_started)
 {
     attach<protocol_version_quiet>(channel)->start(handle_started);
 }
 
-void session_header_sync::handle_channel_start(const code& ec,
-    connector::ptr connect, channel::ptr channel, result_handler handler)
+void session_header_sync::handle_channel_start(const code &ec,
+                                               connector::ptr connect, channel::ptr channel, result_handler handler)
 {
     // Treat a start failure just like a completion failure.
     if (ec)
@@ -151,7 +153,7 @@ void session_header_sync::handle_channel_start(const code& ec,
 }
 
 void session_header_sync::attach_protocols(channel::ptr channel,
-    connector::ptr connect, result_handler handler)
+                                           connector::ptr connect, result_handler handler)
 {
     attach<protocol_ping>(channel)->start();
     attach<protocol_address>(channel)->start();
@@ -159,15 +161,15 @@ void session_header_sync::attach_protocols(channel::ptr channel,
         ->start(BIND4(handle_complete, _1, channel, connect, handler));
 }
 
-void session_header_sync::handle_complete(const code& ec, channel::ptr channel,
-    network::connector::ptr connect, result_handler handler)
+void session_header_sync::handle_complete(const code &ec, channel::ptr channel,
+                                          network::connector::ptr connect, result_handler handler)
 {
     channel->stop(error::channel_stopped);
     if (!ec)
     {
         synced_.store(true);
         log::debug(LOG_NODE)
-                << "header sync handle complete successfully," << ec.message() ;
+            << "header sync handle complete successfully," << ec.message();
         // This is the end of the header sync sequence.
         handler(ec);
         return;
@@ -177,17 +179,17 @@ void session_header_sync::handle_complete(const code& ec, channel::ptr channel,
     minimum_rate_ = static_cast<uint32_t>(minimum_rate_ * back_off_factor);
 
     log::debug(LOG_NODE)
-        << "handle complete failed," << ec.message() ;
+        << "handle complete failed," << ec.message();
 
-//    // There is no failure scenario, we ignore the result code here.
-//    new_connection(connect, handler);
+    //    // There is no failure scenario, we ignore the result code here.
+    //    new_connection(connect, handler);
 }
 
-void session_header_sync::handle_channel_stop(const code& ec, network::connector::ptr connect, result_handler handler)
+void session_header_sync::handle_channel_stop(const code &ec, network::connector::ptr connect, result_handler handler)
 {
     log::debug(LOG_NODE)
         << "Header sync channel stopped: " << ec.message();
-    if(!synced_)
+    if (!synced_)
     {
         ++try_count_;
         if (try_count_ == 10)
@@ -244,7 +246,7 @@ bool session_header_sync::initialize(result_handler handler)
 }
 
 // Get the block hashes that bracket the range to download.
-code session_header_sync::get_range(checkpoint& out_seed, checkpoint& out_stop)
+code session_header_sync::get_range(checkpoint &out_seed, checkpoint &out_stop)
 {
     uint64_t last_height;
 
@@ -272,7 +274,7 @@ code session_header_sync::get_range(checkpoint& out_seed, checkpoint& out_stop)
     }
     else if (first_height == last_height)
     {
-        out_stop = std::move(checkpoint{ first_header.hash(), first_height });
+        out_stop = std::move(checkpoint{first_header.hash(), first_height});
     }
     else
     {
@@ -281,10 +283,10 @@ code session_header_sync::get_range(checkpoint& out_seed, checkpoint& out_stop)
         if (!blockchain_.get_header(last_header, last_height))
             return error::not_found;
 
-        out_stop = std::move(checkpoint{ last_header.hash(), last_height });
+        out_stop = std::move(checkpoint{last_header.hash(), last_height});
     }
 
-    out_seed = std::move(checkpoint{ first_header.hash(), first_height });
+    out_seed = std::move(checkpoint{first_header.hash(), first_height});
     return error::success;
 }
 
