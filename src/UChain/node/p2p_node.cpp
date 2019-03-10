@@ -31,8 +31,10 @@
 #include <UChain/node/sessions/session_manual.hpp>
 #include <UChain/node/sessions/session_outbound.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 using namespace bc::blockchain;
 using namespace bc::chain;
@@ -40,11 +42,11 @@ using namespace bc::config;
 using namespace bc::network;
 using namespace std::placeholders;
 
-p2p_node::p2p_node(const configuration& configuration)
-  : p2p(configuration.network),
-    hashes_(configuration.chain.checkpoints),
-    blockchain_(thread_pool(), configuration.chain, configuration.database),
-    settings_(configuration.node)
+p2p_node::p2p_node(const configuration &configuration)
+    : p2p(configuration.network),
+      hashes_(configuration.chain.checkpoints),
+      blockchain_(thread_pool(), configuration.chain, configuration.database),
+      settings_(configuration.node)
 {
 }
 
@@ -94,11 +96,11 @@ void p2p_node::run(result_handler handler)
     // This is invoked on a new thread.
     header_sync->start(
         std::bind(&p2p_node::handle_headers_synchronized,
-            this, _1, handler));
+                  this, _1, handler));
 }
 
-void p2p_node::handle_headers_synchronized(const code& ec,
-    result_handler handler)
+void p2p_node::handle_headers_synchronized(const code &ec,
+                                           result_handler handler)
 {
     if (stopped())
     {
@@ -120,10 +122,10 @@ void p2p_node::handle_headers_synchronized(const code& ec,
     // This is invoked on a new thread.
     block_sync->start(
         std::bind(&p2p_node::handle_running,
-            this, _1, handler));
+                  this, _1, handler));
 }
 
-void p2p_node::handle_running(const code& ec, result_handler handler)
+void p2p_node::handle_running(const code &ec, result_handler handler)
 {
     if (stopped())
     {
@@ -157,7 +159,7 @@ void p2p_node::handle_running(const code& ec, result_handler handler)
 
     subscribe_blockchain(
         std::bind(&p2p_node::handle_reorganized,
-            this, _1, _2, _3, _4));
+                  this, _1, _2, _3, _4));
 
     // This is invoked on a new thread.
     // This is the end of the derived run startup sequence.
@@ -165,8 +167,8 @@ void p2p_node::handle_running(const code& ec, result_handler handler)
 }
 
 // This maintains a height member.
-bool p2p_node::handle_reorganized(const code& ec, size_t fork_point,
-    const block_ptr_list& incoming, const block_ptr_list& outgoing)
+bool p2p_node::handle_reorganized(const code &ec, size_t fork_point,
+                                  const block_ptr_list &incoming, const block_ptr_list &outgoing)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;
@@ -182,7 +184,7 @@ bool p2p_node::handle_reorganized(const code& ec, size_t fork_point,
         return false;
     }
 
-    for (const auto block: outgoing)
+    for (const auto block : outgoing)
         log::debug(LOG_NODE)
             << "Reorganization discarded block ["
             << encode_hash(block->header.hash()) << "]";
@@ -216,7 +218,7 @@ network::session_outbound::ptr p2p_node::attach_outbound_session()
 
 session_header_sync::ptr p2p_node::attach_header_sync_session()
 {
-    const auto& checkpoints = blockchain_.chain_settings().checkpoints;
+    const auto &checkpoints = blockchain_.chain_settings().checkpoints;
     return attach<session_header_sync>(hashes_, blockchain_, checkpoints);
 }
 
@@ -248,22 +250,22 @@ bool p2p_node::close()
 // Properties.
 // ----------------------------------------------------------------------------
 
-const settings& p2p_node::node_settings() const
+const settings &p2p_node::node_settings() const
 {
     return settings_;
 }
 
-block_chain& p2p_node::chain()
+block_chain &p2p_node::chain()
 {
     return blockchain_;
 }
 
-block_chain_impl& p2p_node::chain_impl()
+block_chain_impl &p2p_node::chain_impl()
 {
     return blockchain_;
 }
 
-transaction_pool& p2p_node::pool()
+transaction_pool &p2p_node::pool()
 {
     return blockchain_.pool();
 }
@@ -281,5 +283,5 @@ void p2p_node::subscribe_transaction_pool(transaction_handler handler)
     pool().subscribe_transaction(handler);
 }
 
-} // namspace node
+} // namespace node
 } //namespace libbitcoin

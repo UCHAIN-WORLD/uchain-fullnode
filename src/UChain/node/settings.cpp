@@ -21,19 +21,21 @@
 
 #include <thread>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 settings::settings()
-  : block_timeout_seconds(5),
-    download_connections(8),
-    transaction_pool_refresh(true)
+    : block_timeout_seconds(5),
+      download_connections(8),
+      transaction_pool_refresh(true)
 {
 }
 
 // There are no current distinctions spanning chain contexts.
 settings::settings(bc::settings context)
-  : settings()
+    : settings()
 {
 }
 

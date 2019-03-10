@@ -23,39 +23,41 @@
 #include <UChain/blockchain.hpp>
 #include <UChain/network.hpp>
 
-namespace libbitcoin {
-namespace node {
+namespace libbitcoin
+{
+namespace node
+{
 
 // Construct with defaults derived from given context.
 configuration::configuration(bc::settings context)
-  : help(false),
-    initchain(false),
-    settings(false),
-    version(false),
-    daemon{false},
-    use_testnet_rules{false},
-    upnp_map_port{true},
-    node(context),
-    chain(context),
-    database(context),
-    network(context)
+    : help(false),
+      initchain(false),
+      settings(false),
+      version(false),
+      daemon{false},
+      use_testnet_rules{false},
+      upnp_map_port{true},
+      node(context),
+      chain(context),
+      database(context),
+      network(context)
 {
 }
 
 // Copy constructor.
-configuration::configuration(const configuration& other)
-  : help(other.help),
-    initchain(other.initchain),
-    settings(other.settings),
-    version(other.version),
-    daemon{other.daemon},
-    use_testnet_rules{other.use_testnet_rules},
-    upnp_map_port{other.upnp_map_port},
-    file(other.file),
-    node(other.node),
-    chain(other.chain),
-    database(other.database),
-    network(other.network)
+configuration::configuration(const configuration &other)
+    : help(other.help),
+      initchain(other.initchain),
+      settings(other.settings),
+      version(other.version),
+      daemon{other.daemon},
+      use_testnet_rules{other.use_testnet_rules},
+      upnp_map_port{other.upnp_map_port},
+      file(other.file),
+      node(other.node),
+      chain(other.chain),
+      database(other.database),
+      network(other.network)
 {
 }
 
