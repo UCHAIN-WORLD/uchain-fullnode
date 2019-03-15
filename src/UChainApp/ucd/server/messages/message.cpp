@@ -25,8 +25,10 @@
 #include <UChain/protocol.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace bc::protocol;
 
@@ -41,12 +43,10 @@ using namespace bc::protocol;
 //-----------------------------------------------------------------------------
 
 // Convert an error code to data for payload.
-data_chunk message::to_bytes(const code& ec)
+data_chunk message::to_bytes(const code &ec)
 {
     return build_chunk(
-    {
-        to_little_endian(static_cast<uint32_t>(ec.value()))
-    });
+        {to_little_endian(static_cast<uint32_t>(ec.value()))});
 }
 
 // Constructors.
@@ -60,28 +60,28 @@ message::message(bool secure)
 }
 
 // Construct a response for the request (response code only).
-message::message(const message& request, const code& ec)
-  : message(request, to_bytes(ec))
+message::message(const message &request, const code &ec)
+    : message(request, to_bytes(ec))
 {
 }
 
 // Construct a response for the request (response data with code).
-message::message(const message& request, const data_chunk& data)
-  : message(request.route(), request.command(), request.id(), data)
+message::message(const message &request, const data_chunk &data)
+    : message(request.route(), request.command(), request.id(), data)
 {
 }
 
 // Construct a response for the route (subscription code only).
-message::message(const server::route& route, const std::string& command,
-    uint32_t id, const code& ec)
-  : message(route, command, id, to_bytes(ec))
+message::message(const server::route &route, const std::string &command,
+                 uint32_t id, const code &ec)
+    : message(route, command, id, to_bytes(ec))
 {
 }
 
 // Construct a response for the route (subscription data with code).
-message::message(const server::route& route, const std::string& command,
-    uint32_t id, const data_chunk& data)
-  : route_(route), command_(command), id_(id), data_(data)
+message::message(const server::route &route, const std::string &command,
+                 uint32_t id, const data_chunk &data)
+    : route_(route), command_(command), id_(id), data_(data)
 {
 }
 
@@ -95,19 +95,19 @@ uint32_t message::id() const
 }
 
 /// Serialized query or response (defined in relation to command).
-const data_chunk& message::data() const
+const data_chunk &message::data() const
 {
     return data_;
 }
 
 /// Query command (used for subscription, always returned to caller).
-const std::string& message::command() const
+const std::string &message::command() const
 {
     return command_;
 }
 
 /// The message route.
-const server::route& message::route() const
+const server::route &message::route() const
 {
     return route_;
 }
@@ -115,7 +115,7 @@ const server::route& message::route() const
 // Transport.
 //-------------------------------------------------------------------------
 
-code message::receive(zmq::socket& socket)
+code message::receive(zmq::socket &socket)
 {
     zmq::message message;
     auto ec = socket.receive(message);
@@ -156,7 +156,7 @@ code message::receive(zmq::socket& socket)
     return error::success;
 }
 
-code message::send(zmq::socket& socket)
+code message::send(zmq::socket &socket)
 {
     zmq::message message;
 
