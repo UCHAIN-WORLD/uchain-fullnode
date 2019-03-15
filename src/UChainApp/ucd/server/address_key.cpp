@@ -24,26 +24,28 @@
 #include <UChain/bitcoin.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
-address_key::address_key(const route& reply_to, const binary& prefix_filter)
-  : reply_to_(reply_to), prefix_filter_(prefix_filter)
+address_key::address_key(const route &reply_to, const binary &prefix_filter)
+    : reply_to_(reply_to), prefix_filter_(prefix_filter)
 {
 }
 
-bool address_key::operator==(const address_key& other) const
+bool address_key::operator==(const address_key &other) const
 {
     return reply_to_ == other.reply_to_ &&
-        prefix_filter_ == other.prefix_filter_;
+           prefix_filter_ == other.prefix_filter_;
 }
 
-const route& address_key::reply_to() const
+const route &address_key::reply_to() const
 {
     return reply_to_;
 }
 
-const binary& address_key::prefix_filter() const
+const binary &address_key::prefix_filter() const
 {
     return prefix_filter_;
 }
