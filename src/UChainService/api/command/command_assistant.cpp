@@ -20,14 +20,18 @@
 
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 // ---------------------------------------------------------------------------
-std::string ec_to_xxx_impl(const std::string& cmd, const std::string& fromkey)
+std::string ec_to_xxx_impl(const std::string &cmd, const std::string &fromkey)
 {
-    if (cmd == "ec-to-public") {
+    if (cmd == "ec-to-public")
+    {
 
         explorer::config::ec_private secret{fromkey};
         ec_compressed point;
@@ -37,7 +41,8 @@ std::string ec_to_xxx_impl(const std::string& cmd, const std::string& fromkey)
         return ec_pubkey.encoded();
     }
 
-    if (cmd == "ec-to-address") {
+    if (cmd == "ec-to-address")
+    {
 
         bc::wallet::ec_public point{fromkey};
         bc::wallet::payment_address pay_addr(point, bc::wallet::payment_address::mainnet_p2kh);
@@ -48,6 +53,6 @@ std::string ec_to_xxx_impl(const std::string& cmd, const std::string& fromkey)
     return "";
 }
 
-}// commands
-}// explorer
-}// libbitcoin
+} // namespace commands
+} // namespace explorer
+} // namespace libbitcoin
