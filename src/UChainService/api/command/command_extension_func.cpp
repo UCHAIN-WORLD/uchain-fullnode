@@ -18,7 +18,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <functional>
 #include <memory>
 #include <string>
@@ -102,26 +101,27 @@
 #include <UChain/explorer/commands/send-tx.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
+namespace libbitcoin
+{
+namespace explorer
+{
 
-
-void broadcast_extension(const function<void(shared_ptr<command>)> func, std::ostream& os)
+void broadcast_extension(const function<void(shared_ptr<command>)> func, std::ostream &os)
 {
     using namespace std;
     using namespace commands;
 
-    os <<"uc-cli:\r\n";
-    os <<"  -c <uc.config path>\r\n";
+    os << "uc-cli:\r\n";
+    os << "  -c <uc.config path>\r\n";
 
-    os <<"system:\r\n";
+    os << "system:\r\n";
     // system
     func(make_shared<shutdown>());
     func(make_shared<showinfo>());
     func(make_shared<addpeer>());
     func(make_shared<showpeers>());
 
-    os <<"wallet:\r\n";
+    os << "wallet:\r\n";
     // wallet
     func(make_shared<createwallet>());
     func(make_shared<checkwalletinfo>());
@@ -134,9 +134,8 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<exportkeyfile>());
     func(make_shared<importkeyfile>());
 
-
     // ucn
-    os <<"ucn:\r\n";
+    os << "ucn:\r\n";
     func(make_shared<sendto>());
     func(make_shared<sendtomulti>());
     func(make_shared<sendfrom>());
@@ -144,8 +143,8 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showbalances>());
     func(make_shared<showbalance>());
     func(make_shared<showaddressucn>());
-    
-    os <<"miming:\r\n";
+
+    os << "miming:\r\n";
     // miming
     func(make_shared<startmining>());
     func(make_shared<stopmining>());
@@ -154,9 +153,8 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showminers>());
     //func(make_shared<showwork>());
     //func(make_shared<submitwork>());
-    
 
-    os <<"block & tx:\r\n";
+    os << "block & tx:\r\n";
     // block & tx
     func(make_shared<showblockheight>());
     func(make_shared<showblock>());
@@ -166,10 +164,9 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showmemorypool>());
     func(make_shared<showtx>());
     func(make_shared<showtxs>());
-    
-    
+
     // token
-    os <<"token:\r\n";
+    os << "token:\r\n";
     func(make_shared<createtoken>());
     func(make_shared<deletetoken>());
     func(make_shared<registertoken>());
@@ -187,7 +184,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showvote>());
 
     // raw tx and multi-sig
-    os <<"raw tx and multi-sig:\r\n";
+    os << "raw tx and multi-sig:\r\n";
     func(make_shared<createrawtx>());
     func(make_shared<decoderawtx>());
     func(make_shared<signrawtx>());
@@ -203,15 +200,15 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     // cert
     /*func(make_shared<registercert>());
     func(make_shared<transfercert>());*/
-    
-    os <<"uids:\r\n";
+
+    os << "uids:\r\n";
     //uid
     func(make_shared<registeruid>());
     func(make_shared<transferuid>());
     func(make_shared<showuids>());
     func(make_shared<showuid>());
 
-    os <<"candidates:\r\n";
+    os << "candidates:\r\n";
     // candidate
     func(make_shared<registercandidate>());
     func(make_shared<transfercandidate>());
@@ -219,7 +216,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showcandidate>());
 }
 
-shared_ptr<command> find_extension(const string& symbol)
+shared_ptr<command> find_extension(const string &symbol)
 {
     using namespace std;
     using namespace commands;
@@ -339,7 +336,7 @@ shared_ptr<command> find_extension(const string& symbol)
     // token
     if (symbol == createtoken::symbol())
         return make_shared<createtoken>();
-    if (symbol == deletetoken::symbol() || symbol == "deletetoken" )
+    if (symbol == deletetoken::symbol() || symbol == "deletetoken")
         return make_shared<deletetoken>();
     if (symbol == showtokens::symbol())
         return make_shared<showtokens>();
@@ -367,7 +364,6 @@ shared_ptr<command> find_extension(const string& symbol)
         return make_shared<vote>();
     if (symbol == showvote::symbol())
         return make_shared<showvote>();
-    
 
     // cert
     /*if (symbol == transfercert::symbol())
@@ -398,31 +394,30 @@ shared_ptr<command> find_extension(const string& symbol)
     return nullptr;
 }
 
-std::string formerly_extension(const string& former)
+std::string formerly_extension(const string &former)
 {
     return "";
 }
 
-bool check_read_only(const string& symbol)
+bool check_read_only(const string &symbol)
 {
     using namespace commands;
-    const vector<std::string> limit_command = {send_tx::symbol(), createwallet::symbol(), deletewallet::symbol(), changepass::symbol(), addaddress::symbol(), \
-                                    importwallet::symbol(), exportkeyfile::symbol(), "exportwalletasfile", importkeyfile::symbol(), "importwalletfromfile", \
-                                    shutdown::symbol(), addpeer::symbol(), stopmining::symbol(), "stop", startmining::symbol(), "start", createrawtx::symbol(), \
-                                    signrawtx::symbol(), sendrawtx::symbol(), createmultisigaddress::symbol(), deletemultisigaddress::symbol(), createmultisigtx::symbol(), \
-                                    signmultisigtx::symbol(), deposit::symbol(), sendto::symbol(), "uidsendto", sendtomulti::symbol(), "uidsendtomulti", \
-                                    sendfrom::symbol(), "uidsendfrom", createtoken::symbol(), deletetoken::symbol(), "deletetoken", registertoken::symbol(), \
-                                    sendtokento::symbol(), "uidsendtokento", sendtokenfrom::symbol(), "uidsendtokenfrom", destroy::symbol(), vote::symbol(), \
-                                    registercandidate::symbol(), transfercandidate::symbol(), registeruid::symbol(), transferuid::symbol(), checkwalletinfo::symbol(), \
-                                    showaddresses::symbol(), showbalances::symbol(), showbalance::symbol(), showwallettoken::symbol(), decoderawtx::symbol(), \
-                                    checkpublickey::symbol()};
-    auto it = std::find(limit_command.begin(), limit_command.end(), symbol);                                    
-    if(it != limit_command.end())
+    const vector<std::string> limit_command = {send_tx::symbol(), createwallet::symbol(), deletewallet::symbol(), changepass::symbol(), addaddress::symbol(),
+                                               importwallet::symbol(), exportkeyfile::symbol(), "exportwalletasfile", importkeyfile::symbol(), "importwalletfromfile",
+                                               shutdown::symbol(), addpeer::symbol(), stopmining::symbol(), "stop", startmining::symbol(), "start", createrawtx::symbol(),
+                                               signrawtx::symbol(), sendrawtx::symbol(), createmultisigaddress::symbol(), deletemultisigaddress::symbol(), createmultisigtx::symbol(),
+                                               signmultisigtx::symbol(), deposit::symbol(), sendto::symbol(), "uidsendto", sendtomulti::symbol(), "uidsendtomulti",
+                                               sendfrom::symbol(), "uidsendfrom", createtoken::symbol(), deletetoken::symbol(), "deletetoken", registertoken::symbol(),
+                                               sendtokento::symbol(), "uidsendtokento", sendtokenfrom::symbol(), "uidsendtokenfrom", destroy::symbol(), vote::symbol(),
+                                               registercandidate::symbol(), transfercandidate::symbol(), registeruid::symbol(), transferuid::symbol(), checkwalletinfo::symbol(),
+                                               showaddresses::symbol(), showbalances::symbol(), showbalance::symbol(), showwallettoken::symbol(), decoderawtx::symbol(),
+                                               checkpublickey::symbol()};
+    auto it = std::find(limit_command.begin(), limit_command.end(), symbol);
+    if (it != limit_command.end())
     {
-        throw invalid_command_exception{ "This command is not permitted!" };
+        throw invalid_command_exception{"This command is not permitted!"};
     }
 }
 
 } // namespace explorer
 } // namespace libbitcoin
-
