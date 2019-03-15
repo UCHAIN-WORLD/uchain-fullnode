@@ -29,21 +29,24 @@
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/utility/fetch_helpers.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace std::placeholders;
 
 // This does NOT save to our memory pool.
 // The transaction will hit our memory pool when it is picked up from a peer.
-void protocol::broadcast_transaction(server_node& node, const message& request,
-    send_handler handler)
+void protocol::broadcast_transaction(server_node &node, const message &request,
+                                     send_handler handler)
 {
     using transaction_ptr = libbitcoin::blockchain::transaction_pool::transaction_ptr;
     using indexes = libbitcoin::blockchain::transaction_pool::indexes;
     static const auto version = bc::message::version::level::maximum;
-    transaction_ptr tx = std::make_shared<bc::message::transaction_message>();;
-//    bc::message::transaction_message tx;
+    transaction_ptr tx = std::make_shared<bc::message::transaction_message>();
+    ;
+    //    bc::message::transaction_message tx;
 
     if (!tx->from_data(version, request.data()))
     {
@@ -51,25 +54,21 @@ void protocol::broadcast_transaction(server_node& node, const message& request,
         return;
     }
 
-    const auto ignore_complete = [](const code&) {};
-    const auto ignore_send = [](const code&, network::channel::ptr) {};
+    const auto ignore_complete = [](const code &) {};
+    const auto ignore_send = [](const code &, network::channel::ptr) {};
 
     // Send and hope for the best!
-//    node.broadcast(tx, ignore_send, ignore_complete);
+    //    node.broadcast(tx, ignore_send, ignore_complete);
 
-    node.pool().store(tx, [tx](const code& ec, transaction_ptr){
-        log::debug(LOG_SERVER) << encode_hash(tx->hash()) << " confirmed";
-    }, [handler, request, tx](const code& ec, transaction_ptr, indexes){
+    node.pool().store(tx, [tx](const code &ec, transaction_ptr) { log::debug(LOG_SERVER) << encode_hash(tx->hash()) << " confirmed"; }, [handler, request, tx](const code &ec, transaction_ptr, indexes) {
         log::debug(LOG_SERVER) << encode_hash(tx->hash()) << " validated";
-        handler(message(request, ec));
-    });
+        handler(message(request, ec)); });
 
     // Tell the user everything is fine.
-
 }
 
-void protocol::total_connections(server_node& node, const message& request,
-    send_handler handler)
+void protocol::total_connections(server_node &node, const message &request,
+                                 send_handler handler)
 {
     if (!request.data().empty())
     {
@@ -79,11 +78,11 @@ void protocol::total_connections(server_node& node, const message& request,
 
     node.connected_count(
         std::bind(&protocol::handle_total_connections,
-            _1, request, handler));
+                  _1, request, handler));
 }
 
-void protocol::handle_total_connections(size_t count, const message& request,
-    send_handler handler)
+void protocol::handle_total_connections(size_t count, const message &request,
+                                        send_handler handler)
 {
     BITCOIN_ASSERT(count <= max_uint32);
     const auto total_connections = static_cast<uint32_t>(count);
@@ -91,10 +90,8 @@ void protocol::handle_total_connections(size_t count, const message& request,
     // [ code:4 ]
     // [ connections:4 ]
     const auto result = build_chunk(
-    {
-        message::to_bytes(error::success),
-        to_little_endian(total_connections)
-    });
+        {message::to_bytes(error::success),
+         to_little_endian(total_connections)});
 
     handler(message(request, result));
 }

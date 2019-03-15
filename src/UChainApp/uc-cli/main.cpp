@@ -38,90 +38,103 @@ BC_USE_UC_MAIN
 using namespace mgbubble::cli;
 namespace po = boost::program_options;
 
-void my_impl(const http_message* hm)
+void my_impl(const http_message *hm)
 {
-    auto&& reply = std::string(hm->body.p, hm->body.len);
+    auto &&reply = std::string(hm->body.p, hm->body.len);
     Json::Reader reader;
     Json::Value root;
-    if (reader.parse(reply, root) && root.isObject()) {
-        if (root["error"]["code"].isInt() && root["error"]["code"].asInt() != 0) {
+    if (reader.parse(reply, root) && root.isObject())
+    {
+        if (root["error"]["code"].isInt() && root["error"]["code"].asInt() != 0)
+        {
             bc::cout << root["error"].toStyledString();
         }
-        else if (root["result"].isString()) {
-            bc::cout << root["result"].asString() <<std::endl;
+        else if (root["result"].isString())
+        {
+            bc::cout << root["result"].asString() << std::endl;
         }
-        else if (root["result"].isNumeric()){
-            bc::cout << root["result"] <<std::endl;
+        else if (root["result"].isNumeric())
+        {
+            bc::cout << root["result"] << std::endl;
         }
-        else if(root["result"].isArray() || root["result"].isObject()) {
+        else if (root["result"].isArray() || root["result"].isObject())
+        {
             bc::cout << root["result"].toStyledString();
         }
-        else {
+        else
+        {
             bc::cout << reply << std::endl;
         }
     }
-    else {
+    else
+    {
         bc::cout << reply << std::endl;
     }
 }
 
-int bc::main(int argc, char* argv[])
+int bc::main(int argc, char *argv[])
 {
     auto cur_path = boost::filesystem::current_path();
-    //boost::filesystem::remove(cur_path/"conf"); 
+    //boost::filesystem::remove(cur_path/"conf");
     bc::set_utf8_stdout();
     auto work_path = bc::default_data_path();
     int index = 0;
-    if(argc > 2)
+    if (argc > 2)
     {
         std::string op = argv[1], cfg_path = argv[2];
         boost::trim(op);
         boost::trim(cfg_path);
-        if(!op.compare("-c"))
+        if (!op.compare("-c"))
         {
-            if(!boost::filesystem::exists(cfg_path))
+            if (!boost::filesystem::exists(cfg_path))
             {
                 log::info("config") << "uc.config path is invalid.";
                 return -1;
             }
-            try{
-                boost::filesystem::remove(cur_path/"conf");
-                boost::filesystem::create_symlink(boost::filesystem::path(cfg_path), cur_path/"conf");
-                if(argc == 3)
+            try
+            {
+                boost::filesystem::remove(cur_path / "conf");
+                boost::filesystem::create_symlink(boost::filesystem::path(cfg_path), cur_path / "conf");
+                if (argc == 3)
                     return 0;
                 else
                     index = 2;
-            }catch(...){
+            }
+            catch (...)
+            {
                 log::info("config") << "Please use administrator privilege to allow uc-cli access! ";
                 return -1;
             }
         }
-        
     }
-    auto&& config_file = boost::filesystem::exists(cur_path / "conf") ? cur_path / "conf" : work_path / "uc.conf";
+    auto &&config_file = boost::filesystem::exists(cur_path / "conf") ? cur_path / "conf" : work_path / "uc.conf";
     std::string url{"127.0.0.1:8707/rpc/v3"};
 
-    if (boost::filesystem::exists(config_file)) {
-        const auto& path = config_file.string();
+    if (boost::filesystem::exists(config_file))
+    {
+        const auto &path = config_file.string();
         bc::ifstream file(path);
 
-        if (!file.good()) {
+        if (!file.good())
+        {
             BOOST_THROW_EXCEPTION(po::reading_file(path.c_str()));
         }
 
         std::string tmp;
         po::options_description desc("");
-        desc.add_options()
-            ("server.mongoose_listen", po::value<std::string>(&tmp)->default_value("127.0.0.1:8707"));
+        desc.add_options()("server.mongoose_listen", po::value<std::string>(&tmp)->default_value("127.0.0.1:8707"));
 
         po::variables_map vm;
         po::store(po::parse_config_file(file, desc, true), vm);
         po::notify(vm);
 
-        if (vm.count("server.mongoose_listen")) {
-            if (!tmp.empty()) {
+        if (vm.count("server.mongoose_listen"))
+        {
+            if (!tmp.empty())
+            {
                 // On Windows, client can not connect to 0.0.0.0
-                if (tmp.find("0.0.0.0") == 0) {
+                if (tmp.find("0.0.0.0") == 0)
+                {
                     tmp.replace(0, 7, "127.0.0.1");
                 }
                 url = tmp + "/rpc/v3";
@@ -132,17 +145,16 @@ int bc::main(int argc, char* argv[])
     // HTTP request call commands
     HttpReq req(url, 3000, reply_handler(my_impl));
 
-    
     Json::Value jsonvar;
     Json::Value jsonopt;
     jsonvar["jsonrpc"] = "3.0";
     jsonvar["id"] = 1;
-    jsonvar["method"] = (argc < 2) ? "help" : argv[1 +index];
+    jsonvar["method"] = (argc < 2) ? "help" : argv[1 + index];
     jsonvar["params"] = Json::arrayValue;
 
-    if (argc > 2+index)
+    if (argc > 2 + index)
     {
-        for (int i = 2+index; i < argc; i++)
+        for (int i = 2 + index; i < argc; i++)
         {
             jsonvar["params"].append(argv[i]);
         }

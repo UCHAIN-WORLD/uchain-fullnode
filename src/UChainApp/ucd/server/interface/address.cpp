@@ -27,15 +27,17 @@
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/utility/fetch_helpers.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace std::placeholders;
 using namespace bc::chain;
 using namespace bc::wallet;
 
-void address::fetch_history2(server_node& node, const message& request,
-    send_handler handler)
+void address::fetch_history2(server_node &node, const message &request,
+                             send_handler handler)
 {
     static constexpr uint64_t limit = 0;
     uint32_t from_height;
@@ -49,20 +51,20 @@ void address::fetch_history2(server_node& node, const message& request,
 
     // Obtain payment address history from the transaction pool and blockchain.
     node.pool().fetch_history(address, limit, from_height,
-        std::bind(send_history_result,
-            _1, _2, request, handler));
+                              std::bind(send_history_result,
+                                        _1, _2, request, handler));
 }
 
 // v2/v3 (deprecated), used for resubscription, alias for subscribe in v3.
-void address::renew(server_node& node, const message& request,
-    send_handler handler)
+void address::renew(server_node &node, const message &request,
+                    send_handler handler)
 {
     subscribe(node, request, handler);
 }
 
 // v2/v3 (deprecated), requires an explicit subscription type.
-void address::subscribe(server_node& node, const message& request,
-    send_handler handler)
+void address::subscribe(server_node &node, const message &request,
+                        send_handler handler)
 {
     binary prefix_filter;
     subscribe_type type;
@@ -77,8 +79,8 @@ void address::subscribe(server_node& node, const message& request,
     handler(message(request, error::success));
 }
 
-bool address::unwrap_subscribe_args(binary& prefix_filter,
-    subscribe_type& type, const message& request)
+bool address::unwrap_subscribe_args(binary &prefix_filter,
+                                    subscribe_type &type, const message &request)
 {
     static constexpr auto address_bits = short_hash_size * byte_bits;
     static constexpr auto stealth_bits = sizeof(uint32_t) * byte_bits;
@@ -86,7 +88,7 @@ bool address::unwrap_subscribe_args(binary& prefix_filter,
     // [ type:1 ] (0 = address prefix, 1 = stealth prefix)
     // [ prefix_bitsize:1 ]
     // [ prefix_blocks:...]
-    const auto& data = request.data();
+    const auto &data = request.data();
 
     if (data.size() < 2)
         return false;
@@ -110,14 +112,14 @@ bool address::unwrap_subscribe_args(binary& prefix_filter,
     if (data.size() - 2 != byte_length)
         return false;
 
-    const data_chunk bytes({ data.begin() + 2, data.end() });
+    const data_chunk bytes({data.begin() + 2, data.end()});
     prefix_filter = binary(bit_length, bytes);
     return true;
 }
 
 // v3 eliminates the subscription type, which we map to 'unspecified'.
-void address::subscribe2(server_node& node, const message& request,
-    send_handler handler)
+void address::subscribe2(server_node &node, const message &request,
+                         send_handler handler)
 {
     static constexpr auto type = subscribe_type::unspecified;
 
@@ -134,8 +136,8 @@ void address::subscribe2(server_node& node, const message& request,
 }
 
 // v3 adds unsubscribe2, which we map to subscription_type 'unsubscribe'.
-void address::unsubscribe2(server_node& node, const message& request,
-    send_handler handler)
+void address::unsubscribe2(server_node &node, const message &request,
+                           send_handler handler)
 {
     static constexpr auto type = subscribe_type::unsubscribe;
 
@@ -151,14 +153,14 @@ void address::unsubscribe2(server_node& node, const message& request,
     handler(message(request, error::success));
 }
 
-bool address::unwrap_subscribe2_args(binary& prefix_filter,
-    const message& request)
+bool address::unwrap_subscribe2_args(binary &prefix_filter,
+                                     const message &request)
 {
     static constexpr auto address_bits = hash_size * byte_bits;
 
     // [ prefix_bitsize:1 ]
     // [ prefix_blocks:...]
-    const auto& data = request.data();
+    const auto &data = request.data();
 
     if (data.empty())
         return false;
@@ -176,7 +178,7 @@ bool address::unwrap_subscribe2_args(binary& prefix_filter,
     if (data.size() - 1 != byte_length)
         return false;
 
-    const data_chunk bytes({ data.begin() + 1, data.end() });
+    const data_chunk bytes({data.begin() + 1, data.end()});
     prefix_filter = binary(bit_length, bytes);
     return true;
 }

@@ -24,24 +24,26 @@
 #include <boost/functional/hash_fwd.hpp>
 #include <UChain/bitcoin.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 route::route()
-  : secure(false), delimited(false)
+    : secure(false), delimited(false)
 {
 }
 
 std::string route::display() const
 {
-    return "[" + encode_base16(address1) +
-        /*":" + encode_base16(address2) +*/ "]";
+  return "[" + encode_base16(address1) +
+         /*":" + encode_base16(address2) +*/ "]";
 }
 
-bool route::operator==(const route& other) const
+bool route::operator==(const route &other) const
 {
-    return secure == other.secure && /*delimited == other.delimited &&*/
-        address1 == other.address1 /*&& address2 == other.address2*/;
+  return secure == other.secure && /*delimited == other.delimited &&*/
+         address1 == other.address1 /*&& address2 == other.address2*/;
 }
 
 } // namespace server

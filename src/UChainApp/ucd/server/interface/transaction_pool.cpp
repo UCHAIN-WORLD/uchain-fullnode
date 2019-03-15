@@ -29,15 +29,17 @@
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/utility/fetch_helpers.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace std::placeholders;
 using namespace bc::chain;
 using namespace bc::message;
 
-void transaction_pool::fetch_transaction(server_node& node,
-    const message& request, send_handler handler)
+void transaction_pool::fetch_transaction(server_node &node,
+                                         const message &request, send_handler handler)
 {
     hash_digest hash;
 
@@ -51,13 +53,13 @@ void transaction_pool::fetch_transaction(server_node& node,
         << "transaction_pool.fetch_transaction(" << encode_hash(hash) << ")";
 
     node.pool().fetch(hash,
-        std::bind(pool_transaction_fetched,
-            _1, _2, request, handler));
+                      std::bind(pool_transaction_fetched,
+                                _1, _2, request, handler));
 }
 
 // Broadcast a transaction with penetration subscription.
-void transaction_pool::broadcast(server_node& node, const message& request,
-    send_handler handler)
+void transaction_pool::broadcast(server_node &node, const message &request,
+                                 send_handler handler)
 {
     transaction tx;
 
@@ -73,8 +75,8 @@ void transaction_pool::broadcast(server_node& node, const message& request,
 }
 
 // NOTE: the format of this response changed in v3 (send only code on error).
-void transaction_pool::validate(server_node& node, const message& request,
-    send_handler handler)
+void transaction_pool::validate(server_node &node, const message &request,
+                                send_handler handler)
 {
     static const auto version = bc::message::version::level::maximum;
     const auto tx = std::make_shared<transaction_message>();
@@ -86,13 +88,13 @@ void transaction_pool::validate(server_node& node, const message& request,
     }
 
     node.pool().validate(tx,
-        std::bind(&transaction_pool::handle_validated,
-            _1, _2, _3, request, handler));
+                         std::bind(&transaction_pool::handle_validated,
+                                   _1, _2, _3, request, handler));
 }
 
-void transaction_pool::handle_validated(const code& ec,
-    transaction_message::ptr, const point::indexes& unconfirmed,
-    const message& request, send_handler handler)
+void transaction_pool::handle_validated(const code &ec,
+                                        transaction_message::ptr, const point::indexes &unconfirmed,
+                                        const message &request, send_handler handler)
 {
     // [ code:4 ]
     // [[ unconfirmed_index:4 ]...]
@@ -100,7 +102,7 @@ void transaction_pool::handle_validated(const code& ec,
     auto serial = make_serializer(result.begin());
     serial.write_error_code(ec);
 
-    for (const auto unconfirmed_index: unconfirmed)
+    for (const auto unconfirmed_index : unconfirmed)
     {
         BITCOIN_ASSERT(unconfirmed_index <= max_uint32);
         const auto index32 = static_cast<uint32_t>(unconfirmed_index);
