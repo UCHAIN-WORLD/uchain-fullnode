@@ -34,7 +34,7 @@ BC_USE_UC_MAIN
  * @param argv  The array of arguments, including the process.
  * @return      The numeric result to return via console exit.
  */
-int bc::main(int argc, char* argv[])
+int bc::main(int argc, char *argv[])
 {
     using namespace bc;
     using namespace bc::server;
@@ -44,25 +44,25 @@ int bc::main(int argc, char* argv[])
     //libzmq crashes  when differs from main standard IO encoding
     set_utf8_stdio();
     server::parser metadata(bc::settings::mainnet);
-    const auto& args = const_cast<const char**>(argv);
+    const auto &args = const_cast<const char **>(argv);
 
     if (!metadata.parse(argc, args, cerr))
         return console_result::failure;
 
-    std::ostream* out = &cout;
-    std::ostream* err = &cerr;
-    if(metadata.configured.daemon)
+    std::ostream *out = &cout;
+    std::ostream *err = &cerr;
+    if (metadata.configured.daemon)
     {
         libbitcoin::daemon();
         static fstream fout;
         fout.open("/dev/null");
-        if(! fout.good())
+        if (!fout.good())
             throw std::runtime_error{"open /dev/null failed"};
         out = &fout;
         err = &fout;
     }
 
-    if(metadata.configured.use_testnet_rules) // option priority No.1
+    if (metadata.configured.use_testnet_rules) // option priority No.1
     {
         metadata.configured.chain.use_testnet_rules = true;
 
@@ -76,5 +76,4 @@ int bc::main(int argc, char* argv[])
 
     executor host(metadata, cin, *out, *err);
     return host.menu() ? console_result::okay : console_result::failure;
-
 }

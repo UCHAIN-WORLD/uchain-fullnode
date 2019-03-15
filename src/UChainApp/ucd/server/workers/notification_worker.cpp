@@ -33,8 +33,10 @@
 #include <UChainApp/ucd/settings.hpp>
 #include <UChainApp/ucd/utility/fetch_helpers.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 #define NAME "notification_worker"
 
@@ -52,21 +54,21 @@ static const std::string address_stealth("address.stealth_update");
 static const std::string address_update2("address.update2");
 static const std::string penetration_update("penetration.update");
 
-notification_worker::notification_worker(zmq::authenticator& authenticator,
-    server_node& node, bool secure)
-  : worker(node.thread_pool()),
-    secure_(secure),
-    settings_(node.server_settings()),
-    node_(node),
-    authenticator_(authenticator),
-    payment_subscriber_(std::make_shared<payment_subscriber>(
-        node.thread_pool(), settings_.subscription_limit, NAME "_payment")),
-    stealth_subscriber_(std::make_shared<stealth_subscriber>(
-        node.thread_pool(), settings_.subscription_limit, NAME "_stealth")),
-    address_subscriber_(std::make_shared<address_subscriber>(
-        node.thread_pool(), settings_.subscription_limit, NAME "_address")),
-    penetration_subscriber_(std::make_shared<penetration_subscriber>(
-        node.thread_pool(), settings_.subscription_limit, NAME "_penetration"))
+notification_worker::notification_worker(zmq::authenticator &authenticator,
+                                         server_node &node, bool secure)
+    : worker(node.thread_pool()),
+      secure_(secure),
+      settings_(node.server_settings()),
+      node_(node),
+      authenticator_(authenticator),
+      payment_subscriber_(std::make_shared<payment_subscriber>(
+          node.thread_pool(), settings_.subscription_limit, NAME "_payment")),
+      stealth_subscriber_(std::make_shared<stealth_subscriber>(
+          node.thread_pool(), settings_.subscription_limit, NAME "_stealth")),
+      address_subscriber_(std::make_shared<address_subscriber>(
+          node.thread_pool(), settings_.subscription_limit, NAME "_address")),
+      penetration_subscriber_(std::make_shared<penetration_subscriber>(
+          node.thread_pool(), settings_.subscription_limit, NAME "_penetration"))
 {
 }
 
@@ -81,23 +83,23 @@ bool notification_worker::start()
     address_subscriber_->start();
     penetration_subscriber_->start();
 
-    if(settings_.block_service_enabled)
+    if (settings_.block_service_enabled)
     {
         // Subscribe to blockchain reorganizations.
         node_.subscribe_blockchain(
             std::bind(&notification_worker::handle_blockchain_reorganization,
-                this, _1, _2, _3, _4));
+                      this, _1, _2, _3, _4));
     }
 
     // Subscribe to transaction pool acceptances.
     node_.subscribe_transaction_pool(
         std::bind(&notification_worker::handle_transaction_pool,
-            this, _1, _2, _3));
+                  this, _1, _2, _3));
 
     // Subscribe to all inventory messages from all peers.
     node_.subscribe<bc::message::inventory>(
         std::bind(&notification_worker::handle_inventory,
-            this, _1, _2));
+                  this, _1, _2));
 
     return zmq::worker::start();
 }
@@ -162,11 +164,10 @@ int32_t notification_worker::purge_interval_milliseconds() const
 // Connect/Disconnect.
 //-----------------------------------------------------------------------------
 
-bool notification_worker::connect(socket& router)
+bool notification_worker::connect(socket &router)
 {
     const auto security = secure_ ? "secure" : "public";
-    const auto& endpoint = secure_ ? query_service::secure_notify :
-        query_service::public_notify;
+    const auto &endpoint = secure_ ? query_service::secure_notify : query_service::public_notify;
 
     const auto ec = router.connect(endpoint);
 
@@ -183,7 +184,7 @@ bool notification_worker::connect(socket& router)
     return true;
 }
 
-bool notification_worker::disconnect(socket& router)
+bool notification_worker::disconnect(socket &router)
 {
     const auto security = secure_ ? "secure" : "public";
 
@@ -216,12 +217,11 @@ void notification_worker::purge()
 // Sending.
 // ----------------------------------------------------------------------------
 
-void notification_worker::send(const route& reply_to,
-    const std::string& command, uint32_t id, const data_chunk& payload)
+void notification_worker::send(const route &reply_to,
+                               const std::string &command, uint32_t id, const data_chunk &payload)
 {
     const auto security = secure_ ? "secure" : "public";
-    const auto& endpoint = secure_ ? query_service::secure_notify :
-        query_service::public_notify;
+    const auto &endpoint = secure_ ? query_service::secure_notify : query_service::public_notify;
 
     zmq::socket notifier(authenticator_, zmq::socket::role::router);
     auto ec = notifier.connect(endpoint);
@@ -247,9 +247,9 @@ void notification_worker::send(const route& reply_to,
             << notification.route().display() << " " << ec.message();
 }
 
-void notification_worker::send_payment(const route& reply_to, uint32_t id,
-    const bc::wallet::payment_address& address, uint32_t height,
-    const hash_digest& block_hash, const chain::transaction& tx)
+void notification_worker::send_payment(const route &reply_to, uint32_t id,
+                                       const bc::wallet::payment_address &address, uint32_t height,
+                                       const hash_digest &block_hash, const chain::transaction &tx)
 {
     // [ address.version:1 ]
     // [ address.hash:20 ]
@@ -257,39 +257,35 @@ void notification_worker::send_payment(const route& reply_to, uint32_t id,
     // [ block_hash:32 ]
     // [ tx:... ]
     const auto payload = build_chunk(
-    {
-        to_array(address.version()),
-        address.hash(),
-        to_little_endian(height),
-        block_hash,
-        tx.to_data()
-    });
+        {to_array(address.version()),
+         address.hash(),
+         to_little_endian(height),
+         block_hash,
+         tx.to_data()});
 
     send(reply_to, address_update, id, payload);
 }
 
-void notification_worker::send_stealth(const route& reply_to, uint32_t id,
-    uint32_t prefix, uint32_t height, const hash_digest& block_hash,
-    const chain::transaction& tx)
+void notification_worker::send_stealth(const route &reply_to, uint32_t id,
+                                       uint32_t prefix, uint32_t height, const hash_digest &block_hash,
+                                       const chain::transaction &tx)
 {
     // [ prefix:4 ]
     // [ height:4 ]
     // [ block_hash:32 ]
     // [ tx:... ]
     const auto payload = build_chunk(
-    {
-        to_little_endian(prefix),
-        to_little_endian(height),
-        block_hash,
-        tx.to_data()
-    });
+        {to_little_endian(prefix),
+         to_little_endian(height),
+         block_hash,
+         tx.to_data()});
 
     send(reply_to, address_stealth, id, payload);
 }
 
-void notification_worker::send_address(const route& reply_to, uint32_t id,
-    uint8_t sequence, uint32_t height, const hash_digest& block_hash,
-    const chain::transaction& tx)
+void notification_worker::send_address(const route &reply_to, uint32_t id,
+                                       uint8_t sequence, uint32_t height, const hash_digest &block_hash,
+                                       const chain::transaction &tx)
 {
     // [ code:4 ]
     // [ sequence:1 ]
@@ -297,13 +293,11 @@ void notification_worker::send_address(const route& reply_to, uint32_t id,
     // [ block_hash:32 ]
     // [ tx:... ]
     const auto payload = build_chunk(
-    {
-        message::to_bytes(error::success),
-        to_array(sequence),
-        to_little_endian(height),
-        block_hash,
-        tx.to_data()
-    });
+        {message::to_bytes(error::success),
+         to_array(sequence),
+         to_little_endian(height),
+         block_hash,
+         tx.to_data()});
 
     send(reply_to, address_update2, id, payload);
 }
@@ -311,10 +305,10 @@ void notification_worker::send_address(const route& reply_to, uint32_t id,
 // Handlers.
 // ----------------------------------------------------------------------------
 
-bool notification_worker::handle_payment(const code& ec,
-    const payment_address& address, uint32_t height,
-    const hash_digest& block_hash, const chain::transaction& tx,
-    const route& reply_to, uint32_t id, const binary& prefix_filter)
+bool notification_worker::handle_payment(const code &ec,
+                                         const payment_address &address, uint32_t height,
+                                         const hash_digest &block_hash, const chain::transaction &tx,
+                                         const route &reply_to, uint32_t id, const binary &prefix_filter)
 {
     if (ec)
     {
@@ -328,10 +322,10 @@ bool notification_worker::handle_payment(const code& ec,
     return true;
 }
 
-bool notification_worker::handle_stealth(const code& ec,
-    uint32_t prefix, uint32_t height, const hash_digest& block_hash,
-    const chain::transaction& tx, const route& reply_to, uint32_t id,
-    const binary& prefix_filter)
+bool notification_worker::handle_stealth(const code &ec,
+                                         uint32_t prefix, uint32_t height, const hash_digest &block_hash,
+                                         const chain::transaction &tx, const route &reply_to, uint32_t id,
+                                         const binary &prefix_filter)
 {
     if (ec)
     {
@@ -345,10 +339,10 @@ bool notification_worker::handle_stealth(const code& ec,
     return true;
 }
 
-bool notification_worker::handle_address(const code& ec,
-    const binary& field, uint32_t height, const hash_digest& block_hash,
-    const chain::transaction& tx, const route& reply_to, uint32_t id,
-    const binary& prefix_filter, sequence_ptr sequence)
+bool notification_worker::handle_address(const code &ec,
+                                         const binary &field, uint32_t height, const hash_digest &block_hash,
+                                         const chain::transaction &tx, const route &reply_to, uint32_t id,
+                                         const binary &prefix_filter, sequence_ptr sequence)
 {
     if (ec)
     {
@@ -370,79 +364,79 @@ bool notification_worker::handle_address(const code& ec,
 
 // Subscribe to address and stealth prefix notifications.
 // Each delegate must connect to the appropriate query notification endpoint.
-void notification_worker::subscribe_address(const route& reply_to, uint32_t id,
-    const binary& prefix_filter, subscribe_type type)
+void notification_worker::subscribe_address(const route &reply_to, uint32_t id,
+                                            const binary &prefix_filter, subscribe_type type)
 {
     static const auto error_code = error::channel_stopped;
-    const auto& duration = settings_.subscription_expiration();
+    const auto &duration = settings_.subscription_expiration();
     const address_key key(reply_to, prefix_filter);
 
     switch (type)
     {
-        // v2/v3 (deprecated)
-        case subscribe_type::payment:
-        {
-            // This class must be kept in scope until work is terminated.
-            const auto handler =
-                std::bind(&notification_worker::handle_payment,
-                    this, _1, _2, _3, _4, _5, reply_to, id, prefix_filter);
+    // v2/v3 (deprecated)
+    case subscribe_type::payment:
+    {
+        // This class must be kept in scope until work is terminated.
+        const auto handler =
+            std::bind(&notification_worker::handle_payment,
+                      this, _1, _2, _3, _4, _5, reply_to, id, prefix_filter);
 
-            payment_subscriber_->subscribe(handler, key, duration, error_code,
-                {}, 0, {}, {});
-            break;
-        }
+        payment_subscriber_->subscribe(handler, key, duration, error_code,
+                                       {}, 0, {}, {});
+        break;
+    }
 
-        // v2/v3 (deprecated)
-        case subscribe_type::stealth:
-        {
-            // This class must be kept in scope until work is terminated.
-            const auto handler =
-                std::bind(&notification_worker::handle_stealth,
-                    this, _1, _2, _3, _4, _5, reply_to, id, prefix_filter);
+    // v2/v3 (deprecated)
+    case subscribe_type::stealth:
+    {
+        // This class must be kept in scope until work is terminated.
+        const auto handler =
+            std::bind(&notification_worker::handle_stealth,
+                      this, _1, _2, _3, _4, _5, reply_to, id, prefix_filter);
 
-            stealth_subscriber_->subscribe(handler, key, duration, error_code,
-                0, 0, {}, {});
-            break;
-        }
+        stealth_subscriber_->subscribe(handler, key, duration, error_code,
+                                       0, 0, {}, {});
+        break;
+    }
 
-        // v3
-        case subscribe_type::unspecified:
-        {
-            // The sequence enables the client to detect dropped messages.
-            const auto sequence = std::make_shared<uint8_t>(0);
+    // v3
+    case subscribe_type::unspecified:
+    {
+        // The sequence enables the client to detect dropped messages.
+        const auto sequence = std::make_shared<uint8_t>(0);
 
-            // This class must be kept in scope until work is terminated.
-            const auto handler =
-                std::bind(&notification_worker::handle_address,
-                    this, _1, _2, _3, _4, _5, reply_to, id, prefix_filter,
-                    sequence);
-
-            // v3
-            address_subscriber_->subscribe(handler, key, duration, error_code,
-                {}, 0, {}, {});
-            break;
-        }
+        // This class must be kept in scope until work is terminated.
+        const auto handler =
+            std::bind(&notification_worker::handle_address,
+                      this, _1, _2, _3, _4, _5, reply_to, id, prefix_filter,
+                      sequence);
 
         // v3
-        default:
-        case subscribe_type::unsubscribe:
-        {
-            // Just as with an expiration (purge) this will cause the stored
-            // handler (notification_worker::handle_address) to be invoked but
-            // with the specified error code (error::channel_stopped) as
-            // opposed to error::channel_timeout.
+        address_subscriber_->subscribe(handler, key, duration, error_code,
+                                       {}, 0, {}, {});
+        break;
+    }
 
-            // v3
-            address_subscriber_->unsubscribe(key, error_code, {}, 0, {}, {});
-            break;
-        }
+    // v3
+    default:
+    case subscribe_type::unsubscribe:
+    {
+        // Just as with an expiration (purge) this will cause the stored
+        // handler (notification_worker::handle_address) to be invoked but
+        // with the specified error code (error::channel_stopped) as
+        // opposed to error::channel_timeout.
+
+        // v3
+        address_subscriber_->unsubscribe(key, error_code, {}, 0, {}, {});
+        break;
+    }
     }
 }
 
 // Subscribe to transaction penetration notifications.
 // Each delegate must connect to the appropriate query notification endpoint.
-void notification_worker::subscribe_penetration(const route& reply_to,
-    uint32_t id, const hash_digest& tx_hash)
+void notification_worker::subscribe_penetration(const route &reply_to,
+                                                uint32_t id, const hash_digest &tx_hash)
 {
     // TODO:
     // Height and hash are zeroized if tx is not chained (inv/mempool).
@@ -461,8 +455,8 @@ void notification_worker::subscribe_penetration(const route& reply_to,
 // Notification (via blockchain).
 // ----------------------------------------------------------------------------
 
-bool notification_worker::handle_blockchain_reorganization(const code& ec,
-    uint64_t fork_point, const block_list& new_blocks, const block_list&)
+bool notification_worker::handle_blockchain_reorganization(const code &ec,
+                                                           uint64_t fork_point, const block_list &new_blocks, const block_list &)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;
@@ -485,14 +479,13 @@ bool notification_worker::handle_blockchain_reorganization(const code& ec,
 }
 
 void notification_worker::notify_blocks(uint32_t fork_point,
-    const block_list& blocks)
+                                        const block_list &blocks)
 {
     if (stopped())
         return;
 
     const auto security = secure_ ? "secure" : "public";
-    const auto& endpoint = secure_ ? block_service::secure_worker :
-        block_service::public_worker;
+    const auto &endpoint = secure_ ? block_service::secure_worker : block_service::public_worker;
 
     // Notifications are off the pub-sub thread so this must connect back.
     // This could be optimized by caching the socket as thread static.
@@ -514,19 +507,19 @@ void notification_worker::notify_blocks(uint32_t fork_point,
     BITCOIN_ASSERT(fork_point < max_uint32 - blocks.size());
     auto height = fork_point;
 
-    for (const auto block: blocks)
+    for (const auto block : blocks)
         notify_block(publisher, height++, block);
 }
 
-void notification_worker::notify_block(zmq::socket& publisher, uint32_t height,
-    const block::ptr block)
+void notification_worker::notify_block(zmq::socket &publisher, uint32_t height,
+                                       const block::ptr block)
 {
     if (stopped())
         return;
 
     const auto block_hash = block->header.hash();
 
-    for (const auto& tx: block->transactions)
+    for (const auto &tx : block->transactions)
     {
         const auto tx_hash = tx.hash();
 
@@ -539,8 +532,8 @@ void notification_worker::notify_block(zmq::socket& publisher, uint32_t height,
 // ----------------------------------------------------------------------------
 // This relies on peers always notifying us of new txs via inv messages.
 
-bool notification_worker::handle_inventory(const code& ec,
-    const bc::message::inventory::ptr packet)
+bool notification_worker::handle_inventory(const code &ec,
+                                           const bc::message::inventory::ptr packet)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;
@@ -555,7 +548,7 @@ bool notification_worker::handle_inventory(const code& ec,
     }
 
     // Loop inventories and extract transaction hashes.
-    for (const auto& inventory: packet->inventories)
+    for (const auto &inventory : packet->inventories)
         if (inventory.is_transaction_type())
             notify_penetration(0, null_hash, inventory.hash);
 
@@ -565,8 +558,8 @@ bool notification_worker::handle_inventory(const code& ec,
 // Notification (via mempool).
 // ----------------------------------------------------------------------------
 
-bool notification_worker::handle_transaction_pool(const code& ec,
-    const point::indexes&, bc::message::transaction_message::ptr tx)
+bool notification_worker::handle_transaction_pool(const code &ec,
+                                                  const point::indexes &, bc::message::transaction_message::ptr tx)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;
@@ -591,7 +584,7 @@ bool notification_worker::handle_transaction_pool(const code& ec,
 
 // This parsing is duplicated by bc::database::data_base.
 void notification_worker::notify_transaction(uint32_t height,
-    const hash_digest& block_hash, const transaction& tx)
+                                             const hash_digest &block_hash, const transaction &tx)
 {
     uint32_t prefix;
 
@@ -604,7 +597,7 @@ void notification_worker::notify_transaction(uint32_t height,
 
     // see data_base::push_inputs
     // Loop inputs and extract payment addresses.
-    for (const auto& input: tx.inputs)
+    for (const auto &input : tx.inputs)
     {
         const auto address = payment_address::extract(input.script);
 
@@ -618,7 +611,7 @@ void notification_worker::notify_transaction(uint32_t height,
 
     // see data_base::push_outputs
     // Loop outputs and extract payment addresses.
-    for (const auto& output: tx.outputs)
+    for (const auto &output : tx.outputs)
     {
         const auto address = payment_address::extract(output.script);
 
@@ -634,8 +627,8 @@ void notification_worker::notify_transaction(uint32_t height,
     // Loop output pairs and extract stealth payments.
     for (size_t index = 0; index < (tx.outputs.size() - 1); ++index)
     {
-        const auto& ephemeral_script = tx.outputs[index].script;
-        const auto& payment_script = tx.outputs[index + 1].script;
+        const auto &ephemeral_script = tx.outputs[index].script;
+        const auto &payment_script = tx.outputs[index + 1].script;
 
         // Try to extract a stealth prefix from the first output.
         // Try to extract the payment address from the second output.
@@ -650,8 +643,8 @@ void notification_worker::notify_transaction(uint32_t height,
 }
 
 // v2/v3 (deprecated)
-void notification_worker::notify_payment(const payment_address& address,
-    uint32_t height, const hash_digest& block_hash, const transaction& tx)
+void notification_worker::notify_payment(const payment_address &address,
+                                         uint32_t height, const hash_digest &block_hash, const transaction &tx)
 {
     static const auto code = error::success;
     payment_subscriber_->relay(code, address, height, block_hash, tx);
@@ -659,15 +652,15 @@ void notification_worker::notify_payment(const payment_address& address,
 
 // v2/v3 (deprecated)
 void notification_worker::notify_stealth(uint32_t prefix, uint32_t height,
-    const hash_digest& block_hash, const transaction& tx)
+                                         const hash_digest &block_hash, const transaction &tx)
 {
     static const auto code = error::success;
     stealth_subscriber_->relay(code, prefix, height, block_hash, tx);
 }
 
 // v3
-void notification_worker::notify_address(const binary& field, uint32_t height,
-    const hash_digest& block_hash, const transaction& tx)
+void notification_worker::notify_address(const binary &field, uint32_t height,
+                                         const hash_digest &block_hash, const transaction &tx)
 {
     static const auto code = error::success;
     address_subscriber_->relay(code, field, height, block_hash, tx);
@@ -675,7 +668,7 @@ void notification_worker::notify_address(const binary& field, uint32_t height,
 
 // v3.x
 void notification_worker::notify_penetration(uint32_t height,
-    const hash_digest& block_hash, const hash_digest& tx_hash)
+                                             const hash_digest &block_hash, const hash_digest &tx_hash)
 {
     static const auto code = error::success;
     penetration_subscriber_->relay(code, height, block_hash, tx_hash);

@@ -21,20 +21,22 @@
 
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 // Construct with defaults derived from given context.
 configuration::configuration(bc::settings context)
-  : node::configuration(context),
-    server(context)
+    : node::configuration(context),
+      server(context)
 {
 }
 
 // Copy constructor.
-configuration::configuration(const configuration& other)
-  : node::configuration(other),
-    server(other.server)
+configuration::configuration(const configuration &other)
+    : node::configuration(other),
+      server(other.server)
 {
 }
 

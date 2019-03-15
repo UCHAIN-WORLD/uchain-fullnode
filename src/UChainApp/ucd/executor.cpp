@@ -34,8 +34,10 @@
 #include <UChainService/txs/utility/callstack.hpp>
 #include <UChainService/txs/utility/path.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using boost::format;
 using namespace std::placeholders;
@@ -52,18 +54,15 @@ static const auto application_name = "bs";
 
 std::promise<code> executor::stopping_;
 
-executor::executor(parser& metadata, std::istream& input,
-    std::ostream& output, std::ostream& error)
-  : metadata_(metadata), output_(output),
-    debug_file_((metadata_.configured.network.debug_file == "debug.log" ? \
-                        (default_data_path() / metadata_.configured.network.debug_file) : metadata_.configured.network.debug_file).string(), append),
-    error_file_((metadata_.configured.network.error_file == "error.log" ? \
-                        (default_data_path() / metadata_.configured.network.error_file) : metadata_.configured.network.error_file).string(), append)
+executor::executor(parser &metadata, std::istream &input,
+                   std::ostream &output, std::ostream &error)
+    : metadata_(metadata), output_(output),
+      debug_file_((metadata_.configured.network.debug_file == "debug.log" ? (default_data_path() / metadata_.configured.network.debug_file) : metadata_.configured.network.debug_file).string(), append),
+      error_file_((metadata_.configured.network.error_file == "error.log" ? (default_data_path() / metadata_.configured.network.error_file) : metadata_.configured.network.error_file).string(), append)
 {
     initialize_logging(debug_file_, error_file_, output, error, metadata_.configured.server.log_level);
     handle_stop(initialize_stop);
 }
-
 
 // Command line options.
 // ----------------------------------------------------------------------------
@@ -88,12 +87,13 @@ void executor::do_settings()
 void executor::do_version()
 {
     output_ << format(BS_VERSION_MESSAGE) %
-        UC_VERSION %
-        UC_SERVER_VERSION %
-        UC_PROTOCOL_VERSION %
-        UC_NODE_VERSION %
-        UC_BLOCKCHAIN_VERSION %
-        UC_VERSION << std::endl;
+                   UC_VERSION %
+                   UC_SERVER_VERSION %
+                   UC_PROTOCOL_VERSION %
+                   UC_NODE_VERSION %
+                   UC_BLOCKCHAIN_VERSION %
+                   UC_VERSION
+            << std::endl;
 }
 
 void executor::set_admin()
@@ -121,8 +121,8 @@ bool executor::do_initchain()
 
     boost::system::error_code ec;
 
-    const auto& directory = metadata_.configured.database.directory;
-    const auto& data_path = directory;
+    const auto &directory = metadata_.configured.database.directory;
+    const auto &data_path = directory;
 
     if (create_directories(data_path, ec))
     {
@@ -130,14 +130,15 @@ bool executor::do_initchain()
 
         // Unfortunately we are still limited to a choice of hardcoded chains.
         //const auto genesis = metadata_.configured.chain.use_testnet_rules ?
-         //   chain::block::genesis_testnet() : chain::block::genesis_mainnet();
+        //   chain::block::genesis_testnet() : chain::block::genesis_mainnet();
         auto genesis = consensus::miner::create_genesis_block(!metadata_.configured.chain.use_testnet_rules);
 
         const auto result = data_base::initialize(data_path, *genesis);
-        if (!result) {
+        if (!result)
+        {
             //rm directories
             remove_all(data_path);
-            throw std::runtime_error{ "initialize chain failed" };
+            throw std::runtime_error{"initialize chain failed"};
         }
         // init admin wallet
         set_admin();
@@ -148,8 +149,9 @@ bool executor::do_initchain()
     }
     else if (UC_DATABASE_VERSION_NUMBER >= 63)
     {
-        if (!data_base::upgrade_version_63(data_path)) {
-            throw std::runtime_error{ " upgrade database to version 63 failed!" };
+        if (!data_base::upgrade_version_63(data_path))
+        {
+            throw std::runtime_error{" upgrade database to version 63 failed!"};
         }
     }
 
@@ -168,7 +170,7 @@ bool executor::do_initchain()
 
 bool executor::menu()
 {
-    const auto& config = metadata_.configured;
+    const auto &config = metadata_.configured;
 
     if (config.help)
     {
@@ -192,12 +194,15 @@ bool executor::menu()
     {
         log::info(LOG_SERVER) << "Ucd version is " << UC_VERSION;
         // set block data absolute path
-        const auto& directory = metadata_.configured.database.directory ;
-        if (!directory.is_absolute()) {
-            const auto& home = metadata_.configured.data_dir ;
-            metadata_.configured.database.directory = home / directory ;
-        } else {
-            const auto& default_directory = metadata_.configured.database.default_directory;
+        const auto &directory = metadata_.configured.database.directory;
+        if (!directory.is_absolute())
+        {
+            const auto &home = metadata_.configured.data_dir;
+            metadata_.configured.database.directory = home / directory;
+        }
+        else
+        {
+            const auto &default_directory = metadata_.configured.database.default_directory;
             metadata_.configured.database.directory = directory / default_directory;
         }
 
@@ -208,7 +213,8 @@ bool executor::menu()
             return result;
         }
     }
-    catch(const std::exception& e){ // initialize failed
+    catch (const std::exception &e)
+    { // initialize failed
         //log::error(LOG_SERVER) << format(BS_INITCHAIN_EXISTS) % data_path;
         log::error(LOG_SERVER) << "initialize chain failed," << e.what();
         return false;
@@ -223,7 +229,7 @@ bool executor::menu()
 
 bool executor::run()
 {
-//    initialize_output();
+    //    initialize_output();
 
     log::info(LOG_SERVER) << BS_NODE_STARTING;
 
@@ -239,7 +245,7 @@ bool executor::run()
     // The callback may be returned on the same thread.
     node_->start(
         std::bind(&executor::handle_started,
-            this, _1));
+                  this, _1));
 
     // Wait for stop.
     stopping_.get_future().wait();
@@ -256,7 +262,7 @@ bool executor::run()
 }
 
 // Handle the completion of the start sequence and begin the run sequence.
-void executor::handle_started(const code& ec)
+void executor::handle_started(const code &ec)
 {
     if (ec)
     {
@@ -270,16 +276,16 @@ void executor::handle_started(const code& ec)
     // This is the beginning of the stop sequence.
     node_->subscribe_stop(
         std::bind(&executor::handle_stopped,
-            this, _1));
+                  this, _1));
 
     // This is the beginning of the run sequence.
     node_->run(
         std::bind(&executor::handle_running,
-            this, _1));
+                  this, _1));
 }
 
 // This is the end of the run sequence.
-void executor::handle_running(const code& ec)
+void executor::handle_running(const code &ec)
 {
     if (ec)
     {
@@ -292,7 +298,7 @@ void executor::handle_running(const code& ec)
 }
 
 // This is the end of the stop sequence.
-void executor::handle_stopped(const code& ec)
+void executor::handle_stopped(const code &ec)
 {
     stop(ec);
 }
@@ -310,7 +316,7 @@ void executor::handle_stop(int code)
     if (code == initialize_stop)
         return;
 
-    if(SIGINT != code)
+    if (SIGINT != code)
     {
         do_callstack("signal.out");
     }
@@ -319,10 +325,10 @@ void executor::handle_stop(int code)
     stop(error::success);
 }
 
-void executor::stop(const code& ec)
+void executor::stop(const code &ec)
 {
     static std::once_flag stop_mutex;
-    std::call_once(stop_mutex, [&](){ stopping_.set_value(ec); });
+    std::call_once(stop_mutex, [&]() { stopping_.set_value(ec); });
 }
 
 // Utilities.
@@ -331,10 +337,11 @@ void executor::stop(const code& ec)
 // Set up logging.
 void executor::initialize_output()
 {
-    //log::info(LOG_SERVER) << BS_LOG_HEADER; 
-    auto file = metadata_.configured.file.string().compare("uc.conf") \
-                        ? metadata_.configured.file:default_data_path() / metadata_.configured.file;
-   
+    //log::info(LOG_SERVER) << BS_LOG_HEADER;
+    auto file = metadata_.configured.file.string().compare("uc.conf")
+                    ? metadata_.configured.file
+                    : default_data_path() / metadata_.configured.file;
+
     if (file.empty())
         log::info(LOG_SERVER) << BS_USING_DEFAULT_CONFIG;
     else
@@ -345,7 +352,7 @@ void executor::initialize_output()
 bool executor::verify_directory()
 {
     boost::system::error_code ec;
-    const auto& directory = metadata_.configured.database.directory;
+    const auto &directory = metadata_.configured.database.directory;
     auto data_path = directory;
 
     if (exists(data_path, ec))
@@ -367,7 +374,7 @@ void executor::set_minimum_threadpool_size()
 {
     metadata_.configured.network.threads =
         std::max(metadata_.configured.network.threads,
-            server_node::threads_required(metadata_.configured));
+                 server_node::threads_required(metadata_.configured));
 }
 
 } // namespace server

@@ -31,19 +31,21 @@
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace std::placeholders;
 using namespace bc::protocol;
 
-query_worker::query_worker(zmq::authenticator& authenticator,
-    server_node& node, bool secure)
-  : worker(node.thread_pool()),
-    secure_(secure),
-    settings_(node.server_settings()),
-    node_(node),
-    authenticator_(authenticator)
+query_worker::query_worker(zmq::authenticator &authenticator,
+                           server_node &node, bool secure)
+    : worker(node.thread_pool()),
+      secure_(secure),
+      settings_(node.server_settings()),
+      node_(node),
+      authenticator_(authenticator)
 {
     // The same interface is attached to the secure and public interfaces.
     attach_interface();
@@ -76,11 +78,10 @@ void query_worker::work()
 // Connect/Disconnect.
 //-----------------------------------------------------------------------------
 
-bool query_worker::connect(zmq::socket& router)
+bool query_worker::connect(zmq::socket &router)
 {
     const auto security = secure_ ? "secure" : "public";
-    const auto& endpoint = secure_ ? query_service::secure_query :
-        query_service::public_query;
+    const auto &endpoint = secure_ ? query_service::secure_query : query_service::public_query;
 
     const auto ec = router.connect(endpoint);
 
@@ -97,7 +98,7 @@ bool query_worker::connect(zmq::socket& router)
     return true;
 }
 
-bool query_worker::disconnect(zmq::socket& router)
+bool query_worker::disconnect(zmq::socket &router)
 {
     const auto security = secure_ ? "secure" : "public";
 
@@ -116,15 +117,14 @@ bool query_worker::disconnect(zmq::socket& router)
 // Because the socket is a router we may simply drop invalid queries.
 // As a single thread worker this router should not reach high water.
 // If we implemented as a replier we would need to always provide a response.
-void query_worker::query(zmq::socket& router)
+void query_worker::query(zmq::socket &router)
 {
     if (stopped())
         return;
 
     // TODO: rewrite the serial blockchain interface to avoid callbacks.
     // We are using a closure vs. bind to take advantage of move arg syntax.
-    const auto sender = [&router](message&& response)
-    {
+    const auto sender = [&router](message &&response) {
         const auto ec = response.send(router);
 
         if (ec && ec != (code)error::service_stopped)
@@ -167,7 +167,7 @@ void query_worker::query(zmq::socket& router)
         << request.route().display();
 
     // The query executor is the delegate bound by the attach method.
-    const auto& query_execute = handler->second;
+    const auto &query_execute = handler->second;
 
     // Execute the request and forward result to queue.
     // Example: address.renew(node_, request, sender);
@@ -179,13 +179,13 @@ void query_worker::query(zmq::socket& router)
 // ----------------------------------------------------------------------------
 
 // Class and method names must match protocol expectations (do not change).
-#define ATTACH(class_name, method_name, node) \
-    attach(#class_name "." #method_name, \
-        std::bind(&bc::server::class_name::method_name, \
-            std::ref(node), _1, _2));
+#define ATTACH(class_name, method_name, node)              \
+    attach(#class_name "." #method_name,                   \
+           std::bind(&bc::server::class_name::method_name, \
+                     std::ref(node), _1, _2));
 
-void query_worker::attach(const std::string& command,
-    command_handler handler)
+void query_worker::attach(const std::string &command,
+                          command_handler handler)
 {
     command_handlers_[command] = handler;
 }
