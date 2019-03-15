@@ -27,8 +27,10 @@
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace std::placeholders;
 using namespace bc::chain;
@@ -39,13 +41,13 @@ static const auto domain = "transaction";
 const config::endpoint transaction_service::public_worker("inproc://public_tx");
 const config::endpoint transaction_service::secure_worker("inproc://secure_tx");
 
-transaction_service::transaction_service(zmq::authenticator& authenticator,
-    server_node& node, bool secure)
-  : worker(node.thread_pool()),
-    secure_(secure),
-    settings_(node.server_settings()),
-    authenticator_(authenticator),
-    node_(node)
+transaction_service::transaction_service(zmq::authenticator &authenticator,
+                                         server_node &node, bool secure)
+    : worker(node.thread_pool()),
+      secure_(secure),
+      settings_(node.server_settings()),
+      authenticator_(authenticator),
+      node_(node)
 {
 }
 
@@ -55,11 +57,10 @@ bool transaction_service::start()
     // Subscribe to transaction pool acceptances.
     node_.subscribe_transaction_pool(
         std::bind(&transaction_service::handle_transaction,
-            this, _1, _2, _3));
+                  this, _1, _2, _3));
 
     return zmq::worker::start();
 }
-
 
 // No unsubscribe so must be kept in scope until subscriber stop complete.
 bool transaction_service::stop()
@@ -89,12 +90,11 @@ void transaction_service::work()
 // Bind/Unbind.
 //-----------------------------------------------------------------------------
 
-bool transaction_service::bind(zmq::socket& xpub, zmq::socket& xsub)
+bool transaction_service::bind(zmq::socket &xpub, zmq::socket &xsub)
 {
     const auto security = secure_ ? "secure" : "public";
-    const auto& worker = secure_ ? secure_worker : public_worker;
-    const auto& service = secure_ ? settings_.secure_transaction_endpoint :
-        settings_.public_transaction_endpoint;
+    const auto &worker = secure_ ? secure_worker : public_worker;
+    const auto &service = secure_ ? settings_.secure_transaction_endpoint : settings_.public_transaction_endpoint;
 
     if (!authenticator_.apply(xpub, domain, secure_))
         return false;
@@ -124,7 +124,7 @@ bool transaction_service::bind(zmq::socket& xpub, zmq::socket& xsub)
     return true;
 }
 
-bool transaction_service::unbind(zmq::socket& xpub, zmq::socket& xsub)
+bool transaction_service::unbind(zmq::socket &xpub, zmq::socket &xsub)
 {
     // Stop both even if one fails.
     const auto service_stop = xpub.stop();
@@ -146,8 +146,8 @@ bool transaction_service::unbind(zmq::socket& xpub, zmq::socket& xsub)
 // Publish (integral worker).
 // ----------------------------------------------------------------------------
 
-bool transaction_service::handle_transaction(const code& ec, const index_list&,
-    transaction_message::ptr tx)
+bool transaction_service::handle_transaction(const code &ec, const index_list &,
+                                             transaction_message::ptr tx)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;
@@ -171,14 +171,13 @@ bool transaction_service::handle_transaction(const code& ec, const index_list&,
 }
 
 // [ tx... ]
-void transaction_service::publish_transaction(const transaction& tx)
+void transaction_service::publish_transaction(const transaction &tx)
 {
     if (stopped())
         return;
 
     const auto security = secure_ ? "secure" : "public";
-    const auto& endpoint = secure_ ? transaction_service::secure_worker :
-        transaction_service::public_worker;
+    const auto &endpoint = secure_ ? transaction_service::secure_worker : transaction_service::public_worker;
 
     // Subscriptions are off the pub-sub thread so this must connect back.
     // This could be optimized by caching the socket as thread static.

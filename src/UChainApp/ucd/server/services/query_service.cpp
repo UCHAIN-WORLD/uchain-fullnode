@@ -24,8 +24,10 @@
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace bc::config;
 using namespace bc::protocol;
@@ -36,12 +38,12 @@ const config::endpoint query_service::secure_query("inproc://secure_query");
 const config::endpoint query_service::public_notify("inproc://public_notify");
 const config::endpoint query_service::secure_notify("inproc://secure_notify");
 
-query_service::query_service(zmq::authenticator& authenticator,
-    server_node& node, bool secure)
-  : worker(node.thread_pool()),
-    secure_(secure),
-    settings_(node.server_settings()),
-    authenticator_(authenticator)
+query_service::query_service(zmq::authenticator &authenticator,
+                             server_node &node, bool secure)
+    : worker(node.thread_pool()),
+      secure_(secure),
+      settings_(node.server_settings()),
+      authenticator_(authenticator)
 {
 }
 
@@ -96,14 +98,13 @@ void query_service::work()
 // Bind/Unbind.
 //-----------------------------------------------------------------------------
 
-bool query_service::bind(zmq::socket& router, zmq::socket& query_dealer,
-    zmq::socket& notify_dealer)
+bool query_service::bind(zmq::socket &router, zmq::socket &query_dealer,
+                         zmq::socket &notify_dealer)
 {
     const auto security = secure_ ? "secure" : "public";
-    const auto& query_worker = secure_ ? secure_query : public_query;
-    const auto& notify_worker = secure_ ? secure_notify : public_notify;
-    const auto& query_service = secure_ ? settings_.secure_query_endpoint :
-        settings_.public_query_endpoint;
+    const auto &query_worker = secure_ ? secure_query : public_query;
+    const auto &notify_worker = secure_ ? secure_notify : public_notify;
+    const auto &query_service = secure_ ? settings_.secure_query_endpoint : settings_.public_query_endpoint;
 
     if (!authenticator_.apply(router, domain, secure_))
         return false;
@@ -143,8 +144,8 @@ bool query_service::bind(zmq::socket& router, zmq::socket& query_dealer,
     return true;
 }
 
-bool query_service::unbind(zmq::socket& router, zmq::socket& query_dealer,
-    zmq::socket& notify_dealer)
+bool query_service::unbind(zmq::socket &router, zmq::socket &query_dealer,
+                           zmq::socket &notify_dealer)
 {
     // Stop all even if one fails.
     const auto service_stop = router.stop();
