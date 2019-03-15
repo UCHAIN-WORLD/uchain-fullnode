@@ -26,8 +26,10 @@
 #include <UChainApp/ucd/config.hpp>
 #include <UChainApp/ucd/messages/message.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace bc::blockchain;
 using namespace bc::chain;
@@ -37,13 +39,13 @@ using namespace bc::wallet;
 // fetch_history stuff
 // ----------------------------------------------------------------------------
 
-bool unwrap_fetch_history_args(payment_address& address,
-    uint32_t& from_height, const message& request)
+bool unwrap_fetch_history_args(payment_address &address,
+                               uint32_t &from_height, const message &request)
 {
     static constexpr size_t history_args_size = sizeof(uint8_t) +
-        short_hash_size + sizeof(uint32_t);
+                                                short_hash_size + sizeof(uint32_t);
 
-    const auto& data = request.data();
+    const auto &data = request.data();
 
     if (data.size() != history_args_size)
     {
@@ -62,18 +64,18 @@ bool unwrap_fetch_history_args(payment_address& address,
     return true;
 }
 
-void send_history_result(const code& ec, const history_compact::list& history,
-    const message& request, send_handler handler)
+void send_history_result(const code &ec, const history_compact::list &history,
+                         const message &request, send_handler handler)
 {
     static constexpr size_t row_size = sizeof(uint8_t) + point_size +
-        sizeof(uint32_t) + sizeof(uint64_t);
+                                       sizeof(uint32_t) + sizeof(uint64_t);
 
     data_chunk result(code_size + row_size * history.size());
     auto serial = make_serializer(result.begin());
     serial.write_error_code(ec);
     BITCOIN_ASSERT(serial.iterator() == result.begin() + code_size);
 
-    for (const auto& row: history)
+    for (const auto &row : history)
     {
         BITCOIN_ASSERT(row.height <= max_uint32);
         serial.write_byte(static_cast<uint8_t>(row.kind));
@@ -90,10 +92,10 @@ void send_history_result(const code& ec, const history_compact::list& history,
 // fetch_transaction stuff
 // ----------------------------------------------------------------------------
 
-bool unwrap_fetch_transaction_args(hash_digest& hash,
-    const message& request)
+bool unwrap_fetch_transaction_args(hash_digest &hash,
+                                   const message &request)
 {
-    const auto& data = request.data();
+    const auto &data = request.data();
 
     if (data.size() != hash_size)
     {
@@ -107,26 +109,25 @@ bool unwrap_fetch_transaction_args(hash_digest& hash,
     return true;
 }
 
-void chain_transaction_fetched(const code& ec, const chain::transaction& tx,
-    const message& request, send_handler handler)
+void chain_transaction_fetched(const code &ec, const chain::transaction &tx,
+                               const message &request, send_handler handler)
 {
     // wdy add for tx is null reference
-    if((code)error::not_found == ec) {
+    if ((code)error::not_found == ec)
+    {
         handler(message(request, error::not_found));
         return;
     }
 
     const auto result = build_chunk(
-    {
-        message::to_bytes(ec),
-        tx.to_data()
-    });
+        {message::to_bytes(ec),
+         tx.to_data()});
 
     handler(message(request, result));
 }
 
-void pool_transaction_fetched(const code& ec, transaction_message::ptr tx,
-    const message& request, send_handler handler)
+void pool_transaction_fetched(const code &ec, transaction_message::ptr tx,
+                              const message &request, send_handler handler)
 {
     chain_transaction_fetched(ec, *tx, request, handler);
 }
