@@ -37,32 +37,34 @@
 #include <shellapi.h>
 #endif
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace std::placeholders;
 using namespace bc::chain;
 using namespace bc::node;
 using namespace bc::protocol;
 
-server_node::server_node(const configuration& configuration)
-  : p2p_node(configuration),
-    under_blockchain_sync_(true),
-    configuration_(configuration),
-    authenticator_(*this),
-    secure_query_service_(authenticator_, *this, true),
-    public_query_service_(authenticator_, *this, false),
-    secure_heartbeat_service_(authenticator_, *this, true),
-    public_heartbeat_service_(authenticator_, *this, false),
-    secure_block_service_(authenticator_, *this, true),
-    public_block_service_(authenticator_, *this, false),
-    secure_transaction_service_(authenticator_, *this, true),
-    public_transaction_service_(authenticator_, *this, false),
-    secure_notification_worker_(authenticator_, *this, true),
-    public_notification_worker_(authenticator_, *this, false),
-    miner_(*this),
-    rest_server_(new mgbubble::RestServ(webpage_path_.string().data(), *this, configuration.server.mongoose_listen)),
-    push_server_(new mgbubble::WsPushServ(*this, configuration.server.websocket_listen))
+server_node::server_node(const configuration &configuration)
+    : p2p_node(configuration),
+      under_blockchain_sync_(true),
+      configuration_(configuration),
+      authenticator_(*this),
+      secure_query_service_(authenticator_, *this, true),
+      public_query_service_(authenticator_, *this, false),
+      secure_heartbeat_service_(authenticator_, *this, true),
+      public_heartbeat_service_(authenticator_, *this, false),
+      secure_block_service_(authenticator_, *this, true),
+      public_block_service_(authenticator_, *this, false),
+      secure_transaction_service_(authenticator_, *this, true),
+      public_transaction_service_(authenticator_, *this, false),
+      secure_notification_worker_(authenticator_, *this, true),
+      public_notification_worker_(authenticator_, *this, false),
+      miner_(*this),
+      rest_server_(new mgbubble::RestServ(webpage_path_.string().data(), *this, configuration.server.mongoose_listen)),
+      push_server_(new mgbubble::WsPushServ(*this, configuration.server.websocket_listen))
 {
 }
 
@@ -75,7 +77,7 @@ server_node::~server_node()
 // Properties.
 // ----------------------------------------------------------------------------
 
-const settings& server_node::server_settings() const
+const settings &server_node::server_settings() const
 {
     return configuration_.server;
 }
@@ -101,10 +103,10 @@ void server_node::run(result_handler handler)
     // The handler is invoked on a new thread.
     p2p_node::run(
         std::bind(&server_node::handle_running,
-            this, _1, handler));
+                  this, _1, handler));
 }
 
-void server_node::handle_running(const code& ec, result_handler handler)
+void server_node::handle_running(const code &ec, result_handler handler)
 {
     if (stopped())
     {
@@ -147,7 +149,7 @@ bool server_node::close()
 }
 
 /// Get miner.
-consensus::miner& server_node::miner()
+consensus::miner &server_node::miner()
 {
     return miner_;
 }
@@ -156,8 +158,8 @@ consensus::miner& server_node::miner()
 // ----------------------------------------------------------------------------
 
 // Subscribe to address (including stealth) prefix notifications.
-void server_node::subscribe_address(const route& reply_to, uint32_t id,
-    const binary& prefix_filter, subscribe_type type)
+void server_node::subscribe_address(const route &reply_to, uint32_t id,
+                                    const binary &prefix_filter, subscribe_type type)
 {
     if (reply_to.secure)
         secure_notification_worker_
@@ -168,8 +170,8 @@ void server_node::subscribe_address(const route& reply_to, uint32_t id,
 }
 
 // Subscribe to transaction penetration notifications.
-void server_node::subscribe_penetration(const route& reply_to, uint32_t id,
-    const hash_digest& tx_hash)
+void server_node::subscribe_penetration(const route &reply_to, uint32_t id,
+                                        const hash_digest &tx_hash)
 {
     if (reply_to.secure)
         secure_notification_worker_
@@ -184,22 +186,21 @@ void server_node::subscribe_penetration(const route& reply_to, uint32_t id,
 
 bool server_node::start_services()
 {
-    return
-        start_authenticator() && start_query_services() &&
-        start_heartbeat_services() && start_block_services() &&
-        start_transaction_services();
+    return start_authenticator() && start_query_services() &&
+           start_heartbeat_services() && start_block_services() &&
+           start_transaction_services();
 }
 
 bool server_node::start_authenticator()
 {
-    const auto& settings = configuration_.server;
+    const auto &settings = configuration_.server;
     const auto heartbeat_interval = settings.heartbeat_interval_seconds;
 
     if ((!settings.server_private_key && settings.secure_only) ||
         ((!settings.query_service_enabled || settings.query_workers == 0) &&
-        (!settings.heartbeat_service_enabled || heartbeat_interval == 0) &&
-        (!settings.block_service_enabled) &&
-        (!settings.transaction_service_enabled)))
+         (!settings.heartbeat_service_enabled || heartbeat_interval == 0) &&
+         (!settings.block_service_enabled) &&
+         (!settings.transaction_service_enabled)))
         return true;
 
     return authenticator_.start();
@@ -207,29 +208,29 @@ bool server_node::start_authenticator()
 
 bool server_node::start_query_services()
 {
-    const auto& settings = configuration_.server;
+    const auto &settings = configuration_.server;
 
     if (!settings.query_service_enabled || settings.query_workers == 0)
         return true;
 
     // Start secure service, query workers and notification workers if enabled.
     if (settings.server_private_key && (!secure_query_service_.start() ||
-        (settings.subscription_limit > 0 && !secure_notification_worker_.start()) ||
-        !start_query_workers(true)))
-            return false;
+                                        (settings.subscription_limit > 0 && !secure_notification_worker_.start()) ||
+                                        !start_query_workers(true)))
+        return false;
 
     // Start public service, query workers and notification workers if enabled.
     if (!settings.secure_only && (!public_query_service_.start() ||
-        (settings.subscription_limit > 0 && !public_notification_worker_.start()) ||
-        !start_query_workers(false)))
-            return false;
+                                  (settings.subscription_limit > 0 && !public_notification_worker_.start()) ||
+                                  !start_query_workers(false)))
+        return false;
 
     return true;
 }
 
 bool server_node::start_heartbeat_services()
 {
-    const auto& settings = configuration_.server;
+    const auto &settings = configuration_.server;
 
     if (!settings.heartbeat_service_enabled ||
         settings.heartbeat_interval_seconds == 0)
@@ -248,7 +249,7 @@ bool server_node::start_heartbeat_services()
 
 bool server_node::start_block_services()
 {
-    const auto& settings = configuration_.server;
+    const auto &settings = configuration_.server;
 
     if (!settings.block_service_enabled)
         return true;
@@ -266,7 +267,7 @@ bool server_node::start_block_services()
 
 bool server_node::start_transaction_services()
 {
-    const auto& settings = configuration_.server;
+    const auto &settings = configuration_.server;
 
     if (!settings.transaction_service_enabled)
         return true;
@@ -285,18 +286,18 @@ bool server_node::start_transaction_services()
 // Called from start_query_services.
 bool server_node::start_query_workers(bool secure)
 {
-    auto& server = *this;
-    const auto& settings = configuration_.server;
+    auto &server = *this;
+    const auto &settings = configuration_.server;
 
     for (auto count = 0; count < settings.query_workers; ++count)
     {
         auto worker = std::make_shared<query_worker>(authenticator_,
-            server, secure);
+                                                     server, secure);
 
         if (!worker->start())
             return false;
 
-        subscribe_stop([=](const code&) { worker->stop(); });
+        subscribe_stop([=](const code &) { worker->stop(); });
     }
 
     return true;
@@ -308,20 +309,20 @@ bool server_node::open_ui()
     const TCHAR szOperation[] = _T("open");
     const TCHAR szAddress[] = _T("http://127.0.0.1:8707");
     HINSTANCE hRslt = ShellExecute(NULL, szOperation,
-        szAddress, NULL, NULL, SW_SHOWNORMAL);
+                                   szAddress, NULL, NULL, SW_SHOWNORMAL);
 
     if (hRslt <= (HINSTANCE)HINSTANCE_ERROR)
         log::error("shell execute failed when open UI");
-        return false;
+    return false;
     log::info("UI on display");
 #endif
     return true;
 }
 
 // static
-uint32_t server_node::threads_required(const configuration& configuration)
+uint32_t server_node::threads_required(const configuration &configuration)
 {
-    const auto& settings = configuration.server;
+    const auto &settings = configuration.server;
     const auto threads = configuration.network.threads;
     const auto heartbeat_interval = settings.heartbeat_interval_seconds;
 
