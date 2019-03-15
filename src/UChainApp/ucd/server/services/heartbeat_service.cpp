@@ -26,8 +26,10 @@
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 static const auto domain = "heartbeat";
 
@@ -41,13 +43,13 @@ static uint32_t to_milliseconds(uint16_t seconds)
 };
 
 // Heartbeat is capped at ~ 25 days by signed/millsecond conversions.
-heartbeat_service::heartbeat_service(zmq::authenticator& authenticator,
-    server_node& node, bool secure)
-  : worker(node.thread_pool()),
-    settings_(node.server_settings()),
-    period_(to_milliseconds(settings_.heartbeat_interval_seconds)),
-    authenticator_(authenticator),
-    secure_(secure)
+heartbeat_service::heartbeat_service(zmq::authenticator &authenticator,
+                                     server_node &node, bool secure)
+    : worker(node.thread_pool()),
+      settings_(node.server_settings()),
+      period_(to_milliseconds(settings_.heartbeat_interval_seconds)),
+      authenticator_(authenticator),
+      secure_(secure)
 {
 }
 
@@ -81,11 +83,10 @@ void heartbeat_service::work()
 // Bind/Unbind.
 //-----------------------------------------------------------------------------
 
-bool heartbeat_service::bind(zmq::socket& publisher)
+bool heartbeat_service::bind(zmq::socket &publisher)
 {
     const auto security = secure_ ? "secure" : "public";
-    const auto& endpoint = secure_ ? settings_.secure_heartbeat_endpoint :
-        settings_.public_heartbeat_endpoint;
+    const auto &endpoint = secure_ ? settings_.secure_heartbeat_endpoint : settings_.public_heartbeat_endpoint;
 
     if (!authenticator_.apply(publisher, domain, secure_))
         return false;
@@ -105,7 +106,7 @@ bool heartbeat_service::bind(zmq::socket& publisher)
     return true;
 }
 
-bool heartbeat_service::unbind(zmq::socket& publisher)
+bool heartbeat_service::unbind(zmq::socket &publisher)
 {
     const auto security = secure_ ? "secure" : "public";
 
@@ -121,7 +122,7 @@ bool heartbeat_service::unbind(zmq::socket& publisher)
 // Publish Execution (integral worker).
 //-----------------------------------------------------------------------------
 
-void heartbeat_service::publish(uint32_t count, zmq::socket& publisher)
+void heartbeat_service::publish(uint32_t count, zmq::socket &publisher)
 {
     if (stopped())
         return;

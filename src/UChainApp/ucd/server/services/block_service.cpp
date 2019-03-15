@@ -27,8 +27,10 @@
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace std::placeholders;
 using namespace bc::chain;
@@ -38,13 +40,13 @@ static const auto domain = "block";
 const config::endpoint block_service::public_worker("inproc://public_block");
 const config::endpoint block_service::secure_worker("inproc://secure_block");
 
-block_service::block_service(zmq::authenticator& authenticator,
-    server_node& node, bool secure)
-  : worker(node.thread_pool()),
-    secure_(secure),
-    settings_(node.server_settings()),
-    authenticator_(authenticator),
-    node_(node)
+block_service::block_service(zmq::authenticator &authenticator,
+                             server_node &node, bool secure)
+    : worker(node.thread_pool()),
+      secure_(secure),
+      settings_(node.server_settings()),
+      authenticator_(authenticator),
+      node_(node)
 {
 }
 
@@ -54,7 +56,7 @@ bool block_service::start()
     // Subscribe to blockchain reorganizations.
     node_.subscribe_blockchain(
         std::bind(&block_service::handle_reorganization,
-            this, _1, _2, _3, _4));
+                  this, _1, _2, _3, _4));
 
     return zmq::worker::start();
 }
@@ -87,12 +89,11 @@ void block_service::work()
 // Bind/Unbind.
 //-----------------------------------------------------------------------------
 
-bool block_service::bind(zmq::socket& xpub, zmq::socket& xsub)
+bool block_service::bind(zmq::socket &xpub, zmq::socket &xsub)
 {
     const auto security = secure_ ? "secure" : "public";
-    const auto& worker = secure_ ? secure_worker : public_worker;
-    const auto& service = secure_ ? settings_.secure_block_endpoint :
-        settings_.public_block_endpoint;
+    const auto &worker = secure_ ? secure_worker : public_worker;
+    const auto &service = secure_ ? settings_.secure_block_endpoint : settings_.public_block_endpoint;
 
     if (!authenticator_.apply(xpub, domain, secure_))
         return false;
@@ -122,7 +123,7 @@ bool block_service::bind(zmq::socket& xpub, zmq::socket& xsub)
     return true;
 }
 
-bool block_service::unbind(zmq::socket& xpub, zmq::socket& xsub)
+bool block_service::unbind(zmq::socket &xpub, zmq::socket &xsub)
 {
     // Stop both even if one fails.
     const auto service_stop = xpub.stop();
@@ -144,8 +145,8 @@ bool block_service::unbind(zmq::socket& xpub, zmq::socket& xsub)
 // Publish (integral worker).
 // ----------------------------------------------------------------------------
 
-bool block_service::handle_reorganization(const code& ec, uint64_t fork_point,
-    const block_list& new_blocks, const block_list&)
+bool block_service::handle_reorganization(const code &ec, uint64_t fork_point,
+                                          const block_list &new_blocks, const block_list &)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;
@@ -171,14 +172,13 @@ bool block_service::handle_reorganization(const code& ec, uint64_t fork_point,
 }
 
 void block_service::publish_blocks(uint32_t fork_point,
-    const block_list& blocks)
+                                   const block_list &blocks)
 {
     if (stopped())
         return;
 
     const auto security = secure_ ? "secure" : "public";
-    const auto& endpoint = secure_ ? block_service::secure_worker :
-        block_service::public_worker;
+    const auto &endpoint = secure_ ? block_service::secure_worker : block_service::public_worker;
 
     // Subscriptions are off the pub-sub thread so this must connect back.
     // This could be optimized by caching the socket as thread static.
@@ -200,7 +200,7 @@ void block_service::publish_blocks(uint32_t fork_point,
     BITCOIN_ASSERT(fork_point < max_uint32 - blocks.size());
     auto height = fork_point;
 
-    for (const auto block: blocks)
+    for (const auto block : blocks)
         publish_block(publisher, height++, block);
 }
 
@@ -209,8 +209,8 @@ void block_service::publish_blocks(uint32_t fork_point,
 // [ txs... ]
 // The payload for block publication is delimited within the zeromq message.
 // This is required for compatability and inconsistent with query payloads.
-void block_service::publish_block(zmq::socket& publisher, uint32_t height,
-    const block_ptr block)
+void block_service::publish_block(zmq::socket &publisher, uint32_t height,
+                                  const block_ptr block)
 {
     if (stopped())
         return;

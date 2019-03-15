@@ -25,19 +25,21 @@
 #include <UChainApp/ucd/config.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 using namespace bc::protocol;
 
-authenticator::authenticator(server_node& node)
-  : zmq::authenticator(node.thread_pool())
+authenticator::authenticator(server_node &node)
+    : zmq::authenticator(node.thread_pool())
 {
-    const auto& settings = node.server_settings();
+    const auto &settings = node.server_settings();
 
     set_private_key(settings.server_private_key);
 
-    for (const auto& address: settings.client_addresses)
+    for (const auto &address : settings.client_addresses)
     {
         log::debug(LOG_SERVER)
             << "Allow client address [" << address
@@ -46,7 +48,7 @@ authenticator::authenticator(server_node& node)
         allow(address);
     }
 
-    for (const auto& public_key: settings.client_public_keys)
+    for (const auto &public_key : settings.client_public_keys)
     {
         log::debug(LOG_SERVER)
             << "Allow client public key [" << public_key << "]";
@@ -55,8 +57,8 @@ authenticator::authenticator(server_node& node)
     }
 }
 
-bool authenticator::apply(zmq::socket& socket, const std::string& domain,
-    bool secure)
+bool authenticator::apply(zmq::socket &socket, const std::string &domain,
+                          bool secure)
 {
     // This will fail if there are client keys but no server key.
     if (!zmq::authenticator::apply(socket, domain, secure))
