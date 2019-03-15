@@ -25,29 +25,31 @@
 #include <iostream>
 #include <UChainApp/ucd.hpp>
 
-namespace libbitcoin {
-namespace server {
+namespace libbitcoin
+{
+namespace server
+{
 
 class executor
 {
-public:
-    executor(parser& metadata, std::istream&, std::ostream& output,
-        std::ostream& error);
+  public:
+    executor(parser &metadata, std::istream &, std::ostream &output,
+             std::ostream &error);
 
     /// This class is not copyable.
-    executor(const executor&) = delete;
-    void operator=(const executor&) = delete;
+    executor(const executor &) = delete;
+    void operator=(const executor &) = delete;
 
     /// Invoke the command indicated by the metadata.
     bool menu();
 
-private:
-    static void stop(const code& ec);
+  private:
+    static void stop(const code &ec);
     static void handle_stop(int code);
 
-    void handle_started(const code& ec);
-    void handle_running(const code& ec);
-    void handle_stopped(const code& ec);
+    void handle_started(const code &ec);
+    void handle_running(const code &ec);
+    void handle_stopped(const code &ec);
 
     void do_help();
     void do_settings();
@@ -64,8 +66,8 @@ private:
     // Termination state.
     static std::promise<code> stopping_;
 
-    parser& metadata_;
-    std::ostream& output_;
+    parser &metadata_;
+    std::ostream &output_;
     bc::ofstream debug_file_;
     bc::ofstream error_file_;
     server_node::ptr node_;
@@ -77,8 +79,8 @@ private:
 #define BS_INFORMATION_MESSAGE \
     "Runs a full UChain node in the global peer-to-peer network."
 
-#define BS_UNINITIALIZED_CHAIN \
-    "The %1% directory is not initialized. " \
+#define BS_UNINITIALIZED_CHAIN                            \
+    "The %1% directory is not initialized. "              \
     "If this is your first time running ucd, please run:" \
     " 'ucd -i' for initializing."
 #define BS_INITIALIZING_CHAIN \
@@ -116,13 +118,13 @@ private:
     "Using config file: %1%"
 #define BS_USING_DEFAULT_CONFIG \
     "Using default configuration settings."
-#define BS_VERSION_MESSAGE \
+#define BS_VERSION_MESSAGE       \
     "\nVersion Information:\n\n" \
-    "ucd:           %1%\n" \
-    "uc-server:     %2%\n" \
-    "uc-protocol:   %3%\n" \
-    "uc-node:       %4%\n" \
-    "uc-blockchain: %5%\n" \
+    "ucd:           %1%\n"       \
+    "uc-server:     %2%\n"       \
+    "uc-protocol:   %3%\n"       \
+    "uc-node:       %4%\n"       \
+    "uc-blockchain: %5%\n"       \
     "uc-base:       %6%"
 #define BS_LOG_HEADER \
     "***************** start-up *****************"
