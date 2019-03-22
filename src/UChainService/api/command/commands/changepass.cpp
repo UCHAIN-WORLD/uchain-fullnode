@@ -18,21 +18,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChain/explorer/dispatch.hpp>
 #include <UChainService/api/command/commands/changepass.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-console_result changepass::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+namespace libbitcoin
 {
-    auto& blockchain = node.chain_impl();
+namespace explorer
+{
+namespace commands
+{
+
+console_result changepass::invoke(Json::Value &jv_output,
+                                  libbitcoin::server::server_node &node)
+{
+    auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     std::string mnemonic;
@@ -45,31 +47,31 @@ console_result changepass::invoke(Json::Value& jv_output,
 
     // reencry address
     auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
-    if(!pvaddr)
+    if (!pvaddr)
         throw address_list_nullptr_exception{"empty address list"};
 
     std::string prv_key;
-    for (auto& each : *pvaddr){
+    for (auto &each : *pvaddr)
+    {
         prv_key = each.get_prv_key(auth_.auth);
         each.set_prv_key(prv_key, option_.passwd);
     }
     // delete all old address
     blockchain.delete_wallet_address(auth_.name);
     // restore address
-    for (auto& each : *pvaddr) {
+    for (auto &each : *pvaddr)
+    {
         auto addr = std::make_shared<bc::chain::wallet_address>(each);
         blockchain.store_wallet_address(addr);
     }
 
-    auto& jv = jv_output;
+    auto &jv = jv_output;
     jv["name"] = auth_.name;
     jv["status"] = "changed successfully";
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
