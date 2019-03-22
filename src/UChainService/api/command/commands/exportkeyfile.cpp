@@ -18,33 +18,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChainService/api/command/commands/exportkeyfile.hpp>
 #include <UChainService/api/command/wallet_info.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChain/bitcoin/formats/base_64.hpp>
 #include <cryptojs/cryptojs_impl.h>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 namespace fs = boost::filesystem;
 using namespace bc::explorer::config;
 /************************ exportwalletasfile *************************/
 
-console_result exportkeyfile::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result exportkeyfile::invoke(Json::Value &jv_output,
+                                     libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    std::string&& mnemonic = blockchain.is_wallet_lastwd_valid(*acc, auth_.auth, argument_.last_word);
+    std::string &&mnemonic = blockchain.is_wallet_lastwd_valid(*acc, auth_.auth, argument_.last_word);
 
     std::string keyfile_name = "uc_keystore_" + auth_.name + ".json";
 
     // wallet address info
     auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
-    if(!pvaddr) throw address_list_nullptr_exception{"nullptr for address list"};
+    if (!pvaddr)
+        throw address_list_nullptr_exception{"nullptr for address list"};
 
     Json::Value file_root;
     //light-wallet version no,
@@ -52,19 +55,21 @@ console_result exportkeyfile::invoke(Json::Value& jv_output,
     file_root["version"] = "0.2.1";
     file_root["algo"] = "aes";
     file_root["index"] = uint32_t(pvaddr->size() - acc->get_multisig_vec().size());
-    file_root["mnemonic"] = libbitcoin::encode_base64( cryptojs::encrypt("\"" + mnemonic + "\"", auth_.auth) );
+    file_root["mnemonic"] = libbitcoin::encode_base64(cryptojs::encrypt("\"" + mnemonic + "\"", auth_.auth));
     //file_root["wallets"] =  ss.str();
 
     Json::Value multisig_lst;
     multisig_lst.resize(0);
-    for (auto ms : acc->get_multisig_vec()) {
+    for (auto ms : acc->get_multisig_vec())
+    {
         Json::Value multisig;
         multisig["m"] = ms.get_m();
         multisig["n"] = ms.get_n();
         multisig["s"] = ms.get_pub_key();
         multisig["d"] = ms.get_description();
-        for (const auto &cosigner_pubkey : ms.get_cosigner_pubkeys()) {
-            multisig["k"].append( cosigner_pubkey );
+        for (const auto &cosigner_pubkey : ms.get_cosigner_pubkeys())
+        {
+            multisig["k"].append(cosigner_pubkey);
         }
         multisig_lst.append(multisig);
     }
@@ -72,22 +77,28 @@ console_result exportkeyfile::invoke(Json::Value& jv_output,
 
     Json::Value result;
 
-    if (!option_.is_data) {
-        if (argument_.dst.empty()) {
+    if (!option_.is_data)
+    {
+        if (argument_.dst.empty())
+        {
             // default path. provides download.
-            if (!boost::filesystem::exists(webpage_path())) {
+            if (!boost::filesystem::exists(webpage_path()))
+            {
                 fs::create_directory(webpage_path());
             }
 
             argument_.dst = webpage_path() / "keys";
             fs::create_directory(argument_.dst);
             argument_.dst /= keyfile_name;
-
-        } else {
+        }
+        else
+        {
             string dstpath = argument_.dst.string();
-            if (dstpath.length() > 0 && dstpath[0] == '~') {
+            if (dstpath.length() > 0 && dstpath[0] == '~')
+            {
                 char *home_dir = getenv("HOME");
-                if (home_dir && strlen(home_dir) != 0) {
+                if (home_dir && strlen(home_dir) != 0)
+                {
                     dstpath.replace(0, 1, home_dir);
                     argument_.dst = fs::path(dstpath);
                 }
@@ -100,7 +111,7 @@ console_result exportkeyfile::invoke(Json::Value& jv_output,
             fs::file_status status2 = fs::status(argument_.dst.parent_path());
             if (!fs::exists(status2))
                 throw argument_legality_exception{
-                        argument_.dst.parent_path().string() + std::string(" directory does not exist.")};
+                    argument_.dst.parent_path().string() + std::string(" directory does not exist.")};
         }
 
         // store encrypted data to file
@@ -109,13 +120,14 @@ console_result exportkeyfile::invoke(Json::Value& jv_output,
         file_output.close();
 
         result = argument_.dst.string();
-
-    } else {
+    }
+    else
+    {
         result = file_root;
     }
 
-    auto& root = jv_output;
-    if(get_api_version() == 1)
+    auto &root = jv_output;
+    if (get_api_version() == 1)
         root["result"] = result;
     else
         root = result;
@@ -123,8 +135,6 @@ console_result exportkeyfile::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

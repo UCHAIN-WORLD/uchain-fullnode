@@ -26,31 +26,35 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-console_result deposit::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+namespace libbitcoin
 {
-    auto& blockchain = node.chain_impl();
+namespace explorer
+{
+namespace commands
+{
+
+console_result deposit::invoke(Json::Value &jv_output,
+                               libbitcoin::server::server_node &node)
+{
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    if (argument_.deposit != 10 && argument_.deposit != 45
-        && argument_.deposit != 120 && argument_.deposit != 240
-        && argument_.deposit != 540)
+    if (argument_.deposit != 10 && argument_.deposit != 45 && argument_.deposit != 120 && argument_.deposit != 240 && argument_.deposit != 540)
     {
         throw wallet_deposit_period_exception{"deposit must be one in [10, 45, 120, 240, 540]."};
     }
 
     auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
-    if(!pvaddr || pvaddr->empty())
+    if (!pvaddr || pvaddr->empty())
         throw address_list_nullptr_exception{"nullptr for address list"};
 
     std::string addr = argument_.uid;
-    if (addr.empty()) {
+    if (addr.empty())
+    {
         addr = get_random_payment_address(pvaddr, blockchain);
-    }else{
+    }
+    else
+    {
         addr = get_address_from_strict_uid(argument_.uid, blockchain);
         auto acc_addr = blockchain.get_wallet_address(auth_.name, addr);
         if (!acc_addr)
@@ -59,16 +63,15 @@ console_result deposit::invoke(Json::Value& jv_output,
 
     // receiver
     std::vector<receiver_record> receiver{
-        {addr, "", argument_.amount, 0, utxo_attach_type::deposit, asset{"", argument_.uid}}
-    };
+        {addr, "", argument_.amount, 0, utxo_attach_type::deposit, asset{"", argument_.uid}}};
     auto deposit_helper = depositing_ucn(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
-            std::move(addr), std::move(receiver), argument_.deposit, argument_.fee);
+                                         std::move(addr), std::move(receiver), argument_.deposit, argument_.fee);
 
     deposit_helper.exec();
 
     // json output
     auto tx = deposit_helper.get_transaction();
-     jv_output =  config::json_helper(get_api_version()).prop_tree(tx, true);
+    jv_output = config::json_helper(get_api_version()).prop_tree(tx, true);
 
     return console_result::okay;
 }
@@ -76,4 +79,3 @@ console_result deposit::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

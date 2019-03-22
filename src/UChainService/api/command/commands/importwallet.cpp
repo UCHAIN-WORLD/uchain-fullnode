@@ -27,17 +27,20 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChain/explorer/commands/offline_commands_impl.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
-console_result importwallet::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result importwallet::invoke(Json::Value &jv_output,
+                                    libbitcoin::server::server_node &node)
 {
 
     // parameter wallet name check
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     if (blockchain.is_wallet_exist(auth_.name))
         throw wallet_existed_exception{"wallet already exist"};
 
@@ -47,16 +50,17 @@ console_result importwallet::invoke(Json::Value& jv_output,
         throw argument_exceed_limit_exception{"name length in [3, 128], password length in [6, 128]"};
 #endif
 
-    if (argument_.words.size() == 1) {
-       argument_.words = bc::split(argument_.words[0], " ", true);
+    if (argument_.words.size() == 1)
+    {
+        argument_.words = bc::split(argument_.words[0], " ", true);
     }
 
     // are vliad mnemonic words.
-    auto&& seed = get_mnemonic_to_seed(option_.language, argument_.words);
+    auto &&seed = get_mnemonic_to_seed(option_.language, argument_.words);
     // is vliad seed.
-    auto&& hd_pri_key = get_hd_new(seed);
+    auto &&hd_pri_key = get_hd_new(seed);
 
-    auto&& mnemonic = bc::join(argument_.words);
+    auto &&mnemonic = bc::join(argument_.words);
 
     // create wallet
     auto acc = std::make_shared<bc::chain::wallet>();
@@ -69,27 +73,33 @@ console_result importwallet::invoke(Json::Value& jv_output,
     blockchain.store_wallet(acc);
 
     // generate all wallet address
-    auto&& str_idx = std::to_string(option_.hd_index);
-    const char* cmds2[]{"addaddress", auth_.name.c_str(), option_.passwd.c_str(), "-n", str_idx.c_str()};
+    auto &&str_idx = std::to_string(option_.hd_index);
+    const char *cmds2[]{"addaddress", auth_.name.c_str(), option_.passwd.c_str(), "-n", str_idx.c_str()};
     Json::Value addresses;
 
-    if (dispatch_command(5, cmds2, addresses, node, get_api_version()) != console_result::okay) {
+    if (dispatch_command(5, cmds2, addresses, node, get_api_version()) != console_result::okay)
+    {
         throw address_generate_exception{"addaddress got exception."};
     }
 
-    if (get_api_version() <= 2) {
-        if (get_api_version() == 1) {
+    if (get_api_version() <= 2)
+    {
+        if (get_api_version() == 1)
+        {
             jv_output["hd_index"] += option_.hd_index;
-            if (option_.hd_index == 1) {
+            if (option_.hd_index == 1)
+            {
                 Json::Value addr;
                 addr.append(addresses.asString());
                 jv_output["addresses"] = addr;
             }
-            else {
+            else
+            {
                 jv_output["addresses"] = addresses["addresses"];
             }
         }
-        else if (get_api_version() == 2) {
+        else if (get_api_version() == 2)
+        {
             jv_output["hd_index"] = option_.hd_index;
             jv_output["addresses"] = addresses["addresses"];
         }
@@ -97,7 +107,8 @@ console_result importwallet::invoke(Json::Value& jv_output,
         jv_output["name"] = auth_.name;
         jv_output["mnemonic"] = mnemonic;
     }
-    else {
+    else
+    {
         config::json_helper::wallet_info acc(auth_.name, mnemonic, addresses);
         jv_output = config::json_helper(get_api_version()).prop_list(acc);
     }
@@ -108,4 +119,3 @@ console_result importwallet::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
