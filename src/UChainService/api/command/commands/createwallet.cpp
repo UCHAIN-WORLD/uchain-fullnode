@@ -26,15 +26,18 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChain/explorer/commands/offline_commands_impl.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ createwallet *************************/
 
-console_result createwallet::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result createwallet::invoke(Json::Value &jv_output,
+                                    libbitcoin::server::server_node &node)
 {
 #ifdef NDEBUG
     if (auth_.name.length() > 128 || auth_.name.length() < 3 ||
@@ -42,8 +45,9 @@ console_result createwallet::invoke(Json::Value& jv_output,
         throw argument_legality_exception{"name length in [3, 128], password length in [6, 128]"};
 #endif
 
-    auto& blockchain = node.chain_impl();
-    if (blockchain.is_wallet_exist(auth_.name)) {
+    auto &blockchain = node.chain_impl();
+    if (blockchain.is_wallet_exist(auth_.name))
+    {
         throw wallet_existed_exception{"wallet already exist"};
     }
 
@@ -52,9 +56,9 @@ console_result createwallet::invoke(Json::Value& jv_output,
     acc->set_passwd(auth_.auth);
 
     bc::explorer::config::language opt_language(option_.language);
-    auto&& seed = get_seed();
-    auto&& words_list = get_mnemonic_new(opt_language , seed);
-    auto&& words = bc::join(words_list);
+    auto &&seed = get_seed();
+    auto &&words_list = get_mnemonic_new(opt_language, seed);
+    auto &&words = bc::join(words_list);
 
     acc->set_mnemonic(words, auth_.auth);
 
@@ -64,9 +68,10 @@ console_result createwallet::invoke(Json::Value& jv_output,
     // get 1 new sub-address by default
     std::stringstream sout("");
     Json::Value jv_temp;
-    const char* cmds2[]{"addaddress", auth_.name.c_str(), auth_.auth.c_str()};
+    const char *cmds2[]{"addaddress", auth_.name.c_str(), auth_.auth.c_str()};
 
-    if (dispatch_command(3, cmds2, jv_temp, node, get_api_version()) != console_result::okay) {
+    if (dispatch_command(3, cmds2, jv_temp, node, get_api_version()) != console_result::okay)
+    {
         throw address_generate_exception(sout.str());
     }
 
@@ -78,8 +83,6 @@ console_result createwallet::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
