@@ -18,7 +18,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChain/explorer/dispatch.hpp>
 #include <UChainService/api/command/commands/deletetoken.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
@@ -26,16 +25,19 @@
 #include <UChainService/api/command/exception.hpp>
 #include <boost/algorithm/string.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 /************************ deletetoken *************************/
 
-console_result deletetoken::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result deletetoken::invoke(Json::Value &jv_output,
+                                   libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     // maybe throw
     blockchain.uppercase_symbol(option_.symbol);
@@ -45,10 +47,10 @@ console_result deletetoken::invoke(Json::Value& jv_output,
 
     std::promise<code> p;
     std::vector<libbitcoin::blockchain::transaction_pool::transaction_ptr> txs;
-    blockchain.pool().fetch([&txs, &p](const code& ec,
-        const std::vector<libbitcoin::blockchain::transaction_pool::transaction_ptr>& tx)
-    {
-        if (!ec) {
+    blockchain.pool().fetch([&txs, &p](const code &ec,
+                                       const std::vector<libbitcoin::blockchain::transaction_pool::transaction_ptr> &tx) {
+        if (!ec)
+        {
             txs = tx;
         }
 
@@ -56,9 +58,12 @@ console_result deletetoken::invoke(Json::Value& jv_output,
     });
     p.get_future().get();
 
-    for(auto& tx : txs) {
-        for(auto& output : tx->outputs) {
-            if (output.is_token_issue() && output.get_token_symbol() == option_.symbol) {
+    for (auto &tx : txs)
+    {
+        for (auto &output : tx->outputs)
+        {
+            if (output.is_token_issue() && output.get_token_symbol() == option_.symbol)
+            {
                 throw token_issued_not_delete{"Cannot delete token " + option_.symbol + " which has been issued."};
             }
         }
@@ -66,14 +71,18 @@ console_result deletetoken::invoke(Json::Value& jv_output,
 
     std::vector<business_address_token> tokens = *blockchain.get_wallet_unissued_tokens(auth_.name);
     bool found = false;
-    for (auto it = tokens.begin(); it != tokens.end(); ++it) {
-        if (it->detail.get_symbol() == option_.symbol) {
-            if (blockchain.delete_wallet_token(auth_.name) == console_result::failure) {
+    for (auto it = tokens.begin(); it != tokens.end(); ++it)
+    {
+        if (it->detail.get_symbol() == option_.symbol)
+        {
+            if (blockchain.delete_wallet_token(auth_.name) == console_result::failure)
+            {
                 throw token_delete_fail{"token " + option_.symbol + " delete fail."};
             }
 
             tokens.erase(it);
-            for (auto token : tokens) {
+            for (auto token : tokens)
+            {
                 blockchain.store_wallet_token(token.detail, auth_.name);
             }
 
@@ -82,18 +91,21 @@ console_result deletetoken::invoke(Json::Value& jv_output,
         }
     }
 
-    if (!found) {
+    if (!found)
+    {
         throw token_notfound_exception{"token " + option_.symbol + " does not existed or do not belong to " + auth_.name + "."};
     }
 
-    if (get_api_version() <= 2) {
+    if (get_api_version() <= 2)
+    {
         jv_output["symbol"] = option_.symbol;
         jv_output["operate"] = "delete";
         jv_output["result"] = "success";
     }
-    else {
+    else
+    {
         jv_output["symbol"] = option_.symbol;
-        jv_output["status"]= "deleted successfully";
+        jv_output["status"] = "deleted successfully";
     }
 
     return console_result::okay;

@@ -25,40 +25,48 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 using namespace bc::explorer::config;
 
-console_result deletemultisigaddress::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result deletemultisigaddress::invoke(Json::Value &jv_output,
+                                             libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    if (!blockchain.is_valid_address(option_.address)) {
-        throw fromaddress_invalid_exception("invalid address! "  + option_.address);
+    if (!blockchain.is_valid_address(option_.address))
+    {
+        throw fromaddress_invalid_exception("invalid address! " + option_.address);
     }
 
     auto addr = bc::wallet::payment_address(option_.address);
-    if (addr.version() != bc::wallet::payment_address::mainnet_p2sh) {
+    if (addr.version() != bc::wallet::payment_address::mainnet_p2sh)
+    {
         throw fromaddress_invalid_exception("address " + option_.address + " is not a script address.");
     }
 
     // get multisig
     auto multisig_vec = acc->get_multisig(option_.address);
-    if (!multisig_vec || multisig_vec->empty()) {
+    if (!multisig_vec || multisig_vec->empty())
+    {
         throw multisig_notfound_exception(" multisig of address " + option_.address + " is not found.");
     }
 
     // remove multisig
-    for(auto& acc_multisig : *multisig_vec) {
+    for (auto &acc_multisig : *multisig_vec)
+    {
         acc->remove_multisig(acc_multisig);
     }
 
     // change wallet type
-    if (acc->get_multisig_vec().empty()) {
+    if (acc->get_multisig_vec().empty())
+    {
         acc->set_type(wallet_type::common);
     }
 
@@ -67,22 +75,27 @@ console_result deletemultisigaddress::invoke(Json::Value& jv_output,
 
     // delete wallet address
     auto vaddr = blockchain.get_wallet_addresses(auth_.name);
-    if (!vaddr) {
+    if (!vaddr)
+    {
         throw address_list_empty_exception{"empty address list for this wallet"};
     }
 
     blockchain.delete_wallet_address(auth_.name);
-    for (auto it = vaddr->begin(); it != vaddr->end();) {
-        if (it->get_address() == option_.address) {
+    for (auto it = vaddr->begin(); it != vaddr->end();)
+    {
+        if (it->get_address() == option_.address)
+        {
             it = vaddr->erase(it);
         }
-        else {
+        else
+        {
             ++it;
         }
     }
 
     // restore address
-    for (auto& each : *vaddr) {
+    for (auto &each : *vaddr)
+    {
         auto addr = std::make_shared<bc::chain::wallet_address>(each);
         blockchain.store_wallet_address(addr);
     }
@@ -90,13 +103,16 @@ console_result deletemultisigaddress::invoke(Json::Value& jv_output,
     // output json
     jv_output.resize(0);
     auto helper = config::json_helper(get_api_version());
-    if (get_api_version() <= 2) {
-        auto& acc_multisig = *(multisig_vec->begin());
+    if (get_api_version() <= 2)
+    {
+        auto &acc_multisig = *(multisig_vec->begin());
         jv_output = helper.prop_list(acc_multisig);
     }
-    else {
+    else
+    {
         Json::Value nodes;
-        for(auto& acc_multisig : *multisig_vec) {
+        for (auto &acc_multisig : *multisig_vec)
+        {
             Json::Value node = helper.prop_list(acc_multisig);
             nodes.append(node);
         }
@@ -107,8 +123,6 @@ console_result deletemultisigaddress::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
