@@ -23,17 +23,19 @@
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ deletewallet *************************/
 
-console_result deletewallet::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result deletewallet::invoke(Json::Value &jv_output,
+                                    libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     blockchain.is_wallet_lastwd_valid(*acc, auth_.auth, argument_.last_word);
@@ -47,13 +49,11 @@ console_result deletewallet::invoke(Json::Value& jv_output,
     blockchain.delete_wallet(acc->get_name());
 
     jv_output["name"] = acc->get_name();
-    jv_output["status"]= "removed successfully";
+    jv_output["status"] = "removed successfully";
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
