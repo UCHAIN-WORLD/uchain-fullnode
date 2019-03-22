@@ -25,35 +25,34 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ checkwalletinfo *************************/
 
-console_result checkwalletinfo::invoke(Json::Value& jv_output,
-                                  libbitcoin::server::server_node& node)
+console_result checkwalletinfo::invoke(Json::Value &jv_output,
+                                       libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     //auto&& mnemonic = acc->get_mnemonic(auth_.auth);
-    std::string&& mnemonic = blockchain.is_wallet_lastwd_valid(*acc, auth_.auth, argument_.last_word);
+    std::string &&mnemonic = blockchain.is_wallet_lastwd_valid(*acc, auth_.auth, argument_.last_word);
 
-    auto& root = jv_output;
+    auto &root = jv_output;
 
-    
     root["name"] = acc->get_name();
     root["mnemonic"] = mnemonic;
     root["address_count"] = acc->get_hd_index();
-    
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
