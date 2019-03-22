@@ -26,16 +26,19 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ registersecondarytoken *************************/
-console_result registersecondarytoken::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result registersecondarytoken::invoke(Json::Value &jv_output,
+                                              libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     blockchain.uppercase_symbol(argument_.symbol);
@@ -52,7 +55,8 @@ console_result registersecondarytoken::invoke(Json::Value& jv_output,
         throw address_dismatch_wallet_exception{"target uid does not match wallet. " + to_uid};
 
     auto token = blockchain.get_issued_token(argument_.symbol);
-    if (!token) {
+    if (!token)
+    {
         throw token_symbol_notfound_exception{"token symbol does not exist on the blockchain"};
     }
 
@@ -60,17 +64,21 @@ console_result registersecondarytoken::invoke(Json::Value& jv_output,
     if (!token_detail::is_secondaryissue_legal(secondaryissue_threshold))
         throw token_secondaryissue_threshold_exception{"token is not allowed to do secondary issue, or the threshold is illegal."};
 
-    if (blockchain.is_token_cert_exist(argument_.symbol, token_cert_ns::issue)) {
+    if (blockchain.is_token_cert_exist(argument_.symbol, token_cert_ns::issue))
+    {
         // check whether it belongs to the wallet.
         auto cert = blockchain.get_wallet_token_cert(auth_.name, argument_.symbol, token_cert_ns::issue);
-        if (!cert) {
+        if (!cert)
+        {
             throw token_cert_notowned_exception("no issue cert " + argument_.symbol + " owned by " + auth_.name);
         }
     }
-    else if (blockchain.chain_settings().use_testnet_rules) {
+    else if (blockchain.chain_settings().use_testnet_rules)
+    {
         // if not exist, then issue one. only happen in testnet.
     }
-    else {
+    else
+    {
         throw token_cert_notfound_exception{"no issue cert '" + argument_.symbol + "' found!"};
     }
 
@@ -79,23 +87,23 @@ console_result registersecondarytoken::invoke(Json::Value& jv_output,
         throw token_amount_exception{"secondaryissue volume cannot exceed maximum value"};
 
     uint64_t token_volume_of_threshold = 0;
-    if (!token_detail::is_secondaryissue_freely(secondaryissue_threshold)) {
+    if (!token_detail::is_secondaryissue_freely(secondaryissue_threshold))
+    {
         token_volume_of_threshold = (uint64_t)(((double)total_volume) / 100 * secondaryissue_threshold);
     }
 
     // receiver
     std::vector<receiver_record> receiver{
         {to_address, argument_.symbol, 0, token_volume_of_threshold,
-            utxo_attach_type::token_secondaryissue, asset("", to_uid)},
+         utxo_attach_type::token_secondaryissue, asset("", to_uid)},
         {to_address, argument_.symbol, 0, 0, token_cert_ns::issue,
-            utxo_attach_type::token_cert, asset("", to_uid)}
-    };
+         utxo_attach_type::token_cert, asset("", to_uid)}};
 
     auto issue_helper = secondary_issuing_token(*this, blockchain,
-        std::move(auth_.name), std::move(auth_.auth),
-        std::move(to_address), std::move(argument_.symbol),
-        std::move(option_.attenuation_model_param),
-        std::move(receiver), argument_.fee, argument_.volume);
+                                                std::move(auth_.name), std::move(auth_.auth),
+                                                std::move(to_address), std::move(argument_.symbol),
+                                                std::move(option_.attenuation_model_param),
+                                                std::move(receiver), argument_.fee, argument_.volume);
 
     issue_helper.exec();
 
@@ -109,4 +117,3 @@ console_result registersecondarytoken::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
