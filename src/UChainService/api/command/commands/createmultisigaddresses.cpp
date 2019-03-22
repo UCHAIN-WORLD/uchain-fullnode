@@ -25,80 +25,94 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 console_result createmultisigaddress::invoke(
-    Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+    Json::Value &jv_output,
+    libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
     // check auth
     auto wallet = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    auto& pubkey_vec = option_.public_keys;
-    if (pubkey_vec.empty()) {
-        throw multisig_cosigne_exception{ "multisig cosigner public key needed." };
+    auto &pubkey_vec = option_.public_keys;
+    if (pubkey_vec.empty())
+    {
+        throw multisig_cosigne_exception{"multisig cosigner public key needed."};
     }
 
     std::set<std::string> unique_keys(pubkey_vec.begin(), pubkey_vec.end());
-    if (unique_keys.size() != pubkey_vec.size()) {
-        throw multisig_cosigne_exception{ "multisig cosigner public key has duplicated items." };
+    if (unique_keys.size() != pubkey_vec.size())
+    {
+        throw multisig_cosigne_exception{"multisig cosigner public key has duplicated items."};
     }
 
     // check m & n
-    if (option_.m < 1) {
-        throw signature_amount_exception{ "signature number less than 1." };
+    if (option_.m < 1)
+    {
+        throw signature_amount_exception{"signature number less than 1."};
     }
-    if (option_.n < 1 || option_.n > 20) {
+    if (option_.n < 1 || option_.n > 20)
+    {
         throw pubkey_amount_exception{
             "public key number " + std::to_string(option_.n) + " less than 1 or bigger than 20."};
     }
-    if (option_.m > option_.n) {
+    if (option_.m > option_.n)
+    {
         throw signature_amount_exception{
-            "signature number " + std::to_string(option_.m)
-            + " is bigger than public key number " + std::to_string(option_.n) };
+            "signature number " + std::to_string(option_.m) + " is bigger than public key number " + std::to_string(option_.n)};
     }
 
     // check self public key
     auto self_pubkey = option_.self_publickey;
-    if (self_pubkey.empty()) {
-        throw pubkey_notfound_exception{ "self pubkey key not found!" };
+    if (self_pubkey.empty())
+    {
+        throw pubkey_notfound_exception{"self pubkey key not found!"};
     }
 
     // if self public key not in public keys then add it.
     auto iter = std::find(pubkey_vec.begin(), pubkey_vec.end(), self_pubkey);
-    if (iter == pubkey_vec.end()) {
+    if (iter == pubkey_vec.end())
+    {
         pubkey_vec.push_back(self_pubkey);
     }
 
     // check public key size
-    if (option_.n != pubkey_vec.size()) {
-        throw pubkey_amount_exception{ "public key number does not match with n." };
+    if (option_.n != pubkey_vec.size())
+    {
+        throw pubkey_amount_exception{"public key number does not match with n."};
     }
 
     // get private key according public key
     auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
-    if (!pvaddr) {
-        throw address_list_nullptr_exception{ "nullptr for address list" };
+    if (!pvaddr)
+    {
+        throw address_list_nullptr_exception{"nullptr for address list"};
     }
 
     std::string self_prvkey;
     auto found = false;
-    for (auto& each : *pvaddr) {
+    for (auto &each : *pvaddr)
+    {
         self_prvkey = each.get_prv_key(auth_.auth);
-        auto&& target_pub_key = ec_to_xxx_impl("ec-to-public", self_prvkey);
-        if (target_pub_key == self_pubkey) {
+        auto &&target_pub_key = ec_to_xxx_impl("ec-to-public", self_prvkey);
+        if (target_pub_key == self_pubkey)
+        {
             found = true;
             break;
         }
     }
 
-    if (!found) {
-        throw pubkey_dismatch_exception{ self_pubkey + " does not belongs to this wallet" };
+    if (!found)
+    {
+        throw pubkey_dismatch_exception{self_pubkey + " does not belongs to this wallet"};
     }
 
     // generate multisig wallet
@@ -112,7 +126,7 @@ console_result createmultisigaddress::invoke(
 
     // check same multisig wallet not exists
     if (wallet->is_multisig_exist(acc_multisig))
-        throw multisig_exist_exception{ "multisig already exists." };
+        throw multisig_exist_exception{"multisig already exists."};
 
     // update index
     acc_multisig.set_index(wallet->get_multisig_vec().size() + 1);
@@ -130,7 +144,7 @@ console_result createmultisigaddress::invoke(
     chain::script payment_script;
     payment_script.from_string(multisig_script);
     if (script_pattern::pay_multisig != payment_script.pattern())
-        throw multisig_script_exception{ std::string("invalid multisig script : ") + multisig_script };
+        throw multisig_script_exception{std::string("invalid multisig script : ") + multisig_script};
 
     payment_address address(payment_script, payment_address::mainnet_p2sh);
     auto hash_address = address.encoded();
@@ -152,8 +166,6 @@ console_result createmultisigaddress::invoke(
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

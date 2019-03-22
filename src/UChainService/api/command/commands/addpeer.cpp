@@ -18,7 +18,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChain/explorer/dispatch.hpp>
 #include <UChainService/api/command/commands/addpeer.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
@@ -28,23 +27,25 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChain/network/channel.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ addpeer *************************/
 
-console_result addpeer::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result addpeer::invoke(Json::Value &jv_output,
+                               libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
-    if(!auth_.name.empty() && !administrator_required_checker(node, auth_.name, auth_.auth))
+    if (!auth_.name.empty() && !administrator_required_checker(node, auth_.name, auth_.auth))
     {
         throw address_invalid_exception{"You can only add one address at a time."};
     }
-    
+
     try
     {
         const auto authority = libbitcoin::config::authority(argument_.address);
@@ -76,13 +77,9 @@ console_result addpeer::invoke(Json::Value& jv_output,
         throw address_invalid_exception{"NODEADDRESS is not valid! "};
     }
 
-    
     return console_result::okay;
 }
-
-
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
