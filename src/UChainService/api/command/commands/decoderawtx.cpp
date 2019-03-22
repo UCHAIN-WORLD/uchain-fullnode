@@ -25,12 +25,15 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
-console_result decoderawtx::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result decoderawtx::invoke(Json::Value &jv_output,
+                                   libbitcoin::server::server_node &node)
 {
     tx_type tx_ = argument_.transaction;
     jv_output = config::json_helper(get_api_version()).prop_tree(tx_, true);
