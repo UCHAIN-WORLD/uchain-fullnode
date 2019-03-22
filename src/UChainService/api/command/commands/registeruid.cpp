@@ -41,31 +41,32 @@ console_result registeruid::invoke(Json::Value &jv_output,
     // check uid symbol
     check_uid_symbol(argument_.symbol, true);
 
-    if (blockchain.is_valid_address(argument_.symbol)) {
+    if (blockchain.is_valid_address(argument_.symbol))
+    {
         throw address_invalid_exception{"symbol cannot be an address!"};
     }
 
     // check fee
-    if (argument_.fee < bc::min_fee_to_register_uid) {
+    if (argument_.fee < bc::min_fee_to_register_uid)
+    {
         throw uid_register_poundage_exception{
-            "register uid: fee less than "
-            + std::to_string(bc::min_fee_to_register_uid) + " that's "
-            + std::to_string(bc::min_fee_to_register_uid / 100000000) + " UCNs"};
+            "register uid: fee less than " + std::to_string(bc::min_fee_to_register_uid) + " that's " + std::to_string(bc::min_fee_to_register_uid / 100000000) + " UCNs"};
     }
 
-    if (argument_.percentage < bc::min_fee_percentage_to_miner || argument_.percentage > 100) {
+    if (argument_.percentage < bc::min_fee_percentage_to_miner || argument_.percentage > 100)
+    {
         throw uid_register_poundage_exception{
-            "register uid minimum percentage of fee to miner less than "
-            + std::to_string(bc::min_fee_percentage_to_miner)
-            + " or greater than 100."};
+            "register uid minimum percentage of fee to miner less than " + std::to_string(bc::min_fee_percentage_to_miner) + " or greater than 100."};
     }
 
     // check address
-    if (!blockchain.is_valid_address(argument_.address)) {
+    if (!blockchain.is_valid_address(argument_.address))
+    {
         throw address_invalid_exception{"invalid address parameter!"};
     }
 
-    if (!blockchain.get_wallet_address(auth_.name, argument_.address)) {
+    if (!blockchain.get_wallet_address(auth_.name, argument_.address))
+    {
         throw address_dismatch_wallet_exception{
             "address " + argument_.address + " is not owned by " + auth_.name};
     }
@@ -80,9 +81,11 @@ console_result registeruid::invoke(Json::Value &jv_output,
 
     wallet_multisig acc_multisig;
     bool is_multisig_address = blockchain.is_script_address(argument_.address);
-    if (is_multisig_address) {
+    if (is_multisig_address)
+    {
         auto multisig_vec = acc->get_multisig(argument_.address);
-        if (!multisig_vec || multisig_vec->empty()) {
+        if (!multisig_vec || multisig_vec->empty())
+        {
             throw multisig_notfound_exception{"multisig of address does not found."};
         }
 
@@ -94,19 +97,21 @@ console_result registeruid::invoke(Json::Value &jv_output,
         {argument_.address, argument_.symbol, 0, 0, utxo_attach_type::uid_register, asset()}};
 
     auto register_helper = registering_uid(
-                               *this, blockchain, std::move(auth_.name), std::move(auth_.auth),
-                               std::move(argument_.address), std::move(argument_.symbol),
-                               std::move(receiver), argument_.fee, argument_.percentage,
-                               std::move(acc_multisig));
+        *this, blockchain, std::move(auth_.name), std::move(auth_.auth),
+        std::move(argument_.address), std::move(argument_.symbol),
+        std::move(receiver), argument_.fee, argument_.percentage,
+        std::move(acc_multisig));
 
     register_helper.exec();
 
     // output json
-    auto && tx = register_helper.get_transaction();
-    if (is_multisig_address) {
+    auto &&tx = register_helper.get_transaction();
+    if (is_multisig_address)
+    {
         jv_output = config::json_helper(get_api_version()).prop_list_of_rawtx(tx, false, true);
     }
-    else {
+    else
+    {
         jv_output = config::json_helper(get_api_version()).prop_tree(tx, true);
     }
 
