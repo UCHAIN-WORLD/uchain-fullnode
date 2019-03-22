@@ -18,27 +18,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChain/explorer/dispatch.hpp>
 #include <UChainService/api/command/commands/addaddress.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ addaddress *************************/
 
-console_result addaddress::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result addaddress::invoke(Json::Value &jv_output,
+                                  libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    if (!option_.count || (option_.count & 0xfff00000)) {
+    if (!option_.count || (option_.count & 0xfff00000))
+    {
         throw address_amount_exception("invalid address number parameter");
     }
     //operation
@@ -47,41 +49,45 @@ console_result addaddress::invoke(Json::Value& jv_output,
         blockchain.delete_n_wallet_address(auth_.name, option_.count);
         acc->set_hd_index(acc->get_hd_index() - option_.count);
         blockchain.safe_store_wallet(*acc, std::vector<std::shared_ptr<wallet_address>>{});
-        jv_output["status"]= "address removed successfully";
+        jv_output["status"] = "address removed successfully";
     }
     else if ((option_.operation == "add") || (option_.operation == ""))
     {
         std::string mnemonic;
         acc->get_mnemonic(auth_.auth, mnemonic);
-        if (mnemonic.empty()) {
+        if (mnemonic.empty())
+        {
             throw mnemonicwords_empty_exception("mnemonic empty");
         }
 
         //split mnemonic to vector words
-        auto&& words = bc::split(mnemonic, " ", true); // with trim
+        auto &&words = bc::split(mnemonic, " ", true); // with trim
 
-        if ((words.size() % bc::wallet::mnemonic_word_multiple) != 0) {
+        if ((words.size() % bc::wallet::mnemonic_word_multiple) != 0)
+        {
             throw mnemonicwords_amount_exception{"invalid size of backup words."};
         }
 
         Json::Value addresses;
-        
+
         std::vector<std::shared_ptr<wallet_address>> wallet_addresses;
         wallet_addresses.reserve(option_.count);
         const auto seed = decode_mnemonic(words);
         libbitcoin::config::base16 bs(seed);
-        const data_chunk& ds = static_cast<const data_chunk&>(bs);
-        const auto prefixes = bc::wallet::hd_private::to_prefixes(76066276, 0);//76066276 is HD private key version
+        const data_chunk &ds = static_cast<const data_chunk &>(bs);
+        const auto prefixes = bc::wallet::hd_private::to_prefixes(76066276, 0); //76066276 is HD private key version
         const bc::wallet::hd_private private_key(ds, prefixes);
 
         // mainnet payment address version
         auto payment_version = 68;
-        if (blockchain.chain_settings().use_testnet_rules) {
+        if (blockchain.chain_settings().use_testnet_rules)
+        {
             // testnucnayment address version
-            payment_version = 127 ;
+            payment_version = 127;
         }
 
-        for (uint32_t idx = 0; idx < option_.count; idx++ ) {
+        for (uint32_t idx = 0; idx < option_.count; idx++)
+        {
 
             auto addr = std::make_shared<bc::chain::wallet_address>();
             addr->set_name(auth_.name);
@@ -99,7 +105,7 @@ console_result addaddress::invoke(Json::Value& jv_output,
             libbitcoin::secret_to_public(point, derive_private_key.secret());
 
             // Serialize to the original compression state.
-            auto ep =  ec_public(point, true);
+            auto ep = ec_public(point, true);
 
             payment_address pa(ep, payment_version);
 
@@ -116,23 +122,19 @@ console_result addaddress::invoke(Json::Value& jv_output,
         blockchain.safe_store_wallet(*acc, wallet_addresses);
 
         // write to output json
-        
-        if(addresses.isNull())
-            addresses.resize(0);  
+
+        if (addresses.isNull())
+            addresses.resize(0);
         jv_output = addresses;
     }
     else
     {
         jv_output = string("Invalid operation [") + option_.operation + "].";
     }
-    
-    
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
