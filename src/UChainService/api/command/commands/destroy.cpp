@@ -26,44 +26,48 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-console_result destroy::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+namespace libbitcoin
 {
-    auto& blockchain = node.chain_impl();
+namespace explorer
+{
+namespace commands
+{
+
+console_result destroy::invoke(Json::Value &jv_output,
+                               libbitcoin::server::server_node &node)
+{
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     std::string blackhole_uid = UC_BLACKHOLE_UID_SYMBOL;
 
-    if (option_.is_candidate) {
-        const char* cmds[] {
+    if (option_.is_candidate)
+    {
+        const char *cmds[]{
             "transfercandidate", auth_.name.c_str(), auth_.auth.c_str(),
-            blackhole_uid.c_str(), argument_.symbol.c_str()
-        };
+            blackhole_uid.c_str(), argument_.symbol.c_str()};
 
         return dispatch_command(5, cmds, jv_output, node, get_api_version());
     }
-    else if (!option_.cert_type.empty()) {
-        const char* cmds[] {
+    else if (!option_.cert_type.empty())
+    {
+        const char *cmds[]{
             "transfercert", auth_.name.c_str(), auth_.auth.c_str(),
-            blackhole_uid.c_str(), argument_.symbol.c_str(), option_.cert_type.c_str()
-        };
+            blackhole_uid.c_str(), argument_.symbol.c_str(), option_.cert_type.c_str()};
 
         return dispatch_command(6, cmds, jv_output, node, get_api_version());
     }
-    else {
-        if (argument_.amount <= 0) {
+    else
+    {
+        if (argument_.amount <= 0)
+        {
             throw argument_legality_exception{"invalid amount parameter!"};
         }
 
-        auto&& amount = std::to_string(argument_.amount);
-        const char* cmds[] {
+        auto &&amount = std::to_string(argument_.amount);
+        const char *cmds[]{
             "sendtokento", auth_.name.c_str(), auth_.auth.c_str(),
-            blackhole_uid.c_str(), argument_.symbol.c_str(), amount.c_str()
-        };
+            blackhole_uid.c_str(), argument_.symbol.c_str(), amount.c_str()};
 
         return dispatch_command(6, cmds, jv_output, node, get_api_version());
     }
@@ -74,4 +78,3 @@ console_result destroy::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
