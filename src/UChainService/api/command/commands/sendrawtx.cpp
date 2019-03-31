@@ -25,15 +25,18 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
-console_result sendrawtx::invoke(Json::Value& jv_output,
-                                 libbitcoin::server::server_node& node)
+console_result sendrawtx::invoke(Json::Value &jv_output,
+                                 libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     tx_type tx_ = argument_.transaction;
 
     uint64_t outputs_ucn_val = tx_.total_output_value();
@@ -52,18 +55,18 @@ console_result sendrawtx::invoke(Json::Value& jv_output,
     if (blockchain.broadcast_transaction(tx_))
         throw tx_broadcast_exception{"broadcast transaction failure"};
 
-    if (get_api_version() <= 2) {
+    if (get_api_version() <= 2)
+    {
         jv_output["hash"] = encode_hash(tx_.hash());
     }
-    else {
+    else
+    {
         jv_output = encode_hash(tx_.hash());
     }
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
