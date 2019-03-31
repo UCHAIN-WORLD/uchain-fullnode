@@ -24,19 +24,23 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showtoken *************************/
 
-console_result showtoken::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showtoken::invoke(Json::Value &jv_output,
+                                 libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
-    if (!argument_.symbol.empty()) {
+    if (!argument_.symbol.empty())
+    {
         // check token symbol
         blockchain.uppercase_symbol(argument_.symbol);
         check_token_symbol(argument_.symbol);
@@ -46,26 +50,33 @@ console_result showtoken::invoke(Json::Value& jv_output,
     Json::Value json_value;
     auto json_helper = config::json_helper(get_api_version());
 
-    if (option_.is_cert) { // only get token certs
+    if (option_.is_cert)
+    { // only get token certs
         json_key = "tokencerts";
 
         // get token cert in blockchain
         auto sh_vec = blockchain.get_issued_token_certs();
-        if (argument_.symbol.empty()) {
+        if (argument_.symbol.empty())
+        {
             std::set<std::string> symbols;
             std::sort(sh_vec->begin(), sh_vec->end());
-            for (auto& elem : *sh_vec) {
-               // get rid of duplicate symbols
-                if (!symbols.count(elem.get_symbol())) {
+            for (auto &elem : *sh_vec)
+            {
+                // get rid of duplicate symbols
+                if (!symbols.count(elem.get_symbol()))
+                {
                     symbols.insert(elem.get_symbol());
                     json_value.append(elem.get_symbol());
                 }
             }
         }
-        else {
+        else
+        {
             auto result_vec = std::make_shared<token_cert::list>();
-            for (auto& cert : *sh_vec) {
-                if (argument_.symbol != cert.get_symbol()) {
+            for (auto &cert : *sh_vec)
+            {
+                if (argument_.symbol != cert.get_symbol())
+                {
                     continue;
                 }
 
@@ -73,31 +84,39 @@ console_result showtoken::invoke(Json::Value& jv_output,
             }
 
             std::sort(result_vec->begin(), result_vec->end());
-            for (auto& elem : *result_vec) {
+            for (auto &elem : *result_vec)
+            {
                 Json::Value token_data = json_helper.prop_list(elem);
                 json_value.append(token_data);
             }
         }
     }
-    else {
+    else
+    {
         json_key = "tokens";
 
         // get token in blockchain
         auto sh_vec = blockchain.get_issued_tokens(argument_.symbol);
-        if (argument_.symbol.empty()) {
+        if (argument_.symbol.empty())
+        {
             std::sort(sh_vec->begin(), sh_vec->end());
             std::set<std::string> symbols;
-            for (auto& elem: *sh_vec) {
+            for (auto &elem : *sh_vec)
+            {
                 // get rid of duplicate symbols
-                if (!symbols.count(elem.get_symbol())) {
+                if (!symbols.count(elem.get_symbol()))
+                {
                     symbols.insert(elem.get_symbol());
                     json_value.append(elem.get_symbol());
                 }
             }
         }
-        else {
-            for (auto& elem: *sh_vec) {
-                if (elem.get_symbol() != argument_.symbol) {
+        else
+        {
+            for (auto &elem : *sh_vec)
+            {
+                if (elem.get_symbol() != argument_.symbol)
+                {
                     continue;
                 }
 
@@ -108,15 +127,18 @@ console_result showtoken::invoke(Json::Value& jv_output,
         }
     }
 
-    if (get_api_version() == 1 && json_value.isNull()) { //compatible for v1
+    if (get_api_version() == 1 && json_value.isNull())
+    { //compatible for v1
         jv_output[json_key] = "";
     }
-    else if (get_api_version() <= 2) {
+    else if (get_api_version() <= 2)
+    {
         jv_output[json_key] = json_value;
     }
-    else {
-        if(json_value.isNull())
-            json_value.resize(0);  
+    else
+    {
+        if (json_value.isNull())
+            json_value.resize(0);
 
         jv_output = json_value;
     }
@@ -127,4 +149,3 @@ console_result showtoken::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

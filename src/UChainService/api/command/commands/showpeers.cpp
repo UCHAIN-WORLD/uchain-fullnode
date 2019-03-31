@@ -18,7 +18,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChain/node/p2p_node.hpp>
 #include <UChain/explorer/dispatch.hpp>
 #include <UChainService/api/command/commands/showpeers.hpp>
@@ -26,34 +25,40 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/node_method_wrapper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showpeers *************************/
 
-console_result showpeers::invoke(Json::Value& jv_output,
-                                   libbitcoin::server::server_node& node)
+console_result showpeers::invoke(Json::Value &jv_output,
+                                 libbitcoin::server::server_node &node)
 {
     administrator_required_checker(node, auth_.name, auth_.auth);
 
     Json::Value array;
-    for (auto authority : node.connections_ptr()->authority_list()) {
+    for (auto authority : node.connections_ptr()->authority_list())
+    {
         // invalid authority
         if (authority.to_hostname() == "[::]" && authority.port() == 0)
             continue;
         array.append(authority.to_string());
     }
 
-    if (get_api_version() <= 2) {
-        auto& root = jv_output;
+    if (get_api_version() <= 2)
+    {
+        auto &root = jv_output;
         root["peers"] = array;
     }
-    else {
-        if(array.isNull())
-            array.resize(0);  
-            
+    else
+    {
+        if (array.isNull())
+            array.resize(0);
+
         jv_output = array;
     }
 
@@ -63,4 +68,3 @@ console_result showpeers::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
