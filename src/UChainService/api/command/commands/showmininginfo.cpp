@@ -24,15 +24,18 @@
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showmininginfo *************************/
 
-console_result showmininginfo::invoke(Json::Value& jv_output,
-                                     libbitcoin::server::server_node& node)
+console_result showmininginfo::invoke(Json::Value &jv_output,
+                                      libbitcoin::server::server_node &node)
 {
     administrator_required_checker(node, auth_.name, auth_.auth);
 
@@ -40,11 +43,12 @@ console_result showmininginfo::invoke(Json::Value& jv_output,
     std::string difficulty;
     bool is_mining;
 
-    auto& miner = node.miner();
+    auto &miner = node.miner();
     //miner.get_state(height, rate, difficulty, is_mining);
 
-    if (get_api_version() <= 2) {
-        auto& aroot = jv_output;
+    if (get_api_version() <= 2)
+    {
+        auto &aroot = jv_output;
         Json::Value info;
         info["is-mining"] = is_mining;
         info["height"] += height;
@@ -52,7 +56,8 @@ console_result showmininginfo::invoke(Json::Value& jv_output,
         info["difficulty"] = difficulty;
         aroot["mining-info"] = info;
     }
-    else {
+    else
+    {
         jv_output["is_mining"] = is_mining;
         jv_output["height"] += height;
         jv_output["rate"] += rate;
@@ -65,4 +70,3 @@ console_result showmininginfo::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
