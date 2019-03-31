@@ -18,45 +18,52 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChain/explorer/dispatch.hpp>
 #include <UChainService/api/command/commands/showaddresses.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showaddresses *************************/
 
-console_result showaddresses::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showaddresses::invoke(Json::Value &jv_output,
+                                     libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    auto& aroot = jv_output;
+    auto &aroot = jv_output;
     Json::Value addresses;
 
     auto vaddr = blockchain.get_wallet_addresses(auth_.name);
-    if(!vaddr) throw address_list_nullptr_exception{"nullptr for address list"};
+    if (!vaddr)
+        throw address_list_nullptr_exception{"nullptr for address list"};
 
-    for (auto& it: *vaddr){
+    for (auto &it : *vaddr)
+    {
         addresses.append(it.get_address());
     }
 
-    if (get_api_version() == 1 && addresses.isNull()) { // compatible for v1
+    if (get_api_version() == 1 && addresses.isNull())
+    { // compatible for v1
         aroot["addresses"] = "";
     }
-    else if (get_api_version() <= 2) {
+    else if (get_api_version() <= 2)
+    {
         aroot["addresses"] = addresses;
     }
-    else {
-        if(addresses.isNull())
-            addresses.resize(0);  
+    else
+    {
+        if (addresses.isNull())
+            addresses.resize(0);
 
         aroot = addresses;
     }
@@ -64,9 +71,6 @@ console_result showaddresses::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

@@ -18,25 +18,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChain/explorer/dispatch.hpp>
 #include <UChainService/api/command/commands/setminingwallet.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ setminingwallet *************************/
 
-console_result setminingwallet::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result setminingwallet::invoke(Json::Value &jv_output,
+                                       libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
-    auto& miner = node.miner();
+    auto &blockchain = node.chain_impl();
+    auto &miner = node.miner();
 
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
@@ -53,18 +54,18 @@ console_result setminingwallet::invoke(Json::Value& jv_output,
 #endif
 
     auto ret = miner.set_miner_payment_address(argument_.payment_address);
-    if (ret) {
+    if (ret)
+    {
         jv_output = "Address [" + argument_.payment_address.encoded() + "] setted.";
-    } else {
+    }
+    else
+    {
         throw unknown_error_exception{"set mining wallet solo mining got an error"};
     }
 
     return console_result::okay;
 }
 
-
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
