@@ -26,29 +26,31 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/consensus/miner.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showminers *************************/
 
-console_result showminers::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showminers::invoke(Json::Value &jv_output,
+                                  libbitcoin::server::server_node &node)
 {
     administrator_required_checker(node, auth_.name, auth_.auth);
 
-    auto& aroot = jv_output;
+    auto &aroot = jv_output;
     Json::Value miners;
     auto json_helper = config::json_helper(get_api_version());
 
     auto sh_vec = node.miner().get_miners();
     for (auto &elem : sh_vec)
     {
-        Json::Value token_data = json_helper.prop_list(elem,true,true);
+        Json::Value token_data = json_helper.prop_list(elem, true, true);
         miners.append(token_data);
     }
-    
 
     if (miners.isNull())
         miners.resize(0);
@@ -58,9 +60,6 @@ console_result showminers::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
