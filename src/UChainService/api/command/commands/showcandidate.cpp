@@ -24,82 +24,93 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 using namespace bc::explorer::config;
 
 /************************ showcandidate *************************/
 
-console_result showcandidate::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showcandidate::invoke(Json::Value &jv_output,
+                                     libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
-    if (!argument_.symbol.empty()) {
+    if (!argument_.symbol.empty())
+    {
         // check symbol
         check_candidate_symbol(argument_.symbol);
     }
 
-
-    if (argument_.symbol.empty()) {
+    if (argument_.symbol.empty())
+    {
         throw argument_legality_exception("candidate symbol not privided while tracing history!");
     }
 
     // page limit & page index paramenter check
-    if (option_.index < 1) {
+    if (option_.index < 1)
+    {
         throw argument_legality_exception{"page index parameter cannot be zero"};
     }
 
-    if (option_.limit < 1) {
+    if (option_.limit < 1)
+    {
         throw argument_legality_exception{"page record limit parameter cannot be zero"};
     }
 
-    if (option_.limit > 100) {
+    if (option_.limit > 100)
+    {
         throw argument_legality_exception{"page record limit cannot be bigger than 100."};
     }
-
 
     Json::Value json_value;
     auto json_helper = config::json_helper(get_api_version());
 
     bool is_list = true;
-    if (argument_.symbol.empty()) {
+    if (argument_.symbol.empty())
+    {
         auto sh_vec = blockchain.get_registered_candidates();
         std::sort(sh_vec->begin(), sh_vec->end());
-        for (auto& elem : *sh_vec) {
+        for (auto &elem : *sh_vec)
+        {
             json_value.append(elem.candidate.get_symbol());
         }
 
-        if (get_api_version() <=2 ) {
+        if (get_api_version() <= 2)
+        {
             jv_output["candidates"] = json_value;
         }
-        else {
+        else
+        {
             jv_output = json_value;
         }
     }
-    else {
+    else
+    {
 
-         auto sh_vec = blockchain.get_candidate_history(argument_.symbol, option_.limit, option_.index);
-             for (auto& elem : *sh_vec) {
-                 Json::Value token_data = json_helper.prop_list(elem);
-                 json_value.append(token_data);
-            }
+        auto sh_vec = blockchain.get_candidate_history(argument_.symbol, option_.limit, option_.index);
+        for (auto &elem : *sh_vec)
+        {
+            Json::Value token_data = json_helper.prop_list(elem);
+            json_value.append(token_data);
+        }
 
-
-        if (get_api_version() <=2 ) {
+        if (get_api_version() <= 2)
+        {
             jv_output["candidates"] = json_value;
         }
-        else {
-            if(json_value.isNull())
+        else
+        {
+            if (json_value.isNull())
                 json_value.resize(0);
             jv_output = json_value;
         }
 
-
         jv_output = json_value;
-
     }
 
     return console_result::okay;
@@ -108,4 +119,3 @@ console_result showcandidate::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
