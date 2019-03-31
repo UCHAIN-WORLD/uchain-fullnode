@@ -25,23 +25,27 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/node_method_wrapper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showinfo *************************/
 
-console_result showinfo::invoke(Json::Value& jv_output,
-                               libbitcoin::server::server_node& node)
+console_result showinfo::invoke(Json::Value &jv_output,
+                                libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
     administrator_required_checker(node, auth_.name, auth_.auth);
 
     auto sh_vec = blockchain.get_issued_tokens();
     std::set<std::string> symbols;
-    for (const auto& elem : *sh_vec) {
+    for (const auto &elem : *sh_vec)
+    {
         symbols.insert(elem.get_symbol());
     }
 
@@ -52,8 +56,9 @@ console_result showinfo::invoke(Json::Value& jv_output,
     bool is_solo_mining;
     node.miner().get_state(height, minercount, is_solo_mining);
 
-    auto& jv = jv_output;
-    if (get_api_version() <= 2) {
+    auto &jv = jv_output;
+    if (get_api_version() <= 2)
+    {
         jv["protocol-version"] = node.network_settings().protocol;
         jv["wallet-version"] = UC_EXPLORER_VERSION;
         jv["database-version"] = UC_DATABASE_VERSION;
@@ -70,7 +75,8 @@ console_result showinfo::invoke(Json::Value& jv_output,
         jv["identifier"] = node.network_settings().identifier;
         //jv["hash-rate"] = rate;
     }
-    else {
+    else
+    {
         jv["protocol_version"] = node.network_settings().protocol;
         jv["wallet_version"] = UC_EXPLORER_VERSION;
         jv["database_version"] = UC_DATABASE_VERSION;
@@ -91,8 +97,6 @@ console_result showinfo::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
