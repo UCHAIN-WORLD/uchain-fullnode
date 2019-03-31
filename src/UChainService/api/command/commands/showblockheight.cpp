@@ -23,14 +23,17 @@
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 /************************ showblockheight *************************/
 
-console_result showblockheight::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showblockheight::invoke(Json::Value &jv_output,
+                                       libbitcoin::server::server_node &node)
 {
     administrator_required_checker(node, auth_.name, auth_.auth);
 
@@ -39,8 +42,6 @@ console_result showblockheight::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
