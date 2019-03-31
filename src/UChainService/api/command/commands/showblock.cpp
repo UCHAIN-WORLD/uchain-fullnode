@@ -25,72 +25,84 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ showblock *************************/
 
-console_result showblock::invoke(Json::Value& jv_output,
-                                libbitcoin::server::server_node& node)
+console_result showblock::invoke(Json::Value &jv_output,
+                                 libbitcoin::server::server_node &node)
 {
     auto json = option_.json;
     auto tx_json = option_.tx_json;
 
     // uint64_t max length
-    if (argument_.hash_or_height.size() < 18) {
+    if (argument_.hash_or_height.size() < 18)
+    {
 
         // fetch_block via height
         auto block_height = std::stoull(argument_.hash_or_height);
 
         std::promise<code> p;
-        auto& blockchain = node.chain_impl();
-        blockchain.fetch_block(block_height, [&p, &jv_output, json, tx_json, this](const code & ec, chain::block::ptr block) {
-            if (ec) {
+        auto &blockchain = node.chain_impl();
+        blockchain.fetch_block(block_height, [&p, &jv_output, json, tx_json, this](const code &ec, chain::block::ptr block) {
+            if (ec)
+            {
                 p.set_value(ec);
                 return;
             }
 
-            if (json) {
-                jv_output =  config::json_helper(get_api_version()).prop_tree(*block, json, tx_json);
+            if (json)
+            {
+                jv_output = config::json_helper(get_api_version()).prop_tree(*block, json, tx_json);
             }
-            else {
-                jv_output =  config::json_helper(get_api_version()).prop_tree(*block, false, false);
+            else
+            {
+                jv_output = config::json_helper(get_api_version()).prop_tree(*block, false, false);
             }
             p.set_value(error::success);
         });
 
         auto result = p.get_future().get();
-        if (result) {
-            throw block_height_get_exception{ result.message() };
+        if (result)
+        {
+            throw block_height_get_exception{result.message()};
         }
     }
 
-    else {
+    else
+    {
         // fetch_block via hash
         bc::config::hash256 block_hash(argument_.hash_or_height);
 
         std::promise<code> p;
-        auto& blockchain = node.chain_impl();
-        blockchain.fetch_block(block_hash, [&p, &jv_output, json, tx_json, this](const code & ec, chain::block::ptr block) {
-            if (ec) {
+        auto &blockchain = node.chain_impl();
+        blockchain.fetch_block(block_hash, [&p, &jv_output, json, tx_json, this](const code &ec, chain::block::ptr block) {
+            if (ec)
+            {
                 p.set_value(ec);
                 return;
             }
 
-            if (json) {
-                jv_output =  config::json_helper(get_api_version()).prop_tree(*block, json, tx_json);
+            if (json)
+            {
+                jv_output = config::json_helper(get_api_version()).prop_tree(*block, json, tx_json);
             }
-            else {
-                jv_output =  config::json_helper(get_api_version()).prop_tree(*block, false, false);
+            else
+            {
+                jv_output = config::json_helper(get_api_version()).prop_tree(*block, false, false);
             }
             p.set_value(error::success);
         });
 
         auto result = p.get_future().get();
-        if (result) {
-            throw block_height_get_exception{ result.message() };
+        if (result)
+        {
+            throw block_height_get_exception{result.message()};
         }
     }
 
@@ -100,4 +112,3 @@ console_result showblock::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

@@ -18,7 +18,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <jsoncpp/json/json.h>
 #include <UChain/client.hpp>
 #include <UChain/explorer/callback_state.hpp>
@@ -29,25 +28,30 @@
 #include <UChain/explorer/utility.hpp>
 #include <UChain/explorer/define.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::client;
 using namespace bc::explorer::config;
 
 /************************ showblockheader *************************/
 
-console_result showblockheader::invoke(Json::Value& jv_output,
-                                      libbitcoin::server::server_node& node)
+console_result showblockheader::invoke(Json::Value &jv_output,
+                                       libbitcoin::server::server_node &node)
 {
 
     uint64_t height = 0;
-    auto& blockchain = node.chain_impl();
-    if (!blockchain.get_last_height(height)) {
+    auto &blockchain = node.chain_impl();
+    if (!blockchain.get_last_height(height))
+    {
         throw block_last_height_get_exception{"query last height failure."};
     }
 
-    if (option_.height != std::numeric_limits<uint32_t>::max()) {
+    if (option_.height != std::numeric_limits<uint32_t>::max())
+    {
         height = option_.height;
     }
 
@@ -55,7 +59,8 @@ console_result showblockheader::invoke(Json::Value& jv_output,
 
     obelisk_client client(connection);
 
-    if (!client.connect(connection)) {
+    if (!client.connect(connection))
+    {
         throw connection_exception{"Could not connect to ucd port " + node.server_settings().public_query_endpoint};
     }
 
@@ -63,57 +68,65 @@ console_result showblockheader::invoke(Json::Value& jv_output,
     std::ostringstream output;
     callback_state state(output, output, json_format);
 
-    auto on_done = [this, &jv_output](const chain::header & header)
-    {
-        auto&& jheader = config::json_helper(get_api_version()).prop_tree(header);
+    auto on_done = [this, &jv_output](const chain::header &header) {
+        auto &&jheader = config::json_helper(get_api_version()).prop_tree(header);
 
-        if (get_api_version() <= 2) {
-            if ( !jheader.isObject()
-                    || !jheader["result"].isObject()
-                    || !jheader["result"]["hash"].isString()) {
+        if (get_api_version() <= 2)
+        {
+            if (!jheader.isObject() || !jheader["result"].isObject() || !jheader["result"]["hash"].isString())
+            {
                 throw block_hash_get_exception{"getbestblockhash got parser exception."};
             }
 
-            if (option_.is_getbestblockhash) {
-                auto&& blockhash = jheader["result"]["hash"].asString();
+            if (option_.is_getbestblockhash)
+            {
+                auto &&blockhash = jheader["result"]["hash"].asString();
                 jv_output = blockhash;
             }
-            else {
-                if (get_api_version() == 1) {
+            else
+            {
+                if (get_api_version() == 1)
+                {
                     jv_output = jheader;
                 }
-                else {
+                else
+                {
                     jv_output = jheader["result"];
                 }
             }
         }
-        else {
-            if (!jheader.isObject() || !jheader["hash"].isString()) {
+        else
+        {
+            if (!jheader.isObject() || !jheader["hash"].isString())
+            {
                 throw block_hash_get_exception{"getbestblockhash parser exception."};
             }
 
-            if (option_.is_getbestblockhash) {
-                auto&& blockhash = jheader["hash"].asString();
+            if (option_.is_getbestblockhash)
+            {
+                auto &&blockhash = jheader["hash"].asString();
                 jv_output = blockhash;
             }
-            else {
+            else
+            {
                 jv_output = jheader;
             }
         }
     };
 
-    auto on_error = [&state](const code & error)
-    {
+    auto on_error = [&state](const code &error) {
         state.succeeded(error);
     };
 
     // Height is ignored if both are specified.
     // Use the null_hash as sentinel to determine whether to use height or hash.
-    const hash_digest& hash = option_.hash;
-    if (hash == null_hash) {
+    const hash_digest &hash = option_.hash;
+    if (hash == null_hash)
+    {
         client.blockchain_fetch_block_header(on_error, on_done, height);
     }
-    else {
+    else
+    {
         client.blockchain_fetch_block_header(on_error, on_done, hash);
     }
 
@@ -122,9 +135,6 @@ console_result showblockheader::invoke(Json::Value& jv_output,
     return state.get_result();
 }
 
-
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

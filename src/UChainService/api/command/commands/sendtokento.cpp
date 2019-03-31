@@ -25,19 +25,22 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-
-console_result sendtokento::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+namespace libbitcoin
 {
-    auto& blockchain = node.chain_impl();
+namespace explorer
+{
+namespace commands
+{
+
+console_result sendtokento::invoke(Json::Value &jv_output,
+                                   libbitcoin::server::server_node &node)
+{
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
     blockchain.uppercase_symbol(argument_.symbol);
 
-    if (!option_.memo.empty() && option_.memo.size() >= 255) {
+    if (!option_.memo.empty() && option_.memo.size() >= 255)
+    {
         throw argument_size_invalid_exception{"memo length out of bounds."};
     }
 
@@ -46,7 +49,8 @@ console_result sendtokento::invoke(Json::Value& jv_output,
 
     check_token_symbol_with_method(argument_.symbol);
 
-    if (!argument_.amount) {
+    if (!argument_.amount)
+    {
         throw token_amount_exception{"invalid token amount parameter!"};
     }
 
@@ -56,29 +60,27 @@ console_result sendtokento::invoke(Json::Value& jv_output,
 
     // receiver
     utxo_attach_type attach_type = option_.attenuation_model_param.empty()
-        ? utxo_attach_type::token_transfer : utxo_attach_type::token_attenuation_transfer;
+                                       ? utxo_attach_type::token_transfer
+                                       : utxo_attach_type::token_attenuation_transfer;
     std::vector<receiver_record> receiver{
-        {to_address, argument_.symbol, 0, argument_.amount, attach_type, attach}
-    };
+        {to_address, argument_.symbol, 0, argument_.amount, attach_type, attach}};
     auto send_helper = sending_token(*this, blockchain,
-            std::move(auth_.name), std::move(auth_.auth),
-            "", std::move(argument_.symbol),
-            std::move(option_.attenuation_model_param),
-            std::move(receiver), option_.fee,
-            std::move(option_.memo),
-            std::move(change_address));
+                                     std::move(auth_.name), std::move(auth_.auth),
+                                     "", std::move(argument_.symbol),
+                                     std::move(option_.attenuation_model_param),
+                                     std::move(receiver), option_.fee,
+                                     std::move(option_.memo),
+                                     std::move(change_address));
 
     send_helper.exec();
 
     // json output
     auto tx = send_helper.get_transaction();
-    jv_output =  config::json_helper(get_api_version()).prop_tree(tx, true);
+    jv_output = config::json_helper(get_api_version()).prop_tree(tx, true);
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

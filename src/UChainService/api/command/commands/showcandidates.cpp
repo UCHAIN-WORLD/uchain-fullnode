@@ -26,52 +26,61 @@
 #include <UChainService/api/command/base_helper.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showcandidates *************************/
 
-console_result showcandidates::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showcandidates::invoke(Json::Value &jv_output,
+                                      libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     Json::Value json_value;
     auto json_helper = config::json_helper(get_api_version());
 
-    if (auth_.name.empty()) {
+    if (auth_.name.empty())
+    {
         // no wallet -- list whole tokens in blockchain
         auto sh_vec = blockchain.get_registered_candidates();
-        if (nullptr != sh_vec) {
+        if (nullptr != sh_vec)
+        {
             //vote first and height next.
-            std::sort(sh_vec->begin(), sh_vec->end(), [](const candidate_info& a,const candidate_info& b) {
-                return a.vote > b.vote?true:a.output_height > b.output_height;
+            std::sort(sh_vec->begin(), sh_vec->end(), [](const candidate_info &a, const candidate_info &b) {
+                return a.vote > b.vote ? true : a.output_height > b.output_height;
             });
-            for (auto& elem : *sh_vec) {
-                if(elem.candidate.get_status() == CANDIDATE_STATUS_TRANSFER \
-                   || elem.candidate.get_status() == CANDIDATE_STATUS_REGISTER)
+            for (auto &elem : *sh_vec)
+            {
+                if (elem.candidate.get_status() == CANDIDATE_STATUS_TRANSFER || elem.candidate.get_status() == CANDIDATE_STATUS_REGISTER)
                 {
                     //elem.candidate.set_status(CANDIDATE_STATUS_REGISTER);
                     Json::Value token_data = json_helper.prop_list(elem);
                     json_value.append(token_data);
                 }
-                
             }
         }
     }
-    else {
+    else
+    {
         blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
         // list tokens owned by wallet
         auto sh_vec = blockchain.get_wallet_candidates(auth_.name);
-        if (nullptr != sh_vec) {
+        if (nullptr != sh_vec)
+        {
             std::sort(sh_vec->begin(), sh_vec->end());
-            for (auto& elem : *sh_vec) {
+            for (auto &elem : *sh_vec)
+            {
                 // update content if it's transfered from others
-                if (!elem.is_register_status()) {
+                if (!elem.is_register_status())
+                {
                     auto token = blockchain.get_registered_candidate(elem.get_symbol());
-                    if (nullptr != token) {
+                    if (nullptr != token)
+                    {
                         elem.set_content(token->candidate.get_content());
                     }
                 }
@@ -86,10 +95,10 @@ console_result showcandidates::invoke(Json::Value& jv_output,
         jv_output["candidates"] = json_value;
     }
     else {*/
-        if(json_value.isNull())
-            json_value.resize(0);  
-            
-        jv_output = json_value;
+    if (json_value.isNull())
+        json_value.resize(0);
+
+    jv_output = json_value;
     //}
 
     return console_result::okay;

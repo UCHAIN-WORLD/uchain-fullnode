@@ -26,48 +26,60 @@
 #include <UChainService/api/command/base_helper.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 using namespace bc::explorer::config;
 
 /************************ showbalances *************************/
 
-console_result showbalances::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showbalances::invoke(Json::Value &jv_output,
+                                    libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     Json::Value all_balances;
 
     auto vaddr = blockchain.get_wallet_addresses(auth_.name);
-    if(!vaddr) {
+    if (!vaddr)
+    {
         throw address_list_nullptr_exception{"nullptr for address list"};
     }
 
-    if (!option_.greater && option_.non_zero) {
+    if (!option_.greater && option_.non_zero)
+    {
         option_.greater = 1;
     }
 
-    if (option_.deposited) {
+    if (option_.deposited)
+    {
         auto deposited_balances = std::make_shared<deposited_balance::list>();
 
-        for (auto& i: *vaddr){
+        for (auto &i : *vaddr)
+        {
             auto waddr = bc::wallet::payment_address(i.get_address());
             sync_fetch_deposited_balance(waddr, blockchain, deposited_balances);
         }
 
-        for (auto& balance : *deposited_balances) {
+        for (auto &balance : *deposited_balances)
+        {
             // non-zero lesser
-            if (option_.lesser) {
-                if (balance.balance > option_.lesser || balance.balance < option_.greater) {
+            if (option_.lesser)
+            {
+                if (balance.balance > option_.lesser || balance.balance < option_.greater)
+                {
                     continue;
                 }
             }
-            else {
-                if (balance.balance < option_.greater) {
+            else
+            {
+                if (balance.balance < option_.greater)
+                {
                     continue;
                 }
             }
@@ -83,20 +95,26 @@ console_result showbalances::invoke(Json::Value& jv_output,
             all_balances.append(json_balance);
         }
     }
-    else {
-        for (auto& i: *vaddr){
+    else
+    {
+        for (auto &i : *vaddr)
+        {
             balances addr_balance{0, 0, 0, 0};
             auto waddr = bc::wallet::payment_address(i.get_address());
             sync_fetchbalance(waddr, blockchain, addr_balance);
 
             // non-zero lesser
-            if (option_.lesser) {
-                if (addr_balance.unspent_balance > option_.lesser || addr_balance.unspent_balance < option_.greater) {
+            if (option_.lesser)
+            {
+                if (addr_balance.unspent_balance > option_.lesser || addr_balance.unspent_balance < option_.greater)
+                {
                     continue;
                 }
             }
-            else {
-                if (addr_balance.unspent_balance < option_.greater) {
+            else
+            {
+                if (addr_balance.unspent_balance < option_.greater)
+                {
                     continue;
                 }
             }
@@ -104,14 +122,16 @@ console_result showbalances::invoke(Json::Value& jv_output,
             Json::Value address_balance;
             address_balance["address"] = i.get_address();
 
-            if (get_api_version() == 1) {
+            if (get_api_version() == 1)
+            {
                 address_balance["confirmed"] += addr_balance.confirmed_balance;
                 address_balance["received"] += addr_balance.total_received;
                 address_balance["unspent"] += addr_balance.unspent_balance;
                 address_balance["available"] += (addr_balance.unspent_balance - addr_balance.frozen_balance);
                 address_balance["frozen"] += addr_balance.frozen_balance;
             }
-            else {
+            else
+            {
                 address_balance["confirmed"] = addr_balance.confirmed_balance;
                 address_balance["received"] = addr_balance.total_received;
                 address_balance["unspent"] = addr_balance.unspent_balance;
@@ -119,26 +139,31 @@ console_result showbalances::invoke(Json::Value& jv_output,
                 address_balance["frozen"] = addr_balance.frozen_balance;
             }
 
-            if (get_api_version() <= 2) {
+            if (get_api_version() <= 2)
+            {
                 Json::Value target_balance;
                 target_balance["balance"] = address_balance;
                 all_balances.append(target_balance);
             }
-            else {
+            else
+            {
                 all_balances.append(address_balance);
             }
         }
     }
 
-    auto& aroot = jv_output;
-    if (get_api_version() == 1 && all_balances.isNull()) { //compatible for v1
+    auto &aroot = jv_output;
+    if (get_api_version() == 1 && all_balances.isNull())
+    { //compatible for v1
         aroot["balances"] = "";
     }
-    else if (get_api_version() <= 2) {
+    else if (get_api_version() <= 2)
+    {
         aroot["balances"] = all_balances;
     }
-    else {
-        if(all_balances.isNull())
+    else
+    {
+        if (all_balances.isNull())
             all_balances.resize(0);
 
         aroot = all_balances;
@@ -147,8 +172,6 @@ console_result showbalances::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

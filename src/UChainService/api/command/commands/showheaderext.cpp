@@ -18,53 +18,57 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChainService/api/command/commands/showheaderext.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChain/explorer/json_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showheaderext *************************/
 
-console_result showheaderext::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showheaderext::invoke(Json::Value &jv_output,
+                                     libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
-    if(argument_.number.empty())
+    if (argument_.number.empty())
         throw block_height_get_exception{"Block number or earliest, latest, pending is needed"};
 
     chain::header block_header;
 
-    auto& miner = node.miner();
+    auto &miner = node.miner();
     auto ret = miner.get_block_header(block_header, argument_.number);
 
-    auto& aroot = jv_output;
+    auto &aroot = jv_output;
 
-    if (ret) {
+    if (ret)
+    {
 
-        auto&& result = config::json_helper(get_api_version()).prop_list(block_header);
+        auto &&result = config::json_helper(get_api_version()).prop_list(block_header);
 
-        if (get_api_version() == 1) {
+        if (get_api_version() == 1)
+        {
             aroot["result"] = result;
-        } else {
+        }
+        else
+        {
             aroot = result;
         }
-
-    } else {
+    }
+    else
+    {
         throw block_height_get_exception{"get block header on height " + argument_.number + " failed."};
     }
 
     return console_result::okay;
 }
 
-
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

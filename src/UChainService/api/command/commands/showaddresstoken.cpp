@@ -26,36 +26,43 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showaddresstoken *************************/
 
-console_result showaddresstoken::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showaddresstoken::invoke(Json::Value &jv_output,
+                                        libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     if (!blockchain.is_valid_address(argument_.address))
         throw address_invalid_exception{"invalid address!"};
 
-    if (!option_.symbol.empty()) {
+    if (!option_.symbol.empty())
+    {
         // check token symbol
         check_token_symbol(option_.symbol);
     }
 
     std::string json_key;
     Json::Value json_value;
-    auto json_helper = config::json_helper(get_api_version());;
+    auto json_helper = config::json_helper(get_api_version());
+    ;
 
-    if (option_.is_cert) { // only get token certs
+    if (option_.is_cert)
+    { // only get token certs
         json_key = "tokencerts";
 
         auto sh_vec = std::make_shared<token_cert::list>();
         sync_fetch_token_cert_balance(argument_.address, "", blockchain, sh_vec);
         std::sort(sh_vec->begin(), sh_vec->end());
-        for (auto& elem: *sh_vec) {
+        for (auto &elem : *sh_vec)
+        {
             if (!option_.symbol.empty() && option_.symbol != elem.get_symbol())
                 continue;
 
@@ -63,19 +70,22 @@ console_result showaddresstoken::invoke(Json::Value& jv_output,
             json_value.append(token_cert);
         }
     }
-    else if (option_.deposited) {
+    else if (option_.deposited)
+    {
         json_key = "tokens";
 
         auto sh_vec = std::make_shared<token_deposited_balance::list>();
         sync_fetch_token_deposited_balance(argument_.address, blockchain, sh_vec);
         std::sort(sh_vec->begin(), sh_vec->end());
 
-        for (auto& elem: *sh_vec) {
+        for (auto &elem : *sh_vec)
+        {
             if (!option_.symbol.empty() && option_.symbol != elem.symbol)
                 continue;
 
             auto issued_token = blockchain.get_issued_token(elem.symbol);
-            if (!issued_token) {
+            if (!issued_token)
+            {
                 continue;
             }
 
@@ -84,18 +94,21 @@ console_result showaddresstoken::invoke(Json::Value& jv_output,
             json_value.append(token_data);
         }
     }
-    else {
+    else
+    {
         json_key = "tokens";
 
         auto sh_vec = std::make_shared<token_balances::list>();
         sync_fetch_token_balance(argument_.address, true, blockchain, sh_vec);
         std::sort(sh_vec->begin(), sh_vec->end());
-        for (auto& elem: *sh_vec) {
+        for (auto &elem : *sh_vec)
+        {
             if (!option_.symbol.empty() && option_.symbol != elem.symbol)
                 continue;
 
             auto issued_token = blockchain.get_issued_token(elem.symbol);
-            if (!issued_token) {
+            if (!issued_token)
+            {
                 continue;
             }
             Json::Value token_data = json_helper.prop_list(elem, *issued_token);
@@ -104,14 +117,17 @@ console_result showaddresstoken::invoke(Json::Value& jv_output,
         }
     }
 
-    if (get_api_version() == 1 && json_value.isNull()) { //compatible for v1
+    if (get_api_version() == 1 && json_value.isNull())
+    { //compatible for v1
         jv_output[json_key] = "";
     }
-    else if (get_api_version() <= 2) {
+    else if (get_api_version() <= 2)
+    {
         jv_output[json_key] = json_value;
     }
-    else {
-        if(json_value.isNull())
+    else
+    {
+        if (json_value.isNull())
             json_value.resize(0);
 
         jv_output = json_value;
@@ -120,8 +136,6 @@ console_result showaddresstoken::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
