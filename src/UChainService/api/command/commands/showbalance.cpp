@@ -26,30 +26,35 @@
 #include <UChainService/api/command/base_helper.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showbalance *************************/
 
-console_result showbalance::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showbalance::invoke(Json::Value &jv_output,
+                                   libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    auto& aroot = jv_output;
+    auto &aroot = jv_output;
 
     auto vaddr = blockchain.get_wallet_addresses(auth_.name);
-    if(!vaddr) throw address_list_nullptr_exception{"nullptr for address list"};
+    if (!vaddr)
+        throw address_list_nullptr_exception{"nullptr for address list"};
 
     uint64_t total_confirmed = 0;
     uint64_t total_received = 0;
     uint64_t total_unspent = 0;
     uint64_t total_frozen = 0;
 
-    for (auto& i: *vaddr) {
+    for (auto &i : *vaddr)
+    {
         balances addr_balance{0, 0, 0, 0};
         auto waddr = bc::wallet::payment_address(i.get_address());
         sync_fetchbalance(waddr, blockchain, addr_balance);
@@ -60,19 +65,15 @@ console_result showbalance::invoke(Json::Value& jv_output,
         total_frozen += addr_balance.frozen_balance;
     }
 
-
     aroot["total_confirmed"] = total_confirmed;
     aroot["total_received"] = total_received;
     aroot["total_unspent"] = total_unspent;
     aroot["total_available"] = (total_unspent - total_frozen);
     aroot["total_frozen"] = total_frozen;
-    
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
