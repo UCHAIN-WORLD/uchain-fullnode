@@ -18,21 +18,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChainService/api/command/node_method_wrapper.hpp>
 #include <UChainService/api/command/commands/showwork.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showwork *************************/
 
-console_result showwork::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showwork::invoke(Json::Value &jv_output,
+                                libbitcoin::server::server_node &node)
 {
 
     administrator_required_checker(node, auth_.name, auth_.auth);
@@ -41,36 +43,39 @@ console_result showwork::invoke(Json::Value& jv_output,
     std::string header_hash;
     std::string boundary;
 
-    auto& blockchain = node.chain_impl();
-    auto& miner = node.miner();
+    auto &blockchain = node.chain_impl();
+    auto &miner = node.miner();
 
     //auto ret = miner.get_work(seed_hash, header_hash, boundary);
     auto ret = 0;
 
-    auto& aroot = jv_output;
+    auto &aroot = jv_output;
 
-    if (ret) {
+    if (ret)
+    {
 
         Json::Value result;
         result.append(header_hash);
         result.append(seed_hash);
         result.append(boundary);
 
-        if (get_api_version() == 1) {
+        if (get_api_version() == 1)
+        {
             aroot["result"] = result;
-        } else {
+        }
+        else
+        {
             aroot = result;
         }
-
-    } else {
+    }
+    else
+    {
         throw setting_required_exception{"Use command <setminingwallet> to set mining address."};
     }
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
