@@ -25,15 +25,17 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-
-console_result transfercandidate::invoke (Json::Value& jv_output,
-        libbitcoin::server::server_node& node)
+namespace libbitcoin
 {
-    auto& blockchain = node.chain_impl();
+namespace explorer
+{
+namespace commands
+{
+
+console_result transfercandidate::invoke(Json::Value &jv_output,
+                                         libbitcoin::server::server_node &node)
+{
+    auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     // check symbol
@@ -42,75 +44,77 @@ console_result transfercandidate::invoke (Json::Value& jv_output,
     // check to uid
     auto to_uid = argument_.to;
     auto to_address = get_address_from_uid(to_uid, blockchain);
-    if (!blockchain.is_valid_address(to_address)) {
+    if (!blockchain.is_valid_address(to_address))
+    {
         throw toaddress_invalid_exception("Invalid uid parameter! " + to_uid);
     }
 
     auto sh_vec = blockchain.get_registered_candidates();
     if (nullptr != sh_vec)
     {
-        auto pred = [to_uid, this](libbitcoin::chain::candidate_info& info){
-                return info.to_uid == to_uid && info.candidate.get_symbol()==argument_.symbol;
+        auto pred = [to_uid, this](libbitcoin::chain::candidate_info &info) {
+            return info.to_uid == to_uid && info.candidate.get_symbol() == argument_.symbol;
         };
         if (std::find_if(sh_vec->begin(), sh_vec->end(), pred) != sh_vec->end())
             throw toaddress_invalid_exception("The UID has owned the address. ");
     }
     // get identifiable token
     auto candidates = blockchain.get_wallet_candidates(auth_.name, argument_.symbol);
-    if (candidates->size() == 0) {
-        throw token_lack_exception("Not enough token '" + argument_.symbol +  "'");
+    if (candidates->size() == 0)
+    {
+        throw token_lack_exception("Not enough token '" + argument_.symbol + "'");
     }
 
-    auto& candidate = *(candidates->begin());
+    auto &candidate = *(candidates->begin());
     std::string from_address(candidate.get_address());
     bool is_multisig_address = blockchain.is_script_address(from_address);
 
     wallet_multisig acc_multisig;
-    if (is_multisig_address) {
+    if (is_multisig_address)
+    {
         auto multisig_vec = acc->get_multisig(from_address);
-        if (!multisig_vec || multisig_vec->empty()) {
+        if (!multisig_vec || multisig_vec->empty())
+        {
             throw multisig_notfound_exception("From address multisig record not found.");
         }
 
         acc_multisig = *(multisig_vec->begin());
     }
     auto candidate_info = blockchain.get_registered_candidate(argument_.symbol);
-    if (nullptr == candidate_info) {
+    if (nullptr == candidate_info)
+    {
         throw token_symbol_name_exception("Invalid SYMBOL parameter! " + argument_.symbol);
     }
     std::string from_uid = candidate_info->to_uid;
     // receiver
     std::vector<receiver_record> receiver{
-        {
-            to_address, argument_.symbol, 0, 0, 0,
-            utxo_attach_type::candidate_transfer, asset(from_uid, to_uid)
-        }
-    };
+        {to_address, argument_.symbol, 0, 0, 0,
+         utxo_attach_type::candidate_transfer, asset(from_uid, to_uid)}};
 
     auto helper = transferring_candidate(
-                      *this, blockchain,
-                      std::move(auth_.name), std::move(auth_.auth),
-                      is_multisig_address ? std::move(from_address) : "",
-                      std::move(argument_.symbol),
-                      std::move(receiver), argument_.fee,
-                      std::move(acc_multisig));
+        *this, blockchain,
+        std::move(auth_.name), std::move(auth_.auth),
+        is_multisig_address ? std::move(from_address) : "",
+        std::move(argument_.symbol),
+        std::move(receiver), argument_.fee,
+        std::move(acc_multisig));
 
     helper.exec();
 
     // json output
     auto tx = helper.get_transaction();
-    if (is_multisig_address) {
+    if (is_multisig_address)
+    {
         jv_output = config::json_helper(get_api_version()).prop_list_of_rawtx(tx, false, true);
     }
-    else {
+    else
+    {
         jv_output = config::json_helper(get_api_version()).prop_tree(tx, true);
     }
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
