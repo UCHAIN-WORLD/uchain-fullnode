@@ -26,25 +26,29 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showtokenview *************************/
 
-console_result showtokenview::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showtokenview::invoke(Json::Value &jv_output,
+                                     libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
-    if (!argument_.symbol.empty()) {
+    if (!argument_.symbol.empty())
+    {
         // check token symbol
         blockchain.uppercase_symbol(argument_.symbol);
         check_token_symbol(argument_.symbol);
     }
 
-       // page limit & page index paramenter check
+    // page limit & page index paramenter check
     if (!argument_.index)
         throw argument_legality_exception{"page index parameter cannot be zero"};
     if (!argument_.limit)
@@ -56,56 +60,65 @@ console_result showtokenview::invoke(Json::Value& jv_output,
     auto json_helper = config::json_helper(get_api_version());
 
     uint64_t start, end, total_page, tx_count;
-    auto calc_range = [&](uint64_t record_size){
-        if (record_size == 0|| (!argument_.index && !argument_.limit)) { // all tx records
+    auto calc_range = [&](uint64_t record_size) {
+        if (record_size == 0 || (!argument_.index && !argument_.limit))
+        { // all tx records
             start = 0;
             tx_count = record_size;
             argument_.index = 1;
             total_page = 1;
-        } else if (argument_.index && argument_.limit) {
+        }
+        else if (argument_.index && argument_.limit)
+        {
             start = (argument_.index - 1) * argument_.limit;
             end = (argument_.index) * argument_.limit;
             if (start >= record_size || record_size == 0)
                 throw argument_legality_exception{"no record in this page"};
 
             total_page = record_size % argument_.limit ? (record_size / argument_.limit + 1) : (record_size / argument_.limit);
-            tx_count = end >= record_size ? (record_size - start) : argument_.limit ;
-
-        } else {
+            tx_count = end >= record_size ? (record_size - start) : argument_.limit;
+        }
+        else
+        {
             throw argument_legality_exception{"invalid limit or index parameter"};
         }
     };
 
-    if (option_.is_deposit){
+    if (option_.is_deposit)
+    {
         auto sh_vec = sync_fetch_token_deposited_view(argument_.symbol, blockchain);
-        if (!sh_vec->empty()){
+        if (!sh_vec->empty())
+        {
             std::sort(sh_vec->begin(), sh_vec->end());
         }
 
         calc_range(sh_vec->size());
 
         std::vector<token_deposited_balance> result(sh_vec->begin() + start, sh_vec->begin() + start + tx_count);
-        for (auto &elem : result){
+        for (auto &elem : result)
+        {
             auto issued_token = blockchain.get_issued_token(elem.symbol);
-            if (!issued_token){
-                    continue;
+            if (!issued_token)
+            {
+                continue;
             }
             Json::Value token_data = json_helper.prop_list(elem, *issued_token);
             token_data["status"] = "unspent";
             json_value.append(token_data);
-            
         }
     }
     else
     {
         auto sh_vec = sync_fetch_token_view(argument_.symbol, blockchain);
-        if (!sh_vec->empty()){
+        if (!sh_vec->empty())
+        {
             std::sort(sh_vec->begin(), sh_vec->end());
         }
-        
+
         calc_range(sh_vec->size());
         std::vector<token_balances> result(sh_vec->begin() + start, sh_vec->begin() + start + tx_count);
-        for (auto &elem : result){
+        for (auto &elem : result)
+        {
             Json::Value token_data = json_helper.prop_list(elem);
             token_data["status"] = "unspent";
             json_value.append(token_data);
@@ -120,8 +133,6 @@ console_result showtokenview::invoke(Json::Value& jv_output,
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

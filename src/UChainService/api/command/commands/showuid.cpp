@@ -26,67 +26,82 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
-console_result showuid::invoke (Json::Value& jv_output,
-                               libbitcoin::server::server_node& node)
+console_result showuid::invoke(Json::Value &jv_output,
+                               libbitcoin::server::server_node &node)
 {
     Json::Value json_value;
 
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
-    if (option_.symbol.empty()) {
+    if (option_.symbol.empty())
+    {
 
         auto sh_vec = blockchain.get_registered_uids();
 
         std::sort(sh_vec->begin(), sh_vec->end());
         // add blockchain uids
-        for (auto& elem : *sh_vec) {
+        for (auto &elem : *sh_vec)
+        {
             json_value.append(elem.get_symbol());
         }
 
-        if (get_api_version() <= 2) {
+        if (get_api_version() <= 2)
+        {
             jv_output["uids"] = json_value;
         }
-        else {
+        else
+        {
             jv_output = json_value;
         }
     }
-    else {
+    else
+    {
         auto uidSymbol = option_.symbol;
-        if (blockchain.is_valid_address(uidSymbol)) {
-            throw token_symbol_name_exception{"Address is not supported."};    
+        if (blockchain.is_valid_address(uidSymbol))
+        {
+            throw token_symbol_name_exception{"Address is not supported."};
         }
 
         // check uid symbol
         check_uid_symbol(uidSymbol);
 
         // check uid exists
-        if (!blockchain.is_uid_exist(uidSymbol)) {
+        if (!blockchain.is_uid_exist(uidSymbol))
+        {
             throw uid_symbol_notfound_exception{"uid symbol does not exist on the blockchain"};
         }
 
         auto blockchain_uids = blockchain.get_uid_history_addresses(uidSymbol);
-        if (blockchain_uids) {
+        if (blockchain_uids)
+        {
             Json::Value json_address;
             Json::Value uid_data;
-            for (auto &uid : *blockchain_uids) {
+            for (auto &uid : *blockchain_uids)
+            {
                 uid_data["address"] = uid.get_uid().get_address();
                 uid_data["status"] = uid.get_status_string();
-                if (get_api_version() >= 3) {
+                if (get_api_version() >= 3)
+                {
                     uid_data["symbol"] = uidSymbol;
                 }
                 json_value.append(uid_data);
             }
-            
-            if (get_api_version() <= 2) {
+
+            if (get_api_version() <= 2)
+            {
                 jv_output["uid"] = uidSymbol;
                 jv_output["addresses"] = json_value;
             }
-            else {
-                if(json_value.isNull())
+            else
+            {
+                if (json_value.isNull())
                     json_value.resize(0);
 
                 jv_output = json_value;
@@ -100,4 +115,3 @@ console_result showuid::invoke (Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-

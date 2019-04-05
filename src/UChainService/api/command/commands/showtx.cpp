@@ -25,42 +25,47 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ showtx *************************/
 /// extent fetch-tx command , add tx height in tx content
-console_result showtx::invoke(Json::Value& jv_output,
-                             libbitcoin::server::server_node& node)
+console_result showtx::invoke(Json::Value &jv_output,
+                              libbitcoin::server::server_node &node)
 {
     bc::chain::transaction tx;
     uint64_t tx_height = 0;
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     auto exist = blockchain.get_transaction(argument_.hash, tx, tx_height);
-    if (!exist) {
+    if (!exist)
+    {
         throw tx_notfound_exception{"transaction does not exist!"};
     }
 
     auto json_helper = config::json_helper(get_api_version());
-    if (option_.json) {
-        if (get_api_version() == 1 && option_.is_fetch_tx) { // compatible for v1 fetch-tx
+    if (option_.json)
+    {
+        if (get_api_version() == 1 && option_.is_fetch_tx)
+        { // compatible for v1 fetch-tx
             jv_output = json_helper.prop_tree(tx, true);
         }
-        else {
+        else
+        {
             jv_output = json_helper.prop_list(tx, tx_height, true);
         }
     }
-    else {
+    else
+    {
         jv_output = json_helper.prop_tree(tx, false);
     }
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
