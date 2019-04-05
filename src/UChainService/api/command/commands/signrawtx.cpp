@@ -25,14 +25,17 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-console_result signrawtx::invoke(Json::Value& jv_output,
-                                 libbitcoin::server::server_node& node)
+namespace libbitcoin
 {
-    auto& blockchain = node.chain_impl();
+namespace explorer
+{
+namespace commands
+{
+
+console_result signrawtx::invoke(Json::Value &jv_output,
+                                 libbitcoin::server::server_node &node)
+{
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     tx_type tx_ = argument_.transaction;
@@ -43,7 +46,8 @@ console_result signrawtx::invoke(Json::Value& jv_output,
         chain::transaction tx_temp;
         uint64_t tx_height;
 
-        for (auto& fromeach : tx_.inputs) {
+        for (auto &fromeach : tx_.inputs)
+        {
             if (!(blockchain.get_transaction(fromeach.previous_output.hash, tx_temp, tx_height)))
                 throw argument_legality_exception{"invalid transaction hash " + encode_hash(fromeach.previous_output.hash)};
 
@@ -64,22 +68,22 @@ console_result signrawtx::invoke(Json::Value& jv_output,
             uint8_t hash_type = (signature_hash_algorithm)sign_type;
 
             bc::explorer::config::ec_private config_private_key(acc_addr->get_prv_key(auth_.auth)); // address private key
-            const ec_secret& private_key =    config_private_key;
+            const ec_secret &private_key = config_private_key;
             bc::wallet::ec_private ec_private_key(private_key, 0u, true);
 
             bc::explorer::config::script config_contract(output.script); // previous output script
-            const bc::chain::script& contract = config_contract;
+            const bc::chain::script &contract = config_contract;
 
             // gen sign
             bc::endorsement endorse;
             if (!bc::chain::script::create_endorsement(endorse, private_key,
-                    contract, tx_, index, hash_type))
+                                                       contract, tx_, index, hash_type))
             {
                 throw tx_sign_exception{"signrawtx sign failure"};
             }
 
             // do script
-            auto&& public_key = ec_private_key.to_public();
+            auto &&public_key = ec_private_key.to_public();
             data_chunk public_key_data;
             public_key.to_data(public_key_data);
             bc::chain::script ss;
@@ -87,9 +91,10 @@ console_result signrawtx::invoke(Json::Value& jv_output,
             ss.operations.push_back({bc::chain::opcode::special, public_key_data});
 
             // if pre-output script is deposit tx.
-            if (contract.pattern() == bc::chain::script_pattern::pay_key_hash_with_lock_height) {
+            if (contract.pattern() == bc::chain::script_pattern::pay_key_hash_with_lock_height)
+            {
                 uint64_t lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(
-                                           contract.operations);
+                    contract.operations);
                 ss.operations.push_back({bc::chain::opcode::special, script_number(lock_height).data()});
             }
 
@@ -100,7 +105,8 @@ console_result signrawtx::invoke(Json::Value& jv_output,
     }
 
     // get raw tx
-    if (blockchain.validate_transaction(tx_)) {
+    if (blockchain.validate_transaction(tx_))
+    {
         throw tx_validate_exception{"validate transaction failure"};
     }
 
@@ -112,4 +118,3 @@ console_result signrawtx::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
