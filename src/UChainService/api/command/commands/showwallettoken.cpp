@@ -26,41 +26,48 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showwallettoken *************************/
 
-console_result showwallettoken::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showwallettoken::invoke(Json::Value &jv_output,
+                                       libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
-    if (!argument_.symbol.empty()) {
+    if (!argument_.symbol.empty())
+    {
         // check token symbol
         check_token_symbol(argument_.symbol);
     }
 
     auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
-    if(!pvaddr)
+    if (!pvaddr)
         throw address_list_nullptr_exception{"nullptr for address list"};
 
     std::string json_key;
     Json::Value json_value;
     auto json_helper = config::json_helper(get_api_version());
 
-    if (option_.is_cert) { // only get token certs
+    if (option_.is_cert)
+    { // only get token certs
         json_key = "tokencerts";
         auto sh_vec = std::make_shared<token_cert::list>();
-        for (auto& each : *pvaddr){
+        for (auto &each : *pvaddr)
+        {
             sync_fetch_token_cert_balance(each.get_address(), argument_.symbol, blockchain, sh_vec);
         }
 
         std::sort(sh_vec->begin(), sh_vec->end());
-        for (auto& elem: *sh_vec) {
+        for (auto &elem : *sh_vec)
+        {
             if (!argument_.symbol.empty() && argument_.symbol != elem.get_symbol())
                 continue;
 
@@ -68,25 +75,29 @@ console_result showwallettoken::invoke(Json::Value& jv_output,
             json_value.append(token_cert);
         }
     }
-    else if (option_.deposited) {
+    else if (option_.deposited)
+    {
         json_key = "tokens";
         auto sh_vec = std::make_shared<token_deposited_balance::list>();
 
         // get address unspent token balance
         std::string addr;
-        for (auto& each : *pvaddr){
+        for (auto &each : *pvaddr)
+        {
             sync_fetch_token_deposited_balance(each.get_address(), blockchain, sh_vec);
         }
 
         std::sort(sh_vec->begin(), sh_vec->end());
 
-        for (auto& elem: *sh_vec) {
-            auto& symbol = elem.symbol;
+        for (auto &elem : *sh_vec)
+        {
+            auto &symbol = elem.symbol;
             if (!argument_.symbol.empty() && argument_.symbol != symbol)
                 continue;
 
             auto issued_token = blockchain.get_issued_token(symbol);
-            if (!issued_token) {
+            if (!issued_token)
+            {
                 continue;
             }
 
@@ -95,24 +106,28 @@ console_result showwallettoken::invoke(Json::Value& jv_output,
             json_value.append(token_data);
         }
     }
-    else {
+    else
+    {
         json_key = "tokens";
         auto sh_vec = std::make_shared<token_balances::list>();
 
         // 1. get token in blockchain
         // get address unspent token balance
         std::string addr;
-        for (auto& each : *pvaddr){
+        for (auto &each : *pvaddr)
+        {
             sync_fetch_token_balance(each.get_address(), false, blockchain, sh_vec);
         }
 
         std::sort(sh_vec->begin(), sh_vec->end());
-        for (auto& elem: *sh_vec) {
-            auto& symbol = elem.symbol;
+        for (auto &elem : *sh_vec)
+        {
+            auto &symbol = elem.symbol;
             if (!argument_.symbol.empty() && argument_.symbol != symbol)
                 continue;
             auto issued_token = blockchain.get_issued_token(symbol);
-            if (!issued_token) {
+            if (!issued_token)
+            {
                 continue;
             }
             Json::Value token_data = json_helper.prop_list(elem, *issued_token);
@@ -123,10 +138,11 @@ console_result showwallettoken::invoke(Json::Value& jv_output,
         // 2. get token in local database
         // shoudl filter all issued token which be stored in local wallet token database
         auto sh_unissued = blockchain.get_wallet_unissued_tokens(auth_.name);
-        for (auto& elem: *sh_unissued) {
-            auto& symbol = elem.detail.get_symbol();
+        for (auto &elem : *sh_unissued)
+        {
+            auto &symbol = elem.detail.get_symbol();
             // symbol filter
-            if(!argument_.symbol.empty() && argument_.symbol !=  symbol)
+            if (!argument_.symbol.empty() && argument_.symbol != symbol)
                 continue;
 
             Json::Value token_data = json_helper.prop_list(elem.detail, false);
@@ -135,13 +151,16 @@ console_result showwallettoken::invoke(Json::Value& jv_output,
         }
     }
 
-    if (get_api_version() == 1 && json_value.isNull()) { //compatible for v1
+    if (get_api_version() == 1 && json_value.isNull())
+    { //compatible for v1
         jv_output[json_key] = "";
     }
-    else if (get_api_version() <= 2) {
+    else if (get_api_version() <= 2)
+    {
         jv_output[json_key] = json_value;
     }
-    else {
+    else
+    {
         if (json_value.isNull())
             json_value.resize(0);
 
@@ -154,4 +173,3 @@ console_result showwallettoken::invoke(Json::Value& jv_output,
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
