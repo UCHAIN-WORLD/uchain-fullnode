@@ -18,41 +18,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <UChainService/api/command/commands/shutdown.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/node_method_wrapper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 
 /************************ shutdown *************************/
-console_result shutdown::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result shutdown::invoke(Json::Value &jv_output,
+                                libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
     administrator_required_checker(node, auth_.name, auth_.auth);
     jv_output = "sending SIGTERM to ucd.";
 
 #ifndef _WIN32
-    killpg(getpgrp(),SIGTERM);
+    killpg(getpgrp(), SIGTERM);
 #else
-    std::thread (
-    []()
-    { 
-        Sleep(2000);
-        ExitProcess(0);
-    }).detach();
+    std::thread(
+        []() {
+            Sleep(2000);
+            ExitProcess(0);
+        })
+        .detach();
 #endif
 
     return console_result::okay;
 }
 
-
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
