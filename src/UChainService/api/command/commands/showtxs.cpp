@@ -26,87 +26,96 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 class BC_API tx_block_info
 {
-public:
-    tx_block_info(uint64_t height, uint32_t timestamp, hash_digest hash):
-        height_(height), timestamp_(timestamp), hash_(hash)
-    {}
-    uint64_t get_height() {
+  public:
+    tx_block_info(uint64_t height, uint32_t timestamp, hash_digest hash) : height_(height), timestamp_(timestamp), hash_(hash)
+    {
+    }
+    uint64_t get_height()
+    {
         return height_;
     }
-    uint32_t get_timestamp() {
+    uint32_t get_timestamp()
+    {
         return timestamp_;
     }
-    hash_digest get_hash() {
+    hash_digest get_hash()
+    {
         return hash_;
     }
-    bool operator<(const tx_block_info & rinfo) const
+    bool operator<(const tx_block_info &rinfo) const
     {
-        return hash_ < const_cast<tx_block_info&>(rinfo).get_hash();
+        return hash_ < const_cast<tx_block_info &>(rinfo).get_hash();
     }
-    bool operator==(const tx_block_info& rinfo) const
+    bool operator==(const tx_block_info &rinfo) const
     {
-        return hash_ == const_cast<tx_block_info&>(rinfo).get_hash();
+        return hash_ == const_cast<tx_block_info &>(rinfo).get_hash();
     }
 
-private:
+  private:
     uint64_t height_;
     uint32_t timestamp_;
     hash_digest hash_;
 };
 
-
 /************************ showtxs *************************/
 
-console_result showtxs::invoke(Json::Value& jv_output,
-                               libbitcoin::server::server_node& node)
+console_result showtxs::invoke(Json::Value &jv_output,
+                               libbitcoin::server::server_node &node)
 {
     using namespace libbitcoin::config; // for hash256
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     administrator_required_checker(node, auth_.name, auth_.auth);
     //blockchain.is_account_passwd_valid(auth_.name, auth_.auth);
     // address option check
     if (!argument_.address.empty() && !blockchain.is_valid_address(argument_.address))
         throw address_invalid_exception{"invalid address parameter!"};
     // height check
-    if (option_.height.first()
-            && option_.height.second()
-            && (option_.height.first() >= option_.height.second())) {
+    if (option_.height.first() && option_.height.second() && (option_.height.first() >= option_.height.second()))
+    {
         throw block_height_exception{"invalid height option!"};
     }
     // symbol check
-    if (!argument_.symbol.empty()) {
+    if (!argument_.symbol.empty())
+    {
         blockchain.uppercase_symbol(argument_.symbol);
         if (!blockchain.get_issued_token(argument_.symbol))
             throw token_symbol_notfound_exception{argument_.symbol + std::string(" not exist!")};
     }
 
-    auto& aroot = jv_output;
+    auto &aroot = jv_output;
     Json::Value balances;
 
-    auto sort_by_height = [](const tx_block_info & lhs, const tx_block_info & rhs)->bool {
-        return const_cast<tx_block_info&>(lhs).get_height() > const_cast<tx_block_info&>(rhs).get_height();
+    auto sort_by_height = [](const tx_block_info &lhs, const tx_block_info &rhs) -> bool {
+        return const_cast<tx_block_info &>(lhs).get_height() > const_cast<tx_block_info &>(rhs).get_height();
     };
 
     auto sh_txs = std::make_shared<std::vector<tx_block_info>>();
     auto sh_addr_vec = std::make_shared<std::vector<std::string>>();
 
     // collect address
-    if (argument_.address.empty()) {
+    if (argument_.address.empty())
+    {
         auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
         if (!pvaddr)
             throw address_invalid_exception{"nullptr for address list"};
 
-        for (auto& elem : *pvaddr) {
+        for (auto &elem : *pvaddr)
+        {
             sh_addr_vec->push_back(elem.get_address());
         }
-    } else { // address exist in command
+    }
+    else
+    { // address exist in command
         sh_addr_vec->push_back(argument_.address);
     }
 
@@ -117,27 +126,32 @@ console_result showtxs::invoke(Json::Value& jv_output,
         throw argument_legality_exception{"page record limit parameter cannot be zero"};
     if (argument_.limit > 100)
         throw argument_legality_exception{"page record limit cannot be bigger than 100."};
-        
-    if(sh_addr_vec->size()){
+
+    if (sh_addr_vec->size())
+    {
         // scan all addresses business record
-        for (auto& each : *sh_addr_vec) {
+        for (auto &each : *sh_addr_vec)
+        {
             auto sh_vec = blockchain.get_address_business_record(each, argument_.symbol,
-                        option_.height.first(), option_.height.second(), 0, 0);
-            for (auto& elem : *sh_vec)
+                                                                 option_.height.first(), option_.height.second(), 0, 0);
+            for (auto &elem : *sh_vec)
                 sh_txs->push_back(tx_block_info(elem.height, elem.data.get_timestamp(), elem.point.hash));
         }
-        std::sort (sh_txs->begin(), sh_txs->end());
+        std::sort(sh_txs->begin(), sh_txs->end());
         sh_txs->erase(std::unique(sh_txs->begin(), sh_txs->end()), sh_txs->end());
-        std::sort (sh_txs->begin(), sh_txs->end(), sort_by_height);
-    } else{
+        std::sort(sh_txs->begin(), sh_txs->end(), sort_by_height);
+    }
+    else
+    {
         std::promise<code> p;
-        blockchain.fetch_latest_transactions(argument_.index, argument_.limit, [&p, &balances, this](const code & ec, const std::shared_ptr<chain::transaction::list> txs) {
-            if (ec) {
+        blockchain.fetch_latest_transactions(argument_.index, argument_.limit, [&p, &balances, this](const code &ec, const std::shared_ptr<chain::transaction::list> txs) {
+            if (ec)
+            {
                 p.set_value(ec);
                 return;
             }
             std::vector<config::transaction> txes;
-            for(auto&& tx:*txs)
+            for (auto &&tx : *txs)
             {
                 txes.push_back(tx);
             }
@@ -146,30 +160,36 @@ console_result showtxs::invoke(Json::Value& jv_output,
         });
 
         auto result = p.get_future().get();
-        if (result) {
-            throw block_height_get_exception{ result.message() };
+        if (result)
+        {
+            throw block_height_get_exception{result.message()};
         }
     }
 
     uint64_t start, end, total_page, tx_count;
-    if (argument_.index && argument_.limit) {
+    if (argument_.index && argument_.limit)
+    {
         start = (argument_.index - 1) * argument_.limit;
         end = (argument_.index) * argument_.limit;
         if ((start >= sh_txs->size() || !sh_txs->size()) && !balances.size())
             throw argument_legality_exception{"no record in this page"};
 
         total_page = sh_txs->size() % argument_.limit ? (sh_txs->size() / argument_.limit + 1) : (sh_txs->size() / argument_.limit);
-        tx_count = end >= sh_txs->size() ? (sh_txs->size() - start) : argument_.limit ;
-
-    } else if (!argument_.index && !argument_.limit) { // all tx records
+        tx_count = end >= sh_txs->size() ? (sh_txs->size() - start) : argument_.limit;
+    }
+    else if (!argument_.index && !argument_.limit)
+    { // all tx records
         start = 0;
         tx_count = sh_txs->size();
         argument_.index = 1;
         total_page = 1;
-    } else {
+    }
+    else
+    {
         throw argument_legality_exception{"invalid limit or index parameter"};
     }
-    if(!balances.size()){
+    if (!balances.size())
+    {
         auto json_helper = config::json_helper(get_api_version());
 
         // sort by height
@@ -180,17 +200,21 @@ console_result showtxs::invoke(Json::Value& jv_output,
         chain::transaction tx;
         uint64_t tx_height;
         //hash_digest trans_hash;
-        for (auto& each : result) {
+        for (auto &each : result)
+        {
             //decode_hash(trans_hash, each.hash);
             if (!blockchain.get_transaction(each.get_hash(), tx, tx_height))
                 continue;
 
             Json::Value tx_item;
             tx_item["hash"] = encode_hash(each.get_hash());
-            if (get_api_version() == 1) {
+            if (get_api_version() == 1)
+            {
                 tx_item["height"] += each.get_height();
                 tx_item["timestamp"] += each.get_timestamp();
-            } else {
+            }
+            else
+            {
                 tx_item["height"] = each.get_height();
                 tx_item["timestamp"] = each.get_timestamp();
             }
@@ -198,16 +222,20 @@ console_result showtxs::invoke(Json::Value& jv_output,
 
             // set inputs content
             Json::Value input_addrs;
-            for (auto& input : tx.inputs) {
+            for (auto &input : tx.inputs)
+            {
                 Json::Value input_addr;
 
-                auto&& script_address = payment_address::extract(input.script);
-                if (script_address) {
-                    auto&& temp_addr = script_address.encoded();
+                auto &&script_address = payment_address::extract(input.script);
+                if (script_address)
+                {
+                    auto &&temp_addr = script_address.encoded();
                     input_addr["address"] = temp_addr;
                     // add input address
                     vec_ip_addr.push_back(temp_addr);
-                } else {
+                }
+                else
+                {
                     // empty input address : coin base tx;
                     if (get_api_version() == 1)
                         input_addr["address"] = "";
@@ -217,33 +245,37 @@ console_result showtxs::invoke(Json::Value& jv_output,
 
                 input_addr["script"] = input.script.to_string(1);
                 input_addrs.append(input_addr);
-
             }
 
-            if (get_api_version() == 1 && input_addrs.isNull()) { // compatible for v1
+            if (get_api_version() == 1 && input_addrs.isNull())
+            { // compatible for v1
                 tx_item["inputs"] = "";
             }
-            else {
+            else
+            {
                 tx_item["inputs"] = input_addrs;
             }
 
             // set outputs content
             Json::Value pt_outputs;
             uint64_t lock_height = 0;
-            for (auto& op : tx.outputs) {
+            for (auto &op : tx.outputs)
+            {
                 Json::Value pt_output;
 
-                auto&& address = payment_address::extract(op.script);
-                if (address) {
-                    auto&& temp_addr = address.encoded();
+                auto &&address = payment_address::extract(op.script);
+                if (address)
+                {
+                    auto &&temp_addr = address.encoded();
                     pt_output["address"] = temp_addr;
                     auto ret = blockchain.get_wallet_address(auth_.name, temp_addr);
                     if (get_api_version() == 1)
                         pt_output["own"] = ret ? "true" : "false";
                     else
                         pt_output["own"] = ret ? true : false;
-
-                } else {
+                }
+                else
+                {
                     // empty output address ? unbelievable.
                     if (get_api_version() == 1)
                         pt_output["address"] = "";
@@ -256,31 +288,36 @@ console_result showtxs::invoke(Json::Value& jv_output,
                 if (chain::operation::is_pay_key_hash_with_lock_height_pattern(op.script.operations))
                     lock_height = chain::operation::get_lock_height_from_pay_key_hash_with_lock_height(op.script.operations);
 
-                
                 pt_output["locked_height_range"] = lock_height;
                 pt_output["ucn_value"] = op.value;
-                
 
-                if (chain::operation::is_pay_key_hash_with_attenuation_model_pattern(op.script.operations)) {
-                    const auto& model_param = op.get_attenuation_model_param();
+                if (chain::operation::is_pay_key_hash_with_attenuation_model_pattern(op.script.operations))
+                {
+                    const auto &model_param = op.get_attenuation_model_param();
                     pt_output["attenuation_model_param"] = json_helper.prop_attenuation_model_param(model_param);
                 }
 
                 auto attach_data = op.attach_data;
                 Json::Value tree = json_helper.prop_list(attach_data);
 
-                if (attach_data.get_type() == UC_TOKEN_TYPE) {
+                if (attach_data.get_type() == UC_TOKEN_TYPE)
+                {
                     auto token_info = boost::get<bc::chain::token>(attach_data.get_attach());
-                    if (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE) {
+                    if (token_info.get_status() == TOKEN_TRANSFERABLE_TYPE)
+                    {
                         // token_transfer dose not contain decimal_number message,
                         // so we get decimal_number from the issued token with the same symbol.
                         auto symbol = tree["symbol"].asString();
                         auto issued_token = blockchain.get_issued_token(symbol);
 
-                        if (issued_token) {
-                            if (get_api_version() == 1) {
+                        if (issued_token)
+                        {
+                            if (get_api_version() == 1)
+                            {
                                 tree["decimal_number"] += issued_token->get_decimal_number();
-                            } else {
+                            }
+                            else
+                            {
                                 tree["decimal_number"] = issued_token->get_decimal_number();
                             }
                         }
@@ -293,20 +330,23 @@ console_result showtxs::invoke(Json::Value& jv_output,
                 pt_outputs.append(pt_output);
             }
 
-            if (get_api_version() == 1 && pt_outputs.isNull()) { // compatible for v1
+            if (get_api_version() == 1 && pt_outputs.isNull())
+            { // compatible for v1
                 tx_item["outputs"] = "";
             }
-            else {
+            else
+            {
                 tx_item["outputs"] = pt_outputs;
             }
 
             // set tx direction
             // 1. receive check
-            auto pos = std::find_if(vec_ip_addr.begin(), vec_ip_addr.end(), [&](const std::string & i) {
+            auto pos = std::find_if(vec_ip_addr.begin(), vec_ip_addr.end(), [&](const std::string &i) {
                 return blockchain.get_wallet_address(auth_.name, i) != nullptr;
             });
 
-            if (pos == vec_ip_addr.end()) {
+            if (pos == vec_ip_addr.end())
+            {
                 tx_item["direction"] = "receive";
             }
 
@@ -315,21 +355,21 @@ console_result showtxs::invoke(Json::Value& jv_output,
             balances.append(tx_item);
         }
     }
-    
 
-
-    aroot["total_page"] = balances.size() ? 10000/argument_.limit : total_page;
+    aroot["total_page"] = balances.size() ? 10000 / argument_.limit : total_page;
     aroot["current_page"] = argument_.index;
     aroot["transaction_count"] = balances.size() ? balances.size() : tx_count;
-    
 
-    if (get_api_version() == 1 && balances.isNull()) { // compatible for v1
+    if (get_api_version() == 1 && balances.isNull())
+    { // compatible for v1
         aroot["transactions"] = "";
     }
-    else if (get_api_version() <= 2) {
+    else if (get_api_version() <= 2)
+    {
         aroot["transactions"] = balances;
     }
-    else {
+    else
+    {
         if (balances.isNull())
             balances.resize(0);
 
