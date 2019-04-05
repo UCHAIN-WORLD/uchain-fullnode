@@ -26,34 +26,42 @@
 #include <UChainService/api/command/base_helper.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showuids *************************/
 
-console_result showuids::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showuids::invoke(Json::Value &jv_output,
+                                libbitcoin::server::server_node &node)
 {
     // page limit & page index paramenter check
-    if (argument_.index <= 0) {
+    if (argument_.index <= 0)
+    {
         throw argument_legality_exception{"page index parameter cannot be zero"};
     }
-    if (argument_.limit <= 0) {
+    if (argument_.limit <= 0)
+    {
         throw argument_legality_exception{"page record limit parameter cannot be zero"};
     }
-    if (argument_.limit > 100) {
+    if (argument_.limit > 100)
+    {
         throw argument_legality_exception{"page record limit cannot be bigger than 100."};
     }
 
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
     std::shared_ptr<uid_detail::list> sh_vec;
-    if (auth_.name.empty()) {
+    if (auth_.name.empty())
+    {
         // no wallet -- list all uids in blockchain
         sh_vec = blockchain.get_registered_uids();
     }
-    else {
+    else
+    {
         // list uids owned by the wallet
         blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
         sh_vec = blockchain.get_wallet_uids(auth_.name);
@@ -63,30 +71,35 @@ console_result showuids::invoke(Json::Value& jv_output,
     uint64_t index = argument_.index;
 
     std::vector<uid_detail> result;
-    uint64_t total_count = sh_vec-> size();
+    uint64_t total_count = sh_vec->size();
     uint64_t total_page = 0;
-    if (total_count > 0) {
+    if (total_count > 0)
+    {
         std::sort(sh_vec->begin(), sh_vec->end());
 
         uint64_t start = 0, end = 0, tx_count = 0;
-        if (index && limit) {
+        if (index && limit)
+        {
             total_page = (total_count % limit) ? (total_count / limit + 1) : (total_count / limit);
             index = index > total_page ? total_page : index;
             start = (index - 1) * limit;
             end = index * limit;
-            tx_count = end >= total_count ? (total_count - start) : limit ;
+            tx_count = end >= total_count ? (total_count - start) : limit;
         }
-        else if (!index && !limit) { // all tx records
+        else if (!index && !limit)
+        { // all tx records
             start = 0;
             tx_count = total_count;
             index = 1;
             total_page = 1;
         }
-        else {
+        else
+        {
             throw argument_legality_exception{"invalid limit or index parameter"};
         }
 
-        if (start < total_count && tx_count > 0) {
+        if (start < total_count && tx_count > 0)
+        {
             result.resize(tx_count);
             std::copy(sh_vec->begin() + start, sh_vec->begin() + start + tx_count, result.begin());
         }
@@ -94,7 +107,8 @@ console_result showuids::invoke(Json::Value& jv_output,
 
     Json::Value uids;
     // add blockchain uids
-    for (auto& elem: result) {
+    for (auto &elem : result)
+    {
         Json::Value uid_data;
         uid_data["symbol"] = elem.get_symbol();
         uid_data["address"] = elem.get_address();
@@ -103,7 +117,8 @@ console_result showuids::invoke(Json::Value& jv_output,
     }
 
     // output
-    if (uids.isNull()) {
+    if (uids.isNull())
+    {
         uids.resize(0);
     }
 
