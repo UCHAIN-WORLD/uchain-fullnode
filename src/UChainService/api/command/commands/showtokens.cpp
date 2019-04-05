@@ -26,65 +26,78 @@
 #include <UChainService/api/command/base_helper.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
+namespace libbitcoin
+{
+namespace explorer
+{
+namespace commands
+{
 using namespace bc::explorer::config;
 
 /************************ showtokens *************************/
 
-console_result showtokens::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+console_result showtokens::invoke(Json::Value &jv_output,
+                                  libbitcoin::server::server_node &node)
 {
-    auto& blockchain = node.chain_impl();
+    auto &blockchain = node.chain_impl();
 
     std::string json_key;
     Json::Value json_value;
-    
+
     auto json_helper = config::json_helper(get_api_version());
 
-    if (option_.is_cert) { // only get token certs
+    if (option_.is_cert)
+    { // only get token certs
         json_key = "tokencerts";
 
-        if (auth_.name.empty()) { // no wallet -- list whole token certs in blockchain
+        if (auth_.name.empty())
+        { // no wallet -- list whole token certs in blockchain
             auto result_vec = blockchain.get_issued_token_certs();
             std::sort(result_vec->begin(), result_vec->end());
-            for (auto& elem : *result_vec) {
+            for (auto &elem : *result_vec)
+            {
                 Json::Value token_data = json_helper.prop_list(elem);
                 json_value.append(token_data);
             }
         }
-        else { // list token certs owned by wallet
+        else
+        { // list token certs owned by wallet
             blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
             auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
             if (!pvaddr)
                 throw address_list_nullptr_exception{"nullptr for address list"};
 
             auto sh_vec = std::make_shared<token_cert::list>();
-            for (auto& each : *pvaddr) {
+            for (auto &each : *pvaddr)
+            {
                 sync_fetch_token_cert_balance(each.get_address(), "", blockchain, sh_vec);
             }
 
             std::sort(sh_vec->begin(), sh_vec->end());
-            for (auto& elem: *sh_vec) {
+            for (auto &elem : *sh_vec)
+            {
                 Json::Value token_cert = json_helper.prop_list(elem);
                 json_value.append(token_cert);
             }
         }
     }
-    else {
+    else
+    {
         json_key = "tokens";
 
-        if (auth_.name.empty()) { // no wallet -- list whole tokens in blockchain
+        if (auth_.name.empty())
+        { // no wallet -- list whole tokens in blockchain
             auto sh_vec = blockchain.get_issued_tokens();
             std::sort(sh_vec->begin(), sh_vec->end());
-            for (auto& elem: *sh_vec) {
+            for (auto &elem : *sh_vec)
+            {
                 Json::Value token_data = json_helper.prop_list(elem, true);
                 token_data["status"] = "issued";
                 json_value.append(token_data);
             }
         }
-        else { // list token owned by wallet
+        else
+        { // list token owned by wallet
             blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
             auto pvaddr = blockchain.get_wallet_addresses(auth_.name);
             if (!pvaddr)
@@ -94,14 +107,17 @@ console_result showtokens::invoke(Json::Value& jv_output,
 
             // 1. get token in blockchain
             // get address unspent token balance
-            for (auto& each : *pvaddr) {
+            for (auto &each : *pvaddr)
+            {
                 sync_fetch_token_balance(each.get_address(), true, blockchain, sh_vec);
             }
 
             std::sort(sh_vec->begin(), sh_vec->end());
-            for (auto& elem: *sh_vec) {
+            for (auto &elem : *sh_vec)
+            {
                 auto issued_token = blockchain.get_issued_token(elem.symbol);
-                if (!issued_token) {
+                if (!issued_token)
+                {
                     continue;
                 }
                 Json::Value token_data = json_helper.prop_list(elem, *issued_token, false);
@@ -113,7 +129,8 @@ console_result showtokens::invoke(Json::Value& jv_output,
             // shoudl filter all issued token which be stored in local wallet token database
             sh_vec->clear();
             auto sh_unissued = blockchain.get_wallet_unissued_tokens(auth_.name);
-            for (auto& elem: *sh_unissued) {
+            for (auto &elem : *sh_unissued)
+            {
                 Json::Value token_data = json_helper.prop_list(elem.detail, false, false);
                 token_data["status"] = "unissued";
                 json_value.append(token_data);
@@ -121,16 +138,19 @@ console_result showtokens::invoke(Json::Value& jv_output,
         }
     }
 
-    if (get_api_version() == 1 && json_value.isNull()) { //compatible for v1
+    if (get_api_version() == 1 && json_value.isNull())
+    { //compatible for v1
         jv_output[json_key] = "";
     }
-    else if (get_api_version() <= 2) {
+    else if (get_api_version() <= 2)
+    {
         jv_output[json_key] = json_value;
     }
-    else {
-        if(json_value.isNull())
-            json_value.resize(0);  
-            
+    else
+    {
+        if (json_value.isNull())
+            json_value.resize(0);
+
         jv_output = json_value;
     }
 
