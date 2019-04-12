@@ -15,14 +15,14 @@
  * 02110-1301, USA.
  */
 
-#include <UChainService/api/restful//utility/Stream.hpp>
-
+#include <UChainService/api/restful //utility/Stream.hpp>
 
 using namespace std;
 
-namespace mgbubble {
+namespace mgbubble
+{
 
-UC_API void reset(ostream& os) noexcept
+UC_API void reset(ostream &os) noexcept
 {
   os.clear();
   os.fill(os.widen(' '));
@@ -33,4 +33,4 @@ UC_API void reset(ostream& os) noexcept
 
 OStreamJoiner::~OStreamJoiner() noexcept = default;
 
-} // mgbubble
+} // namespace mgbubble
