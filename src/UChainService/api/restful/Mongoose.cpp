@@ -16,19 +16,23 @@
  */
 #include <cctype>
 #include <jsoncpp/json/json.h>
-#include <UChainService/api/restful//Mongoose.hpp>
-#include <UChainService/api/restful//utility/Tokeniser.hpp>
+#include <UChainService/api/restful //Mongoose.hpp>
+#include <UChainService/api/restful //utility/Tokeniser.hpp>
 #include <UChainService/api/command/exception.hpp>
 
-namespace mgbubble {
+namespace mgbubble
+{
 
-void HttpMessage::data_to_arg(uint8_t rpc_version) {
+void HttpMessage::data_to_arg(uint8_t rpc_version)
+{
 
     auto vargv_to_argv = [this]() {
         // convert to char** argv
         int i = 0;
-        for(auto& iter : this->vargv_){
-            if (i >= max_paramters){
+        for (auto &iter : this->vargv_)
+        {
+            if (i >= max_paramters)
+            {
                 break;
             }
             this->argv_[i++] = iter.c_str();
@@ -38,30 +42,37 @@ void HttpMessage::data_to_arg(uint8_t rpc_version) {
 
     Json::Reader reader;
     Json::Value root;
-    const char* begin = body().data();
-    const char* end = body().data() + body().size();
-    if (!reader.parse(begin, end, root) || !root.isObject()) {
+    const char *begin = body().data();
+    const char *end = body().data() + body().size();
+    if (!reader.parse(begin, end, root) || !root.isObject())
+    {
         throw libbitcoin::explorer::jsonrpc_parse_error();
     }
 
-    if (root["method"].isString()) {
+    if (root["method"].isString())
+    {
         vargv_.emplace_back(root["method"].asString());
     }
 
-    if (root.isMember("params") && !root["params"].isArray()) {
+    if (root.isMember("params") && !root["params"].isArray())
+    {
         throw libbitcoin::explorer::jsonrpc_invalid_params();
     }
 
-    if (rpc_version == 1) {
+    if (rpc_version == 1)
+    {
         /* ***************** /rpc **********************
          * application/json
          * {"method":"xxx", "params":["p1","p2"]}
          * ******************************************/
-        for (auto& param : root["params"]) {
+        for (auto &param : root["params"])
+        {
             if (!param.isObject())
                 vargv_.emplace_back(param.asString());
         }
-    } else {
+    }
+    else
+    {
         /* ***************** /rpc/v2 or /rpc/v3 **********************
          * application/json
          * {
@@ -78,41 +89,54 @@ void HttpMessage::data_to_arg(uint8_t rpc_version) {
          * ******************************************/
 
         const vector<std::string> api20_ver_list = {"2.0", "3.0"};
-        auto checkAPIVer = [](const vector<std::string> &api_ver_list, const std::string &rpc_version){
+        auto checkAPIVer = [](const vector<std::string> &api_ver_list, const std::string &rpc_version) {
             return find(api_ver_list.begin(), api_ver_list.end(), rpc_version) != api_ver_list.end();
         };
 
-        if (!checkAPIVer(api20_ver_list, root["jsonrpc"].asString())) {
+        if (!checkAPIVer(api20_ver_list, root["jsonrpc"].asString()))
+        {
             throw libbitcoin::explorer::jsonrpc_invalid_request();
         }
 
-        if (root["id"].isString()) {
+        if (root["id"].isString())
+        {
             jsonrpc_id_ = std::stol(root["id"].asString());
-        } else {
+        }
+        else
+        {
             jsonrpc_id_ = root["id"].asInt64();
         }
 
         // push options
-        for (auto& param : root["params"]) {
-            if (param.isObject()) {
-                for (auto& key : param.getMemberNames()) {
-                    if (!param[key].empty()) {
+        for (auto &param : root["params"])
+        {
+            if (param.isObject())
+            {
+                for (auto &key : param.getMemberNames())
+                {
+                    if (!param[key].empty())
+                    {
 
-                        if (!param[key].isArray()) {
+                        if (!param[key].isArray())
+                        {
                             // --option
                             vargv_.emplace_back("--" + key);
                             // value
                             vargv_.emplace_back(param[key].asString());
-                        } else  {
-                            for (auto& member : param[key]) {
+                        }
+                        else
+                        {
+                            for (auto &member : param[key])
+                            {
                                 // --option
                                 vargv_.emplace_back("--" + key);
                                 // value
                                 vargv_.emplace_back(member.asString());
                             }
                         }
-
-                    } else {
+                    }
+                    else
+                    {
                         // --option
                         vargv_.emplace_back("--" + key);
                     }
@@ -122,8 +146,10 @@ void HttpMessage::data_to_arg(uint8_t rpc_version) {
         }
 
         // push arguments at last
-        for (auto& param : root["params"]) {
-            if (!param.isObject()){
+        for (auto &param : root["params"])
+        {
+            if (!param.isObject())
+            {
                 vargv_.emplace_back(param.asString());
             }
         }
@@ -132,28 +158,37 @@ void HttpMessage::data_to_arg(uint8_t rpc_version) {
     vargv_to_argv();
 }
 
-void WebsocketMessage::data_to_arg(uint8_t api_version) {
+void WebsocketMessage::data_to_arg(uint8_t api_version)
+{
     Tokeniser<' '> args;
     args.reset(+*impl_);
 
     // store args from ws message
-    do {
+    do
+    {
         //skip spaces
-        if (args.top().front() == ' '){
+        if (args.top().front() == ' ')
+        {
             args.pop();
             continue;
-        } else if (std::iscntrl(args.top().front())){
+        }
+        else if (std::iscntrl(args.top().front()))
+        {
             break;
-        } else {
+        }
+        else
+        {
             this->vargv_.push_back({args.top().data(), args.top().size()});
             args.pop();
         }
-    }while(!args.empty());
+    } while (!args.empty());
 
     // convert to char** argv
     int i = 0;
-    for(auto& iter : vargv_){
-        if (i >= max_paramters){
+    for (auto &iter : vargv_)
+    {
+        if (i >= max_paramters)
+        {
             break;
         }
         argv_[i++] = iter.c_str();
@@ -161,10 +196,10 @@ void WebsocketMessage::data_to_arg(uint8_t api_version) {
     argc_ = i;
 }
 
-void ToCommandArg::add_arg(std::string&& outside)
+void ToCommandArg::add_arg(std::string &&outside)
 {
     vargv_.push_back(outside);
     argc_++;
 }
 
-} // mgbubble
+} // namespace mgbubble
