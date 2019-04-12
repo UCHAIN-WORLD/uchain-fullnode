@@ -26,14 +26,17 @@
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
 
-namespace libbitcoin {
-namespace explorer {
-namespace commands {
-
-console_result transferuid::invoke(Json::Value& jv_output,
-    libbitcoin::server::server_node& node)
+namespace libbitcoin
 {
-    auto& blockchain = node.chain_impl();
+namespace explorer
+{
+namespace commands
+{
+
+console_result transferuid::invoke(Json::Value &jv_output,
+                                   libbitcoin::server::server_node &node)
+{
+    auto &blockchain = node.chain_impl();
     auto acc = blockchain.is_wallet_passwd_valid(auth_.name, auth_.auth);
 
     // check uid symbol
@@ -43,14 +46,16 @@ console_result transferuid::invoke(Json::Value& jv_output,
 
     // check uid exsits
     auto uid_detail = blockchain.get_registered_uid(uid);
-    if (!uid_detail) {
+    if (!uid_detail)
+    {
         throw uid_symbol_notfound_exception{"Uid '" + uid + "' does not exist on the blockchain"};
     }
 
     auto from_address = uid_detail->get_address();
 
     // check uid is owned by the wallet
-    if (!blockchain.get_wallet_address(auth_.name, from_address)) {
+    if (!blockchain.get_wallet_address(auth_.name, from_address))
+    {
         throw uid_symbol_notowned_exception{
             "Uid '" + uid + "' is not owned by " + auth_.name};
     }
@@ -60,33 +65,31 @@ console_result transferuid::invoke(Json::Value& jv_output,
         throw toaddress_invalid_exception{"Invalid target address parameter!"};
 
     // check to address is owned by the wallet
-    if (!blockchain.get_wallet_address(auth_.name, argument_.to)) {
+    if (!blockchain.get_wallet_address(auth_.name, argument_.to))
+    {
         throw address_dismatch_wallet_exception{"Target address is not owned by wallet. " + argument_.to};
     }
 
-     // fail if address is already binded with uid in blockchain
-    if (blockchain.is_address_registered_uid(argument_.to)) {
+    // fail if address is already binded with uid in blockchain
+    if (blockchain.is_address_registered_uid(argument_.to))
+    {
         throw uid_symbol_existed_exception{"Target address is already binded with some uid on the blockchain"};
     }
 
     // receiver
     std::vector<receiver_record> receiver{
-        {argument_.to, argument_.symbol, 0, 0, utxo_attach_type::uid_transfer, asset()}
-    };
+        {argument_.to, argument_.symbol, 0, 0, utxo_attach_type::uid_transfer, asset()}};
 
     auto toaddr = bc::wallet::payment_address(argument_.to);
     auto addr = bc::wallet::payment_address(from_address);
 
-    if( toaddr.version() == bc::wallet::payment_address::mainnet_p2sh
-    && addr.version() == bc::wallet::payment_address::mainnet_p2sh)
+    if (toaddr.version() == bc::wallet::payment_address::mainnet_p2sh && addr.version() == bc::wallet::payment_address::mainnet_p2sh)
         throw uid_multisig_address_exception{"uid cannot modify multi-signature address to multi-signature address"};
 
-
-    if (addr.version() == bc::wallet::payment_address::mainnet_p2sh
-    || toaddr.version() == bc::wallet::payment_address::mainnet_p2sh) // for multisig address
+    if (addr.version() == bc::wallet::payment_address::mainnet_p2sh || toaddr.version() == bc::wallet::payment_address::mainnet_p2sh) // for multisig address
     {
 
-        auto findmultisig = [&acc](wallet_multisig& acc_multisig, std::string address) {
+        auto findmultisig = [&acc](wallet_multisig &acc_multisig, std::string address) {
             auto multisig_vec = acc->get_multisig(address);
             if (!multisig_vec || multisig_vec->empty())
                 return false;
@@ -104,13 +107,13 @@ console_result transferuid::invoke(Json::Value& jv_output,
             throw multisig_notfound_exception{"to address multisig record not found."};
 
         auto send_helper = sending_multisig_uid(*this, blockchain, std::move(auth_.name), std::move(auth_.auth),
-                                                 std::move(from_address),  std::move(argument_.to),
-                                                 std::move(argument_.symbol), std::move(receiver), argument_.fee,
-                                                 std::move(acc_multisig), std::move(acc_multisig_to));
+                                                std::move(from_address), std::move(argument_.to),
+                                                std::move(argument_.symbol), std::move(receiver), argument_.fee,
+                                                std::move(acc_multisig), std::move(acc_multisig_to));
 
         send_helper.exec();
         // json output
-        auto && tx = send_helper.get_transaction();
+        auto &&tx = send_helper.get_transaction();
         jv_output = config::json_helper(get_api_version()).prop_list_of_rawtx(tx, false, true);
     }
     else
@@ -127,13 +130,9 @@ console_result transferuid::invoke(Json::Value& jv_output,
         jv_output = config::json_helper(get_api_version()).prop_tree(tx, true);
     }
 
-
-
-
     return console_result::okay;
 }
 
 } // namespace commands
 } // namespace explorer
 } // namespace libbitcoin
-
