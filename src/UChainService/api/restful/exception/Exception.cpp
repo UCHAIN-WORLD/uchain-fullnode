@@ -14,20 +14,23 @@
  * not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <UChainService/api/restful//exception/Exception.hpp>
+#include <UChainService/api/restful //exception/Exception.hpp>
 
 using namespace std;
 
-namespace mgbubble {
+namespace mgbubble
+{
 
-namespace {
+namespace
+{
 thread_local ErrMsg errMsg_;
-} // anonymous
+} // namespace
 
 Exception::Exception(string_view what) noexcept
 {
   const auto len = min(ErrMsgMax, what.size());
-  if (len > 0) {
+  if (len > 0)
+  {
     memcpy(what_, what.data(), len);
   }
   what_[len] = '\0';
@@ -35,15 +38,15 @@ Exception::Exception(string_view what) noexcept
 
 Exception::~Exception() noexcept = default;
 
-const char* Exception::what() const noexcept
+const char *Exception::what() const noexcept
 {
   return what_;
 }
 
-ErrMsg& errMsg() noexcept
+ErrMsg &errMsg() noexcept
 {
   errMsg_.reset();
   return errMsg_;
 }
 
-} // mgbubble
+} // namespace mgbubble

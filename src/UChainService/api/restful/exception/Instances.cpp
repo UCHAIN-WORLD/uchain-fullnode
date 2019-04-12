@@ -14,20 +14,21 @@
  * not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <UChainService/api/restful//exception/Instances.hpp>
+#include <UChainService/api/restful //exception/Instances.hpp>
 
 #include <iostream>
 
 using namespace std;
 
-namespace mgbubble {
+namespace mgbubble
+{
 
 ServException::~ServException() noexcept = default;
 
-void ServException::toJson(int status, const char* reason, const char* detail, ostream& os)
+void ServException::toJson(int status, const char *reason, const char *detail, ostream &os)
 {
-  os << "{\"status\":" << status //
-     << ",\"reason\":\"" << reason //
+  os << "{\"status\":" << status     //
+     << ",\"reason\":\"" << reason   //
      << "\",\"detail\":\"" << detail //
      << "\"}";
 }
@@ -39,7 +40,7 @@ int BadRequestException::httpStatus() const noexcept
   return 400;
 }
 
-const char* BadRequestException::httpReason() const noexcept
+const char *BadRequestException::httpReason() const noexcept
 {
   return "Bad Request";
 }
@@ -57,7 +58,7 @@ int ForbiddenException::httpStatus() const noexcept
   return 403;
 }
 
-const char* ForbiddenException::httpReason() const noexcept
+const char *ForbiddenException::httpReason() const noexcept
 {
   return "Forbidden";
 }
@@ -69,7 +70,7 @@ int InternalException::httpStatus() const noexcept
   return 500;
 }
 
-const char* InternalException::httpReason() const noexcept
+const char *InternalException::httpReason() const noexcept
 {
   return "Internal Server Error";
 }
@@ -81,7 +82,7 @@ int MethodNotAllowedException::httpStatus() const noexcept
   return 405;
 }
 
-const char* MethodNotAllowedException::httpReason() const noexcept
+const char *MethodNotAllowedException::httpReason() const noexcept
 {
   return "Method Not Allowed";
 }
@@ -93,7 +94,7 @@ int NotFoundException::httpStatus() const noexcept
   return 404;
 }
 
-const char* NotFoundException::httpReason() const noexcept
+const char *NotFoundException::httpReason() const noexcept
 {
   return "Not Found";
 }
@@ -105,7 +106,7 @@ int ServiceUnavailableException::httpStatus() const noexcept
   return 503;
 }
 
-const char* ServiceUnavailableException::httpReason() const noexcept
+const char *ServiceUnavailableException::httpReason() const noexcept
 {
   return "Service Unavailable";
 }
@@ -117,9 +118,9 @@ int UnauthorizedException::httpStatus() const noexcept
   return 401;
 }
 
-const char* UnauthorizedException::httpReason() const noexcept
+const char *UnauthorizedException::httpReason() const noexcept
 {
   return "Unauthorized";
 }
 
-} // mgbubble
+} // namespace mgbubble
