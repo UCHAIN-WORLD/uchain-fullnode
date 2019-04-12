@@ -15,20 +15,23 @@
  * 02110-1301, USA.
  */
 
-#include <UChainService/api/restful//utility/Stream.hpp>
-#include <UChainService/api/restful//utility/Stream_buf.hpp>
-#include <UChainService/api/restful//utility/String.hpp>
+#include <UChainService/api/restful //utility/Stream.hpp>
+#include <UChainService/api/restful //utility/Stream_buf.hpp>
+#include <UChainService/api/restful //utility/String.hpp>
 
 using namespace std;
 
-namespace mgbubble {
-
-StreamBuf::StreamBuf(mbuf& buf) : buf_(buf)
+namespace mgbubble
 {
-  if (!buf_.buf) {
+
+StreamBuf::StreamBuf(mbuf &buf) : buf_(buf)
+{
+  if (!buf_.buf)
+  {
     // Pre-allocate buffer.
     mbuf_init(&buf_, 4096);
-    if (!buf_.buf) {
+    if (!buf_.buf)
+    {
       throw bad_alloc();
     }
   }
@@ -43,8 +46,9 @@ void StreamBuf::reset() noexcept
 
 void StreamBuf::setContentLength(size_t pos, size_t len) noexcept
 {
-  char* ptr{buf_.buf + pos};
-  do {
+  char *ptr{buf_.buf + pos};
+  do
+  {
     --ptr;
     *ptr = '0' + len % 10;
     len /= 10;
@@ -53,16 +57,18 @@ void StreamBuf::setContentLength(size_t pos, size_t len) noexcept
 
 StreamBuf::int_type StreamBuf::overflow(int_type c) noexcept
 {
-  if (c != traits_type::eof()) {
+  if (c != traits_type::eof())
+  {
     const char z = c;
-    if (mbuf_append(&buf_, &z, 1) != 1) {
+    if (mbuf_append(&buf_, &z, 1) != 1)
+    {
       c = traits_type::eof();
     }
   }
   return c;
 }
 
-streamsize StreamBuf::xsputn(const char_type* s, streamsize count) noexcept
+streamsize StreamBuf::xsputn(const char_type *s, streamsize count) noexcept
 {
   return mbuf_append(&buf_, s, count);
 }
@@ -73,7 +79,7 @@ OStream::OStream() : ostream{nullptr}
 
 OStream::~OStream() noexcept = default;
 
-void OStream::reset(int status, const char* reason,const char *content_type,const char *charset) noexcept
+void OStream::reset(int status, const char *reason, const char *content_type, const char *charset) noexcept
 {
   rdbuf()->reset();
   mgbubble::reset(*this);
@@ -81,7 +87,7 @@ void OStream::reset(int status, const char* reason,const char *content_type,cons
   // Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF. Use 10 space place-holder for
   // content length. RFC2616 states that field value MAY be preceded by any amount of LWS, though a
   // single SP is preferred.
-  *this << "HTTP/1.1 " << status << ' ' << reason << "\r\nContent-Type: "<< content_type<<";charset="<<charset<<"\r\nContent-Length:           \r\n\r\n";
+  *this << "HTTP/1.1 " << status << ' ' << reason << "\r\nContent-Type: " << content_type << ";charset=" << charset << "\r\nContent-Length:           \r\n\r\n";
   headSize_ = size();
   lengthAt_ = headSize_ - 4;
 }
@@ -91,4 +97,4 @@ void OStream::setContentLength() noexcept
   rdbuf()->setContentLength(lengthAt_, size() - headSize_);
 }
 
-} // mgbubble
+} // namespace mgbubble
