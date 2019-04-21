@@ -25,12 +25,12 @@
 using namespace std;
 using namespace libbitcoin;
 #ifdef __MINGW32__
-    boost::random_device libbitcoin::s_fixedHashEngine;
-#else    
-    std::random_device libbitcoin::s_fixedHashEngine;
-#endif    
+boost::random_device libbitcoin::s_fixedHashEngine;
+#else
+std::random_device libbitcoin::s_fixedHashEngine;
+#endif
 
-h128 libbitcoin::fromUUID(std::string const& _uuid)
+h128 libbitcoin::fromUUID(std::string const &_uuid)
 {
     try
     {
@@ -42,12 +42,10 @@ h128 libbitcoin::fromUUID(std::string const& _uuid)
     }
 }
 
-std::string libbitcoin::toUUID(h128 const& _uuid)
+std::string libbitcoin::toUUID(h128 const &_uuid)
 {
     std::string ret = toHex(_uuid.ref());
-    for (unsigned i: {20, 16, 12, 8})
+    for (unsigned i : {20, 16, 12, 8})
         ret.insert(ret.begin() + i, '-');
     return ret;
 }
-
-

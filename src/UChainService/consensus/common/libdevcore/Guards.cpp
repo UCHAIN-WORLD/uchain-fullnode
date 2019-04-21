@@ -25,5 +25,4 @@ using namespace libbitcoin;
 
 namespace dev
 {
-
 }

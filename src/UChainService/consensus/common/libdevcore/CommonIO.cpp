@@ -34,7 +34,7 @@
 using namespace std;
 using namespace libbitcoin;
 
-string libbitcoin::memDump(bytes const& _bytes, unsigned _width, bool _html)
+string libbitcoin::memDump(bytes const &_bytes, unsigned _width, bool _html)
 {
     stringstream ret;
     if (_html)
@@ -66,7 +66,7 @@ string libbitcoin::memDump(bytes const& _bytes, unsigned _width, bool _html)
 }
 
 template <typename _T>
-inline _T contentsGeneric(std::string const& _file)
+inline _T contentsGeneric(std::string const &_file)
 {
     _T ret;
     size_t const c_elementSize = sizeof(typename _T::value_type);
@@ -82,16 +82,16 @@ inline _T contentsGeneric(std::string const& _file)
     is.seekg(0, is.beg);
 
     ret.resize((length + c_elementSize - 1) / c_elementSize);
-    is.read(const_cast<char*>(reinterpret_cast<char const*>(ret.data())), length);
+    is.read(const_cast<char *>(reinterpret_cast<char const *>(ret.data())), length);
     return ret;
 }
 
-bytes libbitcoin::contents(string const& _file)
+bytes libbitcoin::contents(string const &_file)
 {
     return contentsGeneric<bytes>(_file);
 }
 
-bytesSec libbitcoin::contentsSec(string const& _file)
+bytesSec libbitcoin::contentsSec(string const &_file)
 {
     bytes b = contentsGeneric<bytes>(_file);
     bytesSec ret(b);
@@ -99,12 +99,12 @@ bytesSec libbitcoin::contentsSec(string const& _file)
     return ret;
 }
 
-string libbitcoin::contentsString(string const& _file)
+string libbitcoin::contentsString(string const &_file)
 {
     return contentsGeneric<string>(_file);
 }
 
-void libbitcoin::writeFile(std::string const& _file, bytesConstRef _data, bool _writeDeleteRename)
+void libbitcoin::writeFile(std::string const &_file, bytesConstRef _data, bool _writeDeleteRename)
 {
     namespace fs = boost::filesystem;
     if (_writeDeleteRename)
@@ -125,14 +125,14 @@ void libbitcoin::writeFile(std::string const& _file, bytesConstRef _data, bool _
         }
 
         ofstream s(_file, ios::trunc | ios::binary);
-        s.write(reinterpret_cast<char const*>(_data.data()), _data.size());
+        s.write(reinterpret_cast<char const *>(_data.data()), _data.size());
         if (!s)
             BOOST_THROW_EXCEPTION(FileError() << errinfo_comment("Could not write to file: " + _file));
-        DEV_IGNORE_EXCEPTIONS(fs::permissions(_file, fs::owner_read|fs::owner_write));
+        DEV_IGNORE_EXCEPTIONS(fs::permissions(_file, fs::owner_read | fs::owner_write));
     }
 }
 
-std::string libbitcoin::getPassword(std::string const& _prompt)
+std::string libbitcoin::getPassword(std::string const &_prompt)
 {
 #if defined(_WIN32)
     cout << _prompt << flush;
@@ -175,7 +175,6 @@ std::string libbitcoin::getPassword(std::string const& _prompt)
     // restore terminal
     if (tcsetattr(fileno(stdin), TCSANOW, &oflags) != 0)
         BOOST_THROW_EXCEPTION(ExternalFunctionFailure("tcsetattr"));
-
 
     return password;
 #endif

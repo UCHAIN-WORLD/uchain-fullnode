@@ -26,8 +26,7 @@ using namespace libbitcoin;
 bytes libbitcoin::RLPNull = rlp("");
 bytes libbitcoin::RLPEmptyList = rlpList();
 
-RLP::RLP(bytesConstRef _d, Strictness _s):
-    m_data(_d)
+RLP::RLP(bytesConstRef _d, Strictness _s) : m_data(_d)
 {
     if ((_s & FailIfTooBig) && actualSize() < _d.size())
     {
@@ -45,7 +44,7 @@ RLP::RLP(bytesConstRef _d, Strictness _s):
     }
 }
 
-RLP::iterator& RLP::iterator::operator++()
+RLP::iterator &RLP::iterator::operator++()
 {
     if (m_remaining)
     {
@@ -58,7 +57,7 @@ RLP::iterator& RLP::iterator::operator++()
     return *this;
 }
 
-RLP::iterator::iterator(RLP const& _parent, bool _begin)
+RLP::iterator::iterator(RLP const &_parent, bool _begin)
 {
     if (_begin && _parent.isList())
     {
@@ -100,7 +99,7 @@ RLPs RLP::toList(int _flags) const
         else
             return ret;
     }
-    for (auto const& i: *this)
+    for (auto const &i : *this)
         ret.push_back(i);
     return ret;
 }
@@ -227,7 +226,7 @@ size_t RLP::items() const
     return 0;
 }
 
-RLPStream& RLPStream::appendRaw(bytesConstRef _s, size_t _itemCount)
+RLPStream &RLPStream::appendRaw(bytesConstRef _s, size_t _itemCount)
 {
     m_out.insert(m_out.end(), _s.begin(), _s.end());
     noteAppended(_itemCount);
@@ -238,7 +237,7 @@ void RLPStream::noteAppended(size_t _itemCount)
 {
     if (!_itemCount)
         return;
-//    cdebug << "noteAppended(" << _itemCount << ")";
+    //    cdebug << "noteAppended(" << _itemCount << ")";
     while (m_listStack.size())
     {
         if (m_listStack.back().first < _itemCount)
@@ -250,10 +249,10 @@ void RLPStream::noteAppended(size_t _itemCount)
         {
             auto p = m_listStack.back().second;
             m_listStack.pop_back();
-            size_t s = m_out.size() - p;        // list size
+            size_t s = m_out.size() - p; // list size
             auto brs = bytesRequired(s);
             unsigned encodeSize = s < c_rlpListImmLenCount ? 1 : (1 + brs);
-//            cdebug << "s: " << s << ", p: " << p << ", m_out.size(): " << m_out.size() << ", encodeSize: " << encodeSize << " (br: " << brs << ")";
+            //            cdebug << "s: " << s << ", p: " << p << ", m_out.size(): " << m_out.size() << ", encodeSize: " << encodeSize << " (br: " << brs << ")";
             auto os = m_out.size();
             m_out.resize(os + encodeSize);
             memmove(m_out.data() + p + encodeSize, m_out.data() + p, os - p);
@@ -262,20 +261,20 @@ void RLPStream::noteAppended(size_t _itemCount)
             else if (c_rlpListIndLenZero + brs <= 0xff)
             {
                 m_out[p] = (byte)(c_rlpListIndLenZero + brs);
-                byte* b = &(m_out[p + brs]);
+                byte *b = &(m_out[p + brs]);
                 for (; s; s >>= 8)
                     *(b--) = (byte)s;
             }
             else
                 BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("itemCount too large for RLP"));
         }
-        _itemCount = 1;    // for all following iterations, we've effectively appended a single item only since we completed a list.
+        _itemCount = 1; // for all following iterations, we've effectively appended a single item only since we completed a list.
     }
 }
 
-RLPStream& RLPStream::appendList(size_t _items)
+RLPStream &RLPStream::appendList(size_t _items)
 {
-//    cdebug << "appendList(" << _items << ")";
+    //    cdebug << "appendList(" << _items << ")";
     if (_items)
         m_listStack.push_back(std::make_pair(_items, m_out.size()));
     else
@@ -283,7 +282,7 @@ RLPStream& RLPStream::appendList(size_t _items)
     return *this;
 }
 
-RLPStream& RLPStream::appendList(bytesConstRef _rlp)
+RLPStream &RLPStream::appendList(bytesConstRef _rlp)
 {
     if (_rlp.size() < c_rlpListImmLenCount)
         m_out.push_back((byte)(_rlp.size() + c_rlpListStart));
@@ -293,12 +292,14 @@ RLPStream& RLPStream::appendList(bytesConstRef _rlp)
     return *this;
 }
 
-RLPStream& RLPStream::append(bytesConstRef _s, bool _compact)
+RLPStream &RLPStream::append(bytesConstRef _s, bool _compact)
 {
     size_t s = _s.size();
-    byte const* d = _s.data();
+    byte const *d = _s.data();
     if (_compact)
-        for (size_t i = 0; i < _s.size() && !*d; ++i, --s, ++d) {}
+        for (size_t i = 0; i < _s.size() && !*d; ++i, --s, ++d)
+        {
+        }
 
     if (s == 1 && *d < c_rlpDataImmLenStart)
         m_out.push_back(*d);
@@ -314,7 +315,7 @@ RLPStream& RLPStream::append(bytesConstRef _s, bool _compact)
     return *this;
 }
 
-RLPStream& RLPStream::append(bigint _i)
+RLPStream &RLPStream::append(bigint _i)
 {
     if (!_i)
         m_out.push_back(c_rlpDataImmLenStart);
@@ -344,11 +345,11 @@ void RLPStream::pushCount(size_t _count, byte _base)
     auto br = bytesRequired(_count);
     if (int(br) + _base > 0xff)
         BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Count too large for RLP"));
-    m_out.push_back((byte)(br + _base));    // max 8 bytes.
+    m_out.push_back((byte)(br + _base)); // max 8 bytes.
     pushInt(_count, br);
 }
 
-static void streamOut(std::ostream& _out, libbitcoin::RLP const& _d, unsigned _depth = 0)
+static void streamOut(std::ostream &_out, libbitcoin::RLP const &_d, unsigned _depth = 0)
 {
     if (_depth > 64)
         _out << "<max-depth-reached>";
@@ -362,7 +363,7 @@ static void streamOut(std::ostream& _out, libbitcoin::RLP const& _d, unsigned _d
     {
         _out << "[";
         int j = 0;
-        for (auto i: _d)
+        for (auto i : _d)
         {
             _out << (j++ ? ", " : " ");
             streamOut(_out, i, _depth + 1);
@@ -371,7 +372,7 @@ static void streamOut(std::ostream& _out, libbitcoin::RLP const& _d, unsigned _d
     }
 }
 
-std::ostream& libbitcoin::operator<<(std::ostream& _out, RLP const& _d)
+std::ostream &libbitcoin::operator<<(std::ostream &_out, RLP const &_d)
 {
     streamOut(_out, _d);
     return _out;

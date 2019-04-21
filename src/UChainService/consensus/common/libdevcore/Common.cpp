@@ -29,11 +29,11 @@ using namespace libbitcoin;
 namespace libbitcoin
 {
 
-char const* Version = ETH_PROJECT_VERSION;
+char const *Version = ETH_PROJECT_VERSION;
 
 const u256 Invalid256 = ~(u256)0;
 
-void InvariantChecker::checkInvariants(HasInvariants const* _this, char const* _fn, char const* _file, int _line, bool _pre)
+void InvariantChecker::checkInvariants(HasInvariants const *_this, char const *_fn, char const *_file, int _line, bool _pre)
 {
     if (!_this->invariants())
     {
@@ -42,12 +42,22 @@ void InvariantChecker::checkInvariants(HasInvariants const* _this, char const* _
     }
 }
 
-struct TimerChannel: public LogChannel { static const char* name(); static const int verbosity = 0; };
+struct TimerChannel : public LogChannel
+{
+    static const char *name();
+    static const int verbosity = 0;
+};
 
 #if defined(_WIN32)
-const char* TimerChannel::name() { return EthRed " ! "; }
+const char *TimerChannel::name()
+{
+    return EthRed " ! ";
+}
 #else
-const char* TimerChannel::name() { return EthRed " ⚡ "; }
+const char *TimerChannel::name()
+{
+    return EthRed " ⚡ ";
+}
 #endif
 
 TimerHelper::~TimerHelper()
@@ -65,7 +75,7 @@ uint64_t utcTime()
     return time(0);
 }
 
-string inUnits(bigint const& _b, strings const& _units)
+string inUnits(bigint const &_b, strings const &_units)
 {
     ostringstream ret;
     u256 b;
@@ -104,4 +114,4 @@ string inUnits(bigint const& _b, strings const& _units)
     return ret.str();
 }
 
-}
+} // namespace libbitcoin
