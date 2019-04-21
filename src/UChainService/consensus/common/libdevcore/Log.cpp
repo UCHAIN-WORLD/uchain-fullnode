@@ -43,9 +43,9 @@ mutex x_logOverride;
 /// Map of Log Channel types to bool, false forces the channel to be disabled, true forces it to be enabled.
 /// If a channel has no entry, then it will output as long as its verbosity (LogChannel::verbosity) is less than
 /// or equal to the currently output verbosity (g_logVerbosity).
-static map<type_info const*, bool> s_logOverride;
+static map<type_info const *, bool> s_logOverride;
 
-bool libbitcoin::isChannelVisible(std::type_info const* _ch, bool _default)
+bool libbitcoin::isChannelVisible(std::type_info const *_ch, bool _default)
 {
     Guard l(x_logOverride);
     if (s_logOverride.count(_ch))
@@ -53,8 +53,7 @@ bool libbitcoin::isChannelVisible(std::type_info const* _ch, bool _default)
     return _default;
 }
 
-LogOverrideAux::LogOverrideAux(std::type_info const* _ch, bool _value):
-    m_ch(_ch)
+LogOverrideAux::LogOverrideAux(std::type_info const *_ch, bool _value) : m_ch(_ch)
 {
     Guard l(x_logOverride);
     m_old = s_logOverride.count(_ch) ? (int)s_logOverride[_ch] : c_null;
@@ -71,26 +70,31 @@ LogOverrideAux::~LogOverrideAux()
 }
 
 #if defined(_WIN32)
-const char* LogChannel::name() { return EthGray "..."; }
-const char* LeftChannel::name() { return EthNavy "<--"; }
-const char* RightChannel::name() { return EthGreen "-->"; }
-const char* WarnChannel::name() { return EthOnRed EthBlackBold "  X"; }
-const char* NoteChannel::name() { return EthBlue "  i"; }
-const char* DebugChannel::name() { return EthWhite "  D"; }
-const char* TraceChannel::name() { return EthGray "..."; }
+const char *LogChannel::name()
+{
+    return EthGray "...";
+}
+const char *LeftChannel::name() { return EthNavy "<--"; }
+const char *RightChannel::name() { return EthGreen "-->"; }
+const char *WarnChannel::name() { return EthOnRed EthBlackBold "  X"; }
+const char *NoteChannel::name() { return EthBlue "  i"; }
+const char *DebugChannel::name() { return EthWhite "  D"; }
+const char *TraceChannel::name() { return EthGray "..."; }
 #else
-const char* LogChannel::name() { return EthGray "···"; }
-const char* LeftChannel::name() { return EthNavy "◀▬▬"; }
-const char* RightChannel::name() { return EthGreen "▬▬▶"; }
-const char* WarnChannel::name() { return EthOnRed EthBlackBold "  ✘"; }
-const char* NoteChannel::name() { return EthBlue "  ℹ"; }
-const char* DebugChannel::name() { return EthWhite "  ◇"; }
-const char* TraceChannel::name() { return EthGray "..."; }
+const char *LogChannel::name()
+{
+    return EthGray "···";
+}
+const char *LeftChannel::name() { return EthNavy "◀▬▬"; }
+const char *RightChannel::name() { return EthGreen "▬▬▶"; }
+const char *WarnChannel::name() { return EthOnRed EthBlackBold "  ✘"; }
+const char *NoteChannel::name() { return EthBlue "  ℹ"; }
+const char *DebugChannel::name() { return EthWhite "  ◇"; }
+const char *TraceChannel::name() { return EthGray "..."; }
 #endif
 
-LogOutputStreamBase::LogOutputStreamBase(char const* _id, std::type_info const* _info, unsigned _v, bool _autospacing):
-    m_autospacing(_autospacing),
-    m_verbosity(_v)
+LogOutputStreamBase::LogOutputStreamBase(char const *_id, std::type_info const *_info, unsigned _v, bool _autospacing) : m_autospacing(_autospacing),
+                                                                                                                         m_verbosity(_v)
 {
     Guard l(x_logOverride);
     auto it = s_logOverride.find(_info);
@@ -101,17 +105,17 @@ LogOutputStreamBase::LogOutputStreamBase(char const* _id, std::type_info const* 
         char buf[24];
         if (strftime(buf, 24, "%X", localtime(&rawTime)) == 0)
             buf[0] = '\0'; // empty if case strftime fails
-        static char const* c_begin = "  " EthViolet;
-        static char const* c_sep1 = EthReset EthBlack "|" EthNavy;
-        static char const* c_sep2 = EthReset EthBlack "|" EthTeal;
-        static char const* c_end = EthReset "  ";
+        static char const *c_begin = "  " EthViolet;
+        static char const *c_sep1 = EthReset EthBlack "|" EthNavy;
+        static char const *c_sep2 = EthReset EthBlack "|" EthTeal;
+        static char const *c_end = EthReset "  ";
         m_sstr << _id << c_begin << buf << "." << setw(3) << setfill('0') << ms;
         m_sstr << c_sep1 << getThreadName() << ThreadContext::join(c_sep2) << c_end;
     }
 }
 
 #if !defined(ETH_EMSCRIPTEN)
-void LogOutputStreamBase::append(boost::asio::ip::basic_endpoint<boost::asio::ip::tcp> const& _t)
+void LogOutputStreamBase::append(boost::asio::ip::basic_endpoint<boost::asio::ip::tcp> const &_t)
 {
     m_sstr << EthNavyUnder "tcp://" << _t << EthReset;
 }
@@ -120,7 +124,7 @@ void LogOutputStreamBase::append(boost::asio::ip::basic_endpoint<boost::asio::ip
 /// Associate a name with each thread for nice logging.
 struct ThreadLocalLogName
 {
-    ThreadLocalLogName(std::string const& _name) { m_name.reset(new string(_name)); }
+    ThreadLocalLogName(std::string const &_name) { m_name.reset(new string(_name)); }
     boost::thread_specific_ptr<std::string> m_name;
 };
 
@@ -129,7 +133,7 @@ struct ThreadLocalLogContext
 {
     ThreadLocalLogContext() = default;
 
-    void push(std::string const& _name)
+    void push(std::string const &_name)
     {
         if (!m_contexts.get())
             m_contexts.reset(new vector<string>);
@@ -141,11 +145,11 @@ struct ThreadLocalLogContext
         m_contexts->pop_back();
     }
 
-    string join(string const& _prior)
+    string join(string const &_prior)
     {
         string ret;
         if (m_contexts.get())
-            for (auto const& i: *m_contexts)
+            for (auto const &i : *m_contexts)
                 ret += _prior + i;
         return ret;
     }
@@ -157,7 +161,7 @@ ThreadLocalLogContext g_logThreadContext;
 
 ThreadLocalLogName g_logThreadName("main");
 
-void libbitcoin::ThreadContext::push(string const& _n)
+void libbitcoin::ThreadContext::push(string const &_n)
 {
     g_logThreadContext.push(_n);
 }
@@ -167,14 +171,14 @@ void libbitcoin::ThreadContext::pop()
     g_logThreadContext.pop();
 }
 
-string libbitcoin::ThreadContext::join(string const& _prior)
+string libbitcoin::ThreadContext::join(string const &_prior)
 {
     return g_logThreadContext.join(_prior);
 }
 
 // foward declare without all of Windows.h
 #if defined(_WIN32)
-extern "C" __declspec(dllimport) void __stdcall OutputDebugStringA(const char* lpOutputString);
+extern "C" __declspec(dllimport) void __stdcall OutputDebugStringA(const char *lpOutputString);
 #endif
 
 string libbitcoin::getThreadName()
@@ -189,7 +193,7 @@ string libbitcoin::getThreadName()
 #endif
 }
 
-void libbitcoin::setThreadName(string const& _n)
+void libbitcoin::setThreadName(string const &_n)
 {
 #if defined(__GLIBC__)
     pthread_setname_np(pthread_self(), _n.c_str());
@@ -200,20 +204,21 @@ void libbitcoin::setThreadName(string const& _n)
 #endif
 }
 
-void libbitcoin::simpleDebugOut(std::string const& _s, char const*)
+void libbitcoin::simpleDebugOut(std::string const &_s, char const *)
 {
     static SpinLock s_lock;
     SpinGuard l(s_lock);
 
-    cerr << _s << endl << flush;
+    cerr << _s << endl
+         << flush;
 
-    // helpful to use OutputDebugString on windows
-    #if defined(_WIN32)
+// helpful to use OutputDebugString on windows
+#if defined(_WIN32)
     {
         OutputDebugStringA(_s.data());
         OutputDebugStringA("\n");
     }
-    #endif
+#endif
 }
 
-std::function<void(std::string const&, char const*)> libbitcoin::g_logPost = simpleDebugOut;
+std::function<void(std::string const &, char const *)> libbitcoin::g_logPost = simpleDebugOut;
