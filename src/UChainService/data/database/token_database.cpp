@@ -27,14 +27,16 @@
 #include <UChain/database/memory/memory.hpp>
 //#include <UChain/database/result/token_result.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 
-token_database::token_database(const path& map_filename,
-    std::shared_ptr<shared_mutex> mutex)
-  : base_database(map_filename, mutex)
+token_database::token_database(const path &map_filename,
+                               std::shared_ptr<shared_mutex> mutex)
+    : base_database(map_filename, mutex)
 {
 }
 
@@ -44,7 +46,7 @@ token_database::~token_database()
     close();
 }
 
-token_result token_database::get_token_result(const hash_digest& hash) const
+token_result token_database::get_token_result(const hash_digest &hash) const
 {
     const auto memory = get(hash);
     return token_result(memory);
@@ -54,12 +56,12 @@ std::shared_ptr<std::vector<token_detail>> token_database::get_token_details() c
 {
     auto vec_acc = std::make_shared<std::vector<token_detail>>();
     uint64_t i = 0;
-    for ( i = 0; i < get_bucket_count(); i++ ) {
+    for (i = 0; i < get_bucket_count(); i++)
+    {
         auto memo = lookup_map_.find(i);
-        if(memo->size())
+        if (memo->size())
         {
-            const auto action = [&](memory_ptr elem)
-            {
+            const auto action = [&](memory_ptr elem) {
                 const auto memory = REMAP_ADDRESS(elem);
                 auto deserial = make_deserializer_unsafe(memory);
                 vec_acc->push_back(token_detail::factory_from_data(deserial));
@@ -70,7 +72,7 @@ std::shared_ptr<std::vector<token_detail>> token_database::get_token_details() c
     return vec_acc;
 }
 
-void token_database::store(const hash_digest& hash, const token_detail& sp_detail)
+void token_database::store(const hash_digest &hash, const token_detail &sp_detail)
 {
     // Write block data.
     const auto key = hash;
@@ -81,8 +83,7 @@ void token_database::store(const hash_digest& hash, const token_detail& sp_detai
     BITCOIN_ASSERT(sp_size <= max_size_t);
     const auto value_size = static_cast<size_t>(sp_size);
 
-    auto write = [&sp_detail](memory_ptr data)
-    {
+    auto write = [&sp_detail](memory_ptr data) {
         auto serial = make_serializer(REMAP_ADDRESS(data));
         serial.write_data(sp_detail.to_data());
     };
