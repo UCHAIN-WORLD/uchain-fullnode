@@ -34,19 +34,21 @@
 #include "script/script_error.h"
 #include "version.h"
 
-namespace libbitcoin {
-namespace consensus {
+namespace libbitcoin
+{
+namespace consensus
+{
 
 // Static initialization of libsecp256k1 initialization context.
 ECCVerifyHandle TxInputStream::secp256k1_context_ = ECCVerifyHandle();
 
-TxInputStream::TxInputStream(const unsigned char* transaction,
-    size_t transaction_size)
-  : source_(transaction), remaining_(transaction_size)
+TxInputStream::TxInputStream(const unsigned char *transaction,
+                             size_t transaction_size)
+    : source_(transaction), remaining_(transaction_size)
 {
 }
 
-TxInputStream& TxInputStream::read(char* destination, size_t size)
+TxInputStream &TxInputStream::read(char *destination, size_t size)
 {
     if (size > remaining_)
         throw std::ios_base::failure("end of data");
@@ -64,85 +66,85 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
 {
     switch (code)
     {
-        // Logical result
-        case SCRIPT_ERR_OK:
-            return verify_result_eval_true;
-        case SCRIPT_ERR_EVAL_FALSE:
-            return verify_result_eval_false;
+    // Logical result
+    case SCRIPT_ERR_OK:
+        return verify_result_eval_true;
+    case SCRIPT_ERR_EVAL_FALSE:
+        return verify_result_eval_false;
 
-        // Max size errors
-        case SCRIPT_ERR_SCRIPT_SIZE:
-            return verify_result_script_size;
-        case SCRIPT_ERR_PUSH_SIZE:
-            return verify_result_push_size;
-        case SCRIPT_ERR_OP_COUNT:
-            return verify_result_op_count;
-        case SCRIPT_ERR_STACK_SIZE:
-            return verify_result_stack_size;
-        case SCRIPT_ERR_SIG_COUNT:
-            return verify_result_sig_count;
-        case SCRIPT_ERR_PUBKEY_COUNT:
-            return verify_result_pubkey_count;
+    // Max size errors
+    case SCRIPT_ERR_SCRIPT_SIZE:
+        return verify_result_script_size;
+    case SCRIPT_ERR_PUSH_SIZE:
+        return verify_result_push_size;
+    case SCRIPT_ERR_OP_COUNT:
+        return verify_result_op_count;
+    case SCRIPT_ERR_STACK_SIZE:
+        return verify_result_stack_size;
+    case SCRIPT_ERR_SIG_COUNT:
+        return verify_result_sig_count;
+    case SCRIPT_ERR_PUBKEY_COUNT:
+        return verify_result_pubkey_count;
 
-        // Failed verify operations
-        case SCRIPT_ERR_VERIFY:
-            return verify_result_verify;
-        case SCRIPT_ERR_EQUALVERIFY:
-            return verify_result_equalverify;
-        case SCRIPT_ERR_CHECKMULTISIGVERIFY:
-            return verify_result_checkmultisigverify;
-        case SCRIPT_ERR_CHECKSIGVERIFY:
-            return verify_result_checksigverify;
-        case SCRIPT_ERR_NUMEQUALVERIFY:
-            return verify_result_numequalverify;
+    // Failed verify operations
+    case SCRIPT_ERR_VERIFY:
+        return verify_result_verify;
+    case SCRIPT_ERR_EQUALVERIFY:
+        return verify_result_equalverify;
+    case SCRIPT_ERR_CHECKMULTISIGVERIFY:
+        return verify_result_checkmultisigverify;
+    case SCRIPT_ERR_CHECKSIGVERIFY:
+        return verify_result_checksigverify;
+    case SCRIPT_ERR_NUMEQUALVERIFY:
+        return verify_result_numequalverify;
 
-        // Logical/Format/Canonical errors
-        case SCRIPT_ERR_BAD_OPCODE:
-            return verify_result_bad_opcode;
-        case SCRIPT_ERR_DISABLED_OPCODE:
-            return verify_result_disabled_opcode;
-        case SCRIPT_ERR_INVALID_STACK_OPERATION:
-            return verify_result_invalid_stack_operation;
-        case SCRIPT_ERR_INVALID_ALTSTACK_OPERATION:
-            return verify_result_invalid_altstack_operation;
-        case SCRIPT_ERR_UNBALANCED_CONDITIONAL:
-            return verify_result_unbalanced_conditional;
+    // Logical/Format/Canonical errors
+    case SCRIPT_ERR_BAD_OPCODE:
+        return verify_result_bad_opcode;
+    case SCRIPT_ERR_DISABLED_OPCODE:
+        return verify_result_disabled_opcode;
+    case SCRIPT_ERR_INVALID_STACK_OPERATION:
+        return verify_result_invalid_stack_operation;
+    case SCRIPT_ERR_INVALID_ALTSTACK_OPERATION:
+        return verify_result_invalid_altstack_operation;
+    case SCRIPT_ERR_UNBALANCED_CONDITIONAL:
+        return verify_result_unbalanced_conditional;
 
-        // BIP65
-        case SCRIPT_ERR_NEGATIVE_LOCKTIME:
-            return verify_result_negative_locktime;
-        case SCRIPT_ERR_UNSATISFIED_LOCKTIME:
-            return verify_result_unsatisfied_locktime;
+    // BIP65
+    case SCRIPT_ERR_NEGATIVE_LOCKTIME:
+        return verify_result_negative_locktime;
+    case SCRIPT_ERR_UNSATISFIED_LOCKTIME:
+        return verify_result_unsatisfied_locktime;
 
-        // BIP62
-        case SCRIPT_ERR_SIG_HASHTYPE:
-            return verify_result_sig_hashtype;
-        case SCRIPT_ERR_SIG_DER:
-            return verify_result_sig_der;
-        case SCRIPT_ERR_MINIMALDATA:
-            return verify_result_minimaldata;
-        case SCRIPT_ERR_SIG_PUSHONLY:
-            return verify_result_sig_pushonly;
-        case SCRIPT_ERR_SIG_HIGH_S:
-            return verify_result_sig_high_s;
-        case SCRIPT_ERR_SIG_NULLDUMMY:
-            return verify_result_sig_nulldummy;
-        case SCRIPT_ERR_PUBKEYTYPE:
-            return verify_result_pubkeytype;
-        case SCRIPT_ERR_CLEANSTACK:
-            return verify_result_cleanstack;
+    // BIP62
+    case SCRIPT_ERR_SIG_HASHTYPE:
+        return verify_result_sig_hashtype;
+    case SCRIPT_ERR_SIG_DER:
+        return verify_result_sig_der;
+    case SCRIPT_ERR_MINIMALDATA:
+        return verify_result_minimaldata;
+    case SCRIPT_ERR_SIG_PUSHONLY:
+        return verify_result_sig_pushonly;
+    case SCRIPT_ERR_SIG_HIGH_S:
+        return verify_result_sig_high_s;
+    case SCRIPT_ERR_SIG_NULLDUMMY:
+        return verify_result_sig_nulldummy;
+    case SCRIPT_ERR_PUBKEYTYPE:
+        return verify_result_pubkeytype;
+    case SCRIPT_ERR_CLEANSTACK:
+        return verify_result_cleanstack;
 
-        // Softfork safeness
-        case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
-            return verify_result_discourage_upgradable_nops;
+    // Softfork safeness
+    case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
+        return verify_result_discourage_upgradable_nops;
 
-        // Other
-        case SCRIPT_ERR_OP_RETURN:
-            return verify_result_op_return;
-        case SCRIPT_ERR_UNKNOWN_ERROR:
-        case SCRIPT_ERR_ERROR_COUNT:
-        default:
-            return verify_result_unknown_error;
+    // Other
+    case SCRIPT_ERR_OP_RETURN:
+        return verify_result_op_return;
+    case SCRIPT_ERR_UNKNOWN_ERROR:
+    case SCRIPT_ERR_ERROR_COUNT:
+    default:
+        return verify_result_unknown_error;
     }
 }
 
@@ -180,10 +182,10 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
 }
 
 // This function is published. The implementation exposes no satoshi internals.
-verify_result_type verify_script(const unsigned char* transaction,
-    size_t transaction_size, const unsigned char* prevout_script,
-    size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags)
+verify_result_type verify_script(const unsigned char *transaction,
+                                 size_t transaction_size, const unsigned char *prevout_script,
+                                 size_t prevout_script_size, unsigned int tx_input_index,
+                                 unsigned int flags)
 {
     if (transaction_size > 0 && transaction == NULL)
         throw std::invalid_argument("transaction");
@@ -197,7 +199,7 @@ verify_result_type verify_script(const unsigned char* transaction,
         TxInputStream stream(transaction, transaction_size);
         Unserialize(stream, tx, SER_NETWORK, PROTOCOL_VERSION);
     }
-    catch (const std::exception& e)
+    catch (const std::exception &e)
     {
         return verify_result_tx_invalid;
     }
@@ -212,7 +214,7 @@ verify_result_type verify_script(const unsigned char* transaction,
     TransactionSignatureChecker checker(&tx, tx_input_index);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
-    const CScript& input_script = tx.vin[tx_input_index].scriptSig;
+    const CScript &input_script = tx.vin[tx_input_index].scriptSig;
 
     // See libbitcoin-blockchain : validate.cpp :
     // if (!output_script.run(input.script, current_tx, input_index, flags))...
