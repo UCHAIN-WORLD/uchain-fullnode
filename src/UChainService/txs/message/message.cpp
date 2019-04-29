@@ -25,33 +25,33 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
-
-blockchain_message::blockchain_message(): content_("")
+namespace libbitcoin
 {
-}
-blockchain_message::blockchain_message(std::string content):
-    content_(content)
+namespace chain
 {
 
+blockchain_message::blockchain_message() : content_("")
+{
+}
+blockchain_message::blockchain_message(std::string content) : content_(content)
+{
 }
 
-blockchain_message blockchain_message::factory_from_data(const data_chunk& data)
+blockchain_message blockchain_message::factory_from_data(const data_chunk &data)
 {
     blockchain_message instance;
     instance.from_data(data);
     return instance;
 }
 
-blockchain_message blockchain_message::factory_from_data(std::istream& stream)
+blockchain_message blockchain_message::factory_from_data(std::istream &stream)
 {
     blockchain_message instance;
     instance.from_data(stream);
     return instance;
 }
 
-blockchain_message blockchain_message::factory_from_data(reader& source)
+blockchain_message blockchain_message::factory_from_data(reader &source)
 {
     blockchain_message instance;
     instance.from_data(source);
@@ -66,23 +66,23 @@ void blockchain_message::reset()
 bool blockchain_message::is_valid() const
 {
     return !(content_.empty()
-            // add 1 here to prevent content_'s size == 253
-            || variable_string_size(content_) + 1 > BLOCKCHAIN_MESSAGE_FIX_SIZE);
+             // add 1 here to prevent content_'s size == 253
+             || variable_string_size(content_) + 1 > BLOCKCHAIN_MESSAGE_FIX_SIZE);
 }
 
-bool blockchain_message::from_data(const data_chunk& data)
+bool blockchain_message::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool blockchain_message::from_data(std::istream& stream)
+bool blockchain_message::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool blockchain_message::from_data(reader& source)
+bool blockchain_message::from_data(reader &source)
 {
     reset();
     content_ = source.read_string();
@@ -101,13 +101,13 @@ data_chunk blockchain_message::to_data() const
     return data;
 }
 
-void blockchain_message::to_data(std::ostream& stream) const
+void blockchain_message::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void blockchain_message::to_data(writer& sink) const
+void blockchain_message::to_data(writer &sink) const
 {
     sink.write_string(content_);
 }
@@ -125,15 +125,15 @@ std::string blockchain_message::to_string() const
 
     return ss.str();
 }
-const std::string& blockchain_message::get_content() const
+const std::string &blockchain_message::get_content() const
 {
     return content_;
 }
 
-void blockchain_message::set_content(const std::string& content)
+void blockchain_message::set_content(const std::string &content)
 {
     content_ = limit_size_string(content, BLOCKCHAIN_MESSAGE_FIX_SIZE);
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

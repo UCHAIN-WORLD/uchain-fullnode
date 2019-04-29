@@ -26,34 +26,35 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 blockchain_token::blockchain_token()
 {
     reset();
 }
-blockchain_token::blockchain_token(uint32_t version, const output_point& tx_point,
-            uint64_t height, const token_detail& token):
-    version_(version), tx_point_(tx_point), height_(height), token_(token)
+blockchain_token::blockchain_token(uint32_t version, const output_point &tx_point,
+                                   uint64_t height, const token_detail &token) : version_(version), tx_point_(tx_point), height_(height), token_(token)
 {
 }
 
-blockchain_token blockchain_token::factory_from_data(const data_chunk& data)
+blockchain_token blockchain_token::factory_from_data(const data_chunk &data)
 {
     blockchain_token instance;
     instance.from_data(data);
     return instance;
 }
 
-blockchain_token blockchain_token::factory_from_data(std::istream& stream)
+blockchain_token blockchain_token::factory_from_data(std::istream &stream)
 {
     blockchain_token instance;
     instance.from_data(stream);
     return instance;
 }
 
-blockchain_token blockchain_token::factory_from_data(reader& source)
+blockchain_token blockchain_token::factory_from_data(reader &source)
 {
     blockchain_token instance;
     instance.from_data(source);
@@ -72,19 +73,19 @@ void blockchain_token::reset()
     token_ = token_detail();
 }
 
-bool blockchain_token::from_data(const data_chunk& data)
+bool blockchain_token::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool blockchain_token::from_data(std::istream& stream)
+bool blockchain_token::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool blockchain_token::from_data(reader& source)
+bool blockchain_token::from_data(reader &source)
 {
     reset();
 
@@ -106,13 +107,13 @@ data_chunk blockchain_token::to_data() const
     return data;
 }
 
-void blockchain_token::to_data(std::ostream& stream) const
+void blockchain_token::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void blockchain_token::to_data(writer& sink) const
+void blockchain_token::to_data(writer &sink) const
 {
     sink.write_4_bytes_little_endian(version_);
     tx_point_.to_data(sink);
@@ -131,51 +132,49 @@ std::string blockchain_token::to_string() const
     std::ostringstream ss;
 
     ss << "\t version = " << version_ << "\n"
-        << "\t tx_point = " << tx_point_.to_string() << "\n"
-        << "\t height = " << height_ << "\n"
-        << "\t token = " << token_.to_string() << "\n";
+       << "\t tx_point = " << tx_point_.to_string() << "\n"
+       << "\t height = " << height_ << "\n"
+       << "\t token = " << token_.to_string() << "\n";
 
     return ss.str();
 }
 
 #endif
-const uint32_t& blockchain_token::get_version() const
+const uint32_t &blockchain_token::get_version() const
 {
     return version_;
 }
-void blockchain_token::set_version(const uint32_t& version_)
+void blockchain_token::set_version(const uint32_t &version_)
 {
-     this->version_ = version_;
+    this->version_ = version_;
 }
 
-const output_point& blockchain_token::get_tx_point() const
+const output_point &blockchain_token::get_tx_point() const
 {
     return tx_point_;
 }
-void blockchain_token::set_tx_point(const output_point& tx_point_)
+void blockchain_token::set_tx_point(const output_point &tx_point_)
 {
-     this->tx_point_ = tx_point_;
+    this->tx_point_ = tx_point_;
 }
 
-const uint64_t& blockchain_token::get_height() const
+const uint64_t &blockchain_token::get_height() const
 {
     return height_;
 }
-void blockchain_token::set_height(const uint64_t& height_)
+void blockchain_token::set_height(const uint64_t &height_)
 {
-     this->height_ = height_;
+    this->height_ = height_;
 }
 
-const token_detail& blockchain_token::get_token() const
+const token_detail &blockchain_token::get_token() const
 {
     return token_;
 }
-void blockchain_token::set_token(const token_detail& token_)
+void blockchain_token::set_token(const token_detail &token_)
 {
-     this->token_ = token_;
+    this->token_ = token_;
 }
 
-
-
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

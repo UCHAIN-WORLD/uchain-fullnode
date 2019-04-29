@@ -29,10 +29,12 @@
 #include <UChain/database/primitives/record_multimap_iterable.hpp>
 #include <UChain/database/primitives/record_multimap_iterator.hpp>
 
-#define  LOG_ADDRESS_TOKEN_DATABASE  "address_token_database"
+#define LOG_ADDRESS_TOKEN_DATABASE "address_token_database"
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 using namespace bc::chain;
@@ -47,16 +49,16 @@ BC_CONSTEXPR size_t token_transfer_record_size = 1 + 36 + 4 + 8 + 2 + 4 + TOKEN_
 //      + std::max({UCN_FIX_SIZE, TOKEN_DETAIL_FIX_SIZE, TOKEN_TRANSFER_FIX_SIZE});
 BC_CONSTEXPR size_t row_record_size = hash_table_record_size<hash_digest>(token_transfer_record_size);
 
-address_token_database::address_token_database(const path& lookup_filename,
-    const path& rows_filename, std::shared_ptr<shared_mutex> mutex)
+address_token_database::address_token_database(const path &lookup_filename,
+                                               const path &rows_filename, std::shared_ptr<shared_mutex> mutex)
     : lookup_file_(lookup_filename, mutex),
-    lookup_header_(lookup_file_, number_buckets),
-    lookup_manager_(lookup_file_, header_size, record_size),
-    lookup_map_(lookup_header_, lookup_manager_),
-    rows_file_(rows_filename, mutex),
-    rows_manager_(rows_file_, 0, row_record_size),
-    rows_list_(rows_manager_),
-    rows_multimap_(lookup_map_, rows_list_)
+      lookup_header_(lookup_file_, number_buckets),
+      lookup_manager_(lookup_file_, header_size, record_size),
+      lookup_map_(lookup_header_, lookup_manager_),
+      rows_file_(rows_filename, mutex),
+      rows_manager_(rows_file_, 0, row_record_size),
+      rows_list_(rows_manager_),
+      rows_multimap_(lookup_map_, rows_list_)
 {
 }
 
@@ -87,10 +89,9 @@ bool address_token_database::create()
         return false;
 
     // Should not call start after create, already started.
-    return
-        lookup_header_.start() &&
-        lookup_manager_.start() &&
-        rows_manager_.start();
+    return lookup_header_.start() &&
+           lookup_manager_.start() &&
+           rows_manager_.start();
 }
 
 // Startup and shutdown.
@@ -98,71 +99,64 @@ bool address_token_database::create()
 
 bool address_token_database::start()
 {
-    return
-        lookup_file_.start() &&
-        rows_file_.start() &&
-        lookup_header_.start() &&
-        lookup_manager_.start() &&
-        rows_manager_.start();
+    return lookup_file_.start() &&
+           rows_file_.start() &&
+           lookup_header_.start() &&
+           lookup_manager_.start() &&
+           rows_manager_.start();
 }
 
 bool address_token_database::stop()
 {
-    return
-        lookup_file_.stop() &&
-        rows_file_.stop();
+    return lookup_file_.stop() &&
+           rows_file_.stop();
 }
 
 bool address_token_database::close()
 {
-    return
-        lookup_file_.close() &&
-        rows_file_.close();
+    return lookup_file_.close() &&
+           rows_file_.close();
 }
 
 // ----------------------------------------------------------------------------
-void address_token_database::store_input(const short_hash& key,
-    const output_point& inpoint, uint32_t input_height,
-    const input_point& previous, uint32_t timestamp)
+void address_token_database::store_input(const short_hash &key,
+                                         const output_point &inpoint, uint32_t input_height,
+                                         const input_point &previous, uint32_t timestamp)
 {
-    auto write = [&](memory_ptr data)
-    {
+    auto write = [&](memory_ptr data) {
         auto serial = make_serializer(REMAP_ADDRESS(data));
         serial.write_byte(static_cast<uint8_t>(point_kind::spend)); // 1
-        serial.write_data(inpoint.to_data()); // 36
-        serial.write_4_bytes_little_endian(input_height); // 4
-        serial.write_8_bytes_little_endian(previous.checksum()); // 8
+        serial.write_data(inpoint.to_data());                       // 36
+        serial.write_4_bytes_little_endian(input_height);           // 4
+        serial.write_8_bytes_little_endian(previous.checksum());    // 8
 
-        serial.write_2_bytes_little_endian(0); // 2 use ucn type fill incase invalid when deser
+        serial.write_2_bytes_little_endian(0);         // 2 use ucn type fill incase invalid when deser
         serial.write_4_bytes_little_endian(timestamp); // 4
         // token data should be here but input has no these data
     };
     rows_multimap_.add_row(key, write);
 }
 
-void address_token_database::delete_last_row(const short_hash& key)
+void address_token_database::delete_last_row(const short_hash &key)
 {
     rows_multimap_.delete_last_row(key);
 }
 
 /// get all record of key from database
-business_record::list address_token_database::get(const short_hash& key,
-    size_t from_height, size_t limit) const
+business_record::list address_token_database::get(const short_hash &key,
+                                                  size_t from_height, size_t limit) const
 {
     // Read the height value from the row.
-    const auto read_height = [](uint8_t* data)
-    {
+    const auto read_height = [](uint8_t *data) {
         static constexpr file_offset height_position = 1 + 36;
         const auto height_address = data + height_position;
         return from_little_endian_unsafe<uint32_t>(height_address);
     };
 
     // Read a row from the data for the history list.
-    const auto read_row = [](uint8_t* data)
-    {
+    const auto read_row = [](uint8_t *data) {
         auto deserial = make_deserializer_unsafe(data);
-        return business_record
-        {
+        return business_record{
             // output or spend?
             static_cast<point_kind>(deserial.read_byte()),
 
@@ -173,7 +167,7 @@ business_record::list address_token_database::get(const short_hash& key,
             deserial.read_4_bytes_little_endian(),
 
             // value or checksum
-            { deserial.read_8_bytes_little_endian() },
+            {deserial.read_8_bytes_little_endian()},
 
             // business_kd;
             //deserial.read_2_bytes_little_endian(),
@@ -188,7 +182,7 @@ business_record::list address_token_database::get(const short_hash& key,
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
 
-    for (const auto index: records)
+    for (const auto index : records)
     {
         // Stop once we reach the limit (if specified).
         if (limit > 0 && result.size() >= limit)
@@ -209,26 +203,23 @@ business_record::list address_token_database::get(const short_hash& key,
 
 /// get all record of key from database
 std::shared_ptr<business_record::list> address_token_database::get(
-    const std::string& address, const std::string& symbol,
+    const std::string &address, const std::string &symbol,
     size_t start_height, size_t end_height, uint64_t limit, uint64_t page_number) const
 {
     data_chunk addr_data(address.begin(), address.end());
     auto key = ripemd160_hash(addr_data);
 
     // Read the height value from the row.
-    const auto read_height = [](uint8_t* data)
-    {
+    const auto read_height = [](uint8_t *data) {
         static constexpr file_offset height_position = 1 + 36;
         const auto height_address = data + height_position;
         return from_little_endian_unsafe<uint32_t>(height_address);
     };
 
     // Read a row from the data for the history list.
-    const auto read_row = [](uint8_t* data)
-    {
+    const auto read_row = [](uint8_t *data) {
         auto deserial = make_deserializer_unsafe(data);
-        return business_record
-        {
+        return business_record{
             // output or spend?
             static_cast<point_kind>(deserial.read_byte()),
 
@@ -239,7 +230,7 @@ std::shared_ptr<business_record::list> address_token_database::get(
             deserial.read_4_bytes_little_endian(),
 
             // value or checksum
-            { deserial.read_8_bytes_little_endian() },
+            {deserial.read_8_bytes_little_endian()},
 
             // business_kd;
             //deserial.read_2_bytes_little_endian(),
@@ -255,7 +246,7 @@ std::shared_ptr<business_record::list> address_token_database::get(
     const auto records = record_multimap_iterable(rows_list_, start);
 
     uint64_t cnt = 0;
-    for (const auto index: records)
+    for (const auto index : records)
     {
         // Stop once we reach the limit (if specified).
         if (limit > 0 && result->size() >= limit)
@@ -268,37 +259,43 @@ std::shared_ptr<business_record::list> address_token_database::get(
         std::string token_symbol;
 
         // Skip rows below from_height.
-        if ((start_height <= height)
-            && ((end_height == 0) || (height < end_height))) { // from current block height
+        if ((start_height <= height) && ((end_height == 0) || (height < end_height)))
+        { // from current block height
             //result->emplace_back(read_row(address));
             auto row = read_row(address);
-            if (symbol.empty()) { // all utxo
+            if (symbol.empty())
+            { // all utxo
                 cnt++;
                 if ((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
                     continue; // skip previous page record
                 result->emplace_back(row);
             }
-            else { // token symbol utxo
+            else
+            { // token symbol utxo
                 // token business process
                 token_symbol = "";
-                if(row.data.get_kind_value() == business_kind::token_issue) {
+                if (row.data.get_kind_value() == business_kind::token_issue)
+                {
                     auto transfer = boost::get<token_detail>(row.data.get_data());
                     token_symbol = transfer.get_symbol();
                 }
 
-                if(row.data.get_kind_value() == business_kind::token_transfer) {
+                if (row.data.get_kind_value() == business_kind::token_transfer)
+                {
                     auto transfer = boost::get<token_transfer>(row.data.get_data());
                     token_symbol = transfer.get_symbol();
                 }
 
-                if (row.data.get_kind_value() == business_kind::token_cert) {
+                if (row.data.get_kind_value() == business_kind::token_cert)
+                {
                     auto cert = boost::get<token_cert>(row.data.get_data());
                     token_symbol = cert.get_symbol();
                 }
 
-                if (symbol == token_symbol) {
+                if (symbol == token_symbol)
+                {
                     cnt++;
-                    if((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
+                    if ((limit > 0) && (page_number > 0) && ((cnt - 1) / limit) < (page_number - 1))
                         continue; // skip previous page record
                     result->emplace_back(row);
                 }
@@ -311,26 +308,23 @@ std::shared_ptr<business_record::list> address_token_database::get(
 }
 
 /// get all record of key from database
-std::shared_ptr<business_record::list> address_token_database::get(const std::string& address, size_t start_height,
-    size_t end_height) const
+std::shared_ptr<business_record::list> address_token_database::get(const std::string &address, size_t start_height,
+                                                                   size_t end_height) const
 {
     data_chunk addr_data(address.begin(), address.end());
     auto key = ripemd160_hash(addr_data);
 
     // Read the height value from the row.
-    const auto read_height = [](uint8_t* data)
-    {
+    const auto read_height = [](uint8_t *data) {
         static constexpr file_offset height_position = 1 + 36;
         const auto height_address = data + height_position;
         return from_little_endian_unsafe<uint32_t>(height_address);
     };
 
     // Read a row from the data for the history list.
-    const auto read_row = [](uint8_t* data)
-    {
+    const auto read_row = [](uint8_t *data) {
         auto deserial = make_deserializer_unsafe(data);
-        return business_record
-        {
+        return business_record{
             // output or spend?
             static_cast<point_kind>(deserial.read_byte()),
 
@@ -341,7 +335,7 @@ std::shared_ptr<business_record::list> address_token_database::get(const std::st
             deserial.read_4_bytes_little_endian(),
 
             // value or checksum
-            { deserial.read_8_bytes_little_endian() },
+            {deserial.read_8_bytes_little_endian()},
 
             // business_kd;
             //deserial.read_2_bytes_little_endian(),
@@ -356,15 +350,15 @@ std::shared_ptr<business_record::list> address_token_database::get(const std::st
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
 
-    for (const auto index: records)
+    for (const auto index : records)
     {
         // This obtains a remap safe address pointer against the rows file.
         const auto record = rows_list_.get(index);
         const auto address = REMAP_ADDRESS(record);
         auto height = read_height(address);
         // Skip rows below from_height.
-        if ((start_height <= height)
-            && ((end_height == 0) || (height < end_height))) {
+        if ((start_height <= height) && ((end_height == 0) || (height < end_height)))
+        {
             result->emplace_back(read_row(address));
         }
     }
@@ -377,11 +371,9 @@ std::shared_ptr<business_record::list> address_token_database::get(const std::st
 std::shared_ptr<business_record::list> address_token_database::get(size_t idx) const
 {
     // Read a row from the data for the history list.
-    const auto read_row = [](uint8_t* data)
-    {
+    const auto read_row = [](uint8_t *data) {
         auto deserial = make_deserializer_unsafe(data);
-        return business_record
-        {
+        return business_record{
             // output or spend?
             static_cast<point_kind>(deserial.read_byte()),
 
@@ -392,7 +384,7 @@ std::shared_ptr<business_record::list> address_token_database::get(size_t idx) c
             deserial.read_4_bytes_little_endian(),
 
             // value or checksum
-            { deserial.read_8_bytes_little_endian() },
+            {deserial.read_8_bytes_little_endian()},
 
             // business_kd;
             //deserial.read_2_bytes_little_endian(),
@@ -406,9 +398,10 @@ std::shared_ptr<business_record::list> address_token_database::get(size_t idx) c
     auto result = std::make_shared<business_record::list>();
     auto sh_idx_vec = rows_multimap_.lookup(idx);
 
-    for(auto each : *sh_idx_vec) {
+    for (auto each : *sh_idx_vec)
+    {
         const auto records = record_multimap_iterable(rows_list_, each);
-        for (const auto index: records)
+        for (const auto index : records)
         {
             // This obtains a remap safe address pointer against the rows file.
             const auto record = rows_list_.get(index);
@@ -425,11 +418,9 @@ std::shared_ptr<business_record::list> address_token_database::get(size_t idx) c
 business_record address_token_database::get_record(size_t idx) const
 {
     // Read a row from the data for the history list.
-    const auto read_row = [](uint8_t* data)
-    {
+    const auto read_row = [](uint8_t *data) {
         auto deserial = make_deserializer_unsafe(data);
-        return business_record
-        {
+        return business_record{
             // output or spend?
             static_cast<point_kind>(deserial.read_byte()),
 
@@ -440,7 +431,7 @@ business_record address_token_database::get_record(size_t idx) const
             deserial.read_4_bytes_little_endian(),
 
             // value or checksum
-            { deserial.read_8_bytes_little_endian() },
+            {deserial.read_8_bytes_little_endian()},
 
             // business_kd;
             //deserial.read_2_bytes_little_endian(),
@@ -457,8 +448,8 @@ business_record address_token_database::get_record(size_t idx) const
     return read_row(address);
 }
 
-business_history::list address_token_database::get_business_history(const short_hash& key,
-    size_t from_height) const
+business_history::list address_token_database::get_business_history(const short_hash &key,
+                                                                    size_t from_height) const
 {
     business_record::list compact = get(key, from_height, 0);
     business_history::list result;
@@ -472,7 +463,7 @@ business_history::list address_token_database::get_business_history(const short_
             row.output = output->point;
             row.output_height = output->height;
             row.value = output->val_chk_sum.value;
-            row.spend = { null_hash, max_uint32 };
+            row.spend = {null_hash, max_uint32};
             row.temporary_checksum = output->point.checksum();
             row.data = output->data;
             result.emplace_back(row);
@@ -484,15 +475,14 @@ business_history::list address_token_database::get_business_history(const short_
     }
 
     // All outputs have been removed, process the spends.
-    for (const auto& spend: compact)
+    for (const auto &spend : compact)
     {
         auto found = false;
 
         // Update outputs with the corresponding spends.
-        for (auto& row: result)
+        for (auto &row : result)
         {
-            if (row.temporary_checksum == spend.val_chk_sum.previous_checksum
-                && row.spend.hash == null_hash)
+            if (row.temporary_checksum == spend.val_chk_sum.previous_checksum && row.spend.hash == null_hash)
             {
                 row.spend = spend.point;
                 row.spend_height = spend.height;
@@ -506,7 +496,7 @@ business_history::list address_token_database::get_business_history(const short_
         if (!found)
         {
             business_history row;
-            row.output = { null_hash, max_uint32 };
+            row.output = {null_hash, max_uint32};
             row.output_height = max_uint64;
             row.value = max_uint64;
             row.spend = spend.point;
@@ -518,7 +508,7 @@ business_history::list address_token_database::get_business_history(const short_
     compact.clear();
 
     // Clear all remaining checksums from unspent rows.
-    for (auto& row: result)
+    for (auto &row : result)
         if (row.spend.hash == null_hash)
             row.spend_height = max_uint64;
 
@@ -528,22 +518,23 @@ business_history::list address_token_database::get_business_history(const short_
 
 // get address tokens in the database(blockchain)
 std::shared_ptr<business_history::list> address_token_database::get_address_business_history(
-    const std::string& address, size_t from_height) const
+    const std::string &address, size_t from_height) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
     auto unspent = std::make_shared<business_history::list>();
 
-    for (auto& row: result)
+    for (auto &row : result)
     {
-        if ((row.spend.hash == null_hash)) {// unspent business
+        if ((row.spend.hash == null_hash))
+        { // unspent business
             row.status = business_status::unspent;
             unspent->emplace_back(row);
         }
 
-        if (row.output_height != 0
-                &&(row.spend.hash == null_hash || row.spend_height == 0)) {// confirmed business
+        if (row.output_height != 0 && (row.spend.hash == null_hash || row.spend_height == 0))
+        { // confirmed business
             row.status = business_status::confirmed;
             unspent->emplace_back(row);
         }
@@ -556,8 +547,8 @@ std::shared_ptr<business_history::list> address_token_database::get_address_busi
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
-business_history::list address_token_database::get_business_history(const std::string& address,
-    size_t from_height, business_kind kind, uint8_t status) const
+business_history::list address_token_database::get_business_history(const std::string &address,
+                                                                    size_t from_height, business_kind kind, uint8_t status) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
@@ -565,25 +556,21 @@ business_history::list address_token_database::get_business_history(const std::s
     business_history::list unspent;
 
     // token type check
-    if((kind != business_kind::token_issue) // token_detail
+    if ((kind != business_kind::token_issue)       // token_detail
         && (kind != business_kind::token_transfer) // token_transfer
-        && (kind != business_kind::token_cert) // token_cert
-        && (kind != business_kind::ucn_award)
-        && (kind != business_kind::ucn))
+        && (kind != business_kind::token_cert)     // token_cert
+        && (kind != business_kind::ucn_award) && (kind != business_kind::ucn))
         return unspent;
 
-    for (const auto& row: result)
+    for (const auto &row : result)
     {
-        if(row.data.get_kind_value() != kind)
+        if (row.data.get_kind_value() != kind)
             continue;
 
-        if ((row.spend.hash == null_hash)
-                && (status == business_status::unspent)) // unspent business
+        if ((row.spend.hash == null_hash) && (status == business_status::unspent)) // unspent business
             unspent.emplace_back(row);
 
-        if (row.output_height != 0
-                &&(row.spend.hash == null_hash || row.spend_height == 0)
-                && (status == business_status::confirmed)) // confirmed business
+        if (row.output_height != 0 && (row.spend.hash == null_hash || row.spend_height == 0) && (status == business_status::confirmed)) // confirmed business
             unspent.emplace_back(row);
     }
 
@@ -594,8 +581,8 @@ business_history::list address_token_database::get_business_history(const std::s
 /*
  status -- // 0 -- unspent  1 -- confirmed
 */
-business_history::list address_token_database::get_business_history(const std::string& address,
-    size_t from_height, business_kind kind, uint32_t time_begin, uint32_t time_end) const
+business_history::list address_token_database::get_business_history(const std::string &address,
+                                                                    size_t from_height, business_kind kind, uint32_t time_begin, uint32_t time_end) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
@@ -603,27 +590,25 @@ business_history::list address_token_database::get_business_history(const std::s
     business_history::list unspent;
 
     // token type check
-    if((kind != business_kind::token_issue) // token_detail
+    if ((kind != business_kind::token_issue)       // token_detail
         && (kind != business_kind::token_transfer) // token_transfer
-        && (kind != business_kind::token_cert) // token_cert
-        && (kind != business_kind::ucn_award)
-        && (kind != business_kind::ucn))
+        && (kind != business_kind::token_cert)     // token_cert
+        && (kind != business_kind::ucn_award) && (kind != business_kind::ucn))
         return unspent;
 
-    for (auto& row: result)
+    for (auto &row : result)
     {
-        if(row.data.get_kind_value() != kind
-            || row.data.get_timestamp()<time_begin
-            || row.data.get_timestamp()>time_end)
+        if (row.data.get_kind_value() != kind || row.data.get_timestamp() < time_begin || row.data.get_timestamp() > time_end)
             continue;
 
-        if ((row.spend.hash == null_hash)) {//0 -- unspent business
+        if ((row.spend.hash == null_hash))
+        { //0 -- unspent business
             row.status = business_status::unspent;
             unspent.emplace_back(row);
         }
 
-        if (row.output_height != 0
-                &&(row.spend.hash == null_hash || row.spend_height == 0)) {// 1 -- confirmed business
+        if (row.output_height != 0 && (row.spend.hash == null_hash || row.spend_height == 0))
+        { // 1 -- confirmed business
             row.status = business_status::confirmed;
             unspent.emplace_back(row);
         }
@@ -633,15 +618,15 @@ business_history::list address_token_database::get_business_history(const std::s
 }
 
 // get all kinds of token in the database(blockchain)
-business_address_token::list address_token_database::get_tokens(const std::string& address,
-    size_t from_height) const
+business_address_token::list address_token_database::get_tokens(const std::string &address,
+                                                                size_t from_height) const
 {
     return get_tokens(address, from_height, business_kind::unknown);
 }
 
 // get special kind of token in the database(blockchain)
-business_address_token::list address_token_database::get_tokens(const std::string& address,
-    size_t from_height, business_kind kind) const
+business_address_token::list address_token_database::get_tokens(const std::string &address,
+                                                                size_t from_height, business_kind kind) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
@@ -649,23 +634,26 @@ business_address_token::list address_token_database::get_tokens(const std::strin
     business_address_token::list unspent;
 
     // get by kind
-    if (kind != business_kind::unknown) {
+    if (kind != business_kind::unknown)
+    {
         // token type check
-        if ((kind != business_kind::token_issue) // token_detail
+        if ((kind != business_kind::token_issue)        // token_detail
             && (kind != business_kind::token_transfer)) // token_transfer
             return unspent;
     }
 
-    for (const auto& row: result)
+    for (const auto &row : result)
     {
         auto kind_value = row.data.get_kind_value();
-        if (kind != business_kind::unknown) {
+        if (kind != business_kind::unknown)
+        {
             if (kind_value != kind)
                 continue;
         }
-        else {
-            if ((kind_value != business_kind::token_issue)  // token_detail
-                && (kind_value != business_kind::token_transfer))  // token_transfer
+        else
+        {
+            if ((kind_value != business_kind::token_issue)        // token_detail
+                && (kind_value != business_kind::token_transfer)) // token_transfer
                 continue;
         }
 
@@ -678,13 +666,15 @@ business_address_token::list address_token_database::get_tokens(const std::strin
             status = business_status::confirmed;
 
         business_address_token detail;
-        if (kind_value == business_kind::token_issue) {
+        if (kind_value == business_kind::token_issue)
+        {
             // token issue
             auto issue_info = boost::get<token_detail>(row.data.get_data());
             detail.quantity = issue_info.get_maximum_supply();
             detail.detail = issue_info;
         }
-        else {
+        else
+        {
             //token transfer
             auto transfer_info = boost::get<token_transfer>(row.data.get_data());
             detail.quantity = transfer_info.get_quantity();
@@ -692,21 +682,21 @@ business_address_token::list address_token_database::get_tokens(const std::strin
         }
 
         detail.address = address; // wallet address
-        detail.status = status; // 0 -- unspent  1 -- confirmed
+        detail.status = status;   // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);
     }
 
     return unspent;
 }
 
-business_address_message::list address_token_database::get_messages(const std::string& address,
-    size_t from_height) const
+business_address_message::list address_token_database::get_messages(const std::string &address,
+                                                                    size_t from_height) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
     business_address_message::list unspent;
-    for (const auto& row: result)
+    for (const auto &row : result)
     {
         if ((row.data.get_kind_value() != business_kind::message))
             continue;
@@ -724,34 +714,38 @@ business_address_message::list address_token_database::get_messages(const std::s
         detail.msg = issue_info;
 
         detail.address = address; // wallet address
-        detail.status = status; // 0 -- unspent  1 -- confirmed
+        detail.status = status;   // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(detail);
     }
 
     return unspent;
 }
 
-business_address_token_cert::list address_token_database::get_token_certs(const std::string& address,
-    const std::string& symbol, token_cert_type cert_type, size_t from_height) const
+business_address_token_cert::list address_token_database::get_token_certs(const std::string &address,
+                                                                          const std::string &symbol, token_cert_type cert_type, size_t from_height) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
     business_address_token_cert::list unspent;
-    for (const auto& row: result)
+    for (const auto &row : result)
     {
-        if ((row.data.get_kind_value() != business_kind::token_cert))  // token_cert
+        if ((row.data.get_kind_value() != business_kind::token_cert)) // token_cert
             continue;
 
         auto cert_info = boost::get<token_cert>(row.data.get_data());
-        if (!symbol.empty()) {
-            if (symbol != cert_info.get_symbol()) {
+        if (!symbol.empty())
+        {
+            if (symbol != cert_info.get_symbol())
+            {
                 continue;
             }
         }
 
-        if (cert_type != token_cert_ns::none) {
-            if (cert_type != cert_info.get_type()) {
+        if (cert_type != token_cert_ns::none)
+        {
+            if (cert_type != cert_info.get_type())
+            {
                 continue;
             }
         }
@@ -764,54 +758,56 @@ business_address_token_cert::list address_token_database::get_token_certs(const 
             (row.spend.hash == null_hash || row.spend_height == 0))
             status = business_status::confirmed;
 
-        if (status == business_status::unknown) {
+        if (status == business_status::unknown)
+        {
             continue;
         }
 
         business_address_token_cert cert;
         cert.certs = cert_info;
         cert.address = address; // wallet address
-        cert.status = status; // 0 -- unspent  1 -- confirmed
+        cert.status = status;   // 0 -- unspent  1 -- confirmed
         unspent.emplace_back(cert);
     }
 
     return unspent;
 }
 
-
-business_history::list address_token_database::get_token_certs_history(const std::string& address,
-        const std::string& symbol, token_cert_type cert_type,
-        size_t from_height) const
+business_history::list address_token_database::get_token_certs_history(const std::string &address,
+                                                                       const std::string &symbol, token_cert_type cert_type,
+                                                                       size_t from_height) const
 {
     data_chunk data(address.begin(), address.end());
     auto key = ripemd160_hash(data);
     business_history::list result = get_business_history(key, from_height);
     business_history::list unspent(result.size());
 
-    auto it = std::copy_if(result.begin(), result.end(), unspent.begin(), [&symbol,&cert_type](business_history & row)
-    {
-        if ((row.data.get_kind_value() != business_kind::token_cert))  // token_cert
+    auto it = std::copy_if(result.begin(), result.end(), unspent.begin(), [&symbol, &cert_type](business_history &row) {
+        if ((row.data.get_kind_value() != business_kind::token_cert)) // token_cert
             return false;
 
         auto cert_info = boost::get<token_cert>(row.data.get_data());
-        if (!symbol.empty()) {
-            if (symbol != cert_info.get_symbol()) {
+        if (!symbol.empty())
+        {
+            if (symbol != cert_info.get_symbol())
+            {
                 return false;
             }
         }
 
-        if (cert_type != token_cert_ns::none) {
-            if (cert_type != cert_info.get_type()) {
+        if (cert_type != token_cert_ns::none)
+        {
+            if (cert_type != cert_info.get_type())
+            {
                 return false;
             }
         }
         return true;
     });
 
-    unspent.resize(std::distance(unspent.begin(),it));
+    unspent.resize(std::distance(unspent.begin(), it));
     return unspent;
 }
-
 
 void address_token_database::sync()
 {
@@ -821,15 +817,11 @@ void address_token_database::sync()
 
 address_token_statinfo address_token_database::statinfo() const
 {
-    return
-    {
+    return {
         lookup_header_.size(),
         lookup_manager_.count(),
-        rows_manager_.count()
-    };
+        rows_manager_.count()};
 }
 
 } // namespace database
 } // namespace libbitcoin
-
-

@@ -26,23 +26,26 @@
 #include <UChain/bitcoin.hpp>
 #include <UChain/database/memory/memory.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 
-namespace {
-    // copy from block_chain_imp.cpp
-    hash_digest get_hash(const std::string& str)
-    {
-        data_chunk data(str.begin(), str.end());
-        return sha256_hash(data);
-    }
+namespace
+{
+// copy from block_chain_imp.cpp
+hash_digest get_hash(const std::string &str)
+{
+    data_chunk data(str.begin(), str.end());
+    return sha256_hash(data);
 }
+} // namespace
 
-wallet_database::wallet_database(const path& map_filename,
-    std::shared_ptr<shared_mutex> mutex)
-  : base_database(map_filename, mutex)
+wallet_database::wallet_database(const path &map_filename,
+                                 std::shared_ptr<shared_mutex> mutex)
+    : base_database(map_filename, mutex)
 {
 }
 
@@ -52,11 +55,12 @@ wallet_database::~wallet_database()
     close();
 }
 
-void wallet_database::set_admin(const std::string& name, const std::string& passwd)
+void wallet_database::set_admin(const std::string &name, const std::string &passwd)
 {
     // create admin wallet if not exists
     const auto hash = get_hash(name);
-    if( nullptr == get(hash)) {
+    if (nullptr == get(hash))
+    {
         libbitcoin::chain::wallet acc;
         acc.set_name(name);
         acc.set_passwd(passwd);
@@ -66,31 +70,35 @@ void wallet_database::set_admin(const std::string& name, const std::string& pass
     }
 }
 
-void wallet_database::store(const libbitcoin::chain::wallet& wallet)
+void wallet_database::store(const libbitcoin::chain::wallet &wallet)
 {
-    const auto& name = wallet.get_name();
+    const auto &name = wallet.get_name();
     const auto hash = get_hash(name);
     const auto wallet_data = wallet.to_data();
 
     const auto check_store = [this, &name, &hash, &wallet_data]() {
-        auto&& result = get_wallet_result(hash);
-        if (!result) {
+        auto &&result = get_wallet_result(hash);
+        if (!result)
+        {
             return true;
         }
 
         auto detail = result.get_wallet_detail();
-        if (!detail) {
+        if (!detail)
+        {
             return true;
         }
 
         // wallet exist -- check duplicate
-        if (detail->to_data() == wallet_data) {
+        if (detail->to_data() == wallet_data)
+        {
             // if completely same, no need to store the same data.
             return false;
         }
 
         // wallet exist -- check hash conflict
-        if (detail->get_name() != name) {
+        if (detail->get_name() != name)
+        {
             log::error("wallet_database")
                 << detail->get_name()
                 << " is already exist and has same hash "
@@ -106,14 +114,14 @@ void wallet_database::store(const libbitcoin::chain::wallet& wallet)
         return true;
     };
 
-    if (check_store()) {
+    if (check_store())
+    {
         // actually store wallet
         const auto acc_size = wallet.serialized_size();
         BITCOIN_ASSERT(acc_size <= max_size_t);
         const auto value_size = static_cast<size_t>(acc_size);
 
-        auto write = [&wallet_data](memory_ptr data)
-        {
+        auto write = [&wallet_data](memory_ptr data) {
             auto serial = make_serializer(REMAP_ADDRESS(data));
             serial.write_data(wallet_data);
         };
@@ -125,11 +133,12 @@ void wallet_database::store(const libbitcoin::chain::wallet& wallet)
 std::shared_ptr<std::vector<libbitcoin::chain::wallet>> wallet_database::get_wallets() const
 {
     auto vec_acc = std::make_shared<std::vector<libbitcoin::chain::wallet>>();
-    for (size_t i = 0; i < get_bucket_count(); i++ ) {
+    for (size_t i = 0; i < get_bucket_count(); i++)
+    {
         auto memo = lookup_map_.find(i);
-        if (memo->size()) {
-            const auto action = [&vec_acc](memory_ptr elem)
-            {
+        if (memo->size())
+        {
+            const auto action = [&vec_acc](memory_ptr elem) {
                 const auto memory = REMAP_ADDRESS(elem);
                 auto deserial = make_deserializer_unsafe(memory);
                 vec_acc->push_back(libbitcoin::chain::wallet::factory_from_data(deserial));
@@ -140,7 +149,7 @@ std::shared_ptr<std::vector<libbitcoin::chain::wallet>> wallet_database::get_wal
     return vec_acc;
 }
 
-wallet_result wallet_database::get_wallet_result(const hash_digest& hash) const
+wallet_result wallet_database::get_wallet_result(const hash_digest &hash) const
 {
     const auto memory = get(hash);
     return wallet_result(memory);
