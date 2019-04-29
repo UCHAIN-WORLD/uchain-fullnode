@@ -29,8 +29,10 @@
 #include <UChain/database/primitives/record_multimap_iterable.hpp>
 #include <UChain/database/primitives/record_multimap_iterator.hpp>
 
-namespace libbitcoin {
-namespace database {
+namespace libbitcoin
+{
+namespace database
+{
 
 using namespace boost::filesystem;
 using namespace bc::chain;
@@ -45,16 +47,16 @@ BC_CONSTEXPR size_t token_transfer_record_size = 1 + 36 + 4 + 8 + 2 + TOKEN_DETA
 //      + std::max({UCN_FIX_SIZE, TOKEN_DETAIL_FIX_SIZE, TOKEN_TRANSFER_FIX_SIZE});
 BC_CONSTEXPR size_t row_record_size = hash_table_record_size<short_hash>(token_transfer_record_size);
 
-wallet_token_database::wallet_token_database(const path& lookup_filename,
-    const path& rows_filename, std::shared_ptr<shared_mutex> mutex)
+wallet_token_database::wallet_token_database(const path &lookup_filename,
+                                             const path &rows_filename, std::shared_ptr<shared_mutex> mutex)
     : lookup_file_(lookup_filename, mutex),
-    lookup_header_(lookup_file_, number_buckets),
-    lookup_manager_(lookup_file_, header_size, record_size),
-    lookup_map_(lookup_header_, lookup_manager_),
-    rows_file_(rows_filename, mutex),
-    rows_manager_(rows_file_, 0, row_record_size),
-    rows_list_(rows_manager_),
-    rows_multimap_(lookup_map_, rows_list_)
+      lookup_header_(lookup_file_, number_buckets),
+      lookup_manager_(lookup_file_, header_size, record_size),
+      lookup_map_(lookup_header_, lookup_manager_),
+      rows_file_(rows_filename, mutex),
+      rows_manager_(rows_file_, 0, row_record_size),
+      rows_list_(rows_manager_),
+      rows_multimap_(lookup_map_, rows_list_)
 {
 }
 
@@ -85,10 +87,9 @@ bool wallet_token_database::create()
         return false;
 
     // Should not call start after create, already started.
-    return
-        lookup_header_.start() &&
-        lookup_manager_.start() &&
-        rows_manager_.start();
+    return lookup_header_.start() &&
+           lookup_manager_.start() &&
+           rows_manager_.start();
 }
 
 // Startup and shutdown.
@@ -96,46 +97,45 @@ bool wallet_token_database::create()
 
 bool wallet_token_database::start()
 {
-    return
-        lookup_file_.start() &&
-        rows_file_.start() &&
-        lookup_header_.start() &&
-        lookup_manager_.start() &&
-        rows_manager_.start();
+    return lookup_file_.start() &&
+           rows_file_.start() &&
+           lookup_header_.start() &&
+           lookup_manager_.start() &&
+           rows_manager_.start();
 }
 
 bool wallet_token_database::stop()
 {
-    return
-        lookup_file_.stop() &&
-        rows_file_.stop();
+    return lookup_file_.stop() &&
+           rows_file_.stop();
 }
 
 bool wallet_token_database::close()
 {
-    return
-        lookup_file_.close() &&
-        rows_file_.close();
+    return lookup_file_.close() &&
+           rows_file_.close();
 }
 
 // ----------------------------------------------------------------------------
 
-void wallet_token_database::store(const short_hash& key, const token_detail& detail)
+void wallet_token_database::store(const short_hash &key, const token_detail &detail)
 {
     const auto detail_data = detail.to_data();
 
     const auto check_store = [this, &key, &detail, &detail_data]() {
         auto token_vec = get(key);
         auto pos = std::find_if(token_vec.begin(), token_vec.end(),
-                [&detail](const token_detail& elem){
-                    return (elem.get_symbol() == detail.get_symbol());
-                });
+                                [&detail](const token_detail &elem) {
+                                    return (elem.get_symbol() == detail.get_symbol());
+                                });
 
-        if (pos == token_vec.end()) { // new item
+        if (pos == token_vec.end())
+        { // new item
             return true;
         }
 
-        if (pos->to_data() == detail_data) {
+        if (pos->to_data() == detail_data)
+        {
             // don't store duplicate data
             return false;
         }
@@ -146,10 +146,10 @@ void wallet_token_database::store(const short_hash& key, const token_detail& det
         return true;
     };
 
-    if (check_store()) {
+    if (check_store())
+    {
         // actually store token
-        auto write = [&detail_data](memory_ptr data)
-        {
+        auto write = [&detail_data](memory_ptr data) {
             auto serial = make_serializer(REMAP_ADDRESS(data));
             serial.write_data(detail_data);
         };
@@ -157,16 +157,15 @@ void wallet_token_database::store(const short_hash& key, const token_detail& det
     }
 }
 
-void wallet_token_database::delete_last_row(const short_hash& key)
+void wallet_token_database::delete_last_row(const short_hash &key)
 {
     rows_multimap_.delete_last_row(key);
 }
 
-token_detail::list wallet_token_database::get(const short_hash& key) const
+token_detail::list wallet_token_database::get(const short_hash &key) const
 {
     // Read a row from the data for the wallet_token list.
-    const auto read_row = [](uint8_t* data)
-    {
+    const auto read_row = [](uint8_t *data) {
         auto deserial = make_deserializer_unsafe(data);
         return token_detail::factory_from_data(deserial);
     };
@@ -175,7 +174,7 @@ token_detail::list wallet_token_database::get(const short_hash& key) const
     const auto start = rows_multimap_.lookup(key);
     const auto records = record_multimap_iterable(rows_list_, start);
 
-    for (const auto index: records)
+    for (const auto index : records)
     {
         // This obtains a remap safe address pointer against the rows file.
         const auto record = rows_list_.get(index);
@@ -188,13 +187,13 @@ token_detail::list wallet_token_database::get(const short_hash& key) const
     return result;
 }
 
-std::shared_ptr<token_detail> wallet_token_database::get(const short_hash& key, const std::string& address) const
+std::shared_ptr<token_detail> wallet_token_database::get(const short_hash &key, const std::string &address) const
 {
     std::shared_ptr<token_detail> addr(nullptr);
     token_detail::list result = get(key);
-    for (auto element: result)
+    for (auto element : result)
     {
-        if(element.get_address() == address)
+        if (element.get_address() == address)
         {
             addr = std::make_shared<token_detail>(element);
             break;
@@ -202,17 +201,15 @@ std::shared_ptr<token_detail> wallet_token_database::get(const short_hash& key, 
     }
 
     return addr;
-
 }
 /// get tokens whose status is not issued and stored in local database (not in blockchain)
-std::shared_ptr<business_address_token::list> wallet_token_database::get_unissued_tokens(const short_hash& key) const
+std::shared_ptr<business_address_token::list> wallet_token_database::get_unissued_tokens(const short_hash &key) const
 {
     auto result = get(key);
     auto sp_token_vec = std::make_shared<business_address_token::list>();
 
     // reconstruct business_address_token from token_detail and sotre them in sp_token_vec
-    const auto action = [&](const token_detail& elem)
-    {
+    const auto action = [&](const token_detail &elem) {
         business_address_token busi_token;
 
         busi_token.address = elem.get_address();
@@ -234,15 +231,11 @@ void wallet_token_database::sync()
 
 wallet_token_statinfo wallet_token_database::statinfo() const
 {
-    return
-    {
+    return {
         lookup_header_.size(),
         lookup_manager_.count(),
-        rows_manager_.count()
-    };
+        rows_manager_.count()};
 }
 
 } // namespace database
 } // namespace libbitcoin
-
-
