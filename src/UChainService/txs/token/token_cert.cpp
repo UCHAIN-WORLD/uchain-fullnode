@@ -26,8 +26,10 @@
 #include <UChain/blockchain/block_chain_impl.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 #define TOKEN_SYMBOL_DELIMITER "."
 
@@ -36,13 +38,9 @@ token_cert::token_cert()
     reset();
 }
 
-token_cert::token_cert(const std::string& symbol, const std::string& owner,
-                       const std::string& address, token_cert_type cert_type)
-    : symbol_(symbol)
-    , owner_(owner)
-    , address_(address)
-    , cert_type_(cert_type)
-    , status_(TOKEN_CERT_NORMAL_TYPE)
+token_cert::token_cert(const std::string &symbol, const std::string &owner,
+                       const std::string &address, token_cert_type cert_type)
+    : symbol_(symbol), owner_(owner), address_(address), cert_type_(cert_type), status_(TOKEN_CERT_NORMAL_TYPE)
 {
 }
 
@@ -57,34 +55,32 @@ void token_cert::reset()
 
 bool token_cert::is_valid() const
 {
-    return !(symbol_.empty()
-             || owner_.empty()
-             || (cert_type_ == token_cert_ns::none)
-             || (calc_size() > TOKEN_CERT_FIX_SIZE));
+    return !(symbol_.empty() || owner_.empty() || (cert_type_ == token_cert_ns::none) || (calc_size() > TOKEN_CERT_FIX_SIZE));
 }
 
-bool token_cert::operator< (const token_cert& other) const
+bool token_cert::operator<(const token_cert &other) const
 {
     typedef std::tuple<std::string, token_cert_type> cmp_tuple;
     return cmp_tuple(symbol_, cert_type_) < cmp_tuple(other.symbol_, other.cert_type_);
 }
 
-std::string token_cert::get_domain(const std::string& symbol)
+std::string token_cert::get_domain(const std::string &symbol)
 {
     std::string domain("");
-    auto&& tokens = bc::split(symbol, TOKEN_SYMBOL_DELIMITER, true);
-    if (tokens.size() > 0) {
+    auto &&tokens = bc::split(symbol, TOKEN_SYMBOL_DELIMITER, true);
+    if (tokens.size() > 0)
+    {
         domain = tokens[0];
     }
     return domain;
 }
 
-bool token_cert::is_valid_domain(const std::string& domain)
+bool token_cert::is_valid_domain(const std::string &domain)
 {
     return !domain.empty();
 }
 
-std::string token_cert::get_key(const std::string&symbol, const token_cert_type& bit)
+std::string token_cert::get_key(const std::string &symbol, const token_cert_type &bit)
 {
     return std::string(symbol + ":^#`@:" + std::to_string(bit));
 }
@@ -94,40 +90,40 @@ std::string token_cert::token_cert::get_key() const
     return get_key(symbol_, cert_type_);
 }
 
-token_cert token_cert::factory_from_data(const data_chunk& data)
+token_cert token_cert::factory_from_data(const data_chunk &data)
 {
     token_cert instance;
     instance.from_data(data);
     return instance;
 }
 
-token_cert token_cert::factory_from_data(std::istream& stream)
+token_cert token_cert::factory_from_data(std::istream &stream)
 {
     token_cert instance;
     instance.from_data(stream);
     return instance;
 }
 
-token_cert token_cert::factory_from_data(reader& source)
+token_cert token_cert::factory_from_data(reader &source)
 {
     token_cert instance;
     instance.from_data(source);
     return instance;
 }
 
-bool token_cert::from_data(const data_chunk& data)
+bool token_cert::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool token_cert::from_data(std::istream& stream)
+bool token_cert::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool token_cert::from_data(reader& source)
+bool token_cert::from_data(reader &source)
 {
     reset();
     symbol_ = source.read_string();
@@ -152,13 +148,13 @@ data_chunk token_cert::to_data() const
     return data;
 }
 
-void token_cert::to_data(std::ostream& stream) const
+void token_cert::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void token_cert::to_data(writer& sink) const
+void token_cert::to_data(writer &sink) const
 {
     sink.write_string(symbol_);
     sink.write_string(owner_);
@@ -169,11 +165,7 @@ void token_cert::to_data(writer& sink) const
 
 uint64_t token_cert::calc_size() const
 {
-    return (symbol_.size() + 1)
-        + (owner_.size() + 1)
-        + (address_.size() + 1)
-        + TOKEN_CERT_TYPE_FIX_SIZE
-        + TOKEN_CERT_STATUS_FIX_SIZE;
+    return (symbol_.size() + 1) + (owner_.size() + 1) + (address_.size() + 1) + TOKEN_CERT_TYPE_FIX_SIZE + TOKEN_CERT_STATUS_FIX_SIZE;
 }
 
 uint64_t token_cert::serialized_size() const
@@ -192,12 +184,12 @@ std::string token_cert::to_string() const
     return ss.str();
 }
 
-const std::string& token_cert::get_symbol() const
+const std::string &token_cert::get_symbol() const
 {
     return symbol_;
 }
 
-void token_cert::set_symbol(const std::string& symbol)
+void token_cert::set_symbol(const std::string &symbol)
 {
     size_t len = std::min((symbol.size() + 1), TOKEN_CERT_SYMBOL_FIX_SIZE);
     symbol_ = symbol.substr(0, len);
@@ -215,27 +207,26 @@ void token_cert::set_status(uint8_t status)
 
 bool token_cert::is_newly_generated() const
 {
-    return (status_ == TOKEN_CERT_ISSUE_TYPE)
-           || (status_ == TOKEN_CERT_AUTOISSUE_TYPE);
+    return (status_ == TOKEN_CERT_ISSUE_TYPE) || (status_ == TOKEN_CERT_AUTOISSUE_TYPE);
 }
 
-const std::string& token_cert::get_owner() const
+const std::string &token_cert::get_owner() const
 {
     return owner_;
 }
 
-void token_cert::set_owner(const std::string& owner)
+void token_cert::set_owner(const std::string &owner)
 {
     size_t len = std::min((owner.size() + 1), TOKEN_CERT_OWNER_FIX_SIZE);
     owner_ = owner.substr(0, len);
 }
 
-const std::string& token_cert::get_address() const
+const std::string &token_cert::get_address() const
 {
     return address_;
 }
 
-void token_cert::set_address(const std::string& address)
+void token_cert::set_address(const std::string &address)
 {
     size_t len = std::min((address.size() + 1), TOKEN_CERT_ADDRESS_FIX_SIZE);
     address_ = address.substr(0, len);
@@ -266,15 +257,15 @@ std::string token_cert::get_type_name() const
     return get_type_name(cert_type_);
 }
 
-const std::map<token_cert_type, std::string>& token_cert::get_type_name_map()
+const std::map<token_cert_type, std::string> &token_cert::get_type_name_map()
 {
     static std::map<token_cert_type, std::string> static_type_name_map = {
         {token_cert_ns::issue, "issue"},
         {token_cert_ns::domain, "domain"},
         {token_cert_ns::naming, "naming"},
 
-        {token_cert_ns::marriage,   "marriage"},
-        {token_cert_ns::kyc,        "KYC"},
+        {token_cert_ns::marriage, "marriage"},
+        {token_cert_ns::kyc, "KYC"},
     };
     return static_type_name_map;
 }
@@ -283,9 +274,10 @@ std::string token_cert::get_type_name(token_cert_type cert_type)
 {
     BITCOIN_ASSERT(cert_type != token_cert_ns::none);
 
-    const auto& type_name_map = get_type_name_map();
+    const auto &type_name_map = get_type_name_map();
     auto iter = type_name_map.find(cert_type);
-    if (iter != type_name_map.end()) {
+    if (iter != type_name_map.end())
+    {
         return iter->second;
     }
 
@@ -295,7 +287,7 @@ std::string token_cert::get_type_name(token_cert_type cert_type)
     return result;
 }
 
-bool token_cert::test_certs(const std::vector<token_cert_type>& cert_vec, token_cert_type cert_type)
+bool token_cert::test_certs(const std::vector<token_cert_type> &cert_vec, token_cert_type cert_type)
 {
     BITCOIN_ASSERT(cert_type != token_cert_ns::none);
 
@@ -303,14 +295,17 @@ bool token_cert::test_certs(const std::vector<token_cert_type>& cert_vec, token_
     return iter != cert_vec.end();
 }
 
-bool token_cert::test_certs(const std::vector<token_cert_type>& total, const std::vector<token_cert_type>& parts)
+bool token_cert::test_certs(const std::vector<token_cert_type> &total, const std::vector<token_cert_type> &parts)
 {
-    if (total.size() < parts.size()) {
+    if (total.size() < parts.size())
+    {
         return false;
     }
 
-    for (auto& cert_type : parts) {
-        if (!test_certs(total, cert_type)) {
+    for (auto &cert_type : parts)
+    {
+        if (!test_certs(total, cert_type))
+        {
             return false;
         }
     }
@@ -318,6 +313,5 @@ bool token_cert::test_certs(const std::vector<token_cert_type>& total, const std
     return true;
 }
 
-
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
