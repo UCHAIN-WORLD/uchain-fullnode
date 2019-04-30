@@ -27,8 +27,10 @@
 #include <UChain/blockchain/validate_transaction.hpp>
 #include <UChainService/api/restful/utility/Compare.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 // use 1~127 to represent normal candidate status type
 // add plus 128 to them to make their status type in tracing state.
@@ -41,12 +43,9 @@ candidate::candidate()
     reset();
 }
 
-candidate::candidate(const std::string& symbol,
-                     const std::string& address, const std::string& content, uint8_t status)
-    : symbol_(symbol)
-    , address_(address)
-    , content_(content)
-    , status_(status)
+candidate::candidate(const std::string &symbol,
+                     const std::string &address, const std::string &content, uint8_t status)
+    : symbol_(symbol), address_(address), content_(content), status_(status)
 {
 }
 
@@ -60,58 +59,56 @@ void candidate::reset()
 
 bool candidate::is_valid() const
 {
-    return !(symbol_.empty()
-             || address_.empty()
-             || is_invalid_status()
-             || (calc_size() > get_max_serialized_size()));
+    return !(symbol_.empty() || address_.empty() || is_invalid_status() || (calc_size() > get_max_serialized_size()));
 }
 
-bool candidate::operator< (const candidate& other) const
+bool candidate::operator<(const candidate &other) const
 {
     return symbol_.compare(other.symbol_) < 0;
 }
 
-candidate candidate::factory_from_data(const data_chunk& data)
+candidate candidate::factory_from_data(const data_chunk &data)
 {
     candidate instance;
     instance.from_data(data);
     return instance;
 }
 
-candidate candidate::factory_from_data(std::istream& stream)
+candidate candidate::factory_from_data(std::istream &stream)
 {
     candidate instance;
     instance.from_data(stream);
     return instance;
 }
 
-candidate candidate::factory_from_data(reader& source)
+candidate candidate::factory_from_data(reader &source)
 {
     candidate instance;
     instance.from_data(source);
     return instance;
 }
 
-bool candidate::from_data(const data_chunk& data)
+bool candidate::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool candidate::from_data(std::istream& stream)
+bool candidate::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool candidate::from_data(reader& source)
+bool candidate::from_data(reader &source)
 {
     reset();
 
     status_ = source.read_byte();
     symbol_ = source.read_string();
     address_ = source.read_string();
-    if (is_register_status()) {
+    if (is_register_status())
+    {
         content_ = source.read_string();
     }
 
@@ -144,18 +141,19 @@ data_chunk candidate::to_data() const
     return data;
 }
 
-void candidate::to_data(std::ostream& stream) const
+void candidate::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void candidate::to_data(writer& sink) const
+void candidate::to_data(writer &sink) const
 {
     sink.write_byte(status_);
     sink.write_string(symbol_);
     sink.write_string(address_);
-    if (is_register_status()) {
+    if (is_register_status())
+    {
         sink.write_string(content_);
     }
 }
@@ -168,7 +166,8 @@ uint64_t candidate::get_max_serialized_size() const
 uint64_t candidate::calc_size() const
 {
     uint64_t len = (symbol_.size() + 1) + (address_.size() + 1) + TOKEN_CANDIDATE_STATUS_FIX_SIZE;
-    if (is_register_status()) {
+    if (is_register_status())
+    {
         len += variable_string_size(content_);
     }
     return len;
@@ -185,38 +184,39 @@ std::string candidate::to_string() const
     ss << "\t status = " << get_status_name() << "\n";
     ss << "\t symbol = " << symbol_ << "\n";
     ss << "\t address = " << address_ << "\n";
-    if (is_register_status()) {
+    if (is_register_status())
+    {
         ss << "\t content = " << content_ << "\n";
     }
     return ss.str();
 }
 
-const std::string& candidate::get_symbol() const
+const std::string &candidate::get_symbol() const
 {
     return symbol_;
 }
 
-void candidate::set_symbol(const std::string& symbol)
+void candidate::set_symbol(const std::string &symbol)
 {
     symbol_ = limit_size_string(symbol, TOKEN_CANDIDATE_SYMBOL_FIX_SIZE);
 }
 
-const std::string& candidate::get_address() const
+const std::string &candidate::get_address() const
 {
     return address_;
 }
 
-void candidate::set_address(const std::string& address)
+void candidate::set_address(const std::string &address)
 {
     address_ = limit_size_string(address, TOKEN_CANDIDATE_ADDRESS_FIX_SIZE);
 }
 
-const std::string& candidate::get_content() const
+const std::string &candidate::get_content() const
 {
     return content_;
 }
 
-void candidate::set_content(const std::string& content)
+void candidate::set_content(const std::string &content)
 {
     content_ = limit_size_string(content, TOKEN_CANDIDATE_CONTENT_FIX_SIZE);
 }
@@ -233,19 +233,24 @@ void candidate::set_status(uint8_t status)
 
 std::string candidate::status_to_string(uint8_t status)
 {
-    if (status == CANDIDATE_STATUS_REGISTER) {
+    if (status == CANDIDATE_STATUS_REGISTER)
+    {
         return "registered";
     }
-    else if (status == CANDIDATE_STATUS_TRANSFER) {
+    else if (status == CANDIDATE_STATUS_TRANSFER)
+    {
         return "transfered";
     }
-    else if (status == CANDIDATE_STATUS_HISTORY) {
+    else if (status == CANDIDATE_STATUS_HISTORY)
+    {
         return "history";
     }
-    else if (status == CANDIDATE_STATUS_CURRENT) {
+    else if (status == CANDIDATE_STATUS_CURRENT)
+    {
         return "current";
     }
-    else {
+    else
+    {
         return "none";
     }
 }
@@ -283,8 +288,7 @@ void candidate_info::reset()
     candidate.reset();
 }
 
-
-bool candidate_info::operator< (const candidate_info& other) const
+bool candidate_info::operator<(const candidate_info &other) const
 {
     return candidate < other.candidate;
 }
@@ -292,10 +296,10 @@ bool candidate_info::operator< (const candidate_info& other) const
 uint64_t candidate_info::serialized_size() const
 {
     // output_height; timestamp; to_uid; candidate;
-    return 4 + 4 + (to_uid.size() +1) + candidate.serialized_size();
+    return 4 + 4 + (to_uid.size() + 1) + candidate.serialized_size();
 }
 
-candidate_info candidate_info::factory_from_data(reader& source)
+candidate_info candidate_info::factory_from_data(reader &source)
 {
     candidate_info instance;
     instance.reset();
@@ -307,7 +311,8 @@ candidate_info candidate_info::factory_from_data(reader& source)
     instance.candidate = candidate::factory_from_data(source);
 
     auto result = static_cast<bool>(source);
-    if (!result) {
+    if (!result)
+    {
         instance.reset();
     }
 
@@ -353,5 +358,5 @@ data_chunk candidate_info::to_short_data() const
 //     this->status = status;
 // }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
