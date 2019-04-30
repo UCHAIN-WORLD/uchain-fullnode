@@ -28,36 +28,36 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 token::token()
 {
     reset();
 }
-token::token(uint32_t status, const token_detail& detail):
-    status(status), data(detail)
+token::token(uint32_t status, const token_detail &detail) : status(status), data(detail)
 {
 }
-token::token(uint32_t status, const token_transfer& detail):
-    status(status), data(detail)
+token::token(uint32_t status, const token_transfer &detail) : status(status), data(detail)
 {
 }
-token token::factory_from_data(const data_chunk& data)
+token token::factory_from_data(const data_chunk &data)
 {
     token instance;
     instance.from_data(data);
     return instance;
 }
 
-token token::factory_from_data(std::istream& stream)
+token token::factory_from_data(std::istream &stream)
 {
     token instance;
     instance.from_data(stream);
     return instance;
 }
 
-token token::factory_from_data(reader& source)
+token token::factory_from_data(reader &source)
 {
     token instance;
     instance.from_data(source);
@@ -79,46 +79,48 @@ bool token::is_valid() const
 
 bool token::is_valid_type() const
 {
-    return ((TOKEN_DETAIL_TYPE == status)
-        || (TOKEN_TRANSFERABLE_TYPE == status));
+    return ((TOKEN_DETAIL_TYPE == status) || (TOKEN_TRANSFERABLE_TYPE == status));
 }
 
-bool token::from_data(const data_chunk& data)
+bool token::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool token::from_data(std::istream& stream)
+bool token::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool token::from_data(reader& source)
+bool token::from_data(reader &source)
 {
     reset();
 
     status = source.read_4_bytes_little_endian();
     auto result = static_cast<bool>(source);
 
-    if (result && is_valid_type()) {
-        switch(status) {
-            case TOKEN_DETAIL_TYPE:
-            {
-                data = token_detail();
-                break;
-            }
-            case TOKEN_TRANSFERABLE_TYPE:
-            {
-                data = token_transfer();
-                break;
-            }
+    if (result && is_valid_type())
+    {
+        switch (status)
+        {
+        case TOKEN_DETAIL_TYPE:
+        {
+            data = token_detail();
+            break;
+        }
+        case TOKEN_TRANSFERABLE_TYPE:
+        {
+            data = token_transfer();
+            break;
+        }
         }
         auto visitor = from_data_visitor(source);
         result = boost::apply_visitor(visitor, data);
     }
-    else {
+    else
+    {
         result = false;
         reset();
     }
@@ -136,13 +138,13 @@ data_chunk token::to_data() const
     return data;
 }
 
-void token::to_data(std::ostream& stream) const
+void token::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void token::to_data(writer& sink) const
+void token::to_data(writer &sink) const
 {
     sink.write_4_bytes_little_endian(status);
 
@@ -176,22 +178,22 @@ void token::set_status(uint32_t status)
 {
     this->status = status;
 }
-void token::set_data(const token_detail& detail)
+void token::set_data(const token_detail &detail)
 {
     this->data = detail;
 }
-void token::set_data(const token_transfer& detail)
+void token::set_data(const token_transfer &detail)
 {
     this->data = detail;
 }
-token::token_data_type& token::get_data()
+token::token_data_type &token::get_data()
 {
     return this->data;
 }
-const token::token_data_type& token::get_data() const
+const token::token_data_type &token::get_data() const
 {
     return this->data;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
