@@ -27,40 +27,39 @@
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 #include <json/minijson_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
-bool token_balances::operator< (const token_balances& other) const
+bool token_balances::operator<(const token_balances &other) const
 {
     typedef std::tuple<std::string, std::string, uint64_t, uint64_t> cmp_tuple;
-    return cmp_tuple(symbol, address, unspent_token, locked_token)
-        < cmp_tuple(other.symbol, other.address, other.unspent_token, other.locked_token);
+    return cmp_tuple(symbol, address, unspent_token, locked_token) < cmp_tuple(other.symbol, other.address, other.unspent_token, other.locked_token);
 }
 
 token_transfer::token_transfer()
 {
     reset();
 }
-token_transfer::token_transfer(const std::string& symbol, uint64_t quantity):
-    symbol(symbol),quantity(quantity)
+token_transfer::token_transfer(const std::string &symbol, uint64_t quantity) : symbol(symbol), quantity(quantity)
 {
-
 }
-token_transfer token_transfer::factory_from_data(const data_chunk& data)
+token_transfer token_transfer::factory_from_data(const data_chunk &data)
 {
     token_transfer instance;
     instance.from_data(data);
     return instance;
 }
 
-token_transfer token_transfer::factory_from_data(std::istream& stream)
+token_transfer token_transfer::factory_from_data(std::istream &stream)
 {
     token_transfer instance;
     instance.from_data(stream);
     return instance;
 }
 
-token_transfer token_transfer::factory_from_data(reader& source)
+token_transfer token_transfer::factory_from_data(reader &source)
 {
     token_transfer instance;
     instance.from_data(source);
@@ -69,9 +68,7 @@ token_transfer token_transfer::factory_from_data(reader& source)
 
 bool token_transfer::is_valid() const
 {
-    return !(symbol.empty()
-            || quantity==0
-            || symbol.size()+1 > TOKEN_TRANSFER_SYMBOL_FIX_SIZE);
+    return !(symbol.empty() || quantity == 0 || symbol.size() + 1 > TOKEN_TRANSFER_SYMBOL_FIX_SIZE);
 }
 
 void token_transfer::reset()
@@ -80,19 +77,19 @@ void token_transfer::reset()
     quantity = 0;
 }
 
-bool token_transfer::from_data(const data_chunk& data)
+bool token_transfer::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool token_transfer::from_data(std::istream& stream)
+bool token_transfer::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool token_transfer::from_data(reader& source)
+bool token_transfer::from_data(reader &source)
 {
     reset();
     symbol = source.read_string();
@@ -115,13 +112,13 @@ data_chunk token_transfer::to_data() const
     return data;
 }
 
-void token_transfer::to_data(std::ostream& stream) const
+void token_transfer::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void token_transfer::to_data(writer& sink) const
+void token_transfer::to_data(writer &sink) const
 {
     sink.write_string(symbol);
     sink.write_8_bytes_little_endian(quantity);
@@ -138,19 +135,19 @@ std::string token_transfer::to_string() const
     std::ostringstream ss;
 
     ss << "\t symbol = " << symbol << "\n"
-        << "\t quantity = " << quantity << "\n";
+       << "\t quantity = " << quantity << "\n";
 
     return ss.str();
 }
 
-const std::string& token_transfer::get_symbol() const
+const std::string &token_transfer::get_symbol() const
 {
     return symbol;
 }
-void token_transfer::set_symbol(const std::string& symbol)
+void token_transfer::set_symbol(const std::string &symbol)
 {
-     size_t len = std::min(symbol.size()+1, TOKEN_TRANSFER_SYMBOL_FIX_SIZE);
-     this->symbol = symbol.substr(0, len);
+    size_t len = std::min(symbol.size() + 1, TOKEN_TRANSFER_SYMBOL_FIX_SIZE);
+    this->symbol = symbol.substr(0, len);
 }
 
 uint64_t token_transfer::get_quantity() const
@@ -159,9 +156,8 @@ uint64_t token_transfer::get_quantity() const
 }
 void token_transfer::set_quantity(uint64_t quantity)
 {
-     this->quantity = quantity;
+    this->quantity = quantity;
 }
 
-
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
