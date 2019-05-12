@@ -43,14 +43,12 @@ namespace detail
 
 class noncopyable
 {
-private:
-
+  private:
     // C++03 idiom to prevent copy construction and copy assignment
-    noncopyable(const noncopyable&);
-    noncopyable& operator=(const noncopyable&);
+    noncopyable(const noncopyable &);
+    noncopyable &operator=(const noncopyable &);
 
-public:
-
+  public:
     noncopyable()
     {
     }
@@ -58,8 +56,7 @@ public:
 
 class context_base : noncopyable
 {
-public:
-
+  public:
     enum context_nested_status
     {
         NESTED_STATUS_NONE,
@@ -67,16 +64,13 @@ public:
         NESTED_STATUS_ARRAY
     };
 
-private:
-
+  private:
     context_nested_status m_nested_status;
     size_t m_nesting_level;
 
-public:
-
-    context_base() :
-        m_nested_status(NESTED_STATUS_NONE),
-        m_nesting_level(0)
+  public:
+    context_base() : m_nested_status(NESTED_STATUS_NONE),
+                     m_nesting_level(0)
     {
     }
 
@@ -112,28 +106,25 @@ public:
 
 class buffer_context_base : public context_base
 {
-protected:
-
-    const char* m_read_buffer;
-    char* m_write_buffer;
+  protected:
+    const char *m_read_buffer;
+    char *m_write_buffer;
     size_t m_length;
     size_t m_read_offset;
     size_t m_write_offset;
-    const char* m_current_write_buffer;
+    const char *m_current_write_buffer;
 
-    explicit buffer_context_base(const char* read_buffer, char* write_buffer, size_t length) :
-        m_read_buffer(read_buffer),
-        m_write_buffer(write_buffer),
-        m_length(length),
-        m_read_offset(0),
-        m_write_offset(0),
-        m_current_write_buffer(NULL)
+    explicit buffer_context_base(const char *read_buffer, char *write_buffer, size_t length) : m_read_buffer(read_buffer),
+                                                                                               m_write_buffer(write_buffer),
+                                                                                               m_length(length),
+                                                                                               m_read_offset(0),
+                                                                                               m_write_offset(0),
+                                                                                               m_current_write_buffer(NULL)
     {
         new_write_buffer();
     }
 
-public:
-
+  public:
     char read()
     {
         if (m_read_offset >= m_length)
@@ -164,7 +155,7 @@ public:
         m_write_buffer[m_write_offset++] = c;
     }
 
-    const char* write_buffer() const
+    const char *write_buffer() const
     {
         return m_current_write_buffer;
     }
@@ -174,20 +165,16 @@ public:
 
 class buffer_context MJR_FINAL : public detail::buffer_context_base
 {
-public:
-
-    explicit buffer_context(char* buffer, size_t length) :
-        detail::buffer_context_base(buffer, buffer, length)
+  public:
+    explicit buffer_context(char *buffer, size_t length) : detail::buffer_context_base(buffer, buffer, length)
     {
     }
 }; // class buffer_context
 
 class const_buffer_context MJR_FINAL : public detail::buffer_context_base
 {
-public:
-
-    explicit const_buffer_context(const char* buffer, size_t length) :
-        detail::buffer_context_base(buffer, new char[length], length) // don't worry about leaks, buffer_context_base can't throw
+  public:
+    explicit const_buffer_context(const char *buffer, size_t length) : detail::buffer_context_base(buffer, new char[length], length) // don't worry about leaks, buffer_context_base can't throw
     {
     }
 
@@ -199,17 +186,14 @@ public:
 
 class istream_context MJR_FINAL : public detail::context_base
 {
-private:
-
-    std::istream& m_stream;
+  private:
+    std::istream &m_stream;
     size_t m_read_offset;
-    std::list<std::vector<char> > m_write_buffers;
+    std::list<std::vector<char>> m_write_buffers;
 
-public:
-
-    explicit istream_context(std::istream& stream) :
-        m_stream(stream),
-        m_read_offset(0)
+  public:
+    explicit istream_context(std::istream &stream) : m_stream(stream),
+                                                     m_read_offset(0)
     {
         new_write_buffer();
     }
@@ -247,7 +231,7 @@ public:
 
     // This method to retrieve the address of the write buffer MUST be called
     // AFTER all the calls to write() for the current write buffer have been performed
-    const char* write_buffer() const
+    const char *write_buffer() const
     {
         return !m_write_buffers.back().empty() ? &m_write_buffers.back()[0] : NULL;
     }
@@ -255,8 +239,7 @@ public:
 
 class parse_error : public std::exception
 {
-public:
-
+  public:
     enum error_reason
     {
         UNKNOWN,
@@ -274,25 +257,22 @@ public:
         EXCEEDED_NESTING_LIMIT
     };
 
-private:
-
+  private:
     size_t m_offset;
     error_reason m_reason;
 
-    template<typename Context>
-    static size_t get_offset(const Context& context)
+    template <typename Context>
+    static size_t get_offset(const Context &context)
     {
         const size_t read_offset = context.read_offset();
 
         return (read_offset != 0) ? (read_offset - 1) : 0;
     }
 
-public:
-
-    template<typename Context>
-    explicit parse_error(const Context& context, error_reason reason) :
-        m_offset(get_offset(context)),
-        m_reason(reason)
+  public:
+    template <typename Context>
+    explicit parse_error(const Context &context, error_reason reason) : m_offset(get_offset(context)),
+                                                                        m_reason(reason)
     {
     }
 
@@ -306,23 +286,36 @@ public:
         return m_reason;
     }
 
-    const char* what() const throw()
+    const char *what() const throw()
     {
         switch (m_reason)
         {
-        case UNKNOWN:                           return "Unknown parse error";
-        case EXPECTED_OPENING_QUOTE:            return "Expected opening quote";
-        case EXPECTED_UTF16_LOW_SURROGATE:      return "Expected UTF-16 low surrogate";
-        case INVALID_ESCAPE_SEQUENCE:           return "Invalid escape sequence";
-        case INVALID_UTF16_CHARACTER:           return "Invalid UTF-16 character";
-        case EXPECTED_CLOSING_QUOTE:            return "Expected closing quote";
-        case INVALID_VALUE:                     return "Invalid value";
-        case UNTERMINATED_VALUE:                return "Unterminated value";
-        case EXPECTED_OPENING_BRACKET:          return "Expected opening bracket";
-        case EXPECTED_COLON:                    return "Expected colon";
-        case EXPECTED_COMMA_OR_CLOSING_BRACKET: return "Expected comma or closing bracket";
-        case NESTED_OBJECT_OR_ARRAY_NOT_PARSED: return "Nested object or array not parsed";
-        case EXCEEDED_NESTING_LIMIT:            return "Exceeded nesting limit (" MJR_STRINGIFY(MJR_NESTING_LIMIT) ")";
+        case UNKNOWN:
+            return "Unknown parse error";
+        case EXPECTED_OPENING_QUOTE:
+            return "Expected opening quote";
+        case EXPECTED_UTF16_LOW_SURROGATE:
+            return "Expected UTF-16 low surrogate";
+        case INVALID_ESCAPE_SEQUENCE:
+            return "Invalid escape sequence";
+        case INVALID_UTF16_CHARACTER:
+            return "Invalid UTF-16 character";
+        case EXPECTED_CLOSING_QUOTE:
+            return "Expected closing quote";
+        case INVALID_VALUE:
+            return "Invalid value";
+        case UNTERMINATED_VALUE:
+            return "Unterminated value";
+        case EXPECTED_OPENING_BRACKET:
+            return "Expected opening bracket";
+        case EXPECTED_COLON:
+            return "Expected colon";
+        case EXPECTED_COMMA_OR_CLOSING_BRACKET:
+            return "Expected comma or closing bracket";
+        case NESTED_OBJECT_OR_ARRAY_NOT_PARSED:
+            return "Nested object or array not parsed";
+        case EXCEEDED_NESTING_LIMIT:
+            return "Exceeded nesting limit (" MJR_STRINGIFY(MJR_NESTING_LIMIT) ")";
         }
 
         return ""; // to suppress compiler warnings -- LCOV_EXCL_LINE
@@ -350,22 +343,22 @@ struct utf8_char
         bytes[3] = b3;
     }
 
-    uint8_t& operator[](size_t i)
+    uint8_t &operator[](size_t i)
     {
         return bytes[i];
     }
 
-    const uint8_t& operator[](size_t i) const
+    const uint8_t &operator[](size_t i) const
     {
         return bytes[i];
     }
 
-    bool operator==(const utf8_char& other) const
+    bool operator==(const utf8_char &other) const
     {
         return std::equal(bytes, bytes + sizeof(bytes), other.bytes);
     }
 
-    bool operator!=(const utf8_char& other) const
+    bool operator!=(const utf8_char &other) const
     {
         return !operator==(other);
     }
@@ -416,27 +409,27 @@ inline utf8_char utf32_to_utf8(uint32_t utf32_char)
 {
     utf8_char result;
 
-    if      (utf32_char <= 0x00007F)
+    if (utf32_char <= 0x00007F)
     {
         result[0] = utf32_char;
     }
     else if (utf32_char <= 0x0007FF)
     {
-        result[0] = 0xC0 | ((utf32_char & (0x1F <<  6)) >>  6);
-        result[1] = 0x80 | ((utf32_char & (0x3F      ))      );
+        result[0] = 0xC0 | ((utf32_char & (0x1F << 6)) >> 6);
+        result[1] = 0x80 | ((utf32_char & (0x3F)));
     }
     else if (utf32_char <= 0x00FFFF)
     {
         result[0] = 0xE0 | ((utf32_char & (0x0F << 12)) >> 12);
-        result[1] = 0x80 | ((utf32_char & (0x3F <<  6)) >>  6);
-        result[2] = 0x80 | ((utf32_char & (0x3F      ))      );
+        result[1] = 0x80 | ((utf32_char & (0x3F << 6)) >> 6);
+        result[2] = 0x80 | ((utf32_char & (0x3F)));
     }
     else if (utf32_char <= 0x1FFFFF)
     {
         result[0] = 0xF0 | ((utf32_char & (0x07 << 18)) >> 18);
         result[1] = 0x80 | ((utf32_char & (0x3F << 12)) >> 12);
-        result[2] = 0x80 | ((utf32_char & (0x3F <<  6)) >>  6);
-        result[3] = 0x80 | ((utf32_char & (0x3F      ))      );
+        result[2] = 0x80 | ((utf32_char & (0x3F << 6)) >> 6);
+        result[3] = 0x80 | ((utf32_char & (0x3F)));
     }
     else
     {
@@ -457,7 +450,7 @@ struct number_parse_error
 {
 };
 
-inline long parse_long(const char* str, int base = 10)
+inline long parse_long(const char *str, int base = 10)
 {
     if ((str == NULL) || (*str == 0) || isspace(str[0])) // we don't accept empty strings or strings with leading spaces
     {
@@ -471,7 +464,7 @@ inline long parse_long(const char* str, int base = 10)
 #endif
     errno = 0; // reset errno
 
-    char* endptr;
+    char *endptr;
     const long result = std::strtol(str, &endptr, base);
 
     std::swap(saved_errno, errno); // restore errno
@@ -488,7 +481,7 @@ inline long parse_long(const char* str, int base = 10)
     return result;
 }
 
-inline double parse_double(const char* str)
+inline double parse_double(const char *str)
 {
     if ((str == NULL) || (*str == 0)) // we don't accept empty strings
     {
@@ -496,7 +489,7 @@ inline double parse_double(const char* str)
     }
 
     // we perform this check to reject hex numbers (supported in C++11) and string with leading spaces
-    for (const char* c = str; *c != 0; c++)
+    for (const char *c = str; *c != 0; c++)
     {
         if (!(isdigit(*c) || (*c == '+') || (*c == '-') || (*c == '.') || (*c == 'e') || (*c == 'E')))
         {
@@ -511,7 +504,7 @@ inline double parse_double(const char* str)
 #endif
     errno = 0; // reset errno
 
-    char* endptr;
+    char *endptr;
     const double result = std::strtod(str, &endptr);
 
     std::swap(saved_errno, errno); // restore errno
@@ -530,7 +523,7 @@ inline double parse_double(const char* str)
 
 static const size_t UTF16_ESCAPE_SEQ_LENGTH = 4;
 
-inline uint16_t parse_utf16_escape_sequence(const char* seq)
+inline uint16_t parse_utf16_escape_sequence(const char *seq)
 {
     for (size_t i = 0; i < UTF16_ESCAPE_SEQ_LENGTH; i++)
     {
@@ -543,8 +536,8 @@ inline uint16_t parse_utf16_escape_sequence(const char* seq)
     return static_cast<uint16_t>(parse_long(seq, 16));
 }
 
-template<typename Context>
-void write_utf8_char(Context& context, const utf8_char& c)
+template <typename Context>
+void write_utf8_char(Context &context, const utf8_char &c)
 {
     for (size_t i = 0; i < sizeof(c.bytes); i++)
     {
@@ -558,8 +551,8 @@ void write_utf8_char(Context& context, const utf8_char& c)
     }
 }
 
-template<typename Context>
-void read_quoted_string(Context& context, bool skip_opening_quote = false)
+template <typename Context>
+void read_quoted_string(Context &context, bool skip_opening_quote = false)
 {
     enum
     {
@@ -571,7 +564,7 @@ void read_quoted_string(Context& context, bool skip_opening_quote = false)
     } state = (skip_opening_quote) ? CHARACTER : OPENING_QUOTE;
 
     bool empty = true;
-    char utf16_seq[UTF16_ESCAPE_SEQ_LENGTH + 1] = { 0 };
+    char utf16_seq[UTF16_ESCAPE_SEQ_LENGTH + 1] = {0};
     size_t utf16_seq_offset = 0;
     uint16_t high_surrogate = 0;
 
@@ -620,16 +613,35 @@ void read_quoted_string(Context& context, bool skip_opening_quote = false)
 
             switch (c)
             {
-            case '"': context.write('"'); break;
-            case '\\': context.write('\\'); break;
-            case '/': context.write('/'); break;
-            case 'b': context.write('\b'); break;
-            case 'f': context.write('\f'); break;
-            case 'n': context.write('\n'); break;
-            case 'r': context.write('\r'); break;
-            case 't': context.write('\t'); break;
-            case 'u': state = UTF16_SEQUENCE; break;
-            default: throw parse_error(context, parse_error::INVALID_ESCAPE_SEQUENCE);
+            case '"':
+                context.write('"');
+                break;
+            case '\\':
+                context.write('\\');
+                break;
+            case '/':
+                context.write('/');
+                break;
+            case 'b':
+                context.write('\b');
+                break;
+            case 'f':
+                context.write('\f');
+                break;
+            case 'n':
+                context.write('\n');
+                break;
+            case 'r':
+                context.write('\r');
+                break;
+            case 't':
+                context.write('\t');
+                break;
+            case 'u':
+                state = UTF16_SEQUENCE;
+                break;
+            default:
+                throw parse_error(context, parse_error::INVALID_ESCAPE_SEQUENCE);
             }
 
             break;
@@ -659,7 +671,7 @@ void read_quoted_string(Context& context, bool skip_opening_quote = false)
                         write_utf8_char(context, utf16_to_utf8(code_unit, 0));
                     }
                 }
-                catch (const encoding_error&)
+                catch (const encoding_error &)
                 {
                     throw parse_error(context, parse_error::INVALID_UTF16_CHARACTER);
                 }
@@ -690,8 +702,8 @@ void read_quoted_string(Context& context, bool skip_opening_quote = false)
 }
 
 // reads any value that is not a string (or an object/array)
-template<typename Context>
-char read_unquoted_value(Context& context, char first_char = 0)
+template <typename Context>
+char read_unquoted_value(Context &context, char first_char = 0)
 {
     if (first_char != 0)
     {
@@ -729,20 +741,17 @@ enum value_type
 
 class value MJR_FINAL
 {
-private:
-
+  private:
     value_type m_type;
-    const char* m_buffer;
+    const char *m_buffer;
     long m_long_value;
     double m_double_value;
 
-public:
-
-    explicit value(value_type type = Null, const char* buffer = "", long long_value = 0, double double_value = 0.0) :
-        m_type(type),
-        m_buffer(buffer),
-        m_long_value(long_value),
-        m_double_value(double_value)
+  public:
+    explicit value(value_type type = Null, const char *buffer = "", long long_value = 0, double double_value = 0.0) : m_type(type),
+                                                                                                                      m_buffer(buffer),
+                                                                                                                      m_long_value(long_value),
+                                                                                                                      m_double_value(double_value)
     {
     }
 
@@ -751,7 +760,7 @@ public:
         return m_type;
     }
 
-    const char* as_string() const
+    const char *as_string() const
     {
         return m_buffer;
     }
@@ -775,10 +784,10 @@ public:
 namespace detail
 {
 
-template<typename Context>
-value parse_unquoted_value(const Context& context)
+template <typename Context>
+value parse_unquoted_value(const Context &context)
 {
-    const char* const buffer = context.write_buffer();
+    const char *const buffer = context.write_buffer();
 
     if (strcmp(buffer, "true") == 0)
     {
@@ -802,13 +811,13 @@ value parse_unquoted_value(const Context& context)
             long_value = parse_long(buffer);
             double_value = long_value;
         }
-        catch (const number_parse_error&)
+        catch (const number_parse_error &)
         {
             try
             {
                 double_value = parse_double(buffer);
             }
-            catch (const number_parse_error&)
+            catch (const number_parse_error &)
             {
                 throw parse_error(context, parse_error::INVALID_VALUE);
             }
@@ -818,8 +827,8 @@ value parse_unquoted_value(const Context& context)
     }
 }
 
-template<typename Context>
-std::pair<value, char> read_value(Context& context, char first_char)
+template <typename Context>
+std::pair<value, char> read_value(Context &context, char first_char)
 {
     if (first_char == '{')
     {
@@ -845,8 +854,8 @@ std::pair<value, char> read_value(Context& context, char first_char)
     }
 }
 
-template<typename Context>
-void parse_init_helper(const Context& context, char& c, bool& must_read)
+template <typename Context>
+void parse_init_helper(const Context &context, char &c, bool &must_read)
 {
     switch (context.nested_status())
     {
@@ -865,8 +874,8 @@ void parse_init_helper(const Context& context, char& c, bool& must_read)
     }
 }
 
-template<typename Context>
-value parse_value_helper(Context& context, char& c, bool& must_read)
+template <typename Context>
+value parse_value_helper(Context &context, char &c, bool &must_read)
 {
     const std::pair<value, char> read_value_result = detail::read_value(context, c);
     const value v = read_value_result.first;
@@ -890,8 +899,8 @@ value parse_value_helper(Context& context, char& c, bool& must_read)
 
 } // namespace detail
 
-template<typename Context, typename Handler>
-void parse_object(Context& context, Handler handler)
+template <typename Context, typename Handler>
+void parse_object(Context &context, Handler handler)
 {
     const size_t nesting_level = context.nesting_level();
     if (nesting_level > MJR_NESTING_LIMIT)
@@ -916,7 +925,7 @@ void parse_object(Context& context, Handler handler)
         END
     } state = OPENING_BRACKET;
 
-    const char* field_name = "";
+    const char *field_name = "";
 
     while (state != END)
     {
@@ -942,7 +951,7 @@ void parse_object(Context& context, Handler handler)
         case OPENING_BRACKET:
             if (c != '{')
             {
-				//std::cout<<"fuck:"<<static_cast<int>(c)<<std::endl;
+                //std::cout<<"fuck:"<<static_cast<int>(c)<<std::endl;
                 throw parse_error(context, parse_error::EXPECTED_OPENING_BRACKET);
             }
             state = FIELD_NAME_OR_CLOSING_BRACKET;
@@ -1009,8 +1018,8 @@ void parse_object(Context& context, Handler handler)
     context.end_nested();
 }
 
-template<typename Context, typename Handler>
-void parse_array(Context& context, Handler handler)
+template <typename Context, typename Handler>
+void parse_array(Context &context, Handler handler)
 {
     const size_t nesting_level = context.nesting_level();
     if (nesting_level > MJR_NESTING_LIMIT)
@@ -1115,27 +1124,23 @@ class dispatch : detail::noncopyable
 {
     friend class detail::dispatch_rule;
 
-private:
-
-    const char* m_field_name;
+  private:
+    const char *m_field_name;
     bool m_handled;
 
-public:
-
-    explicit dispatch(const char* field_name) :
-        m_field_name(field_name),
-        m_handled(false)
+  public:
+    explicit dispatch(const char *field_name) : m_field_name(field_name),
+                                                m_handled(false)
     {
     }
 
-    explicit dispatch(const std::string& field_name) :
-        m_field_name(field_name.c_str()),
-        m_handled(false)
+    explicit dispatch(const std::string &field_name) : m_field_name(field_name.c_str()),
+                                                       m_handled(false)
     {
     }
 
-    detail::dispatch_rule operator<<(const char* field_name);
-    detail::dispatch_rule operator<<(const std::string& field_name);
+    detail::dispatch_rule operator<<(const char *field_name);
+    detail::dispatch_rule operator<<(const std::string &field_name);
 }; // class dispatch
 
 namespace detail
@@ -1143,21 +1148,18 @@ namespace detail
 
 class dispatch_rule
 {
-private:
+  private:
+    dispatch &m_dispatch;
+    const char *m_field_name;
 
-    dispatch& m_dispatch;
-    const char* m_field_name;
-
-public:
-
-    explicit dispatch_rule(dispatch& parent_dispatch, const char* field_name) :
-        m_dispatch(parent_dispatch),
-        m_field_name(field_name)
+  public:
+    explicit dispatch_rule(dispatch &parent_dispatch, const char *field_name) : m_dispatch(parent_dispatch),
+                                                                                m_field_name(field_name)
     {
     }
 
-    template<typename Handler>
-    dispatch& operator>>(Handler handler) const
+    template <typename Handler>
+    dispatch &operator>>(Handler handler) const
     {
         if (!m_dispatch.m_handled && ((m_field_name == NULL) || (strcmp(m_dispatch.m_field_name, m_field_name) == 0)))
         {
@@ -1169,19 +1171,17 @@ public:
     }
 }; // class dispatch_rule
 
-template<typename Context>
+template <typename Context>
 class ignore
 {
-    Context& m_context;
+    Context &m_context;
 
-public:
-
-    explicit ignore(Context& context) :
-        m_context(context)
+  public:
+    explicit ignore(Context &context) : m_context(context)
     {
     }
 
-    void operator()(const char*, value)
+    void operator()(const char *, value)
     {
         operator()();
     }
@@ -1209,20 +1209,20 @@ public:
 
 } // namespace detail
 
-inline detail::dispatch_rule dispatch::operator<<(const char* field_name)
+inline detail::dispatch_rule dispatch::operator<<(const char *field_name)
 {
     return detail::dispatch_rule(*this, field_name);
 }
 
-inline detail::dispatch_rule dispatch::operator<<(const std::string& field_name)
+inline detail::dispatch_rule dispatch::operator<<(const std::string &field_name)
 {
     return operator<<(field_name.c_str());
 }
 
-static const char* const any = NULL;
+static const char *const any = NULL;
 
-template<typename Context>
-void ignore(Context& context)
+template <typename Context>
+void ignore(Context &context)
 {
     detail::ignore<Context> ignore(context);
     ignore();
