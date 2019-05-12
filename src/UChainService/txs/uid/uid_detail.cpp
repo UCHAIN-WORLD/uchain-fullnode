@@ -27,8 +27,10 @@
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 #include <json/minijson_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 uid_detail::uid_detail()
 {
@@ -36,26 +38,26 @@ uid_detail::uid_detail()
 }
 
 uid_detail::uid_detail(
-    const std::string& symbol, const std::string& address)
+    const std::string &symbol, const std::string &address)
     : symbol(symbol), address(address)
 {
 }
 
-uid_detail uid_detail::factory_from_data(const data_chunk& data)
+uid_detail uid_detail::factory_from_data(const data_chunk &data)
 {
     uid_detail instance;
     instance.from_data(data);
     return instance;
 }
 
-uid_detail uid_detail::factory_from_data(std::istream& stream)
+uid_detail uid_detail::factory_from_data(std::istream &stream)
 {
     uid_detail instance;
     instance.from_data(stream);
     return instance;
 }
 
-uid_detail uid_detail::factory_from_data(reader& source)
+uid_detail uid_detail::factory_from_data(reader &source)
 {
     uid_detail instance;
     instance.from_data(source);
@@ -63,8 +65,7 @@ uid_detail uid_detail::factory_from_data(reader& source)
 }
 bool uid_detail::is_valid() const
 {
-    return !(symbol.empty()
-            || count_size()>UID_DETAIL_FIX_SIZE);
+    return !(symbol.empty() || count_size() > UID_DETAIL_FIX_SIZE);
 }
 
 void uid_detail::reset()
@@ -73,24 +74,24 @@ void uid_detail::reset()
     address = "";
 }
 
-bool uid_detail::from_data(const data_chunk& data)
+bool uid_detail::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool uid_detail::from_data(std::istream& stream)
+bool uid_detail::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool uid_detail::from_data(reader& source)
+bool uid_detail::from_data(reader &source)
 {
     reset();
 
     symbol = source.read_string();
-    address =  source.read_string();
+    address = source.read_string();
 
     auto result = static_cast<bool>(source);
     if (!result)
@@ -109,13 +110,13 @@ data_chunk uid_detail::to_data() const
     return data;
 }
 
-void uid_detail::to_data(std::ostream& stream) const
+void uid_detail::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void uid_detail::to_data(writer& sink) const
+void uid_detail::to_data(writer &sink) const
 {
     sink.write_string(symbol);
     sink.write_string(address);
@@ -129,14 +130,14 @@ uint64_t uid_detail::serialized_size() const
 
 uint32_t uid_detail::count_size() const
 {
-    return symbol.size()  + address.size() + 2;
+    return symbol.size() + address.size() + 2;
 }
 
-bool uid_detail::operator< (const uid_detail& other) const
+bool uid_detail::operator<(const uid_detail &other) const
 {
     auto ret = 0;
-    if((ret = symbol.compare(other.symbol)) < 0
-    || (ret == 0 && address.compare(other.address) < 0)){
+    if ((ret = symbol.compare(other.symbol)) < 0 || (ret == 0 && address.compare(other.address) < 0))
+    {
         return true;
     }
 
@@ -148,12 +149,12 @@ std::string uid_detail::to_string() const
     std::ostringstream ss;
 
     ss << "\t symbol = " << symbol << "\n"
-        << "\t address = " << address << "\n";
+       << "\t address = " << address << "\n";
 
     return ss.str();
 }
 
-void uid_detail::to_json(std::ostream& output)
+void uid_detail::to_json(std::ostream &output)
 {
     minijson::object_writer json_writer(output);
     json_writer.write("symbol", symbol);
@@ -161,27 +162,27 @@ void uid_detail::to_json(std::ostream& output)
     json_writer.close();
 }
 
-const std::string& uid_detail::get_symbol() const
+const std::string &uid_detail::get_symbol() const
 {
     return symbol;
 }
 
-void uid_detail::set_symbol(const std::string& symbol)
+void uid_detail::set_symbol(const std::string &symbol)
 {
-    size_t len = std::min(symbol.size()+1 , UID_DETAIL_SYMBOL_FIX_SIZE);
+    size_t len = std::min(symbol.size() + 1, UID_DETAIL_SYMBOL_FIX_SIZE);
     this->symbol = symbol.substr(0, len);
 }
 
-const std::string& uid_detail::get_address() const
+const std::string &uid_detail::get_address() const
 {
     return address;
 }
 
-void uid_detail::set_address(const std::string& address)
+void uid_detail::set_address(const std::string &address)
 {
-     size_t len = std::min(address.size()+1 , UID_DETAIL_ADDRESS_FIX_SIZE);
-     this->address = address.substr(0, len);
+    size_t len = std::min(address.size() + 1, UID_DETAIL_ADDRESS_FIX_SIZE);
+    this->address = address.substr(0, len);
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
