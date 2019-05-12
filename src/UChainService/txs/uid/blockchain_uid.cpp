@@ -26,34 +26,35 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 blockchain_uid::blockchain_uid()
 {
     reset();
 }
-blockchain_uid::blockchain_uid(uint32_t version, const output_point& tx_point,
-            uint64_t height, uint32_t status, const uid_detail& uid):
-    version_(version), tx_point_(tx_point), height_(height), status_(status), uid_(uid)
+blockchain_uid::blockchain_uid(uint32_t version, const output_point &tx_point,
+                               uint64_t height, uint32_t status, const uid_detail &uid) : version_(version), tx_point_(tx_point), height_(height), status_(status), uid_(uid)
 {
 }
 
-blockchain_uid blockchain_uid::factory_from_data(const data_chunk& data)
+blockchain_uid blockchain_uid::factory_from_data(const data_chunk &data)
 {
     blockchain_uid instance;
     instance.from_data(data);
     return instance;
 }
 
-blockchain_uid blockchain_uid::factory_from_data(std::istream& stream)
+blockchain_uid blockchain_uid::factory_from_data(std::istream &stream)
 {
     blockchain_uid instance;
     instance.from_data(stream);
     return instance;
 }
 
-blockchain_uid blockchain_uid::factory_from_data(reader& source)
+blockchain_uid blockchain_uid::factory_from_data(reader &source)
 {
     blockchain_uid instance;
     instance.from_data(source);
@@ -73,19 +74,19 @@ void blockchain_uid::reset()
     uid_ = uid_detail();
 }
 
-bool blockchain_uid::from_data(const data_chunk& data)
+bool blockchain_uid::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool blockchain_uid::from_data(std::istream& stream)
+bool blockchain_uid::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool blockchain_uid::from_data(reader& source)
+bool blockchain_uid::from_data(reader &source)
 {
     reset();
 
@@ -108,13 +109,13 @@ data_chunk blockchain_uid::to_data() const
     return data;
 }
 
-void blockchain_uid::to_data(std::ostream& stream) const
+void blockchain_uid::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void blockchain_uid::to_data(writer& sink) const
+void blockchain_uid::to_data(writer &sink) const
 {
     sink.write_4_bytes_little_endian(version_);
     tx_point_.to_data(sink);
@@ -134,49 +135,49 @@ std::string blockchain_uid::to_string() const
     std::ostringstream ss;
 
     ss << "\t version = " << version_ << "\n"
-        << "\t tx_point = " << tx_point_.to_string() << "\n"
-        << "\t height = " << height_ << "\n"
-        << "\t status = " << get_status_string().c_str() << "\n"
-        << "\t uid = " << uid_.to_string() << "\n";
+       << "\t tx_point = " << tx_point_.to_string() << "\n"
+       << "\t height = " << height_ << "\n"
+       << "\t status = " << get_status_string().c_str() << "\n"
+       << "\t uid = " << uid_.to_string() << "\n";
 
     return ss.str();
 }
 
 #endif
-const uint32_t& blockchain_uid::get_version() const
+const uint32_t &blockchain_uid::get_version() const
 {
     return version_;
 }
-void blockchain_uid::set_version(const uint32_t& version_)
+void blockchain_uid::set_version(const uint32_t &version_)
 {
-     this->version_ = version_;
+    this->version_ = version_;
 }
 
-const output_point& blockchain_uid::get_tx_point() const
+const output_point &blockchain_uid::get_tx_point() const
 {
     return tx_point_;
 }
-void blockchain_uid::set_tx_point(const output_point& tx_point_)
+void blockchain_uid::set_tx_point(const output_point &tx_point_)
 {
-     this->tx_point_ = tx_point_;
+    this->tx_point_ = tx_point_;
 }
 
-const uint64_t& blockchain_uid::get_height() const
+const uint64_t &blockchain_uid::get_height() const
 {
     return height_;
 }
-void blockchain_uid::set_height(const uint64_t& height_)
+void blockchain_uid::set_height(const uint64_t &height_)
 {
-     this->height_ = height_;
+    this->height_ = height_;
 }
 
-const uid_detail& blockchain_uid::get_uid() const
+const uid_detail &blockchain_uid::get_uid() const
 {
     return uid_;
 }
-void blockchain_uid::set_uid(const uid_detail& uid_)
+void blockchain_uid::set_uid(const uid_detail &uid_)
 {
-     this->uid_ = uid_;
+    this->uid_ = uid_;
 }
 
 void blockchain_uid::set_status(const uint32_t &status)
@@ -206,5 +207,5 @@ std::string blockchain_uid::get_status_string() const
 
     return strStatus;
 }
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
