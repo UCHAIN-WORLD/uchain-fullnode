@@ -26,10 +26,9 @@
 #endif
 #endif
 
-
 namespace libbitcoin
 {
-void call_stack(std::ostream& os)
+void call_stack(std::ostream &os)
 {
 #ifndef _WIN32
 #ifndef __ANDROID__
@@ -43,9 +42,10 @@ void call_stack(std::ostream& os)
     os << "backtrace() returned " << nptrs << " addresses\n";
 
     strings = backtrace_symbols(buffer, nptrs);
-    if (strings == nullptr) {
+    if (strings == nullptr)
+    {
         os << "backtrace_symbols failed" << '\n';
-        exit (EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     for (j = 0; j < nptrs; j++)
@@ -58,19 +58,17 @@ void call_stack(std::ostream& os)
 #endif
 }
 
-
-void do_callstack(const std::string& name)
+void do_callstack(const std::string &name)
 {
     std::fstream fout;
-    fout.open(name, std::ios_base::ate|std::ios_base::out);
-    if(! fout.good())
+    fout.open(name, std::ios_base::ate | std::ios_base::out);
+    if (!fout.good())
     {
         boost::format fmt{"open file %s failed"};
         auto msg = fmt % name;
-        throw std::runtime_error{ msg.str() };
+        throw std::runtime_error{msg.str()};
     }
     call_stack(fout);
 }
 
-}//namespace libbitcoin
-
+} //namespace libbitcoin
