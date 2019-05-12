@@ -28,10 +28,11 @@
 #include <vector>
 #include <string>
 
-namespace cryptojs {
-    typedef std::vector<uint8_t> data_chunk;
-    data_chunk encrypt(const std::string &message, const std::string &passphrase_);
+namespace cryptojs
+{
+typedef std::vector<uint8_t> data_chunk;
+data_chunk encrypt(const std::string &message, const std::string &passphrase_);
 
-    bool decrypt(const data_chunk &cipher_txt, const std::string &passphrase_, std::string &message);
-}
+bool decrypt(const data_chunk &cipher_txt, const std::string &passphrase_, std::string &message);
+} // namespace cryptojs
 #endif //UChain_CRYPTJS_IMPL_H
