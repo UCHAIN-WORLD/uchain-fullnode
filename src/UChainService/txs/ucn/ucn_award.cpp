@@ -25,34 +25,34 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 ucn_award::ucn_award()
 {
     height = 0;
 }
-ucn_award::ucn_award(uint64_t height):
-    height(height)
+ucn_award::ucn_award(uint64_t height) : height(height)
 {
-
 }
 
-ucn_award ucn_award::factory_from_data(const data_chunk& data)
+ucn_award ucn_award::factory_from_data(const data_chunk &data)
 {
     ucn_award instance;
     instance.from_data(data);
     return instance;
 }
 
-ucn_award ucn_award::factory_from_data(std::istream& stream)
+ucn_award ucn_award::factory_from_data(std::istream &stream)
 {
     ucn_award instance;
     instance.from_data(stream);
     return instance;
 }
 
-ucn_award ucn_award::factory_from_data(reader& source)
+ucn_award ucn_award::factory_from_data(reader &source)
 {
     ucn_award instance;
     instance.from_data(source);
@@ -61,26 +61,26 @@ ucn_award ucn_award::factory_from_data(reader& source)
 
 void ucn_award::reset()
 {
-    height= 0;
+    height = 0;
 }
 bool ucn_award::is_valid() const
 {
     return true;
 }
 
-bool ucn_award::from_data(const data_chunk& data)
+bool ucn_award::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool ucn_award::from_data(std::istream& stream)
+bool ucn_award::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool ucn_award::from_data(reader& source)
+bool ucn_award::from_data(reader &source)
 {
     reset();
     height = source.read_8_bytes_little_endian();
@@ -99,13 +99,13 @@ data_chunk ucn_award::to_data() const
     return data;
 }
 
-void ucn_award::to_data(std::ostream& stream) const
+void ucn_award::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void ucn_award::to_data(writer& sink) const
+void ucn_award::to_data(writer &sink) const
 {
     sink.write_8_bytes_little_endian(height);
 }
@@ -133,5 +133,5 @@ void ucn_award::set_height(uint64_t height)
     this->height = height;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
