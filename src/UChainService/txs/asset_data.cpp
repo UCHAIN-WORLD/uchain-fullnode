@@ -26,34 +26,36 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-#define UCN_TYPE            KIND2UINT16(business_kind::ucn)
-#define UCN_AWARD_TYPE      KIND2UINT16(business_kind::ucn_award)
-#define TOKEN_ISSUE_TYPE    KIND2UINT16(business_kind::token_issue)
+#define UCN_TYPE KIND2UINT16(business_kind::ucn)
+#define UCN_AWARD_TYPE KIND2UINT16(business_kind::ucn_award)
+#define TOKEN_ISSUE_TYPE KIND2UINT16(business_kind::token_issue)
 #define TOKEN_TRANSFER_TYPE KIND2UINT16(business_kind::token_transfer)
-#define TOKEN_CERT_TYPE     KIND2UINT16(business_kind::token_cert)
-#define TOKEN_CANDIDATE_TYPE      KIND2UINT16(business_kind::candidate)
-#define MESSAGE_TYPE        KIND2UINT16(business_kind::message)
-#define UID_REGISTER_TYPE   KIND2UINT16(business_kind::uid_register)
-#define UID_TRANSFER_TYPE   KIND2UINT16(business_kind::uid_transfer)
+#define TOKEN_CERT_TYPE KIND2UINT16(business_kind::token_cert)
+#define TOKEN_CANDIDATE_TYPE KIND2UINT16(business_kind::candidate)
+#define MESSAGE_TYPE KIND2UINT16(business_kind::message)
+#define UID_REGISTER_TYPE KIND2UINT16(business_kind::uid_register)
+#define UID_TRANSFER_TYPE KIND2UINT16(business_kind::uid_transfer)
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
-asset_data asset_data::factory_from_data(const data_chunk& data)
+asset_data asset_data::factory_from_data(const data_chunk &data)
 {
     asset_data instance;
     instance.from_data(data);
     return instance;
 }
 
-asset_data asset_data::factory_from_data(std::istream& stream)
+asset_data asset_data::factory_from_data(std::istream &stream)
 {
     asset_data instance;
     instance.from_data(stream);
     return instance;
 }
 
-asset_data asset_data::factory_from_data(reader& source)
+asset_data asset_data::factory_from_data(reader &source)
 {
     asset_data instance;
     instance.from_data(source);
@@ -74,30 +76,22 @@ bool asset_data::is_valid() const
 
 bool asset_data::is_valid_type() const
 {
-    return ((UCN_TYPE == KIND2UINT16(kind))
-            || (TOKEN_ISSUE_TYPE == KIND2UINT16(kind))
-            || (TOKEN_TRANSFER_TYPE == KIND2UINT16(kind))
-            || (TOKEN_CERT_TYPE == KIND2UINT16(kind))
-            || (TOKEN_CANDIDATE_TYPE == KIND2UINT16(kind)))
-            || (UCN_AWARD_TYPE == KIND2UINT16(kind))
-            || (MESSAGE_TYPE == KIND2UINT16(kind))
-            || (UID_REGISTER_TYPE == KIND2UINT16(kind))
-            || (UID_TRANSFER_TYPE == KIND2UINT16(kind));
+    return ((UCN_TYPE == KIND2UINT16(kind)) || (TOKEN_ISSUE_TYPE == KIND2UINT16(kind)) || (TOKEN_TRANSFER_TYPE == KIND2UINT16(kind)) || (TOKEN_CERT_TYPE == KIND2UINT16(kind)) || (TOKEN_CANDIDATE_TYPE == KIND2UINT16(kind))) || (UCN_AWARD_TYPE == KIND2UINT16(kind)) || (MESSAGE_TYPE == KIND2UINT16(kind)) || (UID_REGISTER_TYPE == KIND2UINT16(kind)) || (UID_TRANSFER_TYPE == KIND2UINT16(kind));
 }
 
-bool asset_data::from_data(const data_chunk& data)
+bool asset_data::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool asset_data::from_data(std::istream& stream)
+bool asset_data::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool asset_data::from_data(reader& source)
+bool asset_data::from_data(reader &source)
 {
     reset();
     kind = static_cast<business_kind>(source.read_2_bytes_little_endian());
@@ -108,51 +102,51 @@ bool asset_data::from_data(reader& source)
     {
         switch (KIND2UINT16(kind))
         {
-            case UCN_TYPE:
-            {
-                data = ucn();
-                break;
-            }
-            case UCN_AWARD_TYPE:
-            {
-                data = ucn_award();
-                break;
-            }
-            case TOKEN_ISSUE_TYPE:
-            {
-                data = token_detail();
-                break;
-            }
-            case TOKEN_TRANSFER_TYPE:
-            {
-                data = token_transfer();
-                break;
-            }
-            case TOKEN_CERT_TYPE:
-            {
-                data = token_cert();
-                break;
-            }
-            case TOKEN_CANDIDATE_TYPE:
-            {
-                data = candidate();
-                break;
-            }
-            case MESSAGE_TYPE:
-            {
-                data = blockchain_message();
-                break;
-            }
-            case UID_REGISTER_TYPE:
-            {
-                data = uid_detail();
-                break;
-            }
-            case UID_TRANSFER_TYPE:
-            {
-                data = uid_detail();
-                break;
-            }
+        case UCN_TYPE:
+        {
+            data = ucn();
+            break;
+        }
+        case UCN_AWARD_TYPE:
+        {
+            data = ucn_award();
+            break;
+        }
+        case TOKEN_ISSUE_TYPE:
+        {
+            data = token_detail();
+            break;
+        }
+        case TOKEN_TRANSFER_TYPE:
+        {
+            data = token_transfer();
+            break;
+        }
+        case TOKEN_CERT_TYPE:
+        {
+            data = token_cert();
+            break;
+        }
+        case TOKEN_CANDIDATE_TYPE:
+        {
+            data = candidate();
+            break;
+        }
+        case MESSAGE_TYPE:
+        {
+            data = blockchain_message();
+            break;
+        }
+        case UID_REGISTER_TYPE:
+        {
+            data = uid_detail();
+            break;
+        }
+        case UID_TRANSFER_TYPE:
+        {
+            data = uid_detail();
+            break;
+        }
         }
         auto visitor = from_data_visitor(source);
         result = boost::apply_visitor(visitor, data);
@@ -164,7 +158,6 @@ bool asset_data::from_data(reader& source)
     }
 
     return result;
-
 }
 
 data_chunk asset_data::to_data()
@@ -176,13 +169,13 @@ data_chunk asset_data::to_data()
     return data;
 }
 
-void asset_data::to_data(std::ostream& stream)
+void asset_data::to_data(std::ostream &stream)
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void asset_data::to_data(writer& sink)
+void asset_data::to_data(writer &sink)
 {
     sink.write_2_bytes_little_endian(KIND2UINT16(kind));
     sink.write_4_bytes_little_endian(timestamp);
@@ -219,7 +212,7 @@ business_kind asset_data::get_kind_value() const
     return kind;
 }
 
-const asset_data::asset_data_type& asset_data::get_data() const
+const asset_data::asset_data_type &asset_data::get_data() const
 {
     return data;
 }
@@ -229,5 +222,5 @@ uint32_t asset_data::get_timestamp() const
     return timestamp;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
