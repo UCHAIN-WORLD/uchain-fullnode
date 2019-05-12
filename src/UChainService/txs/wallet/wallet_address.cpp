@@ -33,8 +33,10 @@
 #include <UChain/bitcoin.hpp>
 using namespace libbitcoin::wallet;
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 wallet_address::wallet_address()
 {
@@ -42,15 +44,14 @@ wallet_address::wallet_address()
 }
 
 wallet_address::wallet_address(
-    const std::string& name, const std::string& prv_key,
-    const std::string& pub_key, uint32_t hd_index, uint64_t balance,
-    const std::string& alias, const std::string& address, uint8_t status) :
-    name(name), prv_key(prv_key), pub_key(pub_key), hd_index(hd_index), balance(balance),
-    alias(alias), address(address), status_(status)
+    const std::string &name, const std::string &prv_key,
+    const std::string &pub_key, uint32_t hd_index, uint64_t balance,
+    const std::string &alias, const std::string &address, uint8_t status) : name(name), prv_key(prv_key), pub_key(pub_key), hd_index(hd_index), balance(balance),
+                                                                            alias(alias), address(address), status_(status)
 {
 }
 
-wallet_address::wallet_address(const wallet_address& other)
+wallet_address::wallet_address(const wallet_address &other)
 {
     name = other.name;
     prv_key = other.prv_key;
@@ -61,21 +62,21 @@ wallet_address::wallet_address(const wallet_address& other)
     address = other.address;
     status_ = other.status_;
 }
-wallet_address wallet_address::factory_from_data(const data_chunk& data)
+wallet_address wallet_address::factory_from_data(const data_chunk &data)
 {
     wallet_address instance;
     instance.from_data(data);
     return instance;
 }
 
-wallet_address wallet_address::factory_from_data(std::istream& stream)
+wallet_address wallet_address::factory_from_data(std::istream &stream)
 {
     wallet_address instance;
     instance.from_data(stream);
     return instance;
 }
 
-wallet_address wallet_address::factory_from_data(reader& source)
+wallet_address wallet_address::factory_from_data(reader &source)
 {
     wallet_address instance;
     instance.from_data(source);
@@ -99,19 +100,19 @@ void wallet_address::reset()
     status_ = 0;
 }
 
-bool wallet_address::from_data(const data_chunk& data)
+bool wallet_address::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool wallet_address::from_data(std::istream& stream)
+bool wallet_address::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool wallet_address::from_data(reader& source)
+bool wallet_address::from_data(reader &source)
 {
     reset();
     name = source.read_fixed_string(ADDRESS_NAME_FIX_SIZE);
@@ -143,13 +144,13 @@ data_chunk wallet_address::to_data() const
     return data;
 }
 
-void wallet_address::to_data(std::ostream& stream) const
+void wallet_address::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void wallet_address::to_data(writer& sink) const
+void wallet_address::to_data(writer &sink) const
 {
     sink.write_fixed_string(name, ADDRESS_NAME_FIX_SIZE);
     //sink.write_fixed_string(prv_key, ADDRESS_PRV_KEY_FIX_SIZE);
@@ -164,9 +165,7 @@ void wallet_address::to_data(writer& sink) const
 
 uint64_t wallet_address::serialized_size() const
 {
-    return name.size() + prv_key.size() + pub_key.size() + 4 + 8
-        + alias.size() + address.size() + 1
-        + 5; // 5 "string length" byte
+    return name.size() + prv_key.size() + pub_key.size() + 4 + 8 + alias.size() + address.size() + 1 + 5; // 5 "string length" byte
 }
 
 #ifdef UC_DEBUG
@@ -175,28 +174,28 @@ std::string wallet_address::to_string()
     std::ostringstream ss;
 
     ss << "\t name = " << name << "\n"
-        << "\t prv_key = " << prv_key << "\n"
-        << "\t pub_key = " << pub_key << "\n"
-        << "\t hd_index = " << hd_index << "\n"
-        << "\t balance = " << balance << "\n"
-        << "\t alias = " << alias << "\n"
-        << "\t address = " << address << "\n"
-        << "\t status = " << status_ << "\n";
+       << "\t prv_key = " << prv_key << "\n"
+       << "\t pub_key = " << pub_key << "\n"
+       << "\t hd_index = " << hd_index << "\n"
+       << "\t balance = " << balance << "\n"
+       << "\t alias = " << alias << "\n"
+       << "\t address = " << address << "\n"
+       << "\t status = " << status_ << "\n";
 
     return ss.str();
 }
 #endif
 
-const std::string& wallet_address::get_name() const
+const std::string &wallet_address::get_name() const
 {
     return name;
 }
-void wallet_address::set_name(const std::string& name)
+void wallet_address::set_name(const std::string &name)
 {
-     this->name = name;
+    this->name = name;
 }
 
-const std::string wallet_address::get_prv_key(std::string& passphrase) const
+const std::string wallet_address::get_prv_key(std::string &passphrase) const
 {
     std::string decry_output("");
 
@@ -207,25 +206,25 @@ const std::string wallet_address::get_prv_key() const
 {
     return prv_key;
 }
-void wallet_address::set_prv_key(const std::string& prv_key, std::string& passphrase)
+void wallet_address::set_prv_key(const std::string &prv_key, std::string &passphrase)
 {
     std::string encry_output("");
 
     encrypt_string(prv_key, passphrase, encry_output);
     this->prv_key = encry_output;
 }
-void wallet_address::set_prv_key(const std::string& prv_key)
+void wallet_address::set_prv_key(const std::string &prv_key)
 {
     this->prv_key = prv_key;
 }
 
-const std::string& wallet_address::get_pub_key() const
+const std::string &wallet_address::get_pub_key() const
 {
     return pub_key;
 }
-void wallet_address::set_pub_key(const std::string& pub_key)
+void wallet_address::set_pub_key(const std::string &pub_key)
 {
-     this->pub_key = pub_key;
+    this->pub_key = pub_key;
 }
 
 uint32_t wallet_address::get_hd_index() const
@@ -234,7 +233,7 @@ uint32_t wallet_address::get_hd_index() const
 }
 void wallet_address::set_hd_index(uint32_t hd_index)
 {
-     this->hd_index = hd_index;
+    this->hd_index = hd_index;
 }
 
 uint64_t wallet_address::get_balance() const
@@ -243,25 +242,25 @@ uint64_t wallet_address::get_balance() const
 }
 void wallet_address::set_balance(uint64_t balance)
 {
-     this->balance = balance;
+    this->balance = balance;
 }
 
-const std::string& wallet_address::get_alias() const
+const std::string &wallet_address::get_alias() const
 {
     return alias;
 }
-void wallet_address::set_alias(const std::string& alias)
+void wallet_address::set_alias(const std::string &alias)
 {
-     this->alias = alias;
+    this->alias = alias;
 }
 
-const std::string& wallet_address::get_address() const
+const std::string &wallet_address::get_address() const
 {
     return address;
 }
-void wallet_address::set_address(const std::string& address)
+void wallet_address::set_address(const std::string &address)
 {
-     this->address = address;
+    this->address = address;
 }
 
 uint8_t wallet_address::get_status() const
@@ -273,5 +272,5 @@ void wallet_address::set_status(uint8_t status)
     status_ = status;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin

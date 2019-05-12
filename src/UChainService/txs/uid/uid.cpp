@@ -27,33 +27,34 @@
 #include <UChain/bitcoin/utility/istream_reader.hpp>
 #include <UChain/bitcoin/utility/ostream_writer.hpp>
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 uid::uid()
 {
     reset();
 }
-uid::uid(uint32_t status, const uid_detail& detail):
-    status(status), data(detail)
+uid::uid(uint32_t status, const uid_detail &detail) : status(status), data(detail)
 {
 }
 
-uid uid::factory_from_data(const data_chunk& data)
+uid uid::factory_from_data(const data_chunk &data)
 {
     uid instance;
     instance.from_data(data);
     return instance;
 }
 
-uid uid::factory_from_data(std::istream& stream)
+uid uid::factory_from_data(std::istream &stream)
 {
     uid instance;
     instance.from_data(stream);
     return instance;
 }
 
-uid uid::factory_from_data(reader& source)
+uid uid::factory_from_data(reader &source)
 {
     uid instance;
     instance.from_data(source);
@@ -73,33 +74,34 @@ bool uid::is_valid() const
 
 bool uid::is_valid_type() const
 {
-    return ((UID_DETAIL_TYPE == status)
-        || (UID_TRANSFERABLE_TYPE == status));
+    return ((UID_DETAIL_TYPE == status) || (UID_TRANSFERABLE_TYPE == status));
 }
 
-bool uid::from_data(const data_chunk& data)
+bool uid::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool uid::from_data(std::istream& stream)
+bool uid::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool uid::from_data(reader& source)
+bool uid::from_data(reader &source)
 {
     reset();
 
     status = source.read_4_bytes_little_endian();
     auto result = static_cast<bool>(source);
 
-    if (result && is_valid_type()) {
+    if (result && is_valid_type())
+    {
         result = data.from_data(source);
     }
-    else {
+    else
+    {
         result = false;
         reset();
     }
@@ -117,13 +119,13 @@ data_chunk uid::to_data() const
     return data;
 }
 
-void uid::to_data(std::ostream& stream) const
+void uid::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void uid::to_data(writer& sink) const
+void uid::to_data(writer &sink) const
 {
     sink.write_4_bytes_little_endian(status);
     data.to_data(sink);
@@ -150,15 +152,15 @@ void uid::set_status(uint32_t status)
 {
     this->status = status;
 }
-void uid::set_data(const uid_detail& detail)
+void uid::set_data(const uid_detail &detail)
 {
     this->data = detail;
 }
 
-const uid_detail& uid::get_data() const
+const uid_detail &uid::get_data() const
 {
     return this->data;
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
