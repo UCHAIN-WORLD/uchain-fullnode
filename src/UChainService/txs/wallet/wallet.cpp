@@ -34,8 +34,10 @@
 #include <UChain/bitcoin.hpp>
 using namespace libbitcoin::wallet;
 
-namespace libbitcoin {
-namespace chain {
+namespace libbitcoin
+{
+namespace chain
+{
 
 wallet_multisig::wallet_multisig()
     : hd_index_(0), m_(0), n_(0)
@@ -44,81 +46,93 @@ wallet_multisig::wallet_multisig()
 
 wallet_multisig::wallet_multisig(
     uint32_t hd_index, uint8_t m, uint8_t n,
-    std::vector<std::string>&& cosigner_pubkeys, std::string& pubkey)
-    : hd_index_(hd_index)
-    , m_(m)
-    , n_(n)
-    , cosigner_pubkeys_(std::move(cosigner_pubkeys))
-    , pubkey_(pubkey)
+    std::vector<std::string> &&cosigner_pubkeys, std::string &pubkey)
+    : hd_index_(hd_index), m_(m), n_(n), cosigner_pubkeys_(std::move(cosigner_pubkeys)), pubkey_(pubkey)
 {
 }
 
-void wallet_multisig::set_hd_index(uint32_t hd_index) {
+void wallet_multisig::set_hd_index(uint32_t hd_index)
+{
     hd_index_ = hd_index;
 }
 
-uint32_t wallet_multisig::get_hd_index() const {
+uint32_t wallet_multisig::get_hd_index() const
+{
     return hd_index_;
 }
 
-void wallet_multisig::set_index(uint32_t index) {
+void wallet_multisig::set_index(uint32_t index)
+{
     index_ = index;
 }
 
-uint32_t wallet_multisig::get_index() const {
+uint32_t wallet_multisig::get_index() const
+{
     return index_;
 }
 
-void wallet_multisig::set_m(uint8_t m) {
+void wallet_multisig::set_m(uint8_t m)
+{
     m_ = m;
 }
 
-uint8_t wallet_multisig::get_m() const {
+uint8_t wallet_multisig::get_m() const
+{
     return m_;
 }
 
-void wallet_multisig::set_n(uint8_t n) {
+void wallet_multisig::set_n(uint8_t n)
+{
     n_ = n;
 }
 
-uint8_t wallet_multisig::get_n() const {
+uint8_t wallet_multisig::get_n() const
+{
     return n_;
 }
 
-const std::vector<std::string>& wallet_multisig::get_cosigner_pubkeys() const {
+const std::vector<std::string> &wallet_multisig::get_cosigner_pubkeys() const
+{
     return cosigner_pubkeys_;
 }
 
-void wallet_multisig::set_cosigner_pubkeys(std::vector<std::string>&& cosigner_pubkeys) {
+void wallet_multisig::set_cosigner_pubkeys(std::vector<std::string> &&cosigner_pubkeys)
+{
     cosigner_pubkeys_ = std::move(cosigner_pubkeys);
     std::sort(cosigner_pubkeys_.begin(), cosigner_pubkeys_.end());
 }
 
-std::string wallet_multisig::get_pub_key() const {
+std::string wallet_multisig::get_pub_key() const
+{
     return pubkey_;
 }
 
-void wallet_multisig::set_pub_key(std::string& pubkey) {
+void wallet_multisig::set_pub_key(std::string &pubkey)
+{
     pubkey_ = pubkey;
 }
 
-std::string wallet_multisig::get_description() const {
+std::string wallet_multisig::get_description() const
+{
     return description_;
 }
 
-void wallet_multisig::set_description(std::string& description) {
+void wallet_multisig::set_description(std::string &description)
+{
     description_ = description;
 }
 
-std::string wallet_multisig::get_address() const {
+std::string wallet_multisig::get_address() const
+{
     return address_;
 }
 
-void wallet_multisig::set_address(std::string& address) {
+void wallet_multisig::set_address(std::string &address)
+{
     address_ = address;
 }
 
-bool wallet_multisig::from_data(reader& source)
+bool wallet_multisig::from_data(reader &source)
 {
     hd_index_ = source.read_4_bytes_little_endian();
     index_ = source.read_4_bytes_little_endian();
@@ -136,7 +150,7 @@ bool wallet_multisig::from_data(reader& source)
     return true;
 }
 
-void wallet_multisig::to_data(writer& sink) const
+void wallet_multisig::to_data(writer &sink) const
 {
     sink.write_4_bytes_little_endian(hd_index_);
     sink.write_4_bytes_little_endian(index_);
@@ -145,7 +159,8 @@ void wallet_multisig::to_data(writer& sink) const
     sink.write_string(pubkey_);
     sink.write_byte(cosigner_pubkeys_.size());
 
-    for (auto& each : cosigner_pubkeys_) {
+    for (auto &each : cosigner_pubkeys_)
+    {
         sink.write_string(each);
     }
 
@@ -158,7 +173,8 @@ uint64_t wallet_multisig::serialized_size() const
 {
     uint64_t size = 4 + 4 + 1 + 1 + (pubkey_.size() + 9) + 1; // hd_index,index,m,n,pubkey,pubkey number
 
-    for (auto& each : cosigner_pubkeys_) {
+    for (auto &each : cosigner_pubkeys_)
+    {
         size += (each.size() + 9);
     }
     size += (description_.size() + 9);
@@ -166,22 +182,24 @@ uint64_t wallet_multisig::serialized_size() const
     return size;
 }
 
-bool wallet_multisig::operator==(const wallet_multisig& other) const
+bool wallet_multisig::operator==(const wallet_multisig &other) const
 {
-    if (hd_index_ != other.hd_index_
-            || m_ != other.m_ || n_ != other.n_
-            || pubkey_ != other.pubkey_) {
+    if (hd_index_ != other.hd_index_ || m_ != other.m_ || n_ != other.n_ || pubkey_ != other.pubkey_)
+    {
         return false;
     }
 
-    auto& other_pubkeys = other.cosigner_pubkeys_;
-    if (cosigner_pubkeys_.size() != other_pubkeys.size()) {
+    auto &other_pubkeys = other.cosigner_pubkeys_;
+    if (cosigner_pubkeys_.size() != other_pubkeys.size())
+    {
         return false;
     }
 
-    for (const auto& pubkey : cosigner_pubkeys_) {
+    for (const auto &pubkey : cosigner_pubkeys_)
+    {
         auto iter = std::find(other_pubkeys.begin(), other_pubkeys.end(), pubkey);
-        if (iter == other_pubkeys.end()) {
+        if (iter == other_pubkeys.end())
+        {
             return false;
         }
     }
@@ -212,7 +230,7 @@ std::string wallet_multisig::to_string()
        << "\t n = " << n_ << "\n"
        << "\t pubkey = " << pubkey_ << "\n"
        << "\t description = " << description_ << "\n";
-    for (auto& each : cosigner_pubkeys_)
+    for (auto &each : cosigner_pubkeys_)
         ss << "\t cosigner-pubkey = " << each << std::endl;
     return ss.str();
 }
@@ -220,14 +238,15 @@ std::string wallet_multisig::to_string()
 
 std::string wallet_multisig::get_multisig_script() const
 {
-    if (m_ == 0 && n_ == 0) {
+    if (m_ == 0 && n_ == 0)
+    {
         // not initialized
         return "";
     }
 
     std::ostringstream ss;
     ss << std::to_string(m_);
-    for (auto& each : cosigner_pubkeys_)
+    for (auto &each : cosigner_pubkeys_)
         ss << " [ " << each << " ] ";
     ss << std::to_string(n_) << " checkmultisig";
     return ss.str();
@@ -239,28 +258,27 @@ wallet::wallet()
 }
 
 wallet::wallet(
-    const std::string& name, const std::string& mnemonic, const hash_digest& passwd,
+    const std::string &name, const std::string &mnemonic, const hash_digest &passwd,
     uint32_t hd_index, uint8_t priority, uint8_t status, uint8_t type)
-    : name(name), mnemonic(mnemonic), passwd(passwd)
-    , hd_index(hd_index), priority(priority), status(status), type(type)
+    : name(name), mnemonic(mnemonic), passwd(passwd), hd_index(hd_index), priority(priority), status(status), type(type)
 {
 }
 
-wallet wallet::factory_from_data(const data_chunk& data)
+wallet wallet::factory_from_data(const data_chunk &data)
 {
     wallet instance;
     instance.from_data(data);
     return instance;
 }
 
-wallet wallet::factory_from_data(std::istream& stream)
+wallet wallet::factory_from_data(std::istream &stream)
 {
     wallet instance;
     instance.from_data(stream);
     return instance;
 }
 
-wallet wallet::factory_from_data(reader& source)
+wallet wallet::factory_from_data(reader &source)
 {
     wallet instance;
     instance.from_data(source);
@@ -283,19 +301,19 @@ void wallet::reset()
     this->status = wallet_status::normal;
 }
 
-bool wallet::from_data(const data_chunk& data)
+bool wallet::from_data(const data_chunk &data)
 {
     data_source istream(data);
     return from_data(istream);
 }
 
-bool wallet::from_data(std::istream& stream)
+bool wallet::from_data(std::istream &stream)
 {
     istream_reader source(stream);
     return from_data(source);
 }
 
-bool wallet::from_data(reader& source)
+bool wallet::from_data(reader &source)
 {
     reset();
     name = source.read_string();
@@ -313,11 +331,13 @@ bool wallet::from_data(reader& source)
     //status = source.read_2_bytes_little_endian();
     type = source.read_byte();
     status = source.read_byte();
-    if (type == wallet_type::multisignature) {
+    if (type == wallet_type::multisignature)
+    {
         //multisig.from_data(source);
         wallet_multisig multisig;
         uint32_t size = source.read_4_bytes_little_endian();
-        while (size--) {
+        while (size--)
+        {
             multisig.reset();
             multisig.from_data(source);
             multisig_vec.push_back(multisig);
@@ -336,13 +356,13 @@ data_chunk wallet::to_data() const
     return data;
 }
 
-void wallet::to_data(std::ostream& stream) const
+void wallet::to_data(std::ostream &stream) const
 {
     ostream_writer sink(stream);
     to_data(sink);
 }
 
-void wallet::to_data(writer& sink) const
+void wallet::to_data(writer &sink) const
 {
     sink.write_string(name);
     sink.write_string(mnemonic);
@@ -352,11 +372,14 @@ void wallet::to_data(writer& sink) const
     //sink.write_2_bytes_little_endian(status);
     sink.write_byte(type);
     sink.write_byte(status);
-    if (type == wallet_type::multisignature) {
+    if (type == wallet_type::multisignature)
+    {
         //multisig.to_data(sink);
         sink.write_4_bytes_little_endian(multisig_vec.size());
-        if (multisig_vec.size()) {
-            for (auto& each : multisig_vec) {
+        if (multisig_vec.size())
+        {
+            for (auto &each : multisig_vec)
+            {
                 each.to_data(sink);
             }
         }
@@ -366,10 +389,11 @@ void wallet::to_data(writer& sink) const
 uint64_t wallet::serialized_size() const
 {
     uint64_t size = name.size() + mnemonic.size() + passwd.size() + 4 + 1 + 2 + 2 * 9; // 2 string len
-    if (type == wallet_type::multisignature) {
+    if (type == wallet_type::multisignature)
+    {
         //size += multisig.serialized_size();
         size += 4; // vector size
-        for (auto& each : multisig_vec)
+        for (auto &each : multisig_vec)
             size += each.serialized_size();
     }
     return size;
@@ -380,13 +404,10 @@ wallet::operator bool() const
     return (name.empty() || mnemonic.empty());
 }
 
-bool wallet::operator==(const libbitcoin::chain::wallet& other) const
+bool wallet::operator==(const libbitcoin::chain::wallet &other) const
 {
-    return ((name == other.get_name())
-            && (passwd == other.get_passwd())
-            && (mnemonic == other.get_mnemonic()));
+    return ((name == other.get_name()) && (passwd == other.get_passwd()) && (mnemonic == other.get_mnemonic()));
 }
-
 
 #ifdef UC_DEBUG
 std::string wallet::to_string()
@@ -400,36 +421,37 @@ std::string wallet::to_string()
        << "\t priority = " << priority << "\n"
        << "\t type = " << type << "\n"
        << "\t status = " << status << "\n";
-    if (type == wallet_type::multisignature) {
-        for (auto& each : multisig_vec)
+    if (type == wallet_type::multisignature)
+    {
+        for (auto &each : multisig_vec)
             ss << "\t\t" << each.to_string();
     }
     return ss.str();
 }
 #endif
 
-const std::string& wallet::get_name() const
+const std::string &wallet::get_name() const
 {
     return name;
 }
 
-void wallet::set_name(const std::string& name)
+void wallet::set_name(const std::string &name)
 {
     this->name = name;
 }
 
-const std::string& wallet::get_mnemonic() const
+const std::string &wallet::get_mnemonic() const
 {
     return mnemonic; // for wallet == operator
 }
 
-const std::string& wallet::get_mnemonic(std::string& passphrase, std::string& decry_output) const
+const std::string &wallet::get_mnemonic(std::string &passphrase, std::string &decry_output) const
 {
     decrypt_string(mnemonic, passphrase, decry_output);
     return decry_output;
 }
 
-void wallet::set_mnemonic(const std::string& mnemonic, std::string& passphrase)
+void wallet::set_mnemonic(const std::string &mnemonic, std::string &passphrase)
 {
     if (!mnemonic.size())
         throw std::logic_error{"mnemonic size is 0"};
@@ -441,12 +463,12 @@ void wallet::set_mnemonic(const std::string& mnemonic, std::string& passphrase)
     this->mnemonic = encry_output;
 }
 
-void wallet::set_mnemonic(const std::string& mnemonic)
+void wallet::set_mnemonic(const std::string &mnemonic)
 {
     this->mnemonic = mnemonic;
 }
 
-const hash_digest& wallet::get_passwd() const
+const hash_digest &wallet::get_passwd() const
 {
     return passwd;
 }
@@ -491,62 +513,70 @@ void wallet::set_priority(uint8_t priority)
     this->priority = priority;
 }
 
-const wallet_multisig::list& wallet::get_multisig_vec() const
+const wallet_multisig::list &wallet::get_multisig_vec() const
 {
     return multisig_vec;
 }
 
-void wallet::set_multisig_vec(wallet_multisig::list&& multisig_vec)
+void wallet::set_multisig_vec(wallet_multisig::list &&multisig_vec)
 {
     this->multisig_vec = std::move(multisig_vec);
 }
 
-bool wallet::is_multisig_exist(const wallet_multisig& multisig)
+bool wallet::is_multisig_exist(const wallet_multisig &multisig)
 {
     auto iter = std::find(multisig_vec.begin(), multisig_vec.end(), multisig);
     return iter != multisig_vec.end();
 }
 
-void wallet::set_multisig(const wallet_multisig& multisig)
+void wallet::set_multisig(const wallet_multisig &multisig)
 {
-    if (!is_multisig_exist(multisig)) {
+    if (!is_multisig_exist(multisig))
+    {
         multisig_vec.push_back(multisig);
     }
 }
 
-void wallet::remove_multisig(const wallet_multisig& multisig)
+void wallet::remove_multisig(const wallet_multisig &multisig)
 {
-    for (auto it = multisig_vec.begin(); it != multisig_vec.end();) {
-        if (*it == multisig) {
+    for (auto it = multisig_vec.begin(); it != multisig_vec.end();)
+    {
+        if (*it == multisig)
+        {
             it = multisig_vec.erase(it);
             break;
         }
-        else {
+        else
+        {
             ++it;
         }
     }
 }
 
-std::shared_ptr<wallet_multisig::list> wallet::get_multisig(const std::string& addr)
+std::shared_ptr<wallet_multisig::list> wallet::get_multisig(const std::string &addr)
 {
     auto acc_vec = std::make_shared<wallet_multisig::list>();
-    for (auto& each : multisig_vec) {
-        if (addr == each.get_address()) {
+    for (auto &each : multisig_vec)
+    {
+        if (addr == each.get_address())
+        {
             acc_vec->push_back(each);
         }
     }
     return acc_vec;
 }
 
-void wallet::modify_multisig(const wallet_multisig& multisig)
+void wallet::modify_multisig(const wallet_multisig &multisig)
 {
-    for (auto& each : multisig_vec) {
-        if (each == multisig) {
+    for (auto &each : multisig_vec)
+    {
+        if (each == multisig)
+        {
             each = multisig;
             break;
         }
     }
 }
 
-} // namspace chain
-} // namspace libbitcoin
+} // namespace chain
+} // namespace libbitcoin
