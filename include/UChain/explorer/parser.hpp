@@ -24,7 +24,7 @@
 #include <iostream>
 #include <string>
 #include <boost/filesystem.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/command.hpp>
 #include <UChain/explorer/define.hpp>
 

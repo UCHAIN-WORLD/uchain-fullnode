@@ -26,7 +26,7 @@
 #include <vector>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/config/address.hpp>
 #include <UChain/explorer/config/algorithm.hpp>

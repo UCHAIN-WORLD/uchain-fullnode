@@ -24,7 +24,7 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 
 /* NOTE: don't declare 'using namespace foo' in headers. */

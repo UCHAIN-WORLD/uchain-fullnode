@@ -22,7 +22,7 @@
 #define BX_WRAPPER_HPP
 
 #include <iostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 
 /* NOTE: don't declare 'using namespace foo' in headers. */
