@@ -23,7 +23,7 @@
 
 #include <cstddef>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/define.hpp>
 #include <UChain/network/sessions/session_batch.hpp>

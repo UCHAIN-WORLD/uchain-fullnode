@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/connector.hpp>
 #include <UChain/network/define.hpp>

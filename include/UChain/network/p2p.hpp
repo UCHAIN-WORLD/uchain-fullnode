@@ -27,7 +27,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/connections.hpp>
 #include <UChain/network/define.hpp>

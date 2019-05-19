@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <functional>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/acceptor.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/connections.hpp>
@@ -33,7 +33,7 @@
 #include <UChain/network/pending_channels.hpp>
 #include <UChain/network/proxy.hpp>
 #include <UChain/network/settings.hpp>
-#include <UChain/bitcoin/message/network_address.hpp>
+#include <UChain/coin/message/network_address.hpp>
 
 namespace libbitcoin {
 namespace network {

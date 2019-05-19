@@ -21,7 +21,7 @@
 #ifndef UC_NETWORK_DEFINE_HPP
 #define UC_NETWORK_DEFINE_HPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 // We use the generic helper definitions in libbitcoin to define BCT_API
 // and BCT_INTERNAL. BCT_API is used for the public API symbols. It either DLL

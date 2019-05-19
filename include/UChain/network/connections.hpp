@@ -28,10 +28,10 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/define.hpp>
-#include <UChain/bitcoin/message/address.hpp>
+#include <UChain/coin/message/address.hpp>
 
 namespace libbitcoin {
 namespace network {

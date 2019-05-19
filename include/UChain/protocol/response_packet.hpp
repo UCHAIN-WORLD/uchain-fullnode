@@ -24,7 +24,7 @@
 #define UC_PROTOCOL_RESPONSE_PACKET
 
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/interface.pb.h>
 #include <UChain/protocol/packet.hpp>

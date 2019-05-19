@@ -26,7 +26,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/zmq/context.hpp>
 #include <UChain/protocol/zmq/socket.hpp>

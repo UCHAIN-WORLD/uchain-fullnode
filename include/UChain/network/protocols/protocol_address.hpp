@@ -22,7 +22,7 @@
 #define UC_NETWORK_PROTOCOL_ADDRESS_HPP
 
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/define.hpp>
 #include <UChain/network/protocols/protocol_events.hpp>

@@ -22,7 +22,7 @@
 
 #include <cstdint>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/define.hpp>
 
 namespace libbitcoin

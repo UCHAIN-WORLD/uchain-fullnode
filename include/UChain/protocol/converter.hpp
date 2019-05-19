@@ -24,7 +24,7 @@
 #define UC_PROTOCOL_CONVERSION_HPP
 
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/interface.pb.h>
 

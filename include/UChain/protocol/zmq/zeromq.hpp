@@ -20,7 +20,7 @@
 #ifndef UC_PROTOCOL_ZMQ_ZEROMQ_HPP
 #define UC_PROTOCOL_ZMQ_ZEROMQ_HPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/define.hpp>
 
 namespace libbitcoin

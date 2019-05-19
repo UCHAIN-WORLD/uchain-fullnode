@@ -21,7 +21,7 @@
 #define UC_PROTOCOL_ZMQ_CERTIFICATE_HPP
 
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/define.hpp>
 
 namespace libbitcoin
