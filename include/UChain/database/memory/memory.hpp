@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <memory>
 #include <boost/thread.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 
 namespace libbitcoin

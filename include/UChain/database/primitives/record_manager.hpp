@@ -24,7 +24,7 @@
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/memory/memory_map.hpp>

@@ -22,7 +22,7 @@
 #define UC_DATABASE_RECORD_MULTIMAP_HPP
 
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/primitives/record_list.hpp>

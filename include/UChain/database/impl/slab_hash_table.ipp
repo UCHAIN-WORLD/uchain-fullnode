@@ -21,7 +21,7 @@
 #ifndef UC_DATABASE_SLAB_HASH_TABLE_IPP
 #define UC_DATABASE_SLAB_HASH_TABLE_IPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/memory/memory.hpp>
 #include "remainder.ipp"
 #include "slab_row.ipp"

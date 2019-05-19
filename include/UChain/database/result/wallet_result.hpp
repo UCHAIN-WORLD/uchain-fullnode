@@ -23,7 +23,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/result/base_result.hpp>

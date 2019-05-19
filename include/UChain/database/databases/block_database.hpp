@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <memory>
 #include <boost/filesystem.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/primitives/record_manager.hpp>
