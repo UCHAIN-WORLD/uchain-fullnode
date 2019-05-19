@@ -24,7 +24,7 @@
 #include <atomic>
 #include <memory>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
 
 namespace libbitcoin

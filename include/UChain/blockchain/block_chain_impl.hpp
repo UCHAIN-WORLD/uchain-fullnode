@@ -26,7 +26,7 @@
 #include <cstdint>
 #include <vector>
 #include <functional>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database.hpp>
 #include <UChain/blockchain/block_chain.hpp>
 #include <UChain/blockchain/define.hpp>
@@ -34,8 +34,8 @@
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
 #include <UChain/blockchain/transaction_pool.hpp>
-#include <UChain/bitcoin/chain/header.hpp>
-#include <UChain/bitcoin/chain/header.hpp>
+#include <UChain/coin/chain/header.hpp>
+#include <UChain/coin/chain/header.hpp>
 
 #define LOG_BLOCK_CHAIN_IMPL "block_chain_impl"
 using namespace libbitcoin::message;

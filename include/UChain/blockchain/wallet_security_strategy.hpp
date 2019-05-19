@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <string>
 
-#include <UChain/bitcoin/utility/thread.hpp>
+#include <UChain/coin/utility/thread.hpp>
 
 namespace libbitcoin
 {

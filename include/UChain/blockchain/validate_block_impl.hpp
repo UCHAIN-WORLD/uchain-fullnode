@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
 #include <UChain/blockchain/validate_block.hpp>
 

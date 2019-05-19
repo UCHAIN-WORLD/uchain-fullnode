@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <system_error>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
 

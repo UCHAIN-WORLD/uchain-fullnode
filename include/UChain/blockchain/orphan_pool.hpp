@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <memory>
 #include <boost/circular_buffer.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/block_detail.hpp>
 
