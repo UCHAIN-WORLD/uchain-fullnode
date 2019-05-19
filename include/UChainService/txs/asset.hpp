@@ -22,9 +22,9 @@
 
 #include <cstdint>
 #include <istream>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/utility/reader.hpp>
-#include <UChain/bitcoin/utility/writer.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/utility/reader.hpp>
+#include <UChain/coin/utility/writer.hpp>
 #include <boost/variant.hpp>
 #include <UChainService/txs/token/token.hpp>
 #include <UChainService/txs/token/token_cert.hpp>

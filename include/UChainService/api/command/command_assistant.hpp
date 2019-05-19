@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/command.hpp>

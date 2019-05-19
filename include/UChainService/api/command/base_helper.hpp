@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/command.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>

@@ -23,10 +23,10 @@
 #include <cstdint>
 #include <istream>
 #include <set>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/error.hpp>
-#include <UChain/bitcoin/utility/reader.hpp>
-#include <UChain/bitcoin/utility/writer.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/error.hpp>
+#include <UChain/coin/utility/reader.hpp>
+#include <UChain/coin/utility/writer.hpp>
 
 #define CANDIDATE_STATUS2UINT32(kd) (static_cast<typename std::underlying_type<candidate::candidate_status>::type>(kd))
 

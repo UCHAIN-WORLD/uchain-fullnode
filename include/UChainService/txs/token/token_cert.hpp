@@ -21,10 +21,10 @@
 #define UC_CHAIN_ATTACH_TOKEN_CERT_HPP
 
 #include <cstdint>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/error.hpp>
-#include <UChain/bitcoin/utility/reader.hpp>
-#include <UChain/bitcoin/utility/writer.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/error.hpp>
+#include <UChain/coin/utility/reader.hpp>
+#include <UChain/coin/utility/writer.hpp>
 
 #define TOKEN_CERT_STATUS2UINT32(kd) (static_cast<typename std::underlying_type<token_cert::token_cert_status>::type>(kd))
 

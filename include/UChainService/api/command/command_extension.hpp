@@ -23,7 +23,7 @@
 #include <functional>
 #include <memory>
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/command.hpp>
 #include <UChainService/txs/token/token_detail.hpp> // used for createtoken

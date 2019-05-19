@@ -23,7 +23,7 @@
 #include <mutex>
 #include <memory>
 #include <unordered_map>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainService/api/restful/MgServer.hpp>
 
 namespace libbitcoin

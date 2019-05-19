@@ -21,10 +21,10 @@
 #define UC_CHAIN_ASSET_TOKEN_ATTENUATION_MODEL_HPP
 
 #include <cstdint>
-#include <UChain/bitcoin/chain/point.hpp>
-#include <UChain/bitcoin/chain/script/script.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/error.hpp>
+#include <UChain/coin/chain/point.hpp>
+#include <UChain/coin/chain/script/script.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/error.hpp>
 
 using namespace libbitcoin::chain;
 

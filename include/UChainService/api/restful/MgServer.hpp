@@ -17,7 +17,7 @@
 #ifndef UCD_WS_SERVER_HPP
 #define UCD_WS_SERVER_HPP
 
-#include <UChain/bitcoin/define.hpp>
+#include <UChain/coin/define.hpp>
 #include <atomic>
 #include <string>
 #include <memory>
