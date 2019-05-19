@@ -22,9 +22,9 @@
 #define UC_BLOCKCHAIN_BLOCK_LOCATOR_INDEXES_HPP
 
 #include <cstdint>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
-#include <UChain/bitcoin/chain/header.hpp>
+#include <UChain/coin/chain/header.hpp>
 
 namespace libbitcoin
 {

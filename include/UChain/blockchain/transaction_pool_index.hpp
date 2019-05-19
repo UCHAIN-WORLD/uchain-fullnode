@@ -25,7 +25,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <unordered_map>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/block_chain.hpp>
 

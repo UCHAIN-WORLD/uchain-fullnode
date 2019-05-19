@@ -25,7 +25,7 @@
 #include <cstddef>
 #include <functional>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/transaction_pool.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>

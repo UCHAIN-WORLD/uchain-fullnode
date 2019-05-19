@@ -25,13 +25,13 @@
 #include <atomic>
 #include <cstdint>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/block_detail.hpp>
 #include <UChain/blockchain/orphan_pool.hpp>
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
-#include <UChain/bitcoin/math/hash.hpp>
+#include <UChain/coin/math/hash.hpp>
 #include <boost/thread.hpp>
 
 namespace libbitcoin
