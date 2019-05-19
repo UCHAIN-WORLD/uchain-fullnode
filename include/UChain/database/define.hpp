@@ -23,7 +23,7 @@
 
 #include <cstdint>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 // Now we use the generic helper definitions in libbitcoin to
 // define BCD_API and BCD_INTERNAL.

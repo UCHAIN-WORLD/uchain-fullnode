@@ -24,7 +24,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/config/header.hpp>
 #include <UChain/explorer/config/input.hpp>

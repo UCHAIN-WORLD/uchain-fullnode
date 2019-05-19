@@ -22,7 +22,7 @@
 #define BX_ENCODING_HPP
 
 #include <iostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 
 namespace libbitcoin

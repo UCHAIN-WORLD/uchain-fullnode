@@ -30,7 +30,7 @@
 #include <memory>
 #include <string>
 #include <boost/filesystem.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory.hpp>
 

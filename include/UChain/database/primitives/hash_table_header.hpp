@@ -21,7 +21,7 @@
 #ifndef UC_DATABASE_HASH_TABLE_HEADER_HPP
 #define UC_DATABASE_HASH_TABLE_HEADER_HPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 
 namespace libbitcoin

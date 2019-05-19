@@ -26,7 +26,7 @@
 #include <memory>
 #include <boost/filesystem.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/databases/block_database.hpp>
 #include <UChain/database/databases/spend_database.hpp>
 #include <UChain/database/databases/transaction_database.hpp>

@@ -22,7 +22,7 @@
 #define UC_DATABASE_RECORD_HASH_TABLE_IPP
 
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/memory/memory.hpp>
 #include "record_row.ipp"
 #include "remainder.ipp"
