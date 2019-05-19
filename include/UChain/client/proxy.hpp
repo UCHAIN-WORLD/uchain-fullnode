@@ -22,7 +22,7 @@
 #define UC_CLIENT_PROXY_HPP
 
 #include <functional>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/client/dealer.hpp>
 #include <UChain/client/define.hpp>
 #include <UChain/client/stream.hpp>
