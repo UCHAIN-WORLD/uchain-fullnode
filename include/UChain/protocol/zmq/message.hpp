@@ -21,7 +21,7 @@
 #define UC_PROTOCOL_ZMQ_MESSAGE_HPP
 
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
 namespace libbitcoin

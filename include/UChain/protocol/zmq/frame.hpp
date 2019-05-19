@@ -21,7 +21,7 @@
 #define UC_PROTOCOL_ZMQ_FRAME_HPP
 
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 #include <UChain/protocol/zmq/zeromq.hpp>
