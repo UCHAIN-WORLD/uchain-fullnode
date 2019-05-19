@@ -29,12 +29,12 @@
 #include <set>
 #include <string>
 #include <utility>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/const_buffer.hpp>
 #include <UChain/network/define.hpp>
 #include <UChain/network/message_subscriber.hpp>
 #include <UChain/network/socket.hpp>
-#include <UChain/bitcoin/utility/dispatcher.hpp>
+#include <UChain/coin/utility/dispatcher.hpp>
 #include <boost/thread.hpp>
 
 namespace libbitcoin {

@@ -22,7 +22,7 @@
 #define UC_NETWORK_PENDING_SOCKETS_HPP
 
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/define.hpp>
 #include <UChain/network/socket.hpp>
 

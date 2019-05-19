@@ -21,7 +21,7 @@
 #ifndef UC_NETWORK_SOCKET_HPP
 #define UC_NETWORK_SOCKET_HPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/define.hpp>
 #include <UChain/network/locked_socket.hpp>
 

@@ -23,7 +23,7 @@
 #include <atomic>
 #include <cstddef>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/connector.hpp>
 #include <UChain/network/define.hpp>
