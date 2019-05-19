@@ -20,8 +20,8 @@
 #ifndef UC_CHAIN_VARIANT_HPP
 #define UC_CHAIN_VARIANT_HPP
 
-#include <UChain/bitcoin/utility/reader.hpp>
-#include <UChain/bitcoin/utility/writer.hpp>
+#include <UChain/coin/utility/reader.hpp>
+#include <UChain/coin/utility/writer.hpp>
 #include <boost/variant.hpp>
 
 namespace libbitcoin

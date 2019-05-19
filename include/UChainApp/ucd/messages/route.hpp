@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <string>
 #include <boost/functional/hash_fwd.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainApp/ucd/define.hpp>
 
 namespace libbitcoin

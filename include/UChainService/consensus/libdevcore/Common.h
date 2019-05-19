@@ -54,7 +54,7 @@
 #endif*/
 //#include <boost/multiprecision/detail/number_compare.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
-#include <UChain/bitcoin/math/hash.hpp>
+#include <UChain/coin/math/hash.hpp>
 //#pragma warning(pop)
 //#pragma GCC diagnostic pop
 #include "vector_ref.h"

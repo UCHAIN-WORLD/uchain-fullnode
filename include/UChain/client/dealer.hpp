@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <functional>
 #include <map>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/client/define.hpp>
 #include <UChain/client/stream.hpp>
 

@@ -22,7 +22,7 @@
 #define UC_CLIENT_STREAM_HPP
 
 #include <cstdint>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/client/define.hpp>
 
 namespace libbitcoin

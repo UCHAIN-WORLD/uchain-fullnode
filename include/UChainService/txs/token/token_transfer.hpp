@@ -24,12 +24,12 @@
 #include <istream>
 #include <vector>
 #include <tuple>
-#include <UChain/bitcoin/chain/point.hpp>
-#include <UChain/bitcoin/chain/script/script.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/utility/reader.hpp>
-#include <UChain/bitcoin/utility/writer.hpp>
-#include <UChain/bitcoin/chain/history.hpp>
+#include <UChain/coin/chain/point.hpp>
+#include <UChain/coin/chain/script/script.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/utility/reader.hpp>
+#include <UChain/coin/utility/writer.hpp>
+#include <UChain/coin/chain/history.hpp>
 
 namespace libbitcoin
 {

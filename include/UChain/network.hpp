@@ -14,7 +14,7 @@
  * Maintainers: Do not include this header internal to this library.
  */
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/acceptor.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/connections.hpp>

@@ -26,9 +26,9 @@
 
 #include "UChain/blockchain/block_chain_impl.hpp"
 #include "UChain/blockchain/transaction_pool.hpp"
-#include "UChain/bitcoin/chain/block.hpp"
-#include "UChain/bitcoin/chain/input.hpp"
-#include <UChain/bitcoin/wallet/ec_public.hpp>
+#include "UChain/coin/chain/block.hpp"
+#include "UChain/coin/chain/input.hpp"
+#include <UChain/coin/wallet/ec_public.hpp>
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/explorer/config/ec_private.hpp>
 #include <UChain/explorer/config/hashtype.hpp>

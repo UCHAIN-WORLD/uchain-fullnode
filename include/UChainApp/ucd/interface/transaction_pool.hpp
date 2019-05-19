@@ -21,7 +21,7 @@
 #ifndef UC_SERVER_TRANSACTION_POOL_HPP
 #define UC_SERVER_TRANSACTION_POOL_HPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/server_node.hpp>

@@ -21,7 +21,7 @@
 #ifndef UC_CLIENT_DEFINE_HPP
 #define UC_CLIENT_DEFINE_HPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 // We use the generic helper definitions in libbitcoin to define BCX_API
 // and BCX_INTERNAL. BCX_API is used for the public API symbols. It either DLL

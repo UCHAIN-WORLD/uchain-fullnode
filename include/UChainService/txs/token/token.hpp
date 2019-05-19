@@ -23,11 +23,11 @@
 #include <cstdint>
 #include <istream>
 #include <vector>
-#include <UChain/bitcoin/chain/point.hpp>
-#include <UChain/bitcoin/chain/script/script.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/utility/reader.hpp>
-#include <UChain/bitcoin/utility/writer.hpp>
+#include <UChain/coin/chain/point.hpp>
+#include <UChain/coin/chain/script/script.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/utility/reader.hpp>
+#include <UChain/coin/utility/writer.hpp>
 #include <boost/variant.hpp>
 #include <UChainService/txs/token/token_detail.hpp>
 #include <UChainService/txs/token/token_transfer.hpp>

@@ -21,7 +21,7 @@
 #define UC_DATABASE_WALLET_DATABASE_HPP
 #include <memory>
 #include <boost/filesystem.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/result/wallet_result.hpp>

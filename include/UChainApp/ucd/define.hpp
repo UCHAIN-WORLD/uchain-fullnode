@@ -21,7 +21,7 @@
 #ifndef UC_SERVER_DEFINE_HPP
 #define UC_SERVER_DEFINE_HPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 // We use the generic helper definitions in libbitcoin to define BCS_API
 // and BCS_INTERNAL. BCS_API is used for the public API symbols. It either DLL
