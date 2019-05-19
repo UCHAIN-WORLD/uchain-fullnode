@@ -22,7 +22,7 @@
 #define UC_SERVER_PARSER_HPP
 
 #include <ostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/config.hpp>
 

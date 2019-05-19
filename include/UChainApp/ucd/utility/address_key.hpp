@@ -23,7 +23,7 @@
 
 #include <cstddef>
 #include <boost/functional/hash_fwd.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 #include <UChainApp/ucd/define.hpp>
 

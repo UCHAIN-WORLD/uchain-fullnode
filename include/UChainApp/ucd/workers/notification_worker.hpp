@@ -23,7 +23,7 @@
 
 #include <cstdint>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainApp/ucd/define.hpp>
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
