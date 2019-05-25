@@ -17,9 +17,9 @@
 
 #include <thread>
 #include <functional>
-#include <UChainService/api/restful //MgServer.hpp>
-#include <UChain/bitcoin/utility/log.hpp>
-#include <UChain/bitcoin/version.hpp>
+#include <UChainService/api/restful/MgServer.hpp>
+#include <UChain/coin/utility/log.hpp>
+#include <UChain/coin/version.hpp>
 
 namespace mgbubble
 {

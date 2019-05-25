@@ -14,7 +14,7 @@
  * not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <UChainService/api/restful //exception/Exception.hpp>
+#include <UChainService/api/restful/exception/Exception.hpp>
 
 using namespace std;
 

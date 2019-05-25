@@ -15,9 +15,9 @@
  * 02110-1301, USA.
  */
 
-#include <UChainService/api/restful //utility/Stream.hpp>
-#include <UChainService/api/restful //utility/Stream_buf.hpp>
-#include <UChainService/api/restful //utility/String.hpp>
+#include <UChainService/api/restful/utility/Stream.hpp>
+#include <UChainService/api/restful/utility/Stream_buf.hpp>
+#include <UChainService/api/restful/utility/String.hpp>
 
 using namespace std;
 

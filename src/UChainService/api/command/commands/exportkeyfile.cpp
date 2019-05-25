@@ -21,7 +21,7 @@
 #include <UChainService/api/command/commands/exportkeyfile.hpp>
 #include <UChainService/api/command/wallet_info.hpp>
 #include <UChainService/api/command/exception.hpp>
-#include <UChain/bitcoin/formats/base_64.hpp>
+#include <UChain/coin/formats/base_64.hpp>
 #include <cryptojs/cryptojs_impl.h>
 
 namespace libbitcoin

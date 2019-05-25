@@ -16,8 +16,8 @@
  */
 #include <cctype>
 #include <jsoncpp/json/json.h>
-#include <UChainService/api/restful //Mongoose.hpp>
-#include <UChainService/api/restful //utility/Tokeniser.hpp>
+#include <UChainService/api/restful/Mongoose.hpp>
+#include <UChainService/api/restful/utility/Tokeniser.hpp>
 #include <UChainService/api/command/exception.hpp>
 
 namespace mgbubble

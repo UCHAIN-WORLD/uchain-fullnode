@@ -13,7 +13,7 @@
  * not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <UChainService/api/restful //exception/Error.hpp>
+#include <UChainService/api/restful/exception/Error.hpp>
 
 namespace mgbubble
 {

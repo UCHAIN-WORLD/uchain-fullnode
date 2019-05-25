@@ -18,7 +18,7 @@
 #include <thread>
 #include <sstream>
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/restful //WsPushServ.hpp>
+#include <UChainService/api/restful/WsPushServ.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
 namespace mgbubble
