@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/utility.hpp>
 

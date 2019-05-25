@@ -19,14 +19,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <UChain/blockchain/validate_transaction.hpp>
-#include <UChain/bitcoin/chain/script/operation.hpp>
+#include <UChain/coin/chain/script/operation.hpp>
 
 #include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <numeric>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/transaction_pool.hpp>
 #include <UChain/blockchain/validate_block.hpp>
 #include <UChainService/consensus/miner.hpp>

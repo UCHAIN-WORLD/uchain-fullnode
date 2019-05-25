@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <string>
 #include <boost/iostreams/stream.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/client/stream.hpp>
 
 // A REQ socket always adds a delimiter.

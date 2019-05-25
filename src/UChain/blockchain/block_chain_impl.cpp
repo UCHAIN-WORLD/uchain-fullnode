@@ -30,7 +30,7 @@
 #include <unordered_map>
 #include <boost/filesystem.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainService/txs/token/token_cert.hpp>
 #include <UChain/database.hpp>
 #include <UChain/blockchain/block.hpp>

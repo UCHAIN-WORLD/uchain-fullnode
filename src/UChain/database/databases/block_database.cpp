@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <memory>
 #include <boost/filesystem.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/memory/memory.hpp>
 #include <UChain/database/result/block_result.hpp>
 

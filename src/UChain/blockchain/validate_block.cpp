@@ -27,13 +27,13 @@
 #include <cstdint>
 #include <system_error>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/block.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
 //#include <UChainService/consensus/miner/MinerAux.h>
 //#include <UChainService/consensus/libdevcore/BasicType.h>
 #include <UChainService/consensus/miner.hpp>
-#include <UChain/bitcoin/chain/output.hpp>
+#include <UChain/coin/chain/output.hpp>
 
 namespace libbitcoin
 {

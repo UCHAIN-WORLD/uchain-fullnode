@@ -26,9 +26,9 @@
 #include <stdexcept>
 #include <algorithm>
 #include <boost/filesystem.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainService/txs/utility/path.hpp>
-#include <UChain/bitcoin/config/base16.hpp> // used by db_metadata and push_asset
+#include <UChain/coin/config/base16.hpp> // used by db_metadata and push_asset
 #include <UChain/database/memory/memory_map.hpp>
 #include <UChain/database/settings.hpp>
 #include <UChain/database/version.hpp>
@@ -1192,7 +1192,7 @@ void data_base::pop_outputs(const output::list &outputs, size_t height)
 }
 
 /* begin store token related info into database */
-#include <UChain/bitcoin/config/base16.hpp>
+#include <UChain/coin/config/base16.hpp>
 using namespace libbitcoin::config;
 
 void data_base::push_asset(const asset &attach, const payment_address &address,

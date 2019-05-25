@@ -21,7 +21,7 @@
 #include <UChain/explorer/commands/stealth-shared.hpp>
 
 #include <iostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 
 // This is nearly the same as ec-multiply + sha256.

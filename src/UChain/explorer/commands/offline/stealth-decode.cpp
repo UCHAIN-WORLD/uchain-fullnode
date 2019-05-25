@@ -21,7 +21,7 @@
 #include <UChain/explorer/commands/stealth-decode.hpp>
 
 #include <iostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/json_helper.hpp>
 #include <UChain/explorer/utility.hpp>

@@ -45,7 +45,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <boost/filesystem.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/database/memory/accessor.hpp>
 #include <UChain/database/memory/allocator.hpp>
 #include <UChain/database/memory/memory.hpp>

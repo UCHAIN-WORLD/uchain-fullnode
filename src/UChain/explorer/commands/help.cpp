@@ -22,7 +22,7 @@
 #include <UChain/explorer/commands/help.hpp>
 
 #include <iostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/display.hpp>
 #include <UChain/explorer/generated.hpp>
