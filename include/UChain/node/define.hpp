@@ -21,7 +21,7 @@
 #ifndef UC_NODE_DEFINE_HPP
 #define UC_NODE_DEFINE_HPP
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 // We use the generic helper definitions in libbitcoin to define BCN_API
 // and BCN_INTERNAL. BCN_API is used for the public API symbols. It either DLL

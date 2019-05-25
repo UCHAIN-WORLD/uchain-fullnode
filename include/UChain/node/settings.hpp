@@ -22,7 +22,7 @@
 #define UC_NODE_SETTINGS_HPP
 
 #include <cstdint>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/node/define.hpp>
 
 namespace libbitcoin
