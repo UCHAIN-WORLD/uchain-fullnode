@@ -20,7 +20,7 @@
 #include <UChain/protocol/zmq/message.hpp>
 
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/zmq/frame.hpp>
 
 namespace libbitcoin

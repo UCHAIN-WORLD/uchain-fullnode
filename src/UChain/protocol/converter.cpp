@@ -23,7 +23,7 @@
 #include <UChain/protocol/converter.hpp>
 
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 namespace libbitcoin
 {
