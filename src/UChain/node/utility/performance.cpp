@@ -19,7 +19,7 @@
  */
 #include <UChain/node/utility/performance.hpp>
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 namespace libbitcoin
 {
