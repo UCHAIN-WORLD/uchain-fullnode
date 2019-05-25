@@ -23,7 +23,7 @@
 #include <functional>
 #include <memory>
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/p2p.hpp>
 #include <UChain/network/protocols/protocol_events.hpp>

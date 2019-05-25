@@ -19,7 +19,7 @@
  */
 #include <UChain/network/settings.hpp>
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 namespace libbitcoin
 {

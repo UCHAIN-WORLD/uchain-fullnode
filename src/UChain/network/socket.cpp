@@ -21,7 +21,7 @@
 #include <UChain/network/socket.hpp>
 
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/define.hpp>
 #include <UChain/network/locked_socket.hpp>
 

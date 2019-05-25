@@ -20,7 +20,7 @@
  */
 #include <UChain/network/locked_socket.hpp>
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 namespace libbitcoin
 {

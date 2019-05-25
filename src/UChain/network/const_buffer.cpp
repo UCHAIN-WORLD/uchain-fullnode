@@ -21,7 +21,7 @@
 
 #include <memory>
 #include <utility>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/define.hpp>
 
 namespace libbitcoin

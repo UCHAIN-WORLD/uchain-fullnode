@@ -23,12 +23,12 @@
 #include <cstddef>
 #include <cstdint>
 #include <functional>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/p2p.hpp>
 #include <UChain/network/protocols/protocol_ping.hpp>
 #include <UChain/network/protocols/protocol_seed.hpp>
 #include <UChain/network/proxy.hpp>
-#include <UChain/bitcoin/config/authority.hpp>
+#include <UChain/coin/config/authority.hpp>
 
 namespace libbitcoin
 {

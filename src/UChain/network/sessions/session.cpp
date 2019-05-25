@@ -24,7 +24,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/acceptor.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/connector.hpp>

@@ -24,7 +24,7 @@
 #include <functional>
 #include <iostream>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/proxy.hpp>
 #include <UChain/network/settings.hpp>
