@@ -22,7 +22,7 @@
 
 #include <cstdint>
 #include <functional>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/utility/fetch_helpers.hpp>
