@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <utility>
 #include <boost/format.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/node/utility/performance.hpp>
 #include <UChain/node/utility/reservations.hpp>
 

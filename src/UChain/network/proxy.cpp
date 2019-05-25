@@ -27,11 +27,11 @@
 #include <cstdlib>
 #include <functional>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/const_buffer.hpp>
 #include <UChain/network/define.hpp>
 #include <UChain/network/socket.hpp>
-#include <UChain/bitcoin/utility/time.hpp>
+#include <UChain/coin/utility/time.hpp>
 
 namespace libbitcoin
 {

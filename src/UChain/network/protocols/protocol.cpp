@@ -21,7 +21,7 @@
 #include <UChain/network/protocols/protocol.hpp>
 
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 #include <UChain/network/p2p.hpp>
 

@@ -21,7 +21,7 @@
 
 #include <string>
 #include <zmq.h>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 namespace libbitcoin
 {

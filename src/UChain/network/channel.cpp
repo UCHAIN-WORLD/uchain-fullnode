@@ -25,7 +25,7 @@
 #include <functional>
 #include <memory>
 #include <utility>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/proxy.hpp>
 #include <UChain/network/settings.hpp>
 #include <UChain/network/socket.hpp>

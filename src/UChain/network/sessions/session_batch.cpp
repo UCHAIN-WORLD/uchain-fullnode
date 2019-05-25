@@ -22,7 +22,7 @@
 #include <atomic>
 #include <cstdint>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/connector.hpp>
 #include <UChain/network/p2p.hpp>
 

@@ -23,7 +23,7 @@
 #include <future>
 #include <string>
 #include <zmq.h>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/zmq/message.hpp>
 #include <UChain/protocol/zmq/context.hpp>
 #include <UChain/protocol/zmq/poller.hpp>

@@ -21,7 +21,7 @@
 #include <UChain/network/pending_sockets.hpp>
 
 #include <algorithm>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/proxy.hpp>
 #include <UChain/network/socket.hpp>
 

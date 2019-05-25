@@ -23,7 +23,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <functional>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/channel.hpp>
 
 namespace libbitcoin

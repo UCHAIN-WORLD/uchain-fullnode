@@ -22,7 +22,7 @@
 
 #include <cstddef>
 #include <functional>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/connector.hpp>
 #include <UChain/network/p2p.hpp>
 #include <UChain/network/protocols/protocol_address.hpp>

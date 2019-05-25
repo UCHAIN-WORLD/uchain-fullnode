@@ -22,7 +22,7 @@
 #include <cstdint>
 #include <string>
 #include <zmq.h>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/zmq/authenticator.hpp>
 #include <UChain/protocol/zmq/certificate.hpp>
 #include <UChain/protocol/zmq/identifiers.hpp>

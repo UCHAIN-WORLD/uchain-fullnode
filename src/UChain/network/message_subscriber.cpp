@@ -23,7 +23,7 @@
 #include <istream>
 #include <memory>
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 #define INITIALIZE_SUBSCRIBER(pool, value)                         \
     value##_subscriber_(std::make_shared<value##_subscriber_type>( \

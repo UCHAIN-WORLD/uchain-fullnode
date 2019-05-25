@@ -26,7 +26,7 @@
 #include <numeric>
 #include <utility>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/node/utility/header_queue.hpp>
 #include <UChain/node/utility/performance.hpp>
 #include <UChain/node/utility/reservation.hpp>

@@ -23,7 +23,7 @@
 #include <UChain/protocol/packet.hpp>
 
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/interface.pb.h>
 #include <UChain/protocol/request_packet.hpp>
 #include <UChain/protocol/zmq/message.hpp>
