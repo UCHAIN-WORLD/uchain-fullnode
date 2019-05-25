@@ -21,7 +21,7 @@
 #include <UChainApp/ucd/utility/address_key.hpp>
 
 #include <string>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 
 namespace libbitcoin

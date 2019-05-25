@@ -6,7 +6,7 @@
  */
 
 #include <jsoncpp/json/json.h>
-#include <UChain/bitcoin/error.hpp>
+#include <UChain/coin/error.hpp>
 #include <UChainService/api/command/exception.hpp>
 
 namespace libbitcoin

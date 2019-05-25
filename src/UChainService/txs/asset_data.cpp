@@ -21,10 +21,10 @@
 #include <UChainService/txs/variant.hpp>
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
-#include <UChain/bitcoin/utility/container_sink.hpp>
-#include <UChain/bitcoin/utility/container_source.hpp>
-#include <UChain/bitcoin/utility/istream_reader.hpp>
-#include <UChain/bitcoin/utility/ostream_writer.hpp>
+#include <UChain/coin/utility/container_sink.hpp>
+#include <UChain/coin/utility/container_source.hpp>
+#include <UChain/coin/utility/istream_reader.hpp>
+#include <UChain/coin/utility/ostream_writer.hpp>
 
 #define UCN_TYPE KIND2UINT16(business_kind::ucn)
 #define UCN_AWARD_TYPE KIND2UINT16(business_kind::ucn_award)

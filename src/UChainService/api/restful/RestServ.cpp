@@ -17,9 +17,9 @@
 #include <exception>
 #include <functional> //hash
 
-#include <UChainService/api/restful //RestServ.hpp>
-#include <UChainService/api/restful //exception/Instances.hpp>
-#include <UChainService/api/restful //utility/Stream_buf.hpp>
+#include <UChainService/api/restful/RestServ.hpp>
+#include <UChainService/api/restful/exception/Instances.hpp>
+#include <UChainService/api/restful/utility/Stream_buf.hpp>
 
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/exception.hpp>

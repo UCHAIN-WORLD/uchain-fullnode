@@ -21,17 +21,17 @@
 
 #include <sstream>
 #include <boost/iostreams/stream.hpp>
-#include <UChain/bitcoin/utility/container_sink.hpp>
-#include <UChain/bitcoin/utility/container_source.hpp>
-#include <UChain/bitcoin/utility/istream_reader.hpp>
-#include <UChain/bitcoin/utility/ostream_writer.hpp>
+#include <UChain/coin/utility/container_sink.hpp>
+#include <UChain/coin/utility/container_source.hpp>
+#include <UChain/coin/utility/istream_reader.hpp>
+#include <UChain/coin/utility/ostream_writer.hpp>
 
 #ifdef UC_DEBUG
 #include <json/minijson_writer.hpp>
 #endif
 
-#include <UChain/bitcoin/math/crypto.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin/math/crypto.hpp>
+#include <UChain/coin.hpp>
 using namespace libbitcoin::wallet;
 
 namespace libbitcoin

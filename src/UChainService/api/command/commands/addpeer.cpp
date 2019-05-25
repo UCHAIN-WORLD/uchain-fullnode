@@ -23,7 +23,7 @@
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/node_method_wrapper.hpp>
-#include <UChain/bitcoin/config/authority.hpp>
+#include <UChain/coin/config/authority.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChain/network/channel.hpp>
 

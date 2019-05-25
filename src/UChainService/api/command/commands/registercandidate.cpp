@@ -24,7 +24,7 @@
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/exception.hpp>
 #include <UChainService/api/command/base_helper.hpp>
-#include <UChain/bitcoin/config/authority.hpp>
+#include <UChain/coin/config/authority.hpp>
 
 namespace libbitcoin
 {

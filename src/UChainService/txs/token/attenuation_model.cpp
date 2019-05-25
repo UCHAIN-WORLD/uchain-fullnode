@@ -19,7 +19,7 @@
  */
 
 #include <UChainService/txs/token/attenuation_model.hpp>
-#include <UChain/bitcoin/utility/string.hpp>
+#include <UChain/coin/utility/string.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
 #include <unordered_map>
