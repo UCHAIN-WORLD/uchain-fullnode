@@ -23,7 +23,7 @@
 #include <cstdint>
 #include <iostream>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 
 using namespace po;

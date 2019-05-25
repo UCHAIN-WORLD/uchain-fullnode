@@ -25,7 +25,7 @@
 #include <boost/program_options.hpp>
 #include <UChain/explorer/command.hpp>
 #include <UChain/explorer/define.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 using namespace boost::filesystem;
 using namespace boost::program_options;

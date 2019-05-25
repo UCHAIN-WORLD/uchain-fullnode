@@ -32,7 +32,7 @@
 #include <UChain/explorer/generated.hpp>
 #include <UChain/explorer/parser.hpp>
 #include <UChainService/api/command/exception.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 using namespace boost::filesystem;
 using namespace boost::program_options;

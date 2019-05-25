@@ -23,7 +23,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <iostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 
 namespace libbitcoin

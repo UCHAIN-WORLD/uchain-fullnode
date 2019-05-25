@@ -21,7 +21,7 @@
 #include <UChain/explorer/commands/stealth-secret.hpp>
 
 #include <iostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 #include <UChain/explorer/config/ec_private.hpp>
 

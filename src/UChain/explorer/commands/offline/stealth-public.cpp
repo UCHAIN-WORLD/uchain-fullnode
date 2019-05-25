@@ -21,7 +21,7 @@
 #include <UChain/explorer/commands/stealth-public.hpp>
 
 #include <iostream>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/explorer/define.hpp>
 
 namespace libbitcoin
