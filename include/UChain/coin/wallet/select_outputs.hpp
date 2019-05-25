@@ -2,10 +2,10 @@
  * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
- * This file is part of UChain-node.
+ * This file is part of UChain.
  *
- * UChain-node is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License with
+ * UChain is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -18,32 +18,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_NODE_SETTINGS_HPP
-#define UC_NODE_SETTINGS_HPP
+#ifndef UC_WALLET_SELECT_OUTPUTS_HPP
+#define UC_WALLET_SELECT_OUTPUTS_HPP
 
 #include <cstdint>
-#include <UChain/coin.hpp>
-#include <UChain/node/define.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/chain/output.hpp>
+#include <UChain/coin/chain/point.hpp>
 
 namespace libbitcoin
 {
-namespace node
+namespace wallet
 {
 
-/// Common database configuration settings, properties not thread safe.
-class BCN_API settings
+struct BC_API select_outputs
 {
-  public:
-    settings();
-    settings(bc::settings context);
+    enum class algorithm
+    {
+        greedy
+    };
 
-    /// Properties.
-    uint32_t block_timeout_seconds;
-    uint32_t download_connections;
-    bool transaction_pool_refresh;
+    /// Select optimal outpoints for a spend from unspent outputs list.
+    /// Return includes the amount of change remaining from the spend.
+    static void select(chain::points_info &out,
+                       chain::output_info::list unspent, uint64_t minimum_value,
+                       algorithm option = algorithm::greedy);
 };
 
-} // namespace node
+} // namespace wallet
 } // namespace libbitcoin
 
 #endif

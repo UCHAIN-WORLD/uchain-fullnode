@@ -2,10 +2,10 @@
  * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
- * This file is part of UChain-node.
+ * This file is part of UChain.
  *
- * UChain-node is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License with
+ * UChain is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -18,32 +18,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_NODE_SETTINGS_HPP
-#define UC_NODE_SETTINGS_HPP
+#ifndef UC_COLOR_HPP
+#define UC_COLOR_HPP
 
 #include <cstdint>
-#include <UChain/coin.hpp>
-#include <UChain/node/define.hpp>
+#include <UChain/coin/compat.hpp>
+#include <UChain/coin/define.hpp>
 
 namespace libbitcoin
 {
-namespace node
-{
 
-/// Common database configuration settings, properties not thread safe.
-class BCN_API settings
+struct BC_API color
 {
-  public:
-    settings();
-    settings(bc::settings context);
-
-    /// Properties.
-    uint32_t block_timeout_seconds;
-    uint32_t download_connections;
-    bool transaction_pool_refresh;
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
 };
 
-} // namespace node
 } // namespace libbitcoin
 
 #endif

@@ -2,10 +2,10 @@
  * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
- * This file is part of UChain-node.
+ * This file is part of UChain.
  *
- * UChain-node is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License with
+ * UChain is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -18,32 +18,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_NODE_SETTINGS_HPP
-#define UC_NODE_SETTINGS_HPP
+#ifndef UC_TRACK_HPP
+#define UC_TRACK_HPP
 
-#include <cstdint>
-#include <UChain/coin.hpp>
-#include <UChain/node/define.hpp>
+#include <atomic>
+#include <cstddef>
+#include <string>
 
-namespace libbitcoin
-{
-namespace node
-{
+#define CONSTRUCT_TRACK(class_name) \
+    track<class_name>(#class_name)
 
-/// Common database configuration settings, properties not thread safe.
-class BCN_API settings
+template <class Shared>
+class track
 {
   public:
-    settings();
-    settings(bc::settings context);
+    static std::atomic<size_t> instances;
 
-    /// Properties.
-    uint32_t block_timeout_seconds;
-    uint32_t download_connections;
-    bool transaction_pool_refresh;
+  protected:
+    track(const std::string &class_name);
+    ~track();
+
+  private:
+    const std::string class_;
+#ifndef NDEBUG
+    std::size_t count_;
+#endif
 };
 
-} // namespace node
-} // namespace libbitcoin
+#include <UChain/coin/impl/utility/track.ipp>
 
 #endif

@@ -14,7 +14,7 @@
  * Maintainers: Do not include this header internal to this library.
  */
 
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/protocol/converter.hpp>
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/interface.pb.h>

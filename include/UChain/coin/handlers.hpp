@@ -2,10 +2,10 @@
  * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
- * This file is part of UChain-node.
+ * This file is part of UChain.
  *
- * UChain-node is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License with
+ * UChain is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -18,32 +18,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_NODE_SETTINGS_HPP
-#define UC_NODE_SETTINGS_HPP
+#ifndef UC_HANDLERS_HPP
+#define UC_HANDLERS_HPP
 
-#include <cstdint>
-#include <UChain/coin.hpp>
-#include <UChain/node/define.hpp>
+#include <functional>
+#include <UChain/coin/error.hpp>
 
 namespace libbitcoin
 {
-namespace node
-{
 
-/// Common database configuration settings, properties not thread safe.
-class BCN_API settings
-{
-  public:
-    settings();
-    settings(bc::settings context);
+typedef std::function<void(const code &)> handle0;
 
-    /// Properties.
-    uint32_t block_timeout_seconds;
-    uint32_t download_connections;
-    bool transaction_pool_refresh;
-};
+template <typename Type>
+using handle1 = std::function<void(const code &, const Type &)>;
 
-} // namespace node
+template <typename Type1, typename Type2>
+using handle2 = std::function<void(const code &, const Type1 &,
+                                   const Type2 &)>;
+
+template <typename Type1, typename Type2, typename Type3>
+using handle3 = std::function<void(const code &, const Type1 &,
+                                   const Type2 &, const Type3 &)>;
+
 } // namespace libbitcoin
 
 #endif

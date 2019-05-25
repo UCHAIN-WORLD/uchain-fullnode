@@ -2,10 +2,10 @@
  * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
- * This file is part of UChain-node.
+ * This file is part of UChain.
  *
- * UChain-node is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License with
+ * UChain is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -18,32 +18,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_NODE_SETTINGS_HPP
-#define UC_NODE_SETTINGS_HPP
+#ifndef UC_MINI_KEYS_HPP
+#define UC_MINI_KEYS_HPP
 
-#include <cstdint>
-#include <UChain/coin.hpp>
-#include <UChain/node/define.hpp>
+#include <string>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/math/elliptic_curve.hpp>
 
 namespace libbitcoin
 {
-namespace node
+namespace wallet
 {
 
-/// Common database configuration settings, properties not thread safe.
-class BCN_API settings
-{
-  public:
-    settings();
-    settings(bc::settings context);
+/**
+ * Convert Cascasius minikey to secret parameter.
+ */
+BC_API bool minikey_to_secret(ec_secret out_secret, const std::string &key);
 
-    /// Properties.
-    uint32_t block_timeout_seconds;
-    uint32_t download_connections;
-    bool transaction_pool_refresh;
-};
-
-} // namespace node
+} // namespace wallet
 } // namespace libbitcoin
 
 #endif

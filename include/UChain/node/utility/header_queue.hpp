@@ -22,7 +22,7 @@
 
 #include <cstddef>
 #include <vector>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/node/define.hpp>
 
 namespace libbitcoin
