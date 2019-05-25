@@ -24,7 +24,7 @@
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/block.hpp>
 #include <UChain/blockchain/block_chain.hpp>
 

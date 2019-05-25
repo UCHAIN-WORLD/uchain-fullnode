@@ -26,17 +26,17 @@
 #include <cstdint>
 #include <memory>
 #include <numeric>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/block_detail.hpp>
 #include <UChain/blockchain/orphan_pool.hpp>
 #include <UChain/blockchain/organizer.hpp>
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
 #include <UChain/blockchain/validate_block_impl.hpp>
-#include <UChain/bitcoin/chain/header.hpp>
+#include <UChain/coin/chain/header.hpp>
 #include <UChain/node/protocols/protocol_block_out.hpp>
-#include <UChain/bitcoin/wallet/payment_address.hpp>
-#include <UChain/bitcoin/formats/base_16.hpp>
+#include <UChain/coin/wallet/payment_address.hpp>
+#include <UChain/coin/formats/base_16.hpp>
 
 namespace libbitcoin
 {

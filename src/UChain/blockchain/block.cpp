@@ -20,7 +20,7 @@
 #include <UChain/blockchain/block.hpp>
 
 #include <cstdint>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 
 namespace libbitcoin
 {

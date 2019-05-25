@@ -22,7 +22,7 @@
 #include <UChainService/consensus/miner.hpp>
 
 #include <cstddef>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/blockchain/block_detail.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
 //#include <UChainService/consensus/miner/MinerAux.h>
