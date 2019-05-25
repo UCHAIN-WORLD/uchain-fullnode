@@ -23,7 +23,7 @@
 #include <unordered_map>
 #include <cstdint>
 #include <memory>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/client/dealer.hpp>
 #include <UChain/client/define.hpp>
 #include <UChain/client/stream.hpp>
