@@ -1,4 +1,4 @@
-ADD_SUBDIRECTORY(UChain/bitcoin)
+ADD_SUBDIRECTORY(UChain/coin)
 ADD_SUBDIRECTORY(UChain/network)
 ADD_SUBDIRECTORY(UChain/database)
 ADD_SUBDIRECTORY(UChain/blockchain)
