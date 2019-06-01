@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/unicode/unicode.hpp>
+#include <UChain/coin/unicode/unicode.hpp>
 
 #include <cstddef>
 #include <cstring>
@@ -28,12 +28,12 @@
 #include <stdexcept>
 #include <string>
 #include <boost/locale.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/unicode/console_streambuf.hpp>
-#include <UChain/bitcoin/unicode/unicode_istream.hpp>
-#include <UChain/bitcoin/unicode/unicode_ostream.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
-#include <UChain/bitcoin/utility/data.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/unicode/console_streambuf.hpp>
+#include <UChain/coin/unicode/unicode_istream.hpp>
+#include <UChain/coin/unicode/unicode_ostream.hpp>
+#include <UChain/coin/utility/assert.hpp>
+#include <UChain/coin/utility/data.hpp>
 
 #ifdef _MSC_VER
 #include <fcntl.h>

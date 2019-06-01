@@ -18,30 +18,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/unicode/unicode_ostream.hpp>
+#include <UChain/coin/unicode/ofstream.hpp>
 
-#include <cstddef>
-#include <iostream>
-#include <UChain/bitcoin/unicode/unicode_streambuf.hpp>
+#include <fstream>
+#include <string>
+#include <UChain/coin/unicode/unicode.hpp>
+#include <boost/filesystem.hpp>
 
 namespace libbitcoin
 {
 
-unicode_ostream::unicode_ostream(std::ostream &narrow_stream,
-                                 std::wostream &wide_stream, size_t size)
+// Construct bc::ofstream.
+ofstream::ofstream(const std::string &path, std::ofstream::openmode mode)
 #ifdef _MSC_VER
-    : std::ostream(new unicode_streambuf(wide_stream.rdbuf(), size))
+    : std::ofstream(bc::to_utf16(path), mode), max_size_(LOG_MAX_SIZE), path_(path)
 #else
-    : std::ostream(narrow_stream.rdbuf())
+    : std::ofstream(path, mode), max_size_(LOG_MAX_SIZE), path_(path)
 #endif
 {
+    current_size_ = boost::filesystem::file_size(path);
 }
 
-unicode_ostream::~unicode_ostream()
+uint64_t ofstream::increment(uint64_t size)
 {
-#ifdef _MSC_VER
-  delete rdbuf();
-#endif
+    current_size_ += size;
+    return current_size_;
 }
 
 } // namespace libbitcoin

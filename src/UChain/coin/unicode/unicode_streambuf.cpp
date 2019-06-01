@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/unicode/unicode_streambuf.hpp>
+#include <UChain/coin/unicode/unicode_streambuf.hpp>
 
 #include <cstddef>
 #include <cstring>
 #include <iostream>
 #include <streambuf>
-#include <UChain/bitcoin/constants.hpp>
-#include <UChain/bitcoin/unicode/unicode.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
+#include <UChain/coin/constants.hpp>
+#include <UChain/coin/unicode/unicode.hpp>
+#include <UChain/coin/utility/assert.hpp>
 
 namespace libbitcoin
 {

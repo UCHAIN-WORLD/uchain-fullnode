@@ -18,26 +18,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/unicode/unicode_istream.hpp>
+#include <UChain/coin/unicode/unicode_ostream.hpp>
 
 #include <cstddef>
 #include <iostream>
-#include <UChain/bitcoin/unicode/unicode_streambuf.hpp>
+#include <UChain/coin/unicode/unicode_streambuf.hpp>
 
 namespace libbitcoin
 {
 
-unicode_istream::unicode_istream(std::istream &narrow_stream,
-                                 std::wistream &wide_stream, size_t size)
+unicode_ostream::unicode_ostream(std::ostream &narrow_stream,
+                                 std::wostream &wide_stream, size_t size)
 #ifdef _MSC_VER
-    : std::istream(new unicode_streambuf(wide_stream.rdbuf(), size))
+    : std::ostream(new unicode_streambuf(wide_stream.rdbuf(), size))
 #else
-    : std::istream(narrow_stream.rdbuf())
+    : std::ostream(narrow_stream.rdbuf())
 #endif
 {
 }
 
-unicode_istream::~unicode_istream()
+unicode_ostream::~unicode_ostream()
 {
 #ifdef _MSC_VER
   delete rdbuf();
