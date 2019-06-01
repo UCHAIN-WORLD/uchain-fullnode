@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/checkpoint.hpp>
+#include <UChain/coin/config/checkpoint.hpp>
 
 #include <cstddef>
 #include <iostream>
@@ -27,9 +27,9 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
 #include <boost/regex.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/formats/base_16.hpp>
-#include <UChain/bitcoin/math/hash.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/formats/base_16.hpp>
+#include <UChain/coin/math/hash.hpp>
 
 namespace libbitcoin
 {

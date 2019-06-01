@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/parser.hpp>
+#include <UChain/coin/config/parser.hpp>
 
 #include <string>
 #include <sstream>
@@ -26,7 +26,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
 #include <boost/throw_exception.hpp>
-#include <UChain/bitcoin/unicode/ifstream.hpp>
+#include <UChain/coin/unicode/ifstream.hpp>
 #include <UChainService/txs/utility/path.hpp>
 
 namespace libbitcoin

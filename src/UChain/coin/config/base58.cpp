@@ -18,72 +18,68 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/hash256.hpp>
+#include <UChain/coin/config/base58.hpp>
 
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/formats/base_16.hpp>
-#include <UChain/bitcoin/math/hash.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/formats/base_58.hpp>
+#include <UChain/coin/utility/data.hpp>
 
 namespace libbitcoin
 {
 namespace config
 {
 
-hash256::hash256()
-    : value_(null_hash)
+base58::base58()
 {
 }
 
-hash256::hash256(const std::string &hexcode)
-    : hash256()
+base58::base58(const std::string &base58)
 {
-  std::stringstream(hexcode) >> *this;
+    std::stringstream(base58) >> *this;
 }
 
-hash256::hash256(const hash_digest &value)
+base58::base58(const data_chunk &value)
     : value_(value)
 {
 }
 
-hash256::hash256(const hash256 &other)
-    : hash256(other.value_)
+base58::base58(const base58 &other)
+    : base58(other.value_)
 {
 }
 
-std::string hash256::to_string() const
+base58::operator const data_chunk &() const
 {
-  std::stringstream value;
-  value << *this;
-  return value.str();
+    return value_;
 }
 
-hash256::operator const hash_digest &() const
+base58::operator data_slice() const
 {
-  return value_;
+    return value_;
 }
 
-std::istream &operator>>(std::istream &input, hash256 &argument)
+std::istream &operator>>(std::istream &input, base58 &argument)
 {
-  std::string hexcode;
-  input >> hexcode;
+    std::string base58;
+    input >> base58;
 
-  if (!decode_hash(argument.value_, hexcode))
-  {
-    using namespace boost::program_options;
-    BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
-  }
+    if (!decode_base58(argument.value_, base58))
+    {
+        using namespace boost::program_options;
+        BOOST_THROW_EXCEPTION(invalid_option_value(base58));
+    }
 
-  return input;
+    return input;
 }
 
-std::ostream &operator<<(std::ostream &output, const hash256 &argument)
+std::ostream &operator<<(std::ostream &output, const base58 &argument)
 {
-  output << encode_hash(argument.value_);
-  return output;
+    output << encode_base58(argument.value_);
+    return output;
 }
 
 } // namespace config

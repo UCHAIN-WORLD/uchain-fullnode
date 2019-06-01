@@ -18,67 +18,87 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/base58.hpp>
+#include <UChain/coin/config/sodium.hpp>
 
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/formats/base_58.hpp>
-#include <UChain/bitcoin/utility/data.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/formats/base_85.hpp>
+#include <UChain/coin/math/hash.hpp>
 
 namespace libbitcoin
 {
 namespace config
 {
 
-base58::base58()
+sodium::sodium()
+    : value_(null_hash)
 {
 }
 
-base58::base58(const std::string &base58)
+sodium::sodium(const std::string &base85)
 {
-    std::stringstream(base58) >> *this;
+    std::stringstream(base85) >> *this;
 }
 
-base58::base58(const data_chunk &value)
+sodium::sodium(const hash_digest &value)
     : value_(value)
 {
 }
 
-base58::base58(const base58 &other)
-    : base58(other.value_)
+sodium::sodium(const sodium &other)
+    : sodium(other.value_)
 {
 }
 
-base58::operator const data_chunk &() const
+sodium::operator hash_digest() const
 {
     return value_;
 }
 
-base58::operator data_slice() const
+sodium::operator data_slice() const
 {
     return value_;
 }
 
-std::istream &operator>>(std::istream &input, base58 &argument)
+sodium::operator bool() const
 {
-    std::string base58;
-    input >> base58;
+    return value_ != null_hash;
+}
 
-    if (!decode_base58(argument.value_, base58))
+std::string sodium::to_string() const
+{
+    std::stringstream value;
+    value << *this;
+    return value.str();
+}
+
+std::istream &operator>>(std::istream &input, sodium &argument)
+{
+    std::string base85;
+    input >> base85;
+
+    data_chunk out_value;
+    if (!decode_base85(out_value, base85) || out_value.size() != hash_size)
     {
         using namespace boost::program_options;
-        BOOST_THROW_EXCEPTION(invalid_option_value(base58));
+        BOOST_THROW_EXCEPTION(invalid_option_value(base85));
     }
 
+    std::copy(out_value.begin(), out_value.end(), argument.value_.begin());
     return input;
 }
 
-std::ostream &operator<<(std::ostream &output, const base58 &argument)
+std::ostream &operator<<(std::ostream &output, const sodium &argument)
 {
-    output << encode_base58(argument.value_);
+    std::string decoded;
+
+    // Z85 requires four byte alignment (hash_digest is 32).
+    /* bool */ encode_base85(decoded, argument.value_);
+
+    output << decoded;
     return output;
 }
 

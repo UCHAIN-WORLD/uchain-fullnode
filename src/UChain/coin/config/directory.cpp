@@ -18,64 +18,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/hash160.hpp>
+#include <UChain/coin/config/directory.hpp>
 
-#include <iostream>
-#include <sstream>
 #include <string>
-#include <boost/program_options.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/formats/base_16.hpp>
-#include <UChain/bitcoin/math/hash.hpp>
+#include <UChain/coin/unicode/unicode.hpp>
+
+#ifdef _MSC_VER
+#include <shlobj.h>
+#include <windows.h>
+#endif
 
 namespace libbitcoin
 {
 namespace config
 {
 
-hash160::hash160()
-    : value_(null_short_hash)
+// Returns empty string if unable to retrieve (including when not in Windows).
+std::string windows_config_directory()
 {
-}
+#ifdef _MSC_VER
+    wchar_t directory[MAX_PATH];
+    const auto result = SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA, NULL,
+                                         SHGFP_TYPE_CURRENT, directory);
 
-hash160::hash160(const std::string &hexcode)
-{
-  std::stringstream(hexcode) >> *this;
-}
-
-hash160::hash160(const short_hash &value)
-    : value_(value)
-{
-}
-
-hash160::hash160(const hash160 &other)
-    : hash160(other.value_)
-{
-}
-
-hash160::operator const short_hash &() const
-{
-  return value_;
-}
-
-std::istream &operator>>(std::istream &input, hash160 &argument)
-{
-  std::string hexcode;
-  input >> hexcode;
-
-  if (!decode_base16(argument.value_, hexcode))
-  {
-    using namespace boost::program_options;
-    BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
-  }
-
-  return input;
-}
-
-std::ostream &operator<<(std::ostream &output, const hash160 &argument)
-{
-  output << encode_base16(argument.value_);
-  return output;
+    if (SUCCEEDED(result))
+        return to_utf8(directory);
+#endif
+    return "";
 }
 
 } // namespace config

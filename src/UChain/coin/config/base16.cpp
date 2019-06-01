@@ -18,87 +18,67 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/sodium.hpp>
+#include <UChain/coin/config/base16.hpp>
 
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/formats/base_85.hpp>
-#include <UChain/bitcoin/math/hash.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/formats/base_16.hpp>
+#include <UChain/coin/utility/data.hpp>
 
 namespace libbitcoin
 {
 namespace config
 {
 
-sodium::sodium()
-    : value_(null_hash)
+base16::base16()
 {
 }
 
-sodium::sodium(const std::string &base85)
+base16::base16(const std::string &hexcode)
 {
-    std::stringstream(base85) >> *this;
+    std::stringstream(hexcode) >> *this;
 }
 
-sodium::sodium(const hash_digest &value)
+base16::base16(const data_chunk &value)
     : value_(value)
 {
 }
 
-sodium::sodium(const sodium &other)
-    : sodium(other.value_)
+base16::base16(const base16 &other)
+    : base16(other.value_)
 {
 }
 
-sodium::operator hash_digest() const
+base16::operator const data_chunk &() const
 {
     return value_;
 }
 
-sodium::operator data_slice() const
+base16::operator data_slice() const
 {
     return value_;
 }
 
-sodium::operator bool() const
+std::istream &operator>>(std::istream &input, base16 &argument)
 {
-    return value_ != null_hash;
-}
+    std::string hexcode;
+    input >> hexcode;
 
-std::string sodium::to_string() const
-{
-    std::stringstream value;
-    value << *this;
-    return value.str();
-}
-
-std::istream &operator>>(std::istream &input, sodium &argument)
-{
-    std::string base85;
-    input >> base85;
-
-    data_chunk out_value;
-    if (!decode_base85(out_value, base85) || out_value.size() != hash_size)
+    if (!decode_base16(argument.value_, hexcode))
     {
         using namespace boost::program_options;
-        BOOST_THROW_EXCEPTION(invalid_option_value(base85));
+        BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
     }
 
-    std::copy(out_value.begin(), out_value.end(), argument.value_.begin());
     return input;
 }
 
-std::ostream &operator<<(std::ostream &output, const sodium &argument)
+std::ostream &operator<<(std::ostream &output, const base16 &argument)
 {
-    std::string decoded;
-
-    // Z85 requires four byte alignment (hash_digest is 32).
-    /* bool */ encode_base85(decoded, argument.value_);
-
-    output << decoded;
+    output << encode_base16(argument.value_);
     return output;
 }
 

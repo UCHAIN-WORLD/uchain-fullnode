@@ -18,68 +18,72 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/base16.hpp>
+#include <UChain/coin/config/hash256.hpp>
 
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/formats/base_16.hpp>
-#include <UChain/bitcoin/utility/data.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/formats/base_16.hpp>
+#include <UChain/coin/math/hash.hpp>
 
 namespace libbitcoin
 {
 namespace config
 {
 
-base16::base16()
+hash256::hash256()
+    : value_(null_hash)
 {
 }
 
-base16::base16(const std::string &hexcode)
+hash256::hash256(const std::string &hexcode)
+    : hash256()
 {
-    std::stringstream(hexcode) >> *this;
+  std::stringstream(hexcode) >> *this;
 }
 
-base16::base16(const data_chunk &value)
+hash256::hash256(const hash_digest &value)
     : value_(value)
 {
 }
 
-base16::base16(const base16 &other)
-    : base16(other.value_)
+hash256::hash256(const hash256 &other)
+    : hash256(other.value_)
 {
 }
 
-base16::operator const data_chunk &() const
+std::string hash256::to_string() const
 {
-    return value_;
+  std::stringstream value;
+  value << *this;
+  return value.str();
 }
 
-base16::operator data_slice() const
+hash256::operator const hash_digest &() const
 {
-    return value_;
+  return value_;
 }
 
-std::istream &operator>>(std::istream &input, base16 &argument)
+std::istream &operator>>(std::istream &input, hash256 &argument)
 {
-    std::string hexcode;
-    input >> hexcode;
+  std::string hexcode;
+  input >> hexcode;
 
-    if (!decode_base16(argument.value_, hexcode))
-    {
-        using namespace boost::program_options;
-        BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
-    }
+  if (!decode_hash(argument.value_, hexcode))
+  {
+    using namespace boost::program_options;
+    BOOST_THROW_EXCEPTION(invalid_option_value(hexcode));
+  }
 
-    return input;
+  return input;
 }
 
-std::ostream &operator<<(std::ostream &output, const base16 &argument)
+std::ostream &operator<<(std::ostream &output, const hash256 &argument)
 {
-    output << encode_base16(argument.value_);
-    return output;
+  output << encode_hash(argument.value_);
+  return output;
 }
 
 } // namespace config

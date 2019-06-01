@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/parameter.hpp>
+#include <UChain/coin/config/parameter.hpp>
 
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/utility/collection.hpp>
-#include <UChain/bitcoin/utility/string.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/utility/collection.hpp>
+#include <UChain/coin/utility/string.hpp>
 
 namespace po = boost::program_options;
 using namespace libbitcoin::config;

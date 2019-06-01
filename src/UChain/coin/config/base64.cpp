@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/config/base64.hpp>
+#include <UChain/coin/config/base64.hpp>
 
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <boost/program_options.hpp>
-#include <UChain/bitcoin/define.hpp>
-#include <UChain/bitcoin/formats/base_64.hpp>
-#include <UChain/bitcoin/utility/data.hpp>
+#include <UChain/coin/define.hpp>
+#include <UChain/coin/formats/base_64.hpp>
+#include <UChain/coin/utility/data.hpp>
 
 namespace libbitcoin
 {
