@@ -18,10 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/math/script_number.hpp>
+#include <UChain/coin/math/script_number.hpp>
 
-#include <UChain/bitcoin/constants.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
+#include <UChain/coin/constants.hpp>
+#include <UChain/coin/utility/assert.hpp>
 
 namespace libbitcoin
 {

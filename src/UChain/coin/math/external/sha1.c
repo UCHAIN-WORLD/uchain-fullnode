@@ -16,7 +16,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <UChain/bitcoin/compat.h>
+#include <UChain/coin/compat.h>
 #include "zeroize.h"
 
 #ifdef __BIG_ENDIAN__

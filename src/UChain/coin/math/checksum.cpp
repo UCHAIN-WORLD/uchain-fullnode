@@ -18,31 +18,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/math/crypto.hpp>
+#include <UChain/coin/math/checksum.hpp>
 
-#include <UChain/bitcoin/math/elliptic_curve.hpp>
-#include <UChain/bitcoin/math/hash.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
-#include <UChain/bitcoin/utility/data.hpp>
-#include "external/aes256.h"
+#include <UChain/coin/math/hash.hpp>
+#include <UChain/coin/utility/endian.hpp>
+#include <UChain/coin/utility/deserializer.hpp>
 
 namespace libbitcoin
 {
 
-void aes256_encrypt(const aes_secret &key, aes_block &block)
+void append_checksum(data_chunk &data)
 {
-    aes256_context context;
-    aes256_init(&context, key.data());
-    aes256_encrypt_ecb(&context, block.data());
-    aes256_done(&context);
+    const auto checksum = bitcoin_checksum(data);
+    extend_data(data, to_little_endian(checksum));
 }
 
-void aes256_decrypt(const aes_secret &key, aes_block &block)
+uint32_t bitcoin_checksum(data_slice data)
 {
-    aes256_context context;
-    aes256_init(&context, key.data());
-    aes256_decrypt_ecb(&context, block.data());
-    aes256_done(&context);
+    const auto hash = bitcoin_hash(data);
+    return from_little_endian_unsafe<uint32_t>(hash.begin());
+}
+
+bool verify_checksum(data_slice data)
+{
+    if (data.size() < checksum_size)
+        return false;
+
+    data_slice body(data.begin(), data.end() - checksum_size);
+    auto checksum = from_little_endian_unsafe<uint32_t>(data.end() - checksum_size);
+    return bitcoin_checksum(body) == checksum;
 }
 
 } // namespace libbitcoin

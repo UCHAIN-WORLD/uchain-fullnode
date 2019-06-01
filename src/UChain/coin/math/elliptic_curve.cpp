@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/math/elliptic_curve.hpp>
+#include <UChain/coin/math/elliptic_curve.hpp>
 
 #include <algorithm>
 #include <secp256k1.h>
 #include <secp256k1_recovery.h>
-#include <UChain/bitcoin/math/hash.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
-#include <UChain/bitcoin/utility/data.hpp>
+#include <UChain/coin/math/hash.hpp>
+#include <UChain/coin/utility/assert.hpp>
+#include <UChain/coin/utility/data.hpp>
 #include "external/lax_der_parsing.h"
 #include "secp256k1_initializer.hpp"
 

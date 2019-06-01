@@ -23,7 +23,7 @@
 
 #include <mutex>
 #include <secp256k1.h>
-#include <UChain/bitcoin/define.hpp>
+#include <UChain/coin/define.hpp>
 
 namespace libbitcoin
 {
