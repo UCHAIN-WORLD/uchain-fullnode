@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/deadline.hpp>
+#include <UChain/coin/utility/deadline.hpp>
 
 #include <functional>
-#include <UChain/bitcoin/error.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
-#include <UChain/bitcoin/utility/thread.hpp>
-#include <UChain/bitcoin/utility/threadpool.hpp>
+#include <UChain/coin/error.hpp>
+#include <UChain/coin/utility/assert.hpp>
+#include <UChain/coin/utility/thread.hpp>
+#include <UChain/coin/utility/threadpool.hpp>
 
 namespace libbitcoin
 {

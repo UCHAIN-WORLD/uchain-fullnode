@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/threadpool.hpp>
+#include <UChain/coin/utility/threadpool.hpp>
 
 #include <memory>
 #include <new>
 #include <thread>
-#include <UChain/bitcoin/utility/asio.hpp>
-#include <UChain/bitcoin/utility/thread.hpp>
+#include <UChain/coin/utility/asio.hpp>
+#include <UChain/coin/utility/thread.hpp>
 
 namespace libbitcoin
 {

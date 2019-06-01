@@ -18,25 +18,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/conditional_lock.hpp>
+#include <UChain/coin/utility/scope_lock.hpp>
 
 #include <memory>
-#include <UChain/bitcoin/utility/thread.hpp>
+#include <UChain/coin/utility/thread.hpp>
 
 namespace libbitcoin
 {
 
-conditional_lock::conditional_lock(std::shared_ptr<shared_mutex> mutex_ptr)
-    : mutex_ptr_(mutex_ptr)
+scope_lock::scope_lock(shared_mutex &mutex)
+    : mutex_(mutex)
 {
-  if (mutex_ptr_)
-    mutex_ptr->lock();
+  mutex_.lock();
 }
 
-conditional_lock::~conditional_lock()
+scope_lock::~scope_lock()
 {
-  if (mutex_ptr_)
-    mutex_ptr_->unlock();
+  mutex_.unlock();
 }
 
 } // namespace libbitcoin

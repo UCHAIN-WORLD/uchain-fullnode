@@ -18,39 +18,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/string.hpp>
+#include <UChain/coin/utility/conditional_lock.hpp>
 
-#include <string>
-#include <vector>
-#include <boost/algorithm/string.hpp>
+#include <memory>
+#include <UChain/coin/utility/thread.hpp>
 
 namespace libbitcoin
 {
 
-std::string join(const std::vector<std::string> &words,
-                 const std::string &delimiter)
+conditional_lock::conditional_lock(std::shared_ptr<shared_mutex> mutex_ptr)
+    : mutex_ptr_(mutex_ptr)
 {
-    return boost::join(words, delimiter);
+  if (mutex_ptr_)
+    mutex_ptr->lock();
 }
 
-// Note that use of token_compress_on may cause unexpected results when
-// working with CSV-style lists that accept empty elements.
-std::vector<std::string> split(const std::string &sentence,
-                               const std::string &delimiter, bool trim)
+conditional_lock::~conditional_lock()
 {
-    std::vector<std::string> words;
-    const auto compress = boost::token_compress_on;
-    const auto delimit = boost::is_any_of(delimiter);
-
-    if (trim)
-    {
-        const auto trimmed = boost::trim_copy(sentence);
-        boost::split(words, trimmed, delimit, compress);
-    }
-    else
-        boost::split(words, sentence, delimit, compress);
-
-    return words;
+  if (mutex_ptr_)
+    mutex_ptr_->unlock();
 }
 
 } // namespace libbitcoin

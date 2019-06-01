@@ -18,38 +18,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/variable_uint_size.hpp>
+#include <UChain/coin/utility/work.hpp>
+
+#include <memory>
+#include <string>
+#include <UChain/coin/utility/delegates.hpp>
+#include <UChain/coin/utility/threadpool.hpp>
 
 namespace libbitcoin
 {
 
-size_t variable_uint_size(uint64_t value)
+work::work(threadpool &pool, const std::string &name)
+    : ordered_(std::make_shared<monitor::count>(0)),
+      unordered_(std::make_shared<monitor::count>(0)),
+      concurrent_(std::make_shared<monitor::count>(0)),
+      service_(pool.service()),
+      strand_(service_),
+      name_(name)
 {
-    if (value < 0xfd)
-        return 1;
-    else if (value <= 0xffff)
-        return 3;
-    else if (value <= 0xffffffff)
-        return 5;
-    else
-        return 9;
 }
 
-size_t variable_string_size(const std::string &str)
+size_t work::ordered_backlog()
 {
-    size_t length = str.size();
-    length += variable_uint_size(length);
-    return length;
+    return ordered_->load();
 }
 
-std::string limit_size_string(const std::string &str, size_t limit_size)
+size_t work::unordered_backlog()
 {
-    if (str.size() > limit_size)
-    {
-        return str.substr(0, limit_size);
-    }
+    return unordered_->load();
+}
 
-    return str;
+size_t work::concurrent_backlog()
+{
+    return concurrent_->load();
+}
+
+size_t work::combined_backlog()
+{
+    return ordered_backlog() + unordered_backlog() + concurrent_backlog();
 }
 
 } // namespace libbitcoin

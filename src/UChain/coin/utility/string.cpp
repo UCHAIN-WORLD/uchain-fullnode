@@ -18,31 +18,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/monitor.hpp>
+#include <UChain/coin/utility/string.hpp>
 
-#include <cstddef>
 #include <string>
-#include <UChain/bitcoin/utility/log.hpp>
+#include <vector>
+#include <boost/algorithm/string.hpp>
 
 namespace libbitcoin
 {
 
-monitor::monitor(count_ptr counter, const std::string &name)
-    : counter_(counter), name_(name)
+std::string join(const std::vector<std::string> &words,
+                 const std::string &delimiter)
 {
-    trace(++(*counter_), "+");
+    return boost::join(words, delimiter);
 }
 
-monitor::~monitor()
+// Note that use of token_compress_on may cause unexpected results when
+// working with CSV-style lists that accept empty elements.
+std::vector<std::string> split(const std::string &sentence,
+                               const std::string &delimiter, bool trim)
 {
-    trace(--(*counter_), "-");
-}
+    std::vector<std::string> words;
+    const auto compress = boost::token_compress_on;
+    const auto delimit = boost::is_any_of(delimiter);
 
-void monitor::trace(size_t count, const std::string &action) const
-{
-#ifndef NDEBUG
-    ////log::debug(LOG_SYSTEM) << action << " " << name_ << " {" << count << "}";
-#endif
+    if (trim)
+    {
+        const auto trimmed = boost::trim_copy(sentence);
+        boost::split(words, trimmed, delimit, compress);
+    }
+    else
+        boost::split(words, sentence, delimit, compress);
+
+    return words;
 }
 
 } // namespace libbitcoin

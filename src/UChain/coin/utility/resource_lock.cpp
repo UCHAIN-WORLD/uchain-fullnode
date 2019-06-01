@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/resource_lock.hpp>
+#include <UChain/coin/utility/resource_lock.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/interprocess/exceptions.hpp>
-#include <UChain/bitcoin/unicode/ifstream.hpp>
-#include <UChain/bitcoin/unicode/ofstream.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
+#include <UChain/coin/unicode/ifstream.hpp>
+#include <UChain/coin/unicode/ofstream.hpp>
+#include <UChain/coin/utility/assert.hpp>
 
 namespace libbitcoin
 {
