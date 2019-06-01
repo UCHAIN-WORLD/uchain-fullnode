@@ -18,44 +18,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/work.hpp>
+#include <UChain/coin/utility/dispatcher.hpp>
 
-#include <memory>
 #include <string>
-#include <UChain/bitcoin/utility/delegates.hpp>
-#include <UChain/bitcoin/utility/threadpool.hpp>
+#include <UChain/coin/utility/threadpool.hpp>
+#include <UChain/coin/utility/work.hpp>
 
 namespace libbitcoin
 {
 
-work::work(threadpool &pool, const std::string &name)
-    : ordered_(std::make_shared<monitor::count>(0)),
-      unordered_(std::make_shared<monitor::count>(0)),
-      concurrent_(std::make_shared<monitor::count>(0)),
-      service_(pool.service()),
-      strand_(service_),
-      name_(name)
+dispatcher::dispatcher(threadpool &pool, const std::string &name)
+    : heap_(pool, name)
 {
 }
 
-size_t work::ordered_backlog()
+size_t dispatcher::ordered_backlog()
 {
-    return ordered_->load();
+    return heap_.ordered_backlog();
 }
 
-size_t work::unordered_backlog()
+size_t dispatcher::unordered_backlog()
 {
-    return unordered_->load();
+    return heap_.unordered_backlog();
 }
 
-size_t work::concurrent_backlog()
+size_t dispatcher::concurrent_backlog()
 {
-    return concurrent_->load();
+    return heap_.concurrent_backlog();
 }
 
-size_t work::combined_backlog()
+size_t dispatcher::combined_backlog()
 {
-    return ordered_backlog() + unordered_backlog() + concurrent_backlog();
+    return heap_.combined_backlog();
 }
 
 } // namespace libbitcoin

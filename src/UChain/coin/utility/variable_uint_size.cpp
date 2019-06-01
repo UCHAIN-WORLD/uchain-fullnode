@@ -18,23 +18,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/scope_lock.hpp>
-
-#include <memory>
-#include <UChain/bitcoin/utility/thread.hpp>
+#include <UChain/coin/utility/variable_uint_size.hpp>
 
 namespace libbitcoin
 {
 
-scope_lock::scope_lock(shared_mutex &mutex)
-    : mutex_(mutex)
+size_t variable_uint_size(uint64_t value)
 {
-  mutex_.lock();
+    if (value < 0xfd)
+        return 1;
+    else if (value <= 0xffff)
+        return 3;
+    else if (value <= 0xffffffff)
+        return 5;
+    else
+        return 9;
 }
 
-scope_lock::~scope_lock()
+size_t variable_string_size(const std::string &str)
 {
-  mutex_.unlock();
+    size_t length = str.size();
+    length += variable_uint_size(length);
+    return length;
+}
+
+std::string limit_size_string(const std::string &str, size_t limit_size)
+{
+    if (str.size() > limit_size)
+    {
+        return str.substr(0, limit_size);
+    }
+
+    return str;
 }
 
 } // namespace libbitcoin

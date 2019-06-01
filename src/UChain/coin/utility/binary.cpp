@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/binary.hpp>
+#include <UChain/coin/utility/binary.hpp>
 
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <UChain/bitcoin/constants.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
-#include <UChain/bitcoin/utility/endian.hpp>
+#include <UChain/coin/constants.hpp>
+#include <UChain/coin/utility/assert.hpp>
+#include <UChain/coin/utility/endian.hpp>
 
 namespace libbitcoin
 {

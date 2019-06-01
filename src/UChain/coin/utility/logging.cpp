@@ -27,7 +27,7 @@
 #include <type_traits>
 #include <mutex>
 #include <boost/date_time.hpp>
-#include <UChain/bitcoin.hpp>
+#include <UChain/coin.hpp>
 #include <UChain/network/define.hpp>
 
 namespace libbitcoin

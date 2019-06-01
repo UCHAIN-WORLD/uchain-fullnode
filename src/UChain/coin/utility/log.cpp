@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/log.hpp>
+#include <UChain/coin/utility/log.hpp>
 
 #include <iostream>
 #include <utility>
@@ -26,7 +26,7 @@
 #include <string>
 #include <boost/date_time.hpp>
 #include <boost/format.hpp>
-#include <UChain/bitcoin/unicode/unicode.hpp>
+#include <UChain/coin/unicode/unicode.hpp>
 
 namespace libbitcoin
 {

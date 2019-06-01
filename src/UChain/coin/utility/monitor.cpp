@@ -1,4 +1,5 @@
 /**
+ * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
@@ -11,24 +12,37 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/time.hpp>
-#include <chrono>
+#include <UChain/coin/utility/monitor.hpp>
+
+#include <cstddef>
+#include <string>
+#include <UChain/coin/utility/log.hpp>
 
 namespace libbitcoin
-{ //namespace libbitcoin
-
-int64_t unix_millisecond()
 {
-    using namespace std::chrono;
-    auto ms = duration_cast<milliseconds>(
-        system_clock::now().time_since_epoch());
-    return ms.count();
+
+monitor::monitor(count_ptr counter, const std::string &name)
+    : counter_(counter), name_(name)
+{
+    trace(++(*counter_), "+");
 }
 
-} //namespace libbitcoin
+monitor::~monitor()
+{
+    trace(--(*counter_), "-");
+}
+
+void monitor::trace(size_t count, const std::string &action) const
+{
+#ifndef NDEBUG
+    ////log::debug(LOG_SYSTEM) << action << " " << name_ << " {" << count << "}";
+#endif
+}
+
+} // namespace libbitcoin

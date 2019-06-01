@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/random.hpp>
+#include <UChain/coin/utility/random.hpp>
 
 //#include <chrono>
 #include <cstdint>
@@ -28,9 +28,9 @@
 #else
 #include <random>
 #endif
-#include <UChain/bitcoin/utility/asio.hpp>
-#include <UChain/bitcoin/utility/assert.hpp>
-#include <UChain/bitcoin/utility/data.hpp>
+#include <UChain/coin/utility/asio.hpp>
+#include <UChain/coin/utility/assert.hpp>
+#include <UChain/coin/utility/data.hpp>
 
 namespace libbitcoin
 {

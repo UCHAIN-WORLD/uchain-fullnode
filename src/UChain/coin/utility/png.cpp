@@ -18,20 +18,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/bitcoin/utility/png.hpp>
+#include <UChain/coin/utility/png.hpp>
 
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
 #include <stdexcept>
 #include <boost/iostreams/stream.hpp>
-#include <UChain/bitcoin/constants.hpp>
-#include <UChain/bitcoin/formats/base_16.hpp>
-#include <UChain/bitcoin/utility/color.hpp>
-#include <UChain/bitcoin/utility/container_sink.hpp>
-#include <UChain/bitcoin/utility/container_source.hpp>
-#include <UChain/bitcoin/utility/istream_reader.hpp>
-#include <UChain/bitcoin/utility/ostream_writer.hpp>
+#include <UChain/coin/constants.hpp>
+#include <UChain/coin/formats/base_16.hpp>
+#include <UChain/coin/utility/color.hpp>
+#include <UChain/coin/utility/container_sink.hpp>
+#include <UChain/coin/utility/container_source.hpp>
+#include <UChain/coin/utility/istream_reader.hpp>
+#include <UChain/coin/utility/ostream_writer.hpp>
 
 namespace libbitcoin
 {
