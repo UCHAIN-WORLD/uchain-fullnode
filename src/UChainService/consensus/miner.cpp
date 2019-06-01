@@ -29,13 +29,13 @@
 #include <boost/thread.hpp>
 //#include <UChainService/consensus/miner/MinerAux.h>
 //#include <UChainService/consensus/libdevcore/BasicType.h>
-#include <UChain/bitcoin/chain/script/operation.hpp>
-#include <UChain/bitcoin/config/hash160.hpp>
-#include <UChain/bitcoin/wallet/ec_public.hpp>
-#include <UChain/bitcoin/constants.hpp>
+#include <UChain/coin/chain/script/operation.hpp>
+#include <UChain/coin/config/hash160.hpp>
+#include <UChain/coin/wallet/ec_public.hpp>
+#include <UChain/coin/constants.hpp>
 #include <UChain/blockchain/validate_block.hpp>
 #include <UChain/blockchain/validate_transaction.hpp>
-#include <UChain/bitcoin/utility/time.hpp>
+#include <UChain/coin/utility/time.hpp>
 #define LOG_HEADER "consensus"
 using namespace std;
 using namespace std::this_thread;
