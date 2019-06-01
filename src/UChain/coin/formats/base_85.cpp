@@ -48,13 +48,13 @@
 //  DEALINGS IN THE SOFTWARE.
 //  --------------------------------------------------------------------------
 
-#include <UChain/bitcoin/formats/base_85.hpp>
+#include <UChain/coin/formats/base_85.hpp>
 
 #include <cstddef>
 #include <cstdint>
 #include <string>
-#include <UChain/bitcoin/utility/assert.hpp>
-#include <UChain/bitcoin/utility/data.hpp>
+#include <UChain/coin/utility/assert.hpp>
+#include <UChain/coin/utility/data.hpp>
 
 namespace libbitcoin
 {
