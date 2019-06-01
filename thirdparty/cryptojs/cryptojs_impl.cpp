@@ -24,7 +24,7 @@
 #include "cryptojs_impl.h"
 #include "aes256_cbc.h"
 #include "md5.h"
-#include <UChain/bitcoin/utility/random.hpp>
+#include <UChain/coin/utility/random.hpp>
 #include <boost/smart_ptr.hpp>
 
 #define CONCAT(a, b) a.insert(a.end(), b.begin(), b.end())
