@@ -39,7 +39,7 @@ class BCB_API block_detail
   public:
     typedef std::shared_ptr<block_detail> ptr;
     typedef std::vector<block_detail::ptr> list;
-    typedef message::block_message::ptr block_ptr;
+    typedef message::block_msg::ptr block_ptr;
 
     /// Construct a block detail instance.
     block_detail(block_ptr actual_block);

@@ -61,15 +61,15 @@ class BCB_API block_chain
     typedef handle2<uint64_t, uint64_t> transaction_index_fetch_handler;
 
     typedef std::function<bool(const code &, uint64_t,
-                               const message::block_message::ptr_list &,
-                               const message::block_message::ptr_list &)>
+                               const message::block_msg::ptr_list &,
+                               const message::block_msg::ptr_list &)>
         reorganize_handler;
 
     virtual bool start() = 0;
     virtual bool stop() = 0;
     virtual bool close() = 0;
 
-    virtual void store(message::block_message::ptr block,
+    virtual void store(message::block_msg::ptr block,
                        block_store_handler handler) = 0;
 
     virtual void fetch_block(uint64_t height,
