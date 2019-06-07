@@ -55,7 +55,7 @@ using namespace message;
 
 message_subscriber::message_subscriber(threadpool &pool)
     : INITIALIZE_SUBSCRIBER(pool, address),
-      INITIALIZE_SUBSCRIBER(pool, block_message),
+      INITIALIZE_SUBSCRIBER(pool, block_msg),
       INITIALIZE_SUBSCRIBER(pool, block_transactions),
       INITIALIZE_SUBSCRIBER(pool, compact_block),
       INITIALIZE_SUBSCRIBER(pool, fee_filter),
@@ -86,7 +86,7 @@ message_subscriber::message_subscriber(threadpool &pool)
 void message_subscriber::broadcast(const code &ec)
 {
     RELAY_CODE(ec, address);
-    RELAY_CODE(ec, block_message);
+    RELAY_CODE(ec, block_msg);
     RELAY_CODE(ec, block_transactions);
     RELAY_CODE(ec, compact_block);
     RELAY_CODE(ec, fee_filter);
@@ -119,7 +119,7 @@ code message_subscriber::load(message_type type, uint32_t version,
     switch (type)
     {
         CASE_RELAY_MESSAGE(stream, version, address);
-        CASE_HANDLE_MESSAGE(stream, version, block_message);
+        CASE_HANDLE_MESSAGE(stream, version, block_msg);
         CASE_RELAY_MESSAGE(stream, version, block_transactions);
         CASE_RELAY_MESSAGE(stream, version, compact_block);
         CASE_RELAY_MESSAGE(stream, version, fee_filter);
@@ -153,7 +153,7 @@ code message_subscriber::load(message_type type, uint32_t version,
 void message_subscriber::start()
 {
     START_SUBSCRIBER(address);
-    START_SUBSCRIBER(block_message);
+    START_SUBSCRIBER(block_msg);
     START_SUBSCRIBER(block_transactions);
     START_SUBSCRIBER(compact_block);
     START_SUBSCRIBER(fee_filter);
@@ -183,7 +183,7 @@ void message_subscriber::start()
 void message_subscriber::stop()
 {
     STOP_SUBSCRIBER(address);
-    STOP_SUBSCRIBER(block_message);
+    STOP_SUBSCRIBER(block_msg);
     STOP_SUBSCRIBER(block_transactions);
     STOP_SUBSCRIBER(compact_block);
     STOP_SUBSCRIBER(fee_filter);
