@@ -53,8 +53,8 @@ class BCN_API protocol_transaction_in
     typedef message::get_data::ptr get_data_ptr;
     typedef message::inventory::ptr inventory_ptr;
     typedef message::transaction_message::ptr transaction_ptr;
-    typedef message::block_message::ptr_list block_ptr_list;
-    typedef message::block_message::ptr block_ptr;
+    typedef message::block_msg::ptr_list block_ptr_list;
+    typedef message::block_msg::ptr block_ptr;
 
     void send_get_data(const code &ec, get_data_ptr message);
     void handle_filter_floaters(const code &ec, get_data_ptr message);

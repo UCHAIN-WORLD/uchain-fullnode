@@ -63,7 +63,7 @@
 #include <UChain/coin/math/stealth.hpp>
 #include <UChain/coin/math/uint256.hpp>
 #include <UChain/coin/message/address.hpp>
-#include <UChain/coin/message/block_message.hpp>
+#include <UChain/coin/message/block_msg.hpp>
 #include <UChain/coin/message/block_transactions.hpp>
 #include <UChain/coin/message/compact_block.hpp>
 #include <UChain/coin/message/fee_filter.hpp>
