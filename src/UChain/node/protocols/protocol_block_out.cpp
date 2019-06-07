@@ -359,7 +359,7 @@ void protocol_block_out::send_block(const code &ec, chain::block::ptr block,
     }
 
     // TODO: eliminate copy.
-    SEND2(block_message(*block), handle_send, _1, block_message::command);
+    SEND2(block_msg(*block), handle_send, _1, block_msg::command);
 }
 
 // TODO: move filtered_block to derived class protocol_block_out_70001.
