@@ -43,7 +43,7 @@ enum class message_type
     unknown,
     address,
     alert,
-    block_message,
+    block_msg,
     block_transactions,
     compact_block,
     fee_filter,
