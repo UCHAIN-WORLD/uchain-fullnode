@@ -65,8 +65,8 @@ class BCS_API block_service
     virtual void work();
 
   private:
-    typedef bc::message::block_message::ptr block_ptr;
-    typedef bc::message::block_message::ptr_list block_list;
+    typedef bc::message::block_msg::ptr block_ptr;
+    typedef bc::message::block_msg::ptr_list block_list;
 
     bool handle_reorganization(const code &ec, uint64_t fork_point,
                                const block_list &new_blocks, const block_list &);
