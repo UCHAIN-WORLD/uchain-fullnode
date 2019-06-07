@@ -127,7 +127,7 @@ class BCB_API block_chain_impl
     // ------------------------------------------------------------------------
 
     /// Store a block to the blockchain, with indexing and validation.
-    void store(message::block_message::ptr block,
+    void store(message::block_msg::ptr block,
                block_store_handler handler);
 
     /// fetch a block by height.
@@ -378,7 +378,7 @@ class BCB_API block_chain_impl
 
     void stop_write();
     void start_write();
-    void do_store(message::block_message::ptr block,
+    void do_store(message::block_msg::ptr block,
                   block_store_handler handler);
 
     ////void fetch_ordered(perform_read_functor perform_read);

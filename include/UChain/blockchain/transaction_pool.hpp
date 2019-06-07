@@ -103,7 +103,7 @@ class BCB_API transaction_pool
     typedef buffer::const_iterator const_iterator;
 
     typedef std::function<bool(const chain::input &)> input_compare;
-    typedef message::block_message::ptr_list block_list;
+    typedef message::block_msg::ptr_list block_list;
 
     bool stopped();
     const_iterator find(const hash_digest &tx_hash) const;

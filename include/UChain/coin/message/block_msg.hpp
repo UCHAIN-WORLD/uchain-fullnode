@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_MESSAGE_BLOCK_MESSAGE_HPP
-#define UC_MESSAGE_BLOCK_MESSAGE_HPP
+#ifndef UC_MESSAGE_block_msg_HPP
+#define UC_MESSAGE_block_msg_HPP
 
 #include <cstdint>
 #include <cstddef>
@@ -37,36 +37,36 @@ namespace libbitcoin
 namespace message
 {
 
-class BC_API block_message
+class BC_API block_msg
     : public chain::block
 {
   public:
-    typedef std::vector<block_message> list;
-    typedef std::shared_ptr<block_message> ptr;
+    typedef std::vector<block_msg> list;
+    typedef std::shared_ptr<block_msg> ptr;
     typedef std::vector<ptr> ptr_list;
     typedef std::vector<size_t> indexes;
 
-    static block_message factory_from_data(uint32_t version,
+    static block_msg factory_from_data(uint32_t version,
                                            const data_chunk &data, bool with_transaction_count = true);
-    static block_message factory_from_data(uint32_t version,
+    static block_msg factory_from_data(uint32_t version,
                                            std::istream &stream, bool with_transaction_count = true);
-    static block_message factory_from_data(uint32_t version,
+    static block_msg factory_from_data(uint32_t version,
                                            reader &source, bool with_transaction_count = true);
 
-    block_message();
-    block_message(const chain::block &other);
-    block_message(const block_message &other);
-    block_message(const chain::header &header,
+    block_msg();
+    block_msg(const chain::block &other);
+    block_msg(const block_msg &other);
+    block_msg(const chain::header &header,
                   const chain::transaction::list &transactions);
 
-    block_message(chain::block &&other);
-    block_message(block_message &&other);
-    block_message(chain::header &&header,
+    block_msg(chain::block &&other);
+    block_msg(block_msg &&other);
+    block_msg(chain::header &&header,
                   chain::transaction::list &&transactions);
 
     /// This class is move assignable but not copy assignable.
-    block_message &operator=(block_message &&other);
-    void operator=(const block_message &) = delete;
+    block_msg &operator=(block_msg &&other);
+    void operator=(const block_msg &) = delete;
 
     bool from_data(uint32_t version, const data_chunk &data,
                    bool with_transaction_count = true);
