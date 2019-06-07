@@ -151,8 +151,8 @@ message_type heading::type() const
         return message_type::address;
     if (command == block_transactions::command)
         return message_type::block_transactions;
-    if (command == block_message::command)
-        return message_type::block_message;
+    if (command == block_msg::command)
+        return message_type::block_msg;
     if (command == compact_block::command)
         return message_type::compact_block;
     if (command == filter_add::command)
