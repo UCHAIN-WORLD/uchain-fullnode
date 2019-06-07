@@ -75,7 +75,7 @@ class BCS_API notification_worker
   private:
     typedef chain::point::indexes index_list;
     typedef std::shared_ptr<uint8_t> sequence_ptr;
-    typedef bc::message::block_message::ptr_list block_list;
+    typedef bc::message::block_msg::ptr_list block_list;
 
     typedef notifier<address_key, const code &,
                      const bc::wallet::payment_address &, int32_t, const hash_digest &,
