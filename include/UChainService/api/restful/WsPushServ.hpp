@@ -72,7 +72,7 @@ class WsEvent : public std::enable_shared_from_this<WsEvent>
 class WsPushServ : public MgServer
 {
     typedef bc::chain::point::indexes index_list;
-    typedef bc::message::block_message::ptr_list block_list;
+    typedef bc::message::block_msg::ptr_list block_list;
     typedef MgServer base;
 
   public:

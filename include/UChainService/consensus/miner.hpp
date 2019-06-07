@@ -59,8 +59,8 @@ extern vector<uint64_t> lock_heights;
 class miner
 {
   public:
-    typedef message::block_message block;
-    typedef std::shared_ptr<message::block_message> block_ptr;
+    typedef message::block_msg block;
+    typedef std::shared_ptr<message::block_msg> block_ptr;
     typedef chain::header header;
     typedef chain::transaction transaction;
     typedef message::transaction_message::ptr transaction_ptr;

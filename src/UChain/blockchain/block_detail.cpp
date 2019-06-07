@@ -46,7 +46,7 @@ block_detail::block_detail(block_ptr actual_block)
 
 // Hand off ownership of a block to this wrapper.
 block_detail::block_detail(chain::block &&actual_block)
-    : block_detail(std::make_shared<block_message>(actual_block))
+    : block_detail(std::make_shared<block_msg>(actual_block))
 {
 }
 
