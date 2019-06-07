@@ -110,7 +110,7 @@ class BCN_API p2p_node
     virtual session_block_sync::ptr attach_block_sync_session();
 
   private:
-    typedef message::block_message::ptr_list block_ptr_list;
+    typedef message::block_msg::ptr_list block_ptr_list;
 
     bool handle_reorganized(const code &ec, size_t fork_point,
                             const block_ptr_list &incoming, const block_ptr_list &outgoing);
