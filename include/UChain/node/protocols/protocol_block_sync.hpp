@@ -49,7 +49,7 @@ class BCN_API protocol_block_sync
     virtual void start(event_handler handler);
 
   private:
-    typedef message::block_message::ptr block_ptr;
+    typedef message::block_msg::ptr block_ptr;
 
     void send_get_blocks(event_handler complete, bool reset);
     void handle_send(const code &ec, event_handler complete);

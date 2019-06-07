@@ -54,13 +54,13 @@ class BCN_API protocol_block_out
 
   private:
     // Local type aliases.
-    typedef message::block_message::ptr block_ptr;
+    typedef message::block_msg::ptr block_ptr;
     typedef message::get_data::ptr get_data_ptr;
     typedef message::get_blocks::ptr get_blocks_ptr;
     typedef message::get_headers::ptr get_headers_ptr;
     typedef message::send_headers::ptr send_headers_ptr;
     typedef message::merkle_block::ptr merkle_block_ptr;
-    typedef message::block_message::ptr_list block_ptr_list;
+    typedef message::block_msg::ptr_list block_ptr_list;
     typedef chain::header::list header_list;
 
     void send_block(const code &ec, chain::block::ptr block,

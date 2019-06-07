@@ -52,11 +52,11 @@ class BCN_API protocol_block_in
   private:
     // Local type aliases.
     typedef message::get_data::ptr get_data_ptr;
-    typedef message::block_message::ptr block_ptr;
+    typedef message::block_msg::ptr block_ptr;
     typedef message::headers::ptr headers_ptr;
     typedef message::inventory::ptr inventory_ptr;
     typedef message::not_found::ptr not_found_ptr;
-    typedef message::block_message::ptr_list block_ptr_list;
+    typedef message::block_msg::ptr_list block_ptr_list;
 
     void get_block_inventory(const code &ec);
     void send_get_blocks(const hash_digest &stop_hash);
