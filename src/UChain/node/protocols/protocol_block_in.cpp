@@ -67,7 +67,7 @@ protocol_block_in::ptr protocol_block_in::do_subscribe()
     SUBSCRIBE2(not_found, handle_receive_not_found, _1, _2);
 
     SUBSCRIBE2(inventory, handle_receive_inventory, _1, _2);
-    SUBSCRIBE2(block_message, handle_receive_block, _1, _2);
+    SUBSCRIBE2(block_msg, handle_receive_block, _1, _2);
     protocol_timer::start(get_blocks_interval, BIND1(get_block_inventory, _1));
     return std::dynamic_pointer_cast<protocol_block_in>(protocol::shared_from_this());
 }
