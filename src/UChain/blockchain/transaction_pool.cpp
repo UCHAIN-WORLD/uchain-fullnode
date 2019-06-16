@@ -27,7 +27,7 @@
 #include <UChain/coin.hpp>
 #include <UChain/blockchain/block_chain.hpp>
 #include <UChain/blockchain/settings.hpp>
-#include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/blockchain/validate_tx_engine.hpp>
 
 namespace libbitcoin
 {
@@ -110,7 +110,7 @@ void transaction_pool::do_validate(transaction_ptr tx,
         return;
     }
 
-    const auto validate = std::make_shared<validate_transaction>(
+    const auto validate = std::make_shared<validate_tx_engine>(
         blockchain_, *tx, *this, dispatch_);
 
     validate->start(
