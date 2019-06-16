@@ -34,7 +34,7 @@
 #include <UChain/coin/wallet/ec_public.hpp>
 #include <UChain/coin/constants.hpp>
 #include <UChain/blockchain/validate_block.hpp>
-#include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/blockchain/validate_tx_engine.hpp>
 #include <UChain/coin/utility/time.hpp>
 #define LOG_HEADER "consensus"
 using namespace std;
@@ -162,7 +162,7 @@ bool miner::get_transaction(std::vector<transaction_ptr> &transactions,
             uint64_t fee = total_input_value - total_output_value;
 
             // check fees
-            if (fee < min_tx_fee || !blockchain::validate_transaction::check_special_fees(setting_.use_testnet_rules, tx, fee))
+            if (fee < min_tx_fee || !blockchain::validate_tx_engine::check_special_fees(setting_.use_testnet_rules, tx, fee))
             {
                 i = transactions.erase(i);
                 // delete it from pool if not enough fee

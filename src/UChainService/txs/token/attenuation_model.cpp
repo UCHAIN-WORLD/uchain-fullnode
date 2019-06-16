@@ -21,7 +21,7 @@
 #include <UChainService/txs/token/attenuation_model.hpp>
 #include <UChain/coin/utility/string.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
-#include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/blockchain/validate_tx_engine.hpp>
 #include <unordered_map>
 #include <memory>
 
@@ -994,7 +994,7 @@ bool attenuation_model::validate_model_param(const data_chunk &param, uint64_t t
     return true;
 }
 
-code attenuation_model::check_model_param(const blockchain::validate_transaction &validate_tx)
+code attenuation_model::check_model_param(const blockchain::validate_tx_engine &validate_tx)
 {
     const transaction &tx = validate_tx.get_tx();
     const blockchain::block_chain_impl &chain = validate_tx.get_blockchain();

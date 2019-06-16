@@ -283,7 +283,7 @@ std::string output::to_string(uint32_t flags) const
     return ss.str();
 }
 
-uint64_t output::get_token_amount() const // for validate_transaction.cpp to calculate token transfer amount
+uint64_t output::get_token_amount() const // for validate_tx_engine.cpp to calculate token transfer amount
 {
     if (attach_data.get_type() == UC_TOKEN_TYPE)
     {
@@ -499,7 +499,7 @@ bool output::is_message() const
     return (attach_data.get_type() == MESSAGE_TYPE);
 }
 
-std::string output::get_token_symbol() const // for validate_transaction.cpp to calculate token transfer amount
+std::string output::get_token_symbol() const // for validate_tx_engine.cpp to calculate token transfer amount
 {
     if (is_token())
     {
@@ -528,7 +528,7 @@ std::string output::get_token_symbol() const // for validate_transaction.cpp to 
     return std::string("");
 }
 
-std::string output::get_token_issuer() const // for validate_transaction.cpp to calculate token transfer amount
+std::string output::get_token_issuer() const // for validate_tx_engine.cpp to calculate token transfer amount
 {
     if (is_token())
     {
@@ -546,7 +546,7 @@ std::string output::get_token_issuer() const // for validate_transaction.cpp to 
     return std::string("");
 }
 
-std::string output::get_token_address() const // for validate_transaction.cpp to verify token address
+std::string output::get_token_address() const // for validate_tx_engine.cpp to verify token address
 {
     if (is_token())
     {
@@ -636,7 +636,7 @@ bool output::is_uid_register() const
     return false;
 }
 
-std::string output::get_uid_symbol() const // for validate_transaction.cpp to calculate uid transfer amount
+std::string output::get_uid_symbol() const // for validate_tx_engine.cpp to calculate uid transfer amount
 {
     if (attach_data.get_type() == UID_TYPE)
     {
@@ -647,7 +647,7 @@ std::string output::get_uid_symbol() const // for validate_transaction.cpp to ca
     return std::string("");
 }
 
-std::string output::get_uid_address() const // for validate_transaction.cpp to calculate uid transfer amount
+std::string output::get_uid_address() const // for validate_tx_engine.cpp to calculate uid transfer amount
 {
     if (attach_data.get_type() == UID_TYPE)
     {

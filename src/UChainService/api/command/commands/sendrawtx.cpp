@@ -49,7 +49,7 @@ console_result sendrawtx::invoke(Json::Value &jv_output,
         throw tx_validate_exception{"no enough transaction fee"};
     base_transfer_common::check_fee_in_valid_range(inputs_ucn_val - outputs_ucn_val);
 
-    if (blockchain.validate_transaction(tx_))
+    if (blockchain.validate_tx_engine(tx_))
         throw tx_validate_exception{"validate transaction failure"};
 
     if (blockchain.broadcast_transaction(tx_))
