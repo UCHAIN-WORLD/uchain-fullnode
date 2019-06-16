@@ -325,7 +325,7 @@ void block_chain_impl::stop_write()
 }
 
 // This call is sequential, but we are preserving the callback model for now.
-void block_chain_impl::store(message::block_message::ptr block,
+void block_chain_impl::store(message::block_msg::ptr block,
                              block_store_handler handler)
 {
     if (stopped())
@@ -352,7 +352,7 @@ void block_chain_impl::store(message::block_message::ptr block,
 }
 
 // This processes the block through the organizer.
-void block_chain_impl::do_store(message::block_message::ptr block,
+void block_chain_impl::do_store(message::block_msg::ptr block,
                                 block_store_handler handler)
 {
     start_write();
