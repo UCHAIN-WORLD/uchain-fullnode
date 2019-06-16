@@ -83,7 +83,7 @@ if ./uc-cli showblockheader |grep "message"; then
 if ./uc-cli showheaderext 324904 |grep "message"; then
           alert
       fi	  
-if ./uc-cli showmemorypool |grep "message"; then
+if ./uc-cli showtxpool |grep "message"; then
       alert
     fi 
 if ./uc-cli showtx 627e89bab348941810412ca966bd89959c6b2893e7d88385cc7204848c33a43a |grep "message"; then
