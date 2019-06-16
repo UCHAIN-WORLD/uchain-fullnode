@@ -143,7 +143,7 @@ class BCB_API transaction_pool
 
   private:
     // Unsafe methods limited to friend caller.
-    friend class validate_transaction;
+    friend class validate_tx_engine;
 
     // These methods are NOT thread safe.
     bool is_in_pool(const hash_digest &tx_hash) const;
