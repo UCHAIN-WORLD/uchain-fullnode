@@ -178,7 +178,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                     {
                         log::debug(LOG_BLOCKCHAIN)
                             << "check_symbol_repeat asset uid: " + attach_uid
-                            << " already exists in memorypool!";
+                            << " already exists in txpool!";
                         return false;
                     }
 
@@ -204,7 +204,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                 {
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_symbol_repeat token " + output.get_token_symbol()
-                        << " already exists in memorypool!"
+                        << " already exists in txpool!"
                         << " " << tx->to_string(1);
                     return error::token_exist;
                 }
@@ -218,7 +218,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_symbol_repeat cert " + output.get_token_cert_symbol()
                         << " with type " << output.get_token_cert_type()
-                        << " already exists in memorypool!"
+                        << " already exists in txpool!"
                         << " " << tx->to_string(1);
                     return error::token_cert_exist;
                 }
@@ -230,7 +230,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                 {
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_symbol_repeat candidate " + output.get_token_symbol()
-                        << " already exists in memorypool!"
+                        << " already exists in txpool!"
                         << " " << tx->to_string(1);
                     return error::candidate_exist;
                 }
@@ -243,7 +243,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                 {
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_symbol_repeat uid " + uidsymbol
-                        << " already exists in memorypool!"
+                        << " already exists in txpool!"
                         << " " << tx->to_string(1);
                     return error::uid_exist;
                 }
@@ -253,7 +253,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                 {
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_symbol_repeat uid address " + output.get_uid_address()
-                        << " already has uid on it in memorypool!"
+                        << " already has uid on it in txpool!"
                         << " " << tx->to_string(1);
                     return error::address_registered_uid;
                 }
@@ -262,7 +262,7 @@ code transaction_pool::check_symbol_repeat(transaction_ptr tx)
                 {
                     log::debug(LOG_BLOCKCHAIN)
                         << "check_symbol_repeat asset uid: " + uidsymbol
-                        << " already transfer in memorypool!"
+                        << " already transfer in txpool!"
                         << " " << tx->to_string(1);
                     return error::uid_exist;
                 }
