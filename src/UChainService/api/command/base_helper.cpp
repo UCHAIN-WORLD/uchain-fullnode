@@ -30,7 +30,7 @@ namespace explorer
 namespace commands
 {
 
-using bc::blockchain::validate_transaction;
+using bc::blockchain::validate_tx_engine;
 using bc::chain::blockchain_message;
 
 utxo_attach_type get_utxo_attach_type(const chain::output &output_)
@@ -1054,7 +1054,7 @@ void base_transfer_common::check_model_param_initial(std::string &param, uint64_
 {
     if (!param.empty())
     {
-        if (!validate_transaction::is_uid_feature_activated(blockchain_))
+        if (!validate_tx_engine::is_uid_feature_activated(blockchain_))
         {
             throw token_attenuation_model_exception(
                 "attenuation model should be supported after uid feature is activated.");
@@ -1734,7 +1734,7 @@ void base_transfer_common::sign_tx_inputs()
 
 void base_transfer_common::send_tx()
 {
-    if (blockchain_.validate_transaction(tx_))
+    if (blockchain_.validate_tx_engine(tx_))
     {
 #ifdef UC_DEBUG
         throw tx_validate_exception{"validate transaction failure. " + tx_.to_string(1)};
@@ -1748,7 +1748,7 @@ void base_transfer_common::send_tx()
 void base_transfer_common::populate_tx_header()
 {
     tx_.locktime = 0;
-    if (validate_transaction::is_uid_feature_activated(blockchain_))
+    if (validate_tx_engine::is_uid_feature_activated(blockchain_))
     {
         tx_.version = transaction_version::check_uid_feature;
     }

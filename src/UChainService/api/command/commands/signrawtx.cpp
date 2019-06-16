@@ -105,7 +105,7 @@ console_result signrawtx::invoke(Json::Value &jv_output,
     }
 
     // get raw tx
-    if (blockchain.validate_transaction(tx_))
+    if (blockchain.validate_tx_engine(tx_))
     {
         throw tx_validate_exception{"validate transaction failure"};
     }

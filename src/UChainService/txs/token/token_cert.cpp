@@ -24,7 +24,7 @@
 #include <UChain/coin/utility/istream_reader.hpp>
 #include <UChain/coin/utility/ostream_writer.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
-#include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/blockchain/validate_tx_engine.hpp>
 
 namespace libbitcoin
 {

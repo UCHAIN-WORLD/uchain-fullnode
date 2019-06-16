@@ -203,7 +203,7 @@ console_result signmultisigtx::invoke(
                 distinguished.pop_back();
 
                 ec_signature signature;
-                // from validate_transaction.cpp handle_previous_tx
+                // from validate_tx_engine.cpp handle_previous_tx
                 auto strict = ((script_context::all_enabled & script_context::bip66_enabled) != 0);
                 if (!parse_signature(signature, distinguished, strict))
                 {
@@ -251,7 +251,7 @@ console_result signmultisigtx::invoke(
     {
         log::trace("multisig") << "validate and broadcast multisig transaction." << tx_.to_string(1);
 
-        if (blockchain.validate_transaction(tx_))
+        if (blockchain.validate_tx_engine(tx_))
         {
             throw tx_validate_exception{"validate transaction failure"};
         }
