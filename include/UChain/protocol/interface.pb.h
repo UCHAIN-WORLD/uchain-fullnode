@@ -1917,14 +1917,14 @@ public:
   inline ::libbitcoin::protocol::tx *release_post_transaction();
   inline void set_allocated_post_transaction(::libbitcoin::protocol::tx *post_transaction);
 
-  // optional .libbitcoin.protocol.tx validate_transaction = 5;
-  inline bool has_validate_transaction() const;
-  inline void clear_validate_transaction();
+  // optional .libbitcoin.protocol.tx validate_tx_engine = 5;
+  inline bool has_validate_tx_engine() const;
+  inline void clear_validate_tx_engine();
   static const int kValidateTransactionFieldNumber = 5;
-  inline const ::libbitcoin::protocol::tx &validate_transaction() const;
-  inline ::libbitcoin::protocol::tx *mutable_validate_transaction();
-  inline ::libbitcoin::protocol::tx *release_validate_transaction();
-  inline void set_allocated_validate_transaction(::libbitcoin::protocol::tx *validate_transaction);
+  inline const ::libbitcoin::protocol::tx &validate_tx_engine() const;
+  inline ::libbitcoin::protocol::tx *mutable_validate_tx_engine();
+  inline ::libbitcoin::protocol::tx *release_validate_tx_engine();
+  inline void set_allocated_validate_tx_engine(::libbitcoin::protocol::tx *validate_tx_engine);
 
   // optional .libbitcoin.protocol.block post_block = 6;
   inline bool has_post_block() const;
@@ -1953,7 +1953,7 @@ private:
   inline void set_has_get_block_headers();
   inline void set_has_get_transactions();
   inline void set_has_post_transaction();
-  inline void set_has_validate_transaction();
+  inline void set_has_validate_tx_engine();
   inline void set_has_post_block();
   inline void set_has_validate_block();
 
@@ -1972,7 +1972,7 @@ private:
     ::libbitcoin::protocol::block_headers_request *get_block_headers_;
     ::libbitcoin::protocol::transactions_request *get_transactions_;
     ::libbitcoin::protocol::tx *post_transaction_;
-    ::libbitcoin::protocol::tx *validate_transaction_;
+    ::libbitcoin::protocol::tx *validate_tx_engine_;
     ::libbitcoin::protocol::block *post_block_;
     ::libbitcoin::protocol::block *validate_block_;
   } request_type_;
@@ -2349,12 +2349,12 @@ public:
   inline bool post_transaction_succeeded() const;
   inline void set_post_transaction_succeeded(bool value);
 
-  // optional bool validate_transaction_succeeded = 6;
-  inline bool has_validate_transaction_succeeded() const;
-  inline void clear_validate_transaction_succeeded();
+  // optional bool validate_tx_engine_succeeded = 6;
+  inline bool has_validate_tx_engine_succeeded() const;
+  inline void clear_validate_tx_engine_succeeded();
   static const int kValidateTransactionSucceededFieldNumber = 6;
-  inline bool validate_transaction_succeeded() const;
-  inline void set_validate_transaction_succeeded(bool value);
+  inline bool validate_tx_engine_succeeded() const;
+  inline void set_validate_tx_engine_succeeded(bool value);
 
   // optional bool post_block_succeeded = 7;
   inline bool has_post_block_succeeded() const;
@@ -2381,7 +2381,7 @@ private:
   inline void set_has_get_block_headers_response();
   inline void set_has_get_transactions_response();
   inline void set_has_post_transaction_succeeded();
-  inline void set_has_validate_transaction_succeeded();
+  inline void set_has_validate_tx_engine_succeeded();
   inline void set_has_post_block_succeeded();
   inline void set_has_validate_block_succeeded();
 
@@ -2401,7 +2401,7 @@ private:
     ::libbitcoin::protocol::response_block_headers *get_block_headers_response_;
     ::libbitcoin::protocol::response_transactions *get_transactions_response_;
     bool post_transaction_succeeded_;
-    bool validate_transaction_succeeded_;
+    bool validate_tx_engine_succeeded_;
     bool post_block_succeeded_;
     bool validate_block_succeeded_;
   } response_type_;
@@ -5076,45 +5076,45 @@ inline void request::set_allocated_post_transaction(::libbitcoin::protocol::tx *
   }
 }
 
-// optional .libbitcoin.protocol.tx validate_transaction = 5;
-inline bool request::has_validate_transaction() const
+// optional .libbitcoin.protocol.tx validate_tx_engine = 5;
+inline bool request::has_validate_tx_engine() const
 {
   return request_type_case() == kValidateTransaction;
 }
-inline void request::set_has_validate_transaction()
+inline void request::set_has_validate_tx_engine()
 {
   _oneof_case_[0] = kValidateTransaction;
 }
-inline void request::clear_validate_transaction()
+inline void request::clear_validate_tx_engine()
 {
-  if (has_validate_transaction())
+  if (has_validate_tx_engine())
   {
-    delete request_type_.validate_transaction_;
+    delete request_type_.validate_tx_engine_;
     clear_has_request_type();
   }
 }
-inline const ::libbitcoin::protocol::tx &request::validate_transaction() const
+inline const ::libbitcoin::protocol::tx &request::validate_tx_engine() const
 {
-  return has_validate_transaction() ? *request_type_.validate_transaction_
+  return has_validate_tx_engine() ? *request_type_.validate_tx_engine_
                                     : ::libbitcoin::protocol::tx::default_instance();
 }
-inline ::libbitcoin::protocol::tx *request::mutable_validate_transaction()
+inline ::libbitcoin::protocol::tx *request::mutable_validate_tx_engine()
 {
-  if (!has_validate_transaction())
+  if (!has_validate_tx_engine())
   {
     clear_request_type();
-    set_has_validate_transaction();
-    request_type_.validate_transaction_ = new ::libbitcoin::protocol::tx;
+    set_has_validate_tx_engine();
+    request_type_.validate_tx_engine_ = new ::libbitcoin::protocol::tx;
   }
-  return request_type_.validate_transaction_;
+  return request_type_.validate_tx_engine_;
 }
-inline ::libbitcoin::protocol::tx *request::release_validate_transaction()
+inline ::libbitcoin::protocol::tx *request::release_validate_tx_engine()
 {
-  if (has_validate_transaction())
+  if (has_validate_tx_engine())
   {
     clear_has_request_type();
-    ::libbitcoin::protocol::tx *temp = request_type_.validate_transaction_;
-    request_type_.validate_transaction_ = NULL;
+    ::libbitcoin::protocol::tx *temp = request_type_.validate_tx_engine_;
+    request_type_.validate_tx_engine_ = NULL;
     return temp;
   }
   else
@@ -5122,13 +5122,13 @@ inline ::libbitcoin::protocol::tx *request::release_validate_transaction()
     return NULL;
   }
 }
-inline void request::set_allocated_validate_transaction(::libbitcoin::protocol::tx *validate_transaction)
+inline void request::set_allocated_validate_tx_engine(::libbitcoin::protocol::tx *validate_tx_engine)
 {
   clear_request_type();
-  if (validate_transaction)
+  if (validate_tx_engine)
   {
-    set_has_validate_transaction();
-    request_type_.validate_transaction_ = validate_transaction;
+    set_has_validate_tx_engine();
+    request_type_.validate_tx_engine_ = validate_tx_engine;
   }
 }
 
@@ -5839,39 +5839,39 @@ inline void response::set_post_transaction_succeeded(bool value)
   response_type_.post_transaction_succeeded_ = value;
 }
 
-// optional bool validate_transaction_succeeded = 6;
-inline bool response::has_validate_transaction_succeeded() const
+// optional bool validate_tx_engine_succeeded = 6;
+inline bool response::has_validate_tx_engine_succeeded() const
 {
   return response_type_case() == kValidateTransactionSucceeded;
 }
-inline void response::set_has_validate_transaction_succeeded()
+inline void response::set_has_validate_tx_engine_succeeded()
 {
   _oneof_case_[0] = kValidateTransactionSucceeded;
 }
-inline void response::clear_validate_transaction_succeeded()
+inline void response::clear_validate_tx_engine_succeeded()
 {
-  if (has_validate_transaction_succeeded())
+  if (has_validate_tx_engine_succeeded())
   {
-    response_type_.validate_transaction_succeeded_ = false;
+    response_type_.validate_tx_engine_succeeded_ = false;
     clear_has_response_type();
   }
 }
-inline bool response::validate_transaction_succeeded() const
+inline bool response::validate_tx_engine_succeeded() const
 {
-  if (has_validate_transaction_succeeded())
+  if (has_validate_tx_engine_succeeded())
   {
-    return response_type_.validate_transaction_succeeded_;
+    return response_type_.validate_tx_engine_succeeded_;
   }
   return false;
 }
-inline void response::set_validate_transaction_succeeded(bool value)
+inline void response::set_validate_tx_engine_succeeded(bool value)
 {
-  if (!has_validate_transaction_succeeded())
+  if (!has_validate_tx_engine_succeeded())
   {
     clear_response_type();
-    set_has_validate_transaction_succeeded();
+    set_has_validate_tx_engine_succeeded();
   }
-  response_type_.validate_transaction_succeeded_ = value;
+  response_type_.validate_tx_engine_succeeded_ = value;
 }
 
 // optional bool post_block_succeeded = 7;

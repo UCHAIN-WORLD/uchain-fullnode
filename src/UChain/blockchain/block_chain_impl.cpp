@@ -38,7 +38,7 @@
 #include <UChain/blockchain/organizer.hpp>
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/blockchain/transaction_pool.hpp>
-#include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/blockchain/validate_tx_engine.hpp>
 #include <UChain/blockchain/wallet_security_strategy.hpp>
 namespace libbitcoin
 {
@@ -325,7 +325,7 @@ void block_chain_impl::stop_write()
 }
 
 // This call is sequential, but we are preserving the callback model for now.
-void block_chain_impl::store(message::block_message::ptr block,
+void block_chain_impl::store(message::block_msg::ptr block,
                              block_store_handler handler)
 {
     if (stopped())
@@ -352,7 +352,7 @@ void block_chain_impl::store(message::block_message::ptr block,
 }
 
 // This processes the block through the organizer.
-void block_chain_impl::do_store(message::block_message::ptr block,
+void block_chain_impl::do_store(message::block_msg::ptr block,
                                 block_store_handler handler)
 {
     start_write();
@@ -2426,13 +2426,13 @@ bool block_chain_impl::get_history_callback(const payment_address &address,
     return ret;
 }
 
-code block_chain_impl::validate_transaction(const chain::transaction &tx)
+code block_chain_impl::validate_tx_engine(const chain::transaction &tx)
 {
     code ret = error::success;
     if (stopped())
     {
         //handler(error::service_stopped, {});
-        log::debug("validate_transaction") << "ec=error::service_stopped";
+        log::debug("validate_tx_engine") << "ec=error::service_stopped";
         ret = error::service_stopped;
         return ret;
     }
@@ -2443,8 +2443,8 @@ code block_chain_impl::validate_transaction(const chain::transaction &tx)
 
     mutex.lock();
     auto f = [&ret, &mutex](const code &ec, transaction_message::ptr tx_, chain::point::indexes idx_vec) -> void {
-        log::debug("validate_transaction") << "ec=" << ec << " idx_vec=" << idx_vec.size();
-        log::debug("validate_transaction") << "ec.message=" << ec.message();
+        log::debug("validate_tx_engine") << "ec=" << ec << " idx_vec=" << idx_vec.size();
+        log::debug("validate_tx_engine") << "ec.message=" << ec.message();
         //if((error::success == ec) && idx_vec.empty())
         ret = ec;
         mutex.unlock();

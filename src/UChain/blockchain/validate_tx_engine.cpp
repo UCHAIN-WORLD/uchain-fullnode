@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/blockchain/validate_tx_engine.hpp>
 #include <UChain/coin/chain/script/operation.hpp>
 
 #include <cstddef>
@@ -48,7 +48,7 @@ using namespace std::placeholders;
 // Max transaction size is set to max block size (1,000,000).
 static constexpr uint32_t max_transaction_size = 1000000;
 
-validate_transaction::validate_transaction(block_chain &chain,
+validate_tx_engine::validate_tx_engine(block_chain &chain,
                                            const chain::transaction &tx, const validate_block &validate_block)
     : blockchain_(static_cast<blockchain::block_chain_impl &>(chain)),
       tx_(std::make_shared<message::transaction_message>(tx)),
@@ -59,7 +59,7 @@ validate_transaction::validate_transaction(block_chain &chain,
 {
 }
 
-validate_transaction::validate_transaction(block_chain &chain,
+validate_tx_engine::validate_tx_engine(block_chain &chain,
                                            const chain::transaction &tx, const transaction_pool &pool, dispatcher &dispatch)
     : blockchain_(static_cast<blockchain::block_chain_impl &>(chain)),
       tx_(std::make_shared<message::transaction_message>(tx)),
@@ -70,7 +70,7 @@ validate_transaction::validate_transaction(block_chain &chain,
 {
 }
 
-void validate_transaction::start(validate_handler handler)
+void validate_tx_engine::start(validate_handler handler)
 {
     BITCOIN_ASSERT(tx_ && pool_ && dispatch_);
 
@@ -95,11 +95,11 @@ void validate_transaction::start(validate_handler handler)
     // Check for duplicates in the blockchain.
     blockchain_.fetch_transaction(tx_hash_,
                                   dispatch_->unordered_delegate(
-                                      &validate_transaction::handle_duplicate_check,
+                                      &validate_tx_engine::handle_duplicate_check,
                                       shared_from_this(), _1));
 }
 
-code validate_transaction::basic_checks() const
+code validate_tx_engine::basic_checks() const
 {
     const auto ec = check_transaction();
 
@@ -123,12 +123,12 @@ code validate_transaction::basic_checks() const
     return error::success;
 }
 
-bool validate_transaction::is_standard() const
+bool validate_tx_engine::is_standard() const
 {
     return true;
 }
 
-void validate_transaction::handle_duplicate_check(
+void validate_tx_engine::handle_duplicate_check(
     const code &ec)
 {
     if (ec != (code)error::not_found)
@@ -149,11 +149,11 @@ void validate_transaction::handle_duplicate_check(
 
     // Check inputs, we already know it is not a coinbase tx.
     blockchain_.fetch_last_height(
-        dispatch_->unordered_delegate(&validate_transaction::set_last_height,
+        dispatch_->unordered_delegate(&validate_tx_engine::set_last_height,
                                       shared_from_this(), _1, _2));
 }
 
-void validate_transaction::reset(size_t last_height)
+void validate_tx_engine::reset(size_t last_height)
 {
     // Used for checking coinbase maturity
     last_block_height_ = last_height;
@@ -165,7 +165,7 @@ void validate_transaction::reset(size_t last_height)
     old_cert_symbol_in_ = "";
 }
 
-void validate_transaction::set_last_height(const code &ec,
+void validate_tx_engine::set_last_height(const code &ec,
                                            size_t last_height)
 {
     if (ec)
@@ -181,7 +181,7 @@ void validate_transaction::set_last_height(const code &ec,
         next_previous_transaction();
 }
 
-void validate_transaction::next_previous_transaction()
+void validate_tx_engine::next_previous_transaction()
 {
     BITCOIN_ASSERT(current_input_ < tx_->inputs.size());
 
@@ -190,11 +190,11 @@ void validate_transaction::next_previous_transaction()
     blockchain_.fetch_transaction_index(
         tx_->inputs[current_input_].previous_output.hash,
         dispatch_->unordered_delegate(
-            &validate_transaction::previous_tx_index,
+            &validate_tx_engine::previous_tx_index,
             shared_from_this(), _1, _2));
 }
 
-void validate_transaction::previous_tx_index(const code &ec,
+void validate_tx_engine::previous_tx_index(const code &ec,
                                              size_t parent_height)
 {
     if (ec)
@@ -208,11 +208,11 @@ void validate_transaction::previous_tx_index(const code &ec,
 
     // Now fetch actual transaction body
     blockchain_.fetch_transaction(prev_tx_hash,
-                                  dispatch_->unordered_delegate(&validate_transaction::handle_previous_tx,
+                                  dispatch_->unordered_delegate(&validate_tx_engine::handle_previous_tx,
                                                                 shared_from_this(), _1, _2, parent_height));
 }
 
-bool validate_transaction::get_previous_tx(chain::transaction &prev_tx,
+bool validate_tx_engine::get_previous_tx(chain::transaction &prev_tx,
                                            uint64_t &prev_height, const chain::input &input) const
 {
     prev_height = 0;
@@ -240,7 +240,7 @@ bool validate_transaction::get_previous_tx(chain::transaction &prev_tx,
     return false; // failed
 }
 
-void validate_transaction::search_pool_previous_tx()
+void validate_tx_engine::search_pool_previous_tx()
 {
     transaction previous_tx;
     const auto &current_input = tx_->inputs[current_input_];
@@ -261,7 +261,7 @@ void validate_transaction::search_pool_previous_tx()
     unconfirmed_.push_back(current_input_);
 }
 
-void validate_transaction::handle_previous_tx(const code &ec,
+void validate_tx_engine::handle_previous_tx(const code &ec,
                                               const transaction &previous_tx, size_t parent_height)
 {
     if (ec)
@@ -290,11 +290,11 @@ void validate_transaction::handle_previous_tx(const code &ec,
 
     // Search for double spends...
     blockchain_.fetch_spend(tx_->inputs[current_input_].previous_output,
-                            dispatch_->unordered_delegate(&validate_transaction::check_double_spend,
+                            dispatch_->unordered_delegate(&validate_tx_engine::check_double_spend,
                                                           shared_from_this(), _1, _2));
 }
 
-void validate_transaction::check_double_spend(const code &ec,
+void validate_tx_engine::check_double_spend(const code &ec,
                                               const chain::input_point &)
 {
     if (ec != (code)error::unspent_output)
@@ -315,7 +315,7 @@ void validate_transaction::check_double_spend(const code &ec,
     check_fees();
 }
 
-void validate_transaction::check_fees() const
+void validate_tx_engine::check_fees() const
 {
     code ec = check_tx_connect_input();
     if (ec != error::success)
@@ -339,7 +339,7 @@ void validate_transaction::check_fees() const
     handle_validate_(error::success, tx_, unconfirmed_);
 }
 
-code validate_transaction::check_tx_connect_input() const
+code validate_tx_engine::check_tx_connect_input() const
 {
     uint64_t fee = 0;
 
@@ -389,7 +389,7 @@ code validate_transaction::check_tx_connect_input() const
     return error::success;
 }
 
-code validate_transaction::check_tx_connect_output() const
+code validate_tx_engine::check_tx_connect_output() const
 {
     uint64_t value = 0, quatity = 0, lock_height = 0;
 
@@ -429,7 +429,7 @@ static bool check_same(std::string &dest, const std::string &src)
     return true;
 }
 
-code validate_transaction::check_secondaryissue_transaction() const
+code validate_tx_engine::check_secondaryissue_transaction() const
 {
     const chain::transaction &tx = *tx_;
     blockchain::block_chain_impl &blockchain = blockchain_;
@@ -605,7 +605,7 @@ code validate_transaction::check_secondaryissue_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_token_issue_transaction() const
+code validate_tx_engine::check_token_issue_transaction() const
 {
     const chain::transaction &tx = *tx_;
     blockchain::block_chain_impl &chain = blockchain_;
@@ -785,7 +785,7 @@ code validate_transaction::check_token_issue_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_token_cert_transaction() const
+code validate_tx_engine::check_token_cert_transaction() const
 {
     const chain::transaction &tx = *tx_;
     blockchain::block_chain_impl &chain = blockchain_;
@@ -961,7 +961,7 @@ code validate_transaction::check_token_cert_transaction() const
     return error::success;
 }
 
-code validate_transaction::check_candidate_transaction() const
+code validate_tx_engine::check_candidate_transaction() const
 {
     const chain::transaction &tx = *tx_;
     blockchain::block_chain_impl &chain = blockchain_;
@@ -1092,7 +1092,7 @@ code validate_transaction::check_candidate_transaction() const
     return error::success;
 }
 
-bool validate_transaction::check_uid_exist(const std::string &uid) const
+bool validate_tx_engine::check_uid_exist(const std::string &uid) const
 {
     uint64_t height = blockchain_.get_uid_height(uid);
 
@@ -1110,7 +1110,7 @@ bool validate_transaction::check_uid_exist(const std::string &uid) const
     return height != max_uint64;
 }
 
-bool validate_transaction::check_token_exist(const std::string &symbol) const
+bool validate_tx_engine::check_token_exist(const std::string &symbol) const
 {
     uint64_t height = blockchain_.get_token_height(symbol);
 
@@ -1128,7 +1128,7 @@ bool validate_transaction::check_token_exist(const std::string &symbol) const
     return height != max_uint64;
 }
 
-bool validate_transaction::check_token_cert_exist(const std::string &cert, token_cert_type cert_type) const
+bool validate_tx_engine::check_token_cert_exist(const std::string &cert, token_cert_type cert_type) const
 {
     uint64_t height = blockchain_.get_token_cert_height(cert, cert_type);
 
@@ -1146,7 +1146,7 @@ bool validate_transaction::check_token_cert_exist(const std::string &cert, token
     return height != max_uint64;
 }
 
-bool validate_transaction::check_candidate_exist(const std::string &candidate) const
+bool validate_tx_engine::check_candidate_exist(const std::string &candidate) const
 {
     uint64_t height = blockchain_.get_candidate_height(candidate);
 
@@ -1164,7 +1164,7 @@ bool validate_transaction::check_candidate_exist(const std::string &candidate) c
     return height != max_uint64;
 }
 
-bool validate_transaction::check_address_registered_uid(const std::string &address) const
+bool validate_tx_engine::check_address_registered_uid(const std::string &address) const
 {
     uint64_t fork_index = validate_block_ ? validate_block_->get_fork_index() : max_uint64;
     auto uid_symbol = blockchain_.get_uid_from_address(address, fork_index);
@@ -1188,7 +1188,7 @@ bool validate_transaction::check_address_registered_uid(const std::string &addre
     return true;
 }
 
-code validate_transaction::check_uid_transaction() const
+code validate_tx_engine::check_uid_transaction() const
 {
     const chain::transaction &tx = *tx_;
     blockchain::block_chain_impl &chain = blockchain_;
@@ -1326,7 +1326,7 @@ code validate_transaction::check_uid_transaction() const
     return ret;
 }
 
-bool validate_transaction::connect_uid_input(const uid &info) const
+bool validate_tx_engine::connect_uid_input(const uid &info) const
 {
     const chain::transaction &tx = *tx_;
     blockchain::block_chain_impl &chain = blockchain_;
@@ -1376,7 +1376,7 @@ bool validate_transaction::connect_uid_input(const uid &info) const
     return (found_uid_info && found_address_info && info.get_status() == UID_TRANSFERABLE_TYPE) || (found_address_info && info.get_status() == UID_DETAIL_TYPE);
 }
 
-bool validate_transaction::is_uid_match_address_in_orphan_chain(const std::string &uid, const std::string &address) const
+bool validate_tx_engine::is_uid_match_address_in_orphan_chain(const std::string &uid, const std::string &address) const
 {
     if (validate_block_ && validate_block_->is_uid_match_address_in_orphan_chain(uid, address))
     {
@@ -1388,7 +1388,7 @@ bool validate_transaction::is_uid_match_address_in_orphan_chain(const std::strin
     return false;
 }
 
-bool validate_transaction::is_uid_in_orphan_chain(const std::string &uid) const
+bool validate_tx_engine::is_uid_in_orphan_chain(const std::string &uid) const
 {
     if (validate_block_ && validate_block_->is_uid_in_orphan_chain(uid))
     {
@@ -1399,7 +1399,7 @@ bool validate_transaction::is_uid_in_orphan_chain(const std::string &uid) const
     return false;
 }
 
-code validate_transaction::check_asset_to_uid(const output &output) const
+code validate_tx_engine::check_asset_to_uid(const output &output) const
 {
     auto touid = output.attach_data.get_to_uid();
     if (touid.empty())
@@ -1427,7 +1427,7 @@ code validate_transaction::check_asset_to_uid(const output &output) const
     return error::uid_address_not_match;
 }
 
-code validate_transaction::connect_asset_from_uid(const output &output) const
+code validate_tx_engine::connect_asset_from_uid(const output &output) const
 {
     auto from_uid = output.attach_data.get_from_uid();
     if (from_uid.empty())
@@ -1466,7 +1466,7 @@ code validate_transaction::connect_asset_from_uid(const output &output) const
     return error::uid_address_not_match;
 }
 
-code validate_transaction::check_transaction_connect_input(size_t last_height)
+code validate_tx_engine::check_transaction_connect_input(size_t last_height)
 {
     if (last_height == 0 || tx_->is_strict_coinbase())
     {
@@ -1498,7 +1498,7 @@ code validate_transaction::check_transaction_connect_input(size_t last_height)
     return check_tx_connect_input();
 }
 
-code validate_transaction::check_transaction() const
+code validate_tx_engine::check_transaction() const
 {
     code ret = error::success;
 
@@ -1543,7 +1543,7 @@ code validate_transaction::check_transaction() const
     return ret;
 }
 
-code validate_transaction::check_transaction_basic() const
+code validate_tx_engine::check_transaction_basic() const
 {
     const chain::transaction &tx = *tx_;
     blockchain::block_chain_impl &chain = blockchain_;
@@ -1703,7 +1703,7 @@ code validate_transaction::check_transaction_basic() const
 }
 
 // Validate script consensus conformance based on flags provided.
-bool validate_transaction::check_consensus(const script &prevout_script,
+bool validate_tx_engine::check_consensus(const script &prevout_script,
                                            const transaction &current_tx, size_t input_index, uint32_t flags)
 {
     BITCOIN_ASSERT(input_index <= max_uint32);
@@ -1754,7 +1754,7 @@ bool validate_transaction::check_consensus(const script &prevout_script,
     return valid;
 }
 
-bool validate_transaction::connect_input(const transaction &previous_tx, size_t parent_height)
+bool validate_tx_engine::connect_input(const transaction &previous_tx, size_t parent_height)
 {
     const auto &input = tx_->inputs[current_input_];
     const auto &previous_outpoint = input.previous_output;
@@ -1848,7 +1848,7 @@ bool validate_transaction::connect_input(const transaction &previous_tx, size_t 
     return value_in_ <= max_money();
 }
 
-bool validate_transaction::check_special_fees(bool is_testnet, const chain::transaction &tx, uint64_t fee)
+bool validate_tx_engine::check_special_fees(bool is_testnet, const chain::transaction &tx, uint64_t fee)
 {
     // check fee of issue token or register uid
     auto developer_community_address = bc::get_developer_community_address(is_testnet);
@@ -1934,7 +1934,7 @@ bool validate_transaction::check_special_fees(bool is_testnet, const chain::tran
     return true;
 }
 
-bool validate_transaction::tally_fees(blockchain::block_chain_impl &chain,
+bool validate_tx_engine::tally_fees(blockchain::block_chain_impl &chain,
                                       const transaction &tx, uint64_t value_in, uint64_t &total_fees)
 {
     const auto value_out = tx.total_output_value();
@@ -1961,7 +1961,7 @@ bool validate_transaction::tally_fees(blockchain::block_chain_impl &chain,
     return total_fees <= max_money();
 }
 
-bool validate_transaction::check_token_amount(const transaction &tx) const
+bool validate_tx_engine::check_token_amount(const transaction &tx) const
 {
     const auto token_amount_out = tx.total_output_transfer_amount();
     if (token_amount_in_ != token_amount_out) // token amount must be equal
@@ -1970,7 +1970,7 @@ bool validate_transaction::check_token_amount(const transaction &tx) const
     return true;
 }
 
-bool validate_transaction::check_token_symbol(const transaction &tx) const
+bool validate_tx_engine::check_token_symbol(const transaction &tx) const
 {
     for (const auto &output : tx.outputs)
     {
@@ -1994,7 +1994,7 @@ bool validate_transaction::check_token_symbol(const transaction &tx) const
     return true;
 }
 
-bool validate_transaction::check_token_certs(const transaction &tx) const
+bool validate_tx_engine::check_token_certs(const transaction &tx) const
 {
     bool is_cert_transfer = false;
     bool is_cert_issue = false;
@@ -2112,7 +2112,7 @@ bool validate_transaction::check_token_certs(const transaction &tx) const
     return true;
 }
 
-bool validate_transaction::check_candidate(const transaction &tx) const
+bool validate_tx_engine::check_candidate(const transaction &tx) const
 {
     size_t num_candidate = 0;
     for (const auto &output : tx.outputs)
@@ -2139,7 +2139,7 @@ bool validate_transaction::check_candidate(const transaction &tx) const
     return (num_candidate == 1);
 }
 
-bool validate_transaction::check_uid_symbol_match(const transaction &tx) const
+bool validate_tx_engine::check_uid_symbol_match(const transaction &tx) const
 {
     for (const auto &output : tx.outputs)
     {
@@ -2158,7 +2158,7 @@ bool validate_transaction::check_uid_symbol_match(const transaction &tx) const
     return true;
 }
 
-bool validate_transaction::is_uid_feature_activated(blockchain::block_chain_impl &chain)
+bool validate_tx_engine::is_uid_feature_activated(blockchain::block_chain_impl &chain)
 {
     /*if (chain.chain_settings().use_testnet_rules) {
         return true;

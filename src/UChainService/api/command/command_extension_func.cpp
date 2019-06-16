@@ -84,7 +84,7 @@
 #include <UChainService/api/command/commands/submitwork.hpp>
 #include <UChainService/api/command/commands/setminingwallet.hpp>
 #include <UChainService/api/command/commands/changepass.hpp>
-#include <UChainService/api/command/commands/showmemorypool.hpp>
+#include <UChainService/api/command/commands/showtxpool.hpp>
 #include <UChainService/api/command/commands/createmultisigtx.hpp>
 #include <UChainService/api/command/commands/createrawtx.hpp>
 #include <UChainService/api/command/commands/decoderawtx.hpp>
@@ -161,7 +161,7 @@ void broadcast_extension(const function<void(shared_ptr<command>)> func, std::os
     func(make_shared<showblockheader>());
     func(make_shared<showblockheaders>());
     func(make_shared<showheaderext>());
-    func(make_shared<showmemorypool>());
+    func(make_shared<showtxpool>());
     func(make_shared<showtx>());
     func(make_shared<showtxs>());
 
@@ -284,8 +284,8 @@ shared_ptr<command> find_extension(const string &symbol)
         return make_shared<showblockheaders>();
     if (symbol == showheaderext::symbol())
         return make_shared<showheaderext>();
-    if (symbol == showmemorypool::symbol())
-        return make_shared<showmemorypool>();
+    if (symbol == showtxpool::symbol())
+        return make_shared<showtxpool>();
     if (symbol == showtx::symbol() || symbol == "gettransaction")
         return make_shared<showtx>();
     if (symbol == "fetch-tx")

@@ -1,12 +1,12 @@
 /*
- * showmemorypool.hpp
+ * showtxpool.hpp
  *
  *  Created on: Jul 3, 2017
  *      Author: jiang
  */
 
-#ifndef INCLUDE_UChain_EXPLORER_EXTENSIONS_WALLET_showmemorypool_HPP_
-#define INCLUDE_UChain_EXPLORER_EXTENSIONS_WALLET_showmemorypool_HPP_
+#ifndef INCLUDE_UChain_EXPLORER_EXTENSIONS_WALLET_showtxpool_HPP_
+#define INCLUDE_UChain_EXPLORER_EXTENSIONS_WALLET_showtxpool_HPP_
 
 #include <UChain/explorer/define.hpp>
 #include <UChainService/api/command/command_extension.hpp>
@@ -20,12 +20,12 @@ namespace explorer
 namespace commands
 {
 
-/************************ showmemorypool *************************/
+/************************ showtxpool *************************/
 
-class showmemorypool : public command_extension
+class showtxpool : public command_extension
 {
   public:
-    static const char *symbol() { return "showmemorypool"; }
+    static const char *symbol() { return "showtxpool"; }
     const char *name() override { return symbol(); }
     bool category(int bs) override { return (ctgy_extension & bs) == bs; }
     const char *description() override { return "Returns all transactions in memory pool."; }
@@ -87,4 +87,4 @@ class showmemorypool : public command_extension
 } // namespace explorer
 } // namespace libbitcoin
 
-#endif /* INCLUDE_UChain_EXPLORER_EXTENSIONS_WALLET_showmemorypool_HPP_ */
+#endif /* INCLUDE_UChain_EXPLORER_EXTENSIONS_WALLET_showtxpool_HPP_ */

@@ -350,7 +350,7 @@ class BCB_API block_chain_impl
                               std::function<void(const code &, chain::history::list &)> handler);
     bool get_history(const bc::wallet::payment_address &address,
                      uint64_t limit, uint64_t from_height, history_compact::list &history);
-    code validate_transaction(const chain::transaction &tx);
+    code validate_tx_engine(const chain::transaction &tx);
     code broadcast_transaction(const chain::transaction &tx);
     bool get_tx_inputs_ucn_value(chain::transaction &tx, uint64_t &ucn_val);
     void safe_store_wallet(libbitcoin::chain::wallet &acc, const std::vector<std::shared_ptr<wallet_address>> &addresses);

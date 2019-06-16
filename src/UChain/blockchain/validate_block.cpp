@@ -29,7 +29,7 @@
 #include <vector>
 #include <UChain/coin.hpp>
 #include <UChain/blockchain/block.hpp>
-#include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/blockchain/validate_tx_engine.hpp>
 //#include <UChainService/consensus/miner/MinerAux.h>
 //#include <UChainService/consensus/libdevcore/BasicType.h>
 #include <UChainService/consensus/miner.hpp>
@@ -258,7 +258,7 @@ code validate_block::check_block(blockchain::block_chain_impl &chain) const
             ++coinbase_count;
         }*/
 
-        const auto validate_tx = std::make_shared<validate_transaction>(chain, tx, *this);
+        const auto validate_tx = std::make_shared<validate_tx_engine>(chain, tx, *this);
         auto ec = validate_tx->check_transaction();
         if (!ec)
         {
@@ -645,7 +645,7 @@ code validate_block::connect_block(hash_digest &err_tx, blockchain::block_chain_
 
         RETURN_IF_STOPPED();
 
-        if (!validate_transaction::tally_fees(chain, tx, value_in, fees))
+        if (!validate_tx_engine::tally_fees(chain, tx, value_in, fees))
         {
             err_tx = tx.hash();
             return error::fees_out_of_range;
@@ -794,7 +794,7 @@ bool validate_block::connect_input(size_t index_in_parent,
         }
     }
 
-    if (!validate_transaction::check_consensus(previous_tx_out.script,
+    if (!validate_tx_engine::check_consensus(previous_tx_out.script,
                                                current_tx, input_index, activations_))
     {
         log::warning(LOG_BLOCKCHAIN) << "Input script invalid consensus.";

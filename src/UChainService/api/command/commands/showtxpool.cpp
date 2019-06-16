@@ -19,7 +19,7 @@
  */
 
 #include <UChain/explorer/json_helper.hpp>
-#include <UChainService/api/command/commands/showmemorypool.hpp>
+#include <UChainService/api/command/commands/showtxpool.hpp>
 #include <UChainService/api/command/command_extension_func.hpp>
 #include <UChainService/api/command/command_assistant.hpp>
 #include <UChainService/api/command/base_helper.hpp>
@@ -33,9 +33,9 @@ namespace explorer
 namespace commands
 {
 
-/************************ showmemorypool *************************/
+/************************ showtxpool *************************/
 
-console_result showmemorypool::invoke(Json::Value &jv_output,
+console_result showtxpool::invoke(Json::Value &jv_output,
                                       libbitcoin::server::server_node &node)
 {
 

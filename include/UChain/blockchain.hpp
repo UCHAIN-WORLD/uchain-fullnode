@@ -34,7 +34,7 @@
 #include <UChain/blockchain/transaction_pool_index.hpp>
 #include <UChain/blockchain/validate_block.hpp>
 #include <UChain/blockchain/validate_block_impl.hpp>
-#include <UChain/blockchain/validate_transaction.hpp>
+#include <UChain/blockchain/validate_tx_engine.hpp>
 #include <UChain/blockchain/version.hpp>
 
 #endif
