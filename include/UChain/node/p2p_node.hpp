@@ -43,7 +43,7 @@ class BCN_API p2p_node
   public:
     typedef std::shared_ptr<p2p_node> ptr;
     typedef blockchain::organizer::reorganize_handler reorganize_handler;
-    typedef blockchain::transaction_pool::transaction_handler
+    typedef blockchain::tx_pool::transaction_handler
         transaction_handler;
 
     /// Construct the full node.
@@ -87,7 +87,7 @@ class BCN_API p2p_node
     virtual blockchain::block_chain_impl &chain_impl();
 
     /// Transaction pool interface.
-    virtual blockchain::transaction_pool &pool();
+    virtual blockchain::tx_pool &pool();
 
     // Subscriptions.
     // ------------------------------------------------------------------------
@@ -96,7 +96,7 @@ class BCN_API p2p_node
     virtual void subscribe_blockchain(reorganize_handler handler);
 
     /// Subscribe to transaction pool acceptance and stop events.
-    virtual void subscribe_transaction_pool(transaction_handler handler);
+    virtual void subscribe_tx_pool(transaction_handler handler);
 
   protected:
     /// Override to attach specialized p2p sessions.
