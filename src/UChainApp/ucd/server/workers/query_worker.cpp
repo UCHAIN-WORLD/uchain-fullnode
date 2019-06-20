@@ -27,7 +27,7 @@
 #include <UChainApp/ucd/interface/address.hpp>
 #include <UChainApp/ucd/interface/blockchain.hpp>
 #include <UChainApp/ucd/interface/protocol.hpp>
-#include <UChainApp/ucd/interface/transaction_pool.hpp>
+#include <UChainApp/ucd/interface/tx_pool.hpp>
 #include <UChainApp/ucd/messages/message.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
@@ -207,7 +207,7 @@ void query_worker::attach(const std::string &command,
 // protocol.fetch_stealth2 is new in v3.
 //-----------------------------------------------------------------------------
 // blockchain.broadcast_transaction is deprecated in v3 (deferred).
-// transaction_pool.broadcast (with radar) is new in v3 (deferred).
+// tx_pool.broadcast (with radar) is new in v3 (deferred).
 //=============================================================================
 // Interface class.method names must match protocol (do not change).
 void query_worker::attach_interface()
@@ -227,9 +227,9 @@ void query_worker::attach_interface()
     ATTACH(blockchain, fetch_spend, node_);
     ATTACH(blockchain, fetch_stealth, node_);
     ATTACH(blockchain, fetch_stealth2, node_);
-    ATTACH(transaction_pool, fetch_transaction, node_);
-    ATTACH(transaction_pool, validate, node_);
-    ////ATTACH(transaction_pool, broadcast, node_);
+    ATTACH(tx_pool, fetch_transaction, node_);
+    ATTACH(tx_pool, validate, node_);
+    ////ATTACH(tx_pool, broadcast, node_);
     ATTACH(protocol, broadcast_transaction, node_);
     ATTACH(protocol, total_connections, node_);
 }
