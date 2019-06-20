@@ -33,7 +33,7 @@
 #include <UChain/blockchain/organizer.hpp>
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
-#include <UChain/blockchain/transaction_pool.hpp>
+#include <UChain/blockchain/tx_pool.hpp>
 #include <UChain/coin/chain/header.hpp>
 #include <UChain/coin/chain/header.hpp>
 
@@ -68,7 +68,7 @@ class BCB_API block_chain_impl
     // ------------------------------------------------------------------------
 
     // Get a reference to the transaction pool.
-    transaction_pool &pool();
+    tx_pool &pool();
 
     // Get a reference to the blockchain configuration settings.
     const settings &chain_settings() const;
@@ -396,7 +396,7 @@ class BCB_API block_chain_impl
     organizer organizer_;
     ////dispatcher read_dispatch_;
     ////dispatcher write_dispatch_;
-    blockchain::transaction_pool transaction_pool_;
+    blockchain::tx_pool tx_pool_;
 
     // This is protected by mutex.
     database::data_base database_;

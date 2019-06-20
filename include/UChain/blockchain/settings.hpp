@@ -40,8 +40,8 @@ class BCB_API settings
 
     /// Properties.
     uint32_t block_pool_capacity;
-    uint32_t transaction_pool_capacity;
-    bool transaction_pool_consistency;
+    uint32_t tx_pool_capacity;
+    bool tx_pool_consistency;
     bool use_testnet_rules;
     config::checkpoint::list checkpoints;
 };
