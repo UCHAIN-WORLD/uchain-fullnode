@@ -27,7 +27,7 @@
 #include <memory>
 #include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
-#include <UChain/blockchain/transaction_pool.hpp>
+#include <UChain/blockchain/tx_pool.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
 
 namespace libbitcoin
@@ -38,7 +38,7 @@ namespace blockchain
 class validate_block;
 
 /// This class is not thread safe.
-/// This is a utility for transaction_pool::validate and validate_block.
+/// This is a utility for tx_pool::validate and validate_block.
 class BCB_API validate_tx_engine
     : public enable_shared_from_base<validate_tx_engine>
 {
@@ -50,7 +50,7 @@ class BCB_API validate_tx_engine
         validate_handler;
 
     validate_tx_engine(block_chain &chain, const chain::transaction &tx,
-                         const transaction_pool &pool, dispatcher &dispatch);
+                         const tx_pool &pool, dispatcher &dispatch);
 
     validate_tx_engine(block_chain &chain, const chain::transaction &tx,
                          const validate_block &validate_block);
@@ -131,7 +131,7 @@ class BCB_API validate_tx_engine
 
     block_chain_impl &blockchain_;
     const transaction_ptr tx_;
-    const transaction_pool *const pool_;
+    const tx_pool *const pool_;
     dispatcher *const dispatch_;
     const validate_block *const validate_block_;
 

@@ -63,10 +63,10 @@ class BCC_API proxy
     void protocol_broadcast_transaction(error_handler on_error,
                                         empty_handler on_reply, const chain::transaction &tx);
 
-    void transaction_pool_validate(error_handler on_error,
+    void tx_pool_validate(error_handler on_error,
                                    validate_handler on_reply, const chain::transaction &tx);
 
-    void transaction_pool_fetch_transaction(error_handler on_error,
+    void tx_pool_fetch_transaction(error_handler on_error,
                                             transaction_handler on_reply, const hash_digest &tx_hash);
 
     void blockchain_fetch_transaction(error_handler on_error,

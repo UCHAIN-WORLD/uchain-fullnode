@@ -30,8 +30,8 @@
 #include <UChain/blockchain/orphan_pool.hpp>
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
-#include <UChain/blockchain/transaction_pool.hpp>
-#include <UChain/blockchain/transaction_pool_index.hpp>
+#include <UChain/blockchain/tx_pool.hpp>
+#include <UChain/blockchain/tx_pool_index.hpp>
 #include <UChain/blockchain/validate_block.hpp>
 #include <UChain/blockchain/validate_block_impl.hpp>
 #include <UChain/blockchain/validate_tx_engine.hpp>

@@ -43,7 +43,7 @@ class BCN_API protocol_transaction_out
     /// Construct a transaction protocol instance.
     protocol_transaction_out(network::p2p &network,
                              network::channel::ptr channel, blockchain::block_chain &blockchain,
-                             blockchain::transaction_pool &pool);
+                             blockchain::tx_pool &pool);
 
     ptr do_subscribe();
 
@@ -70,7 +70,7 @@ class BCN_API protocol_transaction_out
                         transaction_ptr message);
 
     blockchain::block_chain &blockchain_;
-    blockchain::transaction_pool &pool_;
+    blockchain::tx_pool &pool_;
     std::atomic<uint64_t> minimum_fee_;
     const bool relay_to_peer_;
 };
