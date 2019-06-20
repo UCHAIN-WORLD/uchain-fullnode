@@ -37,7 +37,7 @@ using namespace bc::network;
 using namespace std::placeholders;
 
 session_manual::session_manual(p2p &network, block_chain &blockchain,
-                               transaction_pool &pool)
+                               tx_pool &pool)
     : network::session_manual(network),
       blockchain_(blockchain),
       pool_(pool)

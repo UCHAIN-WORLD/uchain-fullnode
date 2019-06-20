@@ -92,8 +92,8 @@ bool notification_worker::start()
     }
 
     // Subscribe to transaction pool acceptances.
-    node_.subscribe_transaction_pool(
-        std::bind(&notification_worker::handle_transaction_pool,
+    node_.subscribe_tx_pool(
+        std::bind(&notification_worker::handle_tx_pool,
                   this, _1, _2, _3));
 
     // Subscribe to all inventory messages from all peers.
@@ -558,7 +558,7 @@ bool notification_worker::handle_inventory(const code &ec,
 // Notification (via mempool).
 // ----------------------------------------------------------------------------
 
-bool notification_worker::handle_transaction_pool(const code &ec,
+bool notification_worker::handle_tx_pool(const code &ec,
                                                   const point::indexes &, bc::message::transaction_message::ptr tx)
 {
     if (stopped() || ec == (code)error::service_stopped)

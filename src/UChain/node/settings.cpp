@@ -29,7 +29,7 @@ namespace node
 settings::settings()
     : block_timeout_seconds(5),
       download_connections(8),
-      transaction_pool_refresh(true)
+      tx_pool_refresh(true)
 {
 }
 

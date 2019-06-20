@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainApp/ucd/interface/transaction_pool.hpp>
+#include <UChainApp/ucd/interface/tx_pool.hpp>
 
 #include <cstdint>
 #include <cstddef>
@@ -38,7 +38,7 @@ using namespace std::placeholders;
 using namespace bc::chain;
 using namespace bc::message;
 
-void transaction_pool::fetch_transaction(server_node &node,
+void tx_pool::fetch_transaction(server_node &node,
                                          const message &request, send_handler handler)
 {
     hash_digest hash;
@@ -50,7 +50,7 @@ void transaction_pool::fetch_transaction(server_node &node,
     }
 
     log::debug(LOG_SERVER)
-        << "transaction_pool.fetch_transaction(" << encode_hash(hash) << ")";
+        << "tx_pool.fetch_transaction(" << encode_hash(hash) << ")";
 
     node.pool().fetch(hash,
                       std::bind(pool_transaction_fetched,
@@ -58,7 +58,7 @@ void transaction_pool::fetch_transaction(server_node &node,
 }
 
 // Broadcast a transaction with penetration subscription.
-void transaction_pool::broadcast(server_node &node, const message &request,
+void tx_pool::broadcast(server_node &node, const message &request,
                                  send_handler handler)
 {
     transaction tx;
@@ -75,7 +75,7 @@ void transaction_pool::broadcast(server_node &node, const message &request,
 }
 
 // NOTE: the format of this response changed in v3 (send only code on error).
-void transaction_pool::validate(server_node &node, const message &request,
+void tx_pool::validate(server_node &node, const message &request,
                                 send_handler handler)
 {
     static const auto version = bc::message::version::level::maximum;
@@ -88,11 +88,11 @@ void transaction_pool::validate(server_node &node, const message &request,
     }
 
     node.pool().validate(tx,
-                         std::bind(&transaction_pool::handle_validated,
+                         std::bind(&tx_pool::handle_validated,
                                    _1, _2, _3, request, handler));
 }
 
-void transaction_pool::handle_validated(const code &ec,
+void tx_pool::handle_validated(const code &ec,
                                         transaction_message::ptr, const point::indexes &unconfirmed,
                                         const message &request, send_handler handler)
 {

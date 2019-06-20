@@ -59,8 +59,8 @@ void WsPushServ::run()
 
     node_.subscribe_stop([this](const libbitcoin::code &ec) { stop(); });
 
-    node_.subscribe_transaction_pool(
-        std::bind(&WsPushServ::handle_transaction_pool,
+    node_.subscribe_tx_pool(
+        std::bind(&WsPushServ::handle_tx_pool,
                   this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
     node_.subscribe_blockchain(
@@ -92,7 +92,7 @@ void WsPushServ::spawn_to_mongoose(const std::function<void(uint64_t)> &&handler
         msg->unhook();
 }
 
-bool WsPushServ::handle_transaction_pool(const code &ec, const index_list &, message::transaction_message::ptr tx)
+bool WsPushServ::handle_tx_pool(const code &ec, const index_list &, message::transaction_message::ptr tx)
 {
     if (stopped())
         return false;

@@ -46,9 +46,9 @@ console_result deletetoken::invoke(Json::Value &jv_output,
         throw token_issued_not_delete{"Cannot delete token " + option_.symbol + " which has been issued."};
 
     std::promise<code> p;
-    std::vector<libbitcoin::blockchain::transaction_pool::transaction_ptr> txs;
+    std::vector<libbitcoin::blockchain::tx_pool::transaction_ptr> txs;
     blockchain.pool().fetch([&txs, &p](const code &ec,
-                                       const std::vector<libbitcoin::blockchain::transaction_pool::transaction_ptr> &tx) {
+                                       const std::vector<libbitcoin::blockchain::tx_pool::transaction_ptr> &tx) {
         if (!ec)
         {
             txs = tx;
