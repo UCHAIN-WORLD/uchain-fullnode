@@ -41,8 +41,8 @@ using namespace std::placeholders;
 void protocol::broadcast_transaction(server_node &node, const message &request,
                                      send_handler handler)
 {
-    using transaction_ptr = libbitcoin::blockchain::transaction_pool::transaction_ptr;
-    using indexes = libbitcoin::blockchain::transaction_pool::indexes;
+    using transaction_ptr = libbitcoin::blockchain::tx_pool::transaction_ptr;
+    using indexes = libbitcoin::blockchain::tx_pool::indexes;
     static const auto version = bc::message::version::level::maximum;
     transaction_ptr tx = std::make_shared<bc::message::transaction_message>();
     ;
