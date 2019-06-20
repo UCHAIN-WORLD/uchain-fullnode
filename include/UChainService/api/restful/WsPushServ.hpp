@@ -91,7 +91,7 @@ class WsPushServ : public MgServer
     bool handle_blockchain_reorganization(
         const bc::code &ec, uint64_t fork_point,
         const block_list &new_blocks, const block_list &);
-    bool handle_transaction_pool(
+    bool handle_tx_pool(
         const bc::code &ec, const index_list &,
         bc::message::transaction_message::ptr tx);
 
