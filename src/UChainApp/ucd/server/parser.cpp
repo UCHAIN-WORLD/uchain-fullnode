@@ -219,11 +219,11 @@ options_metadata parser::load_settings()
             "blockchain.block_pool_capacity",
             value<uint32_t>(&configured.chain.block_pool_capacity),
             "The maximum number of orphan blocks in the pool, defaults to 50.")(
-            "blockchain.transaction_pool_capacity",
-            value<uint32_t>(&configured.chain.transaction_pool_capacity),
+            "blockchain.tx_pool_capacity",
+            value<uint32_t>(&configured.chain.tx_pool_capacity),
             "The maximum number of transactions in the pool, defaults to 2000.")(
-            "blockchain.transaction_pool_consistency",
-            value<bool>(&configured.chain.transaction_pool_consistency),
+            "blockchain.tx_pool_consistency",
+            value<bool>(&configured.chain.tx_pool_consistency),
             "Enforce consistency between the pool and the blockchain, defaults to false.")(
             "blockchain.use_testnet_rules",
             value<bool>(&configured.chain.use_testnet_rules),
@@ -240,8 +240,8 @@ options_metadata parser::load_settings()
             "node.download_connections",
             value<uint32_t>(&configured.node.download_connections),
             "The maximum number of connections for initial block download, defaults to 8.")(
-            "node.transaction_pool_refresh",
-            value<bool>(&configured.node.transaction_pool_refresh),
+            "node.tx_pool_refresh",
+            value<bool>(&configured.node.tx_pool_refresh),
             "Refresh the transaction pool on reorganization and channel start, defaults to true.")
 
         /* [server] */
