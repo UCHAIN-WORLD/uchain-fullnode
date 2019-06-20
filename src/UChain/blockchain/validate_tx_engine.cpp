@@ -27,7 +27,7 @@
 #include <numeric>
 #include <memory>
 #include <UChain/coin.hpp>
-#include <UChain/blockchain/transaction_pool.hpp>
+#include <UChain/blockchain/tx_pool.hpp>
 #include <UChain/blockchain/validate_block.hpp>
 #include <UChainService/consensus/miner.hpp>
 
@@ -60,7 +60,7 @@ validate_tx_engine::validate_tx_engine(block_chain &chain,
 }
 
 validate_tx_engine::validate_tx_engine(block_chain &chain,
-                                           const chain::transaction &tx, const transaction_pool &pool, dispatcher &dispatch)
+                                           const chain::transaction &tx, const tx_pool &pool, dispatcher &dispatch)
     : blockchain_(static_cast<blockchain::block_chain_impl &>(chain)),
       tx_(std::make_shared<message::transaction_message>(tx)),
       pool_(&pool),

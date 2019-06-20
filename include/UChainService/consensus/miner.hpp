@@ -25,7 +25,7 @@
 #include <boost/thread.hpp>
 
 #include "UChain/blockchain/block_chain_impl.hpp"
-#include "UChain/blockchain/transaction_pool.hpp"
+#include "UChain/blockchain/tx_pool.hpp"
 #include "UChain/coin/chain/block.hpp"
 #include "UChain/coin/chain/input.hpp"
 #include <UChain/coin/wallet/ec_public.hpp>
@@ -65,7 +65,7 @@ class miner
     typedef chain::transaction transaction;
     typedef message::transaction_message::ptr transaction_ptr;
     typedef blockchain::block_chain_impl block_chain_impl;
-    typedef blockchain::transaction_pool transaction_pool;
+    typedef blockchain::tx_pool tx_pool;
     typedef libbitcoin::node::p2p_node p2p_node;
 
     // prev_output_point -> (prev_block_height, prev_output)

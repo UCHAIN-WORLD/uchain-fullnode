@@ -73,7 +73,7 @@ console_result validate_tx::invoke(std::ostream &output,
         state.succeeded(error);
     };
 
-    client.transaction_pool_validate(on_error, on_done, transaction);
+    client.tx_pool_validate(on_error, on_done, transaction);
     client.wait();
 
     return state.get_result();
