@@ -40,7 +40,7 @@ class BCN_API session_inbound
 
     /// Construct an instance.
     session_inbound(network::p2p &network, blockchain::block_chain &blockchain,
-                    blockchain::transaction_pool &pool);
+                    blockchain::tx_pool &pool);
 
     virtual void attach_handshake_protocols(network::channel::ptr channel,
                                             result_handler handle_started) override;
@@ -50,7 +50,7 @@ class BCN_API session_inbound
     void attach_protocols(network::channel::ptr channel) override;
 
     blockchain::block_chain &blockchain_;
-    blockchain::transaction_pool &pool_;
+    blockchain::tx_pool &pool_;
 };
 
 } // namespace node
