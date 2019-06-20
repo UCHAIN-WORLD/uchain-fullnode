@@ -55,21 +55,21 @@ void proxy::protocol_broadcast_transaction(error_handler on_error,
                            _1, on_reply));
 }
 
-void proxy::transaction_pool_validate(error_handler on_error,
+void proxy::tx_pool_validate(error_handler on_error,
                                       validate_handler on_reply, const chain::transaction &tx)
 {
-    send_request("transaction_pool.validate", tx.to_data(),
+    send_request("tx_pool.validate", tx.to_data(),
                  on_error,
                  std::bind(decode_validate,
                            _1, on_reply));
 }
 
-void proxy::transaction_pool_fetch_transaction(error_handler on_error,
+void proxy::tx_pool_fetch_transaction(error_handler on_error,
                                                transaction_handler on_reply, const hash_digest &tx_hash)
 {
     const auto data = build_chunk({tx_hash});
 
-    send_request("transaction_pool.fetch_transaction", data,
+    send_request("tx_pool.fetch_transaction", data,
                  on_error,
                  std::bind(decode_transaction,
                            _1, on_reply));

@@ -265,7 +265,7 @@ block_chain_impl &p2p_node::chain_impl()
     return blockchain_;
 }
 
-transaction_pool &p2p_node::pool()
+tx_pool &p2p_node::pool()
 {
     return blockchain_.pool();
 }
@@ -278,7 +278,7 @@ void p2p_node::subscribe_blockchain(reorganize_handler handler)
     chain().subscribe_reorganize(handler);
 }
 
-void p2p_node::subscribe_transaction_pool(transaction_handler handler)
+void p2p_node::subscribe_tx_pool(transaction_handler handler)
 {
     pool().subscribe_transaction(handler);
 }
