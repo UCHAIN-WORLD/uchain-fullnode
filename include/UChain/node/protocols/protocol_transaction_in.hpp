@@ -41,7 +41,7 @@ class BCN_API protocol_transaction_in
     /// Construct a transaction protocol instance.
     protocol_transaction_in(network::p2p &network,
                             network::channel::ptr channel, blockchain::block_chain &blockchain,
-                            blockchain::transaction_pool &pool);
+                            blockchain::tx_pool &pool);
 
     ptr do_subscribe();
 
@@ -69,7 +69,7 @@ class BCN_API protocol_transaction_in
     void handle_stop(const code &);
 
     blockchain::block_chain &blockchain_;
-    blockchain::transaction_pool &pool_;
+    blockchain::tx_pool &pool_;
     const bool relay_from_peer_;
     const bool peer_suports_memory_pool_;
     const bool refresh_pool_;

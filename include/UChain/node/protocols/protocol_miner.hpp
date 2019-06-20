@@ -41,7 +41,7 @@ class BCN_API protocol_miner : public network::protocol_events, track<protocol_m
     using indexes = chain::point::indexes;
     using transaction_ptr = message::transaction_message::ptr;
     protocol_miner(network::p2p &network, network::channel::ptr channel, blockchain::block_chain &blockchain
-                   /*, blockchain::transaction_pool& pool*/);
+                   /*, blockchain::tx_pool& pool*/);
     virtual void start();
 
   private:
@@ -49,7 +49,7 @@ class BCN_API protocol_miner : public network::protocol_events, track<protocol_m
     //    bool handle_accept_transaction(const code&, const indexes&, transaction_ptr);
   private:
     blockchain::block_chain &blockchain_;
-    //    blockchain::transaction_pool& pool_;
+    //    blockchain::tx_pool& pool_;
 };
 
 } // namespace node
