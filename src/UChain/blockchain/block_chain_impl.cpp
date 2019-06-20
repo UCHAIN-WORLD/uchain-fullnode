@@ -37,7 +37,7 @@
 #include <UChain/blockchain/block_fetcher.hpp>
 #include <UChain/blockchain/organizer.hpp>
 #include <UChain/blockchain/settings.hpp>
-#include <UChain/blockchain/transaction_pool.hpp>
+#include <UChain/blockchain/tx_pool.hpp>
 #include <UChain/blockchain/validate_tx_engine.hpp>
 #include <UChain/blockchain/wallet_security_strategy.hpp>
 namespace libbitcoin
@@ -61,7 +61,7 @@ block_chain_impl::block_chain_impl(threadpool &pool,
       organizer_(pool, *this, chain_settings),
       ////read_dispatch_(pool, NAME),
       ////write_dispatch_(pool, NAME),
-      transaction_pool_(pool, *this, chain_settings),
+      tx_pool_(pool, *this, chain_settings),
       database_(database_settings)
 {
 }
@@ -90,9 +90,9 @@ static hash_list to_hashes(const block_result &result)
 // Properties.
 // ----------------------------------------------------------------------------
 
-transaction_pool &block_chain_impl::pool()
+tx_pool &block_chain_impl::pool()
 {
-    return transaction_pool_;
+    return tx_pool_;
 }
 
 const settings &block_chain_impl::chain_settings() const
@@ -111,7 +111,7 @@ bool block_chain_impl::start()
 
     stopped_ = false;
     organizer_.start();
-    transaction_pool_.start();
+    tx_pool_.start();
 
     //init the single instance here, to avoid multi-thread init confilict
     auto *temp = wallet_security_strategy::get_instance();
@@ -124,7 +124,7 @@ bool block_chain_impl::stop()
 {
     stopped_ = true;
     organizer_.stop();
-    transaction_pool_.stop();
+    tx_pool_.stop();
     return database_.stop();
 }
 
