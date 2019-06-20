@@ -29,7 +29,7 @@ namespace node
 {
 
 protocol_miner::protocol_miner(network::p2p &network, network::channel::ptr channel, blockchain::block_chain &blockchain
-                               /*, blockchain::transaction_pool& pool*/)
+                               /*, blockchain::tx_pool& pool*/)
     : protocol_events{network, channel, NAME},
       blockchain_{blockchain},
       /*pool_{pool},*/

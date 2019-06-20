@@ -39,7 +39,7 @@ using namespace bc::network;
 using namespace std::placeholders;
 
 protocol_transaction_out::protocol_transaction_out(p2p &network,
-                                                   channel::ptr channel, block_chain &blockchain, transaction_pool &pool)
+                                                   channel::ptr channel, block_chain &blockchain, tx_pool &pool)
     : protocol_events(network, channel, NAME),
       blockchain_(blockchain),
       pool_(pool),

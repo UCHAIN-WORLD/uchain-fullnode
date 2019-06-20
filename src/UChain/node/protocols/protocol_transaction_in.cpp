@@ -41,7 +41,7 @@ using namespace std::placeholders;
 // TODO: derive from protocol_session_node abstract intermediate base class.
 // TODO: Pass p2p_node on construct, obtaining node configuration settings.
 protocol_transaction_in::protocol_transaction_in(p2p &network,
-                                                 channel::ptr channel, block_chain &blockchain, transaction_pool &pool)
+                                                 channel::ptr channel, block_chain &blockchain, tx_pool &pool)
     : protocol_events(network, channel, NAME),
       blockchain_(blockchain),
       pool_(pool),
@@ -52,7 +52,7 @@ protocol_transaction_in::protocol_transaction_in(p2p &network,
       // TODO: move memory_pool to a derived class protocol_transaction_in_60002.
       peer_suports_memory_pool_(peer_version().value >= version::level::bip35),
       refresh_pool_(relay_from_peer_ && peer_suports_memory_pool_
-                    /*&& network.node_settings().transaction_pool_refresh*/),
+                    /*&& network.node_settings().tx_pool_refresh*/),
 
       CONSTRUCT_TRACK(protocol_transaction_in)
 {
