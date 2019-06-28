@@ -270,13 +270,13 @@ bool block_chain_impl::import(block::ptr block, uint64_t height)
     return true;
 }
 
-bool block_chain_impl::push(block_detail::ptr block)
+bool block_chain_impl::push(block_info::ptr block)
 {
     database_.push(*block->actual());
     return true;
 }
 
-bool block_chain_impl::pop_from(block_detail::list &out_blocks,
+bool block_chain_impl::pop_from(block_info::list &out_blocks,
                                 uint64_t height)
 {
     size_t top;
@@ -300,7 +300,7 @@ bool block_chain_impl::pop_from(block_detail::list &out_blocks,
 
     for (uint64_t index = top; index >= height; --index)
     {
-        const auto block = std::make_shared<block_detail>(database_.pop());
+        const auto block = std::make_shared<block_info>(database_.pop());
         out_blocks.push_back(block);
     }
 
@@ -364,7 +364,7 @@ void block_chain_impl::do_store(message::block_msg::ptr block,
         return;
     }
 
-    const auto detail = std::make_shared<block_detail>(block);
+    const auto detail = std::make_shared<block_info>(block);
 
     // ...or if the block is already orphaned.
     if (!organizer_.add(detail))

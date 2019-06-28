@@ -27,7 +27,7 @@
 #include <memory>
 #include <numeric>
 #include <UChain/coin.hpp>
-#include <UChain/blockchain/block_detail.hpp>
+#include <UChain/blockchain/block_info.hpp>
 #include <UChain/blockchain/orphan_pool.hpp>
 #include <UChain/blockchain/organizer.hpp>
 #include <UChain/blockchain/settings.hpp>
@@ -94,7 +94,7 @@ bool organizer::strict(uint64_t fork_point) const
 
 // This verifies the block at orphan_chain[orphan_index]->actual()
 code organizer::verify(uint64_t fork_point,
-                       const block_detail::list &orphan_chain, uint64_t orphan_index)
+                       const block_info::list &orphan_chain, uint64_t orphan_index)
 {
     if (stopped())
         return error::service_stopped;
@@ -185,7 +185,7 @@ void organizer::organize()
     }
 }
 
-bool organizer::add(block_detail::ptr block)
+bool organizer::add(block_info::ptr block)
 {
     return orphan_pool_.add(block);
 }
@@ -195,11 +195,11 @@ void organizer::filter_orphans(message::get_data::ptr message)
     orphan_pool_.filter(message);
 }
 
-void organizer::process(block_detail::ptr process_block)
+void organizer::process(block_info::ptr process_block)
 {
     BITCOIN_ASSERT(process_block);
 
-    std::vector<block_detail::ptr> blocks;
+    std::vector<block_info::ptr> blocks;
     blocks.push_back(process_block);
 
     while (blocks.empty() == false)
@@ -220,7 +220,7 @@ void organizer::process(block_detail::ptr process_block)
             if (orphan_chain.empty() == false)
             {
                 const auto hash = orphan_chain.back()->actual()->header.hash();
-                block_detail::ptr block;
+                block_info::ptr block;
                 while ((block = orphan_pool_.delete_pending_block(hash)))
                 {
                     blocks.push_back(block);
@@ -241,7 +241,7 @@ void organizer::process(block_detail::ptr process_block)
 }
 
 void organizer::replace_chain(uint64_t fork_index,
-                              block_detail::list &orphan_chain)
+                              block_info::list &orphan_chain)
 {
     u256 orphan_work = 0;
 
@@ -307,7 +307,7 @@ void organizer::replace_chain(uint64_t fork_index,
     }
 
     // Replace! Switch!
-    block_detail::list released_blocks;
+    block_info::list released_blocks;
     auto success = chain_.pop_from(released_blocks, begin_index);
 
     if (!released_blocks.empty())
@@ -377,7 +377,7 @@ void organizer::replace_chain(uint64_t fork_index,
     notify_reorganize(fork_index, orphan_chain, released_blocks);
 }
 
-void organizer::remove_processed(block_detail::ptr remove_block)
+void organizer::remove_processed(block_info::ptr remove_block)
 {
     const auto it = std::find(process_queue_.begin(), process_queue_.end(),
                               remove_block);
@@ -386,7 +386,7 @@ void organizer::remove_processed(block_detail::ptr remove_block)
         process_queue_.erase(it);
 }
 
-void organizer::clip_orphans(block_detail::list &orphan_chain,
+void organizer::clip_orphans(block_info::list &orphan_chain,
                              uint64_t orphan_index, const code &invalid_reason)
 {
     // Remove from orphans pool and process queue.
@@ -413,10 +413,10 @@ void organizer::subscribe_reorganize(reorganize_handler handler)
 }
 
 void organizer::notify_reorganize(uint64_t fork_point,
-                                  const block_detail::list &orphan_chain,
-                                  const block_detail::list &replaced_chain)
+                                  const block_info::list &orphan_chain,
+                                  const block_info::list &replaced_chain)
 {
-    const auto to_block_ptr = [](const block_detail::ptr &detail) {
+    const auto to_block_ptr = [](const block_info::ptr &detail) {
         return detail->actual();
     };
 

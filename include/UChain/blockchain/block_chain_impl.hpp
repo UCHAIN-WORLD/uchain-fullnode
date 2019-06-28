@@ -118,10 +118,10 @@ class BCB_API block_chain_impl
     bool import(chain::block::ptr block, uint64_t height);
 
     /// Append the block to the top of the chain.
-    bool push(block_detail::ptr block);
+    bool push(block_info::ptr block);
 
     /// Remove blocks at or above the given height, returning them in order.
-    bool pop_from(block_detail::list &out_blocks, uint64_t height);
+    bool pop_from(block_info::list &out_blocks, uint64_t height);
 
     // block_chain queries (thread safe).
     // ------------------------------------------------------------------------

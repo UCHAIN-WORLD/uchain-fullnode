@@ -26,7 +26,7 @@
 #include <boost/circular_buffer.hpp>
 #include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
-#include <UChain/blockchain/block_detail.hpp>
+#include <UChain/blockchain/block_info.hpp>
 
 namespace libbitcoin
 {
@@ -43,26 +43,26 @@ class BCB_API orphan_pool
     orphan_pool(size_t capacity);
 
     /// Add a block to the pool.
-    bool add(block_detail::ptr block);
+    bool add(block_info::ptr block);
 
     /// Remove a block from the pool.
-    void remove(block_detail::ptr block);
+    void remove(block_info::ptr block);
 
     /// Remove from the message all vectors that match orphans.
     void filter(message::get_data::ptr message) const;
 
     /// Get the longest connected chain of orphans after 'end'.
-    block_detail::list trace(block_detail::ptr end) const;
+    block_info::list trace(block_info::ptr end) const;
 
     /// Get the set of unprocessed orphans.
-    block_detail::list unprocessed() const;
+    block_info::list unprocessed() const;
 
-    bool add_pending_block(const hash_digest &needed_block, const block_detail::ptr &pending_block);
-    block_detail::ptr delete_pending_block(const hash_digest &needed_block);
+    bool add_pending_block(const hash_digest &needed_block, const block_info::ptr &pending_block);
+    block_info::ptr delete_pending_block(const hash_digest &needed_block);
 
   private:
-    //    typedef boost::circular_buffer<block_detail::ptr> buffer;
-    typedef std::vector<block_detail::ptr> buffer;
+    //    typedef boost::circular_buffer<block_info::ptr> buffer;
+    typedef std::vector<block_info::ptr> buffer;
     typedef buffer::const_iterator const_iterator;
     typedef buffer::const_reverse_iterator const_reverse_iterator;
 
@@ -75,7 +75,7 @@ class BCB_API orphan_pool
     buffer buffer_;
     mutable upgrade_mutex mutex_;
 
-    std::multimap<hash_digest, block_detail::ptr> pending_blocks_;
+    std::multimap<hash_digest, block_info::ptr> pending_blocks_;
     std::set<hash_digest> pending_blocks_hash_;
 };
 

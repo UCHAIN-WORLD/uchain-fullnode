@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/blockchain/block_detail.hpp>
+#include <UChain/blockchain/block_info.hpp>
 
 #include <cstdint>
 #include <memory>
@@ -35,7 +35,7 @@ using namespace message;
 // Use zero as orphan sentinel since this is precluded by the orphan pool.
 static constexpr auto orphan_height = 0u;
 
-block_detail::block_detail(block_ptr actual_block)
+block_info::block_info(block_ptr actual_block)
     : code_(error::success),
       processed_(false),
       height_(orphan_height),
@@ -45,58 +45,58 @@ block_detail::block_detail(block_ptr actual_block)
 }
 
 // Hand off ownership of a block to this wrapper.
-block_detail::block_detail(chain::block &&actual_block)
-    : block_detail(std::make_shared<block_msg>(actual_block))
+block_info::block_info(chain::block &&actual_block)
+    : block_info(std::make_shared<block_msg>(actual_block))
 {
 }
 
-block_detail::block_ptr block_detail::actual() const
+block_info::block_ptr block_info::actual() const
 {
     return actual_block_;
 }
 
-void block_detail::set_processed()
+void block_info::set_processed()
 {
     processed_.store(true);
 }
 
-bool block_detail::processed() const
+bool block_info::processed() const
 {
     return processed_.load();
 }
 
-void block_detail::set_height(uint64_t height)
+void block_info::set_height(uint64_t height)
 {
     BITCOIN_ASSERT(height != orphan_height);
     height_.store(height);
 }
 
-uint64_t block_detail::height() const
+uint64_t block_info::height() const
 {
     return height_.load();
 }
 
-void block_detail::set_is_checked_work_proof(bool is_checked)
+void block_info::set_is_checked_work_proof(bool is_checked)
 {
     is_checked_work_proof_.store(is_checked);
 }
 
-bool block_detail::get_is_checked_work_proof() const
+bool block_info::get_is_checked_work_proof() const
 {
     return is_checked_work_proof_.load();
 }
 
-void block_detail::set_error(const code &code)
+void block_info::set_error(const code &code)
 {
     code_.store(code);
 }
 
-code block_detail::error() const
+code block_info::error() const
 {
     return code_.load();
 }
 
-const hash_digest block_detail::hash() const
+const hash_digest block_info::hash() const
 {
     // This relies on the hash caching optimization.
     return actual_block_->header.hash();

@@ -34,16 +34,16 @@ namespace blockchain
 
 /// A block with metadata.
 /// This class is thread safe though property consistency is not guaranteed.
-class BCB_API block_detail
+class BCB_API block_info
 {
   public:
-    typedef std::shared_ptr<block_detail> ptr;
-    typedef std::vector<block_detail::ptr> list;
+    typedef std::shared_ptr<block_info> ptr;
+    typedef std::vector<block_info::ptr> list;
     typedef message::block_msg::ptr block_ptr;
 
     /// Construct a block detail instance.
-    block_detail(block_ptr actual_block);
-    block_detail(chain::block &&actual_block);
+    block_info(block_ptr actual_block);
+    block_info(chain::block &&actual_block);
 
     block_ptr actual() const;
 

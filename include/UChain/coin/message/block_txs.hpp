@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_MESSAGE_GET_BLOCK_TRANSACTIONS_HPP
-#define UC_MESSAGE_GET_BLOCK_TRANSACTIONS_HPP
+#ifndef UC_MESSAGE_block_txs_HPP
+#define UC_MESSAGE_block_txs_HPP
 
 #include <istream>
 #include <UChain/coin/define.hpp>
-#include <UChain/coin/math/hash.hpp>
+#include <UChain/coin/chain/transaction.hpp>
 #include <UChain/coin/utility/data.hpp>
 #include <UChain/coin/utility/reader.hpp>
 #include <UChain/coin/utility/writer.hpp>
@@ -33,17 +33,17 @@ namespace libbitcoin
 namespace message
 {
 
-class BC_API get_block_transactions
+class BC_API block_txs
 {
   public:
-    typedef std::shared_ptr<get_block_transactions> ptr;
+    typedef std::shared_ptr<block_txs> ptr;
 
-    static get_block_transactions factory_from_data(uint32_t version,
-                                                    const data_chunk &data);
-    static get_block_transactions factory_from_data(uint32_t version,
-                                                    std::istream &stream);
-    static get_block_transactions factory_from_data(uint32_t version,
-                                                    reader &source);
+    static block_txs factory_from_data(uint32_t version,
+                                                const data_chunk &data);
+    static block_txs factory_from_data(uint32_t version,
+                                                std::istream &stream);
+    static block_txs factory_from_data(uint32_t version,
+                                                reader &source);
 
     bool from_data(uint32_t version, const data_chunk &data);
     bool from_data(uint32_t version, std::istream &stream);
@@ -60,7 +60,7 @@ class BC_API get_block_transactions
     static const uint32_t version_maximum;
 
     hash_digest block_hash;
-    std::vector<uint64_t> indexes;
+    chain::transaction::list transactions;
 };
 
 } // namespace message

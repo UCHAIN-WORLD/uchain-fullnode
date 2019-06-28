@@ -22,7 +22,7 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <UChain/blockchain/block_detail.hpp>
+#include <UChain/blockchain/block_info.hpp>
 
 namespace libbitcoin
 {
@@ -35,7 +35,7 @@ orphan_pool::orphan_pool(size_t capacity)
 }
 
 // There is no validation whatsoever of the block up to this pont.
-bool orphan_pool::add(block_detail::ptr block)
+bool orphan_pool::add(block_info::ptr block)
 {
     const auto &header = block->actual()->header;
 
@@ -66,7 +66,7 @@ bool orphan_pool::add(block_detail::ptr block)
     return true;
 }
 
-void orphan_pool::remove(block_detail::ptr block)
+void orphan_pool::remove(block_info::ptr block)
 {
     ///////////////////////////////////////////////////////////////////////////
     // Critical Section
@@ -110,9 +110,9 @@ void orphan_pool::filter(message::get_data::ptr message) const
     ///////////////////////////////////////////////////////////////////////////
 }
 
-block_detail::list orphan_pool::trace(block_detail::ptr end) const
+block_info::list orphan_pool::trace(block_info::ptr end) const
 {
-    block_detail::list trace;
+    block_info::list trace;
     trace.reserve(buffer_.size());
     trace.push_back(end);
     auto hash = end->actual()->header.previous_block_hash;
@@ -136,9 +136,9 @@ block_detail::list orphan_pool::trace(block_detail::ptr end) const
     return trace;
 }
 
-block_detail::list orphan_pool::unprocessed() const
+block_info::list orphan_pool::unprocessed() const
 {
-    block_detail::list unprocessed;
+    block_info::list unprocessed;
     unprocessed.reserve(buffer_.size());
 
     ///////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ block_detail::list orphan_pool::unprocessed() const
     return unprocessed;
 }
 
-bool orphan_pool::add_pending_block(const hash_digest &needed_block, const block_detail::ptr &pending_block)
+bool orphan_pool::add_pending_block(const hash_digest &needed_block, const block_info::ptr &pending_block)
 {
     auto hash = pending_block->actual()->header.hash();
     if (pending_blocks_hash_.find(hash) != pending_blocks_hash_.end())
@@ -170,9 +170,9 @@ bool orphan_pool::add_pending_block(const hash_digest &needed_block, const block
     return true;
 }
 
-block_detail::ptr orphan_pool::delete_pending_block(const hash_digest &needed_block)
+block_info::ptr orphan_pool::delete_pending_block(const hash_digest &needed_block)
 {
-    block_detail::ptr ret;
+    block_info::ptr ret;
     auto it = pending_blocks_.find(needed_block);
     if (it != pending_blocks_.end())
     {
@@ -189,7 +189,7 @@ block_detail::ptr orphan_pool::delete_pending_block(const hash_digest &needed_bl
 
 bool orphan_pool::exists(const hash_digest &hash) const
 {
-    const auto match = [&hash](const block_detail::ptr &entry) {
+    const auto match = [&hash](const block_info::ptr &entry) {
         return hash == entry->hash();
     };
 
@@ -198,7 +198,7 @@ bool orphan_pool::exists(const hash_digest &hash) const
 
 bool orphan_pool::exists(const chain::header &header) const
 {
-    const auto match = [&header](const block_detail::ptr &entry) {
+    const auto match = [&header](const block_info::ptr &entry) {
         return header == entry->actual()->header;
     };
 
@@ -208,7 +208,7 @@ bool orphan_pool::exists(const chain::header &header) const
 /*
 orphan_pool::const_iterator orphan_pool::find(buffer::const_iterator begin, const hash_digest& hash) const
 {
-    const auto match = [&hash](const block_detail::ptr& entry)
+    const auto match = [&hash](const block_info::ptr& entry)
     {
         return hash == entry->hash();
     };
@@ -219,7 +219,7 @@ orphan_pool::const_iterator orphan_pool::find(buffer::const_iterator begin, cons
 
 orphan_pool::const_reverse_iterator orphan_pool::rfind(buffer::const_reverse_iterator begin, const hash_digest &hash) const
 {
-    const auto match = [&hash](const block_detail::ptr &entry) {
+    const auto match = [&hash](const block_info::ptr &entry) {
         return hash == entry->hash();
     };
 

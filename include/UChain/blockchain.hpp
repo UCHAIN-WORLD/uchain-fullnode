@@ -23,7 +23,7 @@
 #include <UChain/blockchain/block.hpp>
 #include <UChain/blockchain/block_chain.hpp>
 #include <UChain/blockchain/block_chain_impl.hpp>
-#include <UChain/blockchain/block_detail.hpp>
+#include <UChain/blockchain/block_info.hpp>
 #include <UChain/blockchain/block_fetcher.hpp>
 #include <UChain/blockchain/define.hpp>
 #include <UChain/blockchain/organizer.hpp>

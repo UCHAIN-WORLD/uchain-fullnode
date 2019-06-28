@@ -39,7 +39,7 @@ class BCB_API validate_block_impl
 {
   public:
     validate_block_impl(simple_chain &chain, size_t fork_index,
-                        const block_detail::list &orphan_chain, size_t orphan_index,
+                        const block_info::list &orphan_chain, size_t orphan_index,
                         size_t height, const chain::block &block, bool testnet,
                         const config::checkpoint::list &checkpoints,
                         stopped_callback stopped);
@@ -78,7 +78,7 @@ class BCB_API validate_block_impl
     size_t height_;
     size_t fork_index_;
     size_t orphan_index_;
-    const block_detail::list &orphan_chain_;
+    const block_info::list &orphan_chain_;
 };
 
 } // namespace blockchain
