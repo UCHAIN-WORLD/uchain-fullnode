@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
-#include <UChain/blockchain/block_detail.hpp>
+#include <UChain/blockchain/block_info.hpp>
 
 namespace libbitcoin {
 namespace blockchain {
@@ -72,10 +72,10 @@ public:
     virtual bool import(chain::block::ptr block, uint64_t height) = 0;
 
     /// Append the block to the top of the chain.
-    virtual bool push(block_detail::ptr block) = 0;
+    virtual bool push(block_info::ptr block) = 0;
 
     /// Remove blocks at or above the given height, returning them in order.
-    virtual bool pop_from(block_detail::list& out_blocks,
+    virtual bool pop_from(block_info::list& out_blocks,
         uint64_t height) = 0;
 };
 
