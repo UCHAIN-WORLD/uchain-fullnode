@@ -58,7 +58,7 @@ class BCT_API message_subscriber
 public:
     DEFINE_SUBSCRIBER_TYPE(address);
     DEFINE_SUBSCRIBER_TYPE(block_msg);
-    DEFINE_SUBSCRIBER_TYPE(block_transactions);
+    DEFINE_SUBSCRIBER_TYPE(block_txs);
     DEFINE_SUBSCRIBER_TYPE(compact_block);
     DEFINE_SUBSCRIBER_TYPE(fee_filter);
     DEFINE_SUBSCRIBER_TYPE(filter_add);
@@ -66,7 +66,7 @@ public:
     DEFINE_SUBSCRIBER_TYPE(filter_load);
     DEFINE_SUBSCRIBER_TYPE(get_address);
     DEFINE_SUBSCRIBER_TYPE(get_blocks);
-    DEFINE_SUBSCRIBER_TYPE(get_block_transactions);
+    DEFINE_SUBSCRIBER_TYPE(get_block_txs);
     DEFINE_SUBSCRIBER_TYPE(get_data);
     DEFINE_SUBSCRIBER_TYPE(get_headers);
     DEFINE_SUBSCRIBER_TYPE(headers);
@@ -172,7 +172,7 @@ public:
 private:
     DEFINE_SUBSCRIBER_OVERLOAD(address);
     DEFINE_SUBSCRIBER_OVERLOAD(block_msg);
-    DEFINE_SUBSCRIBER_OVERLOAD(block_transactions);
+    DEFINE_SUBSCRIBER_OVERLOAD(block_txs);
     DEFINE_SUBSCRIBER_OVERLOAD(compact_block);
     DEFINE_SUBSCRIBER_OVERLOAD(fee_filter);
     DEFINE_SUBSCRIBER_OVERLOAD(filter_add);
@@ -180,7 +180,7 @@ private:
     DEFINE_SUBSCRIBER_OVERLOAD(filter_load);
     DEFINE_SUBSCRIBER_OVERLOAD(get_address);
     DEFINE_SUBSCRIBER_OVERLOAD(get_blocks);
-    DEFINE_SUBSCRIBER_OVERLOAD(get_block_transactions);
+    DEFINE_SUBSCRIBER_OVERLOAD(get_block_txs);
     DEFINE_SUBSCRIBER_OVERLOAD(get_data);
     DEFINE_SUBSCRIBER_OVERLOAD(get_headers);
     DEFINE_SUBSCRIBER_OVERLOAD(headers);
@@ -199,7 +199,7 @@ private:
 
     DECLARE_SUBSCRIBER(address);
     DECLARE_SUBSCRIBER(block_msg);
-    DECLARE_SUBSCRIBER(block_transactions);
+    DECLARE_SUBSCRIBER(block_txs);
     DECLARE_SUBSCRIBER(compact_block);
     DECLARE_SUBSCRIBER(fee_filter);
     DECLARE_SUBSCRIBER(filter_add);
@@ -207,7 +207,7 @@ private:
     DECLARE_SUBSCRIBER(filter_load);
     DECLARE_SUBSCRIBER(get_address);
     DECLARE_SUBSCRIBER(get_blocks);
-    DECLARE_SUBSCRIBER(get_block_transactions);
+    DECLARE_SUBSCRIBER(get_block_txs);
     DECLARE_SUBSCRIBER(get_data);
     DECLARE_SUBSCRIBER(get_headers);
     DECLARE_SUBSCRIBER(headers);

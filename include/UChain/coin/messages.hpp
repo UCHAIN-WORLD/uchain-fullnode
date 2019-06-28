@@ -24,14 +24,14 @@
 #include <cstdint>
 #include <UChain/coin/message/address.hpp>
 #include <UChain/coin/message/block_msg.hpp>
-#include <UChain/coin/message/block_transactions.hpp>
+#include <UChain/coin/message/block_txs.hpp>
 #include <UChain/coin/message/compact_block.hpp>
 #include <UChain/coin/message/fee_filter.hpp>
 #include <UChain/coin/message/filter_add.hpp>
 #include <UChain/coin/message/filter_clear.hpp>
 #include <UChain/coin/message/filter_load.hpp>
 #include <UChain/coin/message/get_address.hpp>
-#include <UChain/coin/message/get_block_transactions.hpp>
+#include <UChain/coin/message/get_block_txs.hpp>
 #include <UChain/coin/message/get_blocks.hpp>
 #include <UChain/coin/message/get_data.hpp>
 #include <UChain/coin/message/get_headers.hpp>
