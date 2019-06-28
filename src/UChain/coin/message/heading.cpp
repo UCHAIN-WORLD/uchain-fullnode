@@ -149,8 +149,8 @@ message_type heading::type() const
     // TODO: convert to static map.
     if (command == address::command)
         return message_type::address;
-    if (command == block_transactions::command)
-        return message_type::block_transactions;
+    if (command == block_txs::command)
+        return message_type::block_txs;
     if (command == block_msg::command)
         return message_type::block_msg;
     if (command == compact_block::command)
@@ -163,8 +163,8 @@ message_type heading::type() const
         return message_type::filter_load;
     if (command == get_address::command)
         return message_type::get_address;
-    if (command == get_block_transactions::command)
-        return message_type::get_block_transactions;
+    if (command == get_block_txs::command)
+        return message_type::get_block_txs;
     if (command == get_blocks::command)
         return message_type::get_blocks;
     if (command == get_data::command)

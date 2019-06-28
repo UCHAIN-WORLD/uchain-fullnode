@@ -23,7 +23,7 @@
 
 #include <cstddef>
 #include <UChain/coin.hpp>
-#include <UChain/blockchain/block_detail.hpp>
+#include <UChain/blockchain/block_info.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
 //#include <UChainService/consensus/miner/MinerAux.h>
 #include <UChain/blockchain/block_chain_impl.hpp>
@@ -37,7 +37,7 @@ namespace blockchain
 static constexpr size_t median_time_past_blocks = 11;
 
 validate_block_impl::validate_block_impl(simple_chain &chain,
-                                         size_t fork_index, const block_detail::list &orphan_chain,
+                                         size_t fork_index, const block_info::list &orphan_chain,
                                          size_t orphan_index, size_t height, const chain::block &block,
                                          bool testnet, const config::checkpoint::list &checks,
                                          stopped_callback stopped)
