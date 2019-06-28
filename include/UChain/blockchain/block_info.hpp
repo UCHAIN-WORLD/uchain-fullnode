@@ -1,0 +1,81 @@
+/**
+ * Copyright (c) 2011-2018 libbitcoin developers 
+ * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
+ *
+ * This file is part of UChain.
+ *
+ * UChain is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License with
+ * additional permissions to the one published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version. For more information see LICENSE.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef UC_BLOCKCHAIN_BLOCK_DETAIL_HPP
+#define UC_BLOCKCHAIN_BLOCK_DETAIL_HPP
+
+#include <atomic>
+#include <memory>
+#include <vector>
+#include <UChain/coin.hpp>
+#include <UChain/blockchain/define.hpp>
+
+namespace libbitcoin
+{
+namespace blockchain
+{
+
+/// A block with metadata.
+/// This class is thread safe though property consistency is not guaranteed.
+class BCB_API block_info
+{
+  public:
+    typedef std::shared_ptr<block_info> ptr;
+    typedef std::vector<block_info::ptr> list;
+    typedef message::block_msg::ptr block_ptr;
+
+    /// Construct a block detail instance.
+    block_info(block_ptr actual_block);
+    block_info(chain::block &&actual_block);
+
+    block_ptr actual() const;
+
+    /// Set a flag indicating validation has been completed.
+    void set_processed();
+    bool processed() const;
+
+    /// Set the accepted block height (non-zero).
+    void set_height(uint64_t height);
+    uint64_t height() const;
+
+    /// Set the validation failure code.
+    void set_error(const code &code);
+    code error() const;
+
+    /// This method is thread safe.
+    //- remove & from hash_digest
+    const hash_digest hash() const;
+
+    // Set if work proof is checked.
+    void set_is_checked_work_proof(bool is_checked);
+    bool get_is_checked_work_proof() const;
+
+  private:
+    bc::atomic<code> code_;
+    std::atomic<bool> processed_;
+    std::atomic<uint64_t> height_;
+    const block_ptr actual_block_;
+    std::atomic<bool> is_checked_work_proof_;
+};
+
+} // namespace blockchain
+} // namespace libbitcoin
+
+#endif
