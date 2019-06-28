@@ -92,7 +92,7 @@ class BCB_API tx_pool
     void subscribe_transaction(transaction_handler handler);
 
   protected:
-    /// This is analogous to the orphan pool's block_detail.
+    /// This is analogous to the orphan pool's block_info.
     struct entry
     {
         transaction_ptr tx;
