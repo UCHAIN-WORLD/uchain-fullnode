@@ -27,7 +27,7 @@
 #include <memory>
 #include <UChain/coin.hpp>
 #include <UChain/blockchain/define.hpp>
-#include <UChain/blockchain/block_detail.hpp>
+#include <UChain/blockchain/block_info.hpp>
 #include <UChain/blockchain/orphan_pool.hpp>
 #include <UChain/blockchain/settings.hpp>
 #include <UChain/blockchain/simple_chain.hpp>
@@ -62,7 +62,7 @@ class BCB_API organizer
 
     virtual void start();
     virtual void stop();
-    virtual bool add(block_detail::ptr block);
+    virtual bool add(block_info::ptr block);
     virtual void subscribe_reorganize(reorganize_handler handler);
     virtual void filter_orphans(message::get_data::ptr message);
 
@@ -75,7 +75,7 @@ class BCB_API organizer
     virtual bool stopped();
 
   private:
-    typedef block_detail::list detail_list;
+    typedef block_info::list detail_list;
 
     static uint64_t count_inputs(const chain::block &block);
 
@@ -83,10 +83,10 @@ class BCB_API organizer
 
     /// These methods are NOT thread safe.
     virtual code verify(uint64_t fork_index,
-                        const block_detail::list &orphan_chain, uint64_t orphan_index);
-    void process(block_detail::ptr process_block);
+                        const block_info::list &orphan_chain, uint64_t orphan_index);
+    void process(block_info::ptr process_block);
     void replace_chain(uint64_t fork_index, detail_list &orphan_chain);
-    void remove_processed(block_detail::ptr remove_block);
+    void remove_processed(block_info::ptr remove_block);
     void clip_orphans(detail_list &orphan_chain, uint64_t orphan_index,
                       const code &invalid_reason);
 
@@ -100,7 +100,7 @@ class BCB_API organizer
 
     // These are protected by the caller protecting organize().
     simple_chain &chain_;
-    block_detail::list process_queue_;
+    block_info::list process_queue_;
 
     // These are thread safe.
     orphan_pool orphan_pool_;
