@@ -42,7 +42,7 @@ console_result showtxpool::invoke(Json::Value &jv_output,
     administrator_required_checker(node, auth_.name, auth_.auth);
     auto json = option_.json;
 
-    using transaction_ptr = message::transaction_message::ptr;
+    using transaction_ptr = message::tx_message::ptr;
     auto &blockchain = node.chain_impl();
     std::promise<code> p;
     blockchain.pool().fetch([&jv_output, &p, &json, this](const code &ec, const std::vector<transaction_ptr> &txs) {

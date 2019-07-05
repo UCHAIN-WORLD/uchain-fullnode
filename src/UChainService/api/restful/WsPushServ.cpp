@@ -92,7 +92,7 @@ void WsPushServ::spawn_to_mongoose(const std::function<void(uint64_t)> &&handler
         msg->unhook();
 }
 
-bool WsPushServ::handle_tx_pool(const code &ec, const index_list &, message::transaction_message::ptr tx)
+bool WsPushServ::handle_tx_pool(const code &ec, const index_list &, message::tx_message::ptr tx)
 {
     if (stopped())
         return false;

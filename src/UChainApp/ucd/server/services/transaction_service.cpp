@@ -147,7 +147,7 @@ bool transaction_service::unbind(zmq::socket &xpub, zmq::socket &xsub)
 // ----------------------------------------------------------------------------
 
 bool transaction_service::handle_transaction(const code &ec, const index_list &,
-                                             transaction_message::ptr tx)
+                                             tx_message::ptr tx)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;
@@ -199,7 +199,7 @@ void transaction_service::publish_transaction(const transaction &tx)
         return;
 
     zmq::message broadcast;
-    bc::message::transaction_message tx_msg(tx);
+    bc::message::tx_message tx_msg(tx);
     broadcast.enqueue(tx_msg.to_data(bc::message::version::level::maximum));
     ec = publisher.send(broadcast);
 

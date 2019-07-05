@@ -300,7 +300,7 @@ miner::block_ptr miner::create_genesis_block(bool is_mainnet)
 miner::transaction_ptr miner::create_coinbase_tx(
     const bc::wallet::payment_address &pay_address, uint64_t value, uint64_t block_height)
 {
-    transaction_ptr ptransaction = make_shared<message::transaction_message>();
+    transaction_ptr ptransaction = make_shared<message::tx_message>();
 
     //auto start =unix_millisecond();
     const uint64_t unspent_token = fetch_utxo(ptransaction, pay_address);
@@ -342,7 +342,7 @@ miner::transaction_ptr miner::create_lock_coinbase_tx(
         return nullptr;
     }
 
-    transaction_ptr ptransaction = make_shared<message::transaction_message>();
+    transaction_ptr ptransaction = make_shared<message::tx_message>();
 
     ptransaction->version = version;
     ptransaction->inputs.resize(1);
