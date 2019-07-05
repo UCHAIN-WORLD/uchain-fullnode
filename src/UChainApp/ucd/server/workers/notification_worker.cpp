@@ -559,7 +559,7 @@ bool notification_worker::handle_inventory(const code &ec,
 // ----------------------------------------------------------------------------
 
 bool notification_worker::handle_tx_pool(const code &ec,
-                                                  const point::indexes &, bc::message::transaction_message::ptr tx)
+                                                  const point::indexes &, bc::message::tx_message::ptr tx)
 {
     if (stopped() || ec == (code)error::service_stopped)
         return false;

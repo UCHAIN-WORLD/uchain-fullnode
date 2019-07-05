@@ -79,7 +79,7 @@ void tx_pool::validate(server_node &node, const message &request,
                                 send_handler handler)
 {
     static const auto version = bc::message::version::level::maximum;
-    const auto tx = std::make_shared<transaction_message>();
+    const auto tx = std::make_shared<tx_message>();
 
     if (!tx->from_data(version, request.data()))
     {
@@ -93,7 +93,7 @@ void tx_pool::validate(server_node &node, const message &request,
 }
 
 void tx_pool::handle_validated(const code &ec,
-                                        transaction_message::ptr, const point::indexes &unconfirmed,
+                                        tx_message::ptr, const point::indexes &unconfirmed,
                                         const message &request, send_handler handler)
 {
     // [ code:4 ]

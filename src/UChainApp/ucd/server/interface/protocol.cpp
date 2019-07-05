@@ -44,9 +44,9 @@ void protocol::broadcast_transaction(server_node &node, const message &request,
     using transaction_ptr = libbitcoin::blockchain::tx_pool::transaction_ptr;
     using indexes = libbitcoin::blockchain::tx_pool::indexes;
     static const auto version = bc::message::version::level::maximum;
-    transaction_ptr tx = std::make_shared<bc::message::transaction_message>();
+    transaction_ptr tx = std::make_shared<bc::message::tx_message>();
     ;
-    //    bc::message::transaction_message tx;
+    //    bc::message::tx_message tx;
 
     if (!tx->from_data(version, request.data()))
     {
