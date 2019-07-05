@@ -52,7 +52,7 @@ class BCN_API protocol_transaction_out
 
   private:
     // Local type aliases.
-    typedef message::transaction_message::ptr transaction_ptr;
+    typedef message::tx_message::ptr transaction_ptr;
     typedef message::fee_filter::ptr fee_filter_ptr;
     typedef message::memory_pool::ptr memory_pool_ptr;
     typedef message::get_data::ptr get_data_ptr;

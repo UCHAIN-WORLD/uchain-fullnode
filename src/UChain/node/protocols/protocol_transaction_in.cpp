@@ -61,7 +61,7 @@ protocol_transaction_in::protocol_transaction_in(p2p &network,
 protocol_transaction_in::ptr protocol_transaction_in::do_subscribe()
 {
     SUBSCRIBE2(inventory, handle_receive_inventory, _1, _2);
-    SUBSCRIBE2(transaction_message, handle_receive_transaction, _1, _2);
+    SUBSCRIBE2(tx_message, handle_receive_transaction, _1, _2);
     protocol_events::start(BIND1(handle_stop, _1));
     return std::dynamic_pointer_cast<protocol_transaction_in>(protocol::shared_from_this());
 }

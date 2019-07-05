@@ -44,7 +44,7 @@ class BCB_API validate_tx_engine
 {
   public:
     typedef std::shared_ptr<validate_tx_engine> ptr;
-    typedef message::transaction_message::ptr transaction_ptr;
+    typedef message::tx_message::ptr transaction_ptr;
     typedef std::function<void(const code &, transaction_ptr,
                                chain::point::indexes)>
         validate_handler;

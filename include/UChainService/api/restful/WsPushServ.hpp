@@ -93,7 +93,7 @@ class WsPushServ : public MgServer
         const block_list &new_blocks, const block_list &);
     bool handle_tx_pool(
         const bc::code &ec, const index_list &,
-        bc::message::transaction_message::ptr tx);
+        bc::message::tx_message::ptr tx);
 
     void notify_blocks(uint32_t fork_point, const block_list &blocks);
     void notify_block(uint32_t height, const bc::chain::block::ptr block);

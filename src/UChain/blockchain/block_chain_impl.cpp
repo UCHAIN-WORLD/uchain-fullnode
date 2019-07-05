@@ -2274,10 +2274,10 @@ bool block_chain_impl::get_transaction(const hash_digest &hash,
     else
     {
         boost::mutex mutex;
-        transaction_message::ptr tx_ptr = nullptr;
+        tx_message::ptr tx_ptr = nullptr;
 
         mutex.lock();
-        auto f = [&tx_ptr, &mutex](const code &ec, transaction_message::ptr tx_) -> void {
+        auto f = [&tx_ptr, &mutex](const code &ec, tx_message::ptr tx_) -> void {
             if ((code)error::success == ec)
                 tx_ptr = tx_;
             mutex.unlock();
@@ -2318,9 +2318,9 @@ bool block_chain_impl::get_transaction_callback(const hash_digest &hash,
     }
     else
     {
-        transaction_message::ptr tx_ptr = nullptr;
+        tx_message::ptr tx_ptr = nullptr;
 
-        auto f = [&tx_ptr, handler](const code &ec, transaction_message::ptr tx_) -> void {
+        auto f = [&tx_ptr, handler](const code &ec, tx_message::ptr tx_) -> void {
             if ((code)error::success == ec)
             {
                 tx_ptr = tx_;
@@ -2437,12 +2437,12 @@ code block_chain_impl::validate_tx_engine(const chain::transaction &tx)
         return ret;
     }
 
-    //std::shared_ptr<transaction_message>
-    auto tx_ptr = std::make_shared<transaction_message>(tx);
+    //std::shared_ptr<tx_message>
+    auto tx_ptr = std::make_shared<tx_message>(tx);
     boost::mutex mutex;
 
     mutex.lock();
-    auto f = [&ret, &mutex](const code &ec, transaction_message::ptr tx_, chain::point::indexes idx_vec) -> void {
+    auto f = [&ret, &mutex](const code &ec, tx_message::ptr tx_, chain::point::indexes idx_vec) -> void {
         log::debug("validate_tx_engine") << "ec=" << ec << " idx_vec=" << idx_vec.size();
         log::debug("validate_tx_engine") << "ec.message=" << ec.message();
         //if((error::success == ec) && idx_vec.empty())
@@ -2467,9 +2467,9 @@ code block_chain_impl::broadcast_transaction(const chain::transaction &tx)
         return ret;
     }
 
-    //std::shared_ptr<transaction_message>
-    using transaction_ptr = std::shared_ptr<transaction_message>;
-    auto tx_ptr = std::make_shared<transaction_message>(tx);
+    //std::shared_ptr<tx_message>
+    using transaction_ptr = std::shared_ptr<tx_message>;
+    auto tx_ptr = std::make_shared<tx_message>(tx);
     boost::mutex valid_mutex;
 
     valid_mutex.lock();
@@ -2478,7 +2478,7 @@ code block_chain_impl::broadcast_transaction(const chain::transaction &tx)
     pool().store(tx_ptr, [tx_ptr](const code &ec, transaction_ptr) {
         //send_mutex.unlock();
         //ret = true;
-        log::trace("broadcast_transaction") << encode_hash(tx_ptr->hash()) << " confirmed"; }, [&valid_mutex, &ret, tx_ptr](const code &ec, std::shared_ptr<transaction_message>, chain::point::indexes idx_vec) {
+        log::trace("broadcast_transaction") << encode_hash(tx_ptr->hash()) << " confirmed"; }, [&valid_mutex, &ret, tx_ptr](const code &ec, std::shared_ptr<tx_message>, chain::point::indexes idx_vec) {
         log::debug("broadcast_transaction") << "ec=" << ec << " idx_vec=" << idx_vec.size();
         log::debug("broadcast_transaction") << "ec.message=" << ec.message();
         ret = ec;

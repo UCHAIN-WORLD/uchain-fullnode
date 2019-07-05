@@ -42,7 +42,7 @@ class BCB_API tx_pool
   public:
     typedef chain::point::indexes indexes;
     typedef message::get_data::ptr get_data_ptr;
-    typedef message::transaction_message::ptr transaction_ptr;
+    typedef message::tx_message::ptr transaction_ptr;
 
     typedef handle0 result_handler;
     typedef handle1<transaction_ptr> fetch_handler;
