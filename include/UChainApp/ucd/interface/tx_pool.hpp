@@ -50,7 +50,7 @@ class BCS_API tx_pool
 
   private:
     static void handle_validated(const code &ec,
-                                 bc::message::transaction_message::ptr tx,
+                                 bc::message::tx_message::ptr tx,
                                  const chain::point::indexes &unconfirmed, const message &request,
                                  send_handler handler);
 };
