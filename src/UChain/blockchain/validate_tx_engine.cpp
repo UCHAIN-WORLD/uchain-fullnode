@@ -51,7 +51,7 @@ static constexpr uint32_t max_transaction_size = 1000000;
 validate_tx_engine::validate_tx_engine(block_chain &chain,
                                            const chain::transaction &tx, const validate_block &validate_block)
     : blockchain_(static_cast<blockchain::block_chain_impl &>(chain)),
-      tx_(std::make_shared<message::transaction_message>(tx)),
+      tx_(std::make_shared<message::tx_message>(tx)),
       pool_(nullptr),
       dispatch_(nullptr),
       validate_block_(&validate_block),
@@ -62,7 +62,7 @@ validate_tx_engine::validate_tx_engine(block_chain &chain,
 validate_tx_engine::validate_tx_engine(block_chain &chain,
                                            const chain::transaction &tx, const tx_pool &pool, dispatcher &dispatch)
     : blockchain_(static_cast<blockchain::block_chain_impl &>(chain)),
-      tx_(std::make_shared<message::transaction_message>(tx)),
+      tx_(std::make_shared<message::tx_message>(tx)),
       pool_(&pool),
       dispatch_(&dispatch),
       validate_block_(nullptr),
