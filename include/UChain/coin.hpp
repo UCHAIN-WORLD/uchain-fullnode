@@ -90,7 +90,7 @@
 #include <UChain/coin/message/reject.hpp>
 #include <UChain/coin/message/send_compact_blocks.hpp>
 #include <UChain/coin/message/send_headers.hpp>
-#include <UChain/coin/message/transaction_message.hpp>
+#include <UChain/coin/message/tx_message.hpp>
 #include <UChain/coin/message/verack.hpp>
 #include <UChain/coin/message/version.hpp>
 #include <UChain/coin/unicode/console_streambuf.hpp>

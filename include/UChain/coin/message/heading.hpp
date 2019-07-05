@@ -65,7 +65,7 @@ enum class message_type
     reject,
     send_compact_blocks,
     send_headers,
-    transaction_message,
+    tx_message,
     verack,
     version
 };
