@@ -63,7 +63,7 @@ class miner
     typedef std::shared_ptr<message::block_msg> block_ptr;
     typedef chain::header header;
     typedef chain::transaction transaction;
-    typedef message::transaction_message::ptr transaction_ptr;
+    typedef message::tx_message::ptr transaction_ptr;
     typedef blockchain::block_chain_impl block_chain_impl;
     typedef blockchain::tx_pool tx_pool;
     typedef libbitcoin::node::p2p_node p2p_node;
