@@ -23,7 +23,7 @@
 #include <boost/iostreams/stream.hpp>
 #include <UChain/coin/message/version.hpp>
 #include <UChain/coin/message/block_msg.hpp>
-#include <UChain/coin/message/transaction_message.hpp>
+#include <UChain/coin/message/tx_message.hpp>
 #include <UChain/coin/utility/container_sink.hpp>
 #include <UChain/coin/utility/container_source.hpp>
 #include <UChain/coin/utility/istream_reader.hpp>
@@ -100,7 +100,7 @@ bool reject::from_data(uint32_t version, reader &source)
     reason = source.read_string();
 
     if ((message == block_msg::command) ||
-        (message == transaction_message::command))
+        (message == tx_message::command))
     {
         data = source.read_hash();
     }
@@ -136,7 +136,7 @@ void reject::to_data(uint32_t version, writer &sink) const
     sink.write_string(reason);
 
     if ((message == block_msg::command) ||
-        (message == transaction_message::command))
+        (message == tx_message::command))
     {
         sink.write_hash(data);
     }
@@ -148,7 +148,7 @@ uint64_t reject::serialized_size(uint32_t version) const
                     variable_uint_size(reason.size()) + reason.size();
 
     if ((message == block_msg::command) ||
-        (message == transaction_message::command))
+        (message == tx_message::command))
     {
         size += hash_size;
     }

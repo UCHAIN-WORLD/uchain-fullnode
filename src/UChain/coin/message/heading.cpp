@@ -191,8 +191,8 @@ message_type heading::type() const
         return message_type::send_compact_blocks;
     if (command == send_headers::command)
         return message_type::send_headers;
-    if (command == transaction_message::command)
-        return message_type::transaction_message;
+    if (command == tx_message::command)
+        return message_type::tx_message;
     if (command == verack::command)
         return message_type::verack;
     if (command == version::command)
