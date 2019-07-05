@@ -79,7 +79,7 @@ public:
     DEFINE_SUBSCRIBER_TYPE(reject);
     DEFINE_SUBSCRIBER_TYPE(send_headers);
     DEFINE_SUBSCRIBER_TYPE(send_compact_blocks);
-    DEFINE_SUBSCRIBER_TYPE(transaction_message);
+    DEFINE_SUBSCRIBER_TYPE(tx_message);
     DEFINE_SUBSCRIBER_TYPE(verack);
     DEFINE_SUBSCRIBER_TYPE(version);
 
@@ -193,7 +193,7 @@ private:
     DEFINE_SUBSCRIBER_OVERLOAD(reject);
     DEFINE_SUBSCRIBER_OVERLOAD(send_headers);
     DEFINE_SUBSCRIBER_OVERLOAD(send_compact_blocks);
-    DEFINE_SUBSCRIBER_OVERLOAD(transaction_message);
+    DEFINE_SUBSCRIBER_OVERLOAD(tx_message);
     DEFINE_SUBSCRIBER_OVERLOAD(verack);
     DEFINE_SUBSCRIBER_OVERLOAD(version);
 
@@ -220,7 +220,7 @@ private:
     DECLARE_SUBSCRIBER(reject);
     DECLARE_SUBSCRIBER(send_headers);
     DECLARE_SUBSCRIBER(send_compact_blocks);
-    DECLARE_SUBSCRIBER(transaction_message);
+    DECLARE_SUBSCRIBER(tx_message);
     DECLARE_SUBSCRIBER(verack);
     DECLARE_SUBSCRIBER(version);
 };
