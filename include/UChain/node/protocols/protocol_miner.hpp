@@ -39,7 +39,7 @@ class BCN_API protocol_miner : public network::protocol_events, track<protocol_m
   public:
     using ptr = std::shared_ptr<protocol_miner>;
     using indexes = chain::point::indexes;
-    using transaction_ptr = message::transaction_message::ptr;
+    using transaction_ptr = message::tx_message::ptr;
     protocol_miner(network::p2p &network, network::channel::ptr channel, blockchain::block_chain &blockchain
                    /*, blockchain::tx_pool& pool*/);
     virtual void start();

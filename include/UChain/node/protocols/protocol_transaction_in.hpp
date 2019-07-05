@@ -52,7 +52,7 @@ class BCN_API protocol_transaction_in
     typedef chain::point::indexes index_list;
     typedef message::get_data::ptr get_data_ptr;
     typedef message::inventory::ptr inventory_ptr;
-    typedef message::transaction_message::ptr transaction_ptr;
+    typedef message::tx_message::ptr transaction_ptr;
     typedef message::block_msg::ptr_list block_ptr_list;
     typedef message::block_msg::ptr block_ptr;
 
