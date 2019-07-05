@@ -222,8 +222,8 @@ void protocol_transaction_out::send_transaction(const code &ec,
     log::trace(LOG_NODE) << "send transaction " << encode_hash(transaction.hash()) << ", to " << authority();
 
     // TODO: eliminate copy.
-    SEND2(transaction_message(transaction), handle_send, _1,
-          transaction_message::command);
+    SEND2(tx_message(transaction), handle_send, _1,
+          tx_message::command);
 }
 
 // Subscription.
