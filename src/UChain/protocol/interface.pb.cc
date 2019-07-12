@@ -102,7 +102,7 @@ const ::google::protobuf::Descriptor *response_transactions_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection *
     response_transactions_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor *filters_descriptor_ = NULL;
-const ::google::protobuf::EnumDescriptor *transaction_results_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor *tx_results_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor *locations_descriptor_ = NULL;
 
 } // namespace
@@ -456,7 +456,7 @@ void protobuf_AssignDesc_bitcoin_2fprotocol_2finterface_2eproto()
           ::google::protobuf::MessageFactory::generated_factory(),
           sizeof(response_transactions));
   filters_descriptor_ = file->enum_type(0);
-  transaction_results_descriptor_ = file->enum_type(1);
+  tx_results_descriptor_ = file->enum_type(1);
   locations_descriptor_ = file->enum_type(2);
 }
 
@@ -640,7 +640,7 @@ void protobuf_AddDesc_bitcoin_2fprotocol_2finterface_2eproto()
       "l.tx_result\022/\n\005utxos\030\005 \003(\0132 .libbitcoin."
       "protocol.utxo_result*\005\010d\020\310\001B\017\n\rresponse_"
       "type*4\n\007filters\022\013\n\007ADDRESS\020\001\022\017\n\013TRANSACT"
-      "ION\020\002\022\013\n\007STEALTH\020\003*B\n\023transaction_result"
+      "ION\020\002\022\013\n\007STEALTH\020\003*B\n\023tx_result"
       "s\022\013\n\007TX_HASH\020\001\022\r\n\tTX_RESULT\020\002\022\017\n\013UTXO_RE"
       "SULT\020\003*,\n\tlocations\022\010\n\004NONE\020\000\022\t\n\005BLOCK\020\001"
       "\022\n\n\006MERKLE\020\002",
@@ -716,12 +716,12 @@ bool filters_IsValid(int value)
   }
 }
 
-const ::google::protobuf::EnumDescriptor *transaction_results_descriptor()
+const ::google::protobuf::EnumDescriptor *tx_results_descriptor()
 {
   protobuf_AssignDescriptorsOnce();
-  return transaction_results_descriptor_;
+  return tx_results_descriptor_;
 }
-bool transaction_results_IsValid(int value)
+bool tx_results_IsValid(int value)
 {
   switch (value)
   {
@@ -6304,7 +6304,7 @@ bool transactions_request::MergePartialFromCodedStream(
       break;
     }
 
-    // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
+    // optional .libbitcoin.protocol.tx_results result_type = 4 [default = TX_HASH];
     case 4:
     {
       if (tag == 32)
@@ -6314,9 +6314,9 @@ bool transactions_request::MergePartialFromCodedStream(
         DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
              int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
             input, &value)));
-        if (::libbitcoin::protocol::transaction_results_IsValid(value))
+        if (::libbitcoin::protocol::tx_results_IsValid(value))
         {
-          set_result_type(static_cast<::libbitcoin::protocol::transaction_results>(value));
+          set_result_type(static_cast<::libbitcoin::protocol::tx_results>(value));
         }
         else
         {
@@ -6408,7 +6408,7 @@ void transactions_request::SerializeWithCachedSizes(
         3, this->query(i), output);
   }
 
-  // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
+  // optional .libbitcoin.protocol.tx_results result_type = 4 [default = TX_HASH];
   if (has_result_type())
   {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
@@ -6456,7 +6456,7 @@ void transactions_request::SerializeWithCachedSizes(
             3, this->query(i), target);
   }
 
-  // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
+  // optional .libbitcoin.protocol.tx_results result_type = 4 [default = TX_HASH];
   if (has_result_type())
   {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
@@ -6501,7 +6501,7 @@ int transactions_request::ByteSize() const
                         this->results_per_page());
     }
 
-    // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
+    // optional .libbitcoin.protocol.tx_results result_type = 4 [default = TX_HASH];
     if (has_result_type())
     {
       total_size += 1 +
