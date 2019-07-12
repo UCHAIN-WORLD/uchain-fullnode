@@ -24,7 +24,7 @@
 #include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory_map.hpp>
-#include <UChain/database/result/transaction_result.hpp>
+#include <UChain/database/result/tx_result.hpp>
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
 
