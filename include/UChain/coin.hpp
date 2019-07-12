@@ -86,7 +86,7 @@
 #include <UChain/coin/message/not_found.hpp>
 #include <UChain/coin/message/ping.hpp>
 #include <UChain/coin/message/pong.hpp>
-#include <UChain/coin/message/prefilled_transaction.hpp>
+#include <UChain/coin/message/prefilled_tx.hpp>
 #include <UChain/coin/message/reject.hpp>
 #include <UChain/coin/message/send_compact_blocks.hpp>
 #include <UChain/coin/message/send_headers.hpp>
