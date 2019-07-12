@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_MESSAGE_PREFILLED_TRANSACTION_HPP
-#define UC_MESSAGE_PREFILLED_TRANSACTION_HPP
+#ifndef UC_MESSAGE_prefilled_tx_HPP
+#define UC_MESSAGE_prefilled_tx_HPP
 
 #include <istream>
 #include <UChain/coin/define.hpp>
@@ -34,16 +34,16 @@ namespace libbitcoin
 namespace message
 {
 
-class BC_API prefilled_transaction
+class BC_API prefilled_tx
 {
   public:
-    typedef std::vector<prefilled_transaction> list;
+    typedef std::vector<prefilled_tx> list;
 
-    static prefilled_transaction factory_from_data(uint32_t version,
+    static prefilled_tx factory_from_data(uint32_t version,
                                                    const data_chunk &data);
-    static prefilled_transaction factory_from_data(uint32_t version,
+    static prefilled_tx factory_from_data(uint32_t version,
                                                    std::istream &stream);
-    static prefilled_transaction factory_from_data(uint32_t version,
+    static prefilled_tx factory_from_data(uint32_t version,
                                                    reader &source);
 
     bool from_data(uint32_t version, const data_chunk &data);
