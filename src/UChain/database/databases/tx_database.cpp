@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/database/databases/transaction_database.hpp>
+#include <UChain/database/databases/tx_database.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -26,7 +26,7 @@
 #include <boost/filesystem.hpp>
 #include <UChain/coin.hpp>
 #include <UChain/database/memory/memory.hpp>
-#include <UChain/database/result/transaction_result.hpp>
+#include <UChain/database/result/tx_result.hpp>
 
 namespace libbitcoin
 {
@@ -39,7 +39,7 @@ BC_CONSTEXPR size_t number_buckets = 100000000;
 BC_CONSTEXPR size_t header_size = slab_hash_table_header_size(number_buckets);
 BC_CONSTEXPR size_t initial_map_file_size = header_size + minimum_slabs_size;
 
-transaction_database::transaction_database(const path &map_filename,
+tx_database::tx_database(const path &map_filename,
                                            std::shared_ptr<shared_mutex> mutex)
     : lookup_file_(map_filename, mutex),
       lookup_header_(lookup_file_, number_buckets),
@@ -49,7 +49,7 @@ transaction_database::transaction_database(const path &map_filename,
 }
 
 // Close does not call stop because there is no way to detect thread join.
-transaction_database::~transaction_database()
+tx_database::~tx_database()
 {
     close();
 }
@@ -58,7 +58,7 @@ transaction_database::~transaction_database()
 // ----------------------------------------------------------------------------
 
 // Initialize files and start.
-bool transaction_database::create()
+bool tx_database::create()
 {
     // Resize and create require a started file.
     if (!lookup_file_.start())
@@ -80,7 +80,7 @@ bool transaction_database::create()
 // ----------------------------------------------------------------------------
 
 // Start files and primitives.
-bool transaction_database::start()
+bool tx_database::start()
 {
     return lookup_file_.start() &&
            lookup_header_.start() &&
@@ -88,26 +88,26 @@ bool transaction_database::start()
 }
 
 // Stop files.
-bool transaction_database::stop()
+bool tx_database::stop()
 {
     return lookup_file_.stop();
 }
 
 // Close files.
-bool transaction_database::close()
+bool tx_database::close()
 {
     return lookup_file_.close();
 }
 
 // ----------------------------------------------------------------------------
 
-transaction_result transaction_database::get(const hash_digest &hash) const
+tx_result tx_database::get(const hash_digest &hash) const
 {
     const auto memory = lookup_map_.find(hash);
-    return transaction_result(memory);
+    return tx_result(memory);
 }
 
-void transaction_database::store(size_t height, size_t index,
+void tx_database::store(size_t height, size_t index,
                                  const chain::transaction &tx)
 {
     // Write block data.
@@ -132,14 +132,14 @@ void transaction_database::store(size_t height, size_t index,
     lookup_map_.store(key, write, value_size);
 }
 
-void transaction_database::remove(const hash_digest &hash)
+void tx_database::remove(const hash_digest &hash)
 {
     DEBUG_ONLY(bool success =)
     lookup_map_.unlink(hash);
     BITCOIN_ASSERT(success);
 }
 
-void transaction_database::sync()
+void tx_database::sync()
 {
     lookup_manager_.sync();
 }

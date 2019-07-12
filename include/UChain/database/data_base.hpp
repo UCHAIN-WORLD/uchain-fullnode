@@ -29,7 +29,7 @@
 #include <UChain/coin.hpp>
 #include <UChain/database/databases/block_database.hpp>
 #include <UChain/database/databases/spend_database.hpp>
-#include <UChain/database/databases/transaction_database.hpp>
+#include <UChain/database/databases/tx_database.hpp>
 #include <UChain/database/databases/history_database.hpp>
 #include <UChain/database/databases/stealth_database.hpp>
 #include <UChain/database/define.hpp>
@@ -362,7 +362,7 @@ class BCD_API data_base
     history_database history;
     spend_database spends;
     stealth_database stealth;
-    transaction_database transactions;
+    tx_database transactions;
     /* begin database for wallet, token, address_token,uid relationship */
     wallet_database wallets;
     blockchain_token_database tokens;

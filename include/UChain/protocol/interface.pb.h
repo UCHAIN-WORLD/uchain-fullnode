@@ -83,28 +83,28 @@ inline bool filters_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<filters>(
       filters_descriptor(), name, value);
 }
-enum transaction_results
+enum tx_results
 {
   TX_HASH = 1,
   TX_RESULT = 2,
   UTXO_RESULT = 3
 };
-BCP_API bool transaction_results_IsValid(int value);
-const transaction_results transaction_results_MIN = TX_HASH;
-const transaction_results transaction_results_MAX = UTXO_RESULT;
-const int transaction_results_ARRAYSIZE = transaction_results_MAX + 1;
+BCP_API bool tx_results_IsValid(int value);
+const tx_results tx_results_MIN = TX_HASH;
+const tx_results tx_results_MAX = UTXO_RESULT;
+const int tx_results_ARRAYSIZE = tx_results_MAX + 1;
 
-BCP_API const ::google::protobuf::EnumDescriptor *transaction_results_descriptor();
-inline const ::std::string &transaction_results_Name(transaction_results value)
+BCP_API const ::google::protobuf::EnumDescriptor *tx_results_descriptor();
+inline const ::std::string &tx_results_Name(tx_results value)
 {
   return ::google::protobuf::internal::NameOfEnum(
-      transaction_results_descriptor(), value);
+      tx_results_descriptor(), value);
 }
-inline bool transaction_results_Parse(
-    const ::std::string &name, transaction_results *value)
+inline bool tx_results_Parse(
+    const ::std::string &name, tx_results *value)
 {
-  return ::google::protobuf::internal::ParseNamedEnum<transaction_results>(
-      transaction_results_descriptor(), name, value);
+  return ::google::protobuf::internal::ParseNamedEnum<tx_results>(
+      tx_results_descriptor(), name, value);
 }
 enum locations
 {
@@ -1770,12 +1770,12 @@ public:
   inline ::google::protobuf::RepeatedPtrField<::libbitcoin::protocol::filter> *
   mutable_query();
 
-  // optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
+  // optional .libbitcoin.protocol.tx_results result_type = 4 [default = TX_HASH];
   inline bool has_result_type() const;
   inline void clear_result_type();
   static const int kResultTypeFieldNumber = 4;
-  inline ::libbitcoin::protocol::transaction_results result_type() const;
-  inline void set_result_type(::libbitcoin::protocol::transaction_results value);
+  inline ::libbitcoin::protocol::tx_results result_type() const;
+  inline void set_result_type(::libbitcoin::protocol::tx_results value);
 
   // optional .libbitcoin.protocol.locations location_type = 5 [default = NONE];
   inline bool has_location_type() const;
@@ -4812,7 +4812,7 @@ transactions_request::mutable_query()
   return &query_;
 }
 
-// optional .libbitcoin.protocol.transaction_results result_type = 4 [default = TX_HASH];
+// optional .libbitcoin.protocol.tx_results result_type = 4 [default = TX_HASH];
 inline bool transactions_request::has_result_type() const
 {
   return (_has_bits_[0] & 0x00000008u) != 0;
@@ -4830,14 +4830,14 @@ inline void transactions_request::clear_result_type()
   result_type_ = 1;
   clear_has_result_type();
 }
-inline ::libbitcoin::protocol::transaction_results transactions_request::result_type() const
+inline ::libbitcoin::protocol::tx_results transactions_request::result_type() const
 {
   // @@protoc_insertion_point(field_get:libbitcoin.protocol.transactions_request.result_type)
-  return static_cast<::libbitcoin::protocol::transaction_results>(result_type_);
+  return static_cast<::libbitcoin::protocol::tx_results>(result_type_);
 }
-inline void transactions_request::set_result_type(::libbitcoin::protocol::transaction_results value)
+inline void transactions_request::set_result_type(::libbitcoin::protocol::tx_results value)
 {
-  assert(::libbitcoin::protocol::transaction_results_IsValid(value));
+  assert(::libbitcoin::protocol::tx_results_IsValid(value));
   set_has_result_type();
   result_type_ = value;
   // @@protoc_insertion_point(field_set:libbitcoin.protocol.transactions_request.result_type)
@@ -5978,13 +5978,13 @@ inline const EnumDescriptor *GetEnumDescriptor<::libbitcoin::protocol::filters>(
   return ::libbitcoin::protocol::filters_descriptor();
 }
 template <>
-struct is_proto_enum<::libbitcoin::protocol::transaction_results> : ::google::protobuf::internal::true_type
+struct is_proto_enum<::libbitcoin::protocol::tx_results> : ::google::protobuf::internal::true_type
 {
 };
 template <>
-inline const EnumDescriptor *GetEnumDescriptor<::libbitcoin::protocol::transaction_results>()
+inline const EnumDescriptor *GetEnumDescriptor<::libbitcoin::protocol::tx_results>()
 {
-  return ::libbitcoin::protocol::transaction_results_descriptor();
+  return ::libbitcoin::protocol::tx_results_descriptor();
 }
 template <>
 struct is_proto_enum<::libbitcoin::protocol::locations> : ::google::protobuf::internal::true_type

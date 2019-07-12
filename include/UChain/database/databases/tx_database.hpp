@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_DATABASE_TRANSACTION_DATABASE_HPP
-#define UC_DATABASE_TRANSACTION_DATABASE_HPP
+#ifndef UC_DATABASE_tx_database_HPP
+#define UC_DATABASE_tx_database_HPP
 
 #include <memory>
 #include <boost/filesystem.hpp>
 #include <UChain/coin.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/memory/memory_map.hpp>
-#include <UChain/database/result/transaction_result.hpp>
+#include <UChain/database/result/tx_result.hpp>
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
 
@@ -40,15 +40,15 @@ namespace database
 /// that is assigned upon storage.
 /// This is so we can quickly reconstruct blocks given a list of tx indexes
 /// belonging to that block. These are stored with the block.
-class BCD_API transaction_database
+class BCD_API tx_database
 {
   public:
     /// Construct the database.
-    transaction_database(const boost::filesystem::path &map_filename,
+    tx_database(const boost::filesystem::path &map_filename,
                          std::shared_ptr<shared_mutex> mutex = nullptr);
 
     /// Close the database (all threads must first be stopped).
-    ~transaction_database();
+    ~tx_database();
 
     /// Initialize a new transaction database.
     bool create();
@@ -63,7 +63,7 @@ class BCD_API transaction_database
     bool close();
 
     /// Fetch transaction from its hash.
-    transaction_result get(const hash_digest &hash) const;
+    tx_result get(const hash_digest &hash) const;
 
     /// Store a transaction in the database. Returns a unique index
     /// which can be used to reference the transaction.

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/database/result/transaction_result.hpp>
+#include <UChain/database/result/tx_result.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -44,31 +44,31 @@ chain::transaction deserialize_tx(const Iterator first)
     return tx;
 }
 
-transaction_result::transaction_result(const memory_ptr slab)
+tx_result::tx_result(const memory_ptr slab)
     : slab_(slab)
 {
 }
 
-transaction_result::operator bool() const
+tx_result::operator bool() const
 {
     return slab_ != nullptr;
 }
 
-size_t transaction_result::height() const
+size_t tx_result::height() const
 {
     BITCOIN_ASSERT(slab_);
     const auto memory = REMAP_ADDRESS(slab_);
     return from_little_endian_unsafe<uint32_t>(memory);
 }
 
-size_t transaction_result::index() const
+size_t tx_result::index() const
 {
     BITCOIN_ASSERT(slab_);
     const auto memory = REMAP_ADDRESS(slab_);
     return from_little_endian_unsafe<uint32_t>(memory + height_size);
 }
 
-chain::transaction transaction_result::transaction() const
+chain::transaction tx_result::transaction() const
 {
     BITCOIN_ASSERT(slab_);
     const auto memory = REMAP_ADDRESS(slab_);

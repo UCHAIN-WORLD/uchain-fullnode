@@ -24,7 +24,7 @@
 #include <istream>
 #include <UChain/coin/define.hpp>
 #include <UChain/coin/chain/header.hpp>
-#include <UChain/coin/message/prefilled_transaction.hpp>
+#include <UChain/coin/message/prefilled_tx.hpp>
 #include <UChain/coin/utility/data.hpp>
 #include <UChain/coin/utility/reader.hpp>
 #include <UChain/coin/utility/writer.hpp>
@@ -65,7 +65,7 @@ class BC_API compact_block
     chain::header header;
     uint64_t nonce;
     short_id_list short_ids;
-    prefilled_transaction::list transactions;
+    prefilled_tx::list transactions;
 };
 
 } // namespace message

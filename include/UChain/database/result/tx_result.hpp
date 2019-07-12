@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_DATABASE_TRANSACTION_RESULT_HPP
-#define UC_DATABASE_TRANSACTION_RESULT_HPP
+#ifndef UC_DATABASE_tx_result_HPP
+#define UC_DATABASE_tx_result_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -33,10 +33,10 @@ namespace database
 {
 
 /// Deferred read transaction result.
-class BCD_API transaction_result
+class BCD_API tx_result
 {
   public:
-    transaction_result(const memory_ptr slab);
+    tx_result(const memory_ptr slab);
 
     /// True if this transaction result is valid (found).
     operator bool() const;
