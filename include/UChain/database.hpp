@@ -23,7 +23,7 @@
 #include <UChain/database/databases/history_database.hpp>
 #include <UChain/database/databases/spend_database.hpp>
 #include <UChain/database/databases/stealth_database.hpp>
-#include <UChain/database/databases/transaction_database.hpp>
+#include <UChain/database/databases/tx_database.hpp>
 #include <UChain/database/memory/accessor.hpp>
 #include <UChain/database/memory/allocator.hpp>
 #include <UChain/database/memory/memory.hpp>
@@ -38,6 +38,6 @@
 #include <UChain/database/primitives/slab_hash_table.hpp>
 #include <UChain/database/primitives/slab_manager.hpp>
 #include <UChain/database/result/block_result.hpp>
-#include <UChain/database/result/transaction_result.hpp>
+#include <UChain/database/result/tx_result.hpp>
 
 #endif
