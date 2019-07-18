@@ -31,7 +31,7 @@
 #include <UChainApp/ucd/services/block_service.hpp>
 #include <UChainApp/ucd/services/heartbeat_service.hpp>
 #include <UChainApp/ucd/services/query_service.hpp>
-#include <UChainApp/ucd/services/transaction_service.hpp>
+#include <UChainApp/ucd/services/tx_service.hpp>
 #include <UChainApp/ucd/utility/address_key.hpp>
 #include <UChainApp/ucd/utility/authenticator.hpp>
 #include <UChainApp/ucd/utility/fetch_helpers.hpp>
