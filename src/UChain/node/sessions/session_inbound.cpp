@@ -24,8 +24,8 @@
 #include <UChain/network.hpp>
 #include <UChain/node/protocols/protocol_block_in.hpp>
 #include <UChain/node/protocols/protocol_block_out.hpp>
-#include <UChain/node/protocols/protocol_transaction_in.hpp>
-#include <UChain/node/protocols/protocol_transaction_out.hpp>
+#include <UChain/node/protocols/protocol_tx_in.hpp>
+#include <UChain/node/protocols/protocol_tx_out.hpp>
 
 namespace libbitcoin
 {
@@ -57,8 +57,8 @@ void session_inbound::attach_handshake_protocols(channel::ptr channel,
             auto pt_address = attach<protocol_address>(channel);
             auto pt_block_in = attach<protocol_block_in>(channel, blockchain_);
             auto pt_block_out = attach<protocol_block_out>(channel, blockchain_);
-            auto pt_tx_in = attach<protocol_transaction_in>(channel, blockchain_, pool_);
-            auto pt_tx_out = attach<protocol_transaction_out>(channel, blockchain_, pool_);
+            auto pt_tx_in = attach<protocol_tx_in>(channel, blockchain_, pool_);
+            auto pt_tx_out = attach<protocol_tx_out>(channel, blockchain_, pool_);
 
             pt_ping->do_subscribe();
             pt_address->do_subscribe();
