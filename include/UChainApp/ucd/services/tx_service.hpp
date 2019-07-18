@@ -34,18 +34,18 @@ class server_node;
 
 // This class is thread safe.
 // Subscribe to transaction acceptances into the transaction memory pool.
-class BCS_API transaction_service
+class BCS_API tx_service
     : public bc::protocol::zmq::worker
 {
   public:
-    typedef std::shared_ptr<transaction_service> ptr;
+    typedef std::shared_ptr<tx_service> ptr;
 
     /// The fixed inprocess worker endpoints.
     static const config::endpoint public_worker;
     static const config::endpoint secure_worker;
 
     /// Construct a transaction service.
-    transaction_service(bc::protocol::zmq::authenticator &authenticator,
+    tx_service(bc::protocol::zmq::authenticator &authenticator,
                         server_node &node, bool secure);
 
     /// Start the service.

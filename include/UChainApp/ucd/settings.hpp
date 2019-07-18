@@ -56,7 +56,7 @@ class BCS_API settings
     bool query_service_enabled;
     bool heartbeat_service_enabled;
     bool block_service_enabled;
-    bool transaction_service_enabled;
+    bool tx_service_enabled;
     bool websocket_service_enabled;
 
     config::endpoint public_query_endpoint;

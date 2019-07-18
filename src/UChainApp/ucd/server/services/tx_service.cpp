@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainApp/ucd/services/transaction_service.hpp>
+#include <UChainApp/ucd/services/tx_service.hpp>
 
 #include <functional>
 #include <memory>
@@ -38,10 +38,10 @@ using namespace bc::message;
 using namespace bc::protocol;
 
 static const auto domain = "transaction";
-const config::endpoint transaction_service::public_worker("inproc://public_tx");
-const config::endpoint transaction_service::secure_worker("inproc://secure_tx");
+const config::endpoint tx_service::public_worker("inproc://public_tx");
+const config::endpoint tx_service::secure_worker("inproc://secure_tx");
 
-transaction_service::transaction_service(zmq::authenticator &authenticator,
+tx_service::tx_service(zmq::authenticator &authenticator,
                                          server_node &node, bool secure)
     : worker(node.thread_pool()),
       secure_(secure),
@@ -52,25 +52,25 @@ transaction_service::transaction_service(zmq::authenticator &authenticator,
 }
 
 // There is no unsubscribe so this class shouldn't be restarted.
-bool transaction_service::start()
+bool tx_service::start()
 {
     // Subscribe to transaction pool acceptances.
     node_.subscribe_tx_pool(
-        std::bind(&transaction_service::handle_transaction,
+        std::bind(&tx_service::handle_transaction,
                   this, _1, _2, _3));
 
     return zmq::worker::start();
 }
 
 // No unsubscribe so must be kept in scope until subscriber stop complete.
-bool transaction_service::stop()
+bool tx_service::stop()
 {
     return zmq::worker::stop();
 }
 
 // Implement worker as extended pub-sub.
 // The publisher drops messages for lost peers (clients) and high water.
-void transaction_service::work()
+void tx_service::work()
 {
     zmq::socket xpub(authenticator_, zmq::socket::role::extended_publisher);
     zmq::socket xsub(authenticator_, zmq::socket::role::extended_subscriber);
@@ -90,7 +90,7 @@ void transaction_service::work()
 // Bind/Unbind.
 //-----------------------------------------------------------------------------
 
-bool transaction_service::bind(zmq::socket &xpub, zmq::socket &xsub)
+bool tx_service::bind(zmq::socket &xpub, zmq::socket &xsub)
 {
     const auto security = secure_ ? "secure" : "public";
     const auto &worker = secure_ ? secure_worker : public_worker;
@@ -124,7 +124,7 @@ bool transaction_service::bind(zmq::socket &xpub, zmq::socket &xsub)
     return true;
 }
 
-bool transaction_service::unbind(zmq::socket &xpub, zmq::socket &xsub)
+bool tx_service::unbind(zmq::socket &xpub, zmq::socket &xsub)
 {
     // Stop both even if one fails.
     const auto service_stop = xpub.stop();
@@ -146,7 +146,7 @@ bool transaction_service::unbind(zmq::socket &xpub, zmq::socket &xsub)
 // Publish (integral worker).
 // ----------------------------------------------------------------------------
 
-bool transaction_service::handle_transaction(const code &ec, const index_list &,
+bool tx_service::handle_transaction(const code &ec, const index_list &,
                                              tx_message::ptr tx)
 {
     if (stopped() || ec == (code)error::service_stopped)
@@ -171,13 +171,13 @@ bool transaction_service::handle_transaction(const code &ec, const index_list &,
 }
 
 // [ tx... ]
-void transaction_service::publish_transaction(const transaction &tx)
+void tx_service::publish_transaction(const transaction &tx)
 {
     if (stopped())
         return;
 
     const auto security = secure_ ? "secure" : "public";
-    const auto &endpoint = secure_ ? transaction_service::secure_worker : transaction_service::public_worker;
+    const auto &endpoint = secure_ ? tx_service::secure_worker : tx_service::public_worker;
 
     // Subscriptions are off the pub-sub thread so this must connect back.
     // This could be optimized by caching the socket as thread static.
