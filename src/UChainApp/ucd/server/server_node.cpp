@@ -58,8 +58,8 @@ server_node::server_node(const configuration &configuration)
       public_heartbeat_service_(authenticator_, *this, false),
       secure_block_service_(authenticator_, *this, true),
       public_block_service_(authenticator_, *this, false),
-      secure_transaction_service_(authenticator_, *this, true),
-      public_transaction_service_(authenticator_, *this, false),
+      secure_tx_service_(authenticator_, *this, true),
+      public_tx_service_(authenticator_, *this, false),
       secure_notification_worker_(authenticator_, *this, true),
       public_notification_worker_(authenticator_, *this, false),
       miner_(*this),
@@ -188,7 +188,7 @@ bool server_node::start_services()
 {
     return start_authenticator() && start_query_services() &&
            start_heartbeat_services() && start_block_services() &&
-           start_transaction_services();
+           start_tx_services();
 }
 
 bool server_node::start_authenticator()
@@ -200,7 +200,7 @@ bool server_node::start_authenticator()
         ((!settings.query_service_enabled || settings.query_workers == 0) &&
          (!settings.heartbeat_service_enabled || heartbeat_interval == 0) &&
          (!settings.block_service_enabled) &&
-         (!settings.transaction_service_enabled)))
+         (!settings.tx_service_enabled)))
         return true;
 
     return authenticator_.start();
@@ -265,19 +265,19 @@ bool server_node::start_block_services()
     return true;
 }
 
-bool server_node::start_transaction_services()
+bool server_node::start_tx_services()
 {
     const auto &settings = configuration_.server;
 
-    if (!settings.transaction_service_enabled)
+    if (!settings.tx_service_enabled)
         return true;
 
     // Start secure service if enabled.
-    if (settings.server_private_key && !secure_transaction_service_.start())
+    if (settings.server_private_key && !secure_tx_service_.start())
         return false;
 
     // Start public service if enabled.
-    if (!settings.secure_only && !public_transaction_service_.start())
+    if (!settings.secure_only && !public_tx_service_.start())
         return false;
 
     return true;
@@ -358,7 +358,7 @@ uint32_t server_node::threads_required(const configuration &configuration)
         required += (settings.secure_only ? 0 : 1);
     }
 
-    if (settings.transaction_service_enabled)
+    if (settings.tx_service_enabled)
     {
         required += (settings.server_private_key ? 1 : 0);
         required += (settings.secure_only ? 0 : 1);
