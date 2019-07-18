@@ -285,8 +285,8 @@ options_metadata parser::load_settings()
             "server.block_service_enabled",
             value<bool>(&configured.server.block_service_enabled),
             "Enable the block publishing service, defaults to false.")(
-            "server.transaction_service_enabled",
-            value<bool>(&configured.server.transaction_service_enabled),
+            "server.tx_service_enabled",
+            value<bool>(&configured.server.tx_service_enabled),
             "Enable the transaction publishing service, defaults to false.")(
             "server.websocket_service_enabled",
             value<bool>(&configured.server.websocket_service_enabled),
