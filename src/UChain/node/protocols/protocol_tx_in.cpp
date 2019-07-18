@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/node/protocols/protocol_transaction_in.hpp>
+#include <UChain/node/protocols/protocol_tx_in.hpp>
 
 #include <cstddef>
 #include <functional>
@@ -31,7 +31,7 @@ namespace node
 {
 
 #define NAME "transaction"
-#define CLASS protocol_transaction_in
+#define CLASS protocol_tx_in
 
 using namespace bc::blockchain;
 using namespace bc::message;
@@ -40,39 +40,39 @@ using namespace std::placeholders;
 
 // TODO: derive from protocol_session_node abstract intermediate base class.
 // TODO: Pass p2p_node on construct, obtaining node configuration settings.
-protocol_transaction_in::protocol_transaction_in(p2p &network,
+protocol_tx_in::protocol_tx_in(p2p &network,
                                                  channel::ptr channel, block_chain &blockchain, tx_pool &pool)
     : protocol_events(network, channel, NAME),
       blockchain_(blockchain),
       pool_(pool),
 
-      // TODO: move relay to a derived class protocol_transaction_in_70001.
+      // TODO: move relay to a derived class protocol_tx_in_70001.
       relay_from_peer_(network.network_settings().relay_transactions),
 
-      // TODO: move memory_pool to a derived class protocol_transaction_in_60002.
+      // TODO: move memory_pool to a derived class protocol_tx_in_60002.
       peer_suports_memory_pool_(peer_version().value >= version::level::bip35),
       refresh_pool_(relay_from_peer_ && peer_suports_memory_pool_
                     /*&& network.node_settings().tx_pool_refresh*/),
 
-      CONSTRUCT_TRACK(protocol_transaction_in)
+      CONSTRUCT_TRACK(protocol_tx_in)
 {
 }
 
-protocol_transaction_in::ptr protocol_transaction_in::do_subscribe()
+protocol_tx_in::ptr protocol_tx_in::do_subscribe()
 {
     SUBSCRIBE2(inventory, handle_receive_inventory, _1, _2);
     SUBSCRIBE2(tx_message, handle_receive_transaction, _1, _2);
     protocol_events::start(BIND1(handle_stop, _1));
-    return std::dynamic_pointer_cast<protocol_transaction_in>(protocol::shared_from_this());
+    return std::dynamic_pointer_cast<protocol_tx_in>(protocol::shared_from_this());
 }
 
 // Start.
 //-----------------------------------------------------------------------------
 
-void protocol_transaction_in::start()
+void protocol_tx_in::start()
 {
 
-    // TODO: move memory_pool to a derived class protocol_transaction_in_70002.
+    // TODO: move memory_pool to a derived class protocol_tx_in_70002.
     // Prior to this level the mempool message is not available.
     if (refresh_pool_)
     {
@@ -93,7 +93,7 @@ void protocol_transaction_in::start()
 // Receive inventory sequemessagence.
 //-----------------------------------------------------------------------------
 
-bool protocol_transaction_in::handle_receive_inventory(const code &ec,
+bool protocol_tx_in::handle_receive_inventory(const code &ec,
                                                        inventory_ptr message)
 {
     if (stopped())
@@ -111,7 +111,7 @@ bool protocol_transaction_in::handle_receive_inventory(const code &ec,
     const auto response = std::make_shared<get_data>();
     message->reduce(response->inventories, inventory::type_id::transaction);
 
-    // TODO: move relay to a derived class protocol_transaction_in_70001.
+    // TODO: move relay to a derived class protocol_tx_in_70001.
     // Prior to this level transaction relay is not configurable.
     if (!relay_from_peer_ && !response->inventories.empty())
     {
@@ -123,14 +123,14 @@ bool protocol_transaction_in::handle_receive_inventory(const code &ec,
     }
 
     auto hash = message->inventories.empty() ? "" : encode_hash(message->inventories[0].hash);
-    log::trace(LOG_NODE) << "protocol_transaction_in::handle_receive_inventory pool filter," << hash;
+    log::trace(LOG_NODE) << "protocol_tx_in::handle_receive_inventory pool filter," << hash;
     // This is returned on a new thread.
     // Remove matching transaction hashes found in the transaction pool.
     pool_.filter(response, BIND2(handle_filter_floaters, _1, response));
     return true;
 }
 
-void protocol_transaction_in::handle_filter_floaters(const code &ec,
+void protocol_tx_in::handle_filter_floaters(const code &ec,
                                                      get_data_ptr message)
 {
     if (stopped() || ec == (code)error::service_stopped ||
@@ -151,7 +151,7 @@ void protocol_transaction_in::handle_filter_floaters(const code &ec,
                                     BIND2(send_get_data, _1, message));
 }
 
-void protocol_transaction_in::send_get_data(const code &ec,
+void protocol_tx_in::send_get_data(const code &ec,
                                             get_data_ptr message)
 {
     if (stopped() || ec == (code)error::service_stopped ||
@@ -166,7 +166,7 @@ void protocol_transaction_in::send_get_data(const code &ec,
         stop(ec);
         return;
     }
-    log::trace(LOG_NODE) << "protocol_transaction_in::send_get_data";
+    log::trace(LOG_NODE) << "protocol_tx_in::send_get_data";
     // inventory->get_data[transaction]
     SEND2(*message, handle_send, _1, message->command);
 }
@@ -174,7 +174,7 @@ void protocol_transaction_in::send_get_data(const code &ec,
 // Receive transaction sequence.
 //-----------------------------------------------------------------------------
 
-bool protocol_transaction_in::handle_receive_transaction(const code &ec,
+bool protocol_tx_in::handle_receive_transaction(const code &ec,
                                                          transaction_ptr message)
 {
     if (stopped())
@@ -189,7 +189,7 @@ bool protocol_transaction_in::handle_receive_transaction(const code &ec,
         return false;
     }
 
-    // TODO: move relay to a derived class protocol_transaction_in_70001.
+    // TODO: move relay to a derived class protocol_tx_in_70001.
     // Prior to this level transaction relay is not configurable.
     if (!relay_from_peer_)
     {
@@ -211,7 +211,7 @@ bool protocol_transaction_in::handle_receive_transaction(const code &ec,
 // The transaction has been saved to the memory pool (or not).
 // This will be picked up by subscription in transaction_out and will cause
 // the transaction to be announced to non-originating relay-accepting peers.
-void protocol_transaction_in::handle_store_validated(const code &ec,
+void protocol_tx_in::handle_store_validated(const code &ec,
                                                      transaction_ptr message, const index_list &unconfirmed)
 {
     // Examples:
@@ -223,7 +223,7 @@ void protocol_transaction_in::handle_store_validated(const code &ec,
 }
 
 // The transaction has been confirmed in a block.
-void protocol_transaction_in::handle_store_confirmed(const code &ec,
+void protocol_tx_in::handle_store_confirmed(const code &ec,
                                                      transaction_ptr message)
 {
     // Examples:
@@ -237,9 +237,9 @@ void protocol_transaction_in::handle_store_confirmed(const code &ec,
 // Subscription.
 //-----------------------------------------------------------------------------
 
-// TODO: move memory_pool to a derived class protocol_transaction_in_70002.
+// TODO: move memory_pool to a derived class protocol_tx_in_70002.
 // Prior to this level the mempool message is not available.
-bool protocol_transaction_in::handle_reorganized(const code &ec, size_t,
+bool protocol_tx_in::handle_reorganized(const code &ec, size_t,
                                                  const block_ptr_list &, const block_ptr_list &outgoing)
 {
     if (stopped() || ec == (code)error::service_stopped)
@@ -270,7 +270,7 @@ bool protocol_transaction_in::handle_reorganized(const code &ec, size_t,
 // Stop.
 //-----------------------------------------------------------------------------
 
-void protocol_transaction_in::handle_stop(const code &)
+void protocol_tx_in::handle_stop(const code &)
 {
     log::trace(LOG_NETWORK)
         << "Stopped transaction_in protocol";

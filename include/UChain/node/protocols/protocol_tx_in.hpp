@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UC_NODE_PROTOCOL_TRANSACTION_IN_HPP
-#define UC_NODE_PROTOCOL_TRANSACTION_IN_HPP
+#ifndef UC_NODE_protocol_tx_in_HPP
+#define UC_NODE_protocol_tx_in_HPP
 
 #include <memory>
 #include <UChain/blockchain.hpp>
@@ -31,15 +31,15 @@ namespace libbitcoin
 namespace node
 {
 
-class BCN_API protocol_transaction_in
+class BCN_API protocol_tx_in
     : public network::protocol_events,
-      track<protocol_transaction_in>
+      track<protocol_tx_in>
 {
   public:
-    typedef std::shared_ptr<protocol_transaction_in> ptr;
+    typedef std::shared_ptr<protocol_tx_in> ptr;
 
     /// Construct a transaction protocol instance.
-    protocol_transaction_in(network::p2p &network,
+    protocol_tx_in(network::p2p &network,
                             network::channel::ptr channel, blockchain::block_chain &blockchain,
                             blockchain::tx_pool &pool);
 

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/node/protocols/protocol_transaction_out.hpp>
+#include <UChain/node/protocols/protocol_tx_out.hpp>
 
 #include <cstddef>
 #include <functional>
@@ -31,45 +31,45 @@ namespace node
 {
 
 #define NAME "transaction"
-#define CLASS protocol_transaction_out
+#define CLASS protocol_tx_out
 
 using namespace bc::blockchain;
 using namespace bc::message;
 using namespace bc::network;
 using namespace std::placeholders;
 
-protocol_transaction_out::protocol_transaction_out(p2p &network,
+protocol_tx_out::protocol_tx_out(p2p &network,
                                                    channel::ptr channel, block_chain &blockchain, tx_pool &pool)
     : protocol_events(network, channel, NAME),
       blockchain_(blockchain),
       pool_(pool),
 
-      // TODO: move fee filter to a derived class protocol_transaction_out_70013.
+      // TODO: move fee filter to a derived class protocol_tx_out_70013.
       minimum_fee_(0),
 
-      // TODO: move relay to a derived class protocol_transaction_out_70001.
+      // TODO: move relay to a derived class protocol_tx_out_70001.
       relay_to_peer_(peer_version().relay),
-      CONSTRUCT_TRACK(protocol_transaction_out)
+      CONSTRUCT_TRACK(protocol_tx_out)
 {
 }
 
-protocol_transaction_out::ptr protocol_transaction_out::do_subscribe()
+protocol_tx_out::ptr protocol_tx_out::do_subscribe()
 {
     SUBSCRIBE2(memory_pool, handle_receive_memory_pool, _1, _2);
     SUBSCRIBE2(fee_filter, handle_receive_fee_filter, _1, _2);
     SUBSCRIBE2(get_data, handle_receive_get_data, _1, _2);
     protocol_events::start(BIND1(handle_stop, _1));
-    return std::dynamic_pointer_cast<protocol_transaction_out>(protocol::shared_from_this());
+    return std::dynamic_pointer_cast<protocol_tx_out>(protocol::shared_from_this());
 }
 
-// TODO: move not_found to derived class protocol_transaction_out_70001.
+// TODO: move not_found to derived class protocol_tx_out_70001.
 
 // Start.
 //-----------------------------------------------------------------------------
 
-void protocol_transaction_out::start()
+void protocol_tx_out::start()
 {
-    // TODO: move relay to a derived class protocol_transaction_out_70001.
+    // TODO: move relay to a derived class protocol_tx_out_70001.
     // Prior to this level transaction relay is not configurable.
     if (relay_to_peer_)
     {
@@ -81,15 +81,15 @@ void protocol_transaction_out::start()
         }
     }
 
-    // TODO: move fee filter to a derived class protocol_transaction_out_70013.
+    // TODO: move fee filter to a derived class protocol_tx_out_70013.
     // Filter announcements by fee if set.
 }
 
 // Receive send_headers.
 //-----------------------------------------------------------------------------
 
-// TODO: move fee_filters to a derived class protocol_transaction_out_70013.
-bool protocol_transaction_out::handle_receive_fee_filter(const code &ec,
+// TODO: move fee_filters to a derived class protocol_tx_out_70013.
+bool protocol_tx_out::handle_receive_fee_filter(const code &ec,
                                                          fee_filter_ptr message)
 {
     if (stopped())
@@ -104,7 +104,7 @@ bool protocol_transaction_out::handle_receive_fee_filter(const code &ec,
         return false;
     }
 
-    // TODO: move fee filter to a derived class protocol_transaction_out_70013.
+    // TODO: move fee filter to a derived class protocol_tx_out_70013.
     // Transaction annoucements will be filtered by fee amount.
     minimum_fee_.store(message->minimum_fee);
 
@@ -115,7 +115,7 @@ bool protocol_transaction_out::handle_receive_fee_filter(const code &ec,
 // Receive mempool sequence.
 //-----------------------------------------------------------------------------
 
-bool protocol_transaction_out::handle_receive_memory_pool(const code &ec,
+bool protocol_tx_out::handle_receive_memory_pool(const code &ec,
                                                           memory_pool_ptr)
 {
     if (stopped())
@@ -146,7 +146,7 @@ bool protocol_transaction_out::handle_receive_memory_pool(const code &ec,
         {
             hashes.push_back(t->hash());
         }
-        send<protocol_transaction_out>(inventory{hashes, inventory::type_id::transaction}, &protocol_transaction_out::handle_send, _1, inventory::command);
+        send<protocol_tx_out>(inventory{hashes, inventory::type_id::transaction}, &protocol_tx_out::handle_send, _1, inventory::command);
     });
     return false;
 }
@@ -154,7 +154,7 @@ bool protocol_transaction_out::handle_receive_memory_pool(const code &ec,
 // Receive get_data sequence.
 //-----------------------------------------------------------------------------
 
-bool protocol_transaction_out::handle_receive_get_data(const code &ec,
+bool protocol_tx_out::handle_receive_get_data(const code &ec,
                                                        get_data_ptr message)
 {
     if (stopped())
@@ -194,7 +194,7 @@ bool protocol_transaction_out::handle_receive_get_data(const code &ec,
     return true;
 }
 
-void protocol_transaction_out::send_transaction(const code &ec,
+void protocol_tx_out::send_transaction(const code &ec,
                                                 const chain::transaction &transaction, const hash_digest &hash)
 {
     if (stopped() || ec == (code)error::service_stopped)
@@ -229,7 +229,7 @@ void protocol_transaction_out::send_transaction(const code &ec,
 // Subscription.
 //-----------------------------------------------------------------------------
 
-bool protocol_transaction_out::handle_floated(const code &ec,
+bool protocol_tx_out::handle_floated(const code &ec,
                                               const index_list &unconfirmed, transaction_ptr message)
 {
     if (stopped() || ec == (code)error::service_stopped)
@@ -246,7 +246,7 @@ bool protocol_transaction_out::handle_floated(const code &ec,
         return false;
     }
 
-    // TODO: move fee filter to a derived class protocol_transaction_out_70013.
+    // TODO: move fee filter to a derived class protocol_tx_out_70013.
     // TODO: implement fee computation.
     const uint64_t fee = 0;
 
@@ -262,7 +262,7 @@ bool protocol_transaction_out::handle_floated(const code &ec,
     return true;
 }
 
-void protocol_transaction_out::handle_stop(const code &)
+void protocol_tx_out::handle_stop(const code &)
 {
     log::trace(LOG_NETWORK)
         << "Stopped transaction_out protocol";
