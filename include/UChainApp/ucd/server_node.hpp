@@ -33,7 +33,7 @@
 #include <UChainApp/ucd/services/block_service.hpp>
 #include <UChainApp/ucd/services/heartbeat_service.hpp>
 #include <UChainApp/ucd/services/query_service.hpp>
-#include <UChainApp/ucd/services/transaction_service.hpp>
+#include <UChainApp/ucd/services/tx_service.hpp>
 #include <UChainApp/ucd/utility/authenticator.hpp>
 #include <UChainApp/ucd/workers/notification_worker.hpp>
 #include <UChainService/txs/utility/path.hpp>
@@ -118,7 +118,7 @@ class BCS_API server_node
     bool start_query_services();
     bool start_heartbeat_services();
     bool start_block_services();
-    bool start_transaction_services();
+    bool start_tx_services();
     bool start_query_workers(bool secure);
 
     bool open_ui();
@@ -139,8 +139,8 @@ class BCS_API server_node
     heartbeat_service public_heartbeat_service_;
     block_service secure_block_service_;
     block_service public_block_service_;
-    transaction_service secure_transaction_service_;
-    transaction_service public_transaction_service_;
+    tx_service secure_tx_service_;
+    tx_service public_tx_service_;
     notification_worker secure_notification_worker_;
     notification_worker public_notification_worker_;
 };
