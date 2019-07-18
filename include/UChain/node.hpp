@@ -26,8 +26,8 @@
 #include <UChain/node/protocols/protocol_block_out.hpp>
 #include <UChain/node/protocols/protocol_block_sync.hpp>
 #include <UChain/node/protocols/protocol_header_sync.hpp>
-#include <UChain/node/protocols/protocol_transaction_in.hpp>
-#include <UChain/node/protocols/protocol_transaction_out.hpp>
+#include <UChain/node/protocols/protocol_tx_in.hpp>
+#include <UChain/node/protocols/protocol_tx_out.hpp>
 #include <UChain/node/protocols/protocol_version_quiet.hpp>
 #include <UChain/node/sessions/session_block_sync.hpp>
 #include <UChain/node/sessions/session_header_sync.hpp>
