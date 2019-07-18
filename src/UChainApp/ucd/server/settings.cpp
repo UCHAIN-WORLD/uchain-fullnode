@@ -42,7 +42,7 @@ settings::settings()
       query_service_enabled(true),
       heartbeat_service_enabled(false),
       block_service_enabled(false),
-      transaction_service_enabled(false),
+      tx_service_enabled(false),
       websocket_service_enabled(true),
       public_query_endpoint("tcp://*:18707"),
       public_heartbeat_endpoint("tcp://*:9092"),
