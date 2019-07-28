@@ -27,11 +27,11 @@
 #include <boost/filesystem.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
 #include <UChain/coin.hpp>
-#include <UChain/database/databases/block_database.hpp>
-#include <UChain/database/databases/spend_database.hpp>
-#include <UChain/database/databases/tx_database.hpp>
-#include <UChain/database/databases/history_database.hpp>
-#include <UChain/database/databases/stealth_database.hpp>
+#include <UChain/database/databases/block_db.hpp>
+#include <UChain/database/databases/spend_db.hpp>
+#include <UChain/database/databases/tx_db.hpp>
+#include <UChain/database/databases/history_db.hpp>
+#include <UChain/database/databases/stealth_db.hpp>
 #include <UChain/database/define.hpp>
 #include <UChain/database/settings.hpp>
 
@@ -44,18 +44,18 @@
 #include <UChainService/txs/token/token_transfer.hpp>
 #include <UChainService/txs/asset.hpp>
 
-#include <UChainService/data/databases/wallet_database.hpp>
-#include <UChainService/data/databases/wallet_address_database.hpp>
-#include <UChainService/data/databases/token_database.hpp>
-#include <UChainService/data/databases/blockchain_token_database.hpp>
-#include <UChainService/data/databases/address_token_database.hpp>
-#include <UChainService/data/databases/wallet_token_database.hpp>
+#include <UChainService/data/databases/wallet_db.hpp>
+#include <UChainService/data/databases/wallet_address_db.hpp>
+#include <UChainService/data/databases/token_db.hpp>
+#include <UChainService/data/databases/blockchain_token_db.hpp>
+#include <UChainService/data/databases/address_token_db.hpp>
+#include <UChainService/data/databases/wallet_token_db.hpp>
 #include <UChainService/txs/uid/uid.hpp>
-#include <UChainService/data/databases/blockchain_token_cert_database.hpp>
-#include <UChainService/data/databases/blockchain_uid_database.hpp>
-#include <UChainService/data/databases/address_uid_database.hpp>
-#include <UChainService/data/databases/blockchain_candidate_database.hpp>
-#include <UChainService/data/databases/candidate_history_database.hpp>
+#include <UChainService/data/databases/blockchain_token_cert_db.hpp>
+#include <UChainService/data/databases/blockchain_uid_db.hpp>
+#include <UChainService/data/databases/address_uid_db.hpp>
+#include <UChainService/data/databases/blockchain_candidate_db.hpp>
+#include <UChainService/data/databases/candidate_history_db.hpp>
 
 using namespace libbitcoin::wallet;
 using namespace libbitcoin::chain;
