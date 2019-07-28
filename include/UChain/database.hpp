@@ -19,11 +19,11 @@
 #include <UChain/database/define.hpp>
 #include <UChain/database/settings.hpp>
 #include <UChain/database/version.hpp>
-#include <UChain/database/databases/block_database.hpp>
-#include <UChain/database/databases/history_database.hpp>
-#include <UChain/database/databases/spend_database.hpp>
-#include <UChain/database/databases/stealth_database.hpp>
-#include <UChain/database/databases/tx_database.hpp>
+#include <UChain/database/databases/block_db.hpp>
+#include <UChain/database/databases/history_db.hpp>
+#include <UChain/database/databases/spend_db.hpp>
+#include <UChain/database/databases/stealth_db.hpp>
+#include <UChain/database/databases/tx_db.hpp>
 #include <UChain/database/memory/accessor.hpp>
 #include <UChain/database/memory/allocator.hpp>
 #include <UChain/database/memory/memory.hpp>
