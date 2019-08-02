@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChain/database/databases/history_database.hpp>
+#include <UChain/database/databases/history_db.hpp>
 
 #include <cstdint>
 #include <cstddef>
