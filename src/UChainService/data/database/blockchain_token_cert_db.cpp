@@ -1,4 +1,5 @@
 /**
+ * Copyright (c) 2011-2018 libbitcoin developers 
  * Copyright (c) 2018-2020 UChain core developers (check UC-AUTHORS)
  *
  * This file is part of UChain.
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainService/data/databases/blockchain_candidate_database.hpp>
+#include <UChainService/data/databases/blockchain_token_cert_db.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -33,12 +34,13 @@ namespace database
 
 using namespace boost::filesystem;
 
-BC_CONSTEXPR size_t number_buckets = 9997; //999983;
+//BC_CONSTEXPR size_t number_buckets = 999997;
+BC_CONSTEXPR size_t number_buckets = 9997;
 BC_CONSTEXPR size_t header_size = slab_hash_table_header_size(number_buckets);
 BC_CONSTEXPR size_t initial_map_file_size = header_size + minimum_slabs_size;
 
-blockchain_candidate_database::blockchain_candidate_database(const path &map_filename,
-                                                             std::shared_ptr<shared_mutex> mutex)
+blockchain_token_cert_database::blockchain_token_cert_database(const path &map_filename,
+                                                               std::shared_ptr<shared_mutex> mutex)
     : lookup_file_(map_filename, mutex),
       lookup_header_(lookup_file_, number_buckets),
       lookup_manager_(lookup_file_, header_size),
@@ -47,7 +49,7 @@ blockchain_candidate_database::blockchain_candidate_database(const path &map_fil
 }
 
 // Close does not call stop because there is no way to detect thread join.
-blockchain_candidate_database::~blockchain_candidate_database()
+blockchain_token_cert_database::~blockchain_token_cert_database()
 {
     close();
 }
@@ -56,7 +58,7 @@ blockchain_candidate_database::~blockchain_candidate_database()
 // ----------------------------------------------------------------------------
 
 // Initialize files and start.
-bool blockchain_candidate_database::create()
+bool blockchain_token_cert_database::create()
 {
     // Resize and create require a started file.
     if (!lookup_file_.start())
@@ -78,7 +80,7 @@ bool blockchain_candidate_database::create()
 // ----------------------------------------------------------------------------
 
 // Start files and primitives.
-bool blockchain_candidate_database::start()
+bool blockchain_token_cert_database::start()
 {
     return lookup_file_.start() &&
            lookup_header_.start() &&
@@ -86,59 +88,59 @@ bool blockchain_candidate_database::start()
 }
 
 // Stop files.
-bool blockchain_candidate_database::stop()
+bool blockchain_token_cert_database::stop()
 {
     return lookup_file_.stop();
 }
 
 // Close files.
-bool blockchain_candidate_database::close()
+bool blockchain_token_cert_database::close()
 {
     return lookup_file_.close();
 }
 
 // ----------------------------------------------------------------------------
 
-void blockchain_candidate_database::remove(const hash_digest &hash)
+void blockchain_token_cert_database::remove(const hash_digest &hash)
 {
     DEBUG_ONLY(bool success =)
     lookup_map_.unlink(hash);
     BITCOIN_ASSERT(success);
 }
 
-void blockchain_candidate_database::sync()
+void blockchain_token_cert_database::sync()
 {
     lookup_manager_.sync();
 }
 
-std::shared_ptr<candidate_info> blockchain_candidate_database::get(const hash_digest &hash) const
+std::shared_ptr<token_cert> blockchain_token_cert_database::get(const hash_digest &hash) const
 {
-    std::shared_ptr<candidate_info> detail(nullptr);
+    std::shared_ptr<token_cert> detail(nullptr);
 
     const auto raw_memory = lookup_map_.find(hash);
     if (raw_memory)
     {
         const auto memory = REMAP_ADDRESS(raw_memory);
-        detail = std::make_shared<candidate_info>();
+        detail = std::make_shared<token_cert>();
         auto deserial = make_deserializer_unsafe(memory);
-        *detail = candidate_info::factory_from_data(deserial);
+        detail->from_data(deserial);
     }
 
     return detail;
 }
 
-std::shared_ptr<candidate_info::list> blockchain_candidate_database::get_blockchain_candidates() const
+std::shared_ptr<std::vector<token_cert>> blockchain_token_cert_database::get_blockchain_token_certs() const
 {
-    auto vec_acc = std::make_shared<std::vector<candidate_info>>();
+    auto vec_acc = std::make_shared<std::vector<token_cert>>();
     for (uint64_t i = 0; i < number_buckets; i++)
     {
         auto memo = lookup_map_.find(i);
         if (memo->size())
         {
-            const auto action = [&vec_acc](memory_ptr elem) {
+            const auto action = [&](memory_ptr elem) {
                 const auto memory = REMAP_ADDRESS(elem);
                 auto deserial = make_deserializer_unsafe(memory);
-                vec_acc->push_back(candidate_info::factory_from_data(deserial));
+                vec_acc->push_back(token_cert::factory_from_data(deserial));
             };
             std::for_each(memo->begin(), memo->end(), action);
         }
@@ -146,54 +148,24 @@ std::shared_ptr<candidate_info::list> blockchain_candidate_database::get_blockch
     return vec_acc;
 }
 
-///
-std::shared_ptr<candidate_info> blockchain_candidate_database::get_register_history(const std::string &candidate_symbol) const
+void blockchain_token_cert_database::store(const token_cert &sp_cert)
 {
-    std::shared_ptr<candidate_info> candidate_ = nullptr;
-    data_chunk data(candidate_symbol.begin(), candidate_symbol.end());
-    auto key = sha256_hash(data);
-
-    auto memo = lookup_map_.rfind(key);
-    if (memo)
-    {
-        candidate_ = std::make_shared<candidate_info>();
-        const auto memory = REMAP_ADDRESS(memo);
-        auto deserial = make_deserializer_unsafe(memory);
-        *candidate_ = candidate_info::factory_from_data(deserial);
-    }
-
-    return candidate_;
-}
-
-///
-uint64_t blockchain_candidate_database::get_register_height(const std::string &candidate_symbol) const
-{
-    std::shared_ptr<candidate_info> candidate_ = get_register_history(candidate_symbol);
-    if (candidate_)
-        return candidate_->output_height;
-
-    return max_uint64;
-}
-
-void blockchain_candidate_database::store(candidate_info &candidate_info)
-{
-    const auto &key_str = candidate_info.candidate.get_symbol();
+    auto &&key_str = sp_cert.get_key();
     const data_chunk &data = data_chunk(key_str.begin(), key_str.end());
     const auto key = sha256_hash(data);
-    if (lookup_map_.find(key))
-        remove(key);
+
 #ifdef UC_DEBUG
-    log::debug("blockchain_candidate_database::store") << candidate_info.candidate.to_string();
+    log::debug("blockchain_token_cert_database::store") << sp_cert.to_string();
 #endif
 
     // Write block data.
-    const auto sp_size = candidate_info.serialized_size();
+    const auto sp_size = sp_cert.serialized_size();
     BITCOIN_ASSERT(sp_size <= max_size_t);
     const auto value_size = static_cast<size_t>(sp_size);
 
-    auto write = [&candidate_info](memory_ptr data) {
+    auto write = [sp_cert](memory_ptr data) {
         auto serial = make_serializer(REMAP_ADDRESS(data));
-        serial.write_data(candidate_info.to_data());
+        serial.write_data(sp_cert.to_data());
     };
     lookup_map_.store(key, write, value_size);
 }
