@@ -75,7 +75,7 @@
 #include <UChain/coin/message/get_blocks.hpp>
 #include <UChain/coin/message/get_data.hpp>
 #include <UChain/coin/message/get_headers.hpp>
-#include <UChain/coin/message/header_message.hpp>
+#include <UChain/coin/message/header_msg.hpp>
 #include <UChain/coin/message/headers.hpp>
 #include <UChain/coin/message/heading.hpp>
 #include <UChain/coin/message/inventory.hpp>
@@ -90,7 +90,7 @@
 #include <UChain/coin/message/reject.hpp>
 #include <UChain/coin/message/send_compact_blocks.hpp>
 #include <UChain/coin/message/send_headers.hpp>
-#include <UChain/coin/message/tx_message.hpp>
+#include <UChain/coin/message/tx_msg.hpp>
 #include <UChain/coin/message/verack.hpp>
 #include <UChain/coin/message/version.hpp>
 #include <UChain/coin/unicode/console_streambuf.hpp>
@@ -152,7 +152,7 @@
 #include <UChain/coin/wallet/encrypted_keys.hpp>
 #include <UChain/coin/wallet/hd_private.hpp>
 #include <UChain/coin/wallet/hd_public.hpp>
-#include <UChain/coin/wallet/message.hpp>
+#include <UChain/coin/wallet/msg.hpp>
 #include <UChain/coin/wallet/mini_keys.hpp>
 #include <UChain/coin/wallet/mnemonic.hpp>
 #include <UChain/coin/wallet/payment_address.hpp>
