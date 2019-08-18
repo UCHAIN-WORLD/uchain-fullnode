@@ -38,7 +38,7 @@
 #include <boost/variant.hpp>
 #include <UChainService/txs/token/token.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
-#include <UChainService/txs/message/message.hpp>
+#include <UChainService/txs/message/msg.hpp>
 #include <UChainService/txs/wallet/wallet.hpp>
 #include <UChainService/txs/token/token_detail.hpp>
 #include <UChainService/txs/token/token_transfer.hpp>
