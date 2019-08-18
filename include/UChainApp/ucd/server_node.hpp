@@ -28,7 +28,7 @@
 #include <UChain/protocol.hpp>
 #include <UChainApp/ucd/config.hpp>
 #include <UChainApp/ucd/define.hpp>
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 #include <UChainApp/ucd/services/block_service.hpp>
 #include <UChainApp/ucd/services/heartbeat_service.hpp>
