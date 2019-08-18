@@ -25,7 +25,7 @@
 #include <memory>
 #include <UChain/coin.hpp>
 #include <UChain/protocol/define.hpp>
-#include <UChain/protocol/zmq/message.hpp>
+#include <UChain/protocol/zmq/msg.hpp>
 
 namespace libbitcoin
 {

@@ -26,7 +26,7 @@
 #include <UChainApp/ucd/interface/blockchain.hpp>
 #include <UChainApp/ucd/interface/protocol.hpp>
 #include <UChainApp/ucd/interface/tx_pool.hpp>
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 #include <UChainApp/ucd/services/block_service.hpp>
 #include <UChainApp/ucd/services/heartbeat_service.hpp>
