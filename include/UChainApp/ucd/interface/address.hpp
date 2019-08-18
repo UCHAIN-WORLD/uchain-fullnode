@@ -22,7 +22,7 @@
 #define UC_SERVER_ADDRESS_HPP
 
 #include <UChainApp/ucd/define.hpp>
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
 namespace libbitcoin
