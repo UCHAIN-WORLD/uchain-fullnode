@@ -28,7 +28,7 @@
 #include <UChain/protocol/define.hpp>
 #include <UChain/protocol/interface.pb.h>
 #include <UChain/protocol/packet.hpp>
-#include <UChain/protocol/zmq/message.hpp>
+#include <UChain/protocol/zmq/msg.hpp>
 
 namespace libbitcoin
 {
