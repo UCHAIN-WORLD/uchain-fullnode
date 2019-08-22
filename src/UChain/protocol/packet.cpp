@@ -23,7 +23,7 @@
 #include <UChain/protocol/packet.hpp>
 
 #include <UChain/coin.hpp>
-#include <UChain/protocol/zmq/message.hpp>
+#include <UChain/protocol/zmq/msg.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
 
 namespace libbitcoin
