@@ -26,7 +26,7 @@
 #include <unordered_map>
 #include <UChain/protocol.hpp>
 #include <UChainApp/ucd/define.hpp>
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 #include <UChainApp/ucd/settings.hpp>
 
 namespace libbitcoin
