@@ -24,7 +24,7 @@
 #include <string>
 #include <zmq.h>
 #include <UChain/coin.hpp>
-#include <UChain/protocol/zmq/message.hpp>
+#include <UChain/protocol/zmq/msg.hpp>
 #include <UChain/protocol/zmq/context.hpp>
 #include <UChain/protocol/zmq/poller.hpp>
 #include <UChain/protocol/zmq/socket.hpp>
