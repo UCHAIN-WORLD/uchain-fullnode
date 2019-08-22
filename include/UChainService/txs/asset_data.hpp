@@ -33,7 +33,7 @@
 #include <UChainService/txs/uid/uid_detail.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
 #include <UChainService/txs/ucn/ucn_award.hpp>
-#include <UChainService/txs/message/message.hpp>
+#include <UChainService/txs/message/msg.hpp>
 
 #define KIND2UINT16(kd) (static_cast<typename std::underlying_type<business_kind>::type>(kd))
 // 0 -- unspent  1 -- confirmed  2 -- local token not issued

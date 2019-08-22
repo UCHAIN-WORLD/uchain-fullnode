@@ -33,7 +33,7 @@
 #include <UChainService/txs/uid/uid.hpp>
 #include <UChainService/txs/ucn/ucn.hpp>
 #include <UChainService/txs/ucn/ucn_award.hpp>
-#include <UChainService/txs/message/message.hpp>
+#include <UChainService/txs/message/msg.hpp>
 
 using namespace libbitcoin::chain;
 #define TYPE2UINT32(kd) (static_cast<typename std::underlying_type<asset::asset_type>::type>(kd))

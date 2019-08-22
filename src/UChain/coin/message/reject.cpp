@@ -23,7 +23,7 @@
 #include <boost/iostreams/stream.hpp>
 #include <UChain/coin/message/version.hpp>
 #include <UChain/coin/message/block_msg.hpp>
-#include <UChain/coin/message/tx_message.hpp>
+#include <UChain/coin/message/tx_msg.hpp>
 #include <UChain/coin/utility/container_sink.hpp>
 #include <UChain/coin/utility/container_source.hpp>
 #include <UChain/coin/utility/istream_reader.hpp>
