@@ -25,7 +25,7 @@
 #include <memory>
 #include <UChain/coin.hpp>
 #include <UChainApp/ucd/define.hpp>
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 #include <UChainApp/ucd/messages/route.hpp>
 #include <UChainApp/ucd/settings.hpp>
 #include <UChainApp/ucd/utility/address_key.hpp>
