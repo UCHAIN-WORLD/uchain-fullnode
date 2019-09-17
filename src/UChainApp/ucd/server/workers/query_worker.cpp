@@ -28,7 +28,7 @@
 #include <UChainApp/ucd/interface/blockchain.hpp>
 #include <UChainApp/ucd/interface/protocol.hpp>
 #include <UChainApp/ucd/interface/tx_pool.hpp>
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 
 namespace libbitcoin

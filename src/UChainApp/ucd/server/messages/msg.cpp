@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 
 #include <cstdint>
 #include <string>

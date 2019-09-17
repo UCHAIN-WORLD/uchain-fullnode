@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <UChain/blockchain.hpp>
 #include <UChainApp/ucd/config.hpp>
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 
 namespace libbitcoin
 {

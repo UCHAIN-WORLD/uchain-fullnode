@@ -25,7 +25,7 @@
 #include <functional>
 #include <UChain/blockchain.hpp>
 #include <UChainApp/ucd/define.hpp>
-#include <UChainApp/ucd/messages/message.hpp>
+#include <UChainApp/ucd/messages/msg.hpp>
 #include <UChainApp/ucd/server_node.hpp>
 #include <UChainApp/ucd/utility/fetch_helpers.hpp>
 

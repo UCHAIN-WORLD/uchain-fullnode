@@ -26,7 +26,7 @@
 #include <UChain/protocol/zmq/authenticator.hpp>
 #include <UChain/protocol/zmq/certificate.hpp>
 #include <UChain/protocol/zmq/identifiers.hpp>
-#include <UChain/protocol/zmq/message.hpp>
+#include <UChain/protocol/zmq/msg.hpp>
 #include <UChain/protocol/zmq/zeromq.hpp>
 
 namespace libbitcoin
